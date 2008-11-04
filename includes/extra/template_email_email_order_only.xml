@@ -1,0 +1,126 @@
+<templatefile type='email'><?xml version="1.0" encoding="ISO-8859-1" ?>
+<template deflang="de">
+<TO email="$user_firstname $user_lastname &lt;$user_email&gt;"/>
+
+<subject lang="de" value="Ihre Tickets (Bestell-Nr. $order_id)"/>
+<subject lang="en" value="Your tickets (order nr. $order_id)"/>
+<subject lang="fr" value="Vos billets (commande nr. $order_id)"/>
+<subject lang="it" value="I Suoi biglietti (ordine nr. $order_id)"/>
+
+
+<text lang="de">
+DEMO * DEMO * DEMO * DEMO
+
+Liebe/r $user_firstname $user_lastname!
+
+Sie finden Ihre Tickets im Anhang.
+Ihre Bestell-Nr. ist: $order_id
+
+Herzlichen Dank und Viel Vergn&#252;gen!
+
+$order_date
+
+</text>
+
+<html lang="de">
+<b>DEMO * DEMO * DEMO * DEMO</b>
+
+<p>Liebe/r $user_firstname $user_lastname!</p>
+
+<p>Sie finden Ihre Tickets im Anhang.
+Ihre Bestell-Nr. ist: <b>$order_id</b></p>
+
+<p>Herzlichen Dank und Viel Vergn&#252;gen!</p>
+ 
+
+<p><i>$order_date</i></p>
+
+</html>
+
+<text lang="en">
+DEMO * DEMO * DEMO * DEMO
+
+Dear $user_firstname $user_lastname!
+
+You find here your tickets in attachment.
+Your Order-Nr. is: $order_id
+
+Thank You very much and a lot of fun!
+
+$order_date
+
+</text>
+
+<html lang="en">
+<b>DEMO * DEMO * DEMO * DEMO</b>
+
+<p>Dear $user_firstname $user_lastname!</p>
+
+<p>You find here your tickets in attachment.
+Your Order-Nr. is: <b>$order_id</b></p>
+
+<p>Thank You very much and a lot of fun!</p>
+ 
+<p><i>$order_date</i></p>
+
+</html>
+
+<text lang="fr">
+DEMO * DEMO * DEMO * DEMO
+
+Cher/Ch&#232;re $user_firstname $user_lastname!
+
+Vous trouvez vos billets en annexe.
+Votre Commande-Nr. est: $order_id
+
+Merci beaucoup et bon amusement!
+
+$order_date
+
+</text>
+<html lang="fr">
+<p>Cher/Ch&#232;re $user_firstname $user_lastname!</p>
+
+<p>Vous trouvez vos billets en annexe.
+Votre Commande-Nr. est: <b>$order_id</b></p>
+
+<p>Merci beaucoup et bon amusement!</p>
+ 
+<p><i>$order_date</i></p>
+
+</html>
+
+
+
+
+<text lang="it">
+DEMO * DEMO * DEMO * DEMO
+
+Gentilissimo/a $user_firstname $user_lastname!
+
+I Suoi biglietti si trovano in allegato.
+Il Suo Ordine-Nr. &#232;: $order_id
+
+Grazie mille e buon divertimento!
+
+$order_date
+
+</text>
+
+<html lang="it">
+<b>DEMO * DEMO * DEMO * DEMO</b>
+
+<p>Gentilissimo/a $user_firstname $user_lastname!</p>
+
+<p>I Suoi biglietti si trovano in allegato.
+Il Suo Ordine-Nr. &#232;: <b>$order_id</b></p>
+
+<p>Grazie mille e buon divertimento!</p>
+
+<p><i>$order_date</i></p>
+
+</html>
+
+<order_pdf order_id="$order_id" name="order_$order_id.pdf" mark_send="yes" summary="quittance"/>
+</template>
+</templatefile>

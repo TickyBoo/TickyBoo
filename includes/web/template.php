@@ -1,0 +1,56 @@
+<?php
+require_once("includes/config/init_common.php");
+
+require_once('smarty/Smarty.class.php');
+require_once('classes/MyCart_Smarty.php');
+require_once('classes/User_Smarty.php');
+require_once('classes/Order_Smarty.php');
+require_once('update/Update_Smarty.php');
+
+require_once("config/init_shop.php");
+
+global $_SHOP;
+
+/*/Check page is secure
+if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+$url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
+echo "<script>window.location.href='$url';</script>"; exit;
+//header("Location: https://"$_SHOP->root_secured.$_SERVER['SCRIPT_NAME']);exit;}
+}
+//remove the www. to stop certificate errors.
+if(("https://".$_SERVER['SERVER_NAME']."/") != ($_SHOP->root_secured)) {
+$url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
+echo "<script>window.location.href='$url';</script>"; exit;
+}*/
+$smarty = new Smarty;
+
+$cart_s = new MyCart_Smarty($smarty);
+$user = new User_Smarty($smarty);
+$order = new Order_Smarty($smarty);
+$update = new Update_Smarty($smarty);
+
+/*$smarty->assign('active',"This");*/
+$smarty->assign('_SHOP_user_root', $_SHOP->user_root);
+$smarty->assign('_SHOP_user_root_secured', $_SHOP->user_root_secured);
+$smarty->assign('_SHOP_root', $_SHOP->root);
+$smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
+$smarty->assign('_SHOP_lang', $_SHOP->lang);
+$smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
+
+$smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
+$smarty->assign('organizer', $_SHOP->organizer_data);
+
+$smarty->template_dir = $_SHOP->tpl_dir . '/web/';
+$smarty->compile_dir = $_SHOP->tmp_dir . '/web/templates_c/';
+$smarty->cache_dir = $_SHOP->tmp_dir . '/web/cache/';
+$smarty->config_dir = $_SHOP->includes_dir . '/lang/';
+
+$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "/shop_plugins");
+
+//$smarty->config_load("shop_" . $_SHOP->lang . ".conf");
+
+//ob_start();
+$smarty->display($fond . '.tpl');
+//ob_end_flush();
+
+?>

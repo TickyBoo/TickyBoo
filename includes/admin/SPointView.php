@@ -1,0 +1,371 @@
+<?PHP
+/*
+%%%copyright%%%
+ * phpMyTicket - ticket reservation system
+ * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *
+ * This file is part of phpMyTicket.
+ *
+ * This file may be distributed and/or modified under the terms of the
+ * "GNU General Public License" version 2 as published by the Free
+ * Software Foundation and appearing in the file LICENSE included in
+ * the packaging of this file.
+ *
+ * Licencees holding a valid "phpmyticket professional licence" version 1
+ * may use this file in accordance with the "phpmyticket professional licence"
+ * version 1 Agreement provided with the Software.
+ *
+ * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
+ * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ *
+ * The "phpmyticket professional licence" version 1 is available at
+ * http://www.phpmyticket.com/ and in the file
+ * PROFESSIONAL_LICENCE included in the packaging of this file.
+ * For pricing of this licence please contact us via e-mail to 
+ * info@phpmyticket.com.
+ * Further contact information is available at http://www.phpmyticket.com/
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/copyleft/gpl.html.
+ *
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * clear to you.
+ 
+ */
+
+require_once("classes/ShopDB.php");
+require_once("admin/AdminView.php");
+require_once("page_classes/CountriesList.php");
+
+class SPointView extends AdminView{
+
+function spoint_view (&$data){
+  $data['kasse_name']=$data["user_lastname"];
+  $country=new CountriesList();
+  echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+  echo "<tr><td colspan='2' class='admin_list_title'>".$data["kasse_name"]."</td></tr>";   
+  
+  $data["user_country_name"]=$country->getCountry($user["user_country"]);
+  
+  $this->print_field('user_id',$data);
+  $this->print_field('kasse_name',$data);
+  
+  $this->print_field('user_address',$data);
+  $this->print_field('user_address1',$data);
+  $this->print_field('user_zip',$data);
+  $this->print_field('user_city',$data);
+  $this->print_field('user_country_name',$data);
+
+  $this->print_field('user_phone',$data);
+  $this->print_field('user_fax',$data);
+  $this->print_field('user_email',$data);
+  $this->print_field('user_prefs',$data);
+  $this->print_set('user_organizer_ids',$data["user_organizer_ids"],"Organizer","organizer_name","organizer_id","view_organizer.php");
+  
+  $this->print_field('login',$data);
+
+  echo "</table>";
+  echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>".admin_list."</a></center>";
+  
+}
+function spoint_form (&$data,&$err,$title,$add='add'){
+  $countries=new CountriesList();
+  echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
+  echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+  echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>"; 
+    
+  $this->print_field_o('user_id',$data );
+  $this->print_input('kasse_name',$data,$err,30,50);
+//  $this->print_input('user_firstname',$data,$err,30,50);
+  
+  $this->print_input('user_address',$data,$err,30,75);
+  $this->print_input('user_address1',$data,$err,30,75);
+  $this->print_input('user_zip',$data,$err,8,20);
+  $this->print_input('user_city',$data,$err,30,50);
+  echo "<td class='admin_name'>".country."</td><td class='admin_value'>";
+  $countries->printForm('user_country',$data['user_country'],$err);
+  echo "</td></tr>";	  
+
+  $this->print_input('user_phone',$data,$err,30,50);
+  $this->print_input('user_fax',$data,$err,30,50);
+  $this->print_input('user_email',$data,$err,30,50);
+  
+  $this->print_select('user_prefs',$data,$err,array('pdt','pdf'));
+  
+  if($data["user_organizer_ids"] and $data["user_organizer_ids"]!=""){
+    $org=explode(",",$data["user_organizer_ids"]); 
+  }
+  $query="select organizer_id,organizer_name from Organizer";
+  if(!$res=ShopDB::query($query)){
+    user_error(shopDB::error());
+    return;
+  }
+    
+/*
+  echo "<tr><td class='admin_name'  width='40%'>".$this->con('user_organizer_ids')."</td>
+  <td class='admin_value'>";
+  //multiples organizers for 1 vvs for the moment disabled 
+  //echo "<select multiple size='5' name='user_organizer_ids[]'>";
+  echo "<select  name='user_organizer_ids[]'>";
+  while($row=shopDB::fetch_array($res)){
+    $sel="";
+    foreach($org as $org_id){
+      if($org_id==$row["organizer_id"]){
+        $sel="selected";
+      }
+    }
+    echo "<option value='".$row["organizer_id"]."' $sel>".$row["organizer_name"]."</option>";
+  }
+  echo "</select></td></tr>\n";
+*/  
+  $this->print_input('user_nickname',$data,$err,30,50);
+  
+  if($add=='add'){
+    echo "<tr> <td class='admin_name'>".password."</td>
+         <td class='admin_value'><input type='password' name='password1' size='10'  maxlength='10'><span class='err'>{$err['password']}</span></td></tr>
+         <tr> <td class='admin_name'>".password2."</td>
+         <td class='admin_value'><input type='password' name='password2' size='10'  maxlength='10'></td></tr>";
+  }
+  if($add=='update'){
+    echo "<tr> <td class='admin_name'>".old_password."</td>
+         <td><input type='password' name='old_password' size='10'  maxlength='10'>
+	 <span class='err'>{$err['old_password']}</span></td></tr>
+         <tr> <td class='admin_name'>".new_password."</td>
+         <td class='admin_value'><input type='password' name='new_password1' size='10'  maxlength='10'><span class='err'>{$err['new_password']}</span></td> </tr>
+	 <tr> <td class='admin_name'>".new_password."</td>
+         <td class='admin_value'><input type='password' name='new_password2' size='10'  maxlength='10'></td></tr>";
+  }
+  if($data['user_id']){
+    echo "<input type='hidden' name='user_id' value='{$data['user_id']}'/>\n";
+    echo "<input type='hidden' name='action' value='update'/>\n";
+  }else{
+    echo "<input type='hidden' name='action' value='insert'/>\n";
+  }
+  
+  echo "<tr><td align='center' class='admin_value' colspan='2'>
+    <input type='submit' name='submit' value='".save."'>
+  <input type='reset' name='reset' value='".res."'></td></tr>";
+  echo "</table></form>\n";
+
+  echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>".admin_list."</a></center>";
+}
+
+ function spoint_list (){
+  global $_SHOP;
+  
+  $query="SELECT * FROM User WHERE user_status='1' and user_organizer_ids={$_SHOP->organizer_id}";
+  if(!$res=ShopDB::query($query)){
+    user_error(shopDB::error());
+    return;
+  }
+  
+  $alt=0;
+  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='3'>\n";
+  echo "<tr><td class='admin_list_title' colspan='8' align='center'>".spoint_title."</td></tr>\n";
+  
+  
+  while($row=shopDB::fetch_assoc($res)){
+    echo "<tr class='admin_list_row_$alt'>";
+//    echo "<td class='admin_list_item'>{$row['user_id']}</td>\n";
+    echo "<td class='admin_list_item' width='33%'>{$row['user_lastname']}</td>\n";
+    echo "<td class='admin_list_item' width='59%'>{$row['user_address']} {$row['user_address1']} {$row['user_city']}</td>\n";
+    echo "<td class='admin_list_item' nowrap='nowrap' align='right'>";
+//            <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&user_id={$row['user_id']}'><img src='images/view.png' border='0' alt='".view."' title='".view."'></a></td>\n";
+    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&user_id={$row['user_id']}'><img src='images/edit.gif' border='0' alt='".edit."' title='".edit."'></a>\n";
+    echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&user_id={$row['user_id']}\";}'><img src='images/trash.png' border='0' alt='".remove."' title='".remove."'></a>\n";
+    echo "</td></tr>";
+    $alt=($alt+1)%2;
+  }
+  echo "</table>\n";
+  
+  echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".add."</a></center>";
+}
+
+function organizer_post ($data,$user_id){
+
+  global $_SHOP;
+
+  if(!$data['user_organizer_ids']){
+    $data['user_organizer_ids'][]=$_SHOP->organizer_id;
+  }
+  
+  $first=TRUE;
+  foreach($data['user_organizer_ids'] as $id){
+    if($first){$ids.=$id;}else{$ids.=",".$id;}
+    $first=FALSE;
+  }
+  $query="UPDATE User set user_organizer_ids='$ids' where user_id='$user_id'";
+  if($query){
+    if(ShopDB::query($query)){
+      return TRUE;
+    }
+   }
+   return FALSE;
+
+}
+
+function draw () { 
+if($_POST['action']=='insert'){
+  if(!$this->spoint_check($_POST,$err)){
+    $this->spoint_form($_POST,$err,spoint_add_title);
+  }else{
+    $query="INSERT INTO User (user_lastname, user_address,user_address1,user_zip,user_city,user_country,user_email,user_phone,user_prefs,user_fax,user_status)".
+           " VALUES ('".$this->q($_POST['kasse_name'])."',
+            '".$this->q($_POST['user_address'])."',
+            '".$this->q($_POST['user_address1'])."',
+            '".$this->q($_POST['user_zip'])."',
+            '".$this->q($_POST['user_city'])."',	    
+            '".$this->q($_POST['user_country'])."',	    
+            '".$this->q($_POST['user_email'])."',	    
+	    '".$this->q($_POST['user_phone'])."',
+	    '".$this->q($_POST['user_prefs'])."',
+            '".$this->q($_POST['user_fax'])."',
+	    '1')";  
+    if(!ShopDB::query($query)){
+      user_error(shopDB::error());
+      return 0;
+    }
+    	   
+    if($user_id=shopDB::insert_id()){
+      $query="insert into SPoint (login,password,user_id) VALUES (
+      '".$this->q($_POST['user_nickname'])."',
+      '".$this->q(md5($_POST['password1']))."',
+      '".$this->q($user_id)."')";
+    
+      if(!ShopDB::query($query)){
+        user_error(shopDB::error());
+        return FALSE;
+      }
+    }
+
+
+    if(!$this->organizer_post($_POST,$user_id)){
+      echo "<div class=error>".organizers_setting_problem."<div>";
+      return FALSE;
+    }
+    
+    $this->spoint_list();
+  }
+ }else if($_POST['action']=='update'){  
+  if(!$this->spoint_check($_POST,$err)){
+    $this->spoint_form($_POST,$err,spoint_update_title,'update');
+  }else{
+    $query=" UPDATE User set user_lastname='".$this->q($_POST['kasse_name'])."',
+            user_address='".$this->q($_POST['user_address'])."',
+            user_address1='".$this->q($_POST['user_address1'])."',
+            user_zip='".$this->q($_POST['user_zip'])."',
+            user_city='".$this->q($_POST['user_city'])."',	    
+            user_country='".$this->q($_POST['user_country'])."',	    
+            user_email='".$this->q($_POST['user_email'])."',	    
+	    user_phone='".$this->q($_POST['user_phone'])."',
+	    user_prefs='".$this->q($_POST['user_prefs'])."',
+            user_fax='".$this->q($_POST['user_fax'])."',user_status='1' where user_id='{$_POST["user_id"]}'";
+    if(!ShopDB::query($query)){
+      user_error(shopDB::error());
+      return 0;
+    }
+    if(isset($_POST["old_password"]) and isset($_POST["new_password1"]) and isset($_POST['user_nickname'])){
+      $query="UPDATE SPoint set login='".$this->q($_POST['user_nickname'])."',
+           password='".$this->q(md5($_POST['new_password1']))."' where user_id='{$_POST["user_id"]}'
+	   and password='".$this->q(md5($_POST['old_password']))."'";
+    
+      if(!ShopDB::query($query)){
+        user_error(shopDB::error());
+        return FALSE;
+      }
+      
+    }    
+
+
+    if(!$this->organizer_post($_POST,$_POST["user_id"])){
+      echo "<div class=error>".organizers_setting_problem."<div>";
+      return FALSE;
+    }
+    
+   $this->spoint_list();
+  }
+}else if($_GET['action']=='add'){
+  $this->spoint_form($row,$err,spoint_add_title);
+ 
+ }else if($_GET['action']=='edit'){
+  $query="SELECT * FROM User,SPoint WHERE User.user_id='{$_GET['user_id']}' and SPoint.user_id=User.user_id";
+  if(!$row=ShopDB::query_one_row($query)){
+    user_error(shopDB::error());
+    return 0;
+  }
+  $row['kasse_name']=$row['user_lastname'];
+  $row['user_nickname']=$row['login'];
+  
+  $this->spoint_form($row,$err,spoint_update_title,'update');
+}else 
+if($_GET['action']=='remove' and $_GET['user_id']>0){
+  $query="DELETE User.*, SPoint.* FROM User,SPoint WHERE User.user_id='{$_GET['user_id']}' AND User.user_id=SPoint.user_id";
+  if(!ShopDB::query($query)){
+    user_error(shopDB::error());
+    return 0;
+  }
+  $this->spoint_list();
+}else if($_GET['action']=='view'){
+  $query="SELECT * FROM User,SPoint WHERE User.user_id='{$_GET['user_id']}' and SPoint.user_id=User.user_id";
+  if(!$row=ShopDB::query_one_row($query)){
+    user_error(shopDB::error());
+    return 0;
+  }
+  $this->spoint_view($row);
+ }else{ 
+  $this->spoint_list();
+ }
+}
+
+function spoint_check (&$data, &$err){
+  if(empty($data['kasse_name'])){$err['kasse_name']=mandatory;}
+  if(empty($data['user_address'])){$err['user_address']=mandatory;}
+  if(empty($data['user_zip'])){$err['user_zip']=mandatory;}
+  if(empty($data['user_city'])){$err['user_city']=mandatory;}
+  if(empty($data['user_country'])){$err['user_country']=mandatory;}
+  if(empty($data['user_nickname'])){$err['user_nickname']=mandatory;}
+  
+  if($nickname=$data['user_nickname'] and $data["action"]=='insert'){
+    $query="select Count(*) as count from SPoint where login='$nickname'";
+    if(!$res=ShopDB::query_one_row($query)){
+      user_error(shopDB::error());
+      return 0;
+    }
+    if($res["count"]>0){$err['user_nickname']=already_exist;}
+  }
+  //if(empty($data['user_email'])){$err['user_email']=mandatory;}
+  if($email=$data['user_email']){
+    $check_mail= eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $email);
+    if(!$check_mail){$err['user_email']=not_valid_email;} 
+  }
+  if(!$data["user_id"]){
+    if(empty($data['password1']) or empty($data['password2'])){$err['password']=invalid;}
+    if($data['password1'] and $data['password2']){
+       if($data['password1']!=$data['password2']){$err['password']=pass_not_egal;}
+      if(strlen($data['password1'])<5){$err['password']=pass_too_short;}
+    }
+   }
+   if($data["user_id"]){ 
+     if($pass=$data["old_password"]){
+       $query="select password from SPoint where user_id='{$data["user_id"]}'";
+       if(!$row=ShopDB::query_one_row($query)){
+          user_error(shopDB::error());
+          return 0;
+        }
+       if(md5($pass)!=$row["password"]){ 
+         $err["old_password"]=login_invalid;
+       }else{ 
+         if($data['new_password1']!=$data['new_password2']){$err['new_password']=pass_not_egal;}
+        if(strlen($data['new_password1'])<5){$err['new_password']=pass_too_short;}
+         
+       }
+       
+     }
+   }
+  return empty($err);
+
+}
+
+}
+?>

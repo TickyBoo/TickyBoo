@@ -1,0 +1,71 @@
+<templatefile type='pdf'><?xml version="1.0" ?>
+<template invert="260" lang="fr_FR">
+<dynamic>
+<image src="templates/images/ticket_bg.jpg" x="60" y="200" width="460"/>
+<format type="barcode" var="barcode_text" value="code39" out="barcode" />
+
+<font name="free3of9"/>
+<text value="$barcode" x="330" y="75" size="25" />
+<font name="Helvetica"/>
+<text value="$barcode_text" x="365" y="90" size="12"/>
+<text value="$event_name" x="80" y="85" size="18" style="bold"/>
+
+<text value="$ort_name" x="80" y="110" size="12" style="normal"/>
+
+<text value="$category_name" x="170" y="180" size="12" style="bold"/>
+
+<text value="$discount_name" y="130" x="425" size="12" />
+
+
+<format type="date"
+var="event_date"
+value="%A, %e. %B %Y"
+out="event_date_f" />
+
+<format type="date" var="event_open" value="%H.%Mh" out="event_open_f" />
+
+<format type="date" var="event_time" value="%H.%Mh" out="event_time_f" />
+
+<text value="$event_date_f     $event_time_f" x="80" y="130" size="12" style="bold"/>
+
+<text value="Ouverture des portes $event_open_f" x="80" y="145" size="12" style="normal"/>
+
+
+<?php if($data['category_numbering']=='both'){ ?>
+<text value="Numéro de place" x="250" y="180" size="12"
+style="bold"/>
+<text value="$seat_row_nr-$seat_nr" x="350" y="180"
+size="24" style="bold"/>
+<?php }else if($data['category_numbering']=='rows'){ ?>
+<text value="Rang" x="310" y="180" size="12" style="bold"/>
+<text value="$seat_row_nr" x="350" y="180" size="24"
+style="bold"/>
+<?php }else if($data['category_numbering']=='none'){ ?>
+<text value="Place sans numéro" x="310" y="180" size="12"
+style="bold"/>
+<?php } ?>
+
+
+</dynamic>
+
+<static>
+<line_style width="1"/>
+<line x1="70" y1="30" x2="510" y2="30"/>
+<line x1="70" y1="230" x2="510" y2="230"/>
+<partellipse x="70" y="60" a1="180" a2="90" r1="30" nseg="10" />
+<partellipse x="510" y="60" a1="0" a2="90" r1="30" nseg="10" />
+<partellipse x="70" y="200" a1="180" a2="270" r1="30" nseg="10" />
+<partellipse x="510" y="200" a1="270" a2="360" r1="30" nseg="10" />
+<line x1="40" y1="60" x2="40" y2="200"/>
+<line x1="540" y1="60" x2="540" y2="200"/>
+
+<line_style width="1" dash="5"/>
+<line x1="0" y1="250" x2="600" y2="250"/>
+<line_style width="1"/>
+
+<font name="Helvetica"/>
+<text value="Categorie" x="80" y="180" size="12" style="bold"/>
+<text value="powered by phpMyTicket.com" x="380" y="215" size="9"/>
+</static>
+
+</template></templatefile>

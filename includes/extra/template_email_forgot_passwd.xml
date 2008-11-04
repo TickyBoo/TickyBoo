@@ -1,0 +1,65 @@
+<templatefile type='email'><template deflang="en">
+<TO email="$user_firstname $user_lastname &lt;$user_email&gt;"/>
+
+<subject lang="en" value="Your new password"/>
+<subject lang="fr" value="Votre nouveau mot de passe"/>
+<subject lang="it" value="La Sua nuova parola d'accesso"/>
+
+<text lang="en">
+Dear $user_firstname $user_lastname!
+
+There is your new password: $new_password
+
+Have a nice day
+
+</text>
+
+<html lang="en">
+<p>Dear $user_firstname $user_lastname!</p>
+
+<p>There is your new password: <b>$new_password</b></p>
+
+<p>Have a nice day!</p>
+ 
+
+</html>
+
+<text lang="fr">
+Cher/Chère $user_firstname $user_lastname!
+
+Votre nouveau mot de passe est: $new_password
+
+Meilleures salutations
+
+</text>
+
+<html lang="fr">
+<p>Cher/Chère $user_firstname $user_lastname!</p>
+
+<p>Votre nouveau mot de passe est: <b>$new_password</b></p>
+
+<p>Meilleures salutations</p>
+ 
+</html>
+
+
+<text lang="it">
+Gentile/Gentilissima $user_firstname $user_lastname!
+
+La Sua nuova parola d'accesso è: $new_password
+Distinti saluti
+
+</text>
+
+<html lang="it">
+<p>Gentile/Gentilissima $user_firstname $user_lastname!</p>
+
+<p>La Sua nuova parola d'accesso è: <b>$new_password</b></p>
+
+<p>Distinti saluti</p>
+ 
+
+</html>
+
+</template>
+</templatefile>

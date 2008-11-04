@@ -1,0 +1,1 @@
+{include file="$_SHOP_theme/header.tpl" name=$name}

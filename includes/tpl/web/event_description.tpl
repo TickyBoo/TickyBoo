@@ -1,0 +1,124 @@
+{*
+ * %%%copyright%%%
+ *
+ * FusionTicket - ticket reservation system
+ * Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
+ *
+ * Original Design:
+ *	phpMyTicket - ticket reservation system
+ * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *
+ * This file is part of fusionTicket.
+ *
+ * This file may be distributed and/or modified under the terms of the
+ * "GNU General Public License" version 3 as published by the Free
+ * Software Foundation and appearing in the file LICENSE included in
+ * the packaging of this file.
+ *
+ * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
+ * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ *
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/copyleft/gpl.html.
+ *
+ * Contact info@noctem.co.uk if any conditions of this licencing isn't 
+ * clear to you.
+ *}
+{if $shop_event.event_rep eq 'main'}
+  <table class="table_dark">
+    <tr>
+    	{if $shop_event.event_image}
+    	  <td>
+    	  	<a href='index.php?event_id={$shop_event.event_id}'>
+        		<img src="files/{$shop_event.event_image}" align='left' style="margin:15px;" border="0">
+          </a>
+    	  </td>
+    	{/if}
+      <td>
+        <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
+          {if $shop_event.event_pm_id}
+            <img border='0' src='images/ticket.gif'>
+          {else}
+            <img border='0' src='images/info.gif' />
+          {/if}
+          &nbsp;{$shop_event.event_name}
+        </a>
+        {if $shop_event.event_mp3}
+          <a  href='files/{$shop_event.event_mp3}'>
+            [<img src='images/audio-small.png' border='0' valign='bottom'>]
+          </a>
+        {/if}<br>
+        <span class="date">{$shop_event.event_date|date_format:!shortdate_format!}
+          {$shop_event.event_time|date_format:!time_format!}
+          {$shop_event.pm_name}
+          {if $info_plus}
+            {!doors_open!} {$shop_event.event_open|date_format:!time_format!}
+          {/if}
+        </span><br>
+        {$shop_event.event_text}
+      </td>
+    </tr>
+    <tr>
+      <td colspan='2'>
+        {if $info_plus eq "on"}
+          {!dates_localities!} :
+          {event event_main_id=$smarty.get.event_id ort='on' sub='on' event_status='pub' place_map='on'}
+            <li>
+              <a href="index.php?event_id={$shop_event.event_id}">
+                {$shop_event.event_date|date_format:!date_format!}
+              </a>
+	            {$shop_event.event_time|date_format:!time_format!} {$shop_event.pm_name}
+            </li>
+          {/event}
+        {else}
+          {!various_dates!}
+        {/if}
+      </td>
+    </tr>
+  </table>
+{else}
+  <table class="table_dark">
+    <tr>
+      {if $shop_event.event_image}
+        <td>
+          <a href='index.php?event_id={$shop_event.event_id}'>
+            <img src="files/{$shop_event.event_image}" align='left' style="margin:15px;" border="0">
+          </a>
+        </td>
+      {/if}
+      <td>
+        <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
+          {if $shop_event.event_pm_id}
+            <img border='0' src='images/ticket.gif' align="middle">
+          {else}
+            <img border='0' src='images/info.gif' align="middle">
+          {/if}
+          &nbsp;{$shop_event.event_name}
+        </a>
+        {if $shop_event.event_mp3}
+          <a  href='files/{$shop_event.event_mp3}'>
+            [<img src='images/audio-small.png' border='0' valign='bottom'>]
+          </a>
+        {/if}<br>
+        {if $info_plus eq "on"}
+          <span class="date">
+            {!date!}:
+            {$shop_event.event_date|date_format:!date_format!} -
+            {$shop_event.event_time|date_format:!time_format!} <br>
+            {!venue!}:
+            {$shop_event.ort_name} - {$shop_event.ort_city} - {$shop_event.pm_name} <br>
+            {!doors_open!} {$shop_event.event_open|date_format:!time_format!}
+          </span>
+        {else}
+          <span class="date">{$shop_event.event_date|date_format:!shortdate_format!}
+            {$shop_event.event_time|date_format:!time_format!} {$shop_event.ort_name}
+          </span>
+        {/if}
+        <br><br>
+        {$shop_event.event_text}
+      </td>
+    </tr>
+  </table>
+{/if}

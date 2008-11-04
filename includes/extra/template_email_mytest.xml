@@ -1,0 +1,17 @@
+<templatefile type='email'><?xml version="1.0" encoding="UTF-8" ?>
+<template deflang="en" >
+<FROM email="Demo Theater &lt;systemtest@phpmyticket.com&gt;"/>
+<TO email="$user_firstname $user_lastname &lt;$user_email&gt;"/>
+
+
+<subject lang="en" value="Your tickets (order nr. $order_id)"/>
+
+<text lang="en">
+×·☻ÃÊêçåå
+</text>
+
+
+<order_pdf  order_id="$order_id" name="order_$order_id.pdf" mark_send="yes"/>
+
+</template>
+</templatefile>
