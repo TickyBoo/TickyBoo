@@ -1,0 +1,80 @@
+INSTALL instructions for phpMyTicket 1.0
+
+1.Requirments
+  - PHP version 5.0, tested with 5.2.5 - PHP4 ISNT SUPPORTED ANYMORE!
+  - MySQL version >4.1 with MySQLi (Mandatory!). Tested with version 5.0.51a 
+  - Email support should be enabled in php - Check email security Settings
+  - cURL should be enabled for some features (paypal, authorize.net)
+	- openssl should be enabled for some features (if using https://) 
+	- xml parser should be enabled (needed for templates)
+	- iconv support for non-latin text in pdf templates
+	
+  - some third party code is already included with the distibution:
+    + smarty (see smarty.php.net) is installed in ./smarty folder
+    + ezPDF  in ./classes
+    + htmlMimeMail in ./classes
+    + all required pear components are now distributed with phpmyticket 
+		  in ./pear folder.
+
+  Fusion Ticket was tested on CentOS, Fedora Core and Windows with Apache 2.0
+  Generaly that latested stable version of software will have no problems.
+
+		  
+If you have any Problems with the above requirements and your webhost. Fusion Ticket Can provide hosting which is allways uptodate with the latested versions for security and compatiblity, use the same version that we design the software on.
+Contact hosting@fusionticket.co.uk for more information. All we ask is that you donate regularly to the project.
+
+
+// Held off for the time being
+
+2.Web-based installation 
+
+2.1 Download the archive and decompress it somewhere in the webroot path of your webserver:
+
+      tar -xzf phpMyTicket.tar.gz
+      
+    This produces a directory called phpMyTicket - you can rename it.
+    
+2.2 Create new database using your mysql client, for example:
+
+      mysqladmin create phpMyTicket
+      
+2.3 Browse to the installation script and follow instructions:
+
+      http://[your-host]/phpMyTicket/index.php
+      
+
+4. Problems
+
+There are some know problems because of various php configs.
+Most of them can be solved by renaming _.htaccess file to .htaccess. 
+But, sometimes, your web server is not instructed to read .htaccess
+In this case you need to edit config file: includes/config/init_common.php
+
+4.1 Gegister globals
+
+For security reasons this php flag should be off. Install will produce a warning.
+Renaming _.htaccess to .htaccess should solve this problem, otherwise edit
+includes/config/init_common.php and remove those two lines:
+
+		echo "Set register_globals to OFF please. Bye.";
+		exit;
+
+4.2 Safe mode
+
+Directory creation problem can arise if you are in safe mode. In this case
+edit includes/config/init_common.php and remove section at line 99. 
+After install create missing folders by hand and allow php user to write into.
+
+4.3 Blank screen
+
+If you see a blank screen instead the install page you have too old php version 
+and errors not displayed. Update to newer php version
+
+
+You will find user manuals, forums, demos and other stuff on our web site:
+
+http://www.fusionticket.co.uk/
+
+Have Fun!
+Chris Jenkins
+
