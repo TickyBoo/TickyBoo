@@ -2,6 +2,7 @@
 %%copyright%% 
 *}
 {include file="header.tpl"}
+{$smarty.post.action}
 
 {if $smarty.get.action eq home}
 	{include file='index.tpl'}
@@ -20,7 +21,7 @@
    {include file='view_orders.tpl'}
 
 {elseif $smarty.post.action eq submit_info}
-	{if not $smarty.post.exst_user or $smarty.post.exst_user neq '1'}
+	{if not $smarty.post.exst_user }   {*or not $smarty.post.exst_user = 1 *}
   		{user->login_guest user_id=$smarty.post.exst_user}
   	{else}
 		{user->guest data=$smarty.post short='true'}
@@ -38,7 +39,7 @@
   
 
 {elseif $smarty.post.action eq submit_reserve}
-  {if $smarty.post.exst_user neq '1'}
+  {if not $smarty.post.exst_user } {* neq '1'*}
 	{user->login_guest user_id=$smarty.post.exst_user}
   {else}
 	{user->guest data=$smarty.post short='true'}
@@ -57,7 +58,7 @@
 {elseif $smarty.post.action eq 'cancel_order'}
   {if $order->cancel_f($smarty.post.order_id) }
     <div class='succes'>
-    {#order_canceled#}
+    {!order_canceled!}
     </div>
   {/if}  
 
@@ -76,22 +77,11 @@
   {include file='print_order.tpl'}
   
 {elseif $smarty.post.action eq 'confirm'}
-  {* order->set_reserved order_id=$smarty.post.order_id *}
   {include file='view_orders.tpl'}
-
 {elseif $smarty.post.action eq 'order_tickets'}
   {if $smarty.post.handling}
     {handling handling_id=$smarty.post.handling}
-      {*{if $shop_handling.handling_shipment eq 'sp'}
-	  {order->make user_id=$user_auth->user_id handling=$shop_handling.handing_id place='pos'}
-	  {if $order_success}
-	  	{include file='order_confirm.tpl'}
-		{cart->destroy}
-	  {else}<div class='error'>{$order_error}</div>
-	  {/if}
-	{else}*}
-        {include file='user_address.tpl' handling_id=$smarty.post.handling}
-    {*/if*} 
+      {include file='user_address.tpl' handling_id=$smarty.post.handling}
     {/handling}
   {else}
     {include file='cart_view.tpl'}
@@ -175,7 +165,7 @@
 		  {if $smarty.get.action eq 'change_status'}
   			{if $order->set_status_f($smarty.get.order_id,'pros') }
     		<div class='succes'>
-    			{#order_status_changed#}
+    			{!order_status_changed!}
     		</div>
   			{/if}
   		  {/if}
@@ -188,7 +178,7 @@
 		  {if $smarty.get.action eq 'send'}
   			{$order->set_send_f($smarty.get.order_id,'pros') }
     		<div class='succes'>
-    			{#order_status_changed#}
+    			{!order_status_changed!}
     		</div>
   		  {/if}
   		  {include file="process_view_pros.tpl"}

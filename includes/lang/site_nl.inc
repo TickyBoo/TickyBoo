@@ -47,7 +47,7 @@ define("cancel_ticket","Annuleer kaart");
 define("cannot_find_seat","Kan de stoel niet vinden");
 define("cannot_seal","Interne fout: Kan de creditcard gegevens niet bevestigen");
 define("cannot_store","Interne fout: Kan de creditcard informatie niet opslaan");
-define("cart_cont_mess","Controleer uw bestelling. Indien uw bestelling niet binnen 15 min. wordt bevestigd, dan worden de bestelde kaarten weer in de verkoop gebracht.<br /><br />Om de bestelling te wijzigen dient u eerste de gereserveerde kaarten te verwijderen. Klik vervolgens op 'Bestel meer kaarten' om een nieuwe bestelling te plaatsen. ");
+define("cart_cont_mess","Controleer uw bestelling. Indien u uw bestelling niet binnen 15 min. wordt bevestigd, dan worden de bestelde kaarten weer in de verkoop gebracht.<br /><br />Om de bestelling te wijzigen dient u eerste de gereserveerde kaarten te verwijderen. Klik vervolgens op 'Bestel meer kaarten' om een nieuwe bestelling te plaatsen. ");
 define("cart_empty","Uw winkelwagen is leeg.");
 define("cart_empty_pos","Geen orders om af te sluiten");
 define("cart_not_updated","Winkelwagen is niet bijgewerkt");
@@ -79,7 +79,7 @@ define("category_template","Sjabloon voor kaarten");
 define("category_title","Alle categorie&euml;n");
 define("category_update_title","Categorie omschr. wijzigen");
 define("category_view_title","Categorie");
-define("cat_description","Toegangskaarten en prijzen.");
+define("cat_description","Stoelen, vakken en prijzen");
 define("cat_sold_out","Uitvoering uitverkocht");
 define("cat_stat_error","Fout - categorie stats niet bijgewerkt");
 define("cat_stat_success","Succes - categorie stats bijgewerkt");
@@ -369,7 +369,7 @@ define("login_name","Gebruikersnaam");
 define("logout","Afmelden");
 define("log_error","Probleem bij het aanmelden");
 define("log_err_not_act","<p>Sorry, dit account is nog niet geactiveerd.<br />Activeer eerst uw account!</p><p>Controleer uw email voor uw activatiecode. Controleer zonodig ook uw spam folder. In dit mailtje staat een link die u kunt gebruiken om dit account te activeren.</p><p>Heeft u, na een aantal uur, nog steeds niets ontvangen, klik dan op <a href='resend_activation.php'<b>hier</b></a> om de activatie code opnieuw te laten verzenden.</p>");
-define("log_err_wrong_usr","Verkeerde gebruikersnaam of wachtwoord opgegeven! Probeer het opnieuw. Vergeet niet dat zowel de gebruikersnaam als het wachtwoord hoofdlettergevoelig zijn.<br> Als u uw wachtwoord bent vergeten, klik dan <a href='forgot_password.php'><strong>hier</strong></a>.");
+define("log_err_wrong_usr","Verkeerde gebruikersnaam of wachtwoord opgegeven! Probeer het opnieuw. Vergeet niet dat zowel de gebruiksnaam als het wachtwoord hoofdlettergevoelig zijn.<br> Als u uw wachtwoord bent vergeten, klik dan <a href='forgot_password.php'><strong>hier</strong></a>.");
 define("longdate_format","%Y-%m-%d %H:%M:%S");
 
 define("mandatory","Dit is een verplicht veld");
@@ -456,7 +456,7 @@ define("order_now","Bestel nu");
 define("order_nr","Order nummer");
 define("order_payment_mode","Betalingsmode");
 define("order_payment_status","Betaal status");
-define("order_price","Totaalprijs");
+define("order_price","Totaal prijs");
 define("order_reg","Order geregisteerd");
 define("order_shipment_mode","Verzendings wijze");
 define("order_shipment_status","Verzend status");
@@ -472,7 +472,7 @@ define("order_status_send","Verzonden");
 define("order_status_sp","Verkooppunten");
 define("order_tickets_nr","Aantal kaarten");
 define("order_total","Order totaal");
-define("order_total_price","Totaalprijs");
+define("order_total_price","Totaal prijs");
 define("order_type_canceled","Verwijderd");
 define("order_type_email","Email");
 define("order_type_ordered","Besteld");
@@ -732,7 +732,7 @@ define("shopconfig_restime_remind","Waarschuwen als de email is verzonden");
 define("shopping_cart","Uw winkelwagen");
 define("shopping_cart_pos","Winkelwagen");
 define("shop_condition","Voorwaarden: De door de stg. Valborg geregistreerde gegevens, met betrekking tot de naam, het adres en de woonplaats van de bezoeker, worden in verband met de verstrekking en/of verzending van een toegangsbewijs en het innen van betalingen, opgenomen in een registratie in de zin van de Wet Persoonsregistratie (WPR). De stg. Valborg is de houder van deze registratie. Een kopie van het aanmeldingsformulier ingevolge de WPR van deze registratie is op te vragen bij het bestuur van de stichting.");
-define("shop_info","Stel het gewenste aantal kaarten in en klik op &#146;Vervolgen&#146; om de bestelling te bevestigen en uw adresgegevens op te geven. De kaarten worden per post verzonden. <BR /><BR />Route informatie is beschikbaar door de locatie te klikken. ");
+define("shop_info","Stel het gewenste aantal kaarten in en klik op &#146;Vervolgen&#146; om de bestelling te bevestigen en uw adresgegevens op te geven. De kaarten worden per post verzonden");
 define("shortdate_format","%e %b %Y");
 define("signup","Aanmelden");
 define("sign_in_first","Eerst aanmelden");
@@ -789,7 +789,7 @@ define("tnx_order_mess",'Dank u wel! Uw bestelling is geregisteerd.<br><br>Om uw
 define("to","Naar");
 define("too_low","Geef een nummmer groter dan 0");
 define("total","Totaal");
-define("total_price","Totaalprijs");
+define("total_price","Totaal prijs");
 define("total_without_charges","Totaal zonder kosten");
 define("tot_tick_price","Totaalprijs bestelde kaarten:");
 define("to_pay","Betalen");
@@ -804,7 +804,7 @@ define("upload","Upload");
 define("up_events","Concertagenda");
 define("userid","Gebruikersnummer");
 define("user","Klant");
-define("user_address1","Adres");
+define("user_address1","Adres 2");
 define("user_address","Adres");
 define("user_city","Woonplaats");
 define("user_country","Land");
@@ -816,7 +816,7 @@ define("user_firstname","Voornaam");
 define("user_id","Code");
 define("user_lastname","Achternaam");
 define("user_nickname","Nickname");
-define("user_notice","Vul de onderstaande velden in om kaarten te bestellen en klik op 'Vervolgen'.<BR /><BR />Invoervelden met (*) zijn verplicht.<BR /><BR />De ingevulde gegevens worden geregistreed in verband met de verstrekking en/of verzending van toegangsbewijzen en het innen van betalingen.");
+define("user_notice","Vul de onderstaande velden in om kaarten te bestellen en klik op 'Vervolgen'. Invoervelden met (*) zijn verplicht. De door de Stg. Valborg geregistreerde gegevens, met betrekking tot de naam, het adres en de woonplaats van de bezoeker, worden in verband met de verstrekking en/of verzending van toegangsbewijzen en het innen van betalingen, opgenomen in een registratie in de zin van de Wet Persoonsregistratie (WPR). Stg. Valborg is de houder van deze registratie. Een kopie van het aanmeldingsformulier ingevolge de WPR van deze registratie is op te vragen bij het bestuur van de stichting. <br />U kunt er ook voor kiezen om vaste klant te worden zodat u, bij een volgende bestelling, niet nogmaals de gegevens hoeft in te voeren. <i>De toegang voor vaste klanten vindt u onderaan deze pagina.</i>");
 define("user_organizer_ids","Organisator");
 define("user_phone","Telefoon");
 define("user_prefs","Eigenschappen");
@@ -857,50 +857,41 @@ define("zip","Postcode");
 define("zone","Zone");
 
 #New 8-8-2008
-define('category_new_size_title', 'Aanpassen aantal zitplaatsen');
-define('category_new_size','Aantal zitplaatsen');
-define("number_taken","Verkocht aantal stoelen");	//added lou5
-define("event_group_type","Groep soort");//added lou5
+define("number_taken","Seats sold");	//added lou5
+define("event_group_type","Group Type");//added lou5
 define("export_templates","Templates");		//added lou5
-define("export_template_id","Gekozen template");	//added lou5
-define("export_template_file","Bestandsnaam");		//added lou5
-define("export_submit","Export");		//added lou5
-define("export_entrant_title","Export orders");		//added lou5
+define("export_template_id","Choose Template ");	//added lou5
+define("export_template_file","Filename");		//added lou5
+define("export_submit","Export It!");		//added lou5
+define("export_entrant_title","Export Orders");		//added lou5
 define("export_entrant","Orders");		//added lou5
-define("export_entrant_event","Kies een uitvoering");		//added lou5
-define("export_entrant_NotSended","Niet verzonden");		//added lou5
-define("handling_expires_min","aantal minuten totdat de transactie verloopt");	//added lou5
-define("import_csv_file","Bestandsnaam");		//added lou5
-define("langauge","Taal");		//added lou5
-define("organizer_state","Provincie");	//added lou5
-define("organizer_country","Land");	//added lou5
-define("ort_state","Provincie");	//added lou5
-define("pmz_id","Record nummer");		//added lou5
-define("pmz_ident","Zone code");	//added lou5
-define("pmz_pm_id","Stoel code");	//added lou5
-define("pm_paypal_business","PayPal account");	//added lou5
+define("export_entrant_event","Choose Event");		//added lou5
+define("export_entrant_NotSended","Not sent");		//added lou5
+define("handling_expires_min","Minutes until handling expires");	//added lou5
+define("import_csv_file","Filename");		//added lou5
+define("langauge","Language Name");		//added lou5
+define("organizer_state","State");	//added lou5
+define("organizer_country","Country");	//added lou5
+define("ort_state","State");	//added lou5
+define("pmz_id","Record#");		//added lou5
+define("pmz_ident","Zone#");	//added lou5
+define("pmz_pm_id","Seat Chart ID #");	//added lou5
+define("pm_paypal_business","PayPal Account");	//added lou5
 define("pm_paypal_url","PayPal url");	//added lou5
-define("show_text_stats","Tekst"); //added lou5
-define("show_grafik_stats","Grafisch"); //added lou5
+define("show_text_stats","Text"); //added lou5
+define("show_grafik_stats","Graph"); //added lou5
 
-define('unpublish_event_group','Niet gepubliceerde groep' );
-define('unpublish','Niet gepubliceerd');
-define('publish_event_group', "Gepubliceerde groep");
-define('publish','Publiceren' );
+define('unpublish_event_group','unpublish_event_group' );
+define('unpublish','unpublish');
+define('publish_event_group', 'publish_event_group');
+define('publish','publish' );
 define('Archive','Archief' );
-define('Reservated','Gereserveerd');
-define('category_status','categorie status' );
+define('Reservated','Reservated');
+define('category_status', 'category_status' );
+define('category_new_size_title', 'category_new_size_title');
+define('category_new_size','category_new_size');
 
-define('act_oke',     'Uw account is nu geactiveerd. Log nu in.');
-define('act_error',   'Uw account kon niet geactiveerd worden. Controleer de link of neem kontakt op met de systeem administrator.');
-define('act_uselink', 'Gebruik de link, die per email is verzonden, om uw account te activeren.');
-
-#New 20-8-2008
-define('eventlist_info','Klik op de datum om kaarten te bestellen.');
-define("shop_info2","Voor dit concert kunnen geen kaarten worden gereserveerd.<BR /><BR />Route informatie is beschikbaar door de locatie te klikken. ");
-define("cart_total","Aantal kaarten:")
-define("user_address2","Adres");   //in plaats van define("user_address","Adres");
-define('user_nospam',"Veiligheidscode");
-define("nospam_info","Neem de veiligheidscode over vanuit het plaatje hiernaast.");
-define
+define('act_oke',     'Your account is now active. You may now log in.');
+define('act_error',   'Your account could not be activated. Please re-check the link or contact the system administrator.');
+define('act_uselink', 'Please use the link that has been sent to your email address.');
 ?>

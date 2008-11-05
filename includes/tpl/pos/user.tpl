@@ -36,64 +36,65 @@
 <table width='380' border='0' cellspacing='1' cellpadding='5' align='center' >
 <tr> 
 <td colspan="2" class="title">    
-    {#pers_info#}
+    {!pers_info!}
 </td>
 </tr>
 <tr> 
 <td class='user_item'>     
-    {#lastname#}
+    {!lastname!}
 </td>
   <td><input type='text' name='user_lastname' size='30' maxlength='50' value='{$user_data.user_lastname}'><span class='error'>{$user_errors.user_lastname}</span></td>
 </tr>
 <tr> 
   <td class='user_item'>     
-    {#firstname#}
+    {!firstname!}
 </td>
   <td><input type='text' name='user_firstname' size='30'  maxlength='50' value='{$user_data.user_firstname}'><span class='error'>{$user_errors.user_firstname}</span></td>
 </tr>
 <tr> 
   <td class='user_item'>    
-    {#address#}
+    {!address!}
 </td>
   <td><input type='text' name='user_addresse' size='30'  maxlength='75' value='{$user_data.user_addresse}'><span class='error'>{$user_errors.user_addresse}</span></td>
 </tr>
 <tr> 
   <td class='user_item'> 
-    {#address#} 2
+    {!address1!}
 </td>
   <td><input type='text' name='user_addresse1' size='30'  maxlength='75' value='{$user_data.user_addresse1}'><span class='error'>{$user_errors.user_addresse1}</span></td>
 </tr>
 <tr> 
   <td class='user_item'>    
-    {#zip#}
+    {!zip!}
 </td>
   <td><input type='text' name='user_zip' size='8'  maxlength='20' value='{$user_data.user_zip}'><span class='error'>{$user_errors.user_zip}</span></td>
 </tr>
 <tr> 
   <td class='user_item'>     
-    {#city#}
+    {!city!}
 </td>
   <td><input type='text' name='user_city' size='30'  maxlength='50' value='{$user_data.user_city}'><span class='error'>{$user_errors.user_city}</span></td>
 </tr>
 <tr>
 <td class='user_item'>    
-    {#country#}
+    {!country!}
 </td>
 <td>
+{country assign=clist}
 <select name='user_country'>
-    {countries first=$_SHOP_lang}
-      <option value="{$country.key}" > {$country.name}</option>
-    {/countries}
+{foreach key=code item=name from=$clist}
+<option value='{$code}'>{$name}</option>
+{/foreach}
 </select><span class='error'>{$user_errors.user_country}</span>
    </td></tr>	
 <tr>
 <td class='user_item'>    
-   {#without_fee#}</td>
+   {!without_fee!}</td>
 <td  class='user_value'>
 <input type='checkbox' class='checkbox' name='no_fee' value='1'>
 </td>
 </tr>
  <tr> 
-  <td colspan='2' align='center'><input type='submit' name='submit_info' value='{#continue#}'></td>
+  <td colspan='2' align='center'><input type='submit' name='submit_info' value='{!continue!}'></td>
 </tr>
 </table>

@@ -38,22 +38,22 @@
 </td>
 </tr>
 <tr>
-	<td class="help">First Check you have the right date, Then choose catergory of seats, this just determins the cost and area. Then click continue.
+	<td class="help">{!pos_checkdate!}
 	</td>
 </tr>
 <tr><td  class='event_info_item' >  {$shop_event.event_date|date_format:"%a %e %b %Y"} {$shop_event.ort_name}
 {if $shop_event.ort_phone}
-    {#phone#}
+    {!phone!}
 {$shop_event.ort_phone}
 {/if}
 {if $shop_event.ort_url}
-    {#homepage#}
+    {!homepage!}
 <a class=event_url href='{$shop_event.ort_url}'>{$shop_event.ort_url}</a>
 {/if}
 </td></tr>
 <tr><td  class='event_info_item' > 
-    {#doors_open#}{$shop_event.event_open|date_format:" %Hh%M"}
-    {#event_start#}
+    {!doors_open!}{$shop_event.event_open|date_format:" %Hh%M"}
+    {!event_start!}
 {$shop_event.event_time|date_format:" %Hh%M"}</td></tr>
 
 <tr><td class='event_description_big'>{$shop_event.event_text}</td></tr>
@@ -63,7 +63,7 @@
 <table width='100%' border='0' cellpadding='5' class='cat_details'>
 <tr>
 <td colspan='5' class='title'>
-    {#categories_and_prices#}
+    {!categories_and_prices!}
 </td></tr>
 
 
@@ -72,11 +72,11 @@
 
   {if ($cat_num-1) is div by 4}
     <tr><td class='cat_info_item'>
-    {#tickets#}
+    {!tickets!}
 </td>
     {capture assign=prices_row}
       <tr><td class='cat_info_value'>
-    {#price#}
+    {!price!}
 </td>
     {/capture} 
   {/if}
@@ -93,7 +93,7 @@
           {/if}
     {else}
       <img src='images/red.png'>    
-      {#category_sold#}
+      {!category_sold!}
     {/if}  
     </td>
   {/capture}   
@@ -126,7 +126,7 @@
 {/if}    
 <tr>
 <td colspan='5' align='right' class='note'>    
-    {#prices_in#}&nbsp;{$organizer_currency} 
+    {!prices_in!}&nbsp;{$organizer_currency}
 
 </td></tr>
 </table><br>
@@ -162,7 +162,7 @@ function setQtyShown(){
 <form name='catselect' method='get' action='shop.php'>
    <table  class='cat_choice' cellpadding='5' width='100%' border='0'>
    <tr><td class='title' colspan='3' >    
-    {#select_category#}
+    {!select_category!}
 </td></tr>
 <tr><td width='50%' align='right'><select name='category_id' onchange='setQtyShown()' id='cat_select'>
    {$opt_array}
@@ -171,7 +171,7 @@ function setQtyShown(){
 <div id='qqq'  align='left'>x&nbsp;<input type='text' name='qty' size=4 maxlength=2>
 </div></td>
 <td  align='left' class='category_value'>
-<input type='submit' name='submit_cat' value='{#continue#}'></td></tr>
+<input type='submit' name='submit_cat' value='{!continue!}'></td></tr>
 </table>
 <input type='hidden' name='event_id' value='{$smarty.get.event_id}'>
 </form><br>

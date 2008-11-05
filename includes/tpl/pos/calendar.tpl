@@ -35,22 +35,22 @@
 <table cellpadding='3' width='100%'>
   <tr>
   	<td colspan='4' class='title'>
-	{#calendar#}
+	{!calendar!}
   	</td>
   </tr>
   <tr>
   	<td colspan='4' class='help'>
-	To Book/Reserve Tickets, select an event from the list below.
+      {!pos_calender_info!}
   	</td>
   </tr>
-{event start_date=$smarty.now|date_format:"%Y-%m-%d" ort='on' sub='on' stats='on' order="event_date,event_time"}
-{assign var='month' value=$shop_event.event_date|date_format:"%B"}
+  {event start_date=$smarty.now|date_format:"%Y-%m-%d" ort='on' sub='on' stats='on' order="event_date,event_time"}
+  {assign var='month' value=$shop_event.event_date|date_format:"%B"}
   {if $month neq  $month1}
-  {assign var='style' value="style='border-top:#45436d 1px solid; padding-top:10px;'"}
-  <tr>
-  	<td colspan='6' class='title' {$style}>{$shop_event.event_date|date_format:"%B %Y"}</td>
-  </tr>
-  {assign var='month1' value=$month}
+    {assign var='style' value="style='border-top:#45436d 1px solid; padding-top:10px;'"}
+      <tr>
+      	<td colspan='6' class='title' {$style}>{$shop_event.event_date|date_format:"%B %Y"}</td>
+      </tr>
+    {assign var='month1' value=$month}
   {/if}
   <tr >
 	<td class='calendar'><a class='cal_link' href='shop.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a></td>
@@ -58,14 +58,14 @@
 	<td class='calendar'>{$shop_event.ort_name}</td>
 	<td class='calendar'>{$shop_event.ort_city}</td>
 	<td class='calendar'>
-	{if $shop_event.es_free gt 0}
+  	{if $shop_event.es_free gt 0}
   	  {if $shop_event.es_free/$shop_event.es_total ge 0.2}
-    	<img src='images/green.png'> {$shop_event.es_free}/{$shop_event.es_total}
+      	<img src='images/green.png'> {$shop_event.es_free}/{$shop_event.es_total}
   	  {else}
-    	<img src='images/orange.png'> {$shop_event.es_free}/{$shop_event.es_total}
+      	<img src='images/orange.png'> {$shop_event.es_free}/{$shop_event.es_total}
 	  {/if}
 	{else}
-  	  <img src='images/red.png'> event_sold_out
+    <img src='images/red.png'> {!cat_sold_out!}
 	{/if}
 	</td>
 	<td>{if $shop_event.event_mp3}<a href='{$shop_event.event_mp3}'><img src='images/audio-small.png' border='0'></a> {/if}</td>

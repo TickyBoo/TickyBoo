@@ -34,12 +34,12 @@
  *}{include file='header.tpl'}
 <div class="div_midtone">
 <table class="table_midtone">
-<tr><td class="title">{#pay_accept#}<br><br></td></tr>
+<tr><td class="title">{!pay_accept!}<br><br></td></tr>
 <tr><td>
-{#pay_accept#}!<br>{#order_id#}:
+{!pay_accept!}!<br>{!order_id!}:
 
 <b>{$smarty.post.item_number}.</b><br>
-{#trx_id#} 
+{!trx_id!}
 <b>{$smarty.post.txn_id}</b>
 </td></tr>
 </table>

@@ -1,43 +1,34 @@
 {*
 %%%copyright%%%
- * phpMyTicket - ticket reservation system
- * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ * Fusion Ticket System
+ * Based on phpMyTicket - ticket reservation system
+ * Orginal Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
  *
- * This file is part of phpMyTicket.
+ * Copyright (C) 2007-2008 Christopher Jenkins
+ *
+ * This file is part of fusion ticket, it may be modified or used in any senario but
+ * not as your own. This file is free and open source any distrubution of your own
+ * will have to apply to the GNU rules as well.
  *
  * This file may be distributed and/or modified under the terms of the
  * "GNU General Public License" version 2 as published by the Free
  * Software Foundation and appearing in the file LICENSE included in
  * the packaging of this file.
  *
- * Licencees holding a valid "phpmyticket professional licence" version 1
- * may use this file in accordance with the "phpmyticket professional licence"
- * version 1 Agreement provided with the Software.
  *
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
  * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
- *
- * The "phpmyticket professional licence" version 1 is available at
- * http://www.phpmyticket.com/ and in the file
- * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
- * info@phpmyticket.com.
- * Further contact information is available at http://www.phpmyticket.com/
- *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
- * clear to you.
- 
- *}{include file="header.tpl" name=#handlings#}
+ *}{include file="header.tpl" name=!handlings!}
 <div class="div_midtone">
-<table class="table_midtone">
-<tr><td class='error'>
-{#pay_cancel#}
-</td></tr>		
-
-</table></div>
+  <table class="table_midtone">
+    <tr><td class='error'>
+      {!pay_cancel!}
+    </td></tr>
+  </table>
+</div>
 {include file="footer.tpl"}
 

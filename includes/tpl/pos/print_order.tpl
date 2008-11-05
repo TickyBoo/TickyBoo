@@ -33,10 +33,10 @@
  
  *}<iframe height='0' width='0' src='print.php?order_id={$smarty.post.order_id}'></iframe>
 <center><div class='printer'><img src='images/printing.gif'><br>
-{#tickets_printing#}</div><br>
+{!tickets_printing!}</div><br>
 <a href='print.php?order_id={$smarty.post.order_id}'  class='shop_link' target='printer'>
-{#print_order#}</a><br>
+{!print_order!}</a><br>
 <a href='shop.php'  class='shop_link'>
-{#order_more_tickets#}
+{!order_more_tickets!}
 </a></center>
      

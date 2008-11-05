@@ -34,17 +34,17 @@
  *}
  <form action='shop.php' method='post'>
 <table>
-<div class="help">Either Create a new user, or select an exsiting user if they have already purchased from us before.</div>
+<div class="help">{!pos_selectuser!}</div>
 	<tr>
 		<td align="left">
 			<table width='50%' border='0' cellspacing='1' cellpadding='5' align='left' style='padding-left:50px;'>
 				{include file="user_form.tpl"}
 				<tr>
-					<td class='user_item'>{#without_fee#}</td>
+					<td class='user_item'>{!without_fee!}</td>
 					<td  class='user_value'><input type='checkbox' class='checkbox' name='no_fee' value='1'></td>
 				</tr>
 				<tr>
-					<td class='user_item'>Free / Complimentary Tickets</td>
+					<td class='user_item'>{!pos_freeticket!}s</td>
 					<td  class='user_value'><input type='checkbox' class='checkbox' name='no_cost' value='1'></td>
 				</tr>
 				<tr>
@@ -60,12 +60,12 @@
 			<table>
 				<tr>
 					<td colspan="2" class="title">
-						Exsisting Users
+						{pos_exsistingusers!}
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" class='user_item' valign="left">
-						List of Box office users:
+						{!pos_userlist!}
 					</td>
 				</tr>
 				<tr>
@@ -74,7 +74,7 @@
 					<td valign="right">
 						{assign var=users value=$user_auth->get_users_f() }
 						<select size="28" name="exst_user">
-						<option value="1" selected="selected">New User</option>
+						<option value="1" selected="selected">{!new_newuser!}</option>
 						{$users}
 						</select>
 					</td>

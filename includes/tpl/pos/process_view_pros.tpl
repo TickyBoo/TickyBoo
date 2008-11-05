@@ -28,7 +28,7 @@
 <table width='700'>
   <tr>
   	<td class='title' colspan='5' align='center'>
-    {#processed_unsent#}
+    {!processed_unsent!}
 	</td>
   </tr>
   {order->order_list first=1 length=1 status="pros" not_status="send"}
@@ -40,7 +40,7 @@
 	
   	  <table  cellspacing='1' cellpadding='4' border='0'>
   		<tr>
-		  <td class='title'>{#order_id#} {$shop_order.order_id}</td>
+		  <td class='title'>{!order_id!} {$shop_order.order_id}</td>
   		  <td align='right'>
 			<table width='100' >
   			  <tr>
@@ -60,34 +60,34 @@
 		  <td class='subtitle'>{$next_order_id}</td>
 		</tr>
   		<tr>
-		  <td class='admin_info'>{#number_tickets#}</td>
+		  <td class='admin_info'>{!number_tickets!}</td>
 		  <td class='subtitle'>{$shop_order.order_tickets_nr}</td>
 		</tr>
   		<tr>
-		  <td class='admin_info'>{#user#} {#id#}</td>
+		  <td class='admin_info'>{!user!} {!id!}</td>
 		  <td class='subtitle'>{$shop_order.order_user_id}</td>
 		</tr>
 		<tr>
-		  <td class='admin_info'>{#total_price#}</td>
+		  <td class='admin_info'>{!total_price!}</td>
 		  <td class='subtitle'>{$shop_order.order_total_price|string_format:"%1.2f"} {$organizer_currency}</td>
 		</tr>
 		<tr>
-		  <td class='admin_info'>{#order_date#}</td>
+		  <td class='admin_info'>{!order_date!}</td>
 		  <td class='subtitle'>{$shop_order.order_date}</td>
 		</tr>
 		<tr>
-		  <td class='admin_info'>{#status#}</td>
+		  <td class='admin_info'>{!status!}</td>
 		  <td class='subtitle'>
 		  {if $shop_order.order_status eq "res"}
-		    <font color='orange'>{#reserved#}</font>
+		    <font color='orange'>{!reserved!}</font>
 		  {elseif $shop_order.order_status eq "ord"}
-		    <font color='blue'>{#ordered#}</font>
+		    <font color='blue'>{!ordered!}</font>
 		  {elseif $shop_order.order_status eq "pros"}
-		    <font color='blue'>{#processed#}</font>
+		    <font color='blue'>{!processed!}</font>
 		  {elseif $shop_order.order_status eq "cancel"}
-		    <font color='#cccccc'>{#cancelled#}</font>
+		    <font color='#cccccc'>{!cancelled!}</font>
 		  {elseif $shop_order.order_status eq "reemit"}
-		    <font color='#ffffcc'>{#reemitted#}</font>
+		    <font color='#ffffcc'>{!reemitted!}</font>
 		    (<a href='shop.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
 		    {$shop_order.order_reemited_id}</a>)
 		  {/if}
@@ -112,22 +112,22 @@
 		</tr>
 		{/if}
 		<tr>
-		  <td class="admin_info">Payment {#status#}</td>
+		  <td class="admin_info">Payment {!status!}</td>
 		  <td class="subtitle">
 		  {if $shop_order.order_payment_status eq "none"}
 		    <font color="#FF0000">Not Paid</font>
 		  {elseif $shop_order.order_payment_status eq "payed"}
-		  	<font color='green'>{#paid#}</font>
+		  	<font color='green'>{!paid!}</font>
 		  {/if}
 		  </td>
 		</tr>
 		<tr>
-		  <td class="admin_info">Shipment {#status#}</td>
+		  <td class="admin_info">Shipment {!status!}</td>
 		  <td class="subtitle">
 		  {if $shop_order.order_shipment_status eq "none"}
-		  	<font color="#FF0000">Not {#sent#}</font>
+		  	<font color="#FF0000">Not {!sent!}</font>
 		  {elseif $shop_order.order_shipment_status eq "send"}
-		  	<font color='green'>{#sent#}</font>
+		  	<font color='green'>{!sent!}</font>
 		  {/if}
   	  	  </td>
 		</tr>
@@ -136,47 +136,47 @@
 	<td width="50%" valign="top">
  	  <table width="100%">
 		<tr> 
-	 	  <td class="title" valign="top">User Information</td>
+	 	  <td class="title" colspan=2 valign="top">{!pers_info!}</td>
 		  <td class="title" valign="top">&nbsp;</td>
 		</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">First Name</td>
+		  <td class="admin_info" valign="top">{!user_firstname!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_firstname}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">Second Name</td>
+		  <td class="admin_info" valign="top">{!user_lastname!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_lastname}</td>
 	  	</tr>
 		<tr>
-		  <td class="admin_info" valign="top">Address </td>
+		  <td class="admin_info" valign="top">{!user_Address!} </td>
 		  <td class="sub_title" valign="top">{$user_order.user_address}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">Address 2</td>
+		  <td class="admin_info" valign="top">{!user_Address1!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_address1}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">ZIP</td>
+		  <td class="admin_info" valign="top">{!user_zip!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_zip}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">City</td>
+		  <td class="admin_info" valign="top">{!user_city!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_city}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">State</td>
+		  <td class="admin_info" valign="top">{!user_state!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_state}</td>
 	  	</tr>
 		<tr>
-		  <td class="admin_info" valign="top">Country</td>
-		  <td class="sub_title" valign="top">{$user_order.user_country}</td>
+		  <td class="admin_info" valign="top">{!user_country!}</td>
+		  <td class="sub_title" valign="top">{include file="countries.tpl" code=$user_data.user_country}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">Phone</td>
+		  <td class="admin_info" valign="top">{!user_phone!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_phone}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">Email</td>
+		  <td class="admin_info" valign="top">{!user_email!}</td>
 		  <td class="sub_title" valign="top">{$user_order.user_email}</td>
 	  	</tr>
  	  </table>
@@ -187,10 +187,10 @@
   	<td colspan="2">
   	  <table width='100%' bgcolor="lightgrey">
   		<tr>
-  		  <td width='33%' align="left"><a href="shop.php?process=processed">Click to go back to list of Processed Orders</a></td>
-  		  <td width='34%' align="center"><a href='javascript:if(confirm("The tickets have there ID and Order ID on them and are ready to to be posted?")){literal}{location.href="shop.php?process=processed&order_id={/literal}{$shop_order.order_id}{literal}&action=send";}{/literal}'>
-      				Click To Set to Sent!</a></td>
-  		  <td width='33%' align="right"><a href="shop.php?process=processed&order_id={$next_order_id}">Next Processed Order</a></td>
+  		  <td width='33%' align="left"><a href="shop.php?process=processed">{!pos_gobacktoorders!}</a></td>
+  		  <td width='34%' align="center"><a href='javascript:if(confirm("{!pos_ticketready!}")){literal}{location.href="shop.php?process=processed&order_id={/literal}{$shop_order.order_id}{literal}&action=send";}{/literal}'>
+      				{!pos_clicktosent!}</a></td>
+  		  <td width='33%' align="right"><a href="shop.php?process=processed&order_id={$next_order_id}">{!pos_nextorder!}</a></td>
 		</tr>
 	  </table>
 	</td>
@@ -200,16 +200,16 @@
 	
   	  <table width='100%' cellspacing='1' cellpadding='4'>
 		<tr>
-		  <td class='title' colspan='8'>{#tickets#}<br></td>
+		  <td class='title' colspan='8'>{!tickets!}<br></td>
 		</tr>   
 		<tr>
-		  <td class='subtitle'>{#id#}</td>
-		  <td class='subtitle'>{#event#}</td>
-		  <td class='subtitle'>{#category#}</td>
-		  <td class='subtitle'>{#zone#}</td>
-		  <td class='subtitle'>{#seat#}</td>
-		  <td class='subtitle'>{#discount#}</td>
-		  <td class='subtitle'>{#price#}</td>
+		  <td class='subtitle'>{!id!}</td>
+		  <td class='subtitle'>{!event!}</td>
+		  <td class='subtitle'>{!category!}</td>
+		  <td class='subtitle'>{!zone!}</td>
+		  <td class='subtitle'>{!seat!}</td>
+		  <td class='subtitle'>{!discount!}</td>
+		  <td class='subtitle'>{!price!}</td>
 		</tr>
 		{order->tickets order_id=$shop_order.order_id}
 		{counter assign='row' print=false}
@@ -223,13 +223,13 @@
 		  {if not $shop_ticket.category_numbering or $shop_ticket.category_numbering eq "both"}
 		  	{$shop_ticket.seat_row_nr}  -  {$shop_ticket.seat_nr}
 		  {elseif $shop_ticket.category_numbering eq "rows"}
-		  	{#row#}{$shop_ticket.seat_row_nr}
+		  	{!row!}{$shop_ticket.seat_row_nr}
 		  {else}
 		  	---
 		  {/if}</td>
 		  <td class='admin_info'>{$shop_ticket.discount_name}</td>
 		  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
-		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{#cancel_ticket#}  {$shop_ticket.seat_id}?")){literal}{location.href="shop.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
+		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="shop.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
 		</tr>
 		{/order->tickets}
 	  </table>

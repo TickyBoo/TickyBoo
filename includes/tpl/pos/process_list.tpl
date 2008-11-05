@@ -32,7 +32,7 @@
 	  <table width='100%' cellspacing='1' cellpadding='5' border=0>
 		<tr>
 		  <td class='title' colspan='5' align='center'>
-    		{#unprocessed_paid#}
+    		{!unprocessed_paid!}
 		  </td>
 		</tr>
     	<tr>
@@ -69,13 +69,13 @@
 		  	<input type='hidden' name='action' value='view_orders'>
 			<table border=0 width='100%' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
 			  <tr>
-			  	<td class='admin_info'>{#from#}</td>
+			  	<td class='admin_info'>{!from!}</td>
   				<td class='note'>
 				  <input type='text' name='fromd' value='{$smarty.get.fromd}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromm'])" > -
   				  <input type='text' name='fromm' value='{$smarty.get.fromm}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromy'])"> -
   				  <input type='text' name='fromy' value='{$smarty.get.fromy}' size='4' maxlength='4'> (dd-mm-yyyy)
   				</td>
-				<td class='admin_info'>{#to#}</td>
+				<td class='admin_info'>{!to!}</td>
   				<td class='note'>
 				  <input type='text' name='tod' value='{$smarty.get.tod}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['tom'])" > - 
 				  <input type='text' name='tom' value='{$smarty.get.tom}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['toy'])"> -
@@ -91,11 +91,10 @@
 		</tr>
 		<tr class='subtitle'>
 		  <td>ID</td>
-		  <td>{#total_price#}</td>
-		  <td>{#tickets#}</td>
-		  <td>Time stamp</td>
-		  <td>Actions</td>
-		  <!--<td>{#actions#}</td>-->
+		  <td>{!total_price!}</td>
+		  <td>{!tickets!}</td>
+		  <td>{!timestamp!}</td>
+		  <td>{!actions!}</td>
 		</tr>
 		{assign var='length' value='15'}
 
@@ -135,10 +134,10 @@
 		  <td class='admin_info'>{$shop_order.order_date}</td>
 		  <!--<td class='admin_info'></td>-->
 		  <td class='admin_info' align="right">
-		  	<a href='shop.php?process=paid&order_id={$shop_order.order_id}'>Click to View and Process</a> 
+		  	<a href='shop.php?process=paid&order_id={$shop_order.order_id}'>{!pos_clicktoview!}</a>
 		  {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
 			<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a> 
-			<a href='javascript:if(confirm("{#cancel_order#} {$shop_order.order_id}?")){literal}{location.href="shop.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
+			<a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="shop.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
 			<img border='0' src='images/trash.png'></a>
 		  {else}
 		  </td>
@@ -153,9 +152,9 @@
 
 		{if $smarty.get.first gt 0}
 		  {if ($smarty.get.first-$length) lt 0}
-		    <a href='shop.php?action=view_orders&first=0'>&lt;&lt;&lt; {#prev#}</a>
+		    <a href='shop.php?action=view_orders&first=0'>&lt;&lt;&lt; {!prev!}</a>
 		  {else}
-		    <a href='shop.php?action=view_orders&first={$smarty.get.first-$length}&{$dates}'>&lt;&lt;&lt; {#prev#}</a>
+		    <a href='shop.php?action=view_orders&first={$smarty.get.first-$length}&{$dates}'>&lt;&lt;&lt; {!prev!}</a>
 		  {/if}
 		{/if}
 		</td>
@@ -170,7 +169,7 @@
 		</td>
 		<td align='right'  width='33%'>
 		{if $count eq $length}
-		  <a href='shop.php?action=view_orders&first={$smarty.get.first+$length}&{$dates}'>{#next#} &gt;&gt;&gt;</a>
+		  <a href='shop.php?action=view_orders&first={$smarty.get.first+$length}&{$dates}'>{!next!} &gt;&gt;&gt;</a>
 		{/if}
 		</td>
 	  </tr>

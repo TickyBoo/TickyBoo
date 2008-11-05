@@ -25,9 +25,8 @@
  *}
  <table cellpadding='3' width='100%'>
 
-  <tr><td colspan='5' class='title'>
-Home Page
-  </td>
+  <tr>
+    <td colspan='5' class='title'>{!pos_homepage!}</td>
   </tr>
   <tr>
   	<td class="sub_title" width="45%">Currently Running Event groups</td>

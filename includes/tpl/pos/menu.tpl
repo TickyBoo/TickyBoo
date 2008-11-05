@@ -44,48 +44,30 @@
 <table width="150" border="0" cellspacing="0" cellpadding="0" class='menu'>
 <tr> <td height="24" class="menu_td">
      <a class='shop_link' href='calendar.tpl'>
-    {fr}Calendrier{/fr}
-    {de}Kalender{/de}
-    {it}Calendario{/it}
-    {en}Calendar{/en}
+     {!posmenu_calendar!}
      <img src="images/link.png" border='0' valign='bottom'></a>
 </td></tr>
 <tr> <td height="24" class="menu_td">
      <a class='shop_link' href='event_groups.tpl'>
-    {fr}Festivals{/fr}
-    {de}Festivals{/de}
-    {it}Festival{/it}
-    {en}Festivals{/en}
+    {!posmenu_festivals!}
      <img src="images/link.png" border='0' valign='bottom'></a>
 </td></tr>
 </table>
 <table width="150" border="0" cellspacing="0" cellpadding="0" class='menu'>
 
 <tr> <td height="24" class="menu_td">
-     <a class='shop_link' href='conditions.tpl'>
-    {fr}Commander?{/fr}
-    {de}Wie Bestellen?{/de}
-    {it}Ordinare?{/it}
-    {en}How to?{/en}
-     
-     
+     <a class='shop_link' href='conditions.tpl'>{!posmenu_howto!}
      <img src="images/link.png" border='0' valign='bottom'></a>
 </td></tr>
 <tr> <td height="24" class="menu_td">
      <a class='shop_link' href='about.tpl'>    
-    {fr}A propos{/fr}
-    {de}&Uuml;ber uns{/de}
-    {it}Profilo{/it}
-    {en}About{/en}
+    {!posmenu_about!}
 <img src="images/link.png" border='0' valign='bottom'></a>
 </td></tr>
 
 <tr> <td height="24" class="menu_td">
      <a class='shop_link' href='contact.tpl'>    
-    {fr}Contact{/fr}
-    {de}Kontakt{/de}
-    {it}Contatto{/it}
-    {en}Contact{/en}
+    {!posmenu_contact!}
 <img src="images/link.png" border='0' valign='bottom'></a>
 </td></tr>
 </table>
@@ -101,29 +83,21 @@
 {if $user->logged}
 <table width="150" border="0" cellspacing="0" cellpadding="0" class='menu'>
 <tr> <td height="24" class="menu_login">
-  {fr}Bienvenue{/fr}
-  {de}Willkommen{/de}
-  {it}Benvenuto{/it}
-  {en}Welcome{/en}
-  {user->user_firstname} {user->user_lastname}!
-  <a href='shop.tpl?action=logout'>{en}logout{/en}{de}logout{/de}{it}logout{/it}{fr}<font size='-2'>Tcho, je me casse...</font>{/fr}</a>
+  {!posmenu_welcome!} {user->user_firstname} {user->user_lastname}!
+  <a href='shop.tpl?action=logout'>{!logout!}</a>
 </td></tr></table>
 {else}
-<form method=post action=shop.tpl?action=login>
+<form method='post' action='shop.tpl?action=login'>
 <table width='150' border="0" cellspacing="0" cellpadding="0"  class='menu'>
-   <tr><td class="menu_login">    
-    {fr}Email{/fr}
-    {de}E-Mail{/de}
-    {it}Email{/it}
-    {en}Email{/en}
-</td><td align='left'><input type=input name=username size=8></td></tr> 
-   <tr><td  class="menu_login">    
-    {fr}Mot de passe{/fr}
-    {de}Passwort{/de}
-    {it}Parola d'accesso{/it}
-    {en}Password{/en}
-</td><td align='left'><input type=password name=password size=8></td></tr>
-   <tr><td colspan=2 align='center'><input type=submit value='{fr}entrer{/fr}{de}login{/de}{it}entrare{/it}{en}login{/en}'></td></tr>
+   <tr>
+     <td class="menu_login">{!email!}</td>
+     <td align='left'><input type='input' name='username' size=8></td>
+   </tr>
+   <tr>
+     <td  class="menu_login">{!password!}</td>
+     <td align='left'><input type='password' name='password' size=8></td>
+   </tr>
+   <tr><td colspan=2 align='center'><input type='submit' value='{!login!}'></td></tr>
 </table>
 </form>
 {/if} 
@@ -140,23 +114,14 @@
       <a href='shop.tpl?action=view_cart' class='shop_link'>
       <img src="images/caddie_full1.png" border='0'>
     {/if}
-    {fr}Panier d'achats{/fr}
-    {de}Einkaufskorb{/de}
-    {en}Shopping cart{/en}
-    {it}Carrello{/it}</a>
+    {!shoppingcart!}</a>
     </td>
   </tr>
   <tr> 
     
    {if $cart->is_empty_f() }
-       <td valign="top" class='cart_menu'>
-        {fr}Panier vide{/fr}
-	{de}Leerer Korb{/de}
-	{en}Cart empty{/en}
-	{it}Carrello vuoto{/it}
-       </td>
-      
-    {else}
+       <td valign="top" class='cart_menu'>{!Cart empty!}</td>
+   {else}
       {assign var="cart_overview" value=$cart->overview_f() }
        
        
@@ -178,11 +143,14 @@
 
 <table width="100%" border="0" cellspacing="0" cellpadding="5" class='menu_langs'>
   <tr> 
-    <td><div align="center">
+    <td>
+      <div align="center">
         <a href='shop.tpl?setlang=de' class='langs_link'>[de]</a> 
-	<a href='shop.tpl?setlang=fr' class='langs_link'>[fr]</a>
-	<a href='shop.tpl?setlang=en' class='langs_link'>[en]</a>
-	<a href='shop.tpl?setlang=it' class='langs_link'>[it]</a></div></td>
+      	<a href='shop.tpl?setlang=fr' class='langs_link'>[fr]</a>
+      	<a href='shop.tpl?setlang=en' class='langs_link'>[en]</a>
+      	<a href='shop.tpl?setlang=it' class='langs_link'>[it]</a>
+      </div>
+    </td>
   </tr>
 </table>
 <br><br>

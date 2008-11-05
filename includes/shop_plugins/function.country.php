@@ -1,4 +1,5 @@
-{*
+<?php
+/*
 %%%copyright%%%
  * phpMyTicket - ticket reservation system
  * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
@@ -31,34 +32,28 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}<table  width='100%' border='0' cellspacing='0' cellpadding='1'
-  style='padding-left:5px;'>
-<tr><td class='title' colspan='2'>
-    {!address!}</a>
-</td></tr>
-<tr><td class='user_address_td'>{user_auth->user_firstname} 
- {user_auth->user_lastname}</td></tr>
- <tr><td class='user_address_td'>{user_auth->user_address}</td></tr>
- {if $user_auth->user_address1}
- <tr><td class='user_address_td'>{user_auth->user_address1}</td></tr> 
- {/if}
-<tr><td class='user_address_td'>{user_auth->user_zip} {user_auth->user_city}</td></tr>
-<tr><td class='user_address_td'>{country code=$user_auth->user_country}</td></tr>
-<tr><td class='user_address_td'>{user_auth->user_email}</td></tr></table>
-<br><br><form action='shop.php' method='GET'>
-<table width='100%' border='0' cellspacing='0' cellpadding='3' >
-<tr><td class='title' colspan='2' >
-    {!preferences!}</a>
-</td></tr>
-<tr><td width='300'>
-<select name='user_prefs' >
-<option value="pdt" {if $user_auth->user_prefs eq "pdt"} selected {/if}>{!send_orders_printer!}</option>
-<option value="pdf" {if $user_auth->user_prefs eq "pdf"} selected {/if}>{!open_with_acrobat!}</option>
-</select>
-</td><td align='left'>
-<input type='hidden' name='action' value='save_prefs'>
-<input type='submit' name='save' value='{!save!}'>
-</td></tr>
+ */
 
-</table>
-</form><br>
+If (file_exists("lang/countries_". $_SHOP->lang.".inc")){
+  include_once("lang/countries_". $_SHOP->lang.".inc");
+}else {
+  include_once("lang/countries_en.inc");
+}
+
+function smarty_function_country ($params,&$smarty) {
+  global $_COUNTRY_LIST; 
+  
+  if($params['code']){
+    $res=$_COUNTRY_LIST[$params['code']];
+  }else{
+    $res=&$_COUNTRY_LIST;
+  }
+  
+  if($params['assign']){
+    $smarty->assign($params['assign'],$res);
+  }else{
+    return $res;
+  }   
+}
+
+?>

@@ -30,24 +30,25 @@
  *}
 <table>
   <tr>
-	<td colspan=2>
- 	  <h2>Process Options</h2>
-	</td>
+  	<td colspan=2>
+   	  <h2>{!pos_processoptions!}</h2>
+  	</td>
   </tr>
   <tr>
-	<td>
-	  <p>List of <u>paid</u> <b>but</b> <u>Unprocessed</u> orders</p>
-	</td>
-	<td>
-	  <a href="shop.php?process=paid">Paid List</a>
-	</td>
+  	<td>
+      {!pos_listpaidunprocessed!}
+  	</td>
+  	<td>
+  	  <a href="shop.php?process=paid">{!Paid List</a>
+  	</td>
   </tr>
   <tr>
-	<td>
-	  <p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>
-	</td>
-	<td>
-	  <a href="shop.php?process=processed">UnSent List</a>
-	</td>
+  	<td>
+  	  {!pos_listpaidunsent!}
+  	  <p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>
+  	</td>
+  	<td>
+  	  <a href="shop.php?process=processed">{!pos_unsentlist!}</a>
+  	</td>
   </tr>
 </table>
