@@ -272,7 +272,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
     					echo "+";
     				}
     				if($fixe > 0){
-    					echo $fixe." ".$_SHOP->organizer_data->organizer_currency;
+    					echo $fixe." ".$_SHOP->organizer_data->currency;
     				}
   				echo "</td>\n";
   				echo "<td class='admin_list_item'>$handling_sale_mode</td>\n";

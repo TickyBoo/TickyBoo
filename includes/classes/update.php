@@ -32,9 +32,9 @@ class Update {
 	    global $_SHOP;
 	    
 	    $query="SELECT * FROM `ShopConfig` 
-		WHERE shopconfig_id = ".ShopDB::quotei($config_id)." 
+		WHERE shopconfig_id = ".ShopDB::quote($config_id)." 
 		AND shopconfig_organizer_id={$_SHOP->organizer_id} LIMIT 1";
-	    if($data=ShopDB::queryi_one_row($query)){
+	    if($data=ShopDB::query_one_row($query)){
 	      $this->_fill($data);
 	      return $this;
 	    }

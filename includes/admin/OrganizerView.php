@@ -89,8 +89,7 @@ function organizer_form (&$data, &$err,$title,$mode){
   $this->print_input('organizer_ort',$data, $err,25,100);
   $this->print_input('organizer_state',$data, $err,25,100);
   echo "<tr><td class='admin_name'>" . organizer_country . "</td><td class='admin_value'>";
-  $countries = new CountriesList();
-  $countries->printForm('organizer_country', $data['organizer_country'], $err);
+  $this->print_countrylist('organizer_country', $data['organizer_country'], $err);
   echo "</td></tr>";
 
   $this->print_input('organizer_phone',$data, $err,25,100 );

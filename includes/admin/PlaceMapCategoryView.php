@@ -377,7 +377,7 @@ class PlaceMapCategoryView extends AdminView {
     {
         if (isset($cat_id)) {
             $query = "SELECT * FROM Category_stat WHERE cs_category_id={$cat_id}";
-            if ($stat = ShopDB::queryi_one_row($query)) {
+            if ($stat = ShopDB::query_one_row($query)) {
                 $sold['number_taken'] = $stat['cs_total'] - $stat['cs_free'];
                 return $sold;
             }

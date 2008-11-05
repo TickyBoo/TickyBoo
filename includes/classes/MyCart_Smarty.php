@@ -74,25 +74,18 @@ class MyCart_Smarty {
 
   function add_item ($params, &$smarty){
     if (!$this->add_item_f($params['event_id'],$params['category_id'],$params['seats'],$params['mode'])){
-      //echo "smarty assign ".$this->up->error;
-      $smarty->assign("cart_error",$this->up->error);
+      $smarty->assign("cart_error",$this->error);
     }
   }
 
   function add_item_f ($event_id,$category_id,$seats,$mode='mode_web',$reserved=false){
-    require_once("page_classes/CartUpdate.php");
-
     if(!$mode){
       $mode='mode_web';
     }
-
-    $up=new CartUpdate($event_id,$category_id,$seats,$mode,$reserved);
-    $res=$up->check();
-    $this->up=$up;
+    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved);
     if($res){
       return $res;
     }else{
-      $this->error = $this->up->error;
       return FALSE;
     }
   }
@@ -257,7 +250,102 @@ class MyCart_Smarty {
 
   }
 
+  function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved){
 
+    require_once ("classes/Seat.php");
+    require_once ("classes/Event.php");
+    require_once ("classes/Category.php");
+
+  	// Loads event details
+    if(!$event=Event::load($event_id)){
+      return FALSE;
+    }
+    // Loads cat details
+    if(!$category=Category::load($category_id)){
+      return FALSE;
+    }
+
+    //checks the seating numbering.
+    if($category->category_numbering=='none'){
+      if(!($places>0)){
+        $this->error=places_empty;
+        return FALSE;
+      }
+      $newp = $this->places;
+    }else if($category->category_numbering=='rows' or
+             $category->category_numbering=='both' or
+	           $category->category_numbering=='seat')
+    {
+      if(!is_array($places) or empty($places)){
+        $this->error=places_empty;
+        return FALSE;
+      }
+      $newp = count($places);
+    }else{
+      user_error("unknown: category_numbering '{$category->category_numbering}' category_id '{$category->category_id}'");
+      return FALSE;
+    }
+
+    $max=$event->event_order_limit;
+
+    $cart=$_SESSION['cart'];
+
+    if($mode=='mode_web' and $max){
+      if(isset($cart)){
+
+        $has = $cart->total_places($this->event_id);
+        if(($has+$newp)>$max){
+          $this->error = event_order_limit_exceeded;
+      	  return FALSE;
+      	}
+      }else if($newp>$max){
+        $this->error = event_order_limit_exceeded;
+        return FALSE;
+      }
+    }
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category->category_numbering, $reserved)){
+
+	  //if cart empty create new cart
+      if(!isset($cart)){
+        $cart=new Cart();
+      }
+
+      // add place in cart.
+      $res=$cart->add_place($event_id, $category_id, $places_id);
+
+      $cart->load_info();
+
+      $_SESSION['cart']=$cart;
+      
+      return $res;
+
+    }else{
+      global $_SHOP;
+      if(is_array($_SHOP->place_error)){
+        switch($_SHOP->place_error['errno']){
+      	  case PLACE_ERR_OCCUPIED:
+      	    $this->error=places_occupied;
+      	    break;
+      	  case PLACE_ERR_TOOMUCH:
+      	    $this->error=places_toomuch;
+      	    if($this->mode=='mode_kasse'){
+      	      $this->error.=places_remains.": ".$_SHOP->place_error['remains'];
+      	    }
+      	    break;
+
+      	  case PLACE_ERR_INTERNAL:
+      	  default:
+      	    $this->error=internal_error.' ['.$_SHOP->place_error['place'].'] '. $_SHOP->db_error;
+      	    break;
+      	}
+      }else{
+        $this->error=internal_error.' ['.$_SHOP->place_error['errno'].']'. print_r($_SHOP->place_error, true);
+      }
+
+      return FALSE;
+    }
+  }
 
 }
 

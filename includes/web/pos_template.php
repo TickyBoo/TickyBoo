@@ -11,6 +11,17 @@ require_once("config/init_spoint.php");
 
 global $_SHOP;
 
+
+
+
+
+
+
+
+
+
+
+
 $smarty = new Smarty;
 
 $cart_s = new MyCart_Smarty($smarty);
@@ -18,13 +29,16 @@ $user_s = new UserAuth_Smarty($smarty);
 $user = new User_Smarty($smarty);
 $order = new Order_Smarty($smarty);
 
+
 $smarty->assign('_SHOP_user_root', $_SHOP->user_root);
 $smarty->assign('_SHOP_user_root_secured', $_SHOP->user_root_secured);
 $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
+$smarty->assign('_SHOP_lang', $_SHOP->lang);
+$smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
+
 $smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
 $smarty->assign('organizer', $_SHOP->organizer_data);
-$smarty->assign('_SHOP_lang', $_SHOP->lang);
 
 $smarty->template_dir = $_SHOP->tpl_dir . '/pos/';
 $smarty->compile_dir = $_SHOP->tmp_dir . '/pos/templates_c/';

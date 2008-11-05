@@ -1,6 +1,5 @@
 {*
-/**
-%%%copyright%%%
+ * %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
  *  Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
@@ -26,7 +25,6 @@
  *
  * Contact info@noctem.co.uk if any conditions of this licencing isn't 
  * clear to you.
- */
  *}
 <table border=0 cellpadding="3" bgcolor=white width='90%'>
   <tr>
@@ -49,7 +47,7 @@
      {user->user_zip} {user->user_city}
   </tr>
   <tr><td class='TblHigher' nowrap>
-    {countries code=$user->user_country}
+    {countries code=$code}
       {$country.name}
     {/countries}
   </tr>

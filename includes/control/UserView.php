@@ -36,17 +36,16 @@
 
 require_once("classes/ShopDB.php");
 require_once("classes/User.php");
-require_once("page_classes/AUIComponent.php");
-require_once("page_classes/CountriesList.php");
-class UserView extends AUIComponent{
+//require_once("classes/AUIComponent.php");
+require_once("admin/AdminView.php");
+class UserView extends AdminView{
 
   function UserView ($id){
     $this->user_id=$id;
   }
   
   function print_user ($user){
-    $country=new CountriesList();
-    $user["user_country_name"]=$country->getCountry($user["user_country"]);
+    $user["user_country_name"]=$this->getCountry($user["user_country"]);
     $status=$this->print_status($user["user_status"]);
     $user["user_status"]=$status;
     echo "<table class='admin_form' width='100%' cellspacing='1' cellpadding='2' border='0'>\n";

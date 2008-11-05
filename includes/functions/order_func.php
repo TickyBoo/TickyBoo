@@ -103,29 +103,28 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
       Category FORCE KEY ( PRIMARY ) ,
       `Order` FORCE KEY ( PRIMARY ) ,
 			Handling FORCE KEY ( PRIMARY ) '
-  . " WHERE seat_order_id = ".ShopDB::quotei($order_id)." AND 
+  . " WHERE seat_order_id = ".ShopDB::quote($order_id)." AND 
       event_id = seat_event_id AND 
       ort_id = event_ort_id AND 
       user_id = seat_user_id AND 
       category_id = seat_category_id AND
 			order_handling_id=handling_id AND
-      order_id = ".ShopDB::quotei($order_id)." AND
-			order_organizer_id=".ShopDB::quotei($_SHOP->organizer_id);
+      order_id = ".ShopDB::quote($order_id)." AND
+			order_organizer_id=".ShopDB::quote($_SHOP->organizer_id);
 
   //echo $query;
 
-  if(!$res=ShopDB::queryi($query)){
+  if(!$res=ShopDB::query($query)){
     user_error(shopDB::error());
     return FALSE;
   } 
     
   require_once("classes/TemplateEngine.php");
   require_once("classes/class.ezpdf.php");
-  require_once("page_classes/CountriesList.php");
+  require_once("admin/AdminView.php");
   require_once('classes/Handling.php');
   require_once("functions/barcode_func.php");
 
-	$country= new CountriesList();
 	$first_page=TRUE;
 	
   while($data=shopDB::fetch_assoc($res)){
@@ -156,8 +155,10 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 		  $tpl_id=false;
 		}
 
+  	$country= new AdminView();
 		$data['user_country_name']=$country->getCountry($data['user_country']);
-
+    $country->free;
+    
 		
     if($tpl_id and ($subj & 1)){
 			//load the template
@@ -319,7 +320,7 @@ function email_confirm ($email_data,$template_name){
       WHERE order_id='$email_data' and 
       user_id=order_user_id"; 
 
-    if(!$email_data=ShopDB::queryi_one_row($query)){
+    if(!$email_data=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return FALSE;
     }
@@ -350,7 +351,7 @@ function get_payment ($payment){
       WHERE payment_id='$payment' and 
       payment_organizer_id='{$_SHOP->organizer_id}'"; 
 
-    if(!$res=ShopDB::queryi_one_row($query)){
+    if(!$res=ShopDB::query_one_row($query)){
       return FALSE;
     }
     

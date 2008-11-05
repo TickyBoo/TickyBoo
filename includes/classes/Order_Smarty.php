@@ -93,7 +93,7 @@ class Order_Smarty {
     $order= cart_to_order($cart,$user_id,session_id(),$handling,$_SHOP->organizer_id,$no_fee,$no_cost,$place); 
  
     //begin the transaction 
-    if(!ShopDB::begini()){
+    if(!ShopDB::begin()){
       _order_error(reservate_failed,$smarty);
       return; 
     }
@@ -110,7 +110,7 @@ class Order_Smarty {
     //put the order into database     
     if(!$order_id=$order->save()){
       _order_error(save_failed,$smarty);
-      ShopDB::rollbacki();
+      ShopDB::rollback();
       return; 
     }
 
@@ -124,10 +124,10 @@ class Order_Smarty {
 	}
     $query="UPDATE `User` 
     		$set
-			WHERE user_id=".ShopDB::quotei($user_id);
-	if(!$res=ShopDB::queryi($query)){
+			WHERE user_id=".ShopDB::quote($user_id);
+	if(!$res=ShopDB::query($query)){
 		_order_error(user_failed,$smarty);
-		ShopDB::rollbacki();
+		ShopDB::rollback();
 	}
     
 
@@ -265,7 +265,7 @@ class Order_Smarty {
     
   
       $query="SELECT * $from $where $order_by $limit";
-      $res=ShopDB::queryi($query);
+      $res=ShopDB::query($query);
     
       $order=shopDB::fetch_array($res);
     
@@ -300,7 +300,7 @@ class Order_Smarty {
         $smarty->_SHOP_db_res[]=$res;
         
 		$query="SELECT * FROM User WHERE user_id={$order['order_user_id']}";
-		$res=ShopDB::queryi($query);
+		$res=ShopDB::query($query);
 		$user=shopDB::fetch_array($res);
 		if($user){
 	  	  $smarty->assign("user_order",$user);
@@ -344,7 +344,7 @@ class Order_Smarty {
     
       $query="select * $from $where $order_by $limit";
     
-      $res=ShopDB::queryi($query);
+      $res=ShopDB::query($query);
     
       $ticket=shopDB::fetch_array($res);
     

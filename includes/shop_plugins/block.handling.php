@@ -35,7 +35,7 @@
  */
 
 
-require_once('update/update.php');
+require_once('classes/update.php');
 
 function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 

@@ -67,16 +67,16 @@ class PlaceMapCategory{
     if($this->category_id){
 
       $query="update Category set
-	        category_name=".ShopDB::quotei($this->category_name).",
-	        category_price=".ShopDB::quotei($this->category_price).",
-	        category_template=".ShopDB::quotei($this->category_template).",
-	        category_color=".ShopDB::quotei($this->category_color).",
-                category_numbering=".ShopDB::quotei($this->category_numbering).",
-	        category_size=".ShopDB::quotei($this->category_size).",
-	        category_event_id=".ShopDB::quotei($this->category_event_id).",
-	        category_pmp_id=".ShopDB::quotei($this->category_pmp_id).",
-	        category_data=".ShopDB::quotei($this->category_data).",
-		category_status=".ShopDB::quotei($this->category_status)."
+	        category_name=".ShopDB::quote($this->category_name).",
+	        category_price=".ShopDB::quote($this->category_price).",
+	        category_template=".ShopDB::quote($this->category_template).",
+	        category_color=".ShopDB::quote($this->category_color).",
+                category_numbering=".ShopDB::quote($this->category_numbering).",
+	        category_size=".ShopDB::quote($this->category_size).",
+	        category_event_id=".ShopDB::quote($this->category_event_id).",
+	        category_pmp_id=".ShopDB::quote($this->category_pmp_id).",
+	        category_data=".ShopDB::quote($this->category_data).",
+		category_status=".ShopDB::quote($this->category_status)."
 	      WHERE category_id='{$this->category_id}' and category_organizer_id={$_SHOP->organizer_id}";
 	}else{
 		if(!$this->category_ident){
@@ -97,22 +97,22 @@ class PlaceMapCategory{
 		 		category_ident,
 		 		category_organizer_id
                ) VALUES (
-	         ".ShopDB::quotei($this->category_name).",
-	         ".ShopDB::quotei($this->category_price).",
-	         ".ShopDB::quotei($this->category_template).",
-	         ".ShopDB::quotei($this->category_color).",
-	         ".ShopDB::quotei($this->category_size).",
-	         ".ShopDB::quotei($this->category_numbering).",
-	         ".ShopDB::quotei($this->category_event_id).",
-	         ".ShopDB::quotei($this->category_pmp_id).",
+	         ".ShopDB::quote($this->category_name).",
+	         ".ShopDB::quote($this->category_price).",
+	         ".ShopDB::quote($this->category_template).",
+	         ".ShopDB::quote($this->category_color).",
+	         ".ShopDB::quote($this->category_size).",
+	         ".ShopDB::quote($this->category_numbering).",
+	         ".ShopDB::quote($this->category_event_id).",
+	         ".ShopDB::quote($this->category_pmp_id).",
 	         'unpub',
-	         ".ShopDB::quotei($this->category_pm_id).",
-	         ".ShopDB::quotei($this->category_data).",
-	         ".ShopDB::quotei($this->category_ident).",
-	         ".ShopDB::quotei($_SHOP->organizer_id)." )";
+	         ".ShopDB::quote($this->category_pm_id).",
+	         ".ShopDB::quote($this->category_data).",
+	         ".ShopDB::quote($this->category_ident).",
+	         ".ShopDB::quote($_SHOP->organizer_id)." )";
     }
 
-    if(ShopDB::queryi($query)){
+    if(ShopDB::query($query)){
       if(!$this->category_id){
         $this->category_id=ShopDB::insert_id();
       }
@@ -231,7 +231,7 @@ class PlaceMapCategory{
 			return FALSE;
 		}
 
-		if(!ShopDB::begini()){
+		if(!ShopDB::begin()){
 		  echo "#ERR-TRSAXNOTSTRT(5)";
 		  return FALSE;
 		}
@@ -240,8 +240,8 @@ class PlaceMapCategory{
 		AND cs_organizer_id='{$_SHOP->organizer_id}'
 		FOR UPDATE";
 
-		if(!$cs=ShopDB::queryi_one_row($query)){
-		  ShopDB::rollbacki();
+		if(!$cs=ShopDB::query_one_row($query)){
+		  ShopDB::rollback();
 			echo "#ERR-NOCATSTAT(6)";
 			return FALSE;
 		}
@@ -251,15 +251,15 @@ class PlaceMapCategory{
 		AND es_organizer_id='{$_SHOP->organizer_id}'
 		FOR UPDATE";
 
-		if(!$es=ShopDB::queryi_one_row($query)){
-		  ShopDB::rollbacki();
+		if(!$es=ShopDB::query_one_row($query)){
+		  ShopDB::rollback();
 			echo "#ERR-NOEVNTSTAT(7)";
 			return FALSE;
 		}
 
 
     if(($delta+$cs['cs_free'])<0){
-		  ShopDB::rollbacki();
+		  ShopDB::rollback();
 			echo "#ERR-TOSMALL(8)";
 			return FALSE;
 		}
@@ -268,7 +268,7 @@ class PlaceMapCategory{
 		$new_cs_free=$delta+$cs['cs_free'];
 
     if(($delta+$es['es_free'])<0){
-		  ShopDB::rollbacki();
+		  ShopDB::rollback();
 			echo 9;return FALSE;;
 		}
 
@@ -280,7 +280,7 @@ class PlaceMapCategory{
 			require_once('classes/Seat.php');
 			for($i=0;$i<$delta;$i++){
 				if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id,$_SHOP->organizer_id)){
-					ShopDB::rollbacki();
+					ShopDB::rollback();
 					echo 10;return FALSE;;
 				}
 			}
@@ -294,14 +294,14 @@ class PlaceMapCategory{
 			and seat_status='free'
 			LIMIT $limit";
 
-			if(!ShopDB::queryi($query)){
-				ShopDB::rollbacki();
+			if(!ShopDB::query($query)){
+				ShopDB::rollback();
 				echo 11;return FALSE;;
 			}
 
 
 			if(shopDB::affected_rows($_SHOP->link)!=$limit){
-				ShopDB::rollbacki();
+				ShopDB::rollback();
 				echo 12;return FALSE;;
 			}
 		}
@@ -312,13 +312,13 @@ class PlaceMapCategory{
 		AND cs_organizer_id='{$_SHOP->organizer_id}'
 		LIMIT 1";
 
-		if(!ShopDB::queryi($query)){
-			ShopDB::rollbacki();
+		if(!ShopDB::query($query)){
+			ShopDB::rollback();
 			echo 13;return FALSE;;
 		}
 
 		if(shopDB::affected_rows()!=1){
-			ShopDB::rollbacki();
+			ShopDB::rollback();
 			echo 14;return FALSE;;
 		}
 
@@ -328,20 +328,20 @@ class PlaceMapCategory{
 		and es_organizer_id='{$_SHOP->organizer_id}'
 		LIMIT 1";
 
-		if(!ShopDB::queryi($query)){
-			ShopDB::rollbacki();
+		if(!ShopDB::query($query)){
+			ShopDB::rollback();
 			echo 15;return FALSE;;
 		}
 
 		if(shopDB::affected_rows($_SHOP->link)!=1){
-			ShopDB::rollbacki();
+			ShopDB::rollback();
 			echo 16;return FALSE;;
 		}
 
 		$this->category_size=$new_category_size;
 
 		if(!$this->save()){
-			ShopDB::rollbacki();
+			ShopDB::rollback();
 		  echo 17;return FALSE;;
 		}
 

@@ -36,17 +36,15 @@
 
 require_once("classes/ShopDB.php");
 require_once("admin/AdminView.php");
-require_once("page_classes/CountriesList.php");
 
 class SPointView extends AdminView{
 
 function spoint_view (&$data){
   $data['kasse_name']=$data["user_lastname"];
-  $country=new CountriesList();
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   echo "<tr><td colspan='2' class='admin_list_title'>".$data["kasse_name"]."</td></tr>";   
   
-  $data["user_country_name"]=$country->getCountry($user["user_country"]);
+  $data["user_country_name"]=$this->getCountry($user["user_country"]);
   
   $this->print_field('user_id',$data);
   $this->print_field('kasse_name',$data);
@@ -70,7 +68,6 @@ function spoint_view (&$data){
   
 }
 function spoint_form (&$data,&$err,$title,$add='add'){
-  $countries=new CountriesList();
   echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>"; 
@@ -84,7 +81,7 @@ function spoint_form (&$data,&$err,$title,$add='add'){
   $this->print_input('user_zip',$data,$err,8,20);
   $this->print_input('user_city',$data,$err,30,50);
   echo "<td class='admin_name'>".country."</td><td class='admin_value'>";
-  $countries->printForm('user_country',$data['user_country'],$err);
+  $this->print_countrylist('user_country',$data['user_country'],$err);
   echo "</td></tr>";	  
 
   $this->print_input('user_phone',$data,$err,30,50);

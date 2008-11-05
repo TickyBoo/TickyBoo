@@ -116,7 +116,7 @@ class DiscountView extends AdminView {
             if ($row['discount_type'] == 'percent') {
                 $type = "%";
             } else if ($row['discount_type'] == 'fixe') {
-                $type = ' '.$_SHOP->organizer_data->organizer_currency;
+                $type = $_SHOP->organizer_data->currency;
             }
             echo "<td class='admin_list_item'>{$row['discount_value']}$type</td>\n";
             echo "<td class='admin_list_item' width='20'></td>\n";

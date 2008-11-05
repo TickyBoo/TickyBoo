@@ -34,7 +34,7 @@ require_once("../includes/config/init_admin.php");
 
 require_once ("admin/MenuAdmin.php");
 require_once ("admin/AdminPage.php");
-require_once ("page_classes/AUIBico.php");
+require_once ("classes/AUIBico.php");
 require_once ("admin/OrderView.php");
 
 

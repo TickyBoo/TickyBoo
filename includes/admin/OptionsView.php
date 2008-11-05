@@ -42,21 +42,21 @@ class OptionsView extends AdminView{
 			}else{
 
 				$query="UPDATE `ShopConfig` SET 
-	      		shopconfig_lastrun_int=".ShopDB::quotei($_POST['shopconfig_lastrun_int']).", 
-	      		shopconfig_restime_remind=".ShopDB::quotei($_POST['shopconfig_restime_remind']).", 
-	      		shopconfig_restime=".ShopDB::quotei($_POST['shopconfig_restime']).", 
-	      		shopconfig_check_pos=".ShopDB::quotei($_POST['shopconfig_check_pos']).", 
-	      		shopconfig_delunpaid=".ShopDB::quotei($_POST['shopconfig_delunpaid']).", 
-	      		shopconfig_posttocollect=".ShopDB::quotei($_POST['shopconfig_posttocollect']).", 
-	      		shopconfig_user_activate=".ShopDB::quotei($_POST['shopconfig_user_activate']).", 
-	      		shopconfig_maxres=".ShopDB::quotei($_POST['shopconfig_maxres'])." 
+	      		shopconfig_lastrun_int=".ShopDB::quote($_POST['shopconfig_lastrun_int']).", 
+	      		shopconfig_restime_remind=".ShopDB::quote($_POST['shopconfig_restime_remind']).", 
+	      		shopconfig_restime=".ShopDB::quote($_POST['shopconfig_restime']).", 
+	      		shopconfig_check_pos=".ShopDB::quote($_POST['shopconfig_check_pos']).", 
+	      		shopconfig_delunpaid=".ShopDB::quote($_POST['shopconfig_delunpaid']).", 
+	      		shopconfig_posttocollect=".ShopDB::quote($_POST['shopconfig_posttocollect']).", 
+	      		shopconfig_user_activate=".ShopDB::quote($_POST['shopconfig_user_activate']).", 
+	      		shopconfig_maxres=".ShopDB::quote($_POST['shopconfig_maxres'])." 
 	      		WHERE shopconfig_organizer_id='{$_SHOP->organizer_id}'";
 				
-				if(!ShopDB::queryi($query)){
+				if(!ShopDB::query($query)){
 					return 0;
 				}
 				$query="SELECT * FROM `ShopConfig` WHERE shopconfig_organizer_id='{$_SHOP->organizer_id}'";
-					if(!$row=ShopDB::queryi_one_row($query)){
+					if(!$row=ShopDB::query_one_row($query)){
 				return 0;
 				}
 				$this->option_form($row,$err,option_update_title,"update");
@@ -64,7 +64,7 @@ class OptionsView extends AdminView{
 			}
 		}else{
 			$query="SELECT * FROM `ShopConfig` WHERE shopconfig_organizer_id='{$_SHOP->organizer_id}'";
-			if(!$row=ShopDB::queryi_one_row($query)){
+			if(!$row=ShopDB::query_one_row($query)){
 				return 0;
 			}
 			$this->option_form($row,$err,option_update_title,"update");

@@ -205,8 +205,8 @@ global $_SHOP;
            echo 'No inserting into auth';
            return FALSE;
    	  }
-   	  $query="select * from auth,User where username=".ShopDB::quotei($member['user_email'])." and auth.user_id=User.user_id";
-  	  if(!$row=ShopDB::queryi_one_row($query)){
+   	  $query="select * from auth,User where username=".ShopDB::quote($member['user_email'])." and auth.user_id=User.user_id";
+  	  if(!$row=ShopDB::query_one_row($query)){
    		  return FALSE;
    	  }
        	// New Method of sending actiavtion email using template

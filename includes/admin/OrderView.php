@@ -35,7 +35,6 @@
 
 require_once("admin/AdminView.php");
 require_once("classes/ShopDB.php");
-require_once("page_classes/CountriesList.php");
 require_once("functions/datetime_func.php");
 require_once("functions/order_func.php");
 require_once("classes/Seat.php");
@@ -133,7 +132,7 @@ function order_details ($order_id){
      	   <td class='admin_list_item'>".$ticket["pmz_name"]."</td>
 
      	   <td class='admin_list_item'>$place</td>
- 	   <td class='admin_list_item'>".$ticket["discount_name"]."</td>
+    	   <td class='admin_list_item'>".$ticket["discount_name"]."</td>
 
      	   <td class='admin_list_item' align='right'>".$ticket["seat_price"]."</td>
      	   <td class='admin_list_item' align='right'>".$t_com."</td>
@@ -144,10 +143,10 @@ function order_details ($order_id){
    }
    echo "</table><br>\n";
 
-   $country=new CountriesList();
-   $order["user_country_name"]=$country->getCountry($order["user_country"]);
+   $order["user_country_name"]=$this->getCountry($order["user_country"]);
    $status=$this->print_status($order["user_status"]);
    $order["user_status"]=$status;
+
    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
    echo "<tr><td class='admin_list_title' colspan='2'>".user." ".$order["user_id"]."</td></tr>";
 

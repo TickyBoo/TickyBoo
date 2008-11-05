@@ -79,45 +79,45 @@ class User_Smarty {
   function login_f ($username, $password,&$err){
     require_once('classes/ShopDB.php');
     
-	$sql="SELECT auth.username,User.* 
-            FROM auth,User  
-	    	WHERE auth.user_id=User.user_id 
-	      	AND username=".ShopDB::quotei($username)."
-	      	AND password='".md5($password)."'
-     	  	AND user_status=2
-		  	LIMIT 1";
-	
-	if(!$res=ShopDB::queryi_one_row($sql)){
+  	$sql="SELECT auth.username,User.*
+              FROM auth,User
+  	    	WHERE auth.user_id=User.user_id
+  	      	AND username=".ShopDB::quote($username)."
+  	      	AND password='".md5($password)."'
+       	  	AND user_status=2
+  		  	LIMIT 1";
+
+  	if(!$res=ShopDB::query_one_row($sql)){
+  		$err['error']=true;
+  		$err['msg']=1;
+  		return false;
+  	}
+  	$sql = "SELECT *
+  		FROM auth,User
+  		WHERE username=".ShopDB::quote($username)."
+  		AND password='".md5($password)."'
+  		AND user_status=2
+  		AND User.user_id=".ShopDB::quote($res['user_id'])."
+  		AND auth.user_id=User.user_id
+  		AND auth.active IS NULL
+  		LIMIT 1";
+
+  	if(!$query=ShopDB::query($sql) and $error['error']) {
+  		$err['error']=true;
+  		$err['msg']=2;
+  		return FALSE;
+  	}
+  	if($res and $query){
+	  	$res['is_member']=true;
+    	$_SESSION['_SHOP_USER']=$res;
+    	$this->_fill($res);
+    	$this->logged=true;
+    	$this->is_member=true;
+    	return $res['user_id'];
+  	}
 		$err['error']=true;
-		$err['msg']=1;
-		return false;
-	}
-	$sql = "SELECT * 
-		FROM auth,User 
-		WHERE username=".ShopDB::quotei($username)." 
-		AND password='".md5($password)."' 
-		AND user_status=2
-		AND User.user_id=".ShopDB::quotei($res['user_id'])." 
-		AND auth.user_id=User.user_id 
-		AND auth.active IS NULL 
-		LIMIT 1";
-	
-	if(!$query=ShopDB::queryi($sql) and $error['error']) {
-		$err['error']=true;
-		$err['msg']=2;
-		return FALSE;
-	}
-	if($res and $query){
-	  	$res['is_member']=true;    
-      	$_SESSION['_SHOP_USER']=$res;
-      	$this->_fill($res);
-      	$this->logged=true;
-      	$this->is_member=true;
-      	return $res['user_id'];
-	}
-		$err['error']=true;
-		$err['msg']=3;
-	return FALSE;
+ 		$err['msg']=3;
+  	return FALSE;
   
   }
 
@@ -132,26 +132,39 @@ class User_Smarty {
   
  /* User data gets subbmitted to here */ 
   function member ($params,&$smarty){
-    if(!$this->member_f($params['data'],$err,$params['mandatory'])){
+    if(!$this->member_f($params['data'],$err,$params['mandatory'], $params['secure'])){
       $smarty->assign('user_errors',$err);
     }
   }
 
 /*The next bit of code creates users */
-  function member_f (&$member,&$err,$login=TRUE,$mandatory_l=0){
+  function member_f (&$member,&$err,$login=TRUE,$mandatory_l=0, $secure=''){
     require_once('functions/user_func.php');
 
-	if(!empty($mandatory_l)){
-		if(preg_match_all('/\w+/',$mandatory_l,$matches)){
-			$mandatory=$matches[0];
-		}
-	}
+  	if(!empty($mandatory_l)){
+  		if(preg_match_all('/\w+/',$mandatory_l,$matches)){
+  			$mandatory=$matches[0];
+  		}
+  	}
+//  	echo print_r($_SESSION);
+  	
+    If (!empty($secure)) {
+      if (empty($member[$secure])) {
+        $err[$secure] = mandatory;
+        return 0;
+      }
+      elseif ($_SESSION['_NoSpam'][$secure] <> md5(strtoupper ($member[$secure]))) {
+        $err[$secure] = invalid;
+        return 0;
+      }
+    }
+
 		
     if($res = create_member($member,$err,$mandatory)){ /* $res == the returned $user_id from create_member in user_func.php */
   	  header("location: {$_SERVER["PHP_SELF"]}?action=activate&register_user=on");
       return $res;
     }  
-    echo "error";
+//    echo "error";
   }
 ///////////////////
 //Update Member Function!
@@ -186,18 +199,32 @@ class User_Smarty {
 ///////////////////
 // Guest Don't use this code anymore. Its for purchases without having to log on.
   function guest ($params,&$smarty){
-    if(!$this->guest_f($params['data'],$err,$params['short'],$params['mandatory'])){
+    if(!$this->guest_f($params['data'],$err, $params['short'], $params['mandatory'], $params['secure'])){
       $smarty->assign('user_errors',$err);
     }
   }
 
-  function guest_f (&$guest,&$err,$short=FALSE,$mandatory_l=0){
+  function guest_f (&$guest,&$err,$short=FALSE,$mandatory_l=0, $secure=''){
     require_once('functions/user_func.php');
 		if(!empty($mandatory_l)){
 		  if(preg_match_all('/\w+/',$mandatory_l,$matches)){
 			  $mandatory=$matches[0];
 			}
 		}
+
+//  	echo $_SESSION['_NoSpam'][$secure].' - '.md5(strtoupper ($guest[$secure]));
+
+    If (!empty($secure)) {
+      if (empty($guest[$secure])) {
+        $err[$secure] = mandatory;
+        return 0;
+      }
+      elseif ($_SESSION['_NoSpam'][$secure] <> md5(strtoupper ($guest[$secure]))) {
+        $err[$secure] = invalid;
+        return 0;
+      }
+    }
+
     if($guest_id = create_guest($guest,$err,$short,$mandatory)){
       $this->_login_guest($guest_id);
       return $guest_id;
@@ -232,7 +259,7 @@ class User_Smarty {
 			if(empty($tpl)){
 			  $tpl='forgot_passwd';
 			}
-      $tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id);
+      $tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id); //'forgot_passwd'
       $email=&new htmlMimeMail();
 
       $row['new_password']=$pwd;
@@ -245,15 +272,15 @@ class User_Smarty {
   }
   
   	function resend_activation($params,&$smarty){
-  		$this->forgot_password_f($params['email'],$params['template']);
+  		$this->resend_activation_f($params['email'],$params['template']);
 	}
 	
 	function resend_activation_f($email,$tpl=''){
 		global $_SHOP;
 		
-		$query="SELECT * FROM auth,User WHERE username=".ShopDB::quotei($email)." and auth.user_id=User.user_id";
+		$query="SELECT * FROM auth,User WHERE username=".ShopDB::quote($email)." and auth.user_id=User.user_id";
 		// Cheacks for a realy user.
-	    if(!$row=ShopDB::queryi_one_row($query)){
+	    if(!$row=ShopDB::query_one_row($query)){
 	    	echo("#ERR-NOUSR");
     		return FALSE;
     	}
@@ -265,9 +292,9 @@ class User_Smarty {
 		
 		$active = md5(uniqid(rand(), true));
 		$user_id=$row['user_id'];
-		$query="UPDATE `auth` SET active='$active' WHERE username=".ShopDB::quotei($email)." LIMIT 1";
+		$query="UPDATE `auth` SET active='$active' WHERE username=".ShopDB::quote($email)." LIMIT 1";
 		
-		if(ShopDB::queryi($query) and shopDB::affected_rows($_SHOP->link)==1){
+		if(ShopDB::query($query) and shopDB::affected_rows($_SHOP->link)==1){
 			require_once("classes/TemplateEngine.php");
       		require_once("classes/htmlMimeMail.php");
       	
@@ -276,7 +303,7 @@ class User_Smarty {
 				if(empty($tpl)){
 					$tpl='Signup_email';
 				}
-			$tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id);
+			$tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id); // 'Signup_email';
 			$email=&new htmlMimeMail();
 
 			$link= $_SERVER["PHP_SELF"]."?register_user=on&action=activate&x=".$user_id."&y=".$active;
@@ -316,12 +343,12 @@ class User_Smarty {
     require_once('classes/ShopDB.php');
     $query="SELECT * 
 			FROM `User` 
-	    	WHERE user_id=".ShopDB::quotei($user_id)." 
+	    	WHERE user_id=".ShopDB::quote($user_id)." 
 	      	AND user_status=3
 	    	LIMIT 1";
       
 
-    if($result=ShopDB::queryi($query) and $user=shopDB::fetch_assoc($result)){
+    if($result=ShopDB::query($query) and $user=shopDB::fetch_assoc($result)){
       $user['is_guest']=true;
       $_SESSION['_SHOP_USER']=$user;
       $this->_fill($user);
@@ -352,16 +379,13 @@ class User_Smarty {
         $query = "UPDATE auth SET active=NULL WHERE (user_id='$x' AND active='" . $y . "') LIMIT 1";
 
         if ($result = ShopDB::query($query) and shopDB::affected_rows() == 1) {
-            echo act_oke;
-            return True;
+            return act_oke;
         } else {
-            echo '<p><font color="red" size="+1">'.act_error.'</font></p>';
-            return false;
+            return '<p><font color="red" size="+1">'.act_error.'</font></p>';
         }
         shopDB::close($result);
     } else {
-        echo "<b>".act_uselink."</b>";
-        return false;
+        return "<b>".act_uselink."</b>";
     }
   }
 

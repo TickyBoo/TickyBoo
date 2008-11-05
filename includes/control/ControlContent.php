@@ -34,7 +34,7 @@
  
  */
 
-require_once("page_classes/AUIComponent.php");
+require_once("classes/AUIComponent.php");
 require_once("classes/ShopDB.php");
 require_once("functions/datetime_func.php");
 

@@ -33,6 +33,7 @@
  * clear to you.
  
  */
+require_once('classes/ShopDB.php');
 
 class UserAuth_Smarty {
 
@@ -46,22 +47,22 @@ class UserAuth_Smarty {
       $_SESSION['_SHOP_USER_AUTH']=$user;
     }
 
+    $smarty->register_object("user_auth",$this);
+    $smarty->assign_by_ref("user_auth",$this);
+    $this->logged=false;
+
     if($user){
       $this->_fill($user);
       $this->logged=true;
-
-      $smarty->register_object("user_auth",$this);
-      $smarty->assign_by_ref("user_auth",$this);
-    }  
+    }
   }
 
 
   function _load (){
-    require_once('functions/user_func.php');
-    $auth=auth_userdata();
+
+    $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
     
-    require_once('classes/ShopDB.php');
-    $query="select * 
+    $query="select *
             from User 
 	    where user_id='{$auth['user_id']}'
 	    limit 1";
@@ -73,24 +74,7 @@ class UserAuth_Smarty {
     return FALSE;
   
   }
-  
-    function get_users_f (){
-    	require_once('classes/ShopDB.php');
-		$sqli="SELECT user_id,user_firstname,user_lastname FROM `User` WHERE user_status=3"; 
-		if(!$result=ShopDB::queryi($sqli)){echo("Error"); return;}	
-		$options="";
-		while ($row=shopDB::fetch_array($result)) {
-			$id=$row["user_id"];
-			//$selected = ($id==$selectid) ? ' selected="selected"' : '';  
-			$firstname=$row["user_firstname"];
-			$lastname=$row["user_lastname"];
-			$options.="<OPTION VALUE=\"{$id}\" {$selected}>".$id." - ".$firstname." - ".$lastname."</OPTION>\n"; 
-		}
-		return $options;
-	}
 
-
-  
   function _fill ($user){
     $this->_clean();
     foreach($user as $k=>$v){
@@ -105,20 +89,38 @@ class UserAuth_Smarty {
     }
   }
 
+  function get_users_f (){
+
+    if (!$this->logged) { return FALSE;}
+
+		$sqli="SELECT user_id,user_firstname,user_lastname FROM `User` WHERE user_status=3";  // 3= guest users
+		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}
+		$options="";
+		while ($row=shopDB::fetch_array($result)) {
+			$id=$row["user_id"];
+			//$selected = ($id==$selectid) ? ' selected="selected"' : '';
+			$firstname=$row["user_firstname"];
+			$lastname=$row["user_lastname"];
+			$options.="<OPTION VALUE=\"{$id}\" {$selected}>".$id." - ".$firstname." - ".$lastname."</OPTION>\n";
+		}
+		return $options;
+	}
+
   function set_prefs ($params,&$smarty){
     $this->set_prefs_f($params['prefs']);
   }
   
   function set_prefs_f ($prefs){
-    require_once('functions/user_func.php');
-    $auth=auth_userdata();
+
+    if (!$this->logged) { return FALSE;}
     
+    $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
     $this->user_prefs=$prefs;
   
     require_once("classes/ShopDB.php");
-    $query="update User set user_prefs='{$this->user_prefs}' 
+    $query="update User set user_prefs='{$this->user_prefs}'
             where user_id='{$auth['user_id']}'
-	    limit 1";
+	          limit 1";
 	    
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
        //print_r($_SESSION['_SHOP_USER_AUTH']);

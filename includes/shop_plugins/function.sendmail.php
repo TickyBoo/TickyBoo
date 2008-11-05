@@ -38,7 +38,7 @@
 function smarty_function_sendmail ($params,&$smarty) {
   global $_SHOP;
   
-  $data=$params['data'];
+  $data= (array)$params['data'];
   $attach_files=$params['attach_files'];
   $required=$params['required'];
   $template=$params['template'];

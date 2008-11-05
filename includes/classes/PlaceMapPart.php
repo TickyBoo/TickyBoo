@@ -726,7 +726,7 @@ class PlaceMapPart { // ZRS
         global $_SHOP;
 
         $query = "update PlaceMapPart set pmp_expires=1 where pmp_id=$pmp_id and pmp_organizer_id={$_SHOP->organizer_id}";
-        ShopDB::queryi($query);
+        ShopDB::query($query);
     }
 
     function find_doubles ($pmz_ident = 0)

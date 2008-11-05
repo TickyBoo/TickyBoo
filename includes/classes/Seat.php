@@ -224,7 +224,7 @@ class Seat {
 
     global $_SHOP;
 	if($nocommit==FALSE){
-    	if(!ShopDB::begini()){ 
+    	if(!ShopDB::begin()){
       		return FALSE;
     	}
     }
@@ -244,12 +244,12 @@ class Seat {
 		and seat_organizer_id={$_SHOP->organizer_id}";
     //echo "<div class=info>$query</div>";
 		
-      if(!ShopDB::queryi($query)){ //echo a;
-        ShopDB::rollbacki();
+      if(!ShopDB::query($query)){ //echo a;
+        ShopDB::rollback();
         return FALSE;
       }else{
         if(shopDB::affected_rows($_SHOP->link)!=1){//echo b;
-           ShopDB::rollbacki();
+           ShopDB::rollback();
            return FALSE;
         }
       }
@@ -261,8 +261,8 @@ class Seat {
     foreach($category_stat as $cat=>$count){
       $query="UPDATE `Category_stat` SET cs_free=cs_free+$count 
               WHERE cs_category_id='$cat'";
-      if(!ShopDB::queryi($query)){
-        ShopDB::rollbacki();//echo c;
+      if(!ShopDB::query($query)){
+        ShopDB::rollback();//echo c;
         return FALSE;
       }   
     }
@@ -270,8 +270,8 @@ class Seat {
     foreach($event_stat as $event=>$count){
       $query="UPDATE `Event_stat` SET es_free=es_free+$count 
               WHERE es_event_id='$event'";
-      if(!ShopDB::queryi($query)){
-        ShopDB::rollbacki();//echo d;
+      if(!ShopDB::query($query)){
+        ShopDB::rollback();//echo d;
         return FALSE;
       }   
     }
@@ -296,7 +296,7 @@ class Seat {
   function free ($sid,$event_id,$category_id,$seats){
     global $_SHOP;   
      
-    if(!ShopDB::begini()){ return FALSE;}  
+    if(!ShopDB::begin()){ return FALSE;}
     
     foreach($seats as $seat_id){
 
@@ -310,8 +310,8 @@ class Seat {
   	      and seat_organizer_id={$_SHOP->organizer_id}
 	      FOR UPDATE";
 
-      if(!$row=ShopDB::queryi_one_row($query)){
-        ShopDB::rollbacki(); 
+      if(!$row=ShopDB::query_one_row($query)){
+        ShopDB::rollback(); 
         return FALSE;          
       }else{
         $pmps_id[$row['seat_pmp_id']]=1;
@@ -328,13 +328,13 @@ class Seat {
 	      and seat_category_id='$category_id'
   	      and seat_organizer_id={$_SHOP->organizer_id}";
 
-      if(!ShopDB::queryi($query)){
-        ShopDB::rollbacki(); 
+      if(!ShopDB::query($query)){
+        ShopDB::rollback(); 
         return FALSE;          
 
       }else{
         if(shopDB::affected_rows($_SHOP->link)!=1){
-          ShopDB::rollbacki();
+          ShopDB::rollback();
           return FALSE;
         }
       }
@@ -349,7 +349,7 @@ class Seat {
     }
     
     if(!ShopDB::commiti()){
-      ShopDB::rollbacki();
+      ShopDB::rollback();
       return FALSE;
     }
 
@@ -361,7 +361,7 @@ class Seat {
   
     $query="select seat_id,seat_status,seat_ts from Seat where seat_pmp_id=$pmp_id 
     		and seat_organizer_id={$_SHOP->organizer_id}";
-    if($res=ShopDB::queryi($query)){
+    if($res=ShopDB::query($query)){
       while($seat=shopDB::fetch_array($res)){
         $pmp[$seat['seat_id']]=$seat;
       }
@@ -375,7 +375,7 @@ class Seat {
     $time=time();
     $query="UPDATE Seat SET seat_status='free', seat_ts=NULL, seat_sid=NULL
     	     where seat_status='res' and seat_pmp_id='$pmp_id' and seat_ts<'$time' and seat_organizer_id={$_SHOP->organizer_id}";
-    ShopDB::queryi($query);
+    ShopDB::query($query);
     //echo rem_exp;
   }
 
@@ -385,7 +385,7 @@ class Seat {
     $time=time();
     $query="UPDATE Seat set seat_status='free', seat_ts=NULL, seat_sid=NULL
     	     where seat_status='res' and seat_category_id='$category_id' and seat_ts<'$time' and seat_organizer_id={$_SHOP->organizer_id}";
-    ShopDB::queryi($query);
+    ShopDB::query($query);
     //echo rem_exp;
   }
 
@@ -407,7 +407,7 @@ class Seat {
   	 seat_status='free',
   	 seat_organizer_id='{$_SHOP->organizer_id}'";
 
-    if(ShopDB::queryi($query)){
+    if(ShopDB::query($query)){
       return ShopDB::insert_id();
     }
   }

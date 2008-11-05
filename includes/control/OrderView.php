@@ -35,8 +35,7 @@
  */
 
 require_once("classes/ShopDB.php");
-require_once("page_classes/CountriesList.php");
-require_once("page_classes/AUIComponent.php");
+require_once("classes/AUIComponent.php");
 
 require_once("functions/datetime_func.php");
 //require_once("functions/order_func.php");
@@ -115,8 +114,7 @@ function order_details ($order_id){
 	   
   }
   echo "</table><br>\n";
-  $country=new CountriesList();
-  $order["user_country_name"]=$country->getCountry($order["user_country"]);
+  $order["user_country_name"]=$this->getCountry($order["user_country"]);
   $status=$this->print_status($order["user_status"]);
   $order["user_status"]=$status;
   echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='2' border='0'>\n";

@@ -72,7 +72,9 @@
 	{user->login username=$smarty.post.username password=$smarty.post.password uri=$smarty.post.uri}
 	{if $login_error.error AND not $user->logged}
   		{include file="loginerror.tpl"}
-  	{/if}
+  {else}
+    {include file="last_event_list.tpl"}
+	{/if}
 
 {elseif $smarty.get.register_user}
   {if $smarty.get.action eq 'login'}

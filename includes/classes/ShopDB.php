@@ -35,33 +35,33 @@ define("DB_DEADLOCK", 1213);
 class ShopDB {
     // /
     // new SQLi extenstions
-    function initi ()
+    function init ()
     {
         global $_SHOP;
 
         if (!isset($_SHOP->link) and isset($_SHOP->db_name)) {
             $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
             or die ("Could not connect: " . mysqli_connect_errno());
-            ShopDB::dblogging("[II] -----------------------------\n");
+            self::dblogging("[II] -----------------------------\n");
         } else {
             die ("No connection settings");
         }
     }
     // just requires PHP5 and MySQLi And mysql >4.1
-    function begini ()
+    function begin ()
     {
         global $_SHOP;
         if (!isset($_SHOP->db_trx_startedi)) {
             if (!$_SHOP->link) {
-                ShopDB::initi();
+                self::init();
             }
             if ($_SHOP->link->autocommit(false)) {
-//                ShopDB::dblogging("[BeginI]\n");
+//                self::dblogging("[BeginI]\n");
                 $_SHOP->db_trx_startedi = 1;
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                ShopDB::dblogging("[BeginI]Error: $_SHOP->db_error\n");
+                self::dblogging("[BeginI]Error: $_SHOP->db_error\n");
                 return false;
             }
         } else {
@@ -69,48 +69,57 @@ class ShopDB {
             return true;
         }
     }
-    function commiti ()
+    function commit ()
     {
         global $_SHOP;
         if ($_SHOP->db_trx_startedi==1) {
             if ($_SHOP->link->commit()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
-                ShopDB::dblogging("[CommitI]\n");
+                self::dblogging("[CommitI]\n");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                ShopDB::dblogging("[CommitI]Error: $_SHOP->db_error\n");
+                self::dblogging("[CommitI]Error: $_SHOP->db_error\n");
             }
         } elseif  ($_SHOP->db_trx_startedi > 1) {$_SHOP->db_trx_startedi--;}
     }
-    function rollbacki ()
+    function rollback ()
     {
         global $_SHOP;
         if ($_SHOP->db_trx_started) {
             if ($_SHOP->link->rollback()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_started);
-                ShopDB::dblogging("[RollbackI]\n");
+                self::dblogging("[rollback]\n");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                ShopDB::dblogging("[RollbackI]Error: $_SHOP->db_error\n");
+                self::dblogging("[rollback]Error: $_SHOP->db_error\n");
             }
         }
     }
 
-    function queryi($query)
+    function query($query)
     {
         global $_SHOP;
         // echo  "QUERY: $query <br>";
         if (!isset($_SHOP->link)) {
-            ShopDB::initi();
+            self::init();
         }
+		// Optionally allow extra args which are escaped and inserted in place of ?
+  			if(func_num_args() > 1)
+  			{
+  				$args = func_get_args();
+  				foreach($args as &$item)
+  					$item = self::quote($item);
+  				$query = vsprintf(str_replace('?', '%s', $query), array_slice($args, 1));
+  			}
+
         $res = $_SHOP->link->query($query);
         if (!$res) {
-            ShopDB::dblogging("[Error:] ".$query."\n");
-            ShopDB::dblogging($_SHOP->db_error= mysqli_error($_SHOP->link));
+            self::dblogging("[Error:] ".$query."\n");
+            self::dblogging($_SHOP->db_error= mysqli_error($_SHOP->link));
             $_SHOP->db_errno  =$_SHOP->link->errno ;
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 $_SHOP->db_trx_started = false;
@@ -123,36 +132,27 @@ class ShopDB {
     {
         global $_SHOP;
         if (!$_SHOP->link) {
-            ShopDB::initi();
+            self::init();
         }
         return $_SHOP->link->insert_id;
     }
 
-    function queryi_one_row ($query)
+    function query_one_row ($query)
     {
-        if ($result = ShopDB::queryi($query) and $row = mysqli_fetch_array($result)) {
+        if ($result = self::query($query) and $row = $result->fetch_array()) {
             return $row;
         }
     }
-    function quotei ($s)
+    function quote ($s)
     {
-        return "'" . shopDB::escape_string($s) . "'";
+        return is_null($s) ? 'NULL' : "'" . self::escape_string($s) . "'";
     }
-    
-    function init ()
-    {
-        return shopDB::initi();
-    }
-
-    function query ($query)
-    {
-      return shopDB::queryi($query);
-    }
+		function quoteParam($var) { return self::quote($_REQUEST[$var]); }
 
     function lock ($name, $time = 30)
     {
         $query_lock = "SELECT GET_LOCK('SHOP_$name','$time')";
-        if ($res = ShopDB::query($query_lock) and $row = $res->fetch_array()) {
+        if ($res = self::query($query_lock) and $row = $res->fetch_array()) {
             return $row[0];
         }
     }
@@ -160,44 +160,18 @@ class ShopDB {
     function unlock ($name)
     {
         $query_lock = "SELECT RELEASE_LOCK('SHOP_$name')";
-        ShopDB::query($query_lock);
-    }
-
-    function query_one_row ($query)
-    {
-        if ($result = ShopDB::query($query) and $row = $result->fetch_array()) {
-            return $row;
-        }
-    }
-
-    function quote ($s)
-    {
-        return shopDB::quotei($s);
-    }
-
-    function begin ()
-    {
-        return shopDB::begini();
-    }
-
-    function commit ()
-    {
-        return ShopDB::commiti();
-    }
-
-    function rollback ()
-    {
-        return shopDB::rollbacki();
+        self::query($query_lock);
     }
 
     function affected_rows()
     {
       global $_SHOP;
         if (!isset($_SHOP->link)) {
-            ShopDB::initi();
+            self::init();
         }
-        return $_SHOP->link->affected_rows  ;
+        return $_SHOP->link->affected_rows;
     }
+
     function fetch_array($result)
     {
       global $_SHOP;
@@ -205,8 +179,6 @@ class ShopDB {
         return $result->fetch_array() ;
     }
 
-
-    
     function fetch_assoc($result)
     {
       if ($result)
@@ -245,7 +217,7 @@ class ShopDB {
       {
       global $_SHOP;
         if (!isset($_SHOP->link)) {
-            ShopDB::initi();
+            self::init();
         }
       return $_SHOP->link->real_escape_string($escapestr);
     }
@@ -276,11 +248,11 @@ class ShopDB {
     {
         $Fields = Array ();
 
-        $result = ShopDB::Queryi("SHOW COLUMNS FROM `$TableName`" . ((!empty($prefix))?" LIKE '$prefix%'":""));
+        $result = self::Query("SHOW COLUMNS FROM `$TableName`" . ((!empty($prefix))?" LIKE '$prefix%'":""));
 
         if (!$result) {
             return false;
-        } while ($row = ShopDB::fetch_row($result)) {
+        } while ($row = self::fetch_row($result)) {
             $Fields[] = $row[0];
         }
 
@@ -291,7 +263,7 @@ class ShopDB {
 
     function FieldExists ($tablename, $Fieldname)
     {
-        $Fields = ShopDB::FieldList ($tablename);
+        $Fields = self::FieldList ($tablename);
 
         if (($tables) && in_array($Fieldname, $Fields)) {
             return true;
@@ -304,11 +276,11 @@ class ShopDB {
     {
         $tables = Array ();
 
-        $result = ShopDB::Queryi("SHOW TABLES" . ((!empty($prefix))?" LIKE '$prefix%'":""));
+        $result = self::Query("SHOW TABLES" . ((!empty($prefix))?" LIKE '$prefix%'":""));
 
         if (!$result) {
             return false;
-        } while ($row = ShopDB::fetch_row($result)) {
+        } while ($row = self::fetch_row($result)) {
             $tables[] = $row[0];
         }
 
@@ -320,7 +292,7 @@ class ShopDB {
 
     function TableExists ($tablename)
     {
-        $tables = ShopDB::TableList ();
+        $tables = self::TableList ();
 
         if (($tables) && in_array($tablename, $tables)) {
             return true;
@@ -344,9 +316,9 @@ class ShopDB {
             $tblFields = array();
             $update = false;
 //            echo $tablename.': '.nl2br(print_r($fields,true));
-            If (ShopDB::TableExists("$tablename")) {
+            If (self::TableExists("$tablename")) {
                 $sql = "";
-                $tblFields = ShopDB::FieldList($tablename);
+                $tblFields = self::FieldList($tablename);
                 $oldkey = '';
                 foreach ($fields['fields'] as $key => $info) {
                     if (!$tblFields or !in_array($key, $tblFields)) {
@@ -371,8 +343,8 @@ class ShopDB {
             }
             If ($update) {
                // echo nl2br($sql)."<br><br>\n";
-                $result = ShopDB::queryi($sql, false);
-                if (!$result) $error .= '<B>' .ShopDB::error () . '</b><br>' . $sql . '<br>';
+                $result = self::query($sql, false);
+                if (!$result) $error .= '<B>' .self::error () . '</b><br>' . $sql . '<br>';
             }
         }
         return $error;
@@ -381,13 +353,13 @@ class ShopDB {
     function Upgrade_Autoincrements()
     {
         $error = '';
-        $Struction = shopDB::TableList();
+        $Struction = self::TableList();
 
         foreach ($Struction as $tablename ) {
-            $keys = ShopDB::query_one_row("Show index from ".$tablename);
+            $keys = self::query_one_row("Show index from ".$tablename);
             if (isset($keys) and ($keys['Key_name'] === "PRIMARY")) {
-              $Value = ShopDB::query_one_row("select max(".$keys['Column_name'].") from ".$tablename);
-              ShopDB::queryi("alter table ".$tablename." auto_increment=".$value[$keys['Column_name']]);
+              $Value = self::query_one_row("select max(".$keys['Column_name'].") from ".$tablename);
+              self::query("alter table ".$tablename." auto_increment=".$value[$keys['Column_name']]);
             }
         }
         return $error;
@@ -401,5 +373,4 @@ class ShopDB {
 
     }
 }
-
 ?>

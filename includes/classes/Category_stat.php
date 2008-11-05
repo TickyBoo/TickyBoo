@@ -68,7 +68,7 @@ class Category_stat{
   	global $_SHOP;
     $query="UPDATE Category_stat SET cs_free=cs_free-$count 
             WHERE cs_category_id='$cs_category_id' LIMIT 1";
-    if(!ShopDB::queryi($query) or shopDB::affected_rows($_SHOP->link)!=1){
+    if(!ShopDB::query($query) or shopDB::affected_rows($_SHOP->link)!=1){
       return FALSE;
     }else{
       return TRUE;

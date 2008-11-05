@@ -5,7 +5,7 @@ require_once('smarty/Smarty.class.php');
 require_once('classes/MyCart_Smarty.php');
 require_once('classes/User_Smarty.php');
 require_once('classes/Order_Smarty.php');
-require_once('update/Update_Smarty.php');
+require_once('classes/Update_Smarty.php');
 
 require_once("config/init_shop.php");
 
@@ -25,11 +25,11 @@ echo "<script>window.location.href='$url';</script>"; exit;
 $smarty = new Smarty;
 
 $cart_s = new MyCart_Smarty($smarty);
+
 $user = new User_Smarty($smarty);
 $order = new Order_Smarty($smarty);
 $update = new Update_Smarty($smarty);
 
-/*$smarty->assign('active',"This");*/
 $smarty->assign('_SHOP_user_root', $_SHOP->user_root);
 $smarty->assign('_SHOP_user_root_secured', $_SHOP->user_root_secured);
 $smarty->assign('_SHOP_root', $_SHOP->root);
@@ -47,10 +47,7 @@ $smarty->config_dir = $_SHOP->includes_dir . '/lang/';
 
 $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "/shop_plugins");
 
-//$smarty->config_load("shop_" . $_SHOP->lang . ".conf");
 
-//ob_start();
 $smarty->display($fond . '.tpl');
-//ob_end_flush();
 
 ?>

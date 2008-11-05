@@ -92,8 +92,8 @@ class Handling {
       return $_SHOP->_handling_cache[$handling_id];
     }
     
-    $query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quotei($handling_id)." AND handling_organizer_id='{$_SHOP->organizer_id}'";
-    if($res=ShopDB::queryi_one_row($query)){
+    $query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($handling_id)." AND handling_organizer_id='{$_SHOP->organizer_id}'";
+    if($res=ShopDB::query_one_row($query)){
       $hand=new Handling;
       $hand->_fill($res);
       $hand->templates=Handling::_unser_templates($res['handling_email_template']);
@@ -152,18 +152,18 @@ class Handling {
     }
     if(!$this->handling_id){
       $query="INSERT INTO `Handling` 
-      SET handling_payment=".ShopDB::quotei($this->handling_payment).",
-      handling_shipment=".ShopDB::quotei($this->handling_shipment).",
+      SET handling_payment=".ShopDB::quote($this->handling_payment).",
+      handling_shipment=".ShopDB::quote($this->handling_shipment).",
       $query,
       handling_organizer_id='{$_SHOP->organizer_id}'";
     }else{
      $query="update Handling 
       set $query 
-      where handling_id=".ShopDB::quotei($this->handling_id)." 
+      where handling_id=".ShopDB::quote($this->handling_id)." 
       and handling_organizer_id='{$_SHOP->organizer_id}'";
     }       
     
-    if(ShopDB::queryi($query)){
+    if(ShopDB::query($query)){
       if(!$this->handling_id){
         $this->handling_id=ShopDB::insert_id();
       }
@@ -174,11 +174,11 @@ class Handling {
   function delete (){
     global $_SHOP;
 
-		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quotei($this->handling_id);
-		if($res=ShopDB::queryi_one_row($query) and $res['count']==0){
+		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quote($this->handling_id);
+		if($res=ShopDB::query_one_row($query) and $res['count']==0){
 		
-			$query="DELETE FROM Handling WHERE handling_id=".ShopDB::quotei($this->handling_id)." AND handling_organizer_id='{$_SHOP->organizer_id}' limit 1";
-			ShopDB::queryi($query);
+			$query="DELETE FROM Handling WHERE handling_id=".ShopDB::quote($this->handling_id)." AND handling_organizer_id='{$_SHOP->organizer_id}' limit 1";
+			ShopDB::query($query);
 		}else{
 		  echo "<div class=err>".in_use."</div>";
 			return;
@@ -190,8 +190,11 @@ class Handling {
   } 
 
   function handle ($order,$new_state,$old_state='',$field=''){
-    global $_SHOP;//print_r($this);print_r($order);
-		$ok=TRUE;
+    global $_SHOP;//print_r($this);
+
+    print_r($order);
+
+    $ok=TRUE;
 	
 		
     if($template_name=$this->templates[$new_state] and $order->user_email){
@@ -239,7 +242,7 @@ class Handling {
   }
   	function get_handlings ($selectid=0){
 		$sqli="SELECT handling_id,handling_payment,handling_shipment FROM `Handling` WHERE handling_id!='1'"; 
-		if(!$result=ShopDB::queryi($sqli)){echo("Error"); return;}	
+		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}	
 		$options=""; 
 		
 		while ($row=shopDB::fetch_array($result)) { 
@@ -275,7 +278,7 @@ class Handling {
       $val=$this->$name;
     }
     if($val or $mandatory){
-      return $name.'='.ShopDB::quotei($val).',';   
+      return $name.'='.ShopDB::quote($val).',';   
     }
   }
 

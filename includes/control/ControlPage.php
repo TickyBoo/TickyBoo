@@ -34,7 +34,7 @@
 
  */
 
-require_once("page_classes/AUIComponent.php");
+require_once("classes/AUIComponent.php");
 
 class ControlPage extends AUIComponent {
     var $key = array();

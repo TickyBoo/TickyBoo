@@ -34,7 +34,7 @@
 
  */
 
-require_once("page_classes/CountriesList.php");
+require_once("admin/AdminView.php");
 function user_address ($user_data, $width = '500')
 {
   echo "<table  class='user_address' width='$width' border='0' cellspacing='0' cellpadding='1'>";
@@ -43,10 +43,9 @@ function user_address ($user_data, $width = '500')
   if ($addr = $user_data["user_address1"]){
     echo "<tr><td class='user_address_td'>" . $addr . "</td></tr> ";
   }
-  echo "<tr><td class='user_address_td'>" . $user_data["user_zip"] .
-  " " . $user_data["user_city"] . "</td></tr>";
-  $country = $user_data["user_country"];
-  $countries = new CountriesList();
+  echo "<tr><td class='user_address_td'>" . $user_data["user_zip"] . " " . $user_data["user_city"] . "</td></tr>";
+  $country      = $user_data["user_country"];
+  $countries    = new AdminView();
   $country_name = $countries->getCountry($country);
   echo "<tr><td class='user_address_td'>$country_name</td></tr>";
   echo "<tr><td class='user_address_td'>" . $user_data["user_email"] . "</td></tr></table>";

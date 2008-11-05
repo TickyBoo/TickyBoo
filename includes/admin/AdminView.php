@@ -34,7 +34,7 @@
 
  */
 
-require_once("page_classes/AUIComponent.php");
+require_once("classes/AUIComponent.php");
 require_once("classes/ShopDB.php");
 
 class AdminView extends AUIComponent {
@@ -455,7 +455,37 @@ class AdminView extends AUIComponent {
               // End -->\n";
         echo "</SCRIPT>\n";
     }
-    
+
+  function print_countrylist($sel_name, $selected, &$err){
+  global $_SHOP,  $_COUNTRY_LIST;
+
+    if (!isset($_COUNTRY_LIST)) {
+      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
+        include_once("lang/countries_". $_SHOP->lang.".inc");
+      }else {
+        include_once("lang/countries_en.inc");
+      }
+    }
+    if($_SHOP->lang=='de'){
+  	  if(empty($selected)){$selected='CH';}
+    }else{
+   	  if(empty($selected)){$selected='US';}
+    }
+
+    echo "<select name='$sel_name'>";
+    $si[$selected]=' selected';
+    foreach ($_COUNTRY_LIST as $key=>$value){
+      echo "<option value='$key' {$si[$key]}>$value</option>";
+    }
+    echo "</option>";
+    echo "<div class='error'>{$err[$sel_name]}</div>";
+  }
+
+  function getCountry($val){
+    global $_SHOP, $_COUNTRY_LIST;
+    $val=strtoupper($val);
+    return $_COUNTRY_LIST[$val];
+  }
 }
 
 ?>

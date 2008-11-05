@@ -36,7 +36,6 @@
 
 require_once("classes/ShopDB.php");
 require_once("admin/AdminView.php");
-require_once("page_classes/CountriesList.php");
 require_once('classes/Trash.php');
 
 class GarbageView extends AdminView{
