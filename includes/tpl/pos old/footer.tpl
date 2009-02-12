@@ -1,5 +1,6 @@
 {*
- * %%%copyright%%%
+/**
+%%%copyright%%%
  *
  * FusionTicket - ticket reservation system
  * Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
@@ -23,8 +24,19 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@noctem.co.uk if any conditions of this licencing isn't
+ * Contact info@noctem.co.uk if any conditions of this licencing isn't 
  * clear to you.
+ */
  *}
-{include file='header.tpl' name=!act_name! header=!act_mess_header!}
-{user->activate}
+
+ <hr width='100%' color='#46436d' noshade size='1'> 
+ {if $organizer->organizer_logo} <div align="center"><img src='{$_SHOP_user_root_secured}files/{$organizer->organizer_logo}'/> </div>
+   {/if}
+</td>
+</tr>
+
+</table>
+
+</body>
+</html>
+

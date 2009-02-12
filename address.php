@@ -1,4 +1,4 @@
 <?php 
-$fond='Ort_Address';//salut les francais!!!
+$fond='address';
 require_once('includes/web/template.php');
 ?>

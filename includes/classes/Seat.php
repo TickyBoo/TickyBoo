@@ -285,7 +285,7 @@ class Seat {
 	if($nocommit==TRUE){
 		return TRUE;	
     }
-    if($commit and !ShopDB::commiti()){ //echo e;
+    if($commit and !ShopDB::commit()){ //echo e;
     	return FALSE;
     }
 

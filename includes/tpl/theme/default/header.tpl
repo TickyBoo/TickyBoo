@@ -68,3 +68,6 @@
   {if $name}
     <h1>{$name}</h1>
   {/if}
+  {if $header}
+    <div>{$header}</div>
+  {/if}

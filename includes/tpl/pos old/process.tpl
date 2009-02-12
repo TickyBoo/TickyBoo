@@ -1,14 +1,15 @@
 {*
- * %%%copyright%%%
+/**
+%%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
+ * Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
  * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
  *
- * This file is part of FusionTicket.
+ * This file is part of fusionTicket.
  *
  * This file may be distributed and/or modified under the terms of the
  * "GNU General Public License" version 3 as published by the Free
@@ -25,32 +26,28 @@
  *
  * Contact info@noctem.co.uk if any conditions of this licencing isn't 
  * clear to you.
+ */
  *}
-<table border=0 cellpadding="3" bgcolor='white' width='90%'>
+<table>
   <tr>
-    {if $title eq "on"}
-      <td class='TblHeader'>{!your_addr!}</td>
-    {/if}
+	<td colspan=2>
+ 	  <h2>Process Options</h2>
+	</td>
   </tr>
-  <tr><td class='TblHigher' nowrap>
-     {user->user_firstname} {user->user_lastname}
+  <tr>
+	<td>
+	  <p>List of <u>paid</u> <b>but</b> <u>Unprocessed</u> orders</p>
+	</td>
+	<td>
+	  <a href="shop.php?process=paid">Paid List</a>
+	</td>
   </tr>
-  <tr><td class='TblHigher' nowrap>
-     {user->user_address}
+  <tr>
+	<td>
+	  <p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>
+	</td>
+	<td>
+	  <a href="shop.php?process=processed">UnSent List</a>
+	</td>
   </tr>
-  <tr><td class='TblHigher' nowrap>
-     {if $user->user_address1}
-       {user->user_address1}
-  </tr>
-  <tr><td class='TblHigher' nowrap>
-     {/if}
-     {user->user_zip} {user->user_city}
-  </tr>
-  <tr><td class='TblHigher' nowrap>
-    {countries code=$code}
-      {$country.name}
-    {/countries}
-  </tr>
-  <tr><td class='TblHigher' nowrap>
-     {user->user_email}</td></tr>
 </table>

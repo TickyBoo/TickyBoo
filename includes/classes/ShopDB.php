@@ -56,12 +56,12 @@ class ShopDB {
                 self::init();
             }
             if ($_SHOP->link->autocommit(false)) {
-//                self::dblogging("[BeginI]\n");
+//                self::dblogging("[Begin]\n");
                 $_SHOP->db_trx_startedi = 1;
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[BeginI]Error: $_SHOP->db_error\n");
+                self::dblogging("[Begin]Error: $_SHOP->db_error\n");
                 return false;
             }
         } else {
@@ -76,11 +76,11 @@ class ShopDB {
             if ($_SHOP->link->commit()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
-                self::dblogging("[CommitI]\n");
+                self::dblogging("[Commit]\n");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[CommitI]Error: $_SHOP->db_error\n");
+                self::dblogging("[Commit]Error: $_SHOP->db_error\n");
             }
         } elseif  ($_SHOP->db_trx_startedi > 1) {$_SHOP->db_trx_startedi--;}
     }

@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 %%%copyright%%%
  * phpMyTicket - ticket reservation system
  * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
@@ -22,22 +21,42 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to
+ * For pricing of this licence please contact us via e-mail to 
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
+ 
+ *}{*
+Intd country mgmt. 
+Usage 1:
 
- */
+<select name='country'>
+{include file='countries.tpl' selected=$smarty.post.country}
+</select>
 
-global $_SHOP;
-require_once("init_common.php");
-$_SHOP->session_name = "ShopSession";
+Usage 2:
 
-require_once("init.php");
+You choose {$smarty.post.country} - {include file='countries.tpl' code=$smarty.post.country}
 
-?>
+*}{strip}
+{if $code}
+	{fr}{include file='countries_frr.tpl' selected=$code}{/fr}
+	{de}{include file='countries_der.tpl' selected=$code}{/de}
+	{it}{include file='countries_itr.tpl' selected=$code}{/it}
+	{en}{include file='countries_enr.tpl' selected=$code}{/en}
+	{sv}{include file='countries_svr.tpl' selected=$code}{/sv}
+	{ru}{include file='countries_rur.tpl' selected=$code}{/ru}
+{else}
+	{fr}{include file='countries_fr.tpl' selected=$selected}{/fr}
+	{de}{include file='countries_de.tpl' selected=$selected}{/de}
+	{it}{include file='countries_it.tpl' selected=$selected}{/it}
+	{en}{include file='countries_en.tpl' selected=$selected}{/en}
+	{sv}{include file='countries_sv.tpl' selected=$selected}{/sv}
+	{ru}{include file='countries_ru.tpl' selected=$selected}{/ru}
+{/if}
+{/strip}

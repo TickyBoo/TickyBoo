@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 %%%copyright%%%
  * phpMyTicket - ticket reservation system
  * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
@@ -22,22 +21,27 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to
+ * For pricing of this licence please contact us via e-mail to 
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
-
- */
-
-global $_SHOP;
-require_once("init_common.php");
-$_SHOP->session_name = "ShopSession";
-
-require_once("init.php");
-
-?>
+ 
+ *}{if $user_auth->user_prefs eq "pdf"}
+{if $smarty.get.mode eq "doit"}
+{order->order_print print_prefs=$user_auth->user_prefs order_id=$smarty.get.order_id}
+{else}
+<script type='text/javascript'>
+<!--
+F1 = window.open('print.php?order_id={$smarty.get.order_id}&mode=doit','printer','left=100'); 
+F1.focus();    
+-->
+</script>
+{/if}
+{else}
+{order->order_print print_prefs=$user_auth->user_prefs order_id=$smarty.get.order_id}
+{/if}

@@ -34,9 +34,9 @@
 
  */
 
-global $_SHOP;
-require_once("init_common.php");
+//global $_SHOP;
 
+require_once("init_common.php");
 
 $_SHOP->session_name = "AdminSession";
 //$_SHOP->is_admin = true;
@@ -47,7 +47,7 @@ $_SHOP->auth_password = "admin_password";
 
 $_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3');
 
-require_once("functions/init.php");
+require_once("init.php");
 
 if ($_SHOP->organizer_id != $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id']) {
     session_destroy();

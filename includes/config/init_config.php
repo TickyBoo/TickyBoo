@@ -1,5 +1,6 @@
-{*
- * %%%copyright%%%
+<?php
+/**
+%%%%
  *
  * FusionTicket - ticket reservation system
  * Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
@@ -25,6 +26,23 @@
  *
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
- *}
-{include file='header.tpl' name=!act_name! header=!act_mess_header!}
-{user->activate}
+ */
+
+  global $_SHOP;
+  $_SHOP->Version="1.3.5 BETA5";
+
+  //directory where SHOP installed
+  $_SHOP->install_dir="E:\\web\\www\\beta5";
+
+  //url root, at least "/"
+  $_SHOP->root="http://localhost/beta5/";
+
+  //SHOP database config
+  $_SHOP->db_name="beta5";
+  $_SHOP->db_uname="root";
+  $_SHOP->db_host="localhost";
+  $_SHOP->db_pass="";
+  
+  // secured (https) shop root
+  $_SHOP->root_secured = $_SHOP->root;
+?>

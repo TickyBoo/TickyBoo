@@ -22,22 +22,26 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to
+ * For pricing of this licence please contact us via e-mail to 
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
-
+ 
  */
+  global $_SHOP;
+  require_once("init_common.php");
+  
+  $_SHOP->session_name="SalesSession";
 
-global $_SHOP;
-require_once("init_common.php");
-$_SHOP->session_name = "ShopSession";
-
-require_once("init.php");
-
+  $_SHOP->auth_required=TRUE;
+  $_SHOP->auth_table="SPoint";
+  $_SHOP->auth_login="login";
+  $_SHOP->auth_password="password";
+  
+  require_once("functions/init.php");
 ?>

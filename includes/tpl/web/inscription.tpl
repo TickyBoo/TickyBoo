@@ -60,7 +60,4 @@
     <input type='submit' name='submit_register' value='{!signup!}'>
   </center>
 </form>
-{*      </td>
-    </tr>
-    <tr><td>*}
     <br><br>&nbsp;

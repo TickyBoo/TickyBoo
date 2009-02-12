@@ -29,14 +29,11 @@
  */
   global $_SHOP;
 //  echo '-'.$pad."<br>\n";
-  if (file_exists("./includes/config/init_config.php"))
+  echo $configpath = realpath(dirname(__FILE__)."/includes/config/");
+
+  if (file_exists($configpath."init_config.php"))
     {
-    require_once("./includes/config/init_config.php");
-    }
-  else
-  if (file_exists("../includes/config/init_config.php"))
-    {
-    require_once("../includes/config/init_config.php");
+    require_once($configpath."init_config.php");
     }
   else
     {
@@ -46,8 +43,8 @@
 
 	if (ini_get('register_globals')) {
 
-		echo "Set register_globals to OFF please. Bye.";
-		exit;
+//		echo "Set register_globals to OFF please. Bye.";
+//		exit;
 
 		// Emulate register_globals off
 		if (ini_get('register_globals')) {
@@ -152,7 +149,7 @@
 
 
 	//accepted languages
-	$_SHOP->langs=array('en','nl','de');
+	$_SHOP->langs=array('en');
 	$_SHOP->langs_names=array(
 	'en'=>'English',
 	'de'=>'Deutsch',
