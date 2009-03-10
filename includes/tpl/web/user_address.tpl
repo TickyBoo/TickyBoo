@@ -47,7 +47,7 @@
      {user->user_zip} {user->user_city}
   </tr>
   <tr><td class='TblHigher' nowrap>
-    {countries code=$code}
+    {countries code=$user->user_country}
       {$country.name}
     {/countries}
   </tr>

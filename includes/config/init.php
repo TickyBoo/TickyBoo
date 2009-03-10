@@ -53,6 +53,7 @@
   session_name($_SHOP->session_name);
   session_start();
 
+  if (isset($_REQUEST['action'])) {$action=$_REQUEST['action'];} else { $action=false;}
 
 //authentifying (if needed)
 
@@ -111,15 +112,13 @@
     $_auth = new Auth('DB',$params,'loginFunction');
     $_auth ->setSessionName($_SHOP->session_name); 
     $_auth ->setLoginCallback('loginCallback'); 
-    $_auth->start();
-	
-	  if (isset($_GET['action'])) {$action=$_GET['action'];} else { $action=false;}
-	
     if ($action == 'logout') {
       $_auth->logout();
       session_destroy();
       $_auth->start();
       exit;
+    } else {
+      $_auth->start();
     }
 
     if (!$_auth->getAuth()) {
@@ -165,73 +164,22 @@
 	}
   setlocale(LC_TIME,$locale) or
   setlocale(LC_TIME,$locale.'_'.strtoupper($locale));
-//  If (file_exists("lang/site_". $_SHOP->lang.".inc")){
-    include_once("lang/site_". $_SHOP->lang.".inc");
-/*  }else {
-    echo "'lang/site_". $_SHOP->lang.".inc' does not exist!";
-    include_once("lang/site_en.inc");
+  If (file_exists(INC."lang".DS."site_". $_SHOP->lang.".inc")){
+    include_once(INC."lang".DS."site_". $_SHOP->lang.".inc");
+  }else {
+    include_once(INC."lang".DS."site_en.inc");
   }
-*/
 
 //loading organizer attributes
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
     require_once("classes/ShopDB.php");
-    $query="SELECT * FROM Organizer WHERE organizer_id='{$_SHOP->organizer_id}'";
+    $query="SELECT * FROM Organizer LIMIT 1";
 		
     if($res=ShopDB::query($query) and $data=shopDB::fetch_object($res)){
-      $_SHOP->organizer_data=$data;
-      $_SESSION['_SHOP_ORGANIZER_DATA']=$data;
-      $_SESSION['_SHOP_ORGANIZER_ID']=$_SHOP->organizer_id;   
+      $_SESSION['_SHOP_ORGANIZER_DATA']= $data;
+      $_SESSION['_SHOP_ORGANIZER_ID']  = $data->organizer_id;
 		}
-	}else{
-		$_SHOP->organizer_data=$_SESSION['_SHOP_ORGANIZER_DATA'];
 	}
-	If (!isset($_POST['action'])) {$_POST['action'] ='Noting';}
-	If (!isset($_GET['action'])) {$_GET['action'] ='Noting';}
-	If (!isset($_REQUEST['action'])) {$_REQUEST['action'] ='Noting';}
-	$GLOBALS['_SHOP'] = $_SHOP;
-
-function route($mod, $ctrl, $action) {
-// global  $_SHOP;
-	// Find and run controller & action
-	$ctrl = $ctrl ? $ctrl : 'home';
-	if(file_exists($controlFile = $_SHOP->includes_dir."/($mod)/ctrl_($ctrl).php")) {
-		request_once($controlFile);
-
-
-		if(class_exists($cU = "Controller.".camelize($c))) {
-
-			// Instantiate controller class
-			$controller = new $cU();
-
-			// Run _setups to get
-			if(method_exists($controller,"_globalsetup"))
-				$controller->_globalsetup();
-				
-			if(method_exists($this->controller,"_setup"))
-				$controller->_setup();
-
-			// Run _init to commit any setup changes relevant to Magic Controllers
-			if(method_exists($controller,"_init"))
-				$controller->_init();
-
-			// Run action method $a
-			if(method_exists($action = $controller,"action_($action)")){
-				$controller->$action();
-			} else {
-				$controller->Index();
-      }
-
-			// User-level cleanup function?
-			if(method_exists($controller,"_cleanup"))
-				$controller->_cleanup();
-
-		}
-		else
-			raise("The controller <code>{$ctrl}</code> was not found.");
-	}
-	else
-		raise("The controller <code>{$ctrl}</code> was not found");
-}
-
+  $_SHOP->organizer_data=$_SESSION['_SHOP_ORGANIZER_DATA'];
+  $_SHOP->organizer_id = $_SESSION['_SHOP_ORGANIZER_ID'];
 ?>

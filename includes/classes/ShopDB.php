@@ -367,7 +367,7 @@ class ShopDB {
     function dblogging($debug)
     {
         global $_SHOP;
-        $handle=fopen($_SHOP->install_dir."/includes/tmp/shopdb.log","a");
+        $handle=fopen($_SHOP->tmp_dir."shopdb.log","a");
         fwrite($handle,$debug);
         fclose($handle);
 

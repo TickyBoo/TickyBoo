@@ -24,14 +24,11 @@ echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 $smarty = new Smarty;
 
-$cart_s = new MyCart_Smarty($smarty);
-
-$user = new User_Smarty($smarty);
-$order = new Order_Smarty($smarty);
+$cart   = new MyCart_Smarty($smarty);
+$user   = new User_Smarty($smarty);
+$order  = new Order_Smarty($smarty);
 $update = new Update_Smarty($smarty);
 
-$smarty->assign('_SHOP_user_root', $_SHOP->user_root);
-$smarty->assign('_SHOP_user_root_secured', $_SHOP->user_root_secured);
 $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
 $smarty->assign('_SHOP_lang', $_SHOP->lang);
@@ -40,13 +37,13 @@ $smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
 $smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
 $smarty->assign('organizer', $_SHOP->organizer_data);
 
-$smarty->template_dir = $_SHOP->tpl_dir . '/web/';
-$smarty->compile_dir = $_SHOP->tmp_dir . '/web/templates_c/';
-$smarty->cache_dir = $_SHOP->tmp_dir . '/web/cache/';
-$smarty->config_dir = $_SHOP->includes_dir . '/lang/';
+$smarty->template_dir = $_SHOP->tpl_dir . 'web'.DS;
+$smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
+$smarty->compile_id   = 'webshop';
+$smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
+$smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
 
-$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "/shop_plugins");
-
+$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
 $smarty->display($fond . '.tpl');
 

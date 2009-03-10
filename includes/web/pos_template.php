@@ -29,9 +29,6 @@ $user_s = new UserAuth_Smarty($smarty);
 $user = new User_Smarty($smarty);
 $order = new Order_Smarty($smarty);
 
-
-$smarty->assign('_SHOP_user_root', $_SHOP->user_root);
-$smarty->assign('_SHOP_user_root_secured', $_SHOP->user_root_secured);
 $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
 $smarty->assign('_SHOP_lang', $_SHOP->lang);
@@ -40,12 +37,15 @@ $smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
 $smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
 $smarty->assign('organizer', $_SHOP->organizer_data);
 
-$smarty->template_dir = $_SHOP->tpl_dir . '/pos/';
-$smarty->compile_dir = $_SHOP->tmp_dir . '/pos/templates_c/';
-$smarty->cache_dir = $_SHOP->tmp_dir . '/pos/cache/';
-$smarty->config_dir = $_SHOP->includes_dir . '/lang/';
+$smarty->template_dir = $_SHOP->tpl_dir . 'web'.DS;
+$smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
+$smarty->compile_id   = 'pos';
+$smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
+$smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
 
-$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "/shop_plugins");
+$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+
+$smarty->display($fond . '.tpl');
 
 
 $smarty->display($fond . '.tpl');

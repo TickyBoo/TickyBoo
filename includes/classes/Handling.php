@@ -49,7 +49,7 @@ class Handling {
   }
 
   function _unser_templates($handling_templates){
-    if($t0=explode(',',$handling_templates)){
+    if($handling_templates and $t0=explode(',',$handling_templates)){
       foreach($t0 as $s_t){
         list($state,$template)=explode('=',$s_t);
         $templates[$state]=$template;
@@ -77,11 +77,22 @@ class Handling {
     if(!empty($this->extra)){
 			$this->handling_extra=serialize($this->extra);
 		}
+    $this->handling_sale_mode =   '';
+		If (is_array($this->sale_mode)) {
+      $this->handling_sale_mode = implode(",", array_keys($this->sale_mode));
+    }
 	}
 
 	function _unser_extra(){
 		if(!empty($this->handling_extra)){
       $this->extra=unserialize($this->handling_extra);
+		}  else
+       $this->extra= array();
+//    echo $this->handling_sale_mode,'|';
+//		If (is_string($this->handling_sale_mode)) {
+      $this->sale_mode = array_fill_keys(explode(",", $this->handling_sale_mode),true);
+//      print_r($this->sale_mode);
+//    }
 		}
 	}
 	
@@ -192,11 +203,8 @@ class Handling {
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
 
-    print_r($order);
-
     $ok=TRUE;
 	
-		
     if($template_name=$this->templates[$new_state] and $order->user_email){
       require_once("classes/htmlMimeMail.php");
       require_once("classes/TemplateEngine.php");
@@ -216,13 +224,33 @@ class Handling {
       }
     }
 
-		$ok2=$this->_extra_handle($order,$new_state,$old_state,$field);
-		
-		return ($ok and $ok2);
+		if($ok and $pm = $this->pment()){
+			if(method_exists($pm, 'on_handle')){
+				$ok=$pm->on_handle($order,$new_state,$old_state,$field);
+			}
+		}
+
+		if($ok and $sm = $this->sment()){
+			if(method_exists($sm,'on_handle')){
+				$ok= $sm->on_handle($order,$new_state,$old_state,$field);
+			}
+		}
+		return ($ok);  
   }
 
 	function on_order_delete($order_id){
-		return $this->_extra_on_order_delete($order_id);
+    $ok = true;
+		if($ok and $pm = $this->pment()){
+			if(method_exists($pm,'on_order_delete')){
+				$ok=$pm->on_order_delete($order_id);
+      }
+    }
+		if($ok and $sm = $this->sment()){
+			if(method_exists($sm,'on_order_delete')){
+				$ok= $sm->on_order_delete($order_id);
+			}
+    }
+    return $ok;
 	}
 	
   function get_payment (){
@@ -255,20 +283,11 @@ class Handling {
 		return $options;
 	}
 
-	function con($name){
-		if(defined($name)){
-		    return constant($name);
-		}else{
-			return $name;
-	    }
-	}
-
   function _fill ($data){
     foreach($data as $k=>$v){
       $this->$k=$v;
     }
   }
-
 
   function _set ($name,$value=0,$mandatory=FALSE){
 

@@ -416,18 +416,13 @@ class AdminView extends AUIComponent {
     function user_url($data)
     {
         global $_SHOP;
-        // if($data{0}!='/'){
-        // $data='/'.$data;
-        // }
-        // return "{$_SHOP->user_root}/{$_SHOP->organizer_data->organizer_nickname}/web$data";
-        return $_SHOP->user_files_url . $data;
+        return $_SHOP->files_url . $data;
     }
 
     function user_file ($path)
     {
         global $_SHOP;
-        // return realpath($_SHOP->user_dir.'/'.$_SHOP->organizer_data->organizer_nickname.'/'.$path);
-        return $_SHOP->user_files_dir . '/' . $path;
+        return $_SHOP->files_dir . $path;
     }
 
     function _myErrorHandler($errno, $errstr, $errfile, $errline)

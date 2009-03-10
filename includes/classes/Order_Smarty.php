@@ -132,7 +132,7 @@ class Order_Smarty {
     
 
     //commit the transaction      
-    ShopDB::commiti();
+    ShopDB::commit();
 
   
     $smarty->assign('order_success',true);

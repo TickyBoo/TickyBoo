@@ -348,7 +348,7 @@ class Seat {
       }
     }
     
-    if(!ShopDB::commiti()){
+    if(!ShopDB::commit()){
       ShopDB::rollback();
       return FALSE;
     }

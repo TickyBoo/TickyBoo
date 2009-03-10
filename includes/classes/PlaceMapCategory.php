@@ -345,7 +345,7 @@ class PlaceMapCategory{
 		  echo 17;return FALSE;;
 		}
 
-		ShopDB::commiti();
+		ShopDB::commit();
 		return TRUE;
 	}
 
