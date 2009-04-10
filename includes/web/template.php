@@ -1,11 +1,12 @@
 <?php
 require_once("includes/config/init_common.php");
 
-require_once('smarty/Smarty.class.php');
+require_once('smarty/smarty.class.php');
 require_once('classes/MyCart_Smarty.php');
 require_once('classes/User_Smarty.php');
 require_once('classes/Order_Smarty.php');
 require_once('classes/Update_Smarty.php');
+require_once('classes/gui_Smarty.php');
 
 require_once("config/init_shop.php");
 
@@ -24,6 +25,7 @@ echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 $smarty = new Smarty;
 
+$cart   = new Gui_smarty($smarty);
 $cart   = new MyCart_Smarty($smarty);
 $user   = new User_Smarty($smarty);
 $order  = new Order_Smarty($smarty);
