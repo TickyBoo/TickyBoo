@@ -34,10 +34,45 @@
  
  */
 
-class pm_yp{
-  function on_order_confirm(&$pay,&$smarty){
-	  $order_id=$smarty->get_template_vars('order_id');
-	  return $order_id;
+//require_once("admin/AdminView.php");
+
+class EPM_ideal extends payment{
+	
+	
+	function admin_view ( &$data ){
+		$extra = $data['extra'];
+	  $this->print_field('pm_authorize_aim_login',$extra);
+	  $this->print_field('pm_authorize_aim_txnkey',$extra);
+	  $this->print_field('pm_authorize_aim_hash',$extra);
+	  $this->print_field('pm_authorize_aim_test',$extra);
 	}
+	
+  function admin_form ( &$data, &$err ){
+		$this->print_input('pm_authorize_aim_login',$data['extra'],$err);
+		$this->print_input('pm_authorize_aim_txnkey',$data['extra'],$err);
+		$this->print_input('pm_authorize_aim_hash',$data['extra'],$err);
+    $this->print_checkbox('pm_authorize_aim_test',$data['extra'],$err);
+//    $this->print_field('pm_yp_docs',$docs);
+	}
+
+  function init ( ){
+    global $_SHOP;
+				
+		$form1= 
+'
+<div class="cc_div">
+To validate your order please introduce your payment information and
+click on "Pay". <br> At once that your payment is completed, you receive 
+your tickets by e-mail. <br>If we cannot record cashing during 12 next hours, 
+your order is cancelled automatically.<br><br>
+</div>
+';	
+    $hand->handling_html_template   .= $form1;
+		$hand->handling_text_payment     = 'Credit Card';
+		$hand->handling_text_payment_alt = 'Credit Card';
+
+		$hand->extra['pm_authorize_aim_test']=TRUE;
+	}
+
 }
 ?>
