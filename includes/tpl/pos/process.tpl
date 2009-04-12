@@ -39,7 +39,7 @@
       {!pos_listpaidunprocessed!}
   	</td>
   	<td>
-  	  <a href="shop.php?process=paid">{!Paid List</a>
+  	  <a href="index.php?process=paid">{!Paid List</a>
   	</td>
   </tr>
   <tr>
@@ -48,7 +48,7 @@
   	  <p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>
   	</td>
   	<td>
-  	  <a href="shop.php?process=processed">{!pos_unsentlist!}</a>
+  	  <a href="index.php?process=processed">{!pos_unsentlist!}</a>
   	</td>
   </tr>
 </table>

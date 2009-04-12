@@ -26,6 +26,28 @@ class Gui_smarty {
     $smarty->register_function('valuta', array($this,'valuta'));
   }
 
+  function _URL(  $params, $smarty, $skiping)
+  {
+    GLOBAL $_SHOP;
+   If (isset($params['url'])) {
+      return $this->base.$params['url'];
+    } else {
+      If (!is_array($skipnames)) {$skipnames= array();}
+    //  print_r($params);
+      $urlparams ='';
+      foreach ($params as $key => $value) {
+        if (!in_array($key,array('action','controller','module')) and
+            !in_array($key,$skipnames)) {
+          $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
+        }
+      }
+   //   $urlparams = substr($urlparams,1);
+     // print_r($urlparams);
+      return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
+    }
+
+  }
+
   function print_r ($params,&$smarty) {
     return nl2br(print_r($params['var'],true));
   }
@@ -502,23 +524,14 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
   protected function user_url($data)
   {
       global $_SHOP;
-      // if($this->guidata{0}!='/'){
-      // $this->guidata='/'.$this->guidata;
-      // }
-      // return "{$_SHOP->user_root}/{$_SHOP->organizer_data->organizer_nickname}/web$data";
-      return $_SHOP->user_root . $data;
+      return $_SHOP->root . $data;
   }
 
   protected function user_file ($path)
   {
-      global $_SHOP;
-      // return realpath($_SHOP->user_dir.'/'.$_SHOP->organizer_data->organizer_nickname.'/'.$path);
-      return $_SHOP->user_root. 'files'. DS . $path;
+      return ROOT. 'files'. DS . $path;
   }
-  protected function _URL($params, &$smarty, $skipnames= array()) {
-     return $this->view->_URL($params, $smarty, $skipnames);
-  }
-  
+
   /* NVDS:  I do not know of this is still used.
 
     function print_set ($params, &$smarty) //($name, &$data, $table_name, $column_name, $key_name, $file_name)

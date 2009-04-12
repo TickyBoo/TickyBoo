@@ -28,7 +28,7 @@
  *}
  {include file="header.tpl" name=!becomemember! header=!memberinfo!}
 
-<form action='shop.php?action=register&register_user=on' method='post'>
+<form action='index.php?action=register&register_user=on' method='post'>
   <center>
     <table class="table_dark" cellpadding="3" bgcolor='white' width='85%'>
       {include file="user_form.tpl"}

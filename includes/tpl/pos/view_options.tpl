@@ -45,7 +45,7 @@
 <tr><td class='user_address_td'>{user_auth->user_zip} {user_auth->user_city}</td></tr>
 <tr><td class='user_address_td'>{country code=$user_auth->user_country}</td></tr>
 <tr><td class='user_address_td'>{user_auth->user_email}</td></tr></table>
-<br><br><form action='shop.php' method='GET'>
+<br><br><form action='index.php' method='GET'>
 <table width='100%' border='0' cellspacing='0' cellpadding='3' >
 <tr><td class='title' colspan='2' >
     {!preferences!}</a>

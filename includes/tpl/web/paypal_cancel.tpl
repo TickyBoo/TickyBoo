@@ -27,7 +27,7 @@
  * clear to you.
  *}
 {include file="header.tpl" name=!handlings! header=!pay_cancel!}
-<form method='get' action="shop.php">
+<form method='get' action="index.php">
   <input name="go_home" value="{!order_more_tickets!}" type="submit">
 </form>
 {include file="footer.tpl"}

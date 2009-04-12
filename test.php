@@ -1,5 +1,5 @@
 <?php 
 error_reporting(E_ALL);
-$fond='shop';
+$fond='test_main';
 require_once('includes/web/template.php');
 ?>

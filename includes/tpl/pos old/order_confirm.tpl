@@ -113,14 +113,14 @@
     
 <br><center><table width='600' border='0'><tr><td align='center'>
 
-<form action='shop.php' method='post'>
+<form action='index.php' method='post'>
     <input type='submit' name='print_tickets' value='{#confirm_and_print#}'>
     <input type='hidden' name='order_id' value='{$order_id}'>
     <input type='hidden' name='action' value='print_tickets'>
     </form>
 
 </td><td align='center'>
-    <form action='shop.php' method='post'>
+    <form action='index.php' method='post'>
     <input type='submit' name='cancel_order' value='{#cancel_order#}' onClick='return confirmSubmit()'>
     <input type='hidden' name='action' value='cancel_order'>
     <input type='hidden' name='order_id' value='{$order_id}'>

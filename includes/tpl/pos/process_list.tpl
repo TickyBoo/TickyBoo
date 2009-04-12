@@ -65,7 +65,7 @@
 			-->
 		  </script>
 		  {/literal}
-		  <form action='shop.php' method='get'>
+		  <form action='index.php' method='get'>
 		  	<input type='hidden' name='action' value='view_orders'>
 			<table border=0 width='100%' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
 			  <tr>
@@ -134,10 +134,10 @@
 		  <td class='admin_info'>{$shop_order.order_date}</td>
 		  <!--<td class='admin_info'></td>-->
 		  <td class='admin_info' align="right">
-		  	<a href='shop.php?process=paid&order_id={$shop_order.order_id}'>{!pos_clicktoview!}</a>
+		  	<a href='index.php?process=paid&order_id={$shop_order.order_id}'>{!pos_clicktoview!}</a>
 		  {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
 			<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a> 
-			<a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="shop.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
+			<a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="index.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
 			<img border='0' src='images/trash.png'></a>
 		  {else}
 		  </td>
@@ -152,9 +152,9 @@
 
 		{if $smarty.get.first gt 0}
 		  {if ($smarty.get.first-$length) lt 0}
-		    <a href='shop.php?action=view_orders&first=0'>&lt;&lt;&lt; {!prev!}</a>
+		    <a href='index.php?action=view_orders&first=0'>&lt;&lt;&lt; {!prev!}</a>
 		  {else}
-		    <a href='shop.php?action=view_orders&first={$smarty.get.first-$length}&{$dates}'>&lt;&lt;&lt; {!prev!}</a>
+		    <a href='index.php?action=view_orders&first={$smarty.get.first-$length}&{$dates}'>&lt;&lt;&lt; {!prev!}</a>
 		  {/if}
 		{/if}
 		</td>
@@ -169,7 +169,7 @@
 		</td>
 		<td align='right'  width='33%'>
 		{if $count eq $length}
-		  <a href='shop.php?action=view_orders&first={$smarty.get.first+$length}&{$dates}'>{!next!} &gt;&gt;&gt;</a>
+		  <a href='index.php?action=view_orders&first={$smarty.get.first+$length}&{$dates}'>{!next!} &gt;&gt;&gt;</a>
 		{/if}
 		</td>
 	  </tr>

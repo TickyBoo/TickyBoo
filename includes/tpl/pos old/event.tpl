@@ -159,7 +159,7 @@ function setQtyShown(){
 </script>
 {/literal}
 
-<form name='catselect' method='get' action='shop.php'>
+<form name='catselect' method='get' action='index.php'>
    <table  class='cat_choice' cellpadding='5' width='100%' border='0'>
    <tr><td class='title' colspan='3' >    
     {#select_category#}

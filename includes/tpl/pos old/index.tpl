@@ -31,7 +31,7 @@ Home Page
   </tr>
   <tr>
   	<td class="sub_title" width="45%">Currently Running Event groups</td>
-    <td>{event_group  group_status='pub'}<a class='list' href='shop.php?group_id={$shop_event_group.event_group_id}'>
+    <td>{event_group  group_status='pub'}<a class='list' href='index.php?group_id={$shop_event_group.event_group_id}'>
 		{$shop_event_group.event_group_name}</a>{/event_group}
 	</td>
   </tr>
@@ -41,15 +41,15 @@ Home Page
    </tr>
   <tr>
     <td class="sub_title"><strong>To Order</strong> tickets please click "Book Tickets".</td>
-    <td><b><a href="shop.php?action=calendar">Book Tickets</a></b></td>
+    <td><b><a href="index.php?action=calendar">Book Tickets</a></b></td>
   </tr>
   <tr>
     <td class="sub_title"><strong>To Reserve</strong> seats please click "Reserve Tickets".</td>
-    <td><b><a href="shop.php?action=calendar">Reserve Tickets</a></b></td>
+    <td><b><a href="index.php?action=calendar">Reserve Tickets</a></b></td>
   </tr>
   <tr>
     <td class="sub_title"><strong>To Proccess</strong> Paid Tickets.</td> 
-	<td><b><a href="shop.php?process=on">Process Tickets</a></b></td>
+	<td><b><a href="index.php?process=on">Process Tickets</a></b></td>
     <td></td>
   </tr>
   <tr>

@@ -53,7 +53,7 @@
   {assign var='month1' value=$month}
   {/if}
   <tr >
-	<td class='calendar'><a class='cal_link' href='shop.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a></td>
+	<td class='calendar'><a class='cal_link' href='index.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a></td>
 	<td class='calendar'>{$shop_event.event_date|date_format:"%e %B"} - {$shop_event.event_time|date_format:" %Hh%M"}</td>
 	<td class='calendar'>{$shop_event.ort_name}</td>
 	<td class='calendar'>{$shop_event.ort_city}</td>

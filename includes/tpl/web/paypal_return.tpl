@@ -95,7 +95,7 @@ leejoo_classe = 'border-color:'+leejoo_bordure+';border-style:solid;border-width
  		document.getElementById("leejoo_box2").style.top = -600
  		document.getElementById("leejoo_box3").style.top = -600
  		leejoo_deplace();
- 		location.href='shop.php';
+ 		location.href='index.php';
  		}
  	}
 

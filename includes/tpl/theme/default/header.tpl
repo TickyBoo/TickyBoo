@@ -50,7 +50,7 @@
 
 <div id="navbar">
     <ul>
-     <li>	<a href='shop.php'>
+     <li>	<a href='index.php'>
 	{#home#}</a>
 <li><a href='calendar.php'>
 	{#calendar#}</a>

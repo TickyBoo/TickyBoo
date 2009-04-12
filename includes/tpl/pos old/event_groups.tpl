@@ -34,7 +34,7 @@
  *}{event_group  group_status='pub'}
   <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr><td class='title'>
-<a class='list' href='shop.php?group_id={$shop_event_group.event_group_id}'>
+<a class='list' href='index.php?group_id={$shop_event_group.event_group_id}'>
 {$shop_event_group.event_group_name}</a>
   </td></tr>
   </table>

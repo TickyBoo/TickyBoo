@@ -33,7 +33,7 @@ class Update_Smarty {
 	function view ($params,&$smarty) {
 		
 		if(!isset($this->shopconfig_id)){
-	  		echo "not set";
+	  		echo "not set view";
 			$this->load('1');
 		}
 		//check if reserving is enabled
@@ -198,7 +198,7 @@ class Update_Smarty {
 	// returns a 1 if alt payment method should be used   
   	function check_event($event_date){
   		if(!isset($this->shopconfig_id)){
-	  		echo "not set";
+	  		echo "not set check_event";
 			$this->load('1');
 		}
 		
@@ -220,7 +220,7 @@ class Update_Smarty {
   // Will check last time the update script was run and return the time in mins
   function lastrun(){
   	if(!isset($this->shopconfig_id)){
-	  	echo "not set";
+	  	echo "not set lastrun";
 		$this->load('1');
 	}
 	$time=Time::StringToTime($this->shopconfig_lastrun);
@@ -247,9 +247,11 @@ class Update_Smarty {
   function load ($config_id){
     global $_SHOP;
     
-    $query="SELECT * FROM `ShopConfig` 
-	WHERE shopconfig_id = ".ShopDB::quote($config_id)." 
-	AND shopconfig_organizer_id={$_SHOP->organizer_id} LIMIT 1";
+    $query="SELECT * FROM `ShopConfig`  LIMIT 1";
+    
+//	WHERE shopconfig_id = ".ShopDB::quote($config_id)."
+//	AND shopconfig_organizer_id={$_SHOP->organizer_id}
+
     if($data=ShopDB::query_one_row($query)){
       $this->_fill($data);
       return $this;

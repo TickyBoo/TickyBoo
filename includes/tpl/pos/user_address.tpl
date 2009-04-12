@@ -32,7 +32,7 @@
  * clear to you.
  
  *}
- <form action='shop.php' method='post'>
+ <form action='index.php' method='post'>
 <table>
 <div class="help">{!pos_selectuser!}</div>
 	<tr>

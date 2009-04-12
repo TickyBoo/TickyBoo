@@ -23,7 +23,7 @@
 <br>
 <center>
 {if $cart->can_checkout_f()}
-  <form action='shop.php' method=post>
+  <form action='index.php' method=post>
 <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'> 
 <tr>
   <td rowspan='7'><img src='images/dot.gif' width='1' height='100'></td>
@@ -59,13 +59,13 @@
   <input type='submit' name='submit_payment' value='{#order_it#}'>
   <input type='hidden' name='action' value='order_tickets'>
   </form>
-  <form action='shop.php' method='post'>
+  <form action='index.php' method='post'>
   <input type="hidden" name='handling' value='1'>
   <input type='submit' name='submit_reserve' value='Reserve Tickets'>
   <input type='hidden' name='action' value='reserve_tickets'>
   </form>
 {/if}
-<a class='shop_link' href='shop.php'>{!order_more_tickets!}
+<a class='shop_link' href='index.php'>{!order_more_tickets!}
 </a>
 </center>
 </td>

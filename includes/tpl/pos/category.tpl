@@ -61,7 +61,7 @@
             </td></tr>
           {/if}
         </table>
-        <form name='f' action='shop.php' method='post'>
+        <form name='f' action='index.php' method='post'>
           <center>
             {if $shop_category.category_numbering eq 'none'}
               <br><br>

@@ -44,7 +44,7 @@
     		   		    <td align='center'>
     				        {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
               				<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a>
-              				<a href='javascript:if(confirm("Delete Order?")){literal}{location.href="shop.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
+              				<a href='javascript:if(confirm("Delete Order?")){literal}{location.href="index.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
               				<img border='0' src='images/trash.png'></a>
            					{/if}
         				  </td>
@@ -79,7 +79,7 @@
     		    <font color='#cccccc'>{!cancelled!}</font>
     		  {elseif $shop_order.order_status eq "reemit"}
     		    <font color='#ffffcc'>{!reemitted!}</font>
-    		    (<a href='shop.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
+    		    (<a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
     		      {$shop_order.order_reemited_id}</a>)
     		  {/if}
     		  </td>
@@ -157,7 +157,7 @@
     </tr>
     <tr>
     	<td colspan="2">
-    	<form name='f' action='shop.php' method='post'>
+    	<form name='f' action='index.php' method='post'>
   	  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
   	  <center>
   		<tr>
@@ -226,7 +226,7 @@
   		  {/if}</td>
   		  <td class='admin_info'>{$shop_ticket.discount_name}</td>
   		  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
-  		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="shop.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
+  		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="index.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
   		</tr>
   		{/order->tickets}
   	  </table>

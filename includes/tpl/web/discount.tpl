@@ -40,7 +40,7 @@
   {if $shop_discounts}
     {include file="header.tpl" name=!discounts!}
     {category event='on' category_id=$category_id}
-      <form action='shop.php' method='post'>
+      <form action='index.php' method='post'>
         <table class="table_midtone">
           <tr>
             <td valign='top'>

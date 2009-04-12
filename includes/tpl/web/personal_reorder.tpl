@@ -70,7 +70,7 @@
 			    <font color="#cccccc">{!cancelled!}</font>
 			  {elseif $shop_order.order_status eq "reemit"}
 			    <font color="#ffffcc">{!reemitted!}</font>
-			    (<a href='shop.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
+			    (<a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
 			    {$shop_order.order_reemited_id}</a>)
 			  {/if}
 			  </td>
@@ -133,7 +133,7 @@
 	  </tr>
 	    <tr>
 		  	<td colspan="2">
-		  	<form name='f' action='shop.php?personal_page=orders' method='post'>
+		  	<form name='f' action='index.php?personal_page=orders' method='post'>
 			  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
 			  <center>
 				<tr>

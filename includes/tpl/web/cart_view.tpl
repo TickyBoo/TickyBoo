@@ -38,7 +38,7 @@
 <table class="table_midtone" width='100%'>
   <tr>
     <td width="50%" align="left">
-      <form method='get' action="shop.php">
+      <form method='get' action="index.php">
         {if $event_id}
            <input type='hidden' name='event_id' value='{$event_id}' />
         {/if}

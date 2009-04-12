@@ -26,27 +26,20 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
+ {include file="header.tpl" name=!TestMe! }
+{gui->startform name='testje' data=$smarty.post}
 
-<table width="150" border="0" cellspacing="0" cellpadding="0" class="menu_table">
-  <tr> 
-    <td  align='center' class="menu_title">
-	    {!event_groups!}
-    </td>
-  </tr>
-  <tr>
-    <td align='center' valign='top' class="menu_content">
-      <table width="90%">
-        {counter start="0" assign="count"}
-        {event_group  group_status='pub'}
-          {counter}
-          {assign var='num' value=$count%2}
-          <tr class="tr_{$num}">
-            <td>
-              <a  href='index.php?event_group_id={$shop_event_group.event_group_id}'>{$shop_event_group.event_group_name}</a>
-            </td>
-          </tr>
-        {/event_group}
-      </table>
-    </td>
-  </tr>
-</table>
+{gui->input type='text' name='user_firstname' size='30' maxlength='50'}
+{gui->input type='text' name='user_zip' size='8'  maxlength='20'}
+{gui->selectState name='user_state' }
+{gui->selectCountry name='user_country'}
+
+{gui->inputdate name='datefield'}
+{gui->inputtime name='timefield' }
+{gui->inputfile name='user_city'}
+{gui->selectcolor name='user_Address'}
+{gui->area name='user_status'}
+{gui->captcha name='user_nospam' }
+
+{gui->endform}
+{gui->Navigation offset=$smarty.get.offset count=150 }

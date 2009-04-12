@@ -93,7 +93,7 @@ class Handling {
       $this->sale_mode = array_fill_keys(explode(",", $this->handling_sale_mode),true);
 //      print_r($this->sale_mode);
 //    }
-		}
+//		}
 	}
 	
   function load ($handling_id){
@@ -253,13 +253,44 @@ class Handling {
     return $ok;
 	}
 	
+  function pment() {
+    if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
+    $file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";
+    if (file_exists($file)){
+      if (!isset($this->_pment)){
+        $name = "EPH_".$this->handling_payment;
+        $this->_pment = new $name($this);
+        $this->extras = $this->_pment->extras;
+      }
+    }
+    return $this->_pment;
+  }
+
+  function sment() {
+    if (!isset($this->handling_shipment) or (!$this->handling_shipment)) return;
+    $file = INC."classes".DS."shipments".DS."esm_{$this->handling_shipment}.php";
+    if (!isset($this->_sment) and file_exists($file)) {
+      require_once ($file);
+      $name = "ESM_{$this->handling_shipment}";
+      $this->_sment = new $name($this);
+    }
+    return $this->_sment;
+  }
+
   function get_payment (){
-  	$like= " LIKE  'handling_payment'";
-    $query="SHOW  COLUMNS  FROM Handling {$like}";
-    if(!$res=ShopDB::query_one_row($query)){return;}
-    $types=explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$res[1]));
+    $types=array('','invoice','entrance','cash');
+    $dir = INC.'classes'.DS.'payments';
+	  if ($handle = opendir($dir)) {
+		  while (false !== ($file = readdir($handle))){
+        if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^epm_(.*?\w+).php/", $file, $matches)) {
+          $types[] =  $matches[1];
+        }
+      }
+      closedir($handle);
+  	}
     return $types;
   }
+
 
   function get_shipment (){
   	$like= " LIKE  'handling_shipment'";

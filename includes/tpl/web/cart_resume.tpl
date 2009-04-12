@@ -86,7 +86,7 @@
         		<tr>
         		  <td align='center' class='cart_content' colspan='2'>
           			<br>
-          			<a href='shop.php?action=view_cart'>{!view_order!}</a>
+          			<a href='index.php?action=view_cart'>{!view_order!}</a>
           			<br>
           			<br>{!tot_tick_price!} {cart->total_price|string_format:"%.2f"} {$organizer_currency}
         		  </td>

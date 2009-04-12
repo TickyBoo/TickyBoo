@@ -8,7 +8,7 @@
 {*/if*}
 {if $shop_discounts}
 {category event='on' category_id=$category_id}
-   <form action='shop.php' method='post'>
+   <form action='index.php' method='post'>
    <table  cellpadding='5' width='100%' border='0'>
    <tr><td class='title' valign='top'>    
     {#discounts#}

@@ -42,7 +42,7 @@
 	sub='on' stats='on' cats='on' order="event_date,event_time"}
 {if $shop_event.event_id neq $old_id}
   <tr >
-  <td class='festival'  ><a class='cal_link' href='shop.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a></td>
+  <td class='festival'  ><a class='cal_link' href='index.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a></td>
   <td class='festival' >{$shop_event.event_date|date_format:"%e %B"} - {$shop_event.event_time|date_format:" %Hh%M"}</td>
   <td class='festival' >{$shop_event.ort_name}</td>
   <td class='festival' >{$shop_event.ort_city}</td>
@@ -66,7 +66,7 @@
 <td class='calendar'>&nbsp;</a></td>
 <td class='calendar'>
 {if $shop_event.cs_free gt 0}
-  <a href='shop.php?category_id={$shop_event.category_id}&category_numbering={$shop_event.category_numbering}'>{$shop_event.category_name}</a>
+  <a href='index.php?category_id={$shop_event.category_id}&category_numbering={$shop_event.category_numbering}'>{$shop_event.category_name}</a>
 {else} 
   {$shop_event.category_name}
 {/if} 

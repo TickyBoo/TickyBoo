@@ -34,7 +34,7 @@
 {/if}
 {if !$user->logged}
 
-  <form method='post' action='shop.php?action=login' style='margin-top:0px;'>
+  <form method='post' action='index.php?action=login' style='margin-top:0px;'>
     {include file="header.tpl" name=!login! header=!memberinfo!}
 
     {if $smarty.get.action neq "logout" and $smarty.get.action neq "login"}
@@ -64,7 +64,7 @@
       	</tr>
       	<tr>
       		<td colspan=2 class="TblLower">
-      			<li><a  href='shop.php?register_user=on'>{!register!}</a></li>
+      			<li><a  href='index.php?register_user=on'>{!register!}</a></li>
       		</td>
       	</tr>
       	<tr>

@@ -31,7 +31,7 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  *}
- <form action='shop.php' method='post'>
+ <form action='index.php' method='post'>
 <table>
   <tr>
   <div class="help">{!pos_selectuser!}</div>

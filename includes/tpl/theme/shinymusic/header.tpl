@@ -93,7 +93,7 @@ if (browser_type == "Microsoft Internet Explorer" && (browser_version >= 4)) {
         <img height="20" alt="" src="images/top_left.gif" width="847" border="0"><br>
       </td>
       <td valign="top" width="49">
-      <a onmouseover="changeImage('home','n1a');" onfocus="blur();" onmouseout="changeImage('home','n1')" href="shop.php">
+      <a onmouseover="changeImage('home','n1a');" onfocus="blur();" onmouseout="changeImage('home','n1')" href="index.php">
       <img height="20" alt="" src="images/home_a.gif" width="49" border="0" id="home"></a><br>
       </td>
       <td valign="top" width="12">
@@ -128,7 +128,7 @@ if (browser_type == "Microsoft Internet Explorer" && (browser_version >= 4)) {
   <img height="10" alt="" src="images/groenelijn.gif" width="1000" border="0"><br>
   <div id="navbar">
     <ul >
-     <li><a href='shop.php'>{#home#}</a>
+     <li><a href='index.php'>{#home#}</a>
      <li><a href='calendar.php'>{#calendar#}</a>
      <li><a href='programm.php'>{#program#}</a>
     </ul><br />

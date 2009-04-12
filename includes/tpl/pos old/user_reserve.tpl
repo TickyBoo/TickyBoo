@@ -32,7 +32,7 @@
  * clear to you.
  
  *}
- <form action='shop.php' method='post'>
+ <form action='index.php' method='post'>
 <table>
   <tr>
   <div class="help">Either Create a new user, or select an exsiting user if they have already purchased from us before.</div>

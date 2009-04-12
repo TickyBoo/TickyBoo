@@ -70,7 +70,7 @@
 			    <font color="#cccccc">{!cancelled!}</font>
 			  {elseif $shop_order.order_status eq "reemit"}
 			    <font color="#ffffcc">{!reemitted!}</font>
-			    <a href='shop.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
+			    <a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
 			    {$shop_order.order_reemited_id}</a>
 			  {/if}
 			  </td>
@@ -86,7 +86,7 @@
 			  {/update->countdown}
 			  </td>
 			</tr>
-			<form name='f' action='shop.php?personal_page=orders' method='post'>
+			<form name='f' action='index.php?personal_page=orders' method='post'>
 			{order->tickets order_id=$shop_order.order_id min_date='on' }
 			<input type='hidden' name='min_date' value='{$shop_ticket_min_date}'>
 			{/order->tickets}

@@ -65,7 +65,7 @@
     {#only_rows_numbered#}</b></td></tr>
 {/if}
 </table>
-<form name='f' action='shop.php' method='post'><center>
+<form name='f' action='index.php' method='post'><center>
 
 {if $shop_category.category_numbering eq 'none'}
 <br><br>

@@ -23,7 +23,7 @@
 <br>
 <center>
 {if $cart->can_checkout_f()}
-  <form action='shop.php' method=post>
+  <form action='index.php' method=post>
 
 
 
@@ -66,13 +66,13 @@
   <input type='hidden' name='action' value='order_tickets'>
   </form>
   
-  <form action='shop.php' method='post'>
+  <form action='index.php' method='post'>
   <input type="hidden" name='handling' value='1'>
   <input type='submit' name='submit_reserve' value='Reserve Tickets'>
   <input type='hidden' name='action' value='reserve_tickets'>
   </form>
 {/if}
-<a class='shop_link' href='shop.php'>{#order_more_tickets#}
+<a class='shop_link' href='index.php'>{#order_more_tickets#}
 </a>
 </center>
 

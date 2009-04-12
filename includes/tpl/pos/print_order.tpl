@@ -36,7 +36,7 @@
 {!tickets_printing!}</div><br>
 <a href='print.php?order_id={$smarty.post.order_id}'  class='shop_link' target='printer'>
 {!print_order!}</a><br>
-<a href='shop.php'  class='shop_link'>
+<a href='index.php'  class='shop_link'>
 {!order_more_tickets!}
 </a></center>
      

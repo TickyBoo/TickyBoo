@@ -31,7 +31,7 @@ Replication is not allowed under the Open source software act, this file
 may be edited but may not be used as yours or redistributed.
 *}
 
-<form action="shop.php?personal_page=details&action=update" method=post >
+<form action="index.php?personal_page=details&action=update" method=post >
   <table cellpadding="3" class="main">
 
     {if $smarty.session.id}

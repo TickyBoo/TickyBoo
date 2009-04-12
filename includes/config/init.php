@@ -34,6 +34,7 @@
 
 //check if the site is online  
   require_once("classes/ShopDB.php");
+  require_once("classes/basics.php");
   
   $query="SELECT status FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']=='OFF'){

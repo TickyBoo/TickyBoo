@@ -25,7 +25,7 @@
  * clear to you.
  */
  *}
-<form name='f' action='shop.php' method='post'>
+<form name='f' action='index.php' method='post'>
 <table width='700'>
   <tr>
   	<td class='title' colspan='5' align='center'>
@@ -48,7 +48,7 @@
 		  		<td align='center'>
 				  {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
       				<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a> 
-      				<a href='javascript:if(confirm("{!pos_deleteorder!}")){literal}{location.href="shop.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
+      				<a href='javascript:if(confirm("{!pos_deleteorder!}")){literal}{location.href="index.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
       				<img border='0' src='images/trash.png'></a>
    					{/if}
   				  </td>
@@ -89,7 +89,7 @@
 		    <font color='#cccccc'>{!cancelled!}</font>
 		  {elseif $shop_order.order_status eq "reemit"}
 		    <font color='#ffffcc'>{!reemitted!}</font>
-		    (<a href='shop.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
+		    (<a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
 		    {$shop_order.order_reemited_id}</a>)
 		  {/if}
 		  </td>
@@ -186,10 +186,10 @@
   	<td colspan="2">
   	  <table width='100%' bgcolor="lightgrey">
   		<tr>
-  		  <td width='33%' align="left"><a href="shop.php?process=paid">{!pos_gotounprocessed!}</a></td>
-  		  <td width='34%' align="center"><a href='javascript:if(confirm("{!pos_processorder!}")){literal}{location.href="shop.php?process=paid&order_id={/literal}{$shop_order.order_id}{literal}&action=change_status";}{/literal}'>
+  		  <td width='33%' align="left"><a href="index.php?process=paid">{!pos_gotounprocessed!}</a></td>
+  		  <td width='34%' align="center"><a href='javascript:if(confirm("{!pos_processorder!}")){literal}{location.href="index.php?process=paid&order_id={/literal}{$shop_order.order_id}{literal}&action=change_status";}{/literal}'>
       				{!pos_clicktoproc!}</a></td>
-  		  <td width='33%' align="right"><a href="shop.php?process=paid&order_id={$next_order_id}">{!pos_nextunprocessed!}Next Unprocessed Paid Order</a></td>
+  		  <td width='33%' align="right"><a href="index.php?process=paid&order_id={$next_order_id}">{!pos_nextunprocessed!}Next Unprocessed Paid Order</a></td>
 		</tr>
 	  </table>
 	</td>
@@ -228,7 +228,7 @@
 		  {/if}</td>
 		  <td class='admin_info'>{$shop_ticket.discount_name}</td>
 		  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
-		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="shop.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
+		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="index.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
 		</tr>
 		{/order->tickets}
 	  </table>

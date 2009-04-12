@@ -31,7 +31,7 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}<form action='shop.php' method=post>
+ *}<form action='index.php' method=post>
 <div class='user_inscription'>
 <table width='380' border='0' cellspacing='1' cellpadding='5' align='center' >
 <tr> 

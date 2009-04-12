@@ -53,7 +53,7 @@ document.write("<link REL='stylesheet' HREF='style_nn.css' TYPE='text/css'>");
 <table border='0' style="border:#45436d 1px solid;" width="750"  cellspacing="0" cellpadding="0" bgcolor="#ffffff" >
   <tr>
   	<td colspan='6' style='padding-left:20px;padding-bottom:5px;'>
-	  <a href='shop.php'><img src="images/logo_vvs.png" border="0"></a>
+	  <a href='index.php'><img src="images/logo_vvs.png" border="0"></a>
   	</td>
   </tr>
   <tr>
@@ -61,13 +61,13 @@ document.write("<link REL='stylesheet' HREF='style_nn.css' TYPE='text/css'>");
   <table>
 	<tr>
   	<td width="33%" align="center">
-	  	<a class="shop_link" style="font-size:16px;" href="shop.php?action=home">{!pos_homepage!}</a>
+	  	<a class="shop_link" style="font-size:16px;" href="index.php?action=home">{!pos_homepage!}</a>
 	</td>
 	<td width="34%" align="center">
-		<a class="shop_link" style="font-size:16px;" href="shop.php?process=on">{!pos_processtickets!}</a>
+		<a class="shop_link" style="font-size:16px;" href="index.php?process=on">{!pos_processtickets!}</a>
     </td>
 	<td width="33%" align="center">
-		<a class="shop_link" style="font-size:16px;" href="shop.php?action=book_tickets">{!pos_Book Tickets</a>
+		<a class="shop_link" style="font-size:16px;" href="index.php?action=book_tickets">{!pos_Book Tickets</a>
     </td>
     </tr>
   </table>
@@ -75,22 +75,22 @@ document.write("<link REL='stylesheet' HREF='style_nn.css' TYPE='text/css'>");
   </tr>
   <tr>
   	<td width='125' valign="top"  style='padding-left:20px;border-top:#45436d 1px solid;border-bottom:#45436d 1px solid; padding-bottom:5px; padding-top:5px;'>
-		<a class='shop_link' href='shop.php?action=show_evgroup'>{!event_groups!}</a>
+		<a class='shop_link' href='index.php?action=show_evgroup'>{!event_groups!}</a>
 	</td>
 	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='shop.php?action=calendar'>{!calendar!}</a>
+		<a class='shop_link' href='index.php?action=calendar'>{!calendar!}</a>
 	</td>
 	<td width='125'valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='shop.php?action=view_cart'>{!shopping_cart_pos!}</a>
+		<a class='shop_link' href='index.php?action=view_cart'>{!shopping_cart_pos!}</a>
 	</td>
 	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='shop.php?action=view_orders'>{!orders!}</a>
+		<a class='shop_link' href='index.php?action=view_orders'>{!orders!}</a>
 	</td>
 	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='shop.php?action=view_options'>{!preferences!}</a>
+		<a class='shop_link' href='index.php?action=view_options'>{!preferences!}</a>
 	</td>
 	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;padding-right:40px;">
-		<a class='shop_link' href='shop.php?action=logout'>{!logout!}</a>
+		<a class='shop_link' href='index.php?action=logout'>{!logout!}</a>
 	</td>
   </tr>
   <tr>
