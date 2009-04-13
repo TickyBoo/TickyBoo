@@ -44,7 +44,7 @@ class EventSubPropsView extends EventViewCommon {
 function subevent_form (&$data, &$err, $title){
   global $_SHOP;
 
-  if(!$main=Event::load($data['event_main_id'],FALSE) or $main->event_organizer_id!=$_SHOP->organizer_id){return FALSE;}
+  if(!$main=Event::load($data['event_main_id'],FALSE) ){return FALSE;}
 
   echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 
@@ -141,7 +141,7 @@ function event_check (&$data, &$err){
   global $_SHOP;
 
 
-  if(!$main=Event::load($data['event_main_id'],FALSE) or $main->event_organizer_id!=$_SHOP->organizer_id){return FALSE;}
+  if(!$main=Event::load($data['event_main_id'],FALSE)){return FALSE;}
 
 
   if((isset($data['event_time-h']) and strlen($data['event_time-h'])>0) or
@@ -206,7 +206,7 @@ function event_check (&$data, &$err){
     require_once('classes/Event.php');
 
     $event=Event::new_from_main($data['event_main_id'], FALSE);
-    if(empty($event) or $event->event_organizer_id !=$_SHOP->organizer_id){echo beep ;return;}
+    if(empty($event)){return;}
 
     $event->event_date=$data['event_date'];
     if($data['event_time']){$event->event_time=$data['event_time'];}
@@ -235,10 +235,10 @@ function event_check (&$data, &$err){
     global $_SHOP;
 
     $main=Event::load($data['event_main_id'], FALSE);
-    if(empty($main) or $main->event_organizer_id !=$_SHOP->organizer_id){return;}
+    if(empty($main)){return;}
 
     $event=Event::load($data['event_id'], FALSE);
-    if(empty($event) or $event->event_organizer_id !=$_SHOP->organizer_id){return;}
+    if(empty($event) ){return;}
 
     $event->event_date=$data['event_date'];
     $this->_set('event_short_text',$data,$event,$main);

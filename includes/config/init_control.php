@@ -40,12 +40,11 @@
   $_SHOP->session_name="ControlSession";
 
   $_SHOP->auth_required=TRUE;
-    $_SHOP->auth_table="Control";
-    $_SHOP->auth_login="control_login";
-    $_SHOP->auth_password="control_password";
+  $_SHOP->auth_table="Control";
+  $_SHOP->auth_login="control_login";
+  $_SHOP->auth_password="control_password";
 
-  require_once("functions/init.php");
-  $_SHOP->organizer_id=$_SESSION['_SHOP_AUTH_USER_DATA']['control_organizer_id'];
+  require_once("init.php");
   $_SHOP->event_ids=$_SESSION['_SHOP_AUTH_USER_DATA']['control_event_ids'];
   $_SHOP->currency=$_SESSION['_SHOP_AUTH_USER_DATA']['organizer_currency'];
 ?>

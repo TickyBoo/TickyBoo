@@ -39,9 +39,9 @@ require_once("classes/Ticket.php");
 
 
 // placed orders come here
-function cart_to_order (&$cart,$user_id,$sid,$shipment_mode,$organizer_id,$no_fee=FALSE,$no_cost=FALSE,$place){
+function cart_to_order (&$cart,$user_id,$sid,$shipment_mode,$dummy,$no_fee=FALSE,$no_cost=FALSE,$place){
 // orders are then created in Order.php
-  $order =& new Order($user_id,$sid,$shipment_mode,$organizer_id,$no_fee,$no_cost,$place);
+  $order =& new Order($user_id,$sid,$shipment_mode,0,$no_fee,$no_cost,$place);
   
   $cart->iterate('_collect',$order);
 
@@ -109,8 +109,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
       user_id = seat_user_id AND 
       category_id = seat_category_id AND
 			order_handling_id=handling_id AND
-      order_id = ".ShopDB::quote($order_id)." AND
-			order_organizer_id=".ShopDB::quote($_SHOP->organizer_id);
+      order_id = ".ShopDB::quote($order_id);
 
   //echo $query;
 
@@ -162,7 +161,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 		
     if($tpl_id and ($subj & 1)){
 			//load the template
-			if(!$tpl =& $te->getTemplate($tpl_id,$data['event_organizer_id'])){
+			if(!$tpl =& $te->getTemplate($tpl_id)){
 				user_error(no_template." cat: {$data['category_id']}, event: {$data['event_id']}");        
 				return FALSE;
 			}
@@ -244,7 +243,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 	if($bill_template and ($subj & 2)){
 
 		//loading the template 
-		if($tpl =& $te->getTemplate($bill_template,$last_data['order_organizer_id'])){
+		if($tpl =& $te->getTemplate($bill_template)){
 
 			if(!$first_page){
 				$pdf->ezNewPage();
@@ -295,7 +294,7 @@ function email_order ($email_data,$template_name){
   
   $te=new TemplateEngine;
   
-  if(!$tpl=&$te->getTemplate($template_name,$_SHOP->organizer_id)){
+  if(!$tpl=&$te->getTemplate($template_name)){
     user_error(no_template." ".$template_name);        
     return FALSE;
   }
@@ -331,7 +330,7 @@ function email_confirm ($email_data,$template_name){
   require_once("classes/TemplateEngine.php");
   
   $te=new TemplateEngine;
-  $tpl=&$te->getTemplate($template_name,$_SHOP->organizer_id);
+  $tpl=&$te->getTemplate($template_name);
   
   $email = new htmlMimeMail();
   $tpl->build($email,$email_data,$_SHOP->lang);
@@ -346,10 +345,7 @@ function email_confirm ($email_data,$template_name){
 
 function get_payment ($payment){
    global $_SHOP;
-   $query="SELECT * FROM 
-      Payment 
-      WHERE payment_id='$payment' and 
-      payment_organizer_id='{$_SHOP->organizer_id}'"; 
+   $query="SELECT * FROM Payment WHERE payment_id='$payment'";
 
     if(!$res=ShopDB::query_one_row($query)){
       return FALSE;

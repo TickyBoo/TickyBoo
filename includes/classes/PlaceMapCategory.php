@@ -77,7 +77,7 @@ class PlaceMapCategory{
 	        category_pmp_id=".ShopDB::quote($this->category_pmp_id).",
 	        category_data=".ShopDB::quote($this->category_data).",
 		category_status=".ShopDB::quote($this->category_status)."
-	      WHERE category_id='{$this->category_id}' and category_organizer_id={$_SHOP->organizer_id}";
+	      WHERE category_id='{$this->category_id}' ";
 	}else{
 		if(!$this->category_ident){
 			$this->category_ident=$this->_find_ident($this->category_pm_id);
@@ -94,8 +94,7 @@ class PlaceMapCategory{
 		 		category_status,
 		 		category_pm_id,
 		 		category_data,
-		 		category_ident,
-		 		category_organizer_id
+		 		category_ident
                ) VALUES (
 	         ".ShopDB::quote($this->category_name).",
 	         ".ShopDB::quote($this->category_price).",
@@ -108,8 +107,7 @@ class PlaceMapCategory{
 	         'unpub',
 	         ".ShopDB::quote($this->category_pm_id).",
 	         ".ShopDB::quote($this->category_data).",
-	         ".ShopDB::quote($this->category_ident).",
-	         ".ShopDB::quote($_SHOP->organizer_id)." )";
+	         ".ShopDB::quote($this->category_ident).")";
     }
 
     if(ShopDB::query($query)){
@@ -126,7 +124,7 @@ class PlaceMapCategory{
 
   function load ($category_id){
     global $_SHOP;
-    $query="select * from Category LEFT JOIN Color ON category_color=color_id where category_id=$category_id and (category_organizer_id=0 or category_organizer_id={$_SHOP->organizer_id})";
+    $query="select * from Category LEFT JOIN Color ON category_color=color_id where category_id=$category_id ";
 
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
@@ -139,7 +137,7 @@ class PlaceMapCategory{
   function load_full ($category_id){
     global $_SHOP;
 
-    $query="select * from Category LEFT JOIN Color ON category_color=color_id LEFT JOIN Event ON event_id=category_event_id where category_id=$category_id and (category_organizer_id=0 or category_organizer_id={$_SHOP->organizer_id})";
+    $query="select * from Category LEFT JOIN Color ON category_color=color_id LEFT JOIN Event ON event_id=category_event_id where category_id=$category_id ";
 
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
@@ -152,7 +150,7 @@ class PlaceMapCategory{
 
   function loadAll ($pm_id){
     global $_SHOP;
-    $query="select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id=$pm_id and (category_organizer_id=0 or category_organizer_id={$_SHOP->organizer_id})";
+    $query="select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id=$pm_id";
 
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_array($res)){
@@ -168,8 +166,7 @@ class PlaceMapCategory{
   function loadAll_event ($event_id){
     global $_SHOP;
     $query="select * from Category LEFT JOIN Color ON category_color=color_id
-            where category_event_id=$event_id
-            and (category_organizer_id=0 or category_organizer_id={$_SHOP->organizer_id})";
+            where category_event_id=$event_id";
 
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_array($res)){
@@ -199,7 +196,7 @@ class PlaceMapCategory{
   		}
     }
 
-    $query="delete from Category where category_id=$category_id and category_organizer_id='{$_SHOP->organizer_id}' limit 1";
+    $query="delete from Category where category_id=$category_id limit 1";
     ShopDB::query($query);
 
 
@@ -237,7 +234,6 @@ class PlaceMapCategory{
 		}
 		$query="SELECT * FROM Category_stat
 		WHERE cs_category_id='{$this->category_id}'
-		AND cs_organizer_id='{$_SHOP->organizer_id}'
 		FOR UPDATE";
 
 		if(!$cs=ShopDB::query_one_row($query)){
@@ -248,7 +244,6 @@ class PlaceMapCategory{
 
 		$query="SELECT * FROM Event_stat
 		WHERE es_event_id='{$this->category_event_id}'
-		AND es_organizer_id='{$_SHOP->organizer_id}'
 		FOR UPDATE";
 
 		if(!$es=ShopDB::query_one_row($query)){
@@ -279,7 +274,7 @@ class PlaceMapCategory{
 		if($delta>0){
 			require_once('classes/Seat.php');
 			for($i=0;$i<$delta;$i++){
-				if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id,$_SHOP->organizer_id)){
+				if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id)){
 					ShopDB::rollback();
 					echo 10;return FALSE;;
 				}
@@ -290,7 +285,6 @@ class PlaceMapCategory{
 		  $query="DELETE FROM Seat
 			where seat_category_id='{$this->category_id}'
 			and seat_event_id='{$this->category_event_id}'
-			and seat_organizer_id='{$_SHOP->organizer_id}'
 			and seat_status='free'
 			LIMIT $limit";
 
@@ -309,7 +303,6 @@ class PlaceMapCategory{
 		$query="UPDATE Category_stat
 		SET cs_free='$new_cs_free',cs_total='$new_cs_total'
 		WHERE cs_category_id='{$this->category_id}'
-		AND cs_organizer_id='{$_SHOP->organizer_id}'
 		LIMIT 1";
 
 		if(!ShopDB::query($query)){
@@ -325,7 +318,6 @@ class PlaceMapCategory{
 		$query="UPDATE Event_stat
 		SET es_free='$new_es_free',es_total='$new_es_total'
 		WHERE es_event_id='{$this->category_event_id}'
-		and es_organizer_id='{$_SHOP->organizer_id}'
 		LIMIT 1";
 
 		if(!ShopDB::query($query)){
@@ -351,7 +343,7 @@ class PlaceMapCategory{
 
   function _find_ident ($pm_id){
     global $_SHOP;
-    $query="select category_ident from Category where category_pm_id=$pm_id and category_organizer_id={$_SHOP->organizer_id}";
+    $query="select category_ident from Category where category_pm_id=$pm_id";
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_array($res)){
       $ident[$i['category_ident']]=1;

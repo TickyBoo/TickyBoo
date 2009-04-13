@@ -105,7 +105,7 @@ class UnpublishEventView extends AdminView {
     {
         global $_SHOP;
         if (isset($_POST['confirm']) and $_POST['confirm'] == 'YES' and $_POST['event_id'] > 0) {
-            if ($event = Event::load($_POST['event_id']) and $event->event_organizer_id == $_SHOP->organizer_id) {
+            if ($event = Event::load($_POST['event_id'])) {
                 if ($event->stop_sales()) {
                     echo "<div class='success'> <b>'{$event->event_name}'</b> " . stop_success . "</div>\n";
                 } else {
@@ -131,8 +131,7 @@ class UnpublishEventView extends AdminView {
             }
         } else
         if ($_GET['event_id'] > 0) {
-            if (!$event = Event::load($_GET['event_id'], false) or
-                    $event->event_organizer_id != $_SHOP->organizer_id) {
+            if (!$event = Event::load($_GET['event_id'], false)) {
                return true;
             }
 

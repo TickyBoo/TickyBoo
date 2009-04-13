@@ -95,7 +95,7 @@ class PlaceMapZoneView extends AdminView {
         global $_SHOP;
 
         require_once('classes/PlaceMap.php');
-        if ($pm = PlaceMap::load($pm_id) and $pm->pm_organizer_id == $_SHOP->organizer_id) {
+        if ($pm = PlaceMap::load($pm_id)) {
             $mine = true;
         }
         
@@ -144,7 +144,7 @@ class PlaceMapZoneView extends AdminView {
 
         if ($_GET['action'] == 'add_pmz' and $_GET['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
-            if (!$pm = PlaceMap::load($_GET['pm_id']) or $pm->pm_organizer_id != $_SHOP->organizer_id) {
+            if (!$pm = PlaceMap::load($_GET['pm_id'])) {
                 return;
             }
 
@@ -152,7 +152,7 @@ class PlaceMapZoneView extends AdminView {
             $this->pmz_form($_GET, $err);
         } else if ($_POST['action'] == 'insert_pmz' and $_POST['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
-            if (!$pm = PlaceMap::load($_POST['pm_id']) or $pm->pm_organizer_id != $_SHOP->organizer_id) {
+            if (!$pm = PlaceMap::load($_POST['pm_id'])) {
                 return;
             }
 
@@ -166,27 +166,18 @@ class PlaceMapZoneView extends AdminView {
             }
         }elseif ($_GET['action'] == 'view_pmz' and $_GET['pmz_id'] > 0) {
             $pmz = PlaceMapZone::load($_GET['pmz_id']);
-            if ($pmz->pmz_organizer_id and $pmz->pmz_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
             $this->pmz_view($pmz);
 
         } elseif ($_GET['action'] == 'edit_pmz' and $_GET['pmz_id'] > 0) {
             $pmz = PlaceMapZone::load($_GET['pmz_id']);
-            if ($pmz->pmz_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
             $data = (array)$pmz;
-
             $this->pmz_form($data, $err);
+
         } else if ($_POST['action'] == 'update_pmz' and $_POST['pmz_id'] > 0) {
             if (!$this->pmz_check($_POST, $err)) {
                 $this->pmz_form($_POST, $err);
             } else {
                 $pmz = PlaceMapZone::load($_POST['pmz_id']);
-                if ($pmz->pmz_organizer_id != $_SHOP->organizer_id) {
-                    return;
-                }
 
                 $pmz->pmz_color = $_POST['pmz_color'];
                 $pmz->pmz_name = $_POST['pmz_name'];
@@ -197,9 +188,6 @@ class PlaceMapZoneView extends AdminView {
             }
         }elseif ($_GET['action'] == 'remove_pmz' and $_GET['pmz_id'] > 0) {
             $pmz = PlaceMapZone::load($_GET['pmz_id']);
-            if ($pmz->pmz_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
 
             PlaceMapZone::delete($_GET['pmz_id']);
 

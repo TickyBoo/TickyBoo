@@ -77,7 +77,7 @@ function smarty_function_sendmail ($params,&$smarty) {
   require_once("classes/TemplateEngine.php");
   
   $te=new TemplateEngine;
-  $tpl=&$te->getTemplate($template,$_SHOP->organizer_id);
+  $tpl=&$te->getTemplate($template);
   
   $email = new htmlMimeMail();
   $tpl->build($email,$data,$_SHOP->lang);

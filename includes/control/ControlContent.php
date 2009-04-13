@@ -188,7 +188,7 @@ global $_SHOP;
 if($_SHOP->event_ids !=''){
    $query="select * from Event,Ort where event_status!='unpub' AND 
     event_rep LIKE '%sub%' AND event_ort_id=ort_id 
-  	  and FIELD(event_id,{$_SHOP->event_ids})>0 and event_organizer_id={$_SHOP->organizer_id} order by event_date,event_time ";
+  	  and FIELD(event_id,{$_SHOP->event_ids})>0 order by event_date, event_time ";
   if(!$events=ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
@@ -265,7 +265,6 @@ if($_SHOP->event_ids !=''){
   $query="select event_id,event_name,event_date,event_time from Event
           where event_status!='unpub' and event_rep LIKE '%sub%' 
   	  and FIELD(event_id,{$_SHOP->event_ids})>0 
-	  and event_organizer_id={$_SHOP->organizer_id} 
 	  order by event_date,event_time";
   if(!$res=ShopDB::query($query)){
     user_error(shopDB::error());

@@ -59,7 +59,7 @@ function spoint_view (&$data){
   $this->print_field('user_fax',$data);
   $this->print_field('user_email',$data);
   $this->print_field('user_prefs',$data);
-  $this->print_set('user_organizer_ids',$data["user_organizer_ids"],"Organizer","organizer_name","organizer_id","view_organizer.php");
+//  $this->print_set('user_organizer_ids',$data["user_organizer_ids"],"Organizer","organizer_name","organizer_id","view_organizer.php");
   
   $this->print_field('login',$data);
 
@@ -89,33 +89,7 @@ function spoint_form (&$data,&$err,$title,$add='add'){
   $this->print_input('user_email',$data,$err,30,50);
   
   $this->print_select('user_prefs',$data,$err,array('pdt','pdf'));
-  
-  if($data["user_organizer_ids"] and $data["user_organizer_ids"]!=""){
-    $org=explode(",",$data["user_organizer_ids"]); 
-  }
-  $query="select organizer_id,organizer_name from Organizer";
-  if(!$res=ShopDB::query($query)){
-    user_error(shopDB::error());
-    return;
-  }
-    
-/*
-  echo "<tr><td class='admin_name'  width='40%'>".$this->con('user_organizer_ids')."</td>
-  <td class='admin_value'>";
-  //multiples organizers for 1 vvs for the moment disabled 
-  //echo "<select multiple size='5' name='user_organizer_ids[]'>";
-  echo "<select  name='user_organizer_ids[]'>";
-  while($row=shopDB::fetch_array($res)){
-    $sel="";
-    foreach($org as $org_id){
-      if($org_id==$row["organizer_id"]){
-        $sel="selected";
-      }
-    }
-    echo "<option value='".$row["organizer_id"]."' $sel>".$row["organizer_name"]."</option>";
-  }
-  echo "</select></td></tr>\n";
-*/  
+
   $this->print_input('user_nickname',$data,$err,30,50);
   
   if($add=='add'){
@@ -151,7 +125,7 @@ function spoint_form (&$data,&$err,$title,$add='add'){
  function spoint_list (){
   global $_SHOP;
   
-  $query="SELECT * FROM User WHERE user_status='1' and user_organizer_ids={$_SHOP->organizer_id}";
+  $query="SELECT * FROM User WHERE user_status='1' ";
   if(!$res=ShopDB::query($query)){
     user_error(shopDB::error());
     return;
@@ -179,30 +153,7 @@ function spoint_form (&$data,&$err,$title,$add='add'){
   echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".add."</a></center>";
 }
 
-function organizer_post ($data,$user_id){
-
-  global $_SHOP;
-
-  if(!$data['user_organizer_ids']){
-    $data['user_organizer_ids'][]=$_SHOP->organizer_id;
-  }
-  
-  $first=TRUE;
-  foreach($data['user_organizer_ids'] as $id){
-    if($first){$ids.=$id;}else{$ids.=",".$id;}
-    $first=FALSE;
-  }
-  $query="UPDATE User set user_organizer_ids='$ids' where user_id='$user_id'";
-  if($query){
-    if(ShopDB::query($query)){
-      return TRUE;
-    }
-   }
-   return FALSE;
-
-}
-
-function draw () { 
+function draw () {
 if($_POST['action']=='insert'){
   if(!$this->spoint_check($_POST,$err)){
     $this->spoint_form($_POST,$err,spoint_add_title);
@@ -235,13 +186,6 @@ if($_POST['action']=='insert'){
         return FALSE;
       }
     }
-
-
-    if(!$this->organizer_post($_POST,$user_id)){
-      echo "<div class=error>".organizers_setting_problem."<div>";
-      return FALSE;
-    }
-    
     $this->spoint_list();
   }
  }else if($_POST['action']=='update'){  
@@ -273,13 +217,6 @@ if($_POST['action']=='insert'){
       }
       
     }    
-
-
-    if(!$this->organizer_post($_POST,$_POST["user_id"])){
-      echo "<div class=error>".organizers_setting_problem."<div>";
-      return FALSE;
-    }
-    
    $this->spoint_list();
   }
 }else if($_GET['action']=='add'){

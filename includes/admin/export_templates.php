@@ -44,7 +44,6 @@ class export_templates extends AdminView {
 		global $_SHOP;
 		
 		$query = "select template_id, template_name, template_type from Template
-              where template_organizer_id = '{$_SHOP->organizer_id}'
               order by template_name, template_type";
 
 		if($res=ShopDB::query($query)){
@@ -74,9 +73,8 @@ class export_templates extends AdminView {
 			require_once('functions/xmlsql_func.php');
 			$id=(int)$_GET['export_template_id'];
 			
-			$org="template_organizer_id='{$_SHOP->organizer_id}'";
 
-    	if($res=ShopDB::query_one_row("select template_name, template_type, template_text from Template where template_id='$id' and $org")){
+    	if($res=ShopDB::query_one_row("select template_name, template_type, template_text from Template where template_id='$id'")){
   			$filename=$_GET['export_template_file'];
   			if(empty($filename)){
   			  $filename='template_'.$res['template_type'].'_'.$res['template_name'].'.xml';

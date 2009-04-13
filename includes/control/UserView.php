@@ -98,7 +98,7 @@ class UserView extends AdminView{
 	       <a href='view_order.php?action=details&order_id=".$order["order_id"]."'>
 	       <img src='images/view.png' border='0'></a></td><tr>";
      $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,Event,Category where seat_order_id='".$order["order_id"]."'
-               AND seat_event_id=event_id AND seat_category_id= category_id and event_organizer_id='{$_SHOP->organizer_id}'";
+               AND seat_event_id=event_id AND seat_category_id= category_id";
      if(!$res1=ShopDB::query($query)){
          user_error(shopDB::error());
          return;

@@ -137,7 +137,7 @@ class PlaceMapCategoryView extends AdminView {
         global $_SHOP;
 
         require_once('classes/PlaceMap.php');
-        if ($pm = PlaceMap::load($pm_id) and $pm->pm_organizer_id == $_SHOP->organizer_id) {
+        if ($pm = PlaceMap::load($pm_id)) {
             $mine = true;
         }
 
@@ -183,7 +183,7 @@ class PlaceMapCategoryView extends AdminView {
 
         if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
-            if (!$pm = PlaceMap::load($_GET['pm_id']) or $pm->pm_organizer_id != $_SHOP->organizer_id) {
+            if (!$pm = PlaceMap::load($_GET['pm_id'])) {
                 return;
             }
 
@@ -191,7 +191,7 @@ class PlaceMapCategoryView extends AdminView {
         } else
         if ($_POST['action'] == 'insert_category' and $_POST['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
-            if (!$pm = PlaceMap::load($_POST['pm_id']) or $pm->pm_organizer_id != $_SHOP->organizer_id) {
+            if (!$pm = PlaceMap::load($_POST['pm_id'])) {
                 return;
             }
 
@@ -199,7 +199,7 @@ class PlaceMapCategoryView extends AdminView {
                 $this->category_form($_POST, $err);
             } else {
                 require_once('classes/PlaceMap.php');
-                if (!$pm = PlaceMap::load($_POST['pm_id']) or $pm->pm_organizer_id != $_SHOP->organizer_id) {
+                if (!$pm = PlaceMap::load($_POST['pm_id']) ) {
                     return;
                 }
 
@@ -211,8 +211,7 @@ class PlaceMapCategoryView extends AdminView {
                     $_POST['category_numbering'],
                     $_POST['category_size'],
                     // $_POST['category_max'],
-                    $pm->pm_event_id,
-                    $_SHOP->organizer_id);
+                    $pm->pm_event_id, 0);
                 $category->category_data = $_POST['category_data'];
 
                 $category->save();
@@ -221,16 +220,9 @@ class PlaceMapCategoryView extends AdminView {
             }
         }elseif ($_GET['action'] == 'view_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load_full($_GET['category_id']);
-            if ($category->category_organizer_id and $category->category_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
             $this->category_view($category);
         } elseif ($_GET['action'] == 'edit_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load($_GET['category_id']);
-            if ($category->category_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
-
             $data = (array)$category;
             $data['pm_id'] = $category->category_pm_id;
 
@@ -240,10 +232,6 @@ class PlaceMapCategoryView extends AdminView {
                 $this->category_form($_POST, $err);
             } else {
                 $category = PlaceMapCategory::load($_POST['category_id']);
-                if ($category->category_organizer_id != $_SHOP->organizer_id) {
-                    return;
-                }
-
                 foreach($_POST as $k => $v) {
                     $category->$k = $v;
                 }
@@ -255,19 +243,11 @@ class PlaceMapCategoryView extends AdminView {
         }elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load($_GET['category_id']);
 
-            if ($category->category_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
-
             PlaceMapCategory::delete($category->category_id);
 
             return true;
         } else if ($_POST['action'] == 'resize_category' and $_POST['category_id'] > 0) {
             $category = PlaceMapCategory::load($_POST['category_id']);
-
-            if ($category->category_organizer_id != $_SHOP->organizer_id) {
-                return;
-            }
 
             if (!$category->change_size((int)$_POST['category_new_size'])) {
                 $data = (array)$category;
@@ -285,7 +265,7 @@ class PlaceMapCategoryView extends AdminView {
     {
         global $_SHOP;
 
-        $query = "SELECT template_name FROM Template WHERE template_type='pdf'  AND template_organizer_id='$_SHOP->organizer_id' ORDER BY template_name";
+        $query = "SELECT template_name FROM Template WHERE template_type='pdf' ORDER BY template_name";
         if (!$res = ShopDB::query($query)) {
             user_error(shopDB::error());
             return false;

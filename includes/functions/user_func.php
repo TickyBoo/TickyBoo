@@ -218,7 +218,7 @@ global $_SHOP;
 	  	if(empty($tpl)){
 				$tpl='Signup_email';
 			}
-  		$tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id);
+  		$tpl=$engine->getTemplate($tpl);
 	  	$email=&new htmlMimeMail();
 
   		$link= $_SHOP->root."index.php?register_user=on&action=activate&x=".$user_id."&y=".$active;

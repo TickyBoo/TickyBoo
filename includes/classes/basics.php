@@ -283,6 +283,38 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
   }
   return $result;
 }
+	/**
+	 * redirect to the given url. if relative the base-url to the framework is added.
+	 * @param string url to redirect to
+	 * @param int status http status-code to use for redirection (default 303=get the new url via GET even if this page was reached via POST)
+	 */
+	function Redirect($url, $status = 303) {
+    GLOBAL $_SHOP;
+		$this->AutoRender = false;
+		if (function_exists('session_write_close')) {
+			session_write_close();
+		}
+
+		$pos = strpos($url, '://');
+		if ($pos === false) { // is relative url, construct rest
+			$url = $_SHOP->root . $url;
+		}
+
+		if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
+			header('HTTP/1.1 ' . $status);
+		}
+		header('Location: ' . $url);
+	}
+
+	function constructBase() {
+		$base = 'http' . (env('https') != '' ? 's' : '') . '://' .
+		env('SERVER_NAME') . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '') .
+		(dirname(env('PHP_SELF')));
+		if (substr($base, -1, 1) != '/') {
+			$base .= '/';
+		}
+		return $base;
+	}
 
 function _esc ($str){
   return "'".shopDB::escape_string($str)."'";

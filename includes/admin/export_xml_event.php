@@ -43,8 +43,7 @@ class export_xml_event extends AdminView {
   function cp_form (&$data,&$err){
 		global $_SHOP;
 		
-		$query = "select * from Event where event_rep LIKE '%sub%' and
-		event_organizer_id='{$_SHOP->organizer_id}' ORDER BY event_date,event_time,event_name";
+		$query = "select * from Event where event_rep LIKE '%sub%' ORDER BY event_date,event_time,event_name";
 
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_array($res)){

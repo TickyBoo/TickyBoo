@@ -63,7 +63,7 @@ class PlaceMapZone{
 	    pmz_name=".ShopDB::quote($this->pmz_name).",
 	    pmz_color=".ShopDB::quote($this->pmz_color)."
 	    
-	    where pmz_id='{$this->pmz_id}' and pmz_organizer_id={$_SHOP->organizer_id}";
+	    where pmz_id='{$this->pmz_id}'";
     }else{
        if(!$this->pmz_ident){$this->_find_ident();}
 
@@ -72,15 +72,13 @@ class PlaceMapZone{
     	         pmz_name, 
     	         pmz_short_name, 
 	         pmz_ident, 
-	         pmz_color,
-		 pmz_organizer_id
+	         pmz_color
                ) VALUES (
 	         $this->pmz_pm_id,
 	         ".ShopDB::quote($this->pmz_name).",
 	         ".ShopDB::quote($this->pmz_short_name).",
 	         ".ShopDB::quote($this->pmz_ident).",
-	         ".ShopDB::quote($this->pmz_color).",
-		 {$_SHOP->organizer_id})";
+	         ".ShopDB::quote($this->pmz_color).")";
     }
    
     if(ShopDB::query($query)){
@@ -97,7 +95,7 @@ class PlaceMapZone{
 
   function load ($pmz_id){
     global $_SHOP;
-    $query="select * from PlaceMapZone where pmz_id=$pmz_id and (pmz_organizer_id=0 or pmz_organizer_id={$_SHOP->organizer_id})";
+    $query="select * from PlaceMapZone where pmz_id=$pmz_id";
 
     if($res=ShopDB::query_one_row($query)){
       $new_pmz=new PlaceMapZone;
@@ -110,7 +108,7 @@ class PlaceMapZone{
   function loadAll ($pm_id){
     global $_SHOP;
     
-    $query="select * from PlaceMapZone where pmz_pm_id='$pm_id' and (pmz_organizer_id='0' or pmz_organizer_id='{$_SHOP->organizer_id}')";
+    $query="select * from PlaceMapZone where pmz_pm_id='$pm_id'";
 
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_array($res)){
@@ -140,14 +138,14 @@ class PlaceMapZone{
     }
 	
   
-    $query="delete from PlaceMapZone where pmz_id=$pmz_id and pmz_organizer_id={$_SHOP->organizer_id} limit 1";
+    $query="delete from PlaceMapZone where pmz_id=$pmz_id limit 1";
     ShopDB::query($query);
   }
 
   function _find_ident (){
     global $_SHOP;
 
-    $query="select pmz_ident from PlaceMapZone where pmz_pm_id={$this->pmz_pm_id} and pmz_organizer_id={$_SHOP->organizer_id}";
+    $query="select pmz_ident from PlaceMapZone where pmz_pm_id={$this->pmz_pm_id}";
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_array($res)){
       $ident[$i['pmz_ident']]=1;

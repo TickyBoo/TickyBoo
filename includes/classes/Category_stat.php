@@ -41,14 +41,12 @@ class Category_stat{
   var $cs_category_id;
   var $cs_free;
   var $cs_total;
-  var $cs_organizer_id;
 
-  function Category_stat($cs_category_id=0,$cs_total=0,$cs_organizer_id=0) {
+  function Category_stat($cs_category_id=0,$cs_total=0) {
     if($cs_category_id){
       $this->cs_category_id=$cs_category_id;
       $this->cs_total=$cs_total;
       $this->cs_free=$cs_total;
-      $this->cs_organizer_id=$cs_organizer_id;
     }
   }
   
@@ -56,8 +54,7 @@ class Category_stat{
     $query="insert into Category_stat
     set cs_category_id={$this->cs_category_id},
     cs_free={$this->cs_free},
-    cs_total={$this->cs_total},
-    cs_organizer_id={$this->cs_organizer_id}";
+    cs_total={$this->cs_total}";
     
     if(ShopDB::query($query)){
       return TRUE;

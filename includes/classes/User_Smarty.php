@@ -259,7 +259,7 @@ class User_Smarty {
 			if(empty($tpl)){
 			  $tpl='forgot_passwd';
 			}
-      $tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id); //'forgot_passwd'
+      $tpl=$engine->getTemplate($tpl); //'forgot_passwd'
       $email=&new htmlMimeMail();
 
       $row['new_password']=$pwd;
@@ -303,7 +303,7 @@ class User_Smarty {
 				if(empty($tpl)){
 					$tpl='Signup_email';
 				}
-			$tpl=$engine->getTemplate($tpl,$_SHOP->organizer_id); // 'Signup_email';
+			$tpl=$engine->getTemplate($tpl); // 'Signup_email';
 			$email=&new htmlMimeMail();
 
 			$link= $_SERVER["PHP_SELF"]."?register_user=on&action=activate&x=".$user_id."&y=".$active;

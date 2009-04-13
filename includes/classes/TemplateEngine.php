@@ -46,32 +46,31 @@
   }
 
 	//internal function: loads, initializes the template object, and updates cache
-  function &try_load ($name,$t_class_name,$code,$organizer_id){
+  function &try_load ($name, $t_class_name, $code){
     global $_SHOP;
 
     eval($code);
     if(class_exists($t_class_name)){
       $tpl=&new $t_class_name;
-      $_SHOP->templates[$name.$organizer_id]=&$tpl;
+      $_SHOP->templates[$name]=&$tpl;
       $tpl->engine=&$this; 
-      $tpl->organizer_id=$organizer_id;
       return $tpl;
     }
   }  
 
 	//returns the template object or false
-  function &getTemplate($name,$organizer_id){
+  function &getTemplate($name){
     global $_SHOP;
 
     //check if the template is in cache
-    if(isset($_SHOP->templates[$name.$organizer_id])){
-      $res=&$_SHOP->templates[$name.$organizer_id];
+    if(isset($_SHOP->templates[$name])){
+      $res=&$_SHOP->templates[$name];
       return $res;
     }
     
 		//if not: load the template record from db
     require_once("classes/ShopDB.php");
-    $query="SELECT * FROM Template WHERE template_name='$name' and template_organizer_id='$organizer_id'";
+    $query="SELECT * FROM Template WHERE template_name='$name'";
     if(!$data=ShopDB::query_one_row($query)){
       return FALSE;
     }
@@ -80,7 +79,7 @@
     
     //trying to load already compiled template
     if($data['template_status']=='comp'){
-      if($tpl=&$this->try_load($name,$t_class_name,$data['template_code'],$organizer_id)){
+      if($tpl=&$this->try_load($name,$t_class_name,$data['template_code'])){
         return $tpl;
       }
     }
@@ -107,7 +106,7 @@
     }
 
 		//truying to load just compile template
-    if($tpl=$this->try_load($name,$t_class_name,$code,$organizer_id)){
+    if($tpl=$this->try_load($name,$t_class_name,$code)){
 
       //compilation ok: saving the code in db
       $code_q=shopDB::escape_string($code);

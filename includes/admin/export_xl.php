@@ -174,7 +174,7 @@ class export_xl extends AdminView {
        $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,`Order`,User,Event,Category,Ort where 
                seat_order_id=order_id AND order_date>='$start' AND order_date<='$end' 
 	       AND seat_event_id=event_id AND  seat_category_id=category_id 
-	       AND seat_user_id=user_id AND event_ort_id=ort_id and seat_organizer_id='{$_SHOP->organizer_id}'";
+	       AND seat_user_id=user_id AND event_ort_id=ort_id";
        if(!$res=ShopDB::query($query)){
          return 0;
        }

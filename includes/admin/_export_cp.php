@@ -41,8 +41,7 @@ class export_cp extends AdminView {
   function cp_form (&$data,&$err){
 		global $_SHOP;
 		
-		$query = "select * from Event where event_rep LIKE '%sub%' and
-		event_organizer_id='{$_SHOP->organizer_id}'";
+		$query = "select * from Event where event_rep LIKE '%sub%'";
 
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_array($res)){

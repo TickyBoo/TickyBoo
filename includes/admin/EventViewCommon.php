@@ -45,7 +45,6 @@ class EventViewCommon extends AdminView {
         $query = "SELECT pm_id,ort_id,pm_ort_id,pm_name,ort_name
                   FROM Ort LEFT JOIN PlaceMap2 ON pm_ort_id=ort_id
                   where pm_event_id IS NULL
-                  and   ort_organizer_id={$_SHOP->organizer_id}
                   order by ort_name";
         if (!$res = ShopDB::query($query)) {
             return;
@@ -83,7 +82,6 @@ class EventViewCommon extends AdminView {
 
         $query = "SELECT template_name FROM Template
                   WHERE template_type='pdf'
-                  and template_organizer_id='{$_SHOP->organizer_id}'
                   ORDER BY template_name";
 
         if (!$res = ShopDB::query($query)) {
@@ -112,7 +110,6 @@ class EventViewCommon extends AdminView {
 
         $query = "SELECT event_group_id,event_group_name
                   FROM Event_group
-            	  WHERE event_group_organizer_id='{$_SHOP->organizer_id}'
             	  ORDER BY event_group_name";
         if (!$res = ShopDB::query($query)) {
             return false;

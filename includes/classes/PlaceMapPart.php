@@ -112,7 +112,7 @@ class PlaceMapPart { // ZRS
     	    pmp_expires='{$this->pmp_expires}',
     	    pmp_scene='{$this->pmp_scene}',
     	    pmp_shift='{$this->pmp_shift}'
-    	    where pmp_id='{$this->pmp_id}' and pmp_organizer_id={$_SHOP->organizer_id}";
+    	    where pmp_id='{$this->pmp_id}'";
         } else {
             $query = "insert into PlaceMapPart (
                  pmp_pm_id,
@@ -122,8 +122,7 @@ class PlaceMapPart { // ZRS
 	         pmp_height,
    	         pmp_data,
 		 pmp_scene,
-		 pmp_shift,
-		 pmp_organizer_id
+		 pmp_shift
                ) VALUES (
 	         {$this->pmp_pm_id},
 		 '{$this->pmp_event_id}',
@@ -132,8 +131,7 @@ class PlaceMapPart { // ZRS
 	         {$this->pmp_height},
  	         " . ShopDB::quote($data) . ",
 		 '{$this->pmp_scene}',
-		 '{$this->pmp_shift}',
-		 {$_SHOP->organizer_id})";
+		 '{$this->pmp_shift}')";
         }
 
         if (ShopDB::query($query)) {
@@ -152,7 +150,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from PlaceMapPart where pmp_id=$pmp_id and (pmp_organizer_id={$_SHOP->organizer_id} or pmp_organizer_id=0)";
+        $query = "select * from PlaceMapPart where pmp_id=$pmp_id ";
 
         if ($res = ShopDB::query_one_row($query)) {
             $new_pmp = new PlaceMapPart;
@@ -167,7 +165,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select pmp_id,pmp_name from PlaceMapPart where pmp_pm_id=$pm_id and (pmp_organizer_id={$_SHOP->organizer_id} or pmp_organizer_id=0) order by pmp_id";
+        $query = "select pmp_id,pmp_name from PlaceMapPart where pmp_pm_id=$pm_id order by pmp_id";
         if ($res = ShopDB::query($query)) {
             while ($data = shopDB::fetch_array($res)) {
                 $new_pmp = new PlaceMapPart;
@@ -184,7 +182,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from PlaceMapPart where pmp_pm_id=$pm_id and (pmp_organizer_id={$_SHOP->organizer_id} or pmp_organizer_id=0) order by pmp_id";
+        $query = "select * from PlaceMapPart where pmp_pm_id=$pm_id  order by pmp_id";
 
         if ($res = ShopDB::query($query)) {
             while ($data = shopDB::fetch_array($res)) {
@@ -203,7 +201,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from Ort,PlaceMapPart,PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id where pmp_pm_id=pm_id and ort_id=pm_ort_id and pmp_id=$pmp_id and (pmp_organizer_id={$_SHOP->organizer_id} or pmp_organizer_id=0)";
+        $query = "select * from Ort,PlaceMapPart,PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id where pmp_pm_id=pm_id and ort_id=pm_ort_id and pmp_id=$pmp_id ";
 
         if ($res = ShopDB::query_one_row($query)) {
             $new_pmp = new PlaceMapPart;
@@ -224,8 +222,7 @@ class PlaceMapPart { // ZRS
         global $_SHOP;
 
         $query = "select * from Ort, PlaceMapPart, PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id
-                  where pmp_pm_id=pm_id and ort_id=pm_ort_id and
-                  pm_id=$pm_id and (pmp_organizer_id={$_SHOP->organizer_id} or pmp_organizer_id=0)";
+                  where pmp_pm_id=pm_id and ort_id=pm_ort_id and  pm_id=$pm_id ";
 
         if ($res = ShopDB::query($query)) {
             while ($data = shopDB::fetch_array($res)) {
@@ -248,7 +245,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "delete from PlaceMapPart where pmp_id={$this->pmp_id} and pmp_organizer_id={$_SHOP->organizer_id} limit 1";
+        $query = "delete from PlaceMapPart where pmp_id={$this->pmp_id} limit 1";
         ShopDB::query($query);
     }
 
@@ -584,7 +581,7 @@ class PlaceMapPart { // ZRS
                             $old_cat->category_price,
                             $old_cat->category_template, $old_cat->category_color,
                             $old_cat->category_numbering, 0,
-                            $old_cat->category_event_id, $old_cat->category_organizer_id);
+                            $old_cat->category_event_id);
 
                         $cat->category_ident = $category_ident;
                         $this->pmp_data[$j][$k][PM_CATEGORY] = $cat->category_ident;
@@ -607,7 +604,7 @@ class PlaceMapPart { // ZRS
         }
     }
 
-    function publish ($event_id, $organizer_id, &$stats, &$pmps, $dry_run = false)
+    function publish ($event_id, $dummy, &$stats, &$pmps, $dry_run = false)
     {
         require_once('classes/Seat.php');
 
@@ -623,8 +620,7 @@ class PlaceMapPart { // ZRS
                     }
 
                     if ($dry_run or $seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
-                            $zone->pmz_id, $this->pmp_id, $category->category_id,
-                            $organizer_id)) {
+                            $zone->pmz_id, $this->pmp_id, $category->category_id)) {
                         if (!$dry_run) {
                             $this->pmp_data[$j][$k][PM_ID] = $seat_id;
                         }
@@ -652,7 +648,7 @@ class PlaceMapPart { // ZRS
 
         $query = "update PlaceMapPart set
 	    pmp_data_orig=pmp_data
-	    where pmp_id='{$this->pmp_id}' and pmp_organizer_id={$_SHOP->organizer_id}";
+	    where pmp_id='{$this->pmp_id}' ";
 
         if (ShopDB::query($query)) {
             return $this->pmp_id;
@@ -725,7 +721,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "update PlaceMapPart set pmp_expires=1 where pmp_id=$pmp_id and pmp_organizer_id={$_SHOP->organizer_id}";
+        $query = "update PlaceMapPart set pmp_expires=1 where pmp_id=$pmp_id";
         ShopDB::query($query);
     }
 

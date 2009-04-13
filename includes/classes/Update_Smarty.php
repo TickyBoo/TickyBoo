@@ -108,7 +108,7 @@ class Update_Smarty {
   		if($params['reserved']){
   			$order_id=$this->secure_url_param($params['order_id']);
 			$query="SELECT * FROM `Order` WHERE order_id=".ShopDB::quote($order_id)."
-					AND order_organizer_id={$_SHOP->organizer_id} AND order_status NOT IN ('cancel','trash') LIMIT 1";
+					AND order_status NOT IN ('cancel','trash') LIMIT 1";
 			if($res=ShopDB::query($query)){
 				$result=shopDB::fetch_assoc($res);
 				$time=Time::StringToTime($result['order_date']);
@@ -117,7 +117,7 @@ class Update_Smarty {
 		}else{
 			$order_id=$this->secure_url_param($params['order_id']);
 			$query="SELECT * FROM `Order` WHERE order_id=".ShopDB::quote($order_id)."
-					AND order_organizer_id={$_SHOP->organizer_id} AND order_status NOT IN ('cancel','trash') LIMIT 1";
+					AND order_status NOT IN ('cancel','trash') LIMIT 1";
 			if($res=ShopDB::query($query)){
 				$result=shopDB::fetch_assoc($res);
 				$query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($result['order_handling_id'])." 
@@ -141,8 +141,7 @@ class Update_Smarty {
   	global $_SHOP;
   	
   	if($this->shopconfig_restime >= 10){
-  	  $where =" order_organizer_id={$_SHOP->organizer_id} 
-			AND order_status NOT IN ('trash','ord','cancel') 
+  	  $where =" order_status NOT IN ('trash','ord','cancel')
 			AND order_payment_status !='payed' 
 			AND order_shipment_status !='send' 
 			AND (NOW() - INTERVAL ".$this->shopconfig_restime." MINUTE) > order_date ";
@@ -155,7 +154,7 @@ class Update_Smarty {
 	if($res=ShopDB::query($query)){
 	  while($row = shopDB::fetch_array($res)){
 			//echo "BANG!<br> ";
-			Order::order_delete($row['order_id'],$this->shopconfig_organizer_id);
+			Order::order_delete($row['order_id']);
 	  }
 	}			
   }
@@ -171,8 +170,8 @@ class Update_Smarty {
 	  if($res=ShopDB::query($query)){
 	  	//Cycles through Handling's
 		while($row=shopDB::fetch_array($res)){
-			$query2="SELECT * FROM `Order` WHERE order_organizer_id={$_SHOP->organizer_id}
-		  		  AND (now() - interval ".ShopDB::quote($row['handling_expires_min'])." minute) > order_date 
+			$query2="SELECT * FROM `Order`
+      WHERE (now() - interval ".ShopDB::quote($row['handling_expires_min'])." minute) > order_date
 				  AND order_status NOT IN ('trash','res','cancel')  
 				  AND order_payment_status !='payed' 
 				  AND order_shipment_status !='send' 
@@ -181,7 +180,7 @@ class Update_Smarty {
 			if($resord=ShopDB::query($query2)){
 			//Cycles through orders to see if they should be canceled!
 				while($roword=shopDB::fetch_array($resord)){
-				  Order::order_delete($roword['order_id'],$this->shopconfig_organizer_id);
+				  Order::order_delete($roword['order_id']);
 				}		
 			}else{
 			  	$error['unpaidord']="Could not load unpaid orders for handling id: {$row['handling_id']} !";	
@@ -233,10 +232,7 @@ class Update_Smarty {
   function saveupdate($config_id='1'){
   global $_SHOP;
   
-	$query="UPDATE `ShopConfig` 
-			SET shopconfig_lastrun=NOW() 
-			WHERE shopconfig_id=".ShopDB::quote($config_id)."
-			AND shopconfig_organizer_id={$_SHOP->organizer_id} LIMIT 1";
+	$query="UPDATE `ShopConfig` SET shopconfig_lastrun=NOW() LIMIT 1";
 	if(!$data=ShopDB::query($query)){
 		$error['save']="Save Error, Could not save lastrun";
 		return;		
@@ -249,9 +245,6 @@ class Update_Smarty {
     
     $query="SELECT * FROM `ShopConfig`  LIMIT 1";
     
-//	WHERE shopconfig_id = ".ShopDB::quote($config_id)."
-//	AND shopconfig_organizer_id={$_SHOP->organizer_id}
-
     if($data=ShopDB::query_one_row($query)){
       $this->_fill($data);
       return $this;

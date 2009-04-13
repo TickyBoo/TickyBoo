@@ -200,10 +200,6 @@ class _xmltmp{
 			$query='update `'.$this->table.'` set ';
 			$next=true;
 			foreach($this->query as $field=>$value){
-				if(strpos($field,'organizer_id')!==FALSE){
-					$value=$_SHOP->organizer_id;
-				}
-				
 				if(!$next){
 				  $query.=',';
 				}

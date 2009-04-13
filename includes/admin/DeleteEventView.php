@@ -104,7 +104,7 @@ if($event['event_rep']=='main'){
     global $_SHOP;
 
     if ($_POST['confirm'] == 'YES' and $_POST['event_id'] > 0){
-      if ($event = Event::load($_POST['event_id'], false) and $event->event_organizer_id == $_SHOP->organizer_id){
+      if ($event = Event::load($_POST['event_id'], false)){
         if ($event->delete()){
           echo "<div class='success'> <b>'{$event->event_name}'</b> " . delete_success . "</div>\n";
           Event::emptyTrash();
@@ -137,8 +137,7 @@ if($event['event_rep']=='main'){
         }
       }
     }else if ($_GET['event_id'] > 0){
-      if (!$event = Event::load($_GET['event_id'], false) or
-          $event->event_organizer_id != $_SHOP->organizer_id){
+      if (!$event = Event::load($_GET['event_id'], false)){
         return;
       }
 

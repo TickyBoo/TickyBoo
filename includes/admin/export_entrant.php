@@ -47,8 +47,7 @@ class export_entrant extends AdminView {
   function xl_form (&$data,&$err){
 		global $_SHOP;
 
-		$query = "select * from Event where event_rep LIKE '%sub%' and
-		event_organizer_id='{$_SHOP->organizer_id}' ORDER BY event_date,event_time,event_name";
+		$query = "select * from Event where event_rep LIKE '%sub%' ORDER BY event_date,event_time,event_name";
 
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_array($res)){
@@ -118,8 +117,7 @@ class export_entrant extends AdminView {
     $format_leftb =&$workbook->addFormat(array('Align'=>'left'));
     $format_leftb->setBold();
 
-		$query = "select * from Event where event_id = {$event} and
-		          event_organizer_id='{$_SHOP->organizer_id}'";
+		$query = "select * from Event where event_id = {$event}";
 
 		$row=ShopDB::query_one_row($query);
 //    $dta = print_r($row, true);
@@ -202,13 +200,12 @@ class export_entrant extends AdminView {
     if($_GET['submit']) {// and $_GET['export_xl2_event']>0){
 
 			$event_id=(int)$_GET['export_entrant_event'];
-			$org="_organizer_id='{$_SHOP->organizer_id}'";
       if (!$_GET['expert_entrant_NotSended']) $org .= " and `Order`.order_shipment_status='none'";
       $this->query="SELECT DISTINCT `Order`.order_id,`Order`.order_tickets_nr,`Order`.order_total_price,`Order`.order_shipment_status,`Order`.order_payment_status,`Order`.order_fee,
                               User.user_firstname, User.user_lastname, User.user_city, count(Seat.seat_order_id) AS seat_count, sum(seat_price) as seat_totall_price
               FROM  Seat left JOIN `Order` ON (`Order`.order_id = Seat.seat_order_id)
                          left JOIN User ON (`Order`.order_user_id = User.user_id)
-              WHERE `Order`.order_status = 'ord' and seat_event_id=$event_id and seat$org
+              WHERE `Order`.order_status = 'ord' and seat_event_id=$event_id
               GROUP BY `Order`.order_id, `Order`.order_tickets_nr, `Order`.order_total_price, `Order`.order_shipment_status, `Order`.order_payment_status, `Order`.order_status,
                        `Order`.order_fee, User.user_firstname, User.user_lastname, User.user_city
               ORDER BY User.user_firstname, User.user_lastname";

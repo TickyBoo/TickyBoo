@@ -48,10 +48,4 @@ $_SHOP->auth_password = "admin_password";
 $_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3');
 
 require_once("init.php");
-
-if ($_SHOP->organizer_id != $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id']) {
-    session_destroy();
-    exit;
-}
-
 ?>

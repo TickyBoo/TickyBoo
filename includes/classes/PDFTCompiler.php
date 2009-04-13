@@ -445,7 +445,7 @@ class PDFTCompiler {
     case "include":
       $this->res_includes_names[]=$a["NAME"];
       $this->res_includes.='
-      $temp =& $this->engine->getTemplate("'.$a["NAME"].'",$this->organizer_id);
+      $temp =& $this->engine->getTemplate("'.$a["NAME"].'",0);
       $temp->write($pdf,$data);
       
 ';      

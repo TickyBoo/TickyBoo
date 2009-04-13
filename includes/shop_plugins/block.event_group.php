@@ -50,17 +50,12 @@ function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
      $where .= " and event_group_id='{$params['group_id']}'";
     }
 
-    $where .= " and event_group_organizer_id='{$_SHOP->organizer_id}'";   
-
-    if($params['limit']){
+     if($params['limit']){
       $limit='limit '.$params['limit'];
     }
     
     if($params['group_status']){
      $where .= " and event_group_status='{$params['group_status']}'";
-    }
-    if($params['organizer_ids']){
-      $where.=" and FIELD(event_group_organizer_id,{$params['organizer_ids']})>0";      
     }
     if($params['first']){
       $limit='limit '.$params['first'];

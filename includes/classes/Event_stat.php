@@ -41,14 +41,12 @@ class Event_stat{
   var $es_event_id;
   var $es_free;
   var $es_total;
-  var $es_organizer_id;
 
-  function Event_stat($es_event_id=0,$es_total=0,$es_organizer_id=0) {
+  function Event_stat($es_event_id=0,$es_total=0) {
     if($es_event_id){
       $this->es_event_id=$es_event_id;
       $this->es_total=$es_total;
       $this->es_free=$es_total;
-      $this->es_organizer_id=$es_organizer_id;
     }
   }
   
@@ -57,8 +55,7 @@ class Event_stat{
     $query="insert into Event_stat
     set es_event_id={$this->es_event_id},
     es_free={$this->es_free},
-    es_total={$this->es_total},
-    es_organizer_id={$this->es_organizer_id}";
+    es_total={$this->es_total}";
     
     if(ShopDB::query($query)){
       return TRUE;

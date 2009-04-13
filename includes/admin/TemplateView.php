@@ -121,7 +121,7 @@ class TemplateView extends AdminView{
   function compile_all ()
   {
     global $_SHOP;
-    $query = "SELECT template_name FROM Template WHERE template_organizer_id='{$_SHOP->organizer_id}' order by template_name";
+    $query = "SELECT template_name FROM Template order by template_name";
     if (!$res = ShopDB::query($query)){
       return;
     } while ($row = shopDB::fetch_assoc($res)){
@@ -132,7 +132,7 @@ class TemplateView extends AdminView{
   function template_list ()
   {
     global $_SHOP;
-    $query = "SELECT * FROM Template WHERE template_organizer_id='{$_SHOP->organizer_id}' order by template_type, template_name";
+    $query = "SELECT * FROM Template order by template_type, template_name";
     if (!$res = ShopDB::query($query)){
       return;
     }
@@ -169,7 +169,7 @@ class TemplateView extends AdminView{
     global $_SHOP;
     require_once("classes/TemplateEngine.php");
     $te = new TemplateEngine;
-    if (!$te->getTemplate($name, $_SHOP->organizer_id)){
+    if (!$te->getTemplate($name, 0)){
       echo "<div class=err>'$name': ";
       if ($te->errors){
         foreach($te->errors as $error){
@@ -193,9 +193,9 @@ class TemplateView extends AdminView{
       if (!$this->template_check($_POST, $err)){
         $this->template_form($_POST, $err, template_add_title);
       }else{
-        $query = "INSERT Template (template_name,template_type,template_text,template_status,template_organizer_id)
+        $query = "INSERT Template (template_name,template_type,template_text,template_status)
      VALUES ('" . $this->q($_POST['template_name']) . "','" . $this->q($_POST['template_type']) . "',
-     '" . $this->q($_POST['template_text']) . "','new','{$_SHOP->organizer_id}')";
+     '" . $this->q($_POST['template_text']) . "','new')";
         if (!ShopDB::query($query)){
           return 0;
         }
@@ -230,19 +230,19 @@ class TemplateView extends AdminView{
     }elseif ($_GET['action'] == 'add'){
       $this->template_form($row, $err, template_add_title);
     }elseif ($_GET['action'] == 'edit'){
-      $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}' and template_organizer_id='{$_SHOP->organizer_id}'";
+      $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}'";
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
       $this->template_form($row, $err, template_update_title);
     }elseif ($_GET['action'] == 'view'){
-      $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}' and template_organizer_id='{$_SHOP->organizer_id}'";
+      $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}'";
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
       $this->template_view($row);
     }elseif ($_GET['action'] == 'remove' and $_GET['template_id'] > 0){
-      $query = "DELETE FROM Template WHERE template_id='{$_GET['template_id']}'  and template_organizer_id='{$_SHOP->organizer_id}'";
+      $query = "DELETE FROM Template WHERE template_id='{$_GET['template_id']}'";
       if (!ShopDB::query($query)){
         return 0;
       }

@@ -51,7 +51,7 @@ class StatisticView extends AdminView{
   function plotEventStats ($start_date, $end_date, $month, $year)
   {
     global $_SHOP;
-    $query = "select MAX(es_total) from Event_stat where es_organizer_id='$_SHOP->organizer_id'";
+    $query = "select MAX(es_total) from Event_stat";
     if (!$res = ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return;
@@ -65,8 +65,6 @@ class StatisticView extends AdminView{
                and event_status!='unpub'
   	           and event_date >='$start_date'
         	     and event_date<='$end_date'
-        	     and es_organizer_id='$_SHOP->organizer_id'
-               and event_organizer_id='$_SHOP->organizer_id'
         	     and event_rep LIKE '%sub%'
         	    order by event_date,event_time";
 
@@ -108,7 +106,7 @@ class StatisticView extends AdminView{
       $evfree = $events[$i]["es_free"];
       $evsaled = ($evtot - $evfree);
       If ($events[$i]["event_status"] == 'pub' or $evsaled) {
-        $query = "select MAX(cs_total) from Category_stat where cs_organizer_id='$_SHOP->organizer_id'";
+        $query = "select MAX(cs_total) from Category_stat ";
         if (!$res = ShopDB::query_one_row($query)){
           user_error(shopDB::error());
           return;
@@ -118,8 +116,7 @@ class StatisticView extends AdminView{
 
         $query = "select * from Category_stat,Category where
                 category_event_id='" . $events[$i]["event_id"] . "'
-  	      and cs_category_id=category_id and cs_organizer_id='$_SHOP->organizer_id'
-  	      and category_organizer_id='$_SHOP->organizer_id'";
+  	      and cs_category_id=category_id";
         if (!$res = ShopDB::query($query)){
           user_error(shopDB::error());
           return;
@@ -179,7 +176,6 @@ class StatisticView extends AdminView{
 	     and event_date >='$start_date'
 	     and event_date<='$end_date'
 	     and event_rep LIKE '%sub%'
-	     and es_organizer_id='$_SHOP->organizer_id' and event_organizer_id='$_SHOP->organizer_id'
 	    order by event_date,event_time";
     if (!$res = ShopDB::query($query)){
       user_error(shopDB::error());
@@ -212,8 +208,7 @@ class StatisticView extends AdminView{
 
         $query = "select * from Category_stat,Category where
                 category_event_id='" . $events[$i]["event_id"] . "'
-  	      and cs_category_id=category_id and cs_organizer_id='$_SHOP->organizer_id'
-  	      and category_organizer_id='$_SHOP->organizer_id'";
+  	      and cs_category_id=category_id";
         if (!$res = ShopDB::query($query)){
           user_error(shopDB::error());
           return;
@@ -258,7 +253,7 @@ class StatisticView extends AdminView{
     if (!($_GET['month'] or $_GET['year'])){
       $date = date('Y-m-1');
 
-      $query = "select event_date from Event where event_date>='$date' and event_organizer_id='{$_SHOP->organizer_id}'order by event_date,event_time limit 1";
+      $query = "select event_date from Event where event_date>='$date' order by event_date,event_time limit 1";
       require_once('classes/ShopDB.php');
       if ($row = ShopDB::query_one_row($query) and !empty($row[0])){
         list($year, $month) = split('-', $row[0]);

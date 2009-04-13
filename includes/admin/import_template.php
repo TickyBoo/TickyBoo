@@ -88,9 +88,9 @@ class import_template extends AdminView {
         }
         If (isset($err['main'])) return 0;
 
-        $query = "INSERT Template (template_name,template_type,template_text,template_status,template_organizer_id)
+        $query = "INSERT Template (template_name,template_type,template_text,template_status)
                   VALUES ('" . $this->q($_POST['template_name']) . "','" . $this->q($m[1]) . "',
-                          '" . $this->q($m[2]) . "','new','{$_SHOP->organizer_id}')";
+                          '" . $this->q($m[2]) . "','new')";
         if (!ShopDB::query($query)){
            $this->err['main'] = error.':'+$_SHOP->db_error;
            return 0;

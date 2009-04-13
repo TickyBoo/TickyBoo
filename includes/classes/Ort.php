@@ -65,9 +65,9 @@ class Ort{
         	     ort_url=".ShopDB::quote($this->ort_url);
 
     if($this->ort_id){
-      $query="update Ort $query where ort_id={$this->ort_id} and ort_organizer_id={$_SHOP->organizer_id}";
+      $query="update Ort $query where ort_id={$this->ort_id}";
     }else{
-      $query="insert Ort $query , ort_organizer_id={$_SHOP->organizer_id}";
+      $query="insert Ort $query";
     }
     if(ShopDB::query($query)){
       if(!$this->ort_id){
@@ -103,7 +103,7 @@ class Ort{
       }
     }
     
-    $query="delete from Ort where ort_id='{$this->ort_id}' and  ort_organizer_id={$_SHOP->organizer_id} limit 1";
+    $query="delete from Ort where ort_id='{$this->ort_id}' limit 1";
     ShopDB::query($query);
   }
 

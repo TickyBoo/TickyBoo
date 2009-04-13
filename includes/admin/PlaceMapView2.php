@@ -140,13 +140,7 @@ class PlaceMapView2 extends AdminView {
     {
         global $_SHOP;
 
-        $query = "select ort_organizer_id from Ort where ort_id=$ort_id";
-        if (!$ort = ShopDB::query_one_row($query)) {
-            return;
-        }
-        if ($ort['ort_organizer_id'] == $_SHOP->organizer_id) {
-            $mine = true;
-        }
+        $mine = true;
 
         $query = "select * from PlaceMap2 where pm_ort_id=$ort_id and pm_event_id IS NULL";
         if (!$res = ShopDB::query($query)) {
@@ -163,13 +157,9 @@ class PlaceMapView2 extends AdminView {
             echo "<td class='admin_list_item' width='85%'>{$pm['pm_name']}</td>\n";
 
             echo "<td class='admin_list_item' align=right>";
-            if ($pm['pm_organizer_id'] == $_SHOP->organizer_id) {
-                echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
-                echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}'><img src='images/copy.png' border='0' alt='" . copy . "' title='" . copy . "'></a>\n";
-                echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
-            } else {
-               echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$pm['pm_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
-            }
+            echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
+            echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}'><img src='images/copy.png' border='0' alt='" . copy . "' title='" . copy . "'></a>\n";
+            echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
             echo "</td></tr>";
             $alt = ($alt + 1) % 2;
         }
@@ -185,7 +175,7 @@ class PlaceMapView2 extends AdminView {
     {
         global $_SHOP;
 
-        if (!$pm = PlaceMap::load($pm_id) and $_SHOP->organizer_id != $pm->pm_organizer_id) {
+        if (!$pm = PlaceMap::load($pm_id)) {
             return;
         }
         if (!$pm_parts = PlaceMapPart::loadAll($pm_id)) {
@@ -255,7 +245,6 @@ class PlaceMapView2 extends AdminView {
                 $this->pm_form($_GET, $err, add_pm);
             } else {
                 $pm = new PlaceMap($_POST['pm_ort_id'], $_POST['pm_name']);
-                $pm->pm_organizer_id = $_SHOP->organizer_id;
                 if ($pm_id = $pm->save()) {
                     if (!$this->photo_post($_POST, $pm_id)) {
                         echo "<div class=error>" . img_loading_problem . "<div>";
@@ -300,7 +289,6 @@ class PlaceMapView2 extends AdminView {
         } else
         if ($_GET['action'] == 'remove_pm' and $_GET['pm_id'] > 0) {
             $pm = PlaceMap::load($_GET['pm_id']);
-            // if($pm->pm_organizer_id==$_SHOP->organizer_id){
             $pm->delete();
             // }
             return true;
@@ -309,7 +297,7 @@ class PlaceMapView2 extends AdminView {
             $this->split_form($_GET['pm_id'], $_GET['pmp_id']);
         } else
         if ($_POST['action'] == 'split_pm' and $_POST['pm_id'] > 0) {
-            if (!$pm = PlaceMap::load($_POST['pm_id']) or $pm->pm_organizer_id != $_SHOP->organizer_id) {
+            if (!$pm = PlaceMap::load($_POST['pm_id'])) {
                 return;
             }
             // print_r($_POST);

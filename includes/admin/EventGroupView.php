@@ -98,7 +98,7 @@ function event_group_check (&$data, &$err){
 function event_group_list (){
   global $_SHOP;
 //  $query="SELECT * FROM Event, Ort WHERE event_ort_id=ort_id";
-  $query="select * from Event_group  where  event_group_organizer_id='{$_SHOP->organizer_id}' ";
+  $query="select * from Event_group";
 
   if(!$res=ShopDB::query($query)){
     return;
@@ -193,15 +193,13 @@ if($_POST['action']=='insert'){
     event_group_start_date,
     event_group_end_date,
     event_group_type,    
-    event_group_description, 
-    event_group_organizer_id
+    event_group_description
     )VALUES (
     '".$this->q($_POST['event_group_name'])."',
     $start,
     $end,
     '".$this->q($_POST['event_group_type'])."',
-    '".$this->q($_POST['event_group_description'])."',
-    '{$_SHOP->organizer_id}')";
+    '".$this->q($_POST['event_group_description'])."')";
      
     if(!ShopDB::query($query)){
       return 0;
@@ -238,7 +236,7 @@ if($_POST['action']=='insert'){
    event_group_end_date=$end,
    event_group_type='".$this->q($_POST['event_group_type'])."',
    event_group_description='".$this->q($_POST['event_group_description'])."'
-   WHERE event_group_id='{$_POST['event_group_id']}' and event_group_organizer_id='{$_SHOP->organizer_id}'";
+   WHERE event_group_id='{$_POST['event_group_id']}'";
     
     
     if(!ShopDB::query($query)){
@@ -256,7 +254,7 @@ if($_POST['action']=='insert'){
   $this->event_group_form($row,$err,event_group_add_title);
 }else 
 if($_GET['action']=='remove' and $_GET['event_group_id']>0){
-  $query="DELETE FROM Event_group WHERE event_group_id='{$_GET['event_group_id']}'  and event_group_organizer_id='{$_SHOP->organizer_id}'";
+  $query="DELETE FROM Event_group WHERE event_group_id='{$_GET['event_group_id']}'";
   if(!ShopDB::query($query)){
     return 0;
   }
@@ -282,7 +280,7 @@ if($_GET['action']=='remove' and $_GET['event_group_id']>0){
   
   
 }elseif($_GET['event_group_id']){
-  $query="SELECT * FROM Event_group WHERE event_group_id='{$_GET['event_group_id']}' and event_group_organizer_id='{$_SHOP->organizer_id}'";
+  $query="SELECT * FROM Event_group WHERE event_group_id='{$_GET['event_group_id']}'";
   if(!$row=ShopDB::query_one_row($query)){
     return 0;
   }

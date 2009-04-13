@@ -48,8 +48,7 @@ class Trash {
 		
 		$query="select count(event_id) as count 
 						from Event 
-						where event_status='trash' and
-						event_organizer_id='{$_SHOP->organizer_id}'";
+						where event_status='trash'";
 						
 		if($data=ShopDB::query_one_row($query)){
 		  $res['event']=$data['count'];
@@ -57,8 +56,7 @@ class Trash {
 
 		$query="select count(seat_id) as count 
 						from Seat 
-						where seat_status='trash' and
-						seat_organizer_id='{$_SHOP->organizer_id}'";
+						where seat_status='trash'";
 						
 		if($data=ShopDB::query_one_row($query)){
 		  $res['seat']=$data['count'];
@@ -66,8 +64,7 @@ class Trash {
 
 				$query="select count(order_id) as count 
 						from `Order` 
-						where order_status='trash' and
-						order_organizer_id='{$_SHOP->organizer_id}'";
+						where order_status='trash'";
 						
 		if($data=ShopDB::query_one_row($query)){
 		  $res['order']=$data['count'];

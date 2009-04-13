@@ -289,7 +289,6 @@ class EventItem {
 	        $this->event_ort_name=$obj->ort_name;
 	        $this->event_ort_city=$obj->ort_city;
 	        $this->event_order_limit=$obj->event_order_limit;
-	        $this->event_organizer_id=$obj->event_organizer_id;
 	        // Loads event checker.
 	  		$this->event_use_alt=$update->check_event($this->event_date);
       	}else{

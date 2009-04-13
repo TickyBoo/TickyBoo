@@ -97,14 +97,8 @@ function order_details ($order_id){
 			LEFT JOIN Event ON Seat.seat_event_id=Event.event_id
 			LEFT JOIN Category ON Seat.seat_category_id=Category.category_id
 			LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=PlaceMapZone.pmz_id
-			WHERE Seat.seat_order_id='".$order_id."' AND Event.event_organizer_id='$_SHOP->organizer_id'";
+			WHERE Seat.seat_order_id='".$order_id."'";
 
-// Old MySQL 4 statments doesnt work
-//
-//	$query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,
-//          Event,Category LEFT JOIN PlaceMapZone ON seat_zone_id=pmz_id where seat_order_id='".$order_id."'
-//  	  AND seat_event_id=event_id AND seat_category_id= category_id
-//	  and event_organizer_id='$_SHOP->organizer_id'";
   if(!$res=ShopDB::query($query)){
      user_error(shopDB::error());
      return;
@@ -273,7 +267,7 @@ function order_list (){
   global $_SHOP;
   $query='SELECT order_handling_id, order_shipment_status, order_payment_status, order_status, count( * ) as count, Handling.* '.
          'FROM `Order` , Handling FORCE INDEX (PRIMARY) '.
-	 "WHERE order_organizer_id={$_SHOP->organizer_id} and order_handling_id=handling_id ".
+	 "WHERE order_handling_id=handling_id ".
 	 "and Order.order_status!='trash' ".
    'GROUP BY order_handling_id, order_status, order_shipment_status, order_payment_status '.
 	 'ORDER BY order_handling_id, order_status, order_shipment_status, order_payment_status ';
@@ -334,7 +328,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
   global $_SHOP;
   require_once('classes/Handling.php');
 
-  $where= "order_organizer_id={$_SHOP->organizer_id} and order_handling_id='$order_handling_id'";
+  $where= "order_handling_id='$order_handling_id'";
 
   if($order_status){
     $where.=" and order_status='$order_status'";
@@ -425,12 +419,12 @@ function draw (){
     }
   }else
   if($_GET['action1']=="make_new" and $_GET["order_id1"]){
-    if($new_id=Order::order_reemit($_GET["order_id1"],$_SHOP->organizer_id)){
+    if($new_id=Order::order_reemit($_GET["order_id1"], 0)){
       $this->order_details($new_id);
     }
   }else
   if($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-    Order::order_delete_ticket($_GET["order_id1"], $_GET['seat_id'],$_SHOP->organizer_id);
+    Order::order_delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
   }else
   if($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Ticket::reemit($_GET["order_id1"], $_GET['seat_id']);
@@ -448,7 +442,7 @@ function draw (){
     $this->order_prepare_delete($_GET["order_id"]);
   }else
   if($_GET['action']=='cancel'){
-    Order::order_delete($_GET["order_id"],$_SHOP->organizer_id);
+    Order::order_delete($_GET["order_id"], 0);
     $this->order_details($_GET["order_id"]);
 
   } else

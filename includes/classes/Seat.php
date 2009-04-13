@@ -73,7 +73,6 @@ class Seat {
               WHERE seat_event_id='$event_id'
               and seat_category_id='$category_id' 
 	      and seat_status='free' 
-	      and seat_organizer_id={$_SHOP->organizer_id}
 	      LIMIT $seats
 	      FOR UPDATE";
 
@@ -147,7 +146,6 @@ class Seat {
                 WHERE seat_event_id='$event_id'
                 and seat_category_id='$category_id'
 		and seat_id='$seat_id' $status 
-		and seat_organizer_id={$_SHOP->organizer_id}
 		LIMIT 1
 	        FOR UPDATE";
         if(!$res=ShopDB::query($query)){
@@ -181,7 +179,6 @@ class Seat {
               seat_id='$seat_id' 
               and seat_event_id='$event_id'
               and seat_category_id='$category_id' 
-    	      and seat_organizer_id={$_SHOP->organizer_id}
 	      		$status";
 	      
      if(!ShopDB::query($query)){ 
@@ -240,8 +237,7 @@ class Seat {
 		seat_code=NULL
               where seat_id='{$seat['seat_id']}'
   	        and seat_event_id='{$seat['event_id']}' 
-	        and seat_category_id='{$seat['category_id']}'
-		and seat_organizer_id={$_SHOP->organizer_id}";
+	        and seat_category_id='{$seat['category_id']}'";
     //echo "<div class=info>$query</div>";
 		
       if(!ShopDB::query($query)){ //echo a;
@@ -307,7 +303,6 @@ class Seat {
 	      and seat_status='res'
               and seat_event_id='$event_id' 
 	      and seat_category_id='$category_id' 
-  	      and seat_organizer_id={$_SHOP->organizer_id}
 	      FOR UPDATE";
 
       if(!$row=ShopDB::query_one_row($query)){
@@ -325,8 +320,7 @@ class Seat {
 	      and seat_sid='$sid' 
 	      and seat_status='res'
               and seat_event_id='$event_id' 
-	      and seat_category_id='$category_id'
-  	      and seat_organizer_id={$_SHOP->organizer_id}";
+	      and seat_category_id='$category_id'";
 
       if(!ShopDB::query($query)){
         ShopDB::rollback(); 
@@ -359,8 +353,7 @@ class Seat {
   function load_pmp_all ($pmp_id){
     global $_SHOP;
   
-    $query="select seat_id,seat_status,seat_ts from Seat where seat_pmp_id=$pmp_id 
-    		and seat_organizer_id={$_SHOP->organizer_id}";
+    $query="select seat_id,seat_status,seat_ts from Seat where seat_pmp_id=$pmp_id";
     if($res=ShopDB::query($query)){
       while($seat=shopDB::fetch_array($res)){
         $pmp[$seat['seat_id']]=$seat;
@@ -374,7 +367,7 @@ class Seat {
   
     $time=time();
     $query="UPDATE Seat SET seat_status='free', seat_ts=NULL, seat_sid=NULL
-    	     where seat_status='res' and seat_pmp_id='$pmp_id' and seat_ts<'$time' and seat_organizer_id={$_SHOP->organizer_id}";
+    	     where seat_status='res' and seat_pmp_id='$pmp_id' and seat_ts<'$time'";
     ShopDB::query($query);
     //echo rem_exp;
   }
@@ -384,7 +377,7 @@ class Seat {
 
     $time=time();
     $query="UPDATE Seat set seat_status='free', seat_ts=NULL, seat_sid=NULL
-    	     where seat_status='res' and seat_category_id='$category_id' and seat_ts<'$time' and seat_organizer_id={$_SHOP->organizer_id}";
+    	     where seat_status='res' and seat_category_id='$category_id' and seat_ts<'$time'";
     ShopDB::query($query);
     //echo rem_exp;
   }
@@ -404,8 +397,7 @@ class Seat {
   	 seat_zone_id='$seat_zone_id',
   	 seat_pmp_id='$seat_pmp_id',
   	 seat_category_id='$seat_category_id',
-  	 seat_status='free',
-  	 seat_organizer_id='{$_SHOP->organizer_id}'";
+  	 seat_status='free'";
 
     if(ShopDB::query($query)){
       return ShopDB::insert_id();

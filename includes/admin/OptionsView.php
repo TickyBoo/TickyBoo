@@ -50,12 +50,12 @@ class OptionsView extends AdminView{
 	      		shopconfig_posttocollect=".ShopDB::quote($_POST['shopconfig_posttocollect']).", 
 	      		shopconfig_user_activate=".ShopDB::quote($_POST['shopconfig_user_activate']).", 
 	      		shopconfig_maxres=".ShopDB::quote($_POST['shopconfig_maxres'])." 
-	      		WHERE shopconfig_organizer_id='{$_SHOP->organizer_id}'";
+	      		limit 1";
 				
 				if(!ShopDB::query($query)){
 					return 0;
 				}
-				$query="SELECT * FROM `ShopConfig` WHERE shopconfig_organizer_id='{$_SHOP->organizer_id}'";
+				$query="SELECT * FROM `ShopConfig` limit 1";
 					if(!$row=ShopDB::query_one_row($query)){
 				return 0;
 				}
@@ -63,7 +63,7 @@ class OptionsView extends AdminView{
 				return;
 			}
 		}else{
-			$query="SELECT * FROM `ShopConfig` WHERE shopconfig_organizer_id='{$_SHOP->organizer_id}'";
+			$query="SELECT * FROM `ShopConfig` limit 1";
 			if(!$row=ShopDB::query_one_row($query)){
 				return 0;
 			}

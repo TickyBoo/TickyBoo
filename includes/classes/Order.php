@@ -39,19 +39,17 @@ class Order {
   var $order_user_id;
   var $sid;
   var $handling_id;
-  var $organizer_id;
 
-  function Order ($order_user_id,$sid,$handling_id,$organizer_id,$no_fee,$no_cost,$place='www'){
+  function Order ($order_user_id,$sid,$handling_id,$dummy,$no_fee,$no_cost,$place='www'){
 
     if(!$order_user_id){return;}  
 
     $this->order_user_id=$order_user_id;
     $this->order_sid=$sid;
-    $this->order_organizer_id=$organizer_id;
     $this->order_handling_id=$handling_id;
-	$this->order_place=$place;
-	$this->no_fee=$no_fee;
-	$this->no_cost=$no_cost;
+  	$this->order_place=$place;
+  	$this->no_fee=$no_fee;
+  	$this->no_cost=$no_cost;
     
     require_once('classes/Handling.php');
     $hand=Handling::load($handling_id);
@@ -75,7 +73,7 @@ class Order {
          $this->shipment_price_fixe=0;
       }else{
         $query="select * from Handling WHERE handling_payment='invoice' and 
-	handling_shipment='post' and handling_organizer_id=$this->order_organizer_id";
+	handling_shipment='post'";
         if($pay=ShopDB::query_one_row($query)){
           $this->shipment_price_percent=$pay["handling_fee_percent"];
           $this->shipment_price_fixe=$pay["handling_fee_fix"];
@@ -107,8 +105,7 @@ class Order {
     global $_SHOP;
     
     $query="select * from `Order` 
-    WHERE order_id = ".ShopDB::quote($order_id)." 
-		and order_organizer_id={$_SHOP->organizer_id}";
+    WHERE order_id = ".ShopDB::quote($order_id);
     if($data=ShopDB::query_one_row($query)){
       $order=new Order(0,0,0,0,0,0);
       $order->_fill($data);
@@ -121,8 +118,7 @@ class Order {
     global $_SHOP;
     $query = "SELECT * FROM `Order`, User 
               WHERE order_id = ".ShopDB::quote($order_id)." 
-							and order_user_id=user_id 
-							and order_organizer_id={$_SHOP->organizer_id}";
+							and order_user_id=user_id";
 	      
     if($data=ShopDB::query_one_row($query)){
       $order=new Order(0,0,0,0,0,0);
@@ -206,8 +202,7 @@ class Order {
       order_handling_id,
       order_status,
       order_fee,
-      order_organizer_id,
-	  order_place
+  	  order_place
       ) VALUES (".
       ShopDB::quote($this->order_user_id).",".      
       ShopDB::quote($this->order_sid).",".      
@@ -216,9 +211,8 @@ class Order {
       "NOW(),".      
       ShopDB::quote($this->order_handling->handling_id).",".
       ShopDB::quote($order_status).",".
-      ShopDB::quote($fee).",
-	  {$this->order_organizer_id},".
-	  ShopDB::quote($this->order_place)."
+      ShopDB::quote($fee).",".
+	    ShopDB::quote($this->order_place)."
 	  )";
 
 
@@ -269,7 +263,7 @@ class Order {
   
   /* static functions of common use */
 
-function order_delete_ticket ($order_id,$seat_id,$organizer_id,$user_id=0){
+function order_delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
 
   /*if($user_id){
     $where_t="seat_user_id=$user_id";
@@ -286,9 +280,7 @@ function order_delete_ticket ($order_id,$seat_id,$organizer_id,$user_id=0){
   }
 
   $query="SELECT * FROM `Seat` WHERE seat_id='$seat_id' 
-  AND seat_order_id='$order_id' AND
-  seat_organizer_id=$organizer_id
-  AND $where_t FOR UPDATE";
+  AND seat_order_id='$order_id' AND $where_t FOR UPDATE";
 
   if(!$seat=ShopDB::query_one_row($query)){
     echo "<div class=error>".cannot_find_seat."</div>";
@@ -297,7 +289,6 @@ function order_delete_ticket ($order_id,$seat_id,$organizer_id,$user_id=0){
   }
   
   $query="SELECT * FROM `Order` WHERE order_id='$order_id' 
-  AND order_organizer_id=$organizer_id
   AND $where_o 
   FOR UPDATE";
   
@@ -318,7 +309,7 @@ function order_delete_ticket ($order_id,$seat_id,$organizer_id,$user_id=0){
   //if the order has only one ticket, the whole order will be deleted/canceled instead of just the ticket!
   if($order['order_tickets_nr']==1){
     ShopDB::rollback();
-    return Order::order_delete($order_id,$organizer_id,$user_id);
+    return Order::order_delete($order_id, 0, $user_id);
   }
   
   // If deleteing a reserved ticket
@@ -393,7 +384,7 @@ function order_delete_ticket ($order_id,$seat_id,$organizer_id,$user_id=0){
   return TRUE;
 }
   
-function order_delete ($order_id,$organizer_id,$user_id=0,$place='none'){
+function order_delete ($order_id,$dummy=0,$user_id=0,$place='none'){
   global $_SHOP;
   
   if(!ShopDB::begin()){
@@ -401,19 +392,7 @@ function order_delete ($order_id,$organizer_id,$user_id=0,$place='none'){
     return FALSE;
   }
 
-  $where_t="seat_organizer_id='$organizer_id'";
-  $where_o="order_organizer_id='$organizer_id'";
-  
-  
-  if($user_id){
-    //$where_t.=" and seat_user_id=$user_id";
-    //$where_o.=" and order_user_id=$user_id";
-  }
-  if($place) {
-  	//$where_o.=" and order_place='$place'";
-  } 
-
-  $query="SELECT * FROM `Seat` WHERE seat_order_id='$order_id' and $where_t FOR UPDATE"; 
+  $query="SELECT * FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
   if(!$res=ShopDB::query($query)){
     echo "<div class=error>".order_not_canceled."(1)</div>";
     ShopDB::rollback();
@@ -477,7 +456,7 @@ function order_delete ($order_id,$organizer_id,$user_id=0,$place='none'){
   */
   
   $query="UPDATE  `Order` set order_status='cancel' 
-          where order_id='$order_id' and $where_o";
+          where order_id='$order_id' ";
 
   if(!$res=ShopDB::query($query)){
     ShopDB::rollback();
@@ -500,31 +479,31 @@ function order_delete ($order_id,$organizer_id,$user_id=0,$place='none'){
 		return TRUE;
   }
 } 
-function set_send ($order_id,$organizer_id, $user_id=0){
+function set_send ($order_id, $dummy=0, $user_id=0){
     
   $order=Order::load($order_id);
   $order->set_shipment_status('send');
 }
 
-function set_payed ($order_id,$organizer_id, $user_id=0){
+function set_payed ($order_id, $dummy=0, $user_id=0){
     
   $order=Order::load($order_id);
   $order->set_payment_status ('payed');
 }
-function set_reserved ($order_id,$organizer_id, $user_id=0){
+function set_reserved ($order_id, $dummy=0, $user_id=0){
     
   $order=Order::load($order_id);
   $order->set_status ('res');
 }
 
-function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$place='www',$organizer_id){
+function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$place='www'){
 	
 	if(!ShopDB::begin()){
     	echo "<div class=error>".cannot_begin_transaction."</div>";
     	return FALSE;
   	}
   	//loads old order into var
-  	$query="SELECT * FROM `Order` WHERE order_id='$order_id' AND order_organizer_id='$organizer_id' AND order_status='res' FOR UPDATE";
+  	$query="SELECT * FROM `Order` WHERE order_id='$order_id' AND order_status='res' FOR UPDATE";
   	if(!$order_old=ShopDB::query_one_row($query)){
     	echo "<div class=error>$order_id ".order_not_found."</div>";
     	return;
@@ -594,7 +573,6 @@ function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$p
 	order_payment_status,
 	order_handling_id,
 	order_fee,
-	order_organizer_id,
 	order_place
 	) VALUES (
 	'{$order_old['order_user_id']}',
@@ -606,7 +584,6 @@ function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$p
 	'{$order_old['order_payment_status']}',
 	'{$handling_id}',
 	'{$fee}',
-	'{$organizer_id}',
 	'{$place}'	
 	)";
 	// Runs Query
@@ -621,7 +598,7 @@ function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$p
 	echo "<div class=success>".new_order_created.": $new_id</div>";
 	
 	//Selects Seats from old order using passed order_id from 'params'
-	$query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' and seat_organizer_id='$organizer_id' FOR UPDATE";
+	$query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
 	if(!$res=ShopDB::query($query)){
 		echo "<div class=error>$order_id ".order_cannot_reemit."(load seats)</div>";
 		ShopDB::rollback();
@@ -630,7 +607,7 @@ function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$p
 	//Runs through each seat and gives it a new seat_code and the new order_id.
 	while($seat = shopDB::fetch_array($res)){
 		$code=Ticket::generate_code(8);
-		$query="UPDATE `Seat` set seat_order_id='$new_id',seat_code='$code' WHERE seat_id='{$seat['seat_id']}' and seat_organizer_id='$organizer_id'";
+		$query="UPDATE `Seat` set seat_order_id='$new_id',seat_code='$code' WHERE seat_id='{$seat['seat_id']}' ";
 		if(!ShopDB::query($query)){
 	  		echo "<div class=error>$order_id ".order_cannot_reemit."(update seats)</div>";
 	 	 	ShopDB::rollback();
@@ -640,8 +617,7 @@ function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$p
 	
 	//Change old order, change its status and give the it the id of the new order.
 	$query="UPDATE  `Order` SET order_status='cancel'
-			WHERE order_id='$order_id' 
-		  	AND order_organizer_id='$organizer_id'";
+			WHERE order_id='$order_id'";
 	if(!$res=ShopDB::query($query)){
 		echo "<div class=error>$order_id ".order_cannot_reemit."(cant up old ord)</div>";
 		ShopDB::rollback();
@@ -661,14 +637,14 @@ function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$p
 }
   
 
-function order_reemit ($order_id, $organizer_id){
+function order_reemit ($order_id){
 
   if(!ShopDB::begin()){
     echo "<div class=error>".cannot_begin_transaction."</div>";
     return FALSE;
   }
   //loads old order into var
-  $query="SELECT * FROM `Order` WHERE order_id='$order_id' and order_organizer_id='$organizer_id' FOR UPDATE";
+  $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
   if(!$order_old=ShopDB::query_one_row($query)){
     echo "<div class=error>$order_id ".order_not_found."</div>";
     return;
@@ -692,8 +668,7 @@ function order_reemit ($order_id, $organizer_id){
   order_shipment_status,
   order_payment_status,
   order_handling_id,
-  order_fee,
-  order_organizer_id
+  order_fee
   ) VALUES (
   '{$order_old['order_user_id']}',
   '{$order_old['order_tickets_nr']}',
@@ -703,8 +678,7 @@ function order_reemit ($order_id, $organizer_id){
   '{$order_old['order_shipment_status']}',
   '{$order_old['order_payment_status']}',
   '{$order_old['order_handling_id']}',
-  '{$order_old['order_fee']}',
-  '{$organizer_id}'
+  '{$order_old['order_fee']}'
   )";
   
   // Runs Query
@@ -718,7 +692,7 @@ function order_reemit ($order_id, $organizer_id){
   echo "<div class=success>".new_order_created.": $new_id</div>";
 
   //Selects Seats from old order using passed order_id from 'params'
-  $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' and seat_organizer_id='$organizer_id' FOR UPDATE";
+  $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
   if(!$res=ShopDB::query($query)){
     echo "<div class=error>$order_id ".order_cannot_reemit."(load seats)</div>";
     ShopDB::rollback();
@@ -727,7 +701,7 @@ function order_reemit ($order_id, $organizer_id){
   //Runs through each seat and gives it a new seat_code and the new order_id.
   while($seat = shopDB::fetch_array($res)){
     $code=Ticket::generate_code(8);
-    $query="UPDATE `Seat` set seat_order_id='$new_id',seat_code='$code' WHERE seat_id='{$seat['seat_id']}' and seat_organizer_id='$organizer_id'";
+    $query="UPDATE `Seat` set seat_order_id='$new_id',seat_code='$code' WHERE seat_id='{$seat['seat_id']}'";
     if(!ShopDB::query($query)){
       echo "<div class=error>$order_id ".order_cannot_reemit."(update seats)</div>";
       ShopDB::rollback();
@@ -745,7 +719,7 @@ function order_reemit ($order_id, $organizer_id){
 */
   //Change old order, change its status and give the it the id of the new order.
   $query="UPDATE  `Order` set order_status='reemit',order_reemited_id='$new_id' 
-          where order_id='$order_id' and order_organizer_id='$organizer_id'";
+          where order_id='$order_id'";
   if(!$res=ShopDB::query($query)){
     echo "<div class=error>$order_id ".order_cannot_reemit."</div>";
     ShopDB::rollback();
@@ -800,7 +774,7 @@ function _set_status ($field,$new_status,$dont_do_update=FALSE){
     $suppl = ", order_payment_id='{$this->order_payment_id}'";
   }
 
-  $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE Order.order_id='{$this->order_id}' AND Order.order_organizer_id='{$_SHOP->organizer_id}'";
+  $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE Order.order_id='{$this->order_id}'";
   if($dont_do_update or (ShopDB::query($query))){// and shopDB::affected_rows()==1)){
     if(!$this->order_handling){
       require_once('classes/Handling.php');
@@ -817,8 +791,7 @@ function toTrash(){
 	$query="SELECT order_id, order_tickets_nr, count(seat_id) as count 
 	        FROM `Order`, Seat
 					WHERE seat_order_id=order_id AND 
-					seat_status='trash' AND 
-					order_organizer_id='{$_SHOP->organizer_id}'
+					seat_status='trash'
 					GROUP BY order_id
 					FOR UPDATE";
 	
@@ -854,7 +827,6 @@ function emptyTrash(){
 	$query="delete `Order`
 					from `Order` left join Seat on order_id=seat_order_id 
 					where order_status='trash' and 
-					order_organizer_id={$_SHOP->organizer_id} and
 					seat_id is NULL";
 	
 	if(!ShopDB::query($query)){
@@ -873,7 +845,7 @@ function purgeDeleted($order_handling_id){
 	  $handling_cond = "and order_handling_id='$order_handling_id'";
 	}
 	$query = "UPDATE `Order`
-			SET order_status='trash' WHERE order_status='cancel' AND order_organizer_id={$_SHOP->organizer_id} $handling_cond";
+			SET order_status='trash' WHERE order_status='cancel' $handling_cond";
 
   ShopDB::query($query);
 }
@@ -886,8 +858,7 @@ function purgeReemited($order_handling_id){
 	}
 	$query = "update `Order`
 					set order_status='trash' 
-					where order_status='reemit' and 
-					order_organizer_id={$_SHOP->organizer_id} $handling_cond";
+					where order_status='reemit' $handling_cond";
 
   ShopDB::query($query);
 }
@@ -919,7 +890,7 @@ function delete_expired($handling_id, $expires_min){
 	  while($data=shopDB::fetch_array($res)){
 			$order_id=$data['order_id'];
 			echo "<br>$order_id";
-			Order::order_delete($order_id,$_SHOP->organizer_id);
+			Order::order_delete($order_id, 0);
 		}
 	}
 	

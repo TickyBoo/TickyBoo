@@ -95,7 +95,31 @@ class Handling {
 //    }
 //		}
 	}
-	
+
+  function _fill ($data, $nocheck=false){
+    foreach($data as $k=>$v){
+      $this->$k=$v;
+    }
+    if ($return and $pm = $this->pment()) {
+			foreach($arr as $key => $val)
+				if(in_array($key, $this->extras))
+					$this->extra[$key] = $val;
+    }
+    if (isset($arr['sale_mode']))
+      $this->sale_mode = $arr['sale_mode'];
+//    print_r($this);
+    return $return ;
+  }
+	function clear() {
+	  parent::clear();
+    if (isset($this->_pment)){
+      $this->_pment->free;
+    }
+    if (isset($this->_sment)) {
+      $this->_sment->free;
+      unset($this->_sment);
+    }
+	}	
   function load ($handling_id){
     global $_SHOP;
     
@@ -103,7 +127,7 @@ class Handling {
       return $_SHOP->_handling_cache[$handling_id];
     }
     
-    $query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($handling_id)." AND handling_organizer_id='{$_SHOP->organizer_id}'";
+    $query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($handling_id);
     if($res=ShopDB::query_one_row($query)){
       $hand=new Handling;
       $hand->_fill($res);
@@ -114,14 +138,14 @@ class Handling {
       return $hand;
     }
   }
-  
+	
   function load_all ($handling_sale_mode=''){
     global $_SHOP;
     if($handling_sale_mode){
-      $sale="AND handling_sale_mode=".ShopDB::quote($handling_sale_mode);
+      $sale="where handling_sale_mode=".ShopDB::quote($handling_sale_mode);
     }
     
-    $query="select * from Handling where handling_organizer_id='{$_SHOP->organizer_id}' $handling_sale_mode";
+    $query="select * from Handling $sale";
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_array($res)){
         $hand=new Handling;
@@ -140,6 +164,7 @@ class Handling {
     
 		$this->_ser_extra();
 		$this->_ser_pdf_format();
+    $this->handling_email_template = $this->_ser_templates($this->handling_email_template);
 		
     $query=
     $this->_set('handling_alt').
@@ -165,13 +190,11 @@ class Handling {
       $query="INSERT INTO `Handling` 
       SET handling_payment=".ShopDB::quote($this->handling_payment).",
       handling_shipment=".ShopDB::quote($this->handling_shipment).",
-      $query,
-      handling_organizer_id='{$_SHOP->organizer_id}'";
+      $query";
     }else{
      $query="update Handling 
       set $query 
-      where handling_id=".ShopDB::quote($this->handling_id)." 
-      and handling_organizer_id='{$_SHOP->organizer_id}'";
+      where handling_id=".ShopDB::quote($this->handling_id);
     }       
     
     if(ShopDB::query($query)){
@@ -182,13 +205,17 @@ class Handling {
     }
   }
 
+  function CheckValues($arr) {
+    $ok = parent::CheckValues($arr);
+    return $this->extra_check($arr) and $ok;
+  }
+
   function delete (){
     global $_SHOP;
-
-		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quote($this->handling_id);
+    if (!$id) $id = $this->handling_id;
+		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quote($id);
 		if($res=ShopDB::query_one_row($query) and $res['count']==0){
-		
-			$query="DELETE FROM Handling WHERE handling_id=".ShopDB::quote($this->handling_id)." AND handling_organizer_id='{$_SHOP->organizer_id}' limit 1";
+			$query="DELETE FROM Handling WHERE handling_id=".ShopDB::quote($this->handling_id)." limit 1";
 			ShopDB::query($query);
 		}else{
 		  echo "<div class=err>".in_use."</div>";
@@ -206,11 +233,8 @@ class Handling {
     $ok=TRUE;
 	
     if($template_name=$this->templates[$new_state] and $order->user_email){
-      require_once("classes/htmlMimeMail.php");
-      require_once("classes/TemplateEngine.php");
-  
       $te=new TemplateEngine;
-      $tpl=&$te->getTemplate($template_name,$_SHOP->organizer_id);
+      $tpl=&$te->getTemplate($template_name);
   
       $email = new htmlMimeMail();
       $order_d=(array)$order;
@@ -253,6 +277,72 @@ class Handling {
     return $ok;
 	}
 	
+  // Loads default extras for payment method eg."pm_paypal_View.php"
+  function extra_init(){
+  	if($pm=$this->pment()){
+      $pm->init();
+  	} else {
+    	switch ($this->handling_payment) {
+        case "invoice"  : $this->handling_text_payment=  "Invoice";
+          break;
+        case "entrance" : $this->handling_text_payment=  "At the entrance";
+          break;
+        case "cash"     : $this->handling_text_payment=  "Cash";
+          break;
+  	  }
+    }
+  	if($sm=$this->sment()){
+      $sm->init();
+  	} else {
+    	switch ($this->handling_shipment) {
+        case "email"    : $this->handling_text_shipment=  "By e-mail";
+          break;
+        case "post"     : $this->handling_text_shipment=  "By post";
+          break;
+        case "entrance" : $this->handling_text_shipment=  "At the entrance";
+          break;
+        case "sp"       : $this->handling_text_shipment=  "Salepoint";
+          break;
+    	}
+    }
+  }
+
+  function extra_check(&$data){
+  	if($pm=$this->pment()){
+      return $pm->check($data, $this->errors);
+  	} else return true;
+  }
+
+  function admin_view(){
+  	if($pm=$this->pment()){
+      return $pm->admin_view();
+  	}
+  }
+
+  function admin_form(){
+  	if($pm=$this->pment()){
+      return $pm->admin_form();
+  	}
+  }
+
+  function on_confirm($order) {
+  	if($pm=$this->pment()){
+      return $pm->on_confirm($order);
+  	}
+  }
+
+  function on_submit(&$order, $appoved, &$err) {
+  	if($pm=$this->pment()){
+      return $pm->on_submit($order, $appoved, $err);
+  	}
+  }
+
+  function on_notify(&$order) {
+  	if($pm=$this->pment()){
+      return $pm->on_notify($order);
+  	}
+  }
+
   function pment() {
     if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
     $file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";
@@ -299,26 +389,24 @@ class Handling {
     $types=explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$res[1]));
     return $types;
   }
-  	function get_handlings ($selectid=0){
+
+  	function get_handlings ($selectid=0, $include =''){
 		$sqli="SELECT handling_id,handling_payment,handling_shipment FROM `Handling` WHERE handling_id!='1'"; 
 		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}	
-		$options=""; 
+		$options= array();
+    if ($include)
+			$options["1"] = $include;
 		
 		while ($row=shopDB::fetch_array($result)) { 
 			$id=$row["handling_id"];
 			$selected = ($id==$selectid) ? ' selected="selected"' : '';  
 			$payment=$row["handling_payment"];
 			$shipping=$row["handling_shipment"];
-			$options.="<OPTION VALUE=\"{$id}\" {$selected}>".$id." - ".$this->con($payment)." - ".$this->con($shipping)."</OPTION>\n"; 
+			$options["{$id}"] = $id." - ".con($payment)." - ".con($shipping);
 		}
 		return $options;
 	}
 
-  function _fill ($data){
-    foreach($data as $k=>$v){
-      $this->$k=$v;
-    }
-  }
 
   function _set ($name,$value=0,$mandatory=FALSE){
 
@@ -332,46 +420,7 @@ class Handling {
     }
   }
 
-	function _extra_handle ($order,$new_state,$old_state,$field) {
-		$pm_class='pm_'.$this->handling_payment;
-		$sm_class='sm_'.$this->handling_shipment;
-		$ok=TRUE;
-		
-		if($this->_dyn_load('classes/'.$pm_class.'.php')){
-			$pm=new $pm_class;
-			if(method_exists($pm,'handle')){
-				$ok=$pm->handle($order,$new_state,$old_state,$field);
-			}
-		}
-		
-		if($this->_dyn_load('classes/'.$sm_class.'.php')){
-			$sm=new $sm_class;
-			if(method_exists($sm,'handle')){
-				$ok=($ok and $sm->handle($order,$new_state,$old_state,$field));
-			}
-		}
-		return $ok;
-	}
 
-	function _extra_on_order_delete ($order_id) {
-		$pm_class='pm_'.$this->handling_payment;
-		$sm_class='sm_'.$this->handling_shipment;
-		$ok=TRUE;
-		
-		if($this->_dyn_load('classes/'.$pm_class.'.php')){
-			$pm=new $pm_class;
-			if(method_exists($pm,'on_order_delete')){
-				$ok=$pm->on_order_delete($order_id);
-			}
-		}
-		if($this->_dyn_load('classes/'.$sm_class.'.php')){
-			$sm=new $sm_class;
-			if(method_exists($sm,'on_order_delete')){
-				$ok=($ok and $sm->on_order_delete($order_id));
-			}
-		}
-		return $ok;
-	}
 	
 		function _myErrorHandler($errno, $errstr, $errfile, $errline) {
 			if($errno!=2){

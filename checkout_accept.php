@@ -1,5 +1,4 @@
 <?php 
-error_reporting(E_ALL); 
-$fond='paypal_notify';
+$action="accept";
 require_once('includes/web/template.php');
 ?>

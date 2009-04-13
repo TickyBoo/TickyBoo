@@ -75,8 +75,7 @@ function order_details ($order_id){
           Event,Category,PlaceMapZone where seat_order_id='".$order_id."'
   	   AND seat_event_id=event_id AND 
 	   seat_category_id=category_id and 
-	   seat_zone_id=pmz_id and
-	   event_organizer_id='{$_SHOP->organizer_id}'";
+	   seat_zone_id=pmz_id";
   if(!$res=ShopDB::query($query)){
      user_error(shopDB::error());
      return;

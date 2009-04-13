@@ -75,7 +75,7 @@ class UserView extends AdminView{
     $currency = $_SHOP->currency;
     $user = User::load_user($this->user_id);
     $this->print_user($user);
-    $query = "select * from `Order` where order_user_id ='{$this->user_id}' and order_organizer_id={$_SHOP->organizer_id}";
+    $query = "select * from `Order` where order_user_id ='{$this->user_id}'";
     if (!$res = ShopDB::query($query)){
       user_error(shopDB::error());
       return;
@@ -91,7 +91,7 @@ class UserView extends AdminView{
 	       <a href='view_order.php?action=details&order_id=" . $order["order_id"] . "'>
 	       <img src='images/view.png' border='0'></a></td><tr>";
       $query = "select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,Event,Category where seat_order_id='" . $order["order_id"] . "'
-               AND seat_event_id=event_id AND seat_category_id= category_id and event_organizer_id='{$_SHOP->organizer_id}'";
+               AND seat_event_id=event_id AND seat_category_id= category_id";
       if (!$res1 = ShopDB::query($query)){
         user_error(shopDB::error());
         return;

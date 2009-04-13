@@ -57,20 +57,15 @@ class Order_Smarty {
   /// To reserve, set the handling to '1'
   function make ($params,&$smarty){
 
-    function _order_error ($error,&$smarty){
-      $smarty->assign('order_error',$error);  
-    }
-
-    global $_SHOP;
   	// handling method gets passed from param to var.
     $handling=$params['handling'];
 	
-	if($params['place']){
-		$place=$params['place'];
-	}
-	if($params['no_cost']){
-		$no_cost=$params['no_cost'];
-	}
+  	if($params['place']){
+  		$place=$params['place'];
+  	}
+  	if($params['no_cost']){
+  		$no_cost=$params['no_cost'];
+  	}
     if($params['user_id']){
       $user_id=$params['user_id'];
     }else{
@@ -79,6 +74,20 @@ class Order_Smarty {
     if($params['no_fee']){
      $no_fee=$params['no_fee'];
     }
+    $this->make_f ($handling, $place, $no_cost, $user_id, $no_fee );
+  }
+  function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
+  
+    function _order_error ($error,&$smarty){
+      $smarty->assign('order_error',$error);
+    }
+
+    global $_SHOP;
+
+    if(!$user_id){
+      $user_id=$_SESSION['_SHOP_USER']['user_id'];
+    }
+
     $cart=$_SESSION['cart'];
 
     if(!$handling or !$user_id or !$cart or !$cart->can_checkout()){
@@ -87,10 +96,9 @@ class Order_Smarty {
     }
   
     require_once("functions/order_func.php");
-    require_once("classes/ShopDB.php");
 
     //compile order (order and tickets) from the shopping cart in order_func.php
-    $order= cart_to_order($cart,$user_id,session_id(),$handling,$_SHOP->organizer_id,$no_fee,$no_cost,$place); 
+    $order= cart_to_order($cart,$user_id,session_id(),$handling,0,$no_fee,$no_cost,$place);
  
     //begin the transaction 
     if(!ShopDB::begin()){
@@ -114,13 +122,14 @@ class Order_Smarty {
       return; 
     }
 
-	//    require_once('classes/Handling.php');
-	//    $hand=Handling::load($order->order_handling_id);
 	$no_tickets=$order->size();
 	if($handling==1){
-		$set = "SET user_order_total=user_order_total+1, user_current_tickets=user_current_tickets+{$no_tickets}, user_total_tickets=user_total_tickets+{$no_tickets} ";
+		$set = "SET user_order_total=user_order_total+1,
+                user_current_tickets=user_current_tickets+{$no_tickets},
+                user_total_tickets=user_total_tickets+{$no_tickets} ";
 	}else{
-		$set = "SET user_order_total=user_order_total+1, user_total_tickets=user_total_tickets+{$no_tickets} ";
+		$set = "SET user_order_total=user_order_total+1,
+                user_total_tickets=user_total_tickets+{$no_tickets} ";
 	}
     $query="UPDATE `User` 
     		$set
@@ -129,28 +138,11 @@ class Order_Smarty {
 		_order_error(user_failed,$smarty);
 		ShopDB::rollback();
 	}
-    
-
-    //commit the transaction      
+    //commit the transaction
     ShopDB::commit();
-
-  
-    $smarty->assign('order_success',true);
-    $smarty->assign('order_id',$order_id);
-    $smarty->assign('order_fee',$order->order_fee);
-    $smarty->assign('order_total_price',$order->order_total_price);
-    $smarty->assign('order_partial_price',$order->order_partial_price);
-    $smarty->assign('order_tickets_nr',$order->size());
-    $smarty->assign('order_shipment_mode',$order->order_shipment_mode);
-    $smarty->assign('order_payment_mode',$order->order_payment_mode);
-
-    foreach($order->places as $ticket){
-      $seats[$ticket->seat_id]=TRUE;
-    }
-    $smarty->assign('order_seats_id',$seats);
-
   }
-  	function res_to_order($params,&$smarty){
+
+ 	function res_to_order($params,&$smarty){
   		$order_id=$params['order_id'];
   		$handling_id=$params['handling_id'];
   		//if(($order_id=$this->secure_url_param($params['order_id']))<=1){return;}
@@ -165,7 +157,7 @@ class Order_Smarty {
 	}
 	function res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place){
 		global $_SHOP;
-		return Order::reserve_to_order($order_id,$handling_id,$no_fee,$no_cost,$place,$_SHOP->organizer_id);
+		return Order::reserve_to_order($order_id,$handling_id,$no_fee,$no_cost,$place);
 	}
     
   function cancel ($params,&$smarty){
@@ -174,16 +166,16 @@ class Order_Smarty {
   
   function cancel_f ($order_id){
     global $_SHOP;
-    return Order::order_delete($order_id,$_SHOP->organizer_id,$this->user_auth_id);
+    return Order::order_delete($order_id,0,$this->user_auth_id);
   }
   
-  function delete_ticket ($params,&$smarty){
+  function delete_ticket ($params, &$smarty){
     $this->delete_ticket_f($params['order_id'],$params['ticket_id']); 
   }
   
   function delete_ticket_f ($order_id,$ticket_id){
     global $_SHOP;
-    return Order::order_delete_ticket($order_id,$ticket_id,$_SHOP->organizer_id,$this->user_auth_id);
+    return Order::order_delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
   }
 
   function order_list ($params, $content, &$smarty,&$repeat){
@@ -400,7 +392,7 @@ class Order_Smarty {
   }
   function set_send_f($order_id){
   	global $_SHOP;
-	return Order::set_send($order_id, $_SHOP->organizer_id, $this->user_auth_id);
+	return Order::set_send($order_id, 0, $this->user_auth_id);
   }
   
   
@@ -410,7 +402,7 @@ class Order_Smarty {
   
   function set_reserved_f ($order_id){
     global $_SHOP;
-    return Order::set_reserved($order_id, $_SHOP->organizer_id, $this->user_auth_id);
+    return Order::set_reserved($order_id, 0, $this->user_auth_id);
   }
   
   function set_payed ($params,&$smarty){
@@ -419,7 +411,7 @@ class Order_Smarty {
   
   function set_payed_f ($order_id){
     global $_SHOP;
-    return Order::set_payed($order_id, $_SHOP->organizer_id, $this->user_auth_id);
+    return Order::set_payed($order_id, 0, $this->user_auth_id);
   }
   
   function order_print ($params,&$smarty){
@@ -440,9 +432,9 @@ class Order_Smarty {
 	  $correct = is_numeric($num); 
       if( $correct ) { return $num; } 
       elseif(!$correct ){ 
-		echo "No Such ID"; 
+	    	echo "No Such ID";
       	//$num = cleanNUM($num);
-		$num="1"; 
+		    $num="1";
       	return $num; 
       }
     }

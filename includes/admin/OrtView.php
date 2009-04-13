@@ -112,7 +112,7 @@ class OrtView extends AdminView {
               <input type='reset' name='reset' value='" . res . "'></td></tr>";
         echo "</table>\n";
 
-        if  (($data['ort_id']) and ($data['ort_organizer_id'] == $_SHOP->organizer_id or !$data['ort_organizer_id'])) {
+        if  (($data['ort_id'])) {
             require_once('admin/PlaceMapView2.php');
             echo "<br>";
             PlaceMapView2::pm_list($data['ort_id']);
@@ -137,7 +137,7 @@ class OrtView extends AdminView {
     {
         global $_SHOP;
 
-        $query = "select * from Ort where ort_organizer_id={$_SHOP->organizer_id}";
+        $query = "select * from Ort ";
         if (!$res = ShopDB::query($query)) {
             return;
         }
@@ -162,30 +162,7 @@ class OrtView extends AdminView {
         // echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=import'>".import."</a></center>";
     }
 
-    function shared_ort_list ()
-    {
-        $query = "select * from Ort WHERE ort_organizer_id=0";
-        if (!$res = ShopDB::query($query)) {
-            user_error(shopDB::error());
-            return;
-        }
-
-        $alt = 0;
-        echo "<table class='admin_list' width='$this->width' cellpadding='5' cellspacing='1'>\n";
-        echo "<tr><td class='admin_list_title' colspan='4' align='center'>" . shared_ort_title . "</td></tr>\n";
-
-        while ($row = shopDB::fetch_assoc($res)) {
-            echo "<tr class='admin_list_row_$alt'>";
-            echo "<td class='admin_list_item'>{$row['ort_id']}</td>\n";
-            echo "<td class='admin_list_item' width='60%'>{$row['ort_name']}</td>\n";
-            echo "<td class='admin_list_item'>{$row['ort_country']}{$row['ort_zip']} {$row['ort_city']}</td>\n";
-            echo "<td class='admin_list_item'><a class='link' href='view_ort.php?action=view&ort_id={$row['ort_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a></td>\n";
-            echo "<td class='admin_list_item'><a class='link' href='view_ort.php?action=copy&ort_id={$row['ort_id']}'><img src='images/copy.png' border='0' alt='" . copy . "' title='" . copy . "'></a></td>\n";
-            echo "</tr>";
-            $alt = ($alt + 1) % 2;
-        }
-
-        echo "</table>\n";
+    function shared_ort_list () {
     }
 
     function photo_post ($data, $ort_id)
@@ -207,13 +184,7 @@ class OrtView extends AdminView {
                     $this->ort_form($row, $err, ort_update_title);
                 }
             }
-        } elseif ($_GET['action'] == 'copy' and $_GET['ort_id']) {
-            $ort = Ort::load($_GET['ort_id']);
-            $ort->copy($_SHOP->organizer_id);
-
-            $this->ort_list();
         } else
-
         if ($_POST['action'] == 'insert') {
             if (!$this->ort_check($_POST, $err)) {
                 $this->ort_form($_POST, $err, ort_add_title);

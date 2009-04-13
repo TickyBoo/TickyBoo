@@ -96,7 +96,6 @@ global $_SHOP;
   }
   
   $query="select event_id,event_name,event_date,event_time from Event 
-          where event_organizer_id='{$_SHOP->organizer_id}' 
           order by event_date,event_time";
   if(!$res=ShopDB::query($query)){
     user_error(shopDB::error());
@@ -131,7 +130,7 @@ global $_SHOP;
 
  function control_list (){
   global $_SHOP;
-  $query="SELECT * FROM Control WHERE control_organizer_id='{$_SHOP->organizer_id}'";
+  $query="SELECT * FROM Control";
   if(!$res=ShopDB::query($query)){
     user_error(shopDB::error());
     return;
@@ -175,11 +174,9 @@ if($_POST['action']=='insert'){
     $this->control_form($_POST,$err,control_add_title);
   }else{
     $ids=$this->post_events ($_POST);
-    $query="INSERT INTO Control (control_login,control_password,control_organizer_id,
-             control_event_ids)".
+    $query="INSERT INTO Control (control_login, control_password, control_event_ids)".
            " VALUES ('".$this->q($_POST['control_login'])."',
-            '".$this->q(md5($_POST['password1']))."',".
-             $_SHOP->organizer_id.",'$ids')";  
+            '".$this->q(md5($_POST['password1']))."','$ids')";
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
@@ -195,8 +192,7 @@ if($_POST['action']=='insert'){
       $query="UPDATE Control set 
            control_password='".$this->q(md5($_POST['new_password1']))."' where 
 	   control_login='{$_POST["control_login"]}'
-	   and control_password='".$this->q(md5($_POST['old_password']))."'
-	   and control_organizer_id='{$_SHOP->organizer_id}'";
+	   and control_password='".$this->q(md5($_POST['old_password']))."'";
     
       if(!ShopDB::query($query)){
         user_error(shopDB::error());
@@ -207,8 +203,7 @@ if($_POST['action']=='insert'){
      $ids=$this->post_events($_POST);
     
      $query="UPDATE Control set 
-           control_event_ids='$ids' where control_login='{$_POST["control_login"]}'
-	   and control_organizer_id='{$_SHOP->organizer_id}'";
+           control_event_ids='$ids' where control_login='{$_POST["control_login"]}'";
       if(!ShopDB::query($query)){
         user_error(shopDB::error());
         return FALSE;
@@ -221,7 +216,7 @@ if($_POST['action']=='insert'){
   $this->control_form($row,$err,control_add_title);
  
  }else if($_GET['action']=='edit'){
-  $query="SELECT * FROM Control WHERE control_login='{$_GET['control_login']}' and control_organizer_id='{$_SHOP->organizer_id}'";
+  $query="SELECT * FROM Control WHERE control_login='{$_GET['control_login']}'";
   if(!$row=ShopDB::query_one_row($query)){
     user_error(shopDB::error());
     return 0;
@@ -230,14 +225,14 @@ if($_POST['action']=='insert'){
   $this->control_form($row,$err,control_update_title,'update');
 }else 
 if($_GET['action']=='remove' and $_GET['control_login']){
-  $query="DELETE FROM Control WHERE control_login='{$_GET['control_login']}' AND control_organizer_id='{$_SHOP->organizer_id}'";
+  $query="DELETE FROM Control WHERE control_login='{$_GET['control_login']}'";
   if(!ShopDB::query($query)){
     user_error(shopDB::error());
     return 0;
   }
   $this->control_list();
 }else if($_GET['action']=='view'){
-  $query="SELECT * FROM Control WHERE control_login='{$_GET['control_login']}' AND control_organizer_id='{$_SHOP->organizer_id}'";
+  $query="SELECT * FROM Control WHERE control_login='{$_GET['control_login']}'";
   if(!$row=ShopDB::query_one_row($query)){
     user_error(shopDB::error());
     return 0;

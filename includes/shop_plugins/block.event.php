@@ -94,8 +94,6 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
       $limit='limit '.$params['limit'];
     }
 
-		$where.=" and event_organizer_id='{$_SHOP->organizer_id}'";
-		    
     if($params['event_type']){
       $types=explode(",",$params['event_type']);
       $first=true;
@@ -126,7 +124,6 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 
     if($params['load_organizer']){
       $from.=',Organizer';
-      $where .= " and event_organizer_id=organizer_id";
     }
 
     if($params['first']){

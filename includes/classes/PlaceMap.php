@@ -69,9 +69,9 @@ class PlaceMap{ //ZRS
     
     if($this->pm_id){
       $query="update PlaceMap2 $query
-  	      where pm_id='{$this->pm_id}' and pm_organizer_id={$_SHOP->organizer_id}";
+  	      where pm_id='{$this->pm_id}' ";
     }else{
-      $query="insert into PlaceMap2 $query, pm_organizer_id={$_SHOP->organizer_id}";
+      $query="insert into PlaceMap2 $query";
     }
 
     if(ShopDB::query($query)){
@@ -87,7 +87,7 @@ class PlaceMap{ //ZRS
   function load ($pm_id){
     global $_SHOP;
   
-    $query="select * from PlaceMap2,Ort where pm_ort_id=ort_id and pm_id='$pm_id' and (pm_organizer_id=0 or pm_organizer_id={$_SHOP->organizer_id})";
+    $query="select * from PlaceMap2,Ort where pm_ort_id=ort_id and pm_id='$pm_id'";
     if($res=ShopDB::query_one_row($query)){
 
       $new_pm=new PlaceMap;
@@ -100,7 +100,7 @@ class PlaceMap{ //ZRS
   function loadAll ($ort_id){
     global $_SHOP;
 
-    $query="select * from PlaceMap2,Ort where pm_ort_id=ort_id and ort_id='$ort_id' and (pm_organizer_id=0 or pm_organizer_id={$_SHOP->organizer_id})";
+    $query="select * from PlaceMap2,Ort where pm_ort_id=ort_id and ort_id='$ort_id'";
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_array($res)){
         $new_pm=new PlaceMap;
@@ -119,21 +119,21 @@ class PlaceMap{ //ZRS
         echo '<div class=error>'.Cant_Start_transaction.'<div>';
         return FALSE;}
 
-    $query="delete from PlaceMap2 where pm_id={$this->pm_id} and pm_organizer_id={$_SHOP->organizer_id} limit 1";
+    $query="delete from PlaceMap2 where pm_id={$this->pm_id} limit 1";
     if(!ShopDB::query($query)){
       ShopDB::rollback();
       echo '<div class=error>'.placemap_delete_failed.'<div>';
       return FALSE;
     }
 
-    $query="delete from PlaceMapZone where pmz_pm_id={$this->pm_id} and pmz_organizer_id={$_SHOP->organizer_id}";
+    $query="delete from PlaceMapZone where pmz_pm_id={$this->pm_id}";
     if(!ShopDB::query($query)){
       ShopDB::rollback();
       echo '<div class=error>'.placemapzone_stat_delete_failed.'<div>';
       return FALSE;
     }
 
-    $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} and pmp_organizer_id={$_SHOP->organizer_id}";
+    $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} ";
     if(!ShopDB::query($query)){
       ShopDB::rollback();
       echo '<div class=error>'.event_stat_delete_failed.'<div>';
@@ -141,14 +141,14 @@ class PlaceMap{ //ZRS
     }
       echo '<div class=error>'.Category_delete.'<div>';
 
-    $query="delete from Category where category_pm_id={$this->pm_id} and category_organizer_id={$_SHOP->organizer_id}";
+    $query="delete from Category where category_pm_id={$this->pm_id}";
     if(!ShopDB::query($query)){
       ShopDB::rollback();
       echo '<div class=error>'.Category_delete_failed.'<div>';
       return FALSE;
     }
 
-    $query="delete from Category_stat where cs_category_id={$this->pm_id} and cs_organizer_id={$_SHOP->organizer_id}";
+    $query="delete from Category_stat where cs_category_id={$this->pm_id}";
     if(!ShopDB::query($query)){
       ShopDB::rollback();
       echo '<div class=error>'.Category_stat_delete_failed.'<div>';

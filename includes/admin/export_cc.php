@@ -41,7 +41,7 @@ class export_cc extends AdminView {
 
   function cc_form (&$data,&$err){
 		global $_SHOP;
-		$query = "select count(*) as export_cc_count from CC_Info where cc_info_organizer_id='{$_SHOP->organizer_id}'";
+		$query = "select count(*) as export_cc_count from CC_Info";
 
 		$data=ShopDB::query_one_row($query);
 		
@@ -62,7 +62,7 @@ class export_cc extends AdminView {
     global $_SHOP;
   
     if($_GET['submit']){
-      $query="select * from CC_Info where cc_info_organizer_id='{$_SHOP->organizer_id}'";
+      $query="select * from CC_Info";
 
 		  if(!$res=ShopDB::query($query) or !shopDB::num_rows($res)){
          return 0;

@@ -136,8 +136,7 @@ class Ticket {
     $query="update Seat 
             set seat_code='$new_code'
 	    where seat_id='$seat_id' and
-	          seat_order_id='$order_id' and
-		  seat_organizer_id='{$_SHOP->organizer_id}'
+	          seat_order_id='$order_id'
 	    LIMIT 1";
   
   

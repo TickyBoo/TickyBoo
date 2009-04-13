@@ -124,7 +124,7 @@ class EventPropsView extends EventViewCommon {
     {
         global $_SHOP;
 
-        if (!$main = Event::load($event_main_id, false) or $main->event_organizer_id != $_SHOP->organizer_id) {
+        if (!$main = Event::load($event_main_id, false)) {
             return;
         }
 
@@ -132,7 +132,6 @@ class EventPropsView extends EventViewCommon {
                   from Event left join Ort on event_ort_id=ort_id
                   where event_main_id='$event_main_id'
                   and event_rep='sub'
-                  and event_organizer_id='{$_SHOP->organizer_id}'
                   and event_status!='trash'
                   order by event_date ";
 
@@ -190,8 +189,7 @@ class EventPropsView extends EventViewCommon {
         global $_SHOP;
 
         $query = "select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
-                  WHERE event_organizer_id='{$_SHOP->organizer_id}'
-                  and event_rep!='sub'
+                  WHERE event_rep!='sub'
                   and event_status!='trash'
                   order by event_date ";
 
@@ -419,14 +417,12 @@ class EventPropsView extends EventViewCommon {
         If ($isnew) {
               $event = new Event;
         } else {
-              if ($event = Event::load($data['event_id'], false) and
-                    $event->event_organizer_id != $_SHOP->organizer_id) {
+              if ($event = Event::load($data['event_id'], false)) {
                echo "<div class=error>". invalid_event ."<div>";
             }
         }
 
         $event->_fill($data);
-        $event->event_organizer_id = $_SHOP->organizer_id;
 
         if (!$event_id = $event->save()) {
              echo "<div class=error>". event_not_updated. shopDB::error() ."<div>";

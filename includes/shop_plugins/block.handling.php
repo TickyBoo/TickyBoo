@@ -43,7 +43,7 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 	
   if ($repeat) {
     $from='FROM Handling';
-    $where="WHERE handling_organizer_id='{$_SHOP->organizer_id}' ";
+    $where="WHERE 0=0 ";
     
 	if($params['event_date']){
 		$update= new Update();

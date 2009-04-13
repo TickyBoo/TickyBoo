@@ -144,7 +144,7 @@ function create_member ($member){
     $email=$member['user_email'];
     $engine= new TemplateEngine();
 
-    $tpl=$engine->getTemplate('Signup_email',$_SHOP->organizer_id); // 'Signup_email';
+    $tpl=$engine->getTemplate('Signup_email'); // 'Signup_email';
     $email=&new htmlMimeMail();
 
     $link="".$_SHOP->root."index.php?register_user=on&action=activate&x=$user_id&y=$active";

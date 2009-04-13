@@ -43,7 +43,7 @@ class HandlingView extends AdminView{
 function print_select_tpl ($name,$type,&$data,&$err){
   global $_SHOP;
 
-  $query="SELECT template_name FROM Template WHERE template_type='{$type}' and template_organizer_id='{$_SHOP->organizer_id}' ORDER BY template_name";
+  $query="SELECT template_name FROM Template WHERE template_type='{$type}' ORDER BY template_name";
   if(!$res=ShopDB::query($query)){
     return FALSE;
   }

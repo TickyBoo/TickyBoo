@@ -41,11 +41,7 @@ class Event {
  function select ($only_published=TRUE,$with_stats=FALSE){
    global $_SHOP;
 
-   if($only_published){
-     $pub="and event_status='pub'";
-   }else{
-     $pub="and event_organizer_id={$_SHOP->organizer_id}";
-   }
+   $pub=($only_published)? "and event_status='pub'":"";
 
    $date=date("Y-m-d");
 
@@ -69,9 +65,7 @@ class Event {
    $pub='';
    if($only_published){
      $pub="and event_status='pub'";
-   } //else{
-   $pub.=" and event_organizer_id={$_SHOP->organizer_id}";
-//   }
+   }
 
    $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
            where Event.event_id='$id' $pub limit 1";
@@ -127,12 +121,12 @@ class Event {
    }
 
    if($this->event_id){
-      $query="update Event $query event_status='{$this->event_status}' where event_id={$this->event_id} and event_organizer_id={$_SHOP->organizer_id}";
+      $query="update Event $query event_status='{$this->event_status}' where event_id={$this->event_id}";
       if($this->event_rep=='main'){
         $this->update_subs();
       }
    }else{
-      $query = "insert into Event $query event_status='unpub', event_organizer_id={$_SHOP->organizer_id}";
+      $query = "insert into Event $query event_status='unpub'";
    }
 
    if(ShopDB::query($query)){
@@ -145,8 +139,6 @@ class Event {
        if($this->event_pm_id){
          require_once('classes/PlaceMap.php');
          $pm=PlaceMap::load($this->event_pm_id);
-
-         $pm->pm_organizer_id=$this->event_organizer_id;
 
          if($new_pm_id=$pm->copy($this->event_id)){
            $query="update Event set event_pm_id=$new_pm_id where event_id={$this->event_id}";
@@ -195,7 +187,7 @@ class Event {
 			}
 		}
 
-    $query="delete from Event where event_id={$this->event_id} and event_status!='pub' and event_organizer_id={$_SHOP->organizer_id} limit 1";
+    $query="delete from Event where event_id={$this->event_id} and event_status!='pub' limit 1";
 
     if(!ShopDB::query($query) or !shopDB::affected_rows()==1){
       ShopDB::rollback();
@@ -203,7 +195,7 @@ class Event {
       return FALSE;
     }
 
-    $query="delete from Seat where seat_event_id={$this->event_id}  and seat_organizer_id={$_SHOP->organizer_id}";
+    $query="delete from Seat where seat_event_id={$this->event_id}";
     if(!ShopDB::query($query)){
       ShopDB::rollback();
       echo '<div class=error>'.seats_delete_failed.'<div>';
@@ -250,7 +242,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
       $parts=PlaceMapPart::loadAll_full($this->event_pm_id);
       if(!empty($parts)){
         foreach($parts as $part){
-         if (! $part->publish($this->event_id, $_SHOP->organizer_id, $stats, $pmps, $dry_run)) {
+         if (! $part->publish($this->event_id, 0, $stats, $pmps, $dry_run)) {
            return $this->_abort('publish1');}
           if(!$dry_run and !($part->save() and $part->save_original())) {
             return $this->_abort('publish2');}
@@ -266,7 +258,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
         if($cat->category_numbering=='none' and $cat->category_size>0){
           for($i=0;$i<$cat->category_size;$i++){
 						if(!$dry_run){
-							if( !Seat::publish($this->event_id,0,0,0,0,$cat->category_id,$this->event_organizer_id)) {
+							if( !Seat::publish($this->event_id,0,0,0,0,$cat->category_id)) {
                  return $this->_abort('publish4');
                  }
               }
@@ -278,7 +270,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
       if($stats){
 				foreach($stats as $category_ident=>$cs_total){
 					$cat=$cats[$category_ident];
-					$cs=new Category_stat($cat->category_id,$cs_total,$this->event_organizer_id);
+					$cs=new Category_stat($cat->category_id,$cs_total);
 					if(!$dry_run){$cs->save() or $this->_abort(publish5);}
 					$es_total+=$cs_total;
 
@@ -289,7 +281,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 				}
 			}
 
-      $es=new Event_stat($this->event_id,$es_total,$this->event_organizer_id);
+      $es=new Event_stat($this->event_id,$es_total,0);
       if(!$dry_run){$es->save() or $this->_abort(publish6);}
     }
     $this->event_status='pub';
@@ -404,7 +396,6 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
     //$names[]='event_date';
     $names[]='event_time';
     $names[]='event_open';
-    //$names[]='event_organizer_id';
     $names[]='event_order_limit';
     $names[]='event_payment';
     $names[]='event_template';
@@ -416,7 +407,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 
     foreach($names as $name){
       if($this->$name != $old->$name){
-        $query="update Event set $name=".ShopDB::quote($this->$name)." where $name=".ShopDB::quote($old->$name)." and event_rep='sub' and event_main_id='{$this->event_id}'  and event_organizer_id={$_SHOP->organizer_id}";
+        $query="update Event set $name=".ShopDB::quote($this->$name)." where $name=".ShopDB::quote($old->$name)." and event_rep='sub' and event_main_id='{$this->event_id}'";
         ShopDB::query($query);
       }
     }
@@ -442,8 +433,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 	  ShopDB::begin();
 
 		$query="update Event set event_status='trash'
-						where event_id='{$this->event_id}' and
-						event_organizer_id='{$_SHOP->organizer_id}'";
+						where event_id='{$this->event_id}'";
 
 		if(!ShopDB::query($query)){
 		  ShopDB::rollback();
@@ -471,8 +461,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 
 		$query="select seat_event_id,count(order_id) as count
 						from Seat LEFT JOIN `Order` ON  order_id=seat_order_id
-						where  seat_organizer_id={$_SHOP->organizer_id} and
-						seat_status='trash'
+						where seat_status='trash'
 						group by seat_event_id";
 
 		if(!$res=ShopDB::query($query)){
@@ -489,8 +478,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 		        from Event,Seat,`Order`
 						where event_id=seat_event_id and
 						order_id=seat_order_id and
-						event_status='trash' and
-						event_organizer_id={$_SHOP->organizer_id}
+						event_status='trash'
 						group by event_id";
 
 
@@ -507,8 +495,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 						where event_id=seat_event_id and
 						order_id=seat_order_id and
 						event_status='trash' and
-						order_status='trash'and
-						event_organizer_id={$_SHOP->organizer_id}
+						order_status='trash'
 						group by event_id";
 
 		if(!$res=ShopDB::query($query)){
