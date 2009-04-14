@@ -27,30 +27,26 @@
  * clear to you.
  *}
 
-{if $cart_error}
-  {include file="header.tpl" name=!shopping_cart!}
-  <div align='center' class='error'>{$cart_error}</div>
+{if $pm_return.approved}
+  {include file="header.tpl" name=!pay_refused! }
 {else}
-  {include file="header.tpl" name=!shopping_cart! header=!cart_cont_mess!}
-  {include file="cart_content.tpl" }
+  {include file="header.tpl" name=!pay_refused! }
 {/if}
-<br>
-<table class="table_midtone" width='100%'>
+<table class="table_midtone">
   <tr>
-    <td width="50%" align="left">
-      <form method='get' action="index.php">
-        {if $event_id}
-           <input type='hidden' name='event_id' value='{$event_id}' />
+    <td>
+      {if $pm_return.approved}
+         {!pay_reg!}!<br>
+		    {!order_id!} <b>{$shop_order.order_id}</b><br>
+		    {if $pm_return.transaction_id}
+          {!trx_id!}   <b>{$pm_return.transaction_id}</b><br>
         {/if}
-        <input name="go_home" value="{!order_more_tickets!}" type="submit">
-      </form>
-    </td>
-    <td align="right">
-      {if $cart->can_checkout_f()}
-        <form action="checkout.php" >
-          <input name="go_pay" value="{!checkout!}" type="submit">
-        </form>
-      {/if}
+	      {$pm_return.response}
+	    {else}
+        <div class='error'>
+			      {$pm_return.response}
+			  </div>
+    	{/if}
     </td>
   </tr>
 </table>

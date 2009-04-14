@@ -32,7 +32,7 @@
 {include file="header.tpl" name=!pers_info! header=!user_notice!}
 
 <center>
-  <form action='kasse.php?action=register' method=post >
+  <form action='checkout.php?action=register' method=post >
     <table cellpadding="2" bgcolor='white' width='80%'>
       {include file="user_form.tpl"}
       <tr>
@@ -50,7 +50,7 @@
     </table>
   </form><br>
 
-  <form action='kasse.php?action=login' method=post>
+  <form action='checkout.php?action=login' method=post>
     <table  cellpadding='2' bgcolor='white' width='80%'>
       <tr>
         <td colspan='2' class='TblHeader'> {!member!} </td>

@@ -27,16 +27,16 @@
  * clear to you.
  *}
 {if $shop_event.event_rep eq 'main'}
-  <table class="table_dark">
+  <table class="table_dark" cellpadding="5">
     <tr>
     	{if $shop_event.event_image}
-    	  <td>
+        <td width="30%" valign="top" colspan="2">
     	  	<a href='index.php?event_id={$shop_event.event_id}'>
-        		<img src="files/{$shop_event.event_image}" align='left' style="margin:15px;" border="0">
+            <img src="files/{$shop_event.event_image}" align='left' style="margin:3px;" alt="{$shop_event.event_name} in {$shop_event.ort_city}" title="{$shop_event.event_name} in {$shop_event.ort_city}" border="0" height="100">
           </a>
     	  </td>
     	{/if}
-      <td>
+      <td colspan='4' valign='top'>
         <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
           {if $shop_event.event_pm_id}
             <img border='0' src='images/ticket.gif'>
@@ -47,7 +47,7 @@
         </a>
         {if $shop_event.event_mp3}
           <a  href='files/{$shop_event.event_mp3}'>
-            [<img src='images/audio-small.png' border='0' valign='bottom'>]
+            <img src='images/audio-small.png' border='0' valign='bottom'>
           </a>
         {/if}<br>
         <span class="date">{$shop_event.event_date|date_format:!shortdate_format!}
@@ -61,10 +61,10 @@
       </td>
     </tr>
     <tr>
-      <td colspan='2'>
+      <td colspan='6'>
         {if $info_plus eq "on"}
-          {!dates_localities!} :
-          {event event_main_id=$smarty.get.event_id ort='on' sub='on' event_status='pub' place_map='on'}
+          {!dates_localities!}:
+          {event event_main_id=$smarty.get.event_id ort='on' stats='on' sub='on' event_status='pub' place_map='on'}
             <li>
               <a href="index.php?event_id={$shop_event.event_id}">
                 {$shop_event.event_date|date_format:!date_format!}

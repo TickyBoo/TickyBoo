@@ -26,31 +26,15 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
+ {include file="header.tpl" name=!confirm_payment! header=!confirm_mess!}
 
-{if $cart_error}
-  {include file="header.tpl" name=!shopping_cart!}
-  <div align='center' class='error'>{$cart_error}</div>
-{else}
-  {include file="header.tpl" name=!shopping_cart! header=!cart_cont_mess!}
-  {include file="cart_content.tpl" }
-{/if}
-<br>
-<table class="table_midtone" width='100%'>
-  <tr>
-    <td width="50%" align="left">
-      <form method='get' action="index.php">
-        {if $event_id}
-           <input type='hidden' name='event_id' value='{$event_id}' />
-        {/if}
-        <input name="go_home" value="{!order_more_tickets!}" type="submit">
-      </form>
-    </td>
-    <td align="right">
-      {if $cart->can_checkout_f()}
-        <form action="checkout.php" >
-          <input name="go_pay" value="{!checkout!}" type="submit">
-        </form>
-      {/if}
-    </td>
-  </tr>
-</table>
+ <table width='100%'>
+    {eval var=$shop_handling.handling_text_payment assign=test}
+    {gui->view name=payment value=$test}
+    {eval var=$shop_handling.handling_text_shipment  assign=test}
+    {gui->view name=shipment value=$test }
+    {gui->valuta value=$order_total_price assign=test}
+    {gui->view name=total_price value=$test}
+    {gui->view name=order_id value=$order_id}
+ </table><br>
+ {eval var=$confirmtext}
