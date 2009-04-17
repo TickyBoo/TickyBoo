@@ -36,7 +36,8 @@ require_once("classes/Ticket.php");
 class Order_Smarty {
 
   var $user_auth_id;
-
+  var $error;
+  
   function Order_Smarty (&$smarty){
    global $_SHOP;
    $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
@@ -54,55 +55,29 @@ class Order_Smarty {
 	return;
 }
 
-  /// To reserve, set the handling to '1'
-  function make ($params,&$smarty){
-
-  	// handling method gets passed from param to var.
-    $handling=$params['handling'];
-	
-  	if($params['place']){
-  		$place=$params['place'];
-  	}
-  	if($params['no_cost']){
-  		$no_cost=$params['no_cost'];
-  	}
-    if($params['user_id']){
-      $user_id=$params['user_id'];
-    }else{
-      $user_id=$_SESSION['_SHOP_USER']['user_id'];
-    }  
-    if($params['no_fee']){
-     $no_fee=$params['no_fee'];
-    }
-    $this->make_f ($handling, $place, $no_cost, $user_id, $no_fee );
-  }
-  function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
+   function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
   
-    function _order_error ($error,&$smarty){
-      $smarty->assign('order_error',$error);
-    }
-
     global $_SHOP;
 
     if(!$user_id){
       $user_id=$_SESSION['_SHOP_USER']['user_id'];
     }
 
-    $cart=$_SESSION['cart'];
+    $cart=$_SESSION['_SMART_cart'];
 
     if(!$handling or !$user_id or !$cart or !$cart->can_checkout()){
-      _order_error(reservate_failed,$smarty);
+      $this->error = con('reservate_failed');
       return;
     }
   
-    require_once("functions/order_func.php");
-
     //compile order (order and tickets) from the shopping cart in order_func.php
-    $order= cart_to_order($cart,$user_id,session_id(),$handling,0,$no_fee,$no_cost,$place);
- 
-    //begin the transaction 
+
+    $order = new Order($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
+    $cart->iterate('_collect', $order);
+
+    //begin the transaction
     if(!ShopDB::begin()){
-      _order_error(reservate_failed,$smarty);
+      $this->error =con('reservate_failed');
       return; 
     }
 
@@ -117,30 +92,33 @@ class Order_Smarty {
       
     //put the order into database     
     if(!$order_id=$order->save()){
-      _order_error(save_failed,$smarty);
+      $this->error = con('save_failed');
       ShopDB::rollback();
       return; 
     }
 
-	$no_tickets=$order->size();
-	if($handling==1){
-		$set = "SET user_order_total=user_order_total+1,
-                user_current_tickets=user_current_tickets+{$no_tickets},
-                user_total_tickets=user_total_tickets+{$no_tickets} ";
-	}else{
-		$set = "SET user_order_total=user_order_total+1,
-                user_total_tickets=user_total_tickets+{$no_tickets} ";
-	}
-    $query="UPDATE `User` 
-    		$set
-			WHERE user_id=".ShopDB::quote($user_id);
-	if(!$res=ShopDB::query($query)){
-		_order_error(user_failed,$smarty);
-		ShopDB::rollback();
-	}
+  	$no_tickets=$order->size();
+  	if($handling==1){
+  		$set = "SET user_order_total=user_order_total+1,
+                  user_current_tickets=user_current_tickets+{$no_tickets},
+                  user_total_tickets=user_total_tickets+{$no_tickets} ";
+  	}else{
+  		$set = "SET user_order_total=user_order_total+1,
+                  user_total_tickets=user_total_tickets+{$no_tickets} ";
+  	}
+      $query="UPDATE `User`
+      		$set
+  			WHERE user_id=".ShopDB::quote($user_id);
+  	if(!$res=ShopDB::query($query)){
+  		$this->error =con('user_failed');
+  		ShopDB::rollback();
+  	}
+
     //commit the transaction
     ShopDB::commit();
+    return $order;
   }
+
 
  	function res_to_order($params,&$smarty){
   		$order_id=$params['order_id'];
@@ -155,10 +133,12 @@ class Order_Smarty {
 		
 		$smarty->assign('order_success',true);
 	}
+	
 	function res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place){
 		global $_SHOP;
 		return Order::reserve_to_order($order_id,$handling_id,$no_fee,$no_cost,$place);
 	}
+    
     
   function cancel ($params,&$smarty){
     $this->cancel_f($params['order_id']); 
@@ -451,6 +431,29 @@ class Order_Smarty {
     } 
   }
 
+}
+
+function _collect(&$event_item,&$cat_item,&$place_item,&$order){
+  if(!$place_item->is_expired()){
+
+    $i=0;
+    $discounts=$place_item->discounts;
+    foreach($place_item->places_id as $place_id){
+      if($discounts[$i]){
+        $order->add_seat($event_item->event_id,$cat_item->cat_id,$place_id,$cat_item->cat_price,$discounts[$i]);
+      }else{
+        $order->add_seat($event_item->event_id,$cat_item->cat_id,$place_id,$cat_item->cat_price);
+      }
+      $i++;
+    }
+
+
+    if(!isset($order->place_items)){
+      $order->place_items=array();
+    }
+    array_push($order->place_items,array($event_item->event_id,$cat_item->id,$place_item->id));
+  }
+  return 1;
 }
 
 ?>

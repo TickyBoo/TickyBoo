@@ -290,7 +290,6 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
 	 */
 	function Redirect($url, $status = 303) {
     GLOBAL $_SHOP;
-		$this->AutoRender = false;
 		if (function_exists('session_write_close')) {
 			session_write_close();
 		}

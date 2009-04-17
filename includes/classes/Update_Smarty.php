@@ -13,20 +13,20 @@ class Update_Smarty {
 			$this->load('1');
 		}
 		$smarty->register_object("update",$this);
-	    $smarty->assign_by_ref("update",$this);
-	    
-	    //if(!$dont_run){
-			//Set to same as $this->shopconfig_lastrun_int for testing mode.
-			if($this->lastrun()<='0'){				//Checks to see if res time is enabled anything more than 9 will delete  
-				if($this->shopconfig_restime >= 10){
-				$run=$this->check_reserved();	
-			}
-			if($this->shopconfig_delunpaid == "Yes"){
-				$run=$this->delete_unpaid();
-			}
-			  	
-			$run=$this->saveupdate();
-			}
+    $smarty->assign_by_ref("update",$this);
+    
+    //if(!$dont_run){
+		//Set to same as $this->shopconfig_lastrun_int for testing mode.
+		if($this->lastrun()<='0'){				//Checks to see if res time is enabled anything more than 9 will delete  
+			if($this->shopconfig_restime >= 10){
+			$run=$this->check_reserved();	
+		}
+		if($this->shopconfig_delunpaid == "Yes"){
+			$run=$this->delete_unpaid();
+		}
+		  	
+		$run=$this->saveupdate();
+		}
 		//}
 	}
 	//Used for returning results so a template can know if a button/item should be enabled

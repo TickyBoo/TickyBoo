@@ -176,8 +176,9 @@ class Gui_smarty {
     $name = is($params['name']);
     $Option = is($params['option']);
     $value  = is($params['value'],$this->guidata[$name]);
+    $nolabel  = is($params['nolabel'],false);
     If (!$Option or $this->values[$name]) {
-      return $this->showlabel($name, $value, $params['nolabel']);
+      return $this->showlabel($name, $value, $nolabel);
     }
   }
   function hidden ($params, &$smarty) //$name, &$data, $size = 30, $max = 100)
@@ -290,8 +291,12 @@ class Gui_smarty {
   function viewcountry($params, &$smarty){
     global $_SHOP, $_COUNTRY_LIST;
     $this->Loadcountrys();
-    $name     = is($params['name']);
-    $val=strtoupper($this->guidata[$name]);
+    if (!isset($params['value'])){
+      $name     = is($params['name']);
+      $val=strtoupper($this->guidata[$name]);
+    } else {
+      $val=strtoupper($params['value']);
+    }
     $params['value'] = $_COUNTRY_LIST[$val];
     return $this->view($params,$smarty);
   }

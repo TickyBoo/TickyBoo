@@ -38,7 +38,7 @@
 <table class="table_midtone" width='100%'>
   <tr>
     <td width="50%" align="left">
-      <form method='get' action="index.php">
+      <form method='post' action="index.php">
         {if $event_id}
            <input type='hidden' name='event_id' value='{$event_id}' />
         {/if}
@@ -47,7 +47,7 @@
     </td>
     <td align="right">
       {if $cart->can_checkout_f()}
-        <form action="checkout.php" >
+        <form action="checkout.php" method='post' >
           <input name="go_pay" value="{!checkout!}" type="submit">
         </form>
       {/if}

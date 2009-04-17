@@ -37,40 +37,6 @@ require_once("classes/MyCart.php");
 require_once("classes/Order.php");
 require_once("classes/Ticket.php");
 
-
-// placed orders come here
-function cart_to_order (&$cart,$user_id,$sid,$shipment_mode,$dummy,$no_fee=FALSE,$no_cost=FALSE,$place){
-// orders are then created in Order.php
-  $order =& new Order($user_id,$sid,$shipment_mode,0,$no_fee,$no_cost,$place);
-  
-  $cart->iterate('_collect',$order);
-
-  return $order;
-}
-
-function _collect(&$event_item,&$cat_item,&$place_item,&$order){
-  if(!$place_item->is_expired()){
-       
-    $i=0;
-    $discounts=$place_item->discounts;
-    foreach($place_item->places_id as $place_id){
-      if($discounts[$i]){
-        $order->add_seat($event_item->event_id,$cat_item->cat_id,$place_id,$cat_item->cat_price,$discounts[$i]);
-      }else{
-        $order->add_seat($event_item->event_id,$cat_item->cat_id,$place_id,$cat_item->cat_price); 
-      }
-      $i++;
-    }
-    
-
-    if(!isset($order->place_items)){
-      $order->place_items=array();
-    }
-    array_push($order->place_items,array($event_item->event_id,$cat_item->id,$place_item->id));
-  }
-  return 1;
-}
-
 /*
 function command ($order,$sid,$user_id,$trx=TRUE){
   require_once "classes/Place.php";

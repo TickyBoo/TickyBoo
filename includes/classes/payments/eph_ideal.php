@@ -36,7 +36,7 @@
 
 //require_once("admin/AdminView.php");
 
-class EPM_ideal extends payment{
+class EPH_ideal extends payment{
 	
 	
 	function admin_view ( &$data ){

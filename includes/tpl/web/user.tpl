@@ -30,7 +30,9 @@
  *}
 
 {include file="header.tpl" name=!pers_info! header=!user_notice!}
-
+  {if $errors}
+     <div class='error'>{$errors}</div><br>
+  {/if}
 <center>
   <form action='checkout.php?action=register' method=post >
     <table cellpadding="2" bgcolor='white' width='80%'>
@@ -57,7 +59,7 @@
       </tr>
       <tr>
         <td width="120" class='TblLower'> {!email!} </td>
-        <td class='TblHigher'><input type='text' name='username' size='30'></td>
+        <td class='TblHigher'><input type='text' name='username' size='30' ></td>
       </tr>
       <tr>
         <td  class='TblLower'> {!password!} </td>

@@ -34,7 +34,7 @@
  
  */
 
-class EPM_authorize_aim Extends Payment{
+class EPH_authorize_aim Extends Payment{
   public $extras = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey',
                           'pm_authorize_aim_hash',  'pm_authorize_aim_test');
   public $mandatory = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey',

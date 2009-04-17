@@ -1,4 +1,5 @@
 <?php
-$action =(isset($_REQUEST['action']))?$_REQUEST['action']:'index';
+global $action;
+$action =(isset($_REQUEST['action']) and $_REQUEST['action'])?$_REQUEST['action']:'index';
 require_once('includes/web/checkout.php');
 ?>

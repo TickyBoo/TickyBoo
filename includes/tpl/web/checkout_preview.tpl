@@ -29,12 +29,12 @@
 {include file="header.tpl" name=!shopping_cart! header=!Handling_cont_mess!}
 
 
-		{if !$order_success and $order_error}
+		{if $order_error}
       <div class='error'>{$order_error}</div><br>
 		{/if}
 
 {include file="cart_content.tpl" check_out="on" }
-{assign var=total value=$cart->total_price()}
+{assign var=total value=$cart->total_price_f()}
 <br>
 <table cellpadding="0" cellspacing='0' border='0' width='100%'>
   <tr>
@@ -42,13 +42,14 @@
     	{include file="user_address.tpl" title="on"}
   	</td>
   	<td valign='top' align="right">
-     	<form action='{url action="confirm"}' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+     	<form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+        <input type='hidden' name='action' value='confirm' />
     	  <table border=0 width='90%' cellpadding="5" bgcolor='white'>
       		<tr>
       		  <td colspan='3' class='TblHeader' align='left'>{!handlings!}</td>
       		</tr>
-      		{assign var=min_date value=$cart->min_date()}
-      		{order->handlings www='on' event_date=$min_date }
+      		{assign var=min_date value=$cart->min_date_f()}
+      		{handling www='on' event_date=$min_date }
         		<tr class="{cycle name='payments' values='TblHigher,TblLower'}">
         		  <td class='payment_form'>
           		  <input checked="checked" type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}'>
@@ -66,7 +67,7 @@
                 {/if}&nbsp;
         		  </td>
         		</tr>
-          {/order->handlings}
+          {/handling}
       		{if $update_view.currentres}
         		<tr class="{cycle values='TblHigher,TblLower'}">
         			<td colspan="3">
@@ -81,7 +82,7 @@
   		</form>
   		{* update->view event_date=$min_date user=user->user_id *}
   		{if $update_view.can_reserve }
-        <form action='{url action="reserve"}' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+        <form action='?action="reserve' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
   		  	{!orclick!}
     			<input type='submit' name='submit_reserve' value='{!reserve!}'>
     		</form>

@@ -46,7 +46,5 @@ $smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
 $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
 
 $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
-
 $smarty->display($fond . '.tpl');
-
 ?>

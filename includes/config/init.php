@@ -54,7 +54,7 @@
   session_name($_SHOP->session_name);
   session_start();
 
-  if (isset($_REQUEST['action'])) {$action=$_REQUEST['action'];} else { $action=false;}
+//  if (isset($_REQUEST['action'])) {$action=$_REQUEST['action'];} else { $action=false;}
 
 //authentifying (if needed)
 

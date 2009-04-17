@@ -98,18 +98,11 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 	  	
 		// if handling_extra exsists unserialize it...
 	  	if($pay['handling_extra']){
-			  $pay['extra']=unserialize($pay['handling_extra']);
+			  $pay['extra'] = unserialize($pay['handling_extra']);
+			  
 		  }
 	
-			if($params['pm_exec']){
-			  $pay['pm_return']=_exec_extra_method('pm_','payment',$params['pm_exec'], $pay, $smarty);
-			}
-	
-			if($params['sm_exec']){
-			  $pay['sm_return']=_exec_extra_method('sm_','shipment',$params['sm_exec'], $pay, $smarty);
-			}
-	
-	    $smarty->assign("shop_handling",$pay);  
+	    $smarty->assign("shop_handling",$pay);
 			
 	    $smarty->_SHOP_db_res[]=$res;
 	  }
@@ -119,32 +112,4 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
   return $content;
 }
 
-function _exec_extra_method($prefix, $field, $name,&$pay, &$smarty){
-// e.g. pm_paypal.php
-  $e_class=$prefix.$pay['handling_'.$field];
-  $e_file="classes/$e_class.php";
-  //creates file class which will then run upon payment.
-  if(_dyn_load($e_file)){
-		$e=new $e_class;
-		if(method_exists($e,$name)){
-  		return $e->$name($pay,$smarty);
-		}
-	}
-}
-
-
-		function _myErrorHandler($errno, $errstr, $errfile, $errline) {
-			if($errno!=2){
-				echo "$errno $errstr $errfil $errline";
-			}	
-		}
-	//Loads file
-	function _dyn_load($name){
-	
-		set_error_handler('_myErrorHandler');
-		$res=include_once($name);
-		restore_error_handler();
-	
-		return $res;
-	}	
 ?>

@@ -41,12 +41,11 @@ class MyCart_Smarty {
   function MyCart_Smarty (&$smarty){
     $smarty->register_object("cart",$this,null,true,array("items"));
     $smarty->assign_by_ref("cart",$this);
-    
   }
   
   
   function is_empty_f () {
-    $cart=$_SESSION['cart'];
+    $cart=$_SESSION['_SMART_cart'];
     return !isset($cart) or $cart->is_empty();
   }
 
@@ -57,7 +56,7 @@ class MyCart_Smarty {
 
 
   function total_seats_f ($event_id,$category_id,$only_valid){
-    $cart=$_SESSION['cart'];
+    $cart=$_SESSION['_SMART_cart'];
     
     if($cart){
       return $cart->total_places($event_id,$category_id,$only_valid);
@@ -69,7 +68,6 @@ class MyCart_Smarty {
   function total_seats ($params,&$smarty){
     return $this->total_seats_f($params['event_id'],$params['category_id'],$params['only_valid']);
   }
-
 
 
   function add_item ($params, &$smarty){
@@ -96,14 +94,14 @@ class MyCart_Smarty {
   }
 
   function remove_item_f ($event_id, $cat_id, $item_id){
-    if($cart=$_SESSION['cart']){
+    if($cart=$_SESSION['_SMART_cart']){
 
       if($places=$cart->remove_place($event_id,$cat_id,$item_id)){
         require_once('classes/Seat.php');
         Seat::free(session_id(),$event_id,$cat_id,$places);
       }
       
-      $_SESSION['cart']=$cart;
+      $_SESSION['_SMART_cart']=$cart;
     }  
   }
   
@@ -112,7 +110,7 @@ class MyCart_Smarty {
   }
 
   function total_price_f (){
-    if($cart=$_SESSION['cart']){
+    if($cart=$_SESSION['_SMART_cart']){
       return $cart->total_price();
     }
   }
@@ -122,12 +120,12 @@ class MyCart_Smarty {
   	}
 
   	function use_alt_f (){
-    	if($cart=$_SESSION['cart']){
+    	if($cart=$_SESSION['_SMART_cart']){
       		return $cart->use_alt();
     	}
   	}
   	function min_date_f (){
-		if($cart=$_SESSION['cart']){
+		if($cart=$_SESSION['_SMART_cart']){
       		return $cart->min_date();
     	}
   	}
@@ -137,7 +135,7 @@ class MyCart_Smarty {
   }
 
   function can_checkout_f (){
-    if($cart=$_SESSION['cart']){
+    if($cart=$_SESSION['_SMART_cart']){
       return $cart->can_checkout();
     }
   }
@@ -147,17 +145,14 @@ class MyCart_Smarty {
   }
 
   function overview_f (){
-    if($cart=$_SESSION['cart']){
+    if($cart=$_SESSION['_SMART_cart']){
       return $cart->overview();
     }
   }
 
-
-  
   function items ($params, $content, &$smarty, &$repeat){
     if($repeat){
-      $cart=$_SESSION['cart'];
-      //print_r($cart);
+      $cart=$_SESSION['_SMART_cart'];
 
       if(!$cart or $cart->is_empty()){
         $repeat=FALSE;
@@ -212,11 +207,11 @@ class MyCart_Smarty {
 
 
   function destroy_f (){
-    unset($_SESSION['cart']);  
+    unset($_SESSION['_SMART_cart']);
   }
 
   function destroy ($params,&$smarty){
-    unset($_SESSION['cart']);  
+    unset($_SESSION['_SMART_cart']);
   }
 
   function set_discounts ($params,&$smarty){
@@ -225,7 +220,7 @@ class MyCart_Smarty {
   }
   
   function set_discounts_f ($event_id,$category_id,$item_id,$discounts){
-    if(!$cart=$_SESSION['cart']){return;}
+    if(!$cart=$_SESSION['_SMART_cart']){return;}
 
     require_once("classes/Discount.php");
         
@@ -243,7 +238,7 @@ class MyCart_Smarty {
   
     if($has){ 
       if($cart->set_discounts($event_id,$category_id,$item_id,$discs)){
-        $_SESSION['cart']=$cart;
+        $_SESSION['_SMART_cart']=$cart;
 	      return TRUE;
       }
     }  
@@ -288,7 +283,7 @@ class MyCart_Smarty {
 
     $max=$event->event_order_limit;
 
-    $cart=$_SESSION['cart'];
+    $cart=$_SESSION['_SMART_cart'];
 
     if($mode=='mode_web' and $max){
       if(isset($cart)){
@@ -316,8 +311,7 @@ class MyCart_Smarty {
 
       $cart->load_info();
 
-      $_SESSION['cart']=$cart;
-      
+      $_SESSION['_SMART_cart']=$cart;
       return $res;
 
     }else{

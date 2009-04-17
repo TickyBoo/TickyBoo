@@ -35,7 +35,7 @@
  */
 
 
-class EPM_paypal extends payment{
+class EPH_paypal extends payment{
   public $extras = array('pm_paypal_business', 'pm_paypal_test');
   public $mandatory = array('pm_paypal_business');
 

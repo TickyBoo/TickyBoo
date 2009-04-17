@@ -40,7 +40,7 @@ class Order {
   var $sid;
   var $handling_id;
 
-  function Order ($order_user_id,$sid,$handling_id,$dummy,$no_fee,$no_cost,$place='www'){
+  function Order ($order_user_id, $sid, $handling_id, $dummy, $no_fee, $no_cost, $place='www'){
 
     if(!$order_user_id){return;}  
 

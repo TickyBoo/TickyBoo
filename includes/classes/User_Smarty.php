@@ -76,7 +76,7 @@ class User_Smarty {
 	
   }
 
-  function login_f ($username, $password,&$err){
+  function login_f ($username, $password, &$err){
     require_once('classes/ShopDB.php');
     
   	$sql="SELECT auth.username,User.*
@@ -88,8 +88,7 @@ class User_Smarty {
   		  	LIMIT 1";
 
   	if(!$res=ShopDB::query_one_row($sql)){
-  		$err['error']=true;
-  		$err['msg']=1;
+  		$err =con('log_err_wrong_usr');
   		return false;
   	}
   	$sql = "SELECT *
@@ -103,8 +102,7 @@ class User_Smarty {
   		LIMIT 1";
 
   	if(!$query=ShopDB::query($sql) and $error['error']) {
-  		$err['error']=true;
-  		$err['msg']=2;
+  		$err =con('log_err_not_act');
   		return FALSE;
   	}
   	if($res and $query){
@@ -115,8 +113,7 @@ class User_Smarty {
     	$this->is_member=true;
     	return $res['user_id'];
   	}
-		$err['error']=true;
- 		$err['msg']=3;
+		$err =con('log_err_unknown');
   	return FALSE;
   
   }

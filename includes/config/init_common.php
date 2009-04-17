@@ -44,7 +44,7 @@
     echo "<a href='inst/index.php'>Install me now!</a>";
     exit;
     }
-
+ /*
 	if (ini_get('register_globals')) {
 
 		// Emulate register_globals off
@@ -61,7 +61,7 @@
 		}
 
 	}
-
+*/
  //Shopping cart and place reservation delay
   //how many times the place can stay reserved
   $_SHOP->res_delay=660;

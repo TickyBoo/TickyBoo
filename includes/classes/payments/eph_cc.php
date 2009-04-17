@@ -34,7 +34,7 @@
  
  */
 
-class EPM_cc extends payment{
+class EPH_cc extends payment{
   public $extras = array('pm_cc_pubkey');
 
  	function admin_view (){

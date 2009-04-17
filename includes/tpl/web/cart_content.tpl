@@ -26,9 +26,7 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
- 
-{assign var="cart_empty" value=$cart->is_empty_f()}
-{if $cart_empty }
+ {if $cart->is_empty_f() }
   <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
     <tr><td class='TblLower' align='center' >  <br><br>
       <span class='title'>{!cart_empty!}<br><br><br><br> </span>
