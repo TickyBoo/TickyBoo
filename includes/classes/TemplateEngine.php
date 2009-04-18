@@ -79,18 +79,16 @@
     
     //trying to load already compiled template
     if($data['template_status']=='comp'){
-      if($tpl=&$this->try_load($name,$t_class_name,$data['template_code'])){
-        return $tpl;
-      }
-    }
+      if($tpl=&$this->try_load($name, $t_class_name, $data['template_code'])){
+
          
     //need to compile: loading compiler  	 
     if($data['template_type']=='email'){
       require_once("classes/EmailTCompiler.php");
       $comp=new EmailTCompiler;
-    }else if($data['template_type']=='pdf'){
-      require_once("classes/PDFTCompiler.php");
-      $comp=new PDFTCompiler;
+    }else if($data['template_type']=='pdf2'){
+      require_once("classes/PDF2TCompiler.php");
+      $comp=new PDF2TCompiler;
     }else{
       user_error("unsupported template type: ".$data['template_type']);
     }
@@ -106,7 +104,7 @@
     }
 
 		//truying to load just compile template
-    if($tpl=$this->try_load($name,$t_class_name,$code)){
+    if($tpl=$this->try_load($name, $t_class_name, $code)){
 
       //compilation ok: saving the code in db
       $code_q=shopDB::escape_string($code);
@@ -127,4 +125,7 @@
     }
   }
 }
+
+
+
 ?>
