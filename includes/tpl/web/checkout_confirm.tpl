@@ -26,9 +26,9 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
- {include file="header.tpl" name=!confirm_payment! header=!confirm_mess!}
+{include file="header.tpl" name=!order_reg! header=!tnx_order_mess!}
 
- <table width='100%'>
+  <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
     {eval var=$shop_handling.handling_text_payment assign=test}
     {gui->view name=payment value=$test}
     {eval var=$shop_handling.handling_text_shipment  assign=test}

@@ -25,6 +25,7 @@ require_once('classes/gui_Smarty.php');
 
 require_once("config/init_shop.php");
 
+
 $smarty = new Smarty;
 
 $gui   = new Gui_smarty($smarty);
@@ -51,7 +52,7 @@ $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
 if ($action == 'notify') {
   //noting
-} elseIf ($cart->can_checkout_f() or isset($_SESSION['order']) ) { //or isset($_SESSION['order'])
+} elseIf ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
   If (!$user->logged and
       $action !== 'register' and
       $action !== 'login' ) {
@@ -68,6 +69,7 @@ redirect("index.php?action=cart_view",403);
 die();
 
   function setordervalues($aorder, $smarty){
+    if (!is_object($aorder)) exit;
     if (isset($aorder) and isset($aorder->places)) {
       foreach($aorder->places as $ticket){
         $seats[$ticket->id]=TRUE;
@@ -82,7 +84,7 @@ die();
     $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
     $smarty->assign('order_payment_mode',$aorder->order_payment_mode);
 
-    $smarty->assign('shop_handling', $aorder->handling);
+    $smarty->assign('shop_handling', (array)$aorder->order_handling);
 
     $smarty->assign('order_seats_id',$seats);
   }
@@ -91,7 +93,7 @@ die();
     global $user;
     if (!$user->logged) {
   	  If (! $user->login_f($_POST['username'], $_POST['password'], $errors)) {
-  	    $smarty->assign('errors',$errors);  echo 'error: '.$errors ;
+  	    $smarty->assign('login_error',$errors);
   	    return "user";
       }
     }
@@ -119,7 +121,7 @@ die();
   }
 
   function indexaction($smarty) {
-    unset( $_SESSION['order']);
+    unset( $_SESSION['_SHOP_order']);
     return "checkout_preview";
   }
 
@@ -138,88 +140,90 @@ die();
 
   function confirmaction($smarty) {
     global $order, $cart;
-    if (!isset($_SESSION['order'])) {
+    if (!isset($_SESSION['_SHOP_order'])) {
       $myorder = $order->make_f($_POST['handling_id'],"www");
     } else
-      $myorder = $_SESSION['order'];
+      $myorder = $_SESSION['_SHOP_order'];
     If (!$myorder) {
       $smarty->assign('order_error', $order->error);
       return "checkout_preview";
     } else {
-      $_SESSION['order'] = $myorder;
       setordervalues($myorder, $smarty);
+    //  print_r($myorder);
       $cart->destroy_f();
+      $hand= $myorder->order_handling;
       $confirmtext = $hand->on_confirm($myorder);
-      if (is_string ($confirmtext) and $confirmtext) {
-        $smarty->assign('confirmtext', $confirmtext);
-        return "checkout_confirm";
-      } elseif (is_array($confirmtext)) {
-        $smarty->assign('pm_return',$confirmtext);
-        return "checkout_result";
-      } else {
-        $smarty->assign('pm_return',array('approved'=>TRUE));
-        return "checkout_result";
+
+      $smarty->assign('confirmtext', $confirmtext);
+      if ($hand->is_eph()) {
+        $_SESSION['_SHOP_order'] = $myorder;
       }
+      return "checkout_confirm";
     }
   }
 
   function  submitaction($smarty) {
-    $order_id = $_REGUEST['order_id'];
-    if(!is_numeric($order_id) or (!$myorder = $_SESSION['order']) or $myorder->order_id <> $order_id) {
+    $order_id = $_REGUEST['order_id'];  echo 'submitaction'  ;
+    if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
       $smarty->assign('order_error', con('OrderNotFound'));
       return "checkout_preview";
     }
     setordervalues($myorder, $smarty);
-    $hand= $myorder->handling;
-    $pm_return = $hand->on_submit($myorder, true, $errors);
+    $hand= $myorder->order_handling;
+    $pm_return = $hand->on_submit($myorder);
     $smarty->assign('errors', $errors);
-    if (!$pm_return) {
-      $confirmtext = $hand->on_confirm($myorder);
-      $smarty->assign('confirmtext', $confirmtext);
+    if (is_string($pm_return)) {
+      $smarty->assign('confirmtext', $pm_return);
       return "checkout_confirm";
     } else
       $smarty->assign('pm_return',$pm_return);
+      if(!$pm_return['approved'])
+         $myorder->order_delete($order_id );
+      unset( $_SESSION['_SHOP_order']);
       return "checkout_result";
   }
 
-  function  canceledaction($smarty) {
-    $order_id = $_REGUEST['order_id'];
-    if(!is_numeric($order_id) or !$myorder = $_SESSION['order'] or $myorder->order_id <> $order_id) {
-      $smarty->assign('order_error', con('OrderNotFound'));
+  function  cancelaction($smarty) {
+    $order_id = $_REQUEST['order_id'];
+    if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
+     $smarty->assign('order_error', con('OrderNotFound'));
+      unset( $_SESSION['_SHOP_order']);
       return "checkout_preview";
     }
-    $setordervalues($myorder, $smarty);
-    $hand=$myorder->handling;
-    $pm_return = $hand->on_submit($myorder, false, $errors);
+    setordervalues($myorder, $smarty);
+    $hand=$myorder->order_handling;
+    $pm_return = $hand->on_submit($myorder, false );
     $smarty->assign('pm_return',$pm_return);
-    $smarty->assign('errors', $errors);
+    $myorder->order_delete($order_id );
+    unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
   }
 
   function  acceptaction($smarty) {
     $order_id = $_REGUEST['order_id'];
-    if(!is_numeric($order_id) or !$myorder = $_SESSION['order'] or $myorder->order_id <> $order_id) {
+    if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
       $smarty->assign('order_error', con('OrderNotFound'));
+      unset( $_SESSION['_SHOP_order']);
       return "checkout_preview";
     }
-    $hand=$myorder->handling;
+    $hand=$myorder->order_handling;
     $setordervalues($myorder, $smarty);
-    $pm_return = $hand->on_submit($myorder, true, $errors);
+    $pm_return = $hand->on_submit($myorder, true);
     $smarty->assign('pm_return',$pm_return);
-    $smarty->assign('errors', $errors);
+    unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
   }
 
   function  notifyaction() {
     $order_id = $_REGUEST['order_id'];
-    if(!is_numeric($order_id) or !$myorder = Order::load($order_id, true) or $myorder->order_id <> $order_id) {
+    if(!is_numeric($order_id) or (!$myorder = Order::load($order_id, true)) or ($myorder->order_id <> $order_id)) {
        header('HTTP/1.1 502 Action not allowed');
        ShopDB::dblogging("notify error : $order_id\n");
    die ;
     }
 //       print_r($myorder);
 //         ShopDB::dblogging("notify: $order_id\n");
-    $hand=$myorder->handling;
+    $hand=$myorder->order_handling;
     $hand->on_notify($myorder);
     die();
   }

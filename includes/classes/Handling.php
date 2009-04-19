@@ -206,7 +206,7 @@ class Handling {
   }
 
   function CheckValues($arr) {
-    $ok = parent::CheckValues($arr);
+
     return $this->extra_check($arr) and $ok;
   }
 
@@ -276,7 +276,10 @@ class Handling {
     }
     return $ok;
 	}
-	
+	function is_eph() {
+    return ($this->pment())?true:false;
+  }
+  
   // Loads default extras for payment method eg."pm_paypal_View.php"
   function extra_init(){
   	if($pm=$this->pment()){
@@ -307,9 +310,9 @@ class Handling {
     }
   }
 
-  function extra_check(&$data){
+  function extra_check(&$data, &$errors){
   	if($pm=$this->pment()){
-      return $pm->check($data, $this->errors);
+      return $pm->check($data, $errors);
   	} else return true;
   }
 
@@ -326,14 +329,16 @@ class Handling {
   }
 
   function on_confirm($order) {
+    $return ='';
   	if($pm=$this->pment()){
-      return $pm->on_confirm($order);
+      $return = $pm->on_confirm($order);
   	}
+    return $this->handling_html_template.'<br>'.$return;
   }
 
-  function on_submit(&$order, $appoved, &$err) {
+  function on_submit(&$order, $appoved = nil) {
   	if($pm=$this->pment()){
-      return $pm->on_submit($order, $appoved, $err);
+      return $pm->on_submit($order, $appoved);
   	}
   }
 

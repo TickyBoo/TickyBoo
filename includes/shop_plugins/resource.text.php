@@ -1,6 +1,7 @@
-function smarty_resource_text_template ($tpl_name, &$tpl_source, &$smarty_obj)
+<?php
+function smarty_resource_text_source ($tpl_name, &$tpl_source, &$smarty_obj)
 {
-  $tpl_source = $this->template;
+ echo $tpl_source = $tpl_name;
   return true;
 }
 
@@ -20,3 +21,4 @@ function smarty_resource_text_trusted($tpl_name, &$smarty_obj)
 {
     // not used for templates
 }
+?>

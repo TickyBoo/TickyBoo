@@ -28,7 +28,7 @@
  *}
 
 {if $pm_return.approved}
-  {include file="header.tpl" name=!pay_refused! }
+  {include file="header.tpl" name=!pay_accept! }
 {else}
   {include file="header.tpl" name=!pay_refused! }
 {/if}
@@ -41,7 +41,9 @@
 		    {if $pm_return.transaction_id}
           {!trx_id!}   <b>{$pm_return.transaction_id}</b><br>
         {/if}
-	      {$pm_return.response}
+        {if $pm_return.response}
+	        {eval var=$pm_return.response}
+        {/if}
 	    {else}
         <div class='error'>
 			      {$pm_return.response}

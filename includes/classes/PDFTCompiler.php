@@ -697,7 +697,6 @@ class '.$out_class_name.' {
 
   var $object_id;
   var $engine;
-  var $organizer_id;
 	var $reconv="'.$this->reconv.'";
   
   function '.$out_class_name.'(){}

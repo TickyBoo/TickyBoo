@@ -72,19 +72,17 @@ class export_xml_event extends AdminView {
 			require_once('functions/xmlsql_func.php');
 			$event_id=(int)$_GET['export_xml_event_event'];
 			
-			$org="_organizer_id='{$_SHOP->organizer_id}'";
-			
 			$what[]=array(
 			'table'=>'Event',
 			'query'=>"select * from Event where event_id='$event_id' and event$org");
 			
 			$what[]=array(
 			'table'=>'PlaceMap2',
-			'query'=>"SELECT * FROM `PlaceMap2` WHERE `pm_event_id`='$event_id' and pm$org");
+			'query'=>"SELECT * FROM `PlaceMap2` WHERE `pm_event_id`='$event_id'");
 			
 			$what[]=array(
 			'table'=>'Category',
-			'query'=>"SELECT * FROM `Category` WHERE `category_event_id`='$event_id' and category$org");
+			'query'=>"SELECT * FROM `Category` WHERE `category_event_id`='$event_id'");
 
 			$what[]=array(
 			'table'=>'PlaceMapPart',

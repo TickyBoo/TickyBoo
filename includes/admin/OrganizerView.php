@@ -163,16 +163,12 @@ global $_SHOP;
 function logo_post ($data,$organizer_id){
   global $_SHOP;
 
-	return $this->file_post($data,$organizer_id, 'Organizer', 'organizer','_logo');
+	return $this->file_post($data, 0, 'Organizer', 'organizer','_logo');
 
 	
 
 function organizer_check (&$data, &$err){
   global $_SHOP;
-  if(!$_SHOP->is_admin){
-    $data["organizer_id"]=$_SHOP->organizer_id;
-  }
-
   if(empty($data['organizer_name'])){$err['organizer_name']=mandatory;}
   if(empty($data['organizer_currency'])){$err['organizer_currency']=mandatory;}
   if(empty($data['organizer_address'])){$err['organizer_address']=mandatory;}
@@ -186,7 +182,7 @@ function organizer_check (&$data, &$err){
   }
 
   if($pass=$data["old_password"]){
-    $query="select admin_password from Admin where admin_id='{$data["organizer_id"]}'";
+    $query="select admin_password from Admin where admin_id='{$data["organizer_id"]}'";    //allowed for now.
     if(!$row=ShopDB::query_one_row($query)){
       return 0;
     }

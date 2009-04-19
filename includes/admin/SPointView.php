@@ -59,8 +59,7 @@ function spoint_view (&$data){
   $this->print_field('user_fax',$data);
   $this->print_field('user_email',$data);
   $this->print_field('user_prefs',$data);
-//  $this->print_set('user_organizer_ids',$data["user_organizer_ids"],"Organizer","organizer_name","organizer_id","view_organizer.php");
-  
+
   $this->print_field('login',$data);
 
   echo "</table>";

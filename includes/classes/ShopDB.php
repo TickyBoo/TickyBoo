@@ -42,8 +42,7 @@ class ShopDB {
         if (!isset($_SHOP->link) and isset($_SHOP->db_name)) {
             $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
             or die ("Could not connect: " . mysqli_connect_errno());
-            self::dblogging("[II] -----------------------------\n");
-        } else {
+         } else {
             die ("No connection settings");
         }
     }
@@ -56,8 +55,7 @@ class ShopDB {
                 self::init();
             }
             if ($_SHOP->link->autocommit(false)) {
-//                self::dblogging("[Begin]\n");
-                $_SHOP->db_trx_startedi = 1;
+               $_SHOP->db_trx_startedi = 1;
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
@@ -76,7 +74,6 @@ class ShopDB {
             if ($_SHOP->link->commit()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
-                self::dblogging("[Commit]\n");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
@@ -91,7 +88,6 @@ class ShopDB {
             if ($_SHOP->link->rollback()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_started);
-                self::dblogging("[rollback]\n");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
@@ -368,7 +364,7 @@ class ShopDB {
     {
         global $_SHOP;
         $handle=fopen($_SHOP->tmp_dir."shopdb.log","a");
-        fwrite($handle,$debug);
+        fwrite($handle, date('C').' '. $debug);
         fclose($handle);
 
     }

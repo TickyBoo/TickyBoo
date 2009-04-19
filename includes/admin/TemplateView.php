@@ -80,7 +80,7 @@ class TemplateView extends AdminView{
 
     $this->print_field('template_id', $data);
     $this->print_input('template_name', $data, $err, 30, 100);
-    $this->print_select ("template_type", $data, $err, array("email", "pdf"));
+    $this->print_select ("template_type", $data, $err, array("email", "pdf", "pdf2"));
     echo "<tr><td class='admin_value' colspan='2'>\n
     <textarea rows='40' cols='96' name='template_text'>" .htmlspecialchars($data['template_text'], ENT_QUOTES) ."</textarea>
     <span class='err'>{$err['template_text']}</span>
@@ -106,13 +106,15 @@ class TemplateView extends AdminView{
   {
    // echo nl2br(htmlspecialchars(print_r($data,true)));
     if (empty($data['template_name'])){
-      $err['template_name'] = mandatory;
+      $err['template_name'] = con('mandatory');
     }
     if (empty($data['template_type'])){
-      $err['template_type'] = mandatory;
+      $err['template_type'] = con('mandatory');
+    } elseif ($data['template_type']=='pdf') {
+      $err['template_type'] = con('Type_Not_supported');
     }
     if (empty($data['template_text'])){
-      $err['template_text'] = mandatory;
+      $err['template_text'] = con('mandatory');
     }
 
     return empty($err);

@@ -397,7 +397,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			
 			// verification de la destination
 			$dest = strtoupper($dest);
-			if (!in_array($dest, array('I', 'D', 'F', 'S'))) $dest = 'I';
+			if (!in_array($dest, array('I', 'D', 'F', 'S', 'P'))) $dest = 'I';
 	
 			// verification du nom
 			if (strtolower(substr($name, -4))!='.pdf')

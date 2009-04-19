@@ -58,6 +58,7 @@ class EPH_paypal extends payment{
 	}
 
 	function on_confirm(&$order) {
+    global $_SHOP;
     if (!$this->pm_paypal_test) {
       $pm_paypal_url= 'https://www.paypal.com/cgi-bin/webscr';
     } else {
@@ -73,9 +74,9 @@ class EPH_paypal extends payment{
         <input type='hidden' name='item_number' value='{$order->order_id}'>
         <input type='hidden' name='amount' value='".($order->order_total_price-$order->order_fee)."'>
         <input type='hidden' name='handling' value='".($order->order_fee)."'>
-        <input type='hidden' name='return' value='".makeurl('approved/'.$order->order_id)."'>
-        <input type='hidden' name='notify_url' value='".makeurl('notify/'.$order->order_id )."'>
-        <input type='hidden' name='cancel_return' value='".makeurl('canceled/'.$order->order_id)."'>
+        <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?order_id='. $order->order_id."'>
+        <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?order_id='. $order->order_id."'>
+        <input type='hidden' name='cancel_return' value='".$_SHOP->root_secured. 'checkout_cancel.php?order_id='. $order->order_id."'>
         <input type='hidden' name='currency_code' value='{\$organizer_currency}'>
         <input type='hidden' name='undefined_quantity' value='0'>
         <input type='hidden' name='no_shipping' value='1'>

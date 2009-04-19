@@ -85,10 +85,9 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
   } 
     
   require_once("classes/TemplateEngine.php");
-  require_once("classes/class.ezpdf.php");
+  require_once("html2pdf/html2pdf.class.php");
   require_once("admin/AdminView.php");
   require_once('classes/Handling.php');
-  require_once("functions/barcode_func.php");
 
 	$first_page=TRUE;
 	
@@ -104,8 +103,8 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 				$paper_size=$_SHOP->pdf_paper_size;
 				$paper_orientation=$_SHOP->pdf_paper_orientation;
 			}
-			$te = new TemplateEngine();  
-			$pdf =& new Cezpdf($paper_size,$paper_orientation); 
+			$te  = new TemplateEngine();
+			$pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 		}
 
     //foreach ticket - choose the template
@@ -148,7 +147,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 					$data['seat_code']);
 		
 			if(!$first_page){
-				$pdf->ezNewPage();
+				$pdf->setNewPage();
 			}
 			$first_page=FALSE;
 
@@ -198,7 +197,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 			$paper_orientation=$_SHOP->pdf_paper_orientation;
 		}
 		$te = new TemplateEngine();  
-		$pdf =& new Cezpdf($paper_size,$paper_orientation); 
+		$pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 	}
 
 
@@ -212,7 +211,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 		if($tpl =& $te->getTemplate($bill_template)){
 
 			if(!$first_page){
-				$pdf->ezNewPage();
+				$pdf->setNewPage();
 			}
 			$first_page=FALSE;
 
@@ -229,27 +228,16 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
  
   //producing the output
   if($mode=='file'){
-    $order_file = fopen($_SHOP->ticket_dir."/".$order_file_name.".pdf","w");
-    fwrite($order_file,$pdf_data=$pdf->ezOutput());
-    fclose($order_file);
+    $pdf->output($_SHOP->ticket_dir.DS.$order_file_name, 'F');
   }else if($mode=='stream'){
     if($print){
-      $pdf_options=array("Content-type"=>"application/x-print-pdf",
-                         "Content-Disposition"=>$order_file_name.".pdt");
+      $pdf->output($order_file_name, 'P');
     }else{
-      $pdf_options = array("Content-Disposition"=>$order_file_name.".pdf");
+      $pdf->output($order_file_name, 'I');
     }
-    $pdf->ezStream($pdf_options);
-    
-
-    
   }else if($mode=='data'){
-    $pdf_data=$pdf->ezOutput();
+    $pdf_data=$pdf->output($order_file_name.'pdf', 'S');
   }
-
-  //echo "<pre>{$pdf->messages}</pre>";
-  
-  //return array('data'=>$last_data,'pdf'=>$pdf_data);
   return $pdf_data;
 }
 

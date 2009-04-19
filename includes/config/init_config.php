@@ -39,5 +39,5 @@
   
   // secured (https) shop root
   $_SHOP->root="http://localhost/beta5/";
-  $_SHOP->root_secured = "https://localhost/beta5/";
+  $_SHOP->root_secured = "http://localhost/beta5/";
 ?>

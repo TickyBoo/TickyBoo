@@ -162,7 +162,7 @@ class FileView extends AdminView{
   function draw () { 
     global $_SHOP;
 
-    if(!$org=Organizer::load($_SHOP->organizer_id)){
+    if(!$org=Organizer::load()){
       echo "<div class=error>".organizer_not_found."</div>";
       return;
     }

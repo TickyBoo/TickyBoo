@@ -265,22 +265,13 @@ class Order {
 
 function order_delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
 
-  /*if($user_id){
-    $where_t="seat_user_id=$user_id";
-    $where_o="order_user_id=$user_id";
-  }else{*/
-    $where_t="1";
-    $where_o="1";
-  //}
-
-
   if(!ShopDB::begin()){
     echo "<div class=error>".cannot_begin_transaction."</div>";
     return FALSE;
   }
 
   $query="SELECT * FROM `Seat` WHERE seat_id='$seat_id' 
-  AND seat_order_id='$order_id' AND $where_t FOR UPDATE";
+  AND seat_order_id='$order_id' FOR UPDATE";
 
   if(!$seat=ShopDB::query_one_row($query)){
     echo "<div class=error>".cannot_find_seat."</div>";
@@ -288,9 +279,7 @@ function order_delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
     return FALSE;
   }
   
-  $query="SELECT * FROM `Order` WHERE order_id='$order_id' 
-  AND $where_o 
-  FOR UPDATE";
+  $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
   
    if(!$order=ShopDB::query_one_row($query)){
     echo "<div class=error>".cannot_find_order."</div>";
@@ -300,9 +289,9 @@ function order_delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
   
   // Added v1.3.4 Checks to see if the order has allready been canceled.
   if($order['order_status']=='cancel'){
-	echo "<div class=error>".order_allready_cancelled."</div>";
-	ShopDB::rollback();
-	return FALSE;
+	  echo "<div class=error>".order_allready_cancelled."</div>";
+	  ShopDB::rollback();
+	  return FALSE;
   }
 
   
@@ -383,8 +372,11 @@ function order_delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
   echo "<div class=success>".ticket_deleted."</div>";  
   return TRUE;
 }
-  
-function order_delete ($order_id,$dummy=0,$user_id=0,$place='none'){
+ function order_description() {
+    return con('orderDescription');
+  }
+
+function order_delete ($order_id){
   global $_SHOP;
   
   if(!ShopDB::begin()){
@@ -399,9 +391,7 @@ function order_delete ($order_id,$dummy=0,$user_id=0,$place='none'){
     return FALSE;
   }
 
-  $query="SELECT * FROM `Order` WHERE order_id='$order_id' 
-  and $where_o 
-  FOR UPDATE";
+  $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
 
   if(!$order=ShopDB::query_one_row($query)){
     echo "<div class=error>".cannot_find_order."</div>";
