@@ -58,7 +58,7 @@ class PDFT2Compiler {
 
   function compile ($input, $out_class_name){
 
-    $ret=
+$ret=
 '
 /*this is a generated file. do not edit!
 
@@ -78,6 +78,10 @@ class '.$out_class_name.' {
   function write($pdf, $data){
     global $_SHOP;
 
+    $input = TEXT>>
+    '.$input.'
+    TEXT;
+
     $smarty = new Smarty;
     $smarty->assign("_SHOP_lang", $_SHOP->lang);
     $smarty->assign("organizer_currency", $_SHOP->organizer_data->organizer_currency);
@@ -86,16 +90,14 @@ class '.$out_class_name.' {
 
     $smarty->compile_dir  = $_SHOP->tmp_dir;
     $smarty->compile_id   = "HTML2PDF";
-    $pdf->WriteHTML($this->smarty->fetch("text:'.$name.'), false);
+    $pdf->WriteHTML($this->smarty->fetch("text:'.$out_class_name.':{$input}"), false);
     unset($smarty);
   }
 }
 ';
-//echo "<pre>$ret</pre>";
-return $ret;
-    }else{
-      return FALSE;
-    }
+      echo "<pre>$ret</pre>";
+      die();
+      return $ret;
   }
 }
 ?>

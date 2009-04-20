@@ -53,7 +53,7 @@ class eph_yp extends Payment{
 
 	function init ( ){
     $this->handling_html_template .= "";
-		$this->pm_yp_url='https://yellowpaytest.postfinance.ch/checkout/Yellowpay.aspx?userctrl=Invisible';
+		$this->pm_yp_url = 'https://yellowpaytest.postfinance.ch/checkout/Yellowpay.aspx?userctrl=Invisible';
 	}
 
 	function check ( &$data, &$err ){
@@ -103,6 +103,5 @@ class eph_yp extends Payment{
       <input type='submit' name='submit' value='{!pay!}'>
       </form>";
   }
-  
 }
 ?>

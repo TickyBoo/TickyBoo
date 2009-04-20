@@ -79,10 +79,13 @@
     
     //trying to load already compiled template
     if($data['template_status']=='comp'){
-      if($tpl=&$this->try_load($name, $t_class_name, $data['template_code'])){
+      if($tpl=&$this->try_load($name, $t_class_name, $data['template_code'])) {
+        return $tpl;
+      }
+    }
 
-         
-    //need to compile: loading compiler  	 
+
+    //need to compile: loading compiler
     if($data['template_type']=='email'){
       require_once("classes/EmailTCompiler.php");
       $comp=new EmailTCompiler;
@@ -93,7 +96,7 @@
       user_error("unsupported template type: ".$data['template_type']);
     }
 
-    
+
     //trying to compile
     if(!$code=$comp->compile($data['template_text'],$t_class_name)){
 
@@ -109,7 +112,7 @@
       //compilation ok: saving the code in db
       $code_q=shopDB::escape_string($code);
       $query="UPDATE Template SET template_status='comp', template_code='$code_q' WHERE template_id='{$data['template_id']}'";
-    
+
       if(!ShopDB::query($query)){
 				return FALSE;
       }
@@ -123,9 +126,7 @@
 				return FALSE;
       }
     }
+    return True;
   }
 }
-
-
-
 ?>

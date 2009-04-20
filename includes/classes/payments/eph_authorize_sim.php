@@ -41,9 +41,9 @@ class EPH_authorize_sim extends AdminView{
   public $mandatory = array('pm_authorize_sim_login', 'pm_authorize_sim_txnkey');
 
 	function admin_view (){
-    return "{gui->view name='pm_authorize_sim_login'} ".
-        	 "{gui->view name='pm_authorize_sim_txnkey'} ".
-       	   "{gui->view name='pm_authorize_sim_test'} ";
+    return "{gui->view name='pm_authorize_sim_login} ".
+        	 "{gui->view name='pm_authorize_sim_txnkey} ".
+       	   "{gui->view name='pm_authorize_sim_test} ";
 	}
 
   function admin_form (){
@@ -54,7 +54,7 @@ class EPH_authorize_sim extends AdminView{
 
 	function init( ){
     $this->handling_html_template .= '';
-		$this->pm_authorize_sim_test=TRUE;
+		$this->pm_authorize_sim_test   = TRUE;
 	}
 
   function on_confirm(&$order){

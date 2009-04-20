@@ -1,4 +1,4 @@
 <?php 
 $action="accept";
-require_once('includes/web/template.php');
+require_once('includes/web/checkout.php');
 ?>

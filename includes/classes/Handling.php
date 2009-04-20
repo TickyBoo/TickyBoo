@@ -88,6 +88,12 @@ class Handling {
       $this->extra=unserialize($this->handling_extra);
 		}  else
        $this->extra= array();
+    if ( $pm = $this->pment()) {
+			foreach($this->extra as $key => $val)
+				if(in_array($key, $pm->extras))
+					$this->$key = $val;
+    }
+
 //    echo $this->handling_sale_mode,'|';
 //		If (is_string($this->handling_sale_mode)) {
       $this->sale_mode = array_fill_keys(explode(",", $this->handling_sale_mode),true);
@@ -100,9 +106,9 @@ class Handling {
     foreach($data as $k=>$v){
       $this->$k=$v;
     }
-    if ($return and $pm = $this->pment()) {
-			foreach($arr as $key => $val)
-				if(in_array($key, $this->extras))
+    if ( $pm = $this->pment()) {
+			foreach($data as $key => $val)
+				if(in_array($key, $pm->extras))
 					$this->extra[$key] = $val;
     }
     if (isset($arr['sale_mode']))
@@ -110,6 +116,7 @@ class Handling {
 //    print_r($this);
     return $return ;
   }
+  
 	function clear() {
 	  parent::clear();
     if (isset($this->_pment)){

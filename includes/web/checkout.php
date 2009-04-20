@@ -170,7 +170,7 @@ die();
     }
     setordervalues($myorder, $smarty);
     $hand= $myorder->order_handling;
-    $pm_return = $hand->on_submit($myorder);
+    $pm_return = $hand->on_submit($myorder,nil,$errors);
     $smarty->assign('errors', $errors);
     if (is_string($pm_return)) {
       $smarty->assign('confirmtext', $pm_return);
@@ -200,14 +200,14 @@ die();
   }
 
   function  acceptaction($smarty) {
-    $order_id = $_REGUEST['order_id'];
+    $order_id = $_REQUEST['order_id'];
     if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
-      $smarty->assign('order_error', con('OrderNotFound'));
+     $smarty->assign('order_error', con('OrderNotFound'));
       unset( $_SESSION['_SHOP_order']);
       return "checkout_preview";
     }
     $hand=$myorder->order_handling;
-    $setordervalues($myorder, $smarty);
+    setordervalues($myorder, $smarty);
     $pm_return = $hand->on_submit($myorder, true);
     $smarty->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);

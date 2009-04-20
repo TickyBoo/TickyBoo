@@ -69,7 +69,7 @@ class EPH_authorize_aim Extends Payment{
     $this->handling_html_template   .= $form1;
 		$this->handling_text_payment     = 'Credit Card';
 		$this->handling_text_payment_alt = 'Credit Card';
-		$this->pm_authorize_aim_test=TRUE;
+		$this->pm_authorize_aim_test     = TRUE;
 	}
 
 	function check ( &$data, &$err ){
@@ -77,12 +77,15 @@ class EPH_authorize_aim Extends Payment{
 	}
 	
   function on_confirm(&$order ) {
+    Global $_SHOP;
     if (!isset($_POST['cc_name'])) {
       $_POST['cc_name'] = "{$order->user_firstname} {$order->user_lastname}";
     }
 		$order_id=$order->order_id;
-    return "<form action='".makeURL("submit/{$order_id}") ."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
+    return "<form action='".$_SHOP->root_secured."checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'>
             <table class='cc_form' cellpadding='5'>
+            <input type='hidden' name='action' value='submit'>
+            <input type='hidden' name='order_id' value='{$order_id}'>
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}
             {gui->inputdate type='MY' name=cc_exp}
@@ -214,7 +217,7 @@ class EPH_authorize_aim Extends Payment{
 
 		//echo "<br>";
 
-		if($h_val = $thbis->pm_authorize_aim_hash){
+		if($h_val = $this->pm_authorize_aim_hash){
 
 			$md5 = strtoupper(md5($h_val.$this->pm_authorize_aim_login.$res[6].$res[9]));
 

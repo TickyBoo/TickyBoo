@@ -73,8 +73,11 @@ class EPH_cc extends payment{
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;
-    return "<form action='".makeURL('submit/'.$order_id) ."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
+    return "<form action='".$_SHOP->root_secured."checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'>
             <table class='cc_form' cellpadding='5'>
+            <input type='hidden' name='action' value='submit'>
+            <input type='hidden' name='order_id' value='{$order_id}'>
+
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}
             {gui->inputdate type='MY' name=cc_exp range=10}

@@ -38,3 +38,4 @@
     {gui->view name=order_id value=$order_id}
  </table><br>
  {eval var=$confirmtext}
+ {include file="footer.tpl"}

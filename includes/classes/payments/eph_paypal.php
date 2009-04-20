@@ -54,7 +54,7 @@ class EPH_paypal extends payment{
   	$this->handling_text_payment    = "PayPal";
 		$this->handling_text_payment_alt= "PayPal";
     $this->handling_html_template  .= "";
-		$this->pm_paypal_test          = true;
+		$this->pm_paypal_test  = true;
 	}
 
 	function on_confirm(&$order) {

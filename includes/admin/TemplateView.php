@@ -171,7 +171,7 @@ class TemplateView extends AdminView{
     global $_SHOP;
     require_once("classes/TemplateEngine.php");
     $te = new TemplateEngine;
-    if (!$te->getTemplate($name, 0)){
+    if (!$te->getTemplate($name)){
       echo "<div class=err>'$name': ";
       if ($te->errors){
         foreach($te->errors as $error){
