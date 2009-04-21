@@ -224,7 +224,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
 	}  
  
   //composing filename without extension
-  $order_file_name = "order_".$order_id;
+  $order_file_name = "order_".$order_id.'.pdf';
  
   //producing the output
   if($mode=='file'){
@@ -236,7 +236,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
       $pdf->output($order_file_name, 'I');
     }
   }else if($mode=='data'){
-    $pdf_data=$pdf->output($order_file_name.'pdf', 'S');
+    $pdf_data=$pdf->output($order_file_name, 'S');
   }
   return $pdf_data;
 }

@@ -1,7 +1,8 @@
 <?php
 function smarty_resource_text_source ($tpl_name, &$tpl_source, &$smarty_obj)
 {
- echo $tpl_source = $tpl_name;
+ $tpl_source = $tpl_name;
+ 
   return true;
 }
 

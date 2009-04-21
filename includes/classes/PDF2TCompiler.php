@@ -78,24 +78,28 @@ class '.$out_class_name.' {
   function write($pdf, $data){
     global $_SHOP;
 
-    $input = <<<PDFSOURCE
-    '.$input.'
-PDFSOURCE;
+    $input = '."'" .addslashes($input)."'".';
 
     $smarty = new Smarty;
+    $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+    $smarty->cache_dir    = $_SHOP->tmp_dir;
+    $smarty->compile_dir  = $_SHOP->tmp_dir;
+    $smarty->compile_id   = "HTML2PDF";
+
     $smarty->assign("_SHOP_lang", $_SHOP->lang);
     $smarty->assign("organizer_currency", $_SHOP->organizer_data->organizer_currency);
     $smarty->assign("organizer", $_SHOP->organizer_data);
     $smarty->assign($data);
+    $smarty->assign("OrderData",$data);
 
-    $smarty->compile_dir  = $_SHOP->tmp_dir;
-    $smarty->compile_id   = "HTML2PDF";
-    $pdf->WriteHTML($this->smarty->fetch("text:'.$out_class_name.':{$input}"), false);
+    $input = "text:".stripslashes($input);
+    $input = $smarty->fetch($input);
+    $pdf->WriteHTML($input, false);//'.$out_class_name.':
     unset($smarty);
   }
 }
 ';
-      echo "<pre>$ret</pre>";
+    //  echo "<pre>$ret</pre>";
       return $ret;
   }
 }
