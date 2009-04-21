@@ -99,13 +99,13 @@ class EPH_authorize_sim extends AdminView{
 
       <input type='hidden' name='pmt_lang' value='{lang}'>
 
-      <INPUT type='submit' value='Accept Order'>
+      <INPUT type='submit' value='{!pay!}'>
       </form></center>";
     return $return;
 	}
 
 
-  function on_submit(&$order, $subaction){
+  function on_return(&$order, $subaction){
 		$order_id=$order->order_id;
 
 		if($_POST['x_response_code']==1){

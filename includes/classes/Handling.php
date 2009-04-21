@@ -343,9 +343,15 @@ class Handling {
     return $this->handling_html_template.'<br>'.$return;
   }
 
-  function on_submit(&$order, $appoved = nil) {
+  function on_submit(&$order, &$errors) {
   	if($pm=$this->pment()){
-      return $pm->on_submit($order, $appoved);
+      return $pm->on_submit($order, $errors);
+  	}
+  }
+
+  function on_return(&$order, $accepted) {
+  	if($pm=$this->pment()){
+      return $pm->on_return($order, $appoved);
   	}
   }
 

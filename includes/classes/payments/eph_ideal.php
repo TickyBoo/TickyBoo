@@ -59,14 +59,13 @@ class EPH_ideal extends payment{
     global $_SHOP;
 				
 		$form1= 
-'
-<div class="cc_div">
+'<div class="cc_div">
 To validate your order please introduce your payment information and
 click on "Pay". <br> At once that your payment is completed, you receive 
 your tickets by e-mail. <br>If we cannot record cashing during 12 next hours, 
 your order is cancelled automatically.<br><br>
-</div>
-';	
+</div>';
+
     $hand->handling_html_template   .= $form1;
 		$hand->handling_text_payment     = 'Credit Card';
 		$hand->handling_text_payment_alt = 'Credit Card';

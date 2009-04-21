@@ -90,7 +90,7 @@
       require_once("classes/EmailTCompiler.php");
       $comp=new EmailTCompiler;
     }else if($data['template_type']=='pdf2'){
-      require_once("classes/PDF2TCompiler.php");
+//      require_once("classes/PDF2TCompiler.php");
       $comp=new PDF2TCompiler;
     }else{
       user_error("unsupported template type: ".$data['template_type']);

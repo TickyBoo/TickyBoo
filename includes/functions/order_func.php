@@ -127,7 +127,7 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
     if($tpl_id and ($subj & 1)){
 			//load the template
 			if(!$tpl =& $te->getTemplate($tpl_id)){
-				user_error(no_template." cat: {$data['category_id']}, event: {$data['event_id']}");        
+				user_error(no_template.": name: {$tpl_id} cat: {$data['category_id']}, event: {$data['event_id']}");
 				return FALSE;
 			}
 		

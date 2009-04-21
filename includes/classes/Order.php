@@ -45,7 +45,7 @@ class Order {
     if(!$order_user_id){return;}  
 
     $this->order_user_id=$order_user_id;
-    $this->order_sid=$sid;
+    $this->order_session_id=$sid;
     $this->order_handling_id=$handling_id;
   	$this->order_place=$place;
   	$this->no_fee=$no_fee;
@@ -93,8 +93,8 @@ class Order {
   }
 
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
-    //echo "$event_id,$category_id,$place_id,{$this->order_user_id},{$this->order_sid},$price,$discount";
-    array_push($this->places,new Ticket($event_id,$category_id,$place_id,$this->order_user_id,$this->order_sid,$price,$discount));
+    //echo "$event_id,$category_id,$place_id,{$this->order_user_id},{$this->order_session_id},$price,$discount";
+    array_push($this->places,new Ticket($event_id,$category_id,$place_id,$this->order_user_id,$this->order_session_id,$price,$discount));
   }
   
   function size (){
@@ -205,7 +205,7 @@ class Order {
   	  order_place
       ) VALUES (".
       ShopDB::quote($this->order_user_id).",".      
-      ShopDB::quote($this->order_sid).",".      
+      ShopDB::quote($this->order_session_id).",".
       ShopDB::quote($this->size()).",".      
       ShopDB::quote($total).",".      
       "NOW(),".      
@@ -887,5 +887,32 @@ function delete_expired($handling_id, $expires_min){
 
 }
 
+function EncodeSecureCode($order= nil) {
+  if ($order = nil) $order = $this;
+  if (!isset($order)) return '';
+//  print_r($order); print_r($this);
+  $code = time().':'.$order->order_id.':' .
+          md5($order->order_session_id.':'.$order->order_user_id .$order->order_tickets_nr .
+              $order->order_handling_id .$order->order_total_price .$order->order_handling_id) ;
+  return 'sor='.base64_encode($code);
+}
+
+function DecodeSecureCode(&$order) {
+  If (isset($_REQUEST['sor'])) $code =$_REQUEST['sor'];
+  If (isset($code)) {
+    $code = base64_decode($code);
+    $code = explode(':',$code);
+    if (!$order and isset($this)) $order = $this;
+    if (!$order) $order = SELF::load($code[1], true);
+    
+    if ($code[0] > time()) return false;
+    if ($code[1] <> $order->order_id) return false;
+    if ($code[2] <> md5($order->order_session_id.':'.$order->order_user_id .$order->order_tickets_nr .
+                        $order->order_handling_id .$order->order_total_price .
+                        $order->order_handling_id)) return false;
+    return true;
+ } else
+   return false;
+}
 }
 ?>

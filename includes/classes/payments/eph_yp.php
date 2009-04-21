@@ -83,7 +83,7 @@ class eph_yp extends Payment{
       <input type='hidden' name='txtOrderTotal' value='{\$order_total_price}'>
       <input type='hidden' name='DeliveryPaymentType' value='deferred'>
       <input type='hidden' name='txtOrderIDShop' value='{$order_id}'>
-      <input type='hidden' name='txtShopPara' value='lang={lang}&order_id={$order_id}'>
+      <input type='hidden' name='txtShopPara' value='".$order->EncodeSecureCode()."'>
 
       <input type='hidden' name='txtBTitle' value=''>
 

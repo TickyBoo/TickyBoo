@@ -38,9 +38,8 @@ class EPH_authorize_aim Extends Payment{
   public $extras = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey',
                           'pm_authorize_aim_hash',  'pm_authorize_aim_test');
   public $mandatory = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey',
-                          'pm_authorize_aim_hash');
+                             'pm_authorize_aim_hash');
 
-  
 	function admin_view (){
 	  return "{gui->view name='pm_authorize_aim_login'}".
 	         "{gui->view name='pm_authorize_aim_txnkey'}".
@@ -82,10 +81,9 @@ class EPH_authorize_aim Extends Payment{
       $_POST['cc_name'] = "{$order->user_firstname} {$order->user_lastname}";
     }
 		$order_id=$order->order_id;
-    return "<form action='".$_SHOP->root_secured."checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'>
+    return "<form action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
             <table class='cc_form' cellpadding='5'>
             <input type='hidden' name='action' value='submit'>
-            <input type='hidden' name='order_id' value='{$order_id}'>
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}
             {gui->inputdate type='MY' name=cc_exp}
@@ -96,7 +94,7 @@ class EPH_authorize_aim Extends Payment{
   }
   
   
-  function on_submit(&$order, $result, &$err){
+  function on_submit(&$order, &$err){
 
 		global $_SHOP;
 
@@ -119,7 +117,7 @@ class EPH_authorize_aim Extends Payment{
 
 
 		if(!empty($err)){
-			return;
+			return $this->on_confirm($order);
 		}
 
 		if($this->pm_authorize_aim_test){

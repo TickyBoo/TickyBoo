@@ -120,6 +120,7 @@ die();
       return "checkout_preview";
   }
 
+
   function indexaction($smarty) {
     unset( $_SESSION['_SHOP_order']);
     return "checkout_preview";
@@ -144,6 +145,7 @@ die();
       $myorder = $order->make_f($_POST['handling_id'],"www");
     } else
       $myorder = $_SESSION['_SHOP_order'];
+
     If (!$myorder) {
       $smarty->assign('order_error', $order->error);
       return "checkout_preview";
@@ -163,14 +165,15 @@ die();
   }
 
   function  submitaction($smarty) {
-    $order_id = $_REGUEST['order_id'];  echo 'submitaction'  ;
-    if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
-      $smarty->assign('order_error', con('OrderNotFound'));
-      return "checkout_preview";
+    $myorder = is($_SESSION['_SHOP_order'],nil);
+    if(!Order::DecodeSecureCode($myorder)) {
+      header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
+      unset( $_SESSION['_SHOP_order']);
+      return;
     }
     setordervalues($myorder, $smarty);
     $hand= $myorder->order_handling;
-    $pm_return = $hand->on_submit($myorder,nil,$errors);
+    $pm_return = $hand->on_submit($myorder,$errors);
     $smarty->assign('errors', $errors);
     if (is_string($pm_return)) {
       $smarty->assign('confirmtext', $pm_return);
@@ -183,16 +186,31 @@ die();
       return "checkout_result";
   }
 
-  function  cancelaction($smarty) {
-    $order_id = $_REQUEST['order_id'];
-    if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
-     $smarty->assign('order_error', con('OrderNotFound'));
+  function  printaction($smarty) {
+    Global $order;
+    $myorder = is($_SESSION['_SHOP_order'],nil);
+    if(!Order::DecodeSecureCode($myorder)) {
+      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       unset( $_SESSION['_SHOP_order']);
-      return "checkout_preview";
+      return;
+    }
+
+    require_once("functions/order_func.php");
+    print_order($myorder->order_id, '', 'stream', false, 1);
+    return;
+  }
+
+
+  function  cancelaction($smarty) {
+    $myorder = is($_SESSION['_SHOP_order'],nil);
+    if(!Order::DecodeSecureCode($myorder)) {
+      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
+      unset( $_SESSION['_SHOP_order']);
+      return;
     }
     setordervalues($myorder, $smarty);
     $hand=$myorder->order_handling;
-    $pm_return = $hand->on_submit($myorder, false );
+    $pm_return = $hand->on_return($myorder, false );
     $smarty->assign('pm_return',$pm_return);
     $myorder->order_delete($order_id );
     unset( $_SESSION['_SHOP_order']);
@@ -200,32 +218,31 @@ die();
   }
 
   function  acceptaction($smarty) {
-    $order_id = $_REQUEST['order_id'];
-    if(!is_numeric($order_id) or (!$myorder = $_SESSION['_SHOP_order']) or ($myorder->order_id <> $order_id)) {
-     $smarty->assign('order_error', con('OrderNotFound'));
+    $myorder = is($_SESSION['_SHOP_order'],nil);
+    if(!Order::DecodeSecureCode($myorder)) {
+      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       unset( $_SESSION['_SHOP_order']);
-      return "checkout_preview";
+      return;
     }
     $hand=$myorder->order_handling;
     setordervalues($myorder, $smarty);
-    $pm_return = $hand->on_submit($myorder, true);
+    $pm_return = $hand->on_return($myorder, true);
     $smarty->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
   }
 
   function  notifyaction() {
-    $order_id = $_REGUEST['order_id'];
-    if(!is_numeric($order_id) or (!$myorder = Order::load($order_id, true)) or ($myorder->order_id <> $order_id)) {
-       header('HTTP/1.1 502 Action not allowed');
+    $myorder = is($_SESSION['_SHOP_order'],nil);
+    if(!Order::DecodeSecureCode($myorder)) {
+       header('HTTP/1.1 502 Action not allowed', true, 502);
        ShopDB::dblogging("notify error : $order_id\n");
-   die ;
+       return;
     }
 //       print_r($myorder);
 //         ShopDB::dblogging("notify: $order_id\n");
     $hand=$myorder->order_handling;
     $hand->on_notify($myorder);
-    die();
   }
 
 ?>

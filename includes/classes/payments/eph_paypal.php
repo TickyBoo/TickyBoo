@@ -74,10 +74,10 @@ class EPH_paypal extends payment{
         <input type='hidden' name='item_number' value='{$order->order_id}'>
         <input type='hidden' name='amount' value='".($order->order_total_price-$order->order_fee)."'>
         <input type='hidden' name='handling' value='".($order->order_fee)."'>
-        <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?order_id='. $order->order_id."'>
-        <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?order_id='. $order->order_id."'>
-        <input type='hidden' name='cancel_return' value='".$_SHOP->root_secured. 'checkout_cancel.php?order_id='. $order->order_id."'>
-        <input type='hidden' name='currency_code' value='{\$organizer_currency}'>
+        <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."'>
+        <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."'>
+        <input type='hidden' name='cancel_return' value='".$_SHOP->root_secured. 'checkout_cancel.php?'.$order->EncodeSecureCode()."'>
+        <input type='hidden' name='currency_code' value='{$_SHOP->organizer_currency}'>
         <input type='hidden' name='undefined_quantity' value='0'>
         <input type='hidden' name='no_shipping' value='1'>
         <input type='hidden' name='no_note' value='1'>
@@ -124,13 +124,13 @@ class EPH_paypal extends payment{
   	if(eregi("VERIFIED",$result)===false) {
         $debug.="NOT OK\n";
     } elseif($_POST["payment_status"]!="Completed") {
-         $debug.=$_POST["payment_status"]."\n";
+        $debug.=$_POST["payment_status"]."\n";
     } elseif($_POST["receiver_email"]!=$receiver_email) {
-         $debug.="wrong receiver_email\n";
+        $debug.="wrong receiver_email\n";
     } elseif($_POST["mc_gross"]<$order_total) {
-         $debug.="Invalid payment\n";
+        $debug.="Invalid payment\n";
     } else {
-    $debug.="OK\n";
+        $debug.="OK\n";
         $return =true;
     	  $order->order_payment_id=$_POST['txn_id'];
         $order->set_payment_status('payed');
@@ -141,7 +141,7 @@ class EPH_paypal extends payment{
     return $return;
   }
 
-  function on_submit(&$order, $result){
+  function on_return(&$order, $result){
     If ($result) {
       return array('approved'=>$result,
                    'transaction_id'=>$_REQUEST['txn_id'],

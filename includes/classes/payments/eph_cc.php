@@ -73,11 +73,9 @@ class EPH_cc extends payment{
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;
-    return "<form action='".$_SHOP->root_secured."checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'>
+    return "<form action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
             <table class='cc_form' cellpadding='5'>
             <input type='hidden' name='action' value='submit'>
-            <input type='hidden' name='order_id' value='{$order_id}'>
-
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}
             {gui->inputdate type='MY' name=cc_exp range=10}
@@ -88,7 +86,7 @@ class EPH_cc extends payment{
             </form>";
   }
 
-  function on_submit(&$order, $subaction, &$err){
+  function on_submit(&$order, &$err){
 		$date = getdate();
 		if($_POST['cc_exp_y']<($date['year']-2000) or
 		($_POST['cc_exp_y']==($date['year']-2000) and $_POST['cc_exp_m']<$date['mon'])){
@@ -108,10 +106,11 @@ class EPH_cc extends payment{
 
 
 		if(!empty($err)){
-			return;
+			return $this->on_confirm($order);
 		}
-                 print_r($order);
-		$order_id=$order->order_id;
+    print_r($order);
+
+    $order_id=$order->order_id;
 		$order_total_price=$order->order_total_price;
 		$cc_pubkey=$this->pm_cc_pubkey;
 

@@ -35,7 +35,7 @@
  */
 
 
-class PDFT2Compiler {
+class PDF2TCompiler {
   var $res_stat ="";
   var $res_dyna ="";
   var $mode=0; //1 static 2 dynamic 0 none 3 ezText 
@@ -78,9 +78,9 @@ class '.$out_class_name.' {
   function write($pdf, $data){
     global $_SHOP;
 
-    $input = TEXT>>
+    $input = <<<PDFSOURCE
     '.$input.'
-    TEXT;
+PDFSOURCE;
 
     $smarty = new Smarty;
     $smarty->assign("_SHOP_lang", $_SHOP->lang);
@@ -96,7 +96,6 @@ class '.$out_class_name.' {
 }
 ';
       echo "<pre>$ret</pre>";
-      die();
       return $ret;
   }
 }

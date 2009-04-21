@@ -430,7 +430,10 @@ class Order_Smarty {
 	  } 
     } 
   }
-
+  function EncodeSecureCode(){
+    $order = $_SESSION['_SHOP_order'];
+    return $order->EncodeSecureCode();
+  }
 }
 
 function _collect(&$event_item,&$cat_item,&$place_item,&$order){
