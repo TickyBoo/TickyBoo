@@ -33,7 +33,7 @@
  * clear to you.
  
  */
-
+ require_once('classes/Payment.php');
 class EPH_cc extends payment{
   public $extras = array('pm_cc_pubkey');
 

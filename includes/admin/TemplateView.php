@@ -78,13 +78,16 @@ class TemplateView extends AdminView{
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
 
+    $data['template_text'] = htmlspecialchars($data['template_text'], ENT_QUOTES);
+
     $this->print_field('template_id', $data);
     $this->print_input('template_name', $data, $err, 30, 100);
     $this->print_select ("template_type", $data, $err, array("email", "pdf", "pdf2"));
-    echo "<tr><td class='admin_value' colspan='2'>\n
-    <textarea rows='40' cols='96' name='template_text'>" .htmlspecialchars($data['template_text'], ENT_QUOTES) ."</textarea>
-    <span class='err'>{$err['template_text']}</span>
-    </td></tr>";                      //, ENT_QUOTES)
+    
+    echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
+    <textarea rows='40' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
+
+    </td></tr>";
 
     if ($data['template_id']){
       echo "<input type='hidden' name='template_id' value='{$data['template_id']}'/>\n";
@@ -193,11 +196,13 @@ class TemplateView extends AdminView{
 
     if ($_POST['action'] == 'insert'){
       if (!$this->template_check($_POST, $err)){
+        if (get_magic_quotes_gpc ())
+           $_POST['template_text'] = stripslashes (  $_POST['template_text']);
         $this->template_form($_POST, $err, template_add_title);
       }else{
         $query = "INSERT Template (template_name,template_type,template_text,template_status)
-     VALUES ('" . $this->q($_POST['template_name']) . "','" . $this->q($_POST['template_type']) . "',
-     '" . $this->q($_POST['template_text']) . "','new')";
+     VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($_POST['template_type']) . ",
+     "._ESC($_POST['template_text']).",'new')";
         if (!ShopDB::query($query)){
           return 0;
         }
@@ -212,10 +217,11 @@ class TemplateView extends AdminView{
       if (!$this->template_check($_POST, $err)){
         $this->template_form($_POST, $err, template_update_title);
       }else{
+     echo $row['template_text'],'<hr>';
         $query = "UPDATE Template SET
-    template_name='" . $this->q($_POST['template_name']) . "',
-    template_type='" . $this->q($_POST['template_type']) . "',
-    template_text='" . $this->q($_POST['template_text']) . "',
+    template_name=" . _ESC($_POST['template_name']) . ",
+    template_type=" . _ESC($_POST['template_type']) . ",
+    template_text=" . _ESC($_POST['template_text']) . ",
     template_status='new'
     WHERE template_id='{$_POST['template_id']}'"; 
         // echo $query;
@@ -226,6 +232,9 @@ class TemplateView extends AdminView{
         if ($this->compile_template($_POST['template_name'])){
           $this->template_list();
         }else{
+          if (get_magic_quotes_gpc ())
+             $_POST['template_text'] = stripslashes (  $_POST['template_text']);
+             
           $this->template_form($_POST, $err, template_update_title);
         }
       }
@@ -236,7 +245,8 @@ class TemplateView extends AdminView{
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
-      $this->template_form($row, $err, template_update_title);
+     echo $row['template_text'],'<hr>';
+     $this->template_form($row, $err, template_update_title);
     }elseif ($_GET['action'] == 'view'){
       $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}'";
       if (!$row = ShopDB::query_one_row($query)){

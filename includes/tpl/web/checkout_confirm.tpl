@@ -37,7 +37,7 @@
     {gui->view name=total_price value=$test}
     {gui->view name=order_id value=$order_id}
  </table><br>
-   <a href='?action=print&{order->EncodeSecureCode}' target='_blank'>printinvoice</a>
+   <a href='?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>printinvoice</a>
  <br>  <br>
  
  {eval var=$confirmtext}

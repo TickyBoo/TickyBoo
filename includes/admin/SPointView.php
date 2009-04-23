@@ -158,17 +158,17 @@ if($_POST['action']=='insert'){
     $this->spoint_form($_POST,$err,spoint_add_title);
   }else{
     $query="INSERT INTO User (user_lastname, user_address,user_address1,user_zip,user_city,user_country,user_email,user_phone,user_prefs,user_fax,user_status)".
-           " VALUES ('".$this->q($_POST['kasse_name'])."',
-            '".$this->q($_POST['user_address'])."',
-            '".$this->q($_POST['user_address1'])."',
-            '".$this->q($_POST['user_zip'])."',
-            '".$this->q($_POST['user_city'])."',	    
-            '".$this->q($_POST['user_country'])."',	    
-            '".$this->q($_POST['user_email'])."',	    
-	    '".$this->q($_POST['user_phone'])."',
-	    '".$this->q($_POST['user_prefs'])."',
-            '".$this->q($_POST['user_fax'])."',
-	    '1')";  
+           " VALUES ("._ESC($_POST['kasse_name']).",
+            "._ESC($_POST['user_address']).",
+            "._ESC($_POST['user_address1']).",
+            "._ESC($_POST['user_zip']).",
+            "._ESC($_POST['user_city']).",
+            "._ESC($_POST['user_country']).",
+            "._ESC($_POST['user_email']).",
+	          "._ESC($_POST['user_phone']).",
+	          "._ESC($_POST['user_prefs']).",
+            "._ESC($_POST['user_fax']).",
+	          '1')";
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
@@ -176,9 +176,9 @@ if($_POST['action']=='insert'){
     	   
     if($user_id=shopDB::insert_id()){
       $query="insert into SPoint (login,password,user_id) VALUES (
-      '".$this->q($_POST['user_nickname'])."',
-      '".$this->q(md5($_POST['password1']))."',
-      '".$this->q($user_id)."')";
+      '"._ESC($_POST['user_nickname'])."',
+      '"._ESC(md5($_POST['password1']))."',
+      '"._ESC($user_id)."')";
     
       if(!ShopDB::query($query)){
         user_error(shopDB::error());
@@ -191,24 +191,25 @@ if($_POST['action']=='insert'){
   if(!$this->spoint_check($_POST,$err)){
     $this->spoint_form($_POST,$err,spoint_update_title,'update');
   }else{
-    $query=" UPDATE User set user_lastname='".$this->q($_POST['kasse_name'])."',
-            user_address='".$this->q($_POST['user_address'])."',
-            user_address1='".$this->q($_POST['user_address1'])."',
-            user_zip='".$this->q($_POST['user_zip'])."',
-            user_city='".$this->q($_POST['user_city'])."',	    
-            user_country='".$this->q($_POST['user_country'])."',	    
-            user_email='".$this->q($_POST['user_email'])."',	    
-	    user_phone='".$this->q($_POST['user_phone'])."',
-	    user_prefs='".$this->q($_POST['user_prefs'])."',
-            user_fax='".$this->q($_POST['user_fax'])."',user_status='1' where user_id='{$_POST["user_id"]}'";
+    $query=" UPDATE User set
+            user_lastname="._ESC($_POST['kasse_name']).",
+            user_address="._ESC($_POST['user_address']).",
+            user_address1="._ESC($_POST['user_address1']).",
+            user_zip="._ESC($_POST['user_zip']).",
+            user_city="._ESC($_POST['user_city']).",
+            user_country="._ESC($_POST['user_country']).",
+            user_email="._ESC($_POST['user_email']).",
+	          user_phone="._ESC($_POST['user_phone']).",
+	          user_prefs="._ESC($_POST['user_prefs']).",
+            user_fax="._ESC($_POST['user_fax']).",user_status='1' where user_id='{$_POST["user_id"]}'";
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
     }
     if(isset($_POST["old_password"]) and isset($_POST["new_password1"]) and isset($_POST['user_nickname'])){
-      $query="UPDATE SPoint set login='".$this->q($_POST['user_nickname'])."',
-           password='".$this->q(md5($_POST['new_password1']))."' where user_id='{$_POST["user_id"]}'
-	   and password='".$this->q(md5($_POST['old_password']))."'";
+      $query="UPDATE SPoint set login="._ESC($_POST['user_nickname']).",
+           password="._ESC(md5($_POST['new_password1']))." where user_id="._ESC($_POST["user_id"])."
+	     and password="._ESC(md5($_POST['old_password']));
     
       if(!ShopDB::query($query)){
         user_error(shopDB::error());

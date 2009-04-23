@@ -77,7 +77,7 @@ class import_template extends AdminView {
         
         if (!preg_match('#<templatefile type=[\'"](.*?)[\'"]>(.*?)</templatefile>#s', $lines, $m)) {
            $this->err['main'] = "could not read XML: ".preg_last_error();
-           echo $this->q(print_r($m, true));
+           echo _ESC(print_r($m, true));
   		     return 0;
         }
         if (empty($m[1])){
@@ -89,8 +89,8 @@ class import_template extends AdminView {
         If (isset($err['main'])) return 0;
 
         $query = "INSERT Template (template_name,template_type,template_text,template_status)
-                  VALUES ('" . $this->q($_POST['template_name']) . "','" . $this->q($m[1]) . "',
-                          '" . $this->q($m[2]) . "','new')";
+                  VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($m[1]) . ",
+                          " . _ESC($m[2]) . ",'new')";
         if (!ShopDB::query($query)){
            $this->err['main'] = error.':'+$_SHOP->db_error;
            return 0;

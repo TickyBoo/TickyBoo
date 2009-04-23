@@ -195,11 +195,11 @@ if($_POST['action']=='insert'){
     event_group_type,    
     event_group_description
     )VALUES (
-    '".$this->q($_POST['event_group_name'])."',
+    "._ESC($_POST['event_group_name']).",
     $start,
     $end,
-    '".$this->q($_POST['event_group_type'])."',
-    '".$this->q($_POST['event_group_description'])."')";
+    "._ESC($_POST['event_group_type']).",
+    "._ESC($_POST['event_group_description']).")";
      
     if(!ShopDB::query($query)){
       return 0;
@@ -231,14 +231,13 @@ if($_POST['action']=='insert'){
   }
 
    $query="UPDATE Event_group SET 
-   event_group_name='".$this->q($_POST['event_group_name'])."',
+   event_group_name="._ESC($_POST['event_group_name']).",
    event_group_start_date=$start,
    event_group_end_date=$end,
-   event_group_type='".$this->q($_POST['event_group_type'])."',
-   event_group_description='".$this->q($_POST['event_group_description'])."'
-   WHERE event_group_id='{$_POST['event_group_id']}'";
-    
-    
+   event_group_type="._ESC($_POST['event_group_type']).",
+   event_group_description="._ESC($_POST['event_group_description'])."
+   WHERE event_group_id="._ESC($_POST['event_group_id']);
+
     if(!ShopDB::query($query)){
     echo shopDB::error();
       return 0;

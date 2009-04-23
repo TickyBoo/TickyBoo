@@ -34,6 +34,7 @@
  
  */
 
+require_once('classes/Payment.php');
 
 class EPH_paypal extends payment{
   public $extras = array('pm_paypal_business', 'pm_paypal_test');

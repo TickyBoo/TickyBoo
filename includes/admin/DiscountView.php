@@ -146,10 +146,10 @@ class DiscountView extends AdminView {
                             discount_type,
                             discount_value
                             ) VALUES (
-                            '" . $this->q($_POST['discount_event_id']) . "',
-                            '" . $this->q($_POST['discount_name']) . "',
-                            '" . $this->q($_POST['discount_type']) . "',
-                            '" . $this->q($_POST['discount_value']) . "'
+                            " . _ESC($_POST['discount_event_id']).",
+                            " . _ESC($_POST['discount_name']) . ",
+                            " . _ESC($_POST['discount_type']) . ",
+                            " . _ESC($_POST['discount_value']) . "
                             )";
           //      echo $query ;
                 if (!ShopDB::query($query)) {
@@ -165,11 +165,11 @@ class DiscountView extends AdminView {
                 $this->discount_form($_POST, $err, discount_update_title);
             } else {
                 $query = "UPDATE Discount SET
-                            discount_event_id='" . $this->q($_POST['discount_event_id']) . "',
-                            discount_name='" . $this->q($_POST['discount_name']) . "',
-                            discount_type='" . $this->q($_POST['discount_type']) . "',
-                            discount_value='" . $this->q($_POST['discount_value']) . "'
-                          WHERE discount_id='" . $this->q($_POST['discount_id']) . "'";
+                            discount_event_id=" . _ESC($_POST['discount_event_id']) . ",
+                            discount_name=" . _ESC($_POST['discount_name']) . "'
+                            discount_type=" . _ESC($_POST['discount_type']) . "'
+                            discount_value=" . _ESC($_POST['discount_value']) . "
+                          WHERE discount_id=" . _ESC($_POST['discount_id']) ;
 
                 if (!ShopDB::query($query)) {
                     user_error(shopDB::error());

@@ -35,9 +35,9 @@
   $_SHOP->db_name="beta5";
   $_SHOP->db_uname="root";
   $_SHOP->db_host="localhost";
-  $_SHOP->db_pass="";
+  $_SHOP->db_pass="SambaMan";
   
   // secured (https) shop root
-  $_SHOP->root="http://localhost/beta5/";
-  $_SHOP->root_secured = "http://localhost/beta5/";
+  $_SHOP->root="http://home.lumensoft.nl/beta5/";
+  $_SHOP->root_secured = "http://home.lumensoft.nl/beta5/";
 ?>

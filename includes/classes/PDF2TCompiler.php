@@ -66,7 +66,7 @@ produced '.date("l dS of F Y h:i:s A").'
 
 
 */
-require_once("smarty/smarty.class.php");
+require_once("smarty/Smarty.class.php");
 require_once("html2pdf/html2pdf.class.php");
 
 

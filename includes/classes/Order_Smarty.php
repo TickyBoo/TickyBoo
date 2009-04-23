@@ -430,8 +430,7 @@ class Order_Smarty {
 	  } 
     } 
   }
-  function EncodeSecureCode(){
-    $order = $_SESSION['_SHOP_order'];
+  function EncodeSecureCode($order){
     return $order->EncodeSecureCode();
   }
 }

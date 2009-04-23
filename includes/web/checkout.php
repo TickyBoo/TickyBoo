@@ -16,19 +16,19 @@ if(("https://".$_SERVER['SERVER_NAME']."/") != ($_SHOP->root_secured)) {
   echo "<script>window.location.href='$url';</script>"; exit;
 }
 */
-require_once('smarty/smarty.class.php');
+require_once('smarty/Smarty.class.php');
 require_once('classes/MyCart_Smarty.php');
 require_once('classes/User_Smarty.php');
 require_once('classes/Order_Smarty.php');
 require_once('classes/Update_Smarty.php');
-require_once('classes/gui_Smarty.php');
+require_once('classes/gui_smarty.php');
 
 require_once("config/init_shop.php");
 
 
 $smarty = new Smarty;
 
-$gui   = new Gui_smarty($smarty);
+$gui    = new Gui_smarty($smarty);
 $cart   = new MyCart_Smarty($smarty);
 $user   = new User_Smarty($smarty);
 $order  = new Order_Smarty($smarty);
@@ -50,8 +50,13 @@ $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
 
 $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
-if ($action == 'notify') {
-  //noting
+
+if (isset($_REQUEST['sor'])) {
+  if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
+      $smarty->display($fond . '.tpl');
+  }
+  die();
+
 } elseIf ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
   If (!$user->logged and
       $action !== 'register' and
@@ -160,6 +165,7 @@ die();
       if ($hand->is_eph()) {
         $_SESSION['_SHOP_order'] = $myorder;
       }
+      $order->obj = $myorder;
       return "checkout_confirm";
     }
   }
@@ -176,6 +182,7 @@ die();
     $pm_return = $hand->on_submit($myorder,$errors);
     $smarty->assign('errors', $errors);
     if (is_string($pm_return)) {
+      $order->obj = $myorder;
       $smarty->assign('confirmtext', $pm_return);
       return "checkout_confirm";
     } else
@@ -188,9 +195,10 @@ die();
 
   function  printaction($smarty) {
     Global $order;
-    $myorder = is($_SESSION['_SHOP_order'],nil);
+    $myorder = is($_SESSION['_SHOP_order'],null);
     if(!Order::DecodeSecureCode($myorder)) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
+      echo 'print error' ; print_r($myorder);
       unset( $_SESSION['_SHOP_order']);
       return;
     }
@@ -202,7 +210,7 @@ die();
 
 
   function  cancelaction($smarty) {
-    $myorder = is($_SESSION['_SHOP_order'],nil);
+    $myorder = is($_SESSION['_SHOP_order'],null);
     if(!Order::DecodeSecureCode($myorder)) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       unset( $_SESSION['_SHOP_order']);

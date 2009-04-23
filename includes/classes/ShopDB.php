@@ -59,7 +59,7 @@ class ShopDB {
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[Begin]Error: $_SHOP->db_error\n");
+                self::dblogging("[Begin]Error: $_SHOP->db_error");
                 return false;
             }
         } else {
@@ -77,7 +77,7 @@ class ShopDB {
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[Commit]Error: $_SHOP->db_error\n");
+                self::dblogging("[Commit]Error: $_SHOP->db_error");
             }
         } elseif  ($_SHOP->db_trx_startedi > 1) {$_SHOP->db_trx_startedi--;}
     }
@@ -91,7 +91,7 @@ class ShopDB {
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[rollback]Error: $_SHOP->db_error\n");
+                self::dblogging("[rollback]Error: $_SHOP->db_error");
             }
         }
     }
@@ -114,7 +114,7 @@ class ShopDB {
 
         $res = $_SHOP->link->query($query);
         if (!$res) {
-            self::dblogging("[Error:] ".$query."\n");
+            self::dblogging("[Error:] ".$query);
             self::dblogging($_SHOP->db_error= mysqli_error($_SHOP->link));
             $_SHOP->db_errno  =$_SHOP->link->errno ;
             if ($_SHOP->db_errno == DB_DEADLOCK) {
@@ -135,7 +135,7 @@ class ShopDB {
 
     function query_one_row ($query)
     {
-        if ($result = self::query($query) and $row = $result->fetch_array()) {
+        if ($result = self::query($query) and $row = $result->fetch_array(MYSQLI_ASSOC)) {
             return $row;
         }
     }
@@ -209,13 +209,16 @@ class ShopDB {
       return $_SHOP->db_errno;
       }
 
-    function escape_string($escapestr )
-      {
+    function escape_string($escapestr ){
       global $_SHOP;
+      if (!get_magic_quotes_gpc ()) {
         if (!isset($_SHOP->link)) {
             self::init();
         }
-      return $_SHOP->link->real_escape_string($escapestr);
+        return $_SHOP->link->real_escape_string($escapestr);
+      } else { echo "get_magic_quotes_gpc<br>\n";
+        return $escapestr;
+      }
     }
 
     function freeResult($result) {
@@ -364,7 +367,7 @@ class ShopDB {
     {
         global $_SHOP;
         $handle=fopen($_SHOP->tmp_dir."shopdb.log","a");
-        fwrite($handle, date('C').' '. $debug);
+        fwrite($handle, date('c',time()).' '. $debug."\n");
         fclose($handle);
 
     }

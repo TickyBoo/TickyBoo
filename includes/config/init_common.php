@@ -120,25 +120,20 @@
                    INC.'pear'.PATH_SEPARATOR.
                    get_include_path());
   
-  
+  Include_once('classes/basics.php');
+
   ini_set("magic_quotes_runtime",0);
   ini_set('allow_call_time_pass_reference',0);
 //emulates magic_quotes_gpc off
+/*
   if (get_magic_quotes_gpc()) {
-    function stripslashes_deep($value) {
-       $value = is_array($value) ?
-                   array_map('stripslashes_deep', $value) :
-                   stripslashes($value);
-
-       return $value;
-    }
 
     $_REGUEST = array_map('stripslashes_deep', $_REQUEST);
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
   }
-
+*/
 	//accepted languages
 	$_SHOP->langs=array('en');
 	$_SHOP->langs_names=array('en'=>'English',

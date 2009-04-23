@@ -280,12 +280,6 @@ function update_member2 (&$member,&$err,$mandatory=0){
      }
 }
 
-
-
-function _esc ($str){
-  return "'".shopDB::escape_string($str)."'";
-}
-
 function load_user ($user_id){
   $query="select * from User where user_id="._esc($user_id);
   if(!$user=ShopDB::query_one_row($query)){

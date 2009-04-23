@@ -119,16 +119,16 @@ global $_SHOP;
     }else{
 
       $query="UPDATE Organizer SET
-      organizer_name='".$this->q($_POST['organizer_name'])."',
-      organizer_address='".$this->q($_POST['organizer_address'])."',
-      organizer_plz='".$this->q($_POST['organizer_plz'])."',
-      organizer_ort='".$this->q($_POST['organizer_ort'])."',
-      organizer_email='".$this->q($_POST['organizer_email'])."',
-      organizer_fax='".$this->q($_POST['organizer_fax'])."',
-      organizer_phone='".$this->q($_POST['organizer_phone'])."',
-      organizer_currency='".$this->q($_POST['organizer_currency'])."',
-      organizer_state='".$this->q($_POST['organizer_state'])."',
-      organizer_country='".$this->q($_POST['organizer_country'])."'
+      organizer_name="._ESC($_POST['organizer_name']).",
+      organizer_address="._ESC($_POST['organizer_address']).",
+      organizer_plz="._ESC($_POST['organizer_plz']).",
+      organizer_ort="._ESC($_POST['organizer_ort']).",
+      organizer_email="._ESC($_POST['organizer_email']).",
+      organizer_fax="._ESC($_POST['organizer_fax']).",
+      organizer_phone="._ESC($_POST['organizer_phone']).",
+      organizer_currency="._ESC($_POST['organizer_currency']).",
+      organizer_state="._ESC($_POST['organizer_state']).",
+      organizer_country="._ESC($_POST['organizer_country'])."
       limit 1";
 
       if(!ShopDB::query($query)){
@@ -142,9 +142,9 @@ global $_SHOP;
 
       if(isset($_POST["old_password"]) and isset($_POST["new_password1"])){
         $query="UPDATE Admin set
-                   admin_password='".$this->q(md5($_POST['new_password1']))."'
+                   admin_password='"._ESC(md5($_POST['new_password1']))."'
                 where admin_id='{$_SHOP->organizer_id}'
-	              and admin_password='".$this->q(md5($_POST['old_password']))."'";
+	              and admin_password='"._ESC(md5($_POST['old_password']))."'";
 
         if(!ShopDB::query($query)){
           return FALSE;

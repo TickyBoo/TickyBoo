@@ -35,7 +35,7 @@
  */
 
 //require_once("admin/AdminView.php");
-
+require_once('classes/Payment.php');
 class EPH_ideal extends payment{
 	
 	

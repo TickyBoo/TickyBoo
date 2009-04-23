@@ -33,7 +33,7 @@
  * clear to you.
  
  */
-
+require_once('classes/Payment.php');
 class eph_yp extends Payment{
   public $extras = array('pm_yp_shop_id', 'pm_yp_url');
   public $mandatory = array('pm_yp_shop_id', 'pm_yp_url');

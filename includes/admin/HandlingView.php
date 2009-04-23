@@ -311,8 +311,8 @@ function extra_form($hand, &$data, &$err){
   
   $extras = $hand->admin_form();
   if ( $extras) {
-    require_once('smarty/smarty.class.php');
-    require_once('classes/gui_Smarty.php');
+    require_once('smarty/Smarty.class.php');
+    require_once('classes/gui_smarty.php');
 
     $smarty = new Smarty;
     $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");

@@ -34,7 +34,7 @@
  
  */
 
-
+require_once('classes/Payment.php');
 class EPH_authorize_sim extends AdminView{
   public $extras = array('pm_authorize_sim_login', 'pm_authorize_sim_txnkey',
                          'pm_authorize_sim_test');

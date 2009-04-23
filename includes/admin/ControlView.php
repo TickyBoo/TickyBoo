@@ -175,8 +175,7 @@ if($_POST['action']=='insert'){
   }else{
     $ids=$this->post_events ($_POST);
     $query="INSERT INTO Control (control_login, control_password, control_event_ids)".
-           " VALUES ('".$this->q($_POST['control_login'])."',
-            '".$this->q(md5($_POST['password1']))."','$ids')";
+           " VALUES ("._ESC($_POST['control_login']).","._ESC(md5($_POST['password1'])).",'$ids')";
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
@@ -190,9 +189,9 @@ if($_POST['action']=='insert'){
     if(isset($_POST["old_password"]) and isset($_POST["new_password1"]) and 
        isset($_POST['control_login'])){
       $query="UPDATE Control set 
-           control_password='".$this->q(md5($_POST['new_password1']))."' where 
+           control_password="._ESC(md5($_POST['new_password1']))." where
 	   control_login='{$_POST["control_login"]}'
-	   and control_password='".$this->q(md5($_POST['old_password']))."'";
+	   and control_password="._ESC(md5($_POST['old_password']))."";
     
       if(!ShopDB::query($query)){
         user_error(shopDB::error());
