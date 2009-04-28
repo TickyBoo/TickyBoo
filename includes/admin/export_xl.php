@@ -169,10 +169,10 @@ class export_xl extends AdminView {
      if(!$this->xl_check($_GET,$this->err)){
        return FALSE;
      }else{
-       $start=$_GET["xl_start"];
-       $end=$_GET["xl_end"];
+       $start=_esc($_GET["xl_start"]);
+       $end=_esc($_GET["xl_end"]);
        $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,`Order`,User,Event,Category,Ort where 
-               seat_order_id=order_id AND order_date>='$start' AND order_date<='$end' 
+               seat_order_id=order_id AND order_date>=$start AND order_date<=$end
 	       AND seat_event_id=event_id AND  seat_category_id=category_id 
 	       AND seat_user_id=user_id AND event_ort_id=ort_id";
        if(!$res=ShopDB::query($query)){

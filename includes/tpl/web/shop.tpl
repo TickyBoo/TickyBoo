@@ -53,7 +53,7 @@
     {if $last_item}
       {include file="discount.tpl"}
     {else}
-      {include file="event.tpl"  event_id=$smarty.get.event_id}
+      {include file="event.tpl" event_id=$smarty.get.event_id}
     {/if}
   {else} 
     {include file="category.tpl"}

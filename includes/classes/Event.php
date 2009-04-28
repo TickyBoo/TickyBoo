@@ -68,7 +68,7 @@ class Event {
    }
 
    $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
-           where Event.event_id='$id' $pub limit 1";
+           where Event.event_id="._esc($id)." $pub limit 1";
 
    if($res=ShopDB::query_one_row($query)){
      $event = new Event;
@@ -81,7 +81,7 @@ class Event {
  }
 
  function load_all_sub ($event_main_id){
-   $query="select * from Event where event_rep='sub' and event_main_id=$event_main_id";
+   $query="select * from Event where event_rep='sub' and event_main_id="._esc($event_main_id);
    if($res=ShopDB::query($query)){
      while($event_d=shopDB::fetch_array($res)){
        $event=new Event;
@@ -376,7 +376,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
     }
 
     if($val or $mandatory){
-      return $name.'='.ShopDB::quote($val).',';
+      return $name.'='._esc($val).',';
     }
   }
 
@@ -407,7 +407,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 
     foreach($names as $name){
       if($this->$name != $old->$name){
-        $query="update Event set $name=".ShopDB::quote($this->$name)." where $name=".ShopDB::quote($old->$name)." and event_rep='sub' and event_main_id='{$this->event_id}'";
+        $query="update Event set $name="._esc($this->$name)." where $name="._esc($old->$name)." and event_rep='sub' and event_main_id='{$this->event_id}'";
         ShopDB::query($query);
       }
     }

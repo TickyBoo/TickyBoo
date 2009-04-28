@@ -47,7 +47,7 @@ function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
     } 
     
     if($params['group_id']){
-     $where .= " and event_group_id='{$params['group_id']}'";
+     $where .= " and event_group_id="._esc($params['group_id']);
     }
 
      if($params['limit']){
@@ -55,7 +55,7 @@ function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
     }
     
     if($params['group_status']){
-     $where .= " and event_group_status='{$params['group_status']}'";
+     $where .= " and event_group_status="._esc($params['group_status']);
     }
     if($params['first']){
       $limit='limit '.$params['first'];

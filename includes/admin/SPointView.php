@@ -201,7 +201,8 @@ if($_POST['action']=='insert'){
             user_email="._ESC($_POST['user_email']).",
 	          user_phone="._ESC($_POST['user_phone']).",
 	          user_prefs="._ESC($_POST['user_prefs']).",
-            user_fax="._ESC($_POST['user_fax']).",user_status='1' where user_id='{$_POST["user_id"]}'";
+            user_fax="._ESC($_POST['user_fax']).",user_status='1'
+            where user_id="._esc($_POST["user_id"]);
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
@@ -223,7 +224,7 @@ if($_POST['action']=='insert'){
   $this->spoint_form($row,$err,spoint_add_title);
  
  }else if($_GET['action']=='edit'){
-  $query="SELECT * FROM User,SPoint WHERE User.user_id='{$_GET['user_id']}' and SPoint.user_id=User.user_id";
+  $query="SELECT * FROM User,SPoint WHERE User.user_id="._esc($_GET['user_id'])." and SPoint.user_id=User.user_id";
   if(!$row=ShopDB::query_one_row($query)){
     user_error(shopDB::error());
     return 0;
@@ -241,7 +242,7 @@ if($_GET['action']=='remove' and $_GET['user_id']>0){
   }
   $this->spoint_list();
 }else if($_GET['action']=='view'){
-  $query="SELECT * FROM User,SPoint WHERE User.user_id='{$_GET['user_id']}' and SPoint.user_id=User.user_id";
+  $query="SELECT * FROM User,SPoint WHERE User.user_id="._esc($_GET['user_id']." and SPoint.user_id=User.user_id";
   if(!$row=ShopDB::query_one_row($query)){
     user_error(shopDB::error());
     return 0;
@@ -282,7 +283,7 @@ function spoint_check (&$data, &$err){
    }
    if($data["user_id"]){ 
      if($pass=$data["old_password"]){
-       $query="select password from SPoint where user_id='{$data["user_id"]}'";
+       $query="select password from SPoint where user_id="._esc($data["user_id"]);
        if(!$row=ShopDB::query_one_row($query)){
           user_error(shopDB::error());
           return 0;

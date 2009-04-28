@@ -69,7 +69,8 @@ function search_form (&$data){
   echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_place")."</td></tr>"; 
-  $query="select event_id,event_name,event_date,event_time from Event where event_rep LIKE '%sub%' and event_pm_id IS NOT NULL order by event_date,event_time";
+  $query="select event_id,event_name,event_date,event_time from Event where event_rep LIKE '%sub%'
+          and event_pm_id IS NOT NULL order by event_date,event_time";
   if(!$res=ShopDB::query($query)){
     user_error(shopDB::error());
     return;

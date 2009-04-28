@@ -47,16 +47,16 @@ function smarty_block_category ($params, $content, &$smarty,&$repeat) {
     $where = 'where 1';
 
     if($params['category_id']){
-      $where .= " and category_id='{$params['category_id']}'";
+      $where .= " and category_id="._esc($params['category_id']);
     }
  
      if($params['order']){
-      $order_by="order by {$params['order']}";
+      $order_by="order by "._esc($params['order'],false);
     } 
     
     
     if($params['event_id']){
-      $where .= " and category_event_id='{$params['event_id']}'";
+      $where .= " and category_event_id="._esc($params['event_id']);
     }
   
     if($params['stats']){

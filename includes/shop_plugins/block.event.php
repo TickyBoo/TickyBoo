@@ -42,18 +42,16 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     $where="where event_status='pub'";		
 		
     if($params['order']){
-			$params['order']=shopDB::escape_string($params['order']);
+			$params['order']=_esc($params['order'], false);
       $order_by="order by {$params['order']}";
     }
     
     if($params['event_id']){
-			$params['event_id']=shopDB::escape_string($params['event_id']);
-			$where .= " and event_id='{$params['event_id']}'";
+			$where .= " and event_id="._esc($params['event_id']);
     }
 
     if($params['ort']){
       $from.=' LEFT JOIN Ort ON ort_id=event_ort_id';
-      //$where .= " and ort_id=event_ort_id";      
     }
 
     if($params['place_map']){
@@ -61,19 +59,17 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     }
   
     if($params['stats']){
-      $from.=',Event_stat';
-      $where .= " and event_id=es_event_id";
+      $from.=' left join Event_stat on event_id=es_event_id';
     }
 
     if($params['cats']){
-      $from.=',Category,Category_stat';
-      $where .= " AND event_id=category_event_id AND cs_category_id=category_id ";
+      $from.=' left join Category on event_id=category_event_id ';
+      $from.=' left join Category_stat on cs_category_id=category_id';
     }
 
     if($params['event_group']){
-			$params['event_group']=shopDB::escape_string($params['event_group']);
-      $from.=',Event_group';
-      $where .= " and Event_group.event_group_id='{$params['event_group']}' and Event.event_group_id=Event_group.event_group_id";
+      $from.=' left join Event_group on Event.event_group_id=Event_group.event_group_id';
+      $where .= " and Event_group.event_group_id="._esc($params['event_group']);
     }
 
     if($params['join_event_group']){
@@ -81,17 +77,13 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     }
 
     if($params['start_date']){
-			$params['start_date']=shopDB::escape_string($params['start_date']);
-      $where .= " and event_date>='{$params['start_date']}'";
+      $where .= " and event_date>="._esc($params['start_date']);
     }
     if($params['end_date']){
-			$params['end_date']=shopDB::escape_string($params['end_date']);
-      $where .= " and event_date<='{$params['end_date']}'";
+      $where .= " and event_date<="._esc($params['end_date']);
     }
 
-    if($params['limit']){
-			$params['limit']=shopDB::escape_string($params['limit']);
-      $limit='limit '.$params['limit'];
+    $limit=($params['limit'])?'limit '._esc($params['limit'],false):'';
     }
 
     if($params['event_type']){
@@ -113,8 +105,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
       $where.=" and event_rep LIKE '%sub%'";
 
       if($params['event_main_id']){
-				$params['event_main_id']=shopDB::escape_string($params['event_main_id']);
-        $where.=" and event_main_id='{$params['event_main_id']}'";
+        $where.=" and event_main_id="._esc($params['event_main_id']);
       }
     }
 
@@ -123,7 +114,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     }
 
     if($params['load_organizer']){
-      $from.=',Organizer';
+      $from.=', Organizer';
     }
 
     if($params['first']){

@@ -32,8 +32,8 @@
 
 require_once("classes/ShopDB.php");
 
-function login ($username,$password){  
-  $query="select * from auth where username='$username' and password='".md5($password)."'";
+function login ($username, $password){
+  $query="select * from auth where username="._esc($username)." and password="._esc(md5($password));
   //echo $query;
   if($result=ShopDB::query($query) and $obj=shopDB::fetch_object($result)){
     $_SESSION['SHOP_USER_ID']=$obj->user_id;
@@ -67,25 +67,6 @@ function _create_user ($guest,$status,&$err,$short,$mandatory=0){
     	$err['user_email']=not_valid_email;
 		}		
 	}
-
-	
-/*
-if(empty($guest['user_lastname'])){$err['user_lastname']=mandatory;}
-  if(empty($guest['user_firstname'])){$err['user_firstname']=mandatory;}
-  if(empty($guest['user_addresse'])){$err['user_addresse']=mandatory;}
-  if(empty($guest['user_zip'])){$err['user_zip']=mandatory;}
-  if(empty($guest['user_city'])){$err['user_city']=mandatory;}
-  if(empty($guest['user_country'])){$err['user_country']=mandatory;}
-  if(!$short){
-    if(empty($guest['user_email'])){$err['user_email']=mandatory;}
-    if(empty($guest['check_condition'])){$err['check_condition']=mandatory;}
-	if(empty($guest['check_use'])){$err['check_use']=mandatory;}
-    $email=$guest['user_email'];
-    $check_mail= eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $email);//"
-    if(!$check_mail){$err['user_email']=not_valid_email;}
-  } 
-*/	
-	
   if(!empty($err)){
     return FALSE;
   }
@@ -121,7 +102,7 @@ function _update_user ($guest,$status,&$err,$short,$mandatory=0){
 	  $mandatory=array('user_lastname','user_firstname','user_addresse',
 		'user_zip','user_city','user_country');
 		if(!$short){
-			$mandatory[]='user_email';
+			$mandatory[]='Required';
 		}
 	}
 	
@@ -135,20 +116,6 @@ function _update_user ($guest,$status,&$err,$short,$mandatory=0){
 		}		
 	}
 
-	
-	if(empty($guest['user_lastname'])){$err['user_lastname']="Required";}
-	if(empty($guest['user_firstname'])){$err['user_firstname']="Required";}
-	if(empty($guest['user_addresse'])){$err['user_addresse']="Required";}
-	if(empty($guest['user_zip'])){$err['user_zip']="Required";}
-	if(empty($guest['user_city'])){$err['user_city']="Required";}
-	if(empty($guest['user_country'])){$err['user_country']="Required";}
-	if(!$short){
-		if(empty($guest['user_email'])){$err['user_email']="Required";}
-		$email=$guest['user_email'];
-		$check_mail= eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $email);//"
-		if(!$check_mail){$err['user_email']="Your Email should be something@somthing.this";}
-	  }
-	
   if(!empty($err)){
     return FALSE;
   }
@@ -205,7 +172,7 @@ global $_SHOP;
            echo 'No inserting into auth';
            return FALSE;
    	  }
-   	  $query="select * from auth,User where username=".ShopDB::quote($member['user_email'])." and auth.user_id=User.user_id";
+   	  $query="select * from auth,User where username="._esc($member['user_email'])." and auth.user_id=User.user_id";
   	  if(!$row=ShopDB::query_one_row($query)){
    		  return FALSE;
    	  }
@@ -244,7 +211,7 @@ function update_member2 (&$member,&$err,$mandatory=0){
   /////////////////////////
   ///Check user password///
   /////////////////////////
-	$query="SELECT username FROM auth WHERE user_id='".$member['user_id']."' and password='".md5($member['password1'])."'";
+	$query="SELECT username FROM auth WHERE user_id="._esc($member['user_id'])." and password="._esc(md5($member['password1']));
 	if(!$result=ShopDB::query($query) or !$user=shopDB::fetch_assoc($result)){
 	  $err['password']="Incorrect Password";
 	  return FALSE;
@@ -264,7 +231,7 @@ function update_member2 (&$member,&$err,$mandatory=0){
 		return FALSE;
 	}
 	//$active = md5(uniqid(rand(), true));
-	$query="UPDATE auth SET username="._esc($member['user_email'])." WHERE user_id=".$member['user_id']."";
+	$query="UPDATE auth SET username="._esc($member['user_email'])." WHERE user_id="._esc((int)$member['user_id']);
    
 	if(!ShopDB::query($query)){
 	  return FALSE;
@@ -281,7 +248,7 @@ function update_member2 (&$member,&$err,$mandatory=0){
 }
 
 function load_user ($user_id){
-  $query="select * from User where user_id="._esc($user_id);
+  $query="select * from User where user_id="._esc((int)$user_id);
   if(!$user=ShopDB::query_one_row($query)){
     return FALSE;
   }

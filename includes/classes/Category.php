@@ -46,7 +46,7 @@ class Category {
      $stats_cond=" and  category_id=cs_category_id ";
    }
    
-   $query="select * from Category $stats_table where category_event_id='$event_id' $pub $stats_cond order by category_price";
+   $query="select * from Category $stats_table where category_event_id="._esc($event_id)." $pub $stats_cond order by category_price";
    if($res=ShopDB::query($query)){
      return $res;
    }else{
@@ -61,7 +61,7 @@ class Category {
      $pub="and category_status='pub'";
    }
    
-   $query="select * from Category LEFT JOIN PlaceMap2 ON category_pm_id=pm_id where category_id='$cat_id' $pub"; 
+   $query="select * from Category LEFT JOIN PlaceMap2 ON category_pm_id=pm_id where category_id="._esc($cat_id)." $pub";
 	   
    if($res=ShopDB::query($query)){
      return shopDB::fetch_object($res);
@@ -76,8 +76,8 @@ class Category {
    }
    
    $query="select * from Category LEFT JOIN PlaceMap2 ON category_pm_id=pm_id,Event,Ort where 
-           category_id='$cat_id' and 
-	   category_event_id=event_id and event_ort_id=ort_id $pub";
+           category_id="._esc($cat_id)." and
+	         category_event_id=event_id and event_ort_id=ort_id $pub";
 	    
    if($res=ShopDB::query($query)){ 
      return shopDB::fetch_object($res);

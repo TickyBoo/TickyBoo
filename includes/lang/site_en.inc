@@ -251,7 +251,7 @@ define("excel_admin","Excel");
 define("expired","EXPIRED");
 define("expired_tickets","Expired tickets:");
 define("expires_in","Expires in");
-define("expert_entrant_NotSended","'Not Sent' orders only");
+define("export_entrant_NotSended","'Not Sent' orders only");
 define("export_admin","Export");
 define("export_admin_title","Export Data");
 define("export_cc","Credit Cards");
@@ -264,7 +264,7 @@ define("export_templates","Templates");		//added lou5
 define("export_template_id","Choose Template ");	//added lou5
 define("export_template_file","Filename");		//added lou5
 define("export_submit","Export It!");		//added lou5
-define("export_entrant_title","Export Orders");		//added lou5
+define("export_entrant_title","Export Attendees");		//added lou5
 define("export_entrant","Orders");		//added lou5
 define("export_entrant_event","Choose Event");		//added lou5
 define("export_entrant_NotSended","Not sent");		//added lou5

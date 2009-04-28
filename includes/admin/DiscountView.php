@@ -166,10 +166,10 @@ class DiscountView extends AdminView {
             } else {
                 $query = "UPDATE Discount SET
                             discount_event_id=" . _ESC($_POST['discount_event_id']) . ",
-                            discount_name=" . _ESC($_POST['discount_name']) . "'
-                            discount_type=" . _ESC($_POST['discount_type']) . "'
-                            discount_value=" . _ESC($_POST['discount_value']) . "
-                          WHERE discount_id=" . _ESC($_POST['discount_id']) ;
+                            discount_name="     . _ESC($_POST['discount_name']) . ",
+                            discount_type="     . _ESC($_POST['discount_type']) . ",
+                            discount_value="    . _ESC($_POST['discount_value']) . "
+                          WHERE discount_id="   . _ESC($_POST['discount_id']) ;
 
                 if (!ShopDB::query($query)) {
                     user_error(shopDB::error());
@@ -179,7 +179,7 @@ class DiscountView extends AdminView {
             }
         } else
         if ($_GET['action'] == 'add_disc') {
-            $query = "SELECT * FROM  Event WHERE event_id='{$_GET['discount_event_id']}'";
+            $query = "SELECT * FROM  Event WHERE event_id="._esc((int)$_GET['discount_event_id']);
             if (!$row = ShopDB::query_one_row($query)) {
                 user_error(shopDB::error());
                 return;
@@ -188,7 +188,8 @@ class DiscountView extends AdminView {
             $this->discount_form($row, $err, discount_add_title);
         } else
         if ($_GET['action'] == 'edit_disc') {
-            $query = "SELECT * FROM Discount, Event WHERE discount_id='{$_GET['discount_id']}' and discount_event_id=event_id";
+            $query = "SELECT * FROM Discount left join Event on discount_event_id=event_id
+                      WHERE discount_id="._esc($_GET['discount_id']);
             if (!$row = ShopDB::query_one_row($query)) {
                 return;
             }
@@ -196,7 +197,7 @@ class DiscountView extends AdminView {
         } else
         if ($_GET['action'] == 'remove_disc' and $_GET['discount_id'] > 0) {
             $discount_id = (int)$_GET['discount_id'];
-            $query = "SELECT count(*) as count from Seat where seat_discount_id='$discount_id'";
+            $query = "SELECT count(*) as count from Seat where seat_discount_id="._esc($discount_id);
             if (!$count = ShopDB::query_one_row($query)) {
                 return;
             }
@@ -206,7 +207,7 @@ class DiscountView extends AdminView {
                 return;
             }
 
-            $query = "DELETE FROM Discount WHERE discount_id='{$_GET['discount_id']}' LIMIT 1";
+            $query = "DELETE FROM Discount WHERE discount_id="._esc($_GET['discount_id'])." LIMIT 1";
             if (!ShopDB::query($query)) {
                 return;
             }

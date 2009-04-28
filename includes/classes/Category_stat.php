@@ -52,9 +52,9 @@ class Category_stat{
   
   function save(){
     $query="insert into Category_stat
-    set cs_category_id={$this->cs_category_id},
-    cs_free={$this->cs_free},
-    cs_total={$this->cs_total}";
+    set cs_category_id="._esc($this->cs_category_id).",
+    cs_free="._esc($this->cs_free).",
+    cs_total="._esc($this->cs_total};
     
     if(ShopDB::query($query)){
       return TRUE;
@@ -64,7 +64,7 @@ class Category_stat{
   function dec ($cs_category_id,$count){
   	global $_SHOP;
     $query="UPDATE Category_stat SET cs_free=cs_free-$count 
-            WHERE cs_category_id='$cs_category_id' LIMIT 1";
+            WHERE cs_category_id="._esc($cs_category_id)." LIMIT 1";
     if(!ShopDB::query($query) or shopDB::affected_rows($_SHOP->link)!=1){
       return FALSE;
     }else{
@@ -74,7 +74,7 @@ class Category_stat{
 
   function inc ($cs_category_id,$count){
     $query="UPDATE Category_stat SET cs_free=cs_free+$count 
-            WHERE cs_category_id='$cs_category_id' LIMIT 1";
+            WHERE cs_category_id="._esc($cs_category_id)." LIMIT 1";
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
       return FALSE;
     }else{

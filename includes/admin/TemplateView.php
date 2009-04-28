@@ -223,7 +223,7 @@ class TemplateView extends AdminView{
     template_type=" . _ESC($_POST['template_type']) . ",
     template_text=" . _ESC($_POST['template_text']) . ",
     template_status='new'
-    WHERE template_id='{$_POST['template_id']}'"; 
+    WHERE template_id="._esc((int)$_POST['template_id']);
         // echo $query;
         if (!ShopDB::query($query)){
           return 0;
@@ -241,20 +241,20 @@ class TemplateView extends AdminView{
     }elseif ($_GET['action'] == 'add'){
       $this->template_form($row, $err, template_add_title);
     }elseif ($_GET['action'] == 'edit'){
-      $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}'";
+      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
      echo $row['template_text'],'<hr>';
      $this->template_form($row, $err, template_update_title);
     }elseif ($_GET['action'] == 'view'){
-      $query = "SELECT * FROM Template WHERE template_id='{$_GET['template_id']}'";
+      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
       $this->template_view($row);
     }elseif ($_GET['action'] == 'remove' and $_GET['template_id'] > 0){
-      $query = "DELETE FROM Template WHERE template_id='{$_GET['template_id']}'";
+      $query = "DELETE FROM Template WHERE template_id="._esc($_GET['template_id']);
       if (!ShopDB::query($query)){
         return 0;
       }

@@ -63,8 +63,8 @@ class StatisticView extends AdminView{
     $query = "select Event_stat.*, event_id, event_name, event_date, event_time, event_status from Event_stat, Event
               where  es_event_id=event_id
                and event_status!='unpub'
-  	           and event_date >='$start_date'
-        	     and event_date<='$end_date'
+  	           and event_date >="._esc($start_date)."
+        	     and event_date<="._esc($end_date)."
         	     and event_rep LIKE '%sub%'
         	    order by event_date,event_time";
 

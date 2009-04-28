@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 %%%copyright%%%
  * phpMyTicket - ticket reservation system
@@ -33,8 +33,7 @@
  * clear to you.
  
  */
-?>
-<?
+
 require_once("admin/AdminView.php");
 require_once("classes/ShopDB.php");
 require_once('functions/datetime_func.php');
@@ -58,7 +57,7 @@ class export_entrant extends AdminView {
 		echo "<form action='{$_SERVER[PHP_SELF]}' method='get'>";
 		$this->form_head(export_entrant_title);
 		$this->print_select_assoc('export_entrant_event',$data,$err,$event);
-		$this->print_checkbox('expert_entrant_NotSended',$data,$err);
+		$this->print_checkbox('export_entrant_NotSended',$data,$err);
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
@@ -199,7 +198,7 @@ class export_entrant extends AdminView {
 
     if($_GET['submit']) {// and $_GET['export_xl2_event']>0){
 
-			$event_id=(int)$_GET['export_entrant_event'];
+			$event_id=_esc((int)$_GET['export_entrant_event']);
       if (!$_GET['expert_entrant_NotSended']) $org .= " and `Order`.order_shipment_status='none'";
       $this->query="SELECT DISTINCT `Order`.order_id,`Order`.order_tickets_nr,`Order`.order_total_price,`Order`.order_shipment_status,`Order`.order_payment_status,`Order`.order_fee,
                               User.user_firstname, User.user_lastname, User.user_city, count(Seat.seat_order_id) AS seat_count, sum(seat_price) as seat_totall_price

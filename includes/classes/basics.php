@@ -298,11 +298,14 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
 		if ($pos === false) { // is relative url, construct rest
 			$url = $_SHOP->root . $url;
 		}
-
-		if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
-			header('HTTP/1.1 ' . $status);
-		}
-		header('Location: ' . $url);
+    if ($status===true) {
+      echo 	"<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($url)."';\n</script>";
+    }else{
+  		if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
+  			header('HTTP/1.1 ' . $status);
+  		}
+  		header('Location: ' . $url);
+    }
 	}
 
 	function constructBase() {
@@ -315,8 +318,9 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
 		return $base;
 	}
 
-function _esc ($str){
-  return "'".shopDB::escape_string($str)."'";
+function _esc ($str, $quote=true){
+  $str = shopDB::escape_string($str)
+  return ($quote)?"'".$str."'":$str;
 }
 
 /**

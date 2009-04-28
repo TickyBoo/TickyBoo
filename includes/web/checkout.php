@@ -55,19 +55,23 @@ if (isset($_REQUEST['sor'])) {
   if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
       $smarty->display($fond . '.tpl');
   }
-  die();
+//  session_write_close();
+  exit();
 
 } elseIf ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
   If (!$user->logged and
       $action !== 'register' and
       $action !== 'login' ) {
-    $smarty->display('user.tpl');
-    die();
+    $smarty->display('checkout_user.tpl');
+//    session_write_close();
+    exit();
+    echo "error here";
   }
   if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
       $smarty->display($fond . '.tpl');
   }
-  die();
+//  session_write_close();
+  exit();
 }
 
 redirect("index.php?action=cart_view",403);
@@ -96,10 +100,10 @@ die();
 
   Function loginAction ($smarty){
     global $user;
-    if (!$user->logged) {
+    if (!$user->logged) {      print_r($_POST);
   	  If (! $user->login_f($_POST['username'], $_POST['password'], $errors)) {
   	    $smarty->assign('login_error',$errors);
-  	    return "user";
+  	    return "checkout_user";
       }
     }
     return "checkout_preview";
@@ -252,5 +256,5 @@ die();
     $hand=$myorder->order_handling;
     $hand->on_notify($myorder);
   }
-
+session_write_close();
 ?>

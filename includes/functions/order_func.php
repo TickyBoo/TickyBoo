@@ -267,11 +267,8 @@ function email_order ($email_data,$template_name){
 function email_confirm ($email_data,$template_name){
   if(is_numeric($email_data)){
     //$email_data is in fact order_id
-    $query="SELECT * FROM 
-      User FORCE KEY ( PRIMARY ) ,
-      `Order` FORCE KEY ( PRIMARY )
-      WHERE order_id='$email_data' and 
-      user_id=order_user_id"; 
+    $query="SELECT * FROM  User left join `Order` on user_id=order_user_id
+      WHERE order_id="._esc($email_data);
 
     if(!$email_data=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
@@ -299,7 +296,7 @@ function email_confirm ($email_data,$template_name){
 
 function get_payment ($payment){
    global $_SHOP;
-   $query="SELECT * FROM Payment WHERE payment_id='$payment'";
+   $query="SELECT * FROM Payment WHERE payment_id="._esc($payment);
 
     if(!$res=ShopDB::query_one_row($query)){
       return FALSE;

@@ -132,6 +132,7 @@ global $_SHOP;
       limit 1";
 
       if(!ShopDB::query($query)){
+
         return 0;
       }
 
@@ -141,16 +142,17 @@ global $_SHOP;
 
 
       if(isset($_POST["old_password"]) and isset($_POST["new_password1"])){
-        $query="UPDATE Admin set
-                   admin_password='"._ESC(md5($_POST['new_password1']))."'
-                where admin_id='{$_SHOP->organizer_id}'
-	              and admin_password='"._ESC(md5($_POST['old_password']))."'";
+        $query="UPDATE Admin set admin_password="._ESC(md5($_POST['new_password1']))."
+                where admin_id='3'
+	              and admin_password="._ESC(md5($_POST['old_password']));
 
         if(!ShopDB::query($query)){
           return FALSE;
         }
       }
-
+     unset($_SESSION['_SHOP_ORGANIZER_DATA']);
+     redirect('admin/view_organizer.php', true);
+     return;
     }
   }
   $query="SELECT * FROM Organizer limit 1";
@@ -164,7 +166,7 @@ function logo_post ($data,$organizer_id){
   global $_SHOP;
 
 	return $this->file_post($data, 0, 'Organizer', 'organizer','_logo');
-
+}
 	
 
 function organizer_check (&$data, &$err){
@@ -191,7 +193,7 @@ function organizer_check (&$data, &$err){
     }else{
      if($data['new_password1']!=$data['new_password2']){$err['new_password']=pass_not_egal;}
     if(strlen($data['new_password1'])<5){$err['new_password']=pass_too_short;}
-
+   }
   }
   return empty($err);
 }

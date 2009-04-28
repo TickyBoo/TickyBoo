@@ -47,4 +47,5 @@ $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
 
 $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 $smarty->display($fond . '.tpl');
+session_write_close();
 ?>

@@ -71,10 +71,10 @@ class export_templates extends AdminView {
   
     if($_GET['submit'] and $_GET['export_template_id']>0){
 			require_once('functions/xmlsql_func.php');
-			$id=(int)$_GET['export_template_id'];
+			$id=_esc((int)$_GET['export_template_id']);
 			
 
-    	if($res=ShopDB::query_one_row("select template_name, template_type, template_text from Template where template_id='$id'")){
+    	if($res=ShopDB::query_one_row("select template_name, template_type, template_text from Template where template_id={$id}")){
   			$filename=$_GET['export_template_file'];
   			if(empty($filename)){
   			  $filename='template_'.$res['template_type'].'_'.$res['template_name'].'.xml';

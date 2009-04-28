@@ -52,7 +52,7 @@ function control_view (&$data){
     echo "<tr><td class='admin_name' valign='top'>".$this->con(control_event_ids)."</td>
           <td class='admin_value'>";
     foreach($ids as $id){
-      $query="select event_name,event_date,event_time from Event where event_id='$id'";
+      $query="select event_name, event_date, event_time from Event where event_id='$id'";
       if($row=ShopDB::query_one_row($query)){
         $date=formatAdminDate($row["event_date"]);
         $time=formatTime($row["event_time"]);
@@ -189,9 +189,9 @@ if($_POST['action']=='insert'){
     if(isset($_POST["old_password"]) and isset($_POST["new_password1"]) and 
        isset($_POST['control_login'])){
       $query="UPDATE Control set 
-           control_password="._ESC(md5($_POST['new_password1']))." where
-	   control_login='{$_POST["control_login"]}'
-	   and control_password="._ESC(md5($_POST['old_password']))."";
+           control_password="._ESC(md5($_POST['new_password1']))."
+           where control_login="._esc($_POST["control_login"])."
+	         and control_password="._ESC(md5($_POST['old_password']))."";
     
       if(!ShopDB::query($query)){
         user_error(shopDB::error());
@@ -202,7 +202,7 @@ if($_POST['action']=='insert'){
      $ids=$this->post_events($_POST);
     
      $query="UPDATE Control set 
-           control_event_ids='$ids' where control_login='{$_POST["control_login"]}'";
+           control_event_ids='$ids' where control_login="._esc($_POST["control_login"]);
       if(!ShopDB::query($query)){
         user_error(shopDB::error());
         return FALSE;
@@ -215,7 +215,7 @@ if($_POST['action']=='insert'){
   $this->control_form($row,$err,control_add_title);
  
  }else if($_GET['action']=='edit'){
-  $query="SELECT * FROM Control WHERE control_login='{$_GET['control_login']}'";
+  $query="SELECT * FROM Control WHERE control_login="._esc($_GET['control_login']);
   if(!$row=ShopDB::query_one_row($query)){
     user_error(shopDB::error());
     return 0;
@@ -224,14 +224,14 @@ if($_POST['action']=='insert'){
   $this->control_form($row,$err,control_update_title,'update');
 }else 
 if($_GET['action']=='remove' and $_GET['control_login']){
-  $query="DELETE FROM Control WHERE control_login='{$_GET['control_login']}'";
+  $query="DELETE FROM Control WHERE control_login="._esc($_GET['control_login']);
   if(!ShopDB::query($query)){
     user_error(shopDB::error());
     return 0;
   }
   $this->control_list();
 }else if($_GET['action']=='view'){
-  $query="SELECT * FROM Control WHERE control_login='{$_GET['control_login']}'";
+  $query="SELECT * FROM Control WHERE control_login="._esc($_GET['control_login']);
   if(!$row=ShopDB::query_one_row($query)){
     user_error(shopDB::error());
     return 0;
@@ -247,7 +247,7 @@ function control_check (&$data, &$err){
   if(empty($data['control_login'])){$err['control_login']=mandatory;}
   
   if($nickname=$data['control_login'] and $data["action"]=='insert'){
-    $query="select Count(*) as count from Control where control_login='$nickname'";
+    $query="select Count(*) as count from Control where control_login="._esc($nickname);
     if(!$res=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return 0;
@@ -263,7 +263,7 @@ function control_check (&$data, &$err){
    }
    if($data["action"]=='update'){ 
      if($pass=$data["old_password"]){
-       $query="select control_password from Control where control_login='{$data["control_login"]}'";
+       $query="select control_password from Control where control_login="._esc($data["control_login"]);
        if(!$row=ShopDB::query_one_row($query)){
           user_error(shopDB::error());
           return 0;

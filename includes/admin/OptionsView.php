@@ -42,14 +42,14 @@ class OptionsView extends AdminView{
 			}else{
 
 				$query="UPDATE `ShopConfig` SET 
-	      		shopconfig_lastrun_int=".ShopDB::quote($_POST['shopconfig_lastrun_int']).", 
-	      		shopconfig_restime_remind=".ShopDB::quote($_POST['shopconfig_restime_remind']).", 
-	      		shopconfig_restime=".ShopDB::quote($_POST['shopconfig_restime']).", 
-	      		shopconfig_check_pos=".ShopDB::quote($_POST['shopconfig_check_pos']).", 
-	      		shopconfig_delunpaid=".ShopDB::quote($_POST['shopconfig_delunpaid']).", 
-	      		shopconfig_posttocollect=".ShopDB::quote($_POST['shopconfig_posttocollect']).", 
-	      		shopconfig_user_activate=".ShopDB::quote($_POST['shopconfig_user_activate']).", 
-	      		shopconfig_maxres=".ShopDB::quote($_POST['shopconfig_maxres'])." 
+	      		shopconfig_lastrun_int="._ESC($_POST['shopconfig_lastrun_int']).",
+	      		shopconfig_restime_remind="._ESC($_POST['shopconfig_restime_remind']).",
+	      		shopconfig_restime="._ESC($_POST['shopconfig_restime']).",
+	      		shopconfig_check_pos="._ESC($_POST['shopconfig_check_pos']).",
+	      		shopconfig_delunpaid="._ESC($_POST['shopconfig_delunpaid']).",
+	      		shopconfig_posttocollect="._ESC($_POST['shopconfig_posttocollect']).",
+	      		shopconfig_user_activate="._ESC($_POST['shopconfig_user_activate']).",
+	      		shopconfig_maxres="._ESC($_POST['shopconfig_maxres'])."
 	      		limit 1";
 				
 				if(!ShopDB::query($query)){

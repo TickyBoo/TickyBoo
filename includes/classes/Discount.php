@@ -54,7 +54,7 @@ class Discount {
   function load ($id){
     require_once "classes/ShopDB.php";
     
-    $query="SELECT * FROM Discount WHERE discount_id='$id'";
+    $query="SELECT * FROM Discount WHERE discount_id="._esc($id);
     if(!$row=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return FALSE;

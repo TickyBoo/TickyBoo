@@ -270,8 +270,9 @@ class Order {
   /* static functions of common use */
 
   function order_delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
-
-    if(!ShopDB::begin()){
+  	global $_SHOP;
+  	
+    if(!ShopDB::begin('order_delete_ticket')){
       echo "<div class=error>".cannot_begin_transaction."</div>";
       return FALSE;
     }
@@ -281,7 +282,7 @@ class Order {
 
     if(!$seat=ShopDB::query_one_row($query)){
       echo "<div class=error>".cannot_find_seat."</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return FALSE;
     }
 
@@ -289,21 +290,21 @@ class Order {
 
      if(!$order=ShopDB::query_one_row($query)){
       echo "<div class=error>".cannot_find_order."</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return FALSE;
     }
 
     // Added v1.3.4 Checks to see if the order has allready been canceled.
     if($order['order_status']=='cancel'){
   	  echo "<div class=error>".order_allready_cancelled."</div>";
-  	  ShopDB::rollback();
+  	  ShopDB::rollback('order_delete_ticket');
   	  return FALSE;
     }
 
 
     //if the order has only one ticket, the whole order will be deleted/canceled instead of just the ticket!
     if($order['order_tickets_nr']==1){
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return Order::order_delete($order_id, 0, $user_id);
     }
 
@@ -312,7 +313,7 @@ class Order {
   	$query="UPDATE `User` SET user_current_tickets=user_current_tickets-1 WHERE user_id=".$order['order_user_id'];
   	if(!ShopDB::query($query)){
   		echo "<div class=error>".no_such_user."</div>";
-  		ShopDB::rollback();
+  		ShopDB::rollback('order_delete_ticket');
   		return FALSE;
   	}
     }
@@ -320,18 +321,18 @@ class Order {
     $place=array('seat_id'=>$seat['seat_id'],
                  'event_id'=>$seat['seat_event_id'],
                  'category_id'=>$seat['seat_category_id'],
-  	       'pmp_id'=>$seat['seat_pmp_id']);
+  	             'pmp_id'=>$seat['seat_pmp_id']);
 
     if(!Seat::cancel(array($place),$seat['seat_user_id'])){
       echo "<div class=error>".cannot_delete_ticket."(1)</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return FALSE;
     }
     //returns cost of seats Adds up the seats with the same order id.
     $query="SELECT SUM(seat_price) AS total FROM `Seat` WHERE seat_order_id='$order_id'";
     if(!$res=ShopDB::query_one_row($query)){
       echo "<div class=error>".cannot_delete_ticket."(2)</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return FALSE;
     }
     $total=$res['total'];
@@ -347,19 +348,18 @@ class Order {
             set order_tickets_nr=(order_tickets_nr-1),
   	      order_total_price=$total,
   	      order_fee=$fee
-            where order_id='$order_id' and
-  	  $where_o
+            where order_id='$order_id'
   	  LIMIT 1";
-  	global $_SHOP;
+
     if(!ShopDB::query($query) or shopDB::affected_rows($_SHOP->link)!=1){
       echo "<div class=error>".cannot_delete_ticket."(3)</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return FALSE;
     }
 
   /*
     $query="delete from Seat
-            where seat_id='$seat_id' and seat_order_id='$order_id' and $where_t
+            where seat_id='$seat_id' and seat_order_id='$order_id'
   	  LIMIT 1";
 
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
@@ -368,15 +368,16 @@ class Order {
       return FALSE;
     }
   */
-    if(!ShopDB::commit()){
+    if(!ShopDB::commit('order_delete_ticket')){
       echo "<div class=error>".cannot_delete_ticket."(4)</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete_ticket');
       return FALSE;
     }
 
     echo "<div class=success>".ticket_deleted."</div>";
     return TRUE;
   }
+  
    function order_description() {
       return con('orderDescription');
     }
@@ -384,7 +385,7 @@ class Order {
   function order_delete ($order_id){
     global $_SHOP;
 
-    if(!ShopDB::begin()){
+    if(!ShopDB::begin('order_delete')){
       echo "<div class=error>".cannot_begin_transaction."</div>";
       return FALSE;
     }
@@ -392,7 +393,7 @@ class Order {
     $query="SELECT * FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
     if(!$res=ShopDB::query($query)){
       echo "<div class=error>".order_not_canceled."(1)</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete');
       return FALSE;
     }
 
@@ -400,13 +401,13 @@ class Order {
 
     if(!$order=ShopDB::query_one_row($query)){
       echo "<div class=error>".cannot_find_order."</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete');
       return FALSE;
     }
     // Added v1.3.4 Checks to see if the order has allready been canceled.
     if($order['order_status']=='cancel'){
   	echo "<div class=error>".order_allready_cancelled."</div>";
-  	ShopDB::rollback();
+  	ShopDB::rollback('order_delete');
   	return FALSE;
     }
 
@@ -415,7 +416,7 @@ class Order {
   	$query="UPDATE `User` SET user_current_tickets=user_current_tickets-".$order['order_tickets_nr']." WHERE user_id=".$order['order_user_id'];
   	if(!ShopDB::query($query)){
   		echo "<div class=error>".no_such_user."</div>";
-  		ShopDB::rollback();
+  		ShopDB::rollback('order_delete');
   		return FALSE;
   	}
     }
@@ -435,14 +436,14 @@ class Order {
       //return FALSE;
     	if(!Seat::cancel($places,$user_id,TRUE)){
       	echo "<div class=error>".order_not_canceled."(3)</div>";
-      	ShopDB::rollback();
+      	ShopDB::rollback('order_delete');
       	return FALSE;
     	}
     }
 
 
     /*
-    $query="DELETE FROM Seat WHERE seat_order_id='$order_id' and $where_t";
+    $query="DELETE FROM Seat WHERE seat_order_id='$order_id'
     if(!$res=ShopDB::query($query)){
       echo "<div class=error>".order_not_canceled."</div>";
       ShopDB::rollback();
@@ -454,14 +455,14 @@ class Order {
             where order_id='$order_id' ";
 
     if(!$res=ShopDB::query($query)){
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete');
       echo "<div class=error>".order_not_canceled."(4)</div>";
       return FALSE;
     }
 
-    if(!ShopDB::commit()){
+    if(!ShopDB::commit('order_delete')){
       echo "<div class=error>".order_not_canceled."(5)</div>";
-      ShopDB::rollback();
+      ShopDB::rollback('order_delete');
       return FALSE;
     }else{
       //echo "<div class=success>".order_canceled."</div>";
@@ -545,8 +546,7 @@ class Order {
   	  set order_tickets_nr=(order_tickets_nr-1),
   	  order_total_price=$total,
   	  order_fee=$fee
-  	  where order_id='$order_id' and
-  	$where_o
+  	  where order_id='$order_id'
   	LIMIT 1";
 
   	if(!ShopDB::query($query) or shopDB::affected_rows()!=1){

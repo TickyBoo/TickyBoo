@@ -178,12 +178,12 @@ if($_POST['action']=='insert'){
     $this->event_group_form($_POST,$err,event_group_add_title);
   }else{
     if(isset($_POST['event_group_start_date'])){
-      $start="'{$_POST['event_group_start_date']}'";
+      $start=_esc($_POST['event_group_start_date']);
     }else{
       $start="NULL";
     }
     if(isset($_POST['event_group_end_date'])){
-      $end="'{$_POST['event_group_end_date']}'";
+      $end=_esc($_POST['event_group_end_date']);
     }else{
       $end="NULL";
     }
@@ -220,12 +220,12 @@ if($_POST['action']=='insert'){
     $this->event_group_form($_POST,$err,event_group_update_title);
   }    
   if(isset($_POST['event_group_start_date'])){
-    $start="'{$_POST['event_group_start_date']}'";
+    $start=_esc($_POST['event_group_start_date']);
   }else{
     $start="NULL";
   }
   if(isset($_POST['event_group_end_date'])){
-    $end="'{$_POST['event_group_end_date']}'";
+    $end=_esc($_POST['event_group_end_date']);
   }else{
     $end="NULL";
   }
@@ -253,7 +253,7 @@ if($_POST['action']=='insert'){
   $this->event_group_form($row,$err,event_group_add_title);
 }else 
 if($_GET['action']=='remove' and $_GET['event_group_id']>0){
-  $query="DELETE FROM Event_group WHERE event_group_id='{$_GET['event_group_id']}'";
+  $query="DELETE FROM Event_group WHERE event_group_id="._esc((int)$_GET['event_group_id']);
   if(!ShopDB::query($query)){
     return 0;
   }
@@ -261,7 +261,7 @@ if($_GET['action']=='remove' and $_GET['event_group_id']>0){
 }elseif($_GET['action']=='publish'){
   $query="UPDATE Event_group SET 
   event_group_status='pub'
-  WHERE event_group_id='{$_GET['event_group_id']}'";
+  WHERE event_group_id="._esc((int)$_GET['event_group_id']);
   if(!ShopDB::query($query)){
     echo shopDB::error();
     return 0;
@@ -270,7 +270,7 @@ if($_GET['action']=='remove' and $_GET['event_group_id']>0){
 }elseif($_GET['action']=='unpublish'){
   $query="UPDATE Event_group SET 
   event_group_status='unpub'
-  WHERE event_group_id='{$_GET['event_group_id']}'";
+  WHERE event_group_id="._esc($_GET['event_group_id']);
   if(!ShopDB::query($query)){
     echo shopDB::error();
     return 0;
@@ -279,7 +279,7 @@ if($_GET['action']=='remove' and $_GET['event_group_id']>0){
   
   
 }elseif($_GET['event_group_id']){
-  $query="SELECT * FROM Event_group WHERE event_group_id='{$_GET['event_group_id']}'";
+  $query="SELECT * FROM Event_group WHERE event_group_id="._esc((int)$_GET['event_group_id']);
   if(!$row=ShopDB::query_one_row($query)){
     return 0;
   }

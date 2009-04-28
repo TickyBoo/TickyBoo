@@ -57,6 +57,11 @@
       <tr>
         <td colspan='2' class='TblHeader'> {!member!} </td>
       </tr>
+      {if $login_error}
+        <tr>
+          <td colspan='2' class='error'> {$login_error} </td>
+        </tr>
+      {/if}
       <tr>
         <td width="120" class='TblLower'> {!email!} </td>
         <td class='TblHigher'><input type='text' name='username' size='30' ></td>

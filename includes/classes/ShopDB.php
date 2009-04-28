@@ -39,15 +39,30 @@ class ShopDB {
     {
         global $_SHOP;
 
-        if (!isset($_SHOP->link) and isset($_SHOP->db_name)) {
-            $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
-            or die ("Could not connect: " . mysqli_connect_errno());
-         } else {
-            die ("No connection settings");
+        if (!isset($_SHOP->link)) {
+          if (isset($_SHOP->db_name)) {
+             $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
+                            or die ("Could not connect: " . mysqli_connect_errno());
+          } else {
+             echo 'db init - ';
+             Print_r($_SHOP);
+             die ("No connection settings");
+          }
         }
+        return true;
     }
     // just requires PHP5 and MySQLi And mysql >4.1
-    function begin ()
+    
+    function close(){
+        global $_SHOP;
+
+        if (isset($_SHOP->link)) {
+           $_SHOP->link->close();
+        }
+
+    }
+    
+    function begin ($name='')
     {
         global $_SHOP;
         if (!isset($_SHOP->db_trx_startedi)) {
@@ -56,43 +71,55 @@ class ShopDB {
             }
             if ($_SHOP->link->autocommit(false)) {
                $_SHOP->db_trx_startedi = 1;
+               self::dblogging("[Begin {$name}]");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[Begin]Error: $_SHOP->db_error");
+                self::dblogging("[Begin {$name}]Error: $_SHOP->db_error");
                 return false;
             }
         } else {
             $_SHOP->db_trx_startedi++;
+            self::dblogging("[Begin {$name}] {$_SHOP->db_trx_startedi}");
             return true;
         }
     }
-    function commit ()
+    function commit ($name='')
     {
         global $_SHOP;
         if ($_SHOP->db_trx_startedi==1) {
             if ($_SHOP->link->commit()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
+                self::dblogging("[Commit {$name}]");
                 return true;
             } else {
-                user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[Commit]Error: $_SHOP->db_error");
+                user_error($_SHOP->db_error= $_SHOP->link->error);
+                self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
             }
-        } elseif  ($_SHOP->db_trx_startedi > 1) {$_SHOP->db_trx_startedi--;}
+        } elseif ($_SHOP->db_trx_startedi > 1) {
+            self::dblogging("[Commit {$name}] {$_SHOP->db_trx_startedi}");
+            $_SHOP->db_trx_startedi--;
+            return true;
+        } else {
+            self::dblogging("[Commit {$name}] - no transaction");
+        }
     }
-    function rollback ()
+    function rollback ($name='')
     {
         global $_SHOP;
-        if ($_SHOP->db_trx_started) {
+        if ($_SHOP->db_trx_startedi) {
             if ($_SHOP->link->rollback()) {
                 $_SHOP->link->autocommit(true);
-                unset($_SHOP->db_trx_started);
+                self::dblogging("[Rollback {$name}] {$_SHOP->db_trx_started}");
+                unset($_SHOP->db_trx_startedi);
                 return true;
             } else {
-                user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
-                self::dblogging("[rollback]Error: $_SHOP->db_error");
+                user_error($_SHOP->db_error= $_SHOP->link->error);
+                self::dblogging("[rollback {$name}]Error: $_SHOP->db_error");
             }
+        }  else {
+            self::dblogging("[Rollback {$name}] no transaction");
         }
     }
 
@@ -114,9 +141,11 @@ class ShopDB {
 
         $res = $_SHOP->link->query($query);
         if (!$res) {
-            self::dblogging("[Error:] ".$query);
+            $_SHOP->db_errno  =$_SHOP->link->errno ;
+            self::dblogging("[Error: {$_SHOP->db_errno}] ".$query);
             self::dblogging($_SHOP->db_error= mysqli_error($_SHOP->link));
             $_SHOP->db_errno  =$_SHOP->link->errno ;
+
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 $_SHOP->db_trx_started = false;
             }
@@ -213,7 +242,7 @@ class ShopDB {
       global $_SHOP;
       if (!get_magic_quotes_gpc ()) {
         if (!isset($_SHOP->link)) {
-            self::init();
+           self::init();
         }
         return $_SHOP->link->real_escape_string($escapestr);
       } else { echo "get_magic_quotes_gpc<br>\n";
@@ -227,7 +256,7 @@ class ShopDB {
 
       }
     }
-    function close($result) {
+    function tblclose($result) {
       if (isset($_SHOP->link) and isset($result)) {
         $result->close();
 

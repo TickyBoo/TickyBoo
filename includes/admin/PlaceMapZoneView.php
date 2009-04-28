@@ -99,7 +99,7 @@ class PlaceMapZoneView extends AdminView {
             $mine = true;
         }
         
-        $query = "select * from PlaceMapZone where pmz_pm_id=$pm_id";
+        $query = "select * from PlaceMapZone where pmz_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
             return;
         }

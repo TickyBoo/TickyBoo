@@ -45,25 +45,26 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
     $from='FROM Handling';
     $where="WHERE 0=0 ";
     
-	if($params['event_date']){
-		$update= new Update();
-   		$use_alt=$update->check_event($params['event_date']);
-	}
-	if(!$params['handling_id']){  	
+  	if($params['event_date']){
+  		$update= new Update();
+     		$use_alt=$update->check_event($params['event_date']);
+      unset($update);
+  	}
+  	if(!$params['handling_id']){
 	   	if(!$use_alt){
 	   		$where .= " AND handling_alt_only='No'";
-		}
-		if($use_alt){
-			$where .= " AND handling_alt <= 3";
-		}
-	}
+  		}
+  		if($use_alt){
+  			$where .= " AND handling_alt <= 3";
+  		}
+  	}
 	
     if($params['order']){
       $order_by="order by {$params['order']}";
     } 
     
     if($params['handling_id']){
-     $where .= " and handling_id='{$params['handling_id']}'";
+     $where .= " and handling_id="._esc((int)$params['handling_id']);
     }
 
     if($params['sp']){
@@ -74,10 +75,7 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
      $where .= " and handling_sale_mode LIKE '%www%'";
     }
     
-    if($params['limit']){
-      $limit='limit '.$params['limit'];
-    }
-
+    $limit= ($params['limit'])?'limit '.$params['limit']:'';
   
     $query="select * $from $where $order_by $limit";
     

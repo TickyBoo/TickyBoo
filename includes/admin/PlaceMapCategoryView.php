@@ -146,7 +146,7 @@ class PlaceMapCategoryView extends AdminView {
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         echo "<tr><td class='admin_list_title' colspan='5' align='center'>" . categories . "</td></tr>\n";
 
-        $query = "select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id=$pm_id";
+        $query = "select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
             return;
         } while ($category = shopDB::fetch_object($res)) {
@@ -265,7 +265,7 @@ class PlaceMapCategoryView extends AdminView {
     {
         global $_SHOP;
 
-        $query = "SELECT template_name FROM Template WHERE template_type='pdf' ORDER BY template_name";
+        $query = "SELECT template_name FROM Template WHERE template_type='pdf2' ORDER BY template_name";
         if (!$res = ShopDB::query($query)) {
             user_error(shopDB::error());
             return false;
@@ -289,7 +289,7 @@ class PlaceMapCategoryView extends AdminView {
     function print_color ($name, &$data)
     {
         if ($data[$name] > 0) {
-            $query = "SELECT color_code FROM Color WHERE color_id='{$data[$name]}'";
+            $query = "SELECT color_code FROM Color WHERE color_id="._esc($data[$name]);
             if (!$res = ShopDB::query_one_row($query)) {
                 return false;
             }
@@ -356,7 +356,7 @@ class PlaceMapCategoryView extends AdminView {
     function Cat_Stat($cat_id)
     {
         if (isset($cat_id)) {
-            $query = "SELECT * FROM Category_stat WHERE cs_category_id={$cat_id}";
+            $query = "SELECT * FROM Category_stat WHERE cs_category_id="._esc($cat_id);
             if ($stat = ShopDB::query_one_row($query)) {
                 $sold['number_taken'] = $stat['cs_total'] - $stat['cs_free'];
                 return $sold;

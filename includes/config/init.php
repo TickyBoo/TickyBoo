@@ -37,7 +37,7 @@
   require_once("classes/basics.php");
   
   $query="SELECT status FROM ShopConfig LIMIT 1";
-  if(!$res=ShopDB::query_one_row($query) or $res['status']=='OFF'){
+  if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){
       $_SHOP->system_status_off=TRUE;
       
@@ -50,7 +50,7 @@
   }
   
 //starting a new session
-
+//  require_once("classes/sessions.php");
   session_name($_SHOP->session_name);
   session_start();
 
@@ -91,7 +91,6 @@
  
     function loginCallback ($username,$auth){
       global $_SHOP; 
-      require_once("classes/ShopDB.php");
       $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`='$username'";
       if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
         unset($data[ $_SHOP->auth_password ]);
@@ -173,7 +172,6 @@
 
 //loading organizer attributes
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
-    require_once("classes/ShopDB.php");
     $query="SELECT * FROM Organizer LIMIT 1";
 		
     if($res=ShopDB::query($query) and $data=shopDB::fetch_object($res)){

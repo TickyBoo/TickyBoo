@@ -42,7 +42,7 @@ class PlaceMapView2 extends AdminView {
     {
         global $_SHOP;
 
-        $query = "select * from PlaceMap2,Ort where pm_id=$pm_id and pm_ort_id=ort_id";
+        $query = "select * from PlaceMap2,Ort where pm_id="._esc($pm_id)." and pm_ort_id=ort_id";
         if ($row = ShopDB::query_one_row($query)) {
             $this->pm_form($row, $err, edit_pm);
         }
@@ -262,7 +262,7 @@ class PlaceMapView2 extends AdminView {
                 return true;
             }
         } else if ($_GET['action'] == 'edit_pm' and $_GET['pm_id'] > 0) {
-            $query = "select * from PlaceMap2,Ort where pm_id={$_GET['pm_id']} and pm_ort_id=ort_id";
+            $query = "select * from PlaceMap2,Ort where pm_id="._esc($_GET['pm_id'])." and pm_ort_id=ort_id";
             if ($row = ShopDB::query_one_row($query)) {
                 $this->pm_form($row, $err, edit_pm);
             }

@@ -570,7 +570,7 @@ class PlaceMapPartView extends AdminView {
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         echo "<tr><td class='admin_list_title' colspan='4' align='center'>" . pm_parts . "</td></tr>\n";
 
-        $query = "select * from PlaceMapPart where pmp_pm_id=$pm_id";
+        $query = "select * from PlaceMapPart where pmp_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
             return;
         } while ($pmp = shopDB::fetch_array($res)) {
