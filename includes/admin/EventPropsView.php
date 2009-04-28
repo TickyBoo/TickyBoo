@@ -80,6 +80,7 @@ class EventPropsView extends EventViewCommon {
         $this->print_date('event_date', $data, $err);
         $this->print_time('event_time', $data, $err);
         $this->print_time('event_open', $data, $err);
+  $this->print_time('event_end',$data,$err);
 
         $this->print_input('event_order_limit', $data, $err, 3, 4);
         $this->print_select_tpl('event_template', $data, $err);
@@ -184,8 +185,7 @@ class EventPropsView extends EventViewCommon {
         }
     }
 
-    function event_list ()
-    {
+    function event_list () {
         global $_SHOP;
 
         $query = "select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
@@ -252,8 +252,7 @@ class EventPropsView extends EventViewCommon {
     // #######################################################
     // #######################################################
     // #######################################################
-    function draw ()
-    {
+    function draw () {
         global $_SHOP;
 
         if (preg_match('/_disc$/', $_REQUEST['action']) or
@@ -365,6 +364,13 @@ class EventPropsView extends EventViewCommon {
             } else {
                 $data['event_open'] = "$h:$m";
             }
+
+  if((isset($data['event_end-h']) and strlen($data['event_end-h'])>0) or (isset($data['event_end-m']) and strlen($data['event_end-m'])>0)){
+    $h=$data['event_end-h'];
+    $m=$data['event_end-m'];
+    if(!is_numeric($h) or $h<0 or $h>23){$err['event_end']=invalid;}
+    else if(!is_numeric($m) or $h<0 or $m>59){$err['event_end']=invalid;}
+    else{$data['event_end']="$h:$m";}
         }
 
         if ((isset($data['event_date-y']) and strlen($data['event_date-y']) > 0) or

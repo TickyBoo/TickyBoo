@@ -63,6 +63,7 @@ class DeleteEventView extends AdminView{
     $data["event_date"] = formatAdminDate($data["event_date"]);
     $data["event_time"] = formatTime($data["event_time"]);
     $data["event_open"] = formatTime($data["event_open"]);
+  $data["event_end"]=formatTime($data["event_end"]);
     $event_id = $data["event_id"];
 
     echo "<table class='admin_form' width='500' cellspacing='1' cellpadding='4'>\n";
