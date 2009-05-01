@@ -54,7 +54,7 @@ class Category_stat{
     $query="insert into Category_stat
     set cs_category_id="._esc($this->cs_category_id).",
     cs_free="._esc($this->cs_free).",
-    cs_total="._esc($this->cs_total};
+    cs_total="._esc($this->cs_total);
     
     if(ShopDB::query($query)){
       return TRUE;
