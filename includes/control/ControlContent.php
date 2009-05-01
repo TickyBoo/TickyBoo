@@ -105,10 +105,9 @@ function draw (){
 
     $query="select * from Seat LEFT JOIN PlaceMapZone ON seat_zone_id=pmz_id,
 	 					Category LEFT JOIN Color ON category_color=color_id
-            where 
-            seat_category_id=category_id AND
-            seat_id='$seat_id'
-	    AND seat_code='$ticket_code'";
+            where seat_category_id=category_id
+            AND seat_id="._esc($seat_id)."
+	          AND seat_code="._esc($ticket_code);
 
     if(!$ticket=ShopDB::query_one_row($query)){
         echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
@@ -173,7 +172,7 @@ function draw (){
 
     echo  "<tr><td > &nbsp; </td></tr></table></td></tr></table>";
      
-    $query="UPDATE Seat set seat_status='check' where seat_id='{$ticket['seat_id']}'";
+    $query="UPDATE Seat set seat_status='check' where seat_id="._esc($ticket['seat_id']);
 
     if(!ShopDB::query($query)){
         echo "<div class='err'>".place_status_not_updated."</div>";

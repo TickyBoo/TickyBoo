@@ -91,7 +91,7 @@
  
     function loginCallback ($username,$auth){
       global $_SHOP; 
-      $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`='$username'";
+      $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`="._esc($username);
       if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
         unset($data[ $_SHOP->auth_password ]);
         $_SESSION['_SHOP_AUTH_USER_DATA']=$data;

@@ -68,7 +68,7 @@ class export_cp extends AdminView {
   
     if($_GET['submit'] and $_GET['export_cp_event']>0){
 			require_once('functions/xmlsql_func.php');
-			$event_id=(int)$_GET['export_cp_event'];
+			$event_id=_esc((int)$_GET['export_cp_event'],false);
 			
 			$what[]=array(
 			'table'=>'Event',

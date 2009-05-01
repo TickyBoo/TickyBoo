@@ -46,7 +46,7 @@ class OrderView extends AUIComponent{
   var $page_length=15;
 function order_details ($order_id){
   global $_SHOP;
-  $query="select * from `Order`,User where order_id='$order_id' and order_user_id=user_id";
+  $query="select * from `Order`,User where order_id="._esc($order_id)." and order_user_id=user_id";
   if(!$order=ShopDB::query_one_row($query)){
     echo "<div class='error'>".order_not_found." $order_id</div>";
     return;
@@ -67,12 +67,9 @@ function order_details ($order_id){
   $this->print_field('order_fee',$order);	 
   $this->print_field('order_status',$order);
   echo "</table><br>\n";
-  
-
-
 
   $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,
-          Event,Category,PlaceMapZone where seat_order_id='".$order_id."'
+          Event,Category,PlaceMapZone where seat_order_id="._esc($order_id)."
   	   AND seat_event_id=event_id AND 
 	   seat_category_id=category_id and 
 	   seat_zone_id=pmz_id";

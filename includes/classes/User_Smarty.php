@@ -83,7 +83,7 @@ class User_Smarty {
               FROM auth,User
   	    	WHERE auth.user_id=User.user_id
   	      	AND username=".ShopDB::quote($username)."
-  	      	AND password='".md5($password)."'
+  	      	AND password="._esc(md5($password))."
        	  	AND user_status=2
   		  	LIMIT 1";
 
@@ -94,7 +94,7 @@ class User_Smarty {
   	$sql = "SELECT *
   		FROM auth,User
   		WHERE username=".ShopDB::quote($username)."
-  		AND password='".md5($password)."'
+  		AND password="._esc(md5($password))."
   		AND user_status=2
   		AND User.user_id=".ShopDB::quote($res['user_id'])."
   		AND auth.user_id=User.user_id
@@ -246,7 +246,7 @@ class User_Smarty {
       return FALSE;
     }
     
-    $query="UPDATE auth SET password='$pwd_md5' WHERE username=".ShopDB::quote($email)." limit 1";
+    $query="UPDATE auth SET password="._esc($pwd_md5)." WHERE username=".ShopDB::quote($email)." limit 1";
 
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
       require_once("classes/TemplateEngine.php");
@@ -289,7 +289,7 @@ class User_Smarty {
 		
 		$active = md5(uniqid(rand(), true));
 		$user_id=$row['user_id'];
-		$query="UPDATE `auth` SET active='$active' WHERE username=".ShopDB::quote($email)." LIMIT 1";
+		$query="UPDATE `auth` SET active="._esc($active)." WHERE username=".ShopDB::quote($email)." LIMIT 1";
 		
 		if(ShopDB::query($query) and shopDB::affected_rows($_SHOP->link)==1){
 			require_once("classes/TemplateEngine.php");
@@ -373,7 +373,7 @@ class User_Smarty {
 
     if ( ($x> 0) && (strlen($y) == 32)) {
 
-        $query = "UPDATE auth SET active=NULL WHERE (user_id='$x' AND active='" . $y . "') LIMIT 1";
+        $query = "UPDATE auth SET active=NULL WHERE (user_id="._esc($x)." AND active='" . _esc($y) . ") LIMIT 1";
 
         if ($result = ShopDB::query($query) and shopDB::affected_rows() == 1) {
             return act_oke;

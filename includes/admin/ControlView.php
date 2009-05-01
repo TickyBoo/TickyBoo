@@ -52,7 +52,7 @@ function control_view (&$data){
     echo "<tr><td class='admin_name' valign='top'>".$this->con(control_event_ids)."</td>
           <td class='admin_value'>";
     foreach($ids as $id){
-      $query="select event_name, event_date, event_time from Event where event_id='$id'";
+      $query="select event_name, event_date, event_time from Event where event_id="._esc($id);
       if($row=ShopDB::query_one_row($query)){
         $date=formatAdminDate($row["event_date"]);
         $time=formatTime($row["event_time"]);
@@ -175,7 +175,7 @@ if($_POST['action']=='insert'){
   }else{
     $ids=$this->post_events ($_POST);
     $query="INSERT INTO Control (control_login, control_password, control_event_ids)".
-           " VALUES ("._ESC($_POST['control_login']).","._ESC(md5($_POST['password1'])).",'$ids')";
+           " VALUES ("._ESC($_POST['control_login']).","._ESC(md5($_POST['password1'])).","._esc($ids).)";
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;

@@ -64,8 +64,7 @@ class UserAuth_Smarty {
     
     $query="select *
             from User 
-	    where user_id='{$auth['user_id']}'
-	    limit 1";
+	    where user_id="._esc($auth['user_id']) ." limit 1";
 
     if($result=ShopDB::query($query) and $user=shopDB::fetch_assoc($result)){
       return $user;
@@ -118,9 +117,8 @@ class UserAuth_Smarty {
     $this->user_prefs=$prefs;
   
     require_once("classes/ShopDB.php");
-    $query="update User set user_prefs='{$this->user_prefs}'
-            where user_id='{$auth['user_id']}'
-	          limit 1";
+    $query="update User set user_prefs="._esc($this->user_prefs)."
+            where user_id="._esc($auth['user_id'])." limit 1";
 	    
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
        //print_r($_SESSION['_SHOP_USER_AUTH']);
