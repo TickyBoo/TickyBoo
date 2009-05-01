@@ -84,7 +84,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     }
 
     $limit=($params['limit'])?'limit '._esc($params['limit'],false):'';
-    }
+    
 
     if($params['event_type']){
       $types=explode(",",$params['event_type']);
@@ -149,7 +149,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 
     $event=shopDB::fetch_array($res);
 
-  }else{
+  } else {
     $res_a=array_pop($smarty->_SHOP_db_res);
 
 		$res=$res_a[0];

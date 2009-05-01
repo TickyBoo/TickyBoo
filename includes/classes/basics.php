@@ -318,10 +318,10 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
 		return $base;
 	}
 
-function _esc ($str, $quote=true){
-  $str = shopDB::escape_string($str)
-  return ($quote)?"'".$str."'":$str;
-}
+	function _esc ($str, $quote=true){
+  		$str = shopDB::escape_string($str);
+  		return ($quote)?"'".$str."'":$str;
+	}
 
 /**
  * This function creates a md5 password code to allow login true WWW-Authenticate
