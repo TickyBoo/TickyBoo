@@ -92,9 +92,9 @@ class '.$out_class_name.' {
     $smarty->assign($data);
     $smarty->assign("OrderData",$data);
 
-    $input = "text:".stripslashes($input);
-    $input = $smarty->fetch($input);
-    $pdf->WriteHTML($input, false);//'.$out_class_name.':
+    $smarty->my_template_source = stripslashes($input);
+    $input = $smarty->fetch("text:".'.$out_class_name.');
+    $pdf->WriteHTML($input, false);
     unset($smarty);
   }
 }

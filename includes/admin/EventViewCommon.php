@@ -81,7 +81,7 @@ class EventViewCommon extends AdminView {
         global $_SHOP;
 
         $query = "SELECT template_name FROM Template
-                  WHERE template_type='pdf'
+                  WHERE template_type='pdf2'
                   ORDER BY template_name";
 
         if (!$res = ShopDB::query($query)) {

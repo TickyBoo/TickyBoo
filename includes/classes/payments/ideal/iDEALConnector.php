@@ -457,12 +457,11 @@ class iDEALConnector {
 		$res->setConsumerAccountNumber( $this->parseFromXml( "consumerAccountNumber", $response ) );
 		$res->setConsumerCity( $this->parseFromXml( "consumerCity", $response ) );
 		$res->setTransactionID( $this->parseFromXml( "transactionID", $response ) );
+		$status = $this->parseFromXml( "status", $response );
+    $res->setStatusText($status);
 
 		// The initial status is INVALID, so that future modifications to
 		// this or remote code will yield alarming conditions.
-		$res->setStatus( TX_STATUS_INVALID );
-		$status = $this->parseFromXml( "status", $response );
-
 		// Determine status identifier (case-insensitive).
 		if ( strcasecmp( $status, "success" ) == 0 ) {
 			$res->setStatus( IDEAL_TX_STATUS_SUCCESS );
@@ -474,7 +473,10 @@ class iDEALConnector {
 			$res->setStatus( IDEAL_TX_STATUS_FAILURE );
 		} else if ( strcasecmp( $status, "Open" ) == 0 ) {
 			$res->setStatus( IDEAL_TX_STATUS_OPEN );
-		}
+		} else {
+   		$res->setStatus( TX_STATUS_INVALID );
+    }
+
 
 		// The verification of the response starts here.
 		// The message as per the reference guide instructions.

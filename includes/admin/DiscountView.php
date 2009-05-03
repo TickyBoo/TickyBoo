@@ -90,14 +90,14 @@ class DiscountView extends AdminView {
         global $_SHOP;
         $query = "SELECT event_name,ort_name,event_status
           FROM Event left join Ort on ort_id=event_ort_id
-          WHERE event_id='$discount_event_id'";
+          WHERE event_id="._esc((int)$discount_event_id);
         if (!$names = ShopDB::query_one_row($query)) {
             $err = shopDB::error();
             if ($err) user_error($err);
             return;
         }
 
-        $query = "SELECT * FROM Discount WHERE discount_event_id='$discount_event_id'";
+        $query = "SELECT * FROM Discount WHERE discount_event_id="._esc((int)$discount_event_id);
         if (!$res = ShopDB::query($query)) {
             user_error(shopDB::error());
             return;

@@ -28,11 +28,6 @@
  *}
 <table class="table_dark" >
   <tr>
-    <td  class='title' >
-      {!bcm_mbr!}
-    </td>
-  </tr>
-  <tr>
     <td>
       {!tnx_mbr!}
     </td>

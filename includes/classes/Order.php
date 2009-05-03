@@ -379,9 +379,15 @@ class Order {
   }
   
    function order_description() {
-      return con('orderDescription');
-    }
+     return con('orderDescription');
+   }
 
+
+  function Check_payment($order_id){
+   $order = Order::load($order_id, true);
+   return $order->order_handling->on_check($order);
+  }
+  
   function order_delete ($order_id){
     global $_SHOP;
 

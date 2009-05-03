@@ -35,7 +35,6 @@
  */
 
 require_once("classes/AUIComponent.php");
-require_once("functions/print_func.php");
 
 class MenuAdmin extends AUIComponent {
 

@@ -21,6 +21,7 @@ class AcquirerStatusResponse
     var $consumerCity = "";
     var $transactionID = "";
     var $status = "";
+    var $statustext = "";
 	var $errorMessage = false;
     
     /**
@@ -100,7 +101,23 @@ class AcquirerStatusResponse
     {
         $this->transactionID = $transactionID;
     }
-    
+
+    /**
+     * @return Returns the status. See the definitions
+     */
+    function getStatusText()
+    {
+        return $this->statustext;
+    }
+
+    /**
+     * @param status The status to set. See the definitions
+     */
+    function setStatusText( $status )
+    {
+        $this->statustext = $status;
+    }
+
     /**
      * @return Returns the status. See the definitions
      */

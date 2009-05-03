@@ -38,6 +38,7 @@
 require_once("classes/ShopDB.php");
 require_once("classes/Discount.php");
 require_once("classes/update.php");
+
 class Cart {
 	
 	// sessions.docx for cart layout
@@ -275,7 +276,6 @@ class EventItem {
 
   function load_info (){
     if($this->invalid){return FALSE;}
-    $update= new Update();
     global $_SHOP;
     if($this->not_load){
 
@@ -290,7 +290,7 @@ class EventItem {
 	        $this->event_ort_city=$obj->ort_city;
 	        $this->event_order_limit=$obj->event_order_limit;
 	        // Loads event checker.
-	  		$this->event_use_alt=$update->check_event($this->event_date);
+	  		$this->event_use_alt= check_event($this->event_date);
       	}else{
 		//echo shopDB::error();      
         	$this->invalid = TRUE;

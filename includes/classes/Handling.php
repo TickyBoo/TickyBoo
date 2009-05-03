@@ -188,7 +188,7 @@ class Handling {
     $this->_set('handling_text_shipment').
     $this->_set('handling_delunpaid').
     $this->_set('handling_expires_min').
-	$this->_set('handling_extra');
+	  $this->_set('handling_extra');
 	
     if($query){
       $query=substr($query,0,-1);
@@ -229,6 +229,7 @@ class Handling {
 			return;
 		} 			
   }
+  
 // Calculates fee for tickets
   function calculate_fee ($total){
     return round($this->handling_fee_fix+($total/100.00)*$this->handling_fee_percent,2);
@@ -361,6 +362,12 @@ class Handling {
   	}
   }
 
+  function on_check(&$order) {
+  	if($pm=$this->pment()){
+      return $pm->on_check($order);
+  	}
+  }
+
   function pment() {
     if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
     $file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";
@@ -386,11 +393,11 @@ class Handling {
   }
 
   function get_payment (){
-    $types=array('','invoice','entrance','cash');
+    $types=array('cash','entrance','invoice');
     $dir = INC.'classes'.DS.'payments';
 	  if ($handle = opendir($dir)) {
 		  while (false !== ($file = readdir($handle))){
-        if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^epm_(.*?\w+).php/", $file, $matches)) {
+        if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^eph_(.*?\w+).php/", $file, $matches)) {
           $types[] =  $matches[1];
         }
       }
@@ -404,12 +411,12 @@ class Handling {
   	$like= " LIKE  'handling_shipment'";
     $query="SHOW  COLUMNS  FROM Handling {$like}";
     if(!$res=ShopDB::query_one_row($query)){return;}
-    $types=explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$res[1]));
+    $types=explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$res['Type']));
     return $types;
   }
 
-  	function get_handlings ($selectid=0, $include =''){
-		$sqli="SELECT handling_id,handling_payment,handling_shipment FROM `Handling` WHERE handling_id!='1'"; 
+  function get_handlings ($selectid=0, $include =''){
+		$sqli="SELECT handling_id, handling_payment, handling_shipment FROM `Handling` WHERE handling_id!='1'";
 		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}	
 		$options= array();
     if ($include)

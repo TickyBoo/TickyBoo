@@ -330,4 +330,22 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
 function md5pass($user,$pass) {
 	return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
 }
+
+function check_event($event_date){
+  global $_SHOP;
+  require_once("classes/Time.php");
+	if($_SHOP->shopconfig_posttocollect>=10){
+	  $time=Time::StringToTime($event_date);
+		$remain=Time::countdown($time);
+		//if there is less than 10 mins till the event needs to go to alt payment return a 1
+		// so alt payment should be used.
+		//echo $remain["justmins"]."-".$this->shopconfig_posttocollect;
+		if($remain["justmins"]<=($_SHOP->shopconfig_posttocollect+10)){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+}
+
 ?>

@@ -54,6 +54,8 @@ class Payment {
 
   function on_notify(&$order){}
 
+  function on_check(&$order){ return false;}
+  
 //****************************************************************************//
 
   protected function url_post ($url,&$data){

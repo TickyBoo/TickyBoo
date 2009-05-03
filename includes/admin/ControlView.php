@@ -175,7 +175,7 @@ if($_POST['action']=='insert'){
   }else{
     $ids=$this->post_events ($_POST);
     $query="INSERT INTO Control (control_login, control_password, control_event_ids)".
-           " VALUES ("._ESC($_POST['control_login']).","._ESC(md5($_POST['password1'])).","._esc($ids).)";
+           " VALUES ("._ESC($_POST['control_login']).","._ESC(md5($_POST['password1'])).","._esc($ids).")";
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;

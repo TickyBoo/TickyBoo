@@ -36,7 +36,7 @@
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
   
-  $query="SELECT status FROM ShopConfig LIMIT 1";
+  $query="SELECT * FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){
       $_SHOP->system_status_off=TRUE;
@@ -44,9 +44,14 @@
     }else{
       echo "<center>
             <h1>This service is temporarily unavailable</h1>
-	    <h3>Please return later</h3></center>";
+	          <h3>Please return later</h3></center>";
       exit;
     }   	  
+  }
+  foreach($res as $key => $value){
+    If ($key != 'status') {
+      $_SHOP->$key = $value;
+    }
   }
   
 //starting a new session

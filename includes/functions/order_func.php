@@ -163,6 +163,9 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
     if(!isset($bill[$key])){
       $bill[$key]=array(
         'event_name'=>$data['event_name'],
+        'event_date'=>$data['event_date'],
+        'ort_name'=>$data['ort_name'],
+        'ort_city'=>$data['ort_city'],
 				'qty'=>1,
 				'category_name'=>$data['category_name'],
 				'seat_price'=>$data['seat_price'],
@@ -241,68 +244,5 @@ function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $su
   return $pdf_data;
 }
 
-function email_order ($email_data,$template_name){
-  global $_SHOP;
-  require_once("classes/htmlMimeMail.php");
-  require_once("classes/TemplateEngine.php");
-  
-  $te=new TemplateEngine;
-  
-  if(!$tpl=&$te->getTemplate($template_name)){
-    user_error(no_template." ".$template_name);        
-    return FALSE;
-  }
-  
-  $email = new htmlMimeMail();
-  $tpl->build($email,$email_data,$_SHOP->lang);
 
-  if(!$email->send($tpl->to)){
-    echo $email->errors;
-    return FALSE;
-  }
-  
-  return TRUE;
-}
-
-function email_confirm ($email_data,$template_name){
-  if(is_numeric($email_data)){
-    //$email_data is in fact order_id
-    $query="SELECT * FROM  User left join `Order` on user_id=order_user_id
-      WHERE order_id="._esc($email_data);
-
-    if(!$email_data=ShopDB::query_one_row($query)){
-      user_error(shopDB::error());
-      return FALSE;
-    }
-  }
-
-  global $_SHOP;
-  require_once("classes/htmlMimeMail.php");
-  require_once("classes/TemplateEngine.php");
-  
-  $te=new TemplateEngine;
-  $tpl=&$te->getTemplate($template_name);
-  
-  $email = new htmlMimeMail();
-  $tpl->build($email,$email_data,$_SHOP->lang);
-
-  if(!$email->send($tpl->to)){
-    user_error($email->errors);
-    return FALSE;
-  }
-  
-  return TRUE;
-}
-
-function get_payment ($payment){
-   global $_SHOP;
-   $query="SELECT * FROM Payment WHERE payment_id="._esc($payment);
-
-    if(!$res=ShopDB::query_one_row($query)){
-      return FALSE;
-    }
-    
-    return $res;
-
-}
 ?>

@@ -265,4 +265,26 @@ function auth_userdata(){
   //this value is set in functions/init.php
   return $_SESSION['_SHOP_AUTH_USER_DATA'];
 }
+
+function check_email_mx($email){
+    if(preg_match('#.+@(?<host>.+)#',$email,$match) > 0 and getmxrr($match['host'],$mxhosts)){
+        // mx records gevonden
+
+        $valid = false;
+
+        // mx records overlopen op zoek naar een geldige
+        while($host = next($mxhosts) and !$valid){
+            // een IPv4 of IPv6 adres volstaat
+            $valid = checkdnsrr($host, 'A') or checkdnsrr($host,'AAAA');
+        }
+
+        return $valid;
+    }
+
+    // geen geldig mail adres wegens geen
+    // correcte hostname of geen mx records
+    return false;
+}
+
+
 ?>

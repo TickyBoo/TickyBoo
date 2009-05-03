@@ -35,7 +35,7 @@
  */
 
 
-require_once('classes/update.php');
+require_once('classes/handling.php');
 
 function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 
@@ -46,9 +46,7 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
     $where="WHERE 0=0 ";
     
   	if($params['event_date']){
-  		$update= new Update();
-     		$use_alt=$update->check_event($params['event_date']);
-      unset($update);
+  		$use_alt=check_event($params['event_date']);
   	}
   	if(!$params['handling_id']){
 	   	if(!$use_alt){

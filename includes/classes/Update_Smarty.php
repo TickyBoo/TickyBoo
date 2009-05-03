@@ -2,47 +2,46 @@
 require_once("classes/ShopDB.php");
 require_once("classes/Time.php");
 require_once('classes/Order.php');
-require_once('classes/update.php');
-
 
 class Update_Smarty {
-  var $cron;
   
 	function Update_Smarty (&$smarty) {
-		if(!isset($this->shopconfig_id)){
-			$this->load('1');
-		}
-		$smarty->register_object("update",$this);
+
+		$smarty->register_object("update",$this, array('view','countdown'));
     $smarty->assign_by_ref("update",$this);
     
     //if(!$dont_run){
-		//Set to same as $this->shopconfig_lastrun_int for testing mode.
-		if($this->lastrun()<='0'){				//Checks to see if res time is enabled anything more than 9 will delete  
-			if($this->shopconfig_restime >= 10){
-			$run=$this->check_reserved();	
-		}
-		if($this->shopconfig_delunpaid == "Yes"){
-			$run=$this->delete_unpaid();
-		}
-		  	
-		$run=$this->saveupdate();
+		//Set to same as $_SHOP->shopconfig_lastrun_int for testing mode.
+		if($this->lastrun()<='0'){
+      //Checks to see if res time is enabled anything more than 9 will delete
+			if($_SHOP->shopconfig_restime >= 10){
+  			$run=$this->check_reserved();
+  		}
+  		if($_SHOP->shopconfig_delunpaid == "Yes"){
+  			$run=$this->delete_unpaid();
+  		}
+
+  		$run=$this->saveupdate();
 		}
 		//}
 	}
+	function __get($key){
+    global $_SHOP;
+    If (stripos('ShopConfig_', $key) !== false) {
+      return $__SHOP->$key;
+    }
+  }
+  
 	//Used for returning results so a template can know if a button/item should be enabled
 	function view ($params,&$smarty) {
-		
-		if(!isset($this->shopconfig_id)){
-	  		echo "not set view";
-			$this->load('1');
-		}
+
 		//check if reserving is enabled
 		$enabled['can_reserve']=false;
 		$event_date=$params['event_date'];
 		if(!$event_date){
 			die ("No Event Date");
 		}
-		if($this->shopconfig_restime >= 20){
+		if($_SHOP->shopconfig_restime >= 20){
 			$enabled['can_reserve']=true;
 			
 			//check to see if can reserve, adds two days before the reservation would expire, stops
@@ -51,14 +50,14 @@ class Update_Smarty {
 			$remain=Time::countdown($time);
 			// edit number to change the offset for reserving, reserved tickets will allways expire 2 days before the event.
 			// I would recommend keeping this above 1440, a day before the event.
-			if($remain["justmins"]>=($this->shopconfig_restime+2880)){
+			if($remain["justmins"]>=($_SHOP->shopconfig_restime+2880)){
 				$enabled['can_reserve']=true;
-				$use_alt=$this->check_event($event_date);
+				$use_alt= check_event($event_date);
 		   		if($use_alt==true){
 					$enabled['can_reserve']=false;
 				}
 			}
-			if($this->shopconfig_maxres > 1){
+			if($_SHOP->shopconfig_maxres > 1){
 				if(isset($_SESSION['_SHOP_USER']) and $user=$_SESSION['_SHOP_USER'] and $user['user_status']==2){
 					$query="SELECT * FROM User WHERE user_id=".ShopDB::quote($user['user_id'])." AND user_status='2'";
 					if(!$res=ShopDB::query($query)){
@@ -70,9 +69,9 @@ class Update_Smarty {
 						$cart=MyCart_Smarty::overview_f();
 						$res_total=$user_query['user_current_tickets']+$cart['valid'];
 						
-						if($res_total > $this->shopconfig_maxres){
+						if($res_total > $_SHOP->shopconfig_maxres){
 							$enabled['can_reserve']=false;
-							$enabled['maxres']=$this->shopconfig_maxres;
+							$enabled['maxres']=$_SHOP->shopconfig_maxres;
 							$enabled['currentres']=$res_total;
 						}else{
 							$enabled['can_reserve']=true;
@@ -112,7 +111,7 @@ class Update_Smarty {
 			if($res=ShopDB::query($query)){
 				$result=shopDB::fetch_assoc($res);
 				$time=Time::StringToTime($result['order_date']);
-				$array=Time::countdown($time,$this->shopconfig_restime);
+				$array=Time::countdown($time,$_SHOP->shopconfig_restime);
 			}
 		}else{
 			$order_id=$this->secure_url_param($params['order_id']);
@@ -140,30 +139,31 @@ class Update_Smarty {
   function check_reserved(){
   	global $_SHOP;
   	
-  	if($this->shopconfig_restime >= 10){
-  	  $where =" order_status NOT IN ('trash','ord','cancel')
-			AND order_payment_status !='payed' 
-			AND order_shipment_status !='send' 
-			AND (NOW() - INTERVAL ".$this->shopconfig_restime." MINUTE) > order_date ";
-  	  if($this->shopconfig_check_pos == 'No'){
-		$where .= " AND order_place !='pos' ";
-	  }
-	  	
-	$query="SELECT * FROM `Order` WHERE $where";
-	}
-	if($res=ShopDB::query($query)){
-	  while($row = shopDB::fetch_array($res)){
-			//echo "BANG!<br> ";
-			Order::order_delete($row['order_id']);
-	  }
-	}			
+	  $where =" order_status NOT IN ('trash','ord','cancel')
+		AND order_payment_status !='payed' 
+		AND order_shipment_status !='send' 
+		AND (NOW() - INTERVAL ".$_SHOP->shopconfig_restime." MINUTE) > order_date ";
+	  if($_SHOP->shopconfig_check_pos == 'No'){
+	    $where .= " AND order_place !='pos' ";
+    }
+    $query="SELECT order_id FROM `Order` WHERE $where";
+
+  	if($res=ShopDB::query($query)){
+  	  while($row = shopDB::fetch_array($res)){
+  			//echo "BANG!<br> ";
+  			If ((!Order::Check_payment($row['order_id']) and
+        	  ($_SHOP->shopconfig_restime >= 10)) {
+  			  Order::order_delete($row['order_id']);
+        }
+  	  }
+  	}
   }
   
   //Deletes Unpaid Items, Handling and Config `delunpaid` need to be set to yes to work.
   function delete_unpaid(){
   	global $_SHOP;
   	
-  	if($this->shopconfig_delunpaid == "Yes"){
+  	if($_SHOP->shopconfig_delunpaid == "Yes"){
 	  $query="SELECT * FROM `Handling` 
 	  			WHERE handling_delunpaid='Yes'
 				AND handling_expires_min > 10 ";
@@ -194,36 +194,13 @@ class Update_Smarty {
 	  return;
 	}
   }
-	// returns a 1 if alt payment method should be used   
-  	function check_event($event_date){
-  		if(!isset($this->shopconfig_id)){
-	  		echo "not set check_event";
-			$this->load('1');
-		}
-		
-		if($this->shopconfig_posttocollect>=10){
-			$time=Time::StringToTime($event_date);
-			$remain=Time::countdown($time);
-			//if there is less than 10 mins till the event needs to go to alt payment return a 1
-			// so alt payment should be used.
-			//echo $remain["justmins"]."-".$this->shopconfig_posttocollect;
-			if($remain["justmins"]<=($this->shopconfig_posttocollect+10)){
-				return 1;
-			}else{
-				return 0;
-			}
-		}
-	}
-  
+
   
   // Will check last time the update script was run and return the time in mins
   function lastrun(){
-  	if(!isset($this->shopconfig_id)){
-	  	echo "not set lastrun";
-		$this->load('1');
-	}
-	$time=Time::StringToTime($this->shopconfig_lastrun);
-	$remain=Time::countdown($time,$this->shopconfig_lastrun_int);
+
+	$time=Time::StringToTime($_SHOP->shopconfig_lastrun);
+	$remain=Time::countdown($time,$_SHOP->shopconfig_lastrun_int);
 	$return=$remain['justmins'];
 	
 	return $return;
@@ -240,24 +217,7 @@ class Update_Smarty {
 	return true;
   }
   
-  function load ($config_id){
-    global $_SHOP;
-    
-    $query="SELECT * FROM `ShopConfig`  LIMIT 1";
-    
-    if($data=ShopDB::query_one_row($query)){
-      $this->_fill($data);
-      return $this;
-    }
-  }
-	
-  function _fill ($data){
-    foreach($data as $k=>$v){
-     $this->$k=$v;
-    }
-  }
-  
-  function secure_url_param($num=FALSE, $nonum=FALSE) 
+  function secure_url_param($num=FALSE, $nonum=FALSE)
   { 
 	if ($num) {
 	  $correct = is_numeric($num); 

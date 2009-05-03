@@ -27,6 +27,7 @@ require_once("config/init_shop.php");
 
 
 $smarty = new Smarty;
+$_SHOP->smarty = $smarty;
 
 $gui    = new Gui_smarty($smarty);
 $cart   = new MyCart_Smarty($smarty);
@@ -185,7 +186,9 @@ die();
     $hand= $myorder->order_handling;
     $pm_return = $hand->on_submit($myorder,$errors);
     $smarty->assign('errors', $errors);
-    if (is_string($pm_return)) {
+    if empty($pm_return)) {
+      return '';
+    elseif (is_string($pm_return)) {
       $order->obj = $myorder;
       $smarty->assign('confirmtext', $pm_return);
       return "checkout_confirm";

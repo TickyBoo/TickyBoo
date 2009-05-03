@@ -16,6 +16,8 @@ class Gui_smarty {
 	var $width = '95%';
 	var $FormDepth = 0;
 	var $_ShowLabel = True;
+	var $gui_name = 'gui_name';
+	var $gui_value = 'gui_value';
   public $guidata = array();
 
   function __construct  (&$smarty){
@@ -159,8 +161,8 @@ class Gui_smarty {
 
   private function showlabel($name, $value, $nolabel=false) {
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr><td class='gui_name' width='30%'>" . con($name) . "</td>".
-                "    <td class='gui_value'>{$value}";
+      $return = "<tr><td class='{$this->gui_name}' width='30%'>" . con($name) . "</td>".
+                "    <td class='{$this->gui_value}'>{$value}";
       if (isset($this->errors[$name])) {
         $return .= "<span class='error'>{$this->errors[$name]}</span>";
       }
@@ -252,6 +254,7 @@ class Gui_smarty {
     If (!is_array($opt)) {
       $opt  = explode('|',$opt);
     }
+    print_r($opt);
     // $val=array('both','rows','none');
     $sel[$this->guidata[$name]] = " selected ";
 
@@ -260,8 +263,8 @@ class Gui_smarty {
     foreach($opt as $v) {
         if (is_array($v)) {
           list($v, $n) = $v;
-        } elseif (! strpos($v, '~')===false) {
-          list($v, $n) = explode('~',$value);
+        } elseif (strpos($v, '~')!==false) {
+          list($v, $n) = explode('~',$v);
         } else {
          $n = $v;
         }
@@ -526,20 +529,7 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
     }
   }
 
-  protected function user_url($data)
-  {
-      global $_SHOP;
-      return $_SHOP->root . $data;
-  }
-
-  protected function user_file ($path)
-  {
-      return ROOT. 'files'. DS . $path;
-  }
-
-  /* NVDS:  I do not know of this is still used.
-
-    function print_set ($params, &$smarty) //($name, &$data, $table_name, $column_name, $key_name, $file_name)
+  function print_set ($params, &$smarty) //($name, &$data, $table_name, $column_name, $key_name, $file_name)
   {
       $ids = explode(",", $this->guidata);
       $set = array();
@@ -563,7 +553,17 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
       }
       return "</td></tr>\n";
   }
-*/
+
+  protected function user_url($data)
+  {
+      global $_SHOP;
+      return $_SHOP->root . $data;
+  }
+
+  protected function user_file ($path)
+  {
+      return ROOT. 'files'. DS . $path;
+  }
 
 /* this does not belong here anymore where to put this then?
   function file_post ($params, &$smarty) //($data, $id, $table, $name,  = '_image')

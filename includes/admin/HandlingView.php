@@ -325,7 +325,10 @@ function extra_form($hand, &$data, &$err){
     $gui   = new Gui_smarty($smarty);
     $gui->guidata = $data;
     $gui->errors  = $errors;
-    $smarty->display('text:'.$extras);
+    $gui->gui_name  = 'admin_name';
+	  $gui->gui_value = 'admin_value';
+    $smarty->my_template_source = $extras;
+    $smarty->display('text:'. $hand->handling_payment );
   }
 }
 
