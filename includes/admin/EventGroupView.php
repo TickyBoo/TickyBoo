@@ -29,8 +29,6 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
-require_once("functions/datetime_func.php");
 
 class EventGroupView extends AdminView{
 

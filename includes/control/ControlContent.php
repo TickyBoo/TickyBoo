@@ -35,8 +35,6 @@
  */
 
 require_once("classes/AUIComponent.php");
-require_once("classes/ShopDB.php");
-require_once("functions/datetime_func.php");
 
 
 class ControlContent extends AUIComponent{

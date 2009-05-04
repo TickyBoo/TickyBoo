@@ -35,7 +35,7 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
+
 require_once("classes/PlaceMapPart.php");
 
 class PlaceMapPartView extends AdminView {

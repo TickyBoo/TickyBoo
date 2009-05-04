@@ -35,7 +35,6 @@
  */
 
 require_once("classes/AUIComponent.php");
-require_once("classes/ShopDB.php");
 
 class AdminView extends AUIComponent {
 

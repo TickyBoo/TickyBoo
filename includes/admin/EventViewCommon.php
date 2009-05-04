@@ -35,8 +35,6 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
-require_once("functions/datetime_func.php");
 
 class EventViewCommon extends AdminView {
     function print_select_pm ($name, &$data, &$err, $main = 'main')

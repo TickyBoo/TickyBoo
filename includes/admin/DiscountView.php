@@ -35,7 +35,6 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
 
 class DiscountView extends AdminView {
 

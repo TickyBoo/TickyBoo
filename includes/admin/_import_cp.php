@@ -34,7 +34,6 @@
  
  */
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
 
 class import_cp extends AdminView {
 
@@ -59,9 +58,9 @@ class import_cp extends AdminView {
     global $_SHOP;
   
 		if(!empty($_FILES['import_cp_file']) and !empty($_FILES['import_cp_file']['name']) and !empty($_FILES['import_cp_file']['tmp_name'])){
-			require_once('functions/xmlsql_func.php');
+			require_once('classes/xml2sql.php');
 			
-			xml2sql($_FILES['import_cp_file']['tmp_name']);
+			xml2xml::xml2sql($_FILES['import_cp_file']['tmp_name']);
 			
 			return TRUE;
     }  

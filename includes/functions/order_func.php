@@ -58,7 +58,7 @@ function command ($order,$sid,$user_id,$trx=TRUE){
 //21dec2004: templates are  optional
 
 function print_order ($order_id,$bill_template='',$mode='file',$print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
-  require_once("classes/ShopDB.php");
+  
 	global $_SHOP;
 	
   $query = 'SELECT * FROM Seat LEFT JOIN 

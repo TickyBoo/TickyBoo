@@ -34,7 +34,7 @@
  
  */
 
-require_once("classes/ShopDB.php");
+
 require_once("classes/User.php");
 //require_once("classes/AUIComponent.php");
 require_once("admin/AdminView.php");

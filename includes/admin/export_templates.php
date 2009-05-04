@@ -35,8 +35,6 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
-require_once('functions/datetime_func.php');
 
 class export_templates extends AdminView {
 
@@ -70,7 +68,6 @@ class export_templates extends AdminView {
     global $_SHOP;
   
     if($_GET['submit'] and $_GET['export_template_id']>0){
-			require_once('functions/xmlsql_func.php');
 			$id=_esc((int)$_GET['export_template_id']);
 			
 

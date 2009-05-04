@@ -35,8 +35,6 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
-require_once('functions/datetime_func.php');
 
 class export_xml_event extends AdminView {
 
@@ -69,7 +67,7 @@ class export_xml_event extends AdminView {
     global $_SHOP;
   
     if($_GET['submit'] and $_GET['export_xml_event_event']>0){
-			require_once('functions/xmlsql_func.php');
+			require_once('classes/xml2sql.php');
 			$event_id=_esc((int)$_GET['export_xml_event_event']);
 			
 			$what[]=array(
@@ -136,7 +134,7 @@ class export_xml_event extends AdminView {
 			}
 			$this->write_header($filename);
 			
-			sql2xml_all($what,SQL2XML_OUT_ECHO);
+			xml2xml::sql2xml_all($what,SQL2XML_OUT_ECHO);
 			
 			return TRUE;
     }  

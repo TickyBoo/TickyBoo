@@ -34,7 +34,6 @@
  
  */
 require_once("admin/AdminView.php");
-require_once("classes/ShopDB.php");
 
 class export_cp extends AdminView {
 
@@ -67,7 +66,7 @@ class export_cp extends AdminView {
     global $_SHOP;
   
     if($_GET['submit'] and $_GET['export_cp_event']>0){
-			require_once('functions/xmlsql_func.php');
+			require_once('classes/xml2sql.php');
 			$event_id=_esc((int)$_GET['export_cp_event'],false);
 			
 			$what[]=array(
@@ -133,7 +132,7 @@ class export_cp extends AdminView {
 			}
 			$this->write_header($filename);
 			
-			sql2xml_all($what,SQL2XML_OUT_ECHO);
+			xml2xml::sql2xml_all($what,SQL2XML_OUT_ECHO);
 			
 			return TRUE;
     }  

@@ -39,7 +39,8 @@
     category_id=$smarty.post.category_id item_id=$smarty.post.item_id
     discounts=$smarty.post.discount }
   {include file="cart_view.tpl"}
-
+{elseif $smarty.get.action eq 'activate'}
+  {include file="activate.tpl"}
 {elseif $smarty.get.action eq "remove"}
   {$cart->remove_item_f($smarty.get.event_id,$smarty.get.cat_id,$smarty.get.item)}
   {include file="cart_view.tpl"}
@@ -88,11 +89,7 @@
     {assign var='user_data' value=$smarty.post}
   {/if}
   {if not $user->logged}
-  	{if $smarty.get.action eq 'activate'}
-      {include file="activate.tpl"}
-    {else}
       {include file="inscription.tpl"}
-    {/if}
   {else}
     {include file="last_event_list.tpl"}
   {/if}  

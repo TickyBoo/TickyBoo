@@ -169,8 +169,8 @@ class User_Smarty {
 
   function update_member($params,&$smarty){
   	if(!$this->update_member_f($params['data'],$err,$params['mandatory'])){
-		$smarty->assign('user_errors',$err);
-	}
+  		$smarty->assign('user_errors',$err);
+	  }
   }
   
   function update_member_f (&$member,&$err,$login=TRUE,$mandatory_l=0){
@@ -181,15 +181,92 @@ class User_Smarty {
 			  $mandatory=$matches[0];
 			}
 		}
-		
-    if($res = update_member2($member,$err,$mandatory)){ /* $res == the returned $user_id from create_member in user_func.php */
+
+    if(!empty($member['user_id']) or !empty($member['password1']))
+    {
+      /////////////////////////
+      ///Check user password///
+      /////////////////////////
+    	$query="SELECT username FROM auth WHERE user_id="._esc($member['user_id'])." and password="._esc(md5($member['password1']));
+    	if(!$result=ShopDB::query($query) or !$user=shopDB::fetch_assoc($result)){
+    	  $err['password']="Incorrect Password";
+    	  return FALSE;
+    	}
+
+    	if(empty($member['user_email'])){
+    		$err['user_email']=mandatory;
+    	}
+    	/*
+    	$query="select count(*) from auth where username='".$member['user_email']."'";
+    	if($result=ShopDB::query($query) and $row=shopDB::fetch_array($result) and $row[0]>0){
+    		$err['user_email']=alreadyexist;
+    		return FALSE;
+    	}
+    	*/
+    	if(!$user_id= $this->_update_user($member,2,$err,FALSE,$mandatory)){
+    		return FALSE;
+    	}
+    	//$active = md5(uniqid(rand(), true));
+    	$query="UPDATE auth SET username="._esc($member['user_email'])." WHERE user_id="._esc((int)$member['user_id']);
+
+    	if(!ShopDB::query($query)){
+    	  return FALSE;
+    	}
+
       $this->login_f($member['user_email'],$member['password1'],$err);
-	  $_SESSION['_USER_UPDATED']="User Information updated successfully!";
+	    $_SESSION['_USER_UPDATED']="User Information updated successfully!";
 	  //header("location: index.php?personal_page=details");
-      return $res;
+      return $user_id;
+    }else{
+      $err['password']="Incorrect password";
+      return FALSE;
     }
 	return false;
   }
+  
+  function _update_user ($guest, $status, &$err, $short, $mandatory=0){
+
+  	if(!$mandatory){
+  	  $mandatory=array('user_lastname','user_firstname','user_addresse',
+  		'user_zip','user_city','user_country');
+  		if(!$short){
+  			$mandatory[]='Required';
+  		}
+  	}
+
+  	foreach($mandatory as $field){
+  		if(empty($guest[$field])){$err[$field]=mandatory;}
+  	}
+
+  	if(!empty($guest['user_email'])){
+  		if(!eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $guest['user_email'])){
+      	$err['user_email']=not_valid_email;
+  		}
+  	}
+
+    if(!empty($err)){
+      return FALSE;
+    }
+
+    $query="UPDATE User SET ".
+    "user_lastname="._esc($guest['user_lastname']).",".
+    "user_firstname="._esc($guest['user_firstname']).",".
+    "user_address="._esc($guest['user_addresse']).",".
+    "user_address1="._esc($guest['user_addresse1']).",".
+    "user_zip="._esc($guest['user_zip']).",".
+    "user_city="._esc($guest['user_city']).",".
+    "user_state="._esc($guest['user_state']).",".
+    "user_country="._esc($guest['user_country']).",".
+    "user_email="._esc($guest['user_email']).",".
+    "user_phone="._esc($guest['user_phone']).",".
+    "user_fax="._esc($guest['user_fax'])." WHERE user_id=".$guest['user_id']."";
+
+    //echo $query;
+    if($result=ShopDB::query($query)){
+      return $guest['user_id'];
+    }
+  }
+
 
 ///////////////////
 ///////Guest///////
@@ -268,8 +345,8 @@ class User_Smarty {
     }
   }
   
-  	function resend_activation($params,&$smarty){
-  		$this->resend_activation_f($params['email'],$params['template']);
+  function resend_activation($params,&$smarty){
+  	$this->resend_activation_f($params['email'],$params['template']);
 	}
 	
 	function resend_activation_f($email,$tpl=''){
@@ -303,8 +380,11 @@ class User_Smarty {
 			$tpl=$engine->getTemplate($tpl); // 'Signup_email';
 			$email=&new htmlMimeMail();
 
-			$link= $_SERVER["PHP_SELF"]."?register_user=on&action=activate&x=".$user_id."&y=".$active;
-			$row['link']=$link;
+      $activation = base64_encode("$user_id|".date('c')."|$active");
+
+  		$row['link']== $_SHOP->root."index.php?action=activate&z=". $activation;
+  		$row['activatecode'] = $activation;
+
 			$tpl->build($email,$row);
  
 			if($email->send($tpl->to)){
@@ -331,12 +411,12 @@ class User_Smarty {
   }
   
   	function login_guest($params,&$smarty){
-		if(!$this->_login_guest($params['user_id'])){
+		if(!$this->login_guest_f($params['user_id'])){
 			return;
 		}
 	}
 
-  function _login_guest ($user_id){
+  function login_guest_f ($user_id){
     require_once('classes/ShopDB.php');
     $query="SELECT * 
 			FROM `User` 
@@ -360,16 +440,16 @@ class User_Smarty {
 
   function Activate($params,&$smarty){
 
-    if (isset($_GET['x'])) {
-        $x = (int) $_GET['x'];
+    if (isset($_GET['z'])) {
+        $userdata = (int) $_GET['z'];
     } else {
-        $x = 0;
+        return "<b>".act_uselink."</b>";
     }
-    if (isset($_GET['y'])) {
-        $y = $_GET['y'];
-    } else {
-        $y = 0;
-    }
+
+    $userdata2 = base64_decode($userdata);
+    list($x,$z,$y) = explode('|', $userdata2, 3);
+
+    if (!isset($x) or !isset($y) or !$this->is_base64_encoded($userdata)) {
 
     if ( ($x> 0) && (strlen($y) == 32)) {
 
@@ -385,6 +465,8 @@ class User_Smarty {
         return "<b>".act_uselink."</b>";
     }
   }
+  
+  
 
 }
 ?>

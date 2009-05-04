@@ -30,114 +30,11 @@
  
  */
 
-require_once("classes/ShopDB.php");
 
-function login ($username, $password){
-  $query="select * from auth where username="._esc($username)." and password="._esc(md5($password));
-  //echo $query;
-  if($result=ShopDB::query($query) and $obj=shopDB::fetch_object($result)){
-    $_SESSION['SHOP_USER_ID']=$obj->user_id;
-    return $obj->user_id;
-  }
-  return FALSE;
-}
-
-function logout (){  
-  unset($_SESSION['SHOP_USER_ID']);
-}
-
-
-function _create_user ($guest,$status,&$err,$short,$mandatory=0){
-
-	if(!$mandatory){
-	  $mandatory=array('user_lastname','user_firstname','user_addresse',
-		'user_zip','user_city','user_country');
-		if(!$short){
-			$mandatory[]='user_email';
-			$mandatory[]='check_condition';
-		}
-	}
-	
-	foreach($mandatory as $field){
-		if(empty($guest[$field])){$err[$field]=mandatory;}
-	}
-	
-	if(!empty($guest['user_email'])){
-		if(!eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $guest['user_email'])){
-    	$err['user_email']=not_valid_email;
-		}		
-	}
-  if(!empty($err)){
-    return FALSE;
-  }
-  
-  $query="insert into User ( user_lastname, user_firstname, user_address,".
-  "user_address1,user_zip,user_city,user_state,user_country,user_email,user_phone,user_fax,user_status)".
-  " VALUES (".
-  _esc($guest['user_lastname']).",".
-  _esc($guest['user_firstname']).",".
-  _esc($guest['user_addresse']).",".
-  _esc($guest['user_addresse1']).",".
-  _esc($guest['user_zip']).",".
-  _esc($guest['user_city']).",".
-  _esc($guest['user_state']).",".	
-  _esc($guest['user_country']).",".
-  _esc($guest['user_email']).",".
-  _esc($guest['user_phone']).",".
-  _esc($guest['user_fax']).",".
-  "'$status')";   
-  
-  //echo $query;
-  if($result=ShopDB::query($query) and $user=shopDB::insert_id()){
-    return $user;
-  }
-}
 
 ///////////////////////////
 /////UPDATE FUNCTION///////
 ///////////////////////////
-function _update_user ($guest,$status,&$err,$short,$mandatory=0){
-
-	if(!$mandatory){
-	  $mandatory=array('user_lastname','user_firstname','user_addresse',
-		'user_zip','user_city','user_country');
-		if(!$short){
-			$mandatory[]='Required';
-		}
-	}
-	
-	foreach($mandatory as $field){
-		if(empty($guest[$field])){$err[$field]=mandatory;}
-	}
-	
-	if(!empty($guest['user_email'])){
-		if(!eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $guest['user_email'])){
-    	$err['user_email']=not_valid_email;
-		}		
-	}
-
-  if(!empty($err)){
-    return FALSE;
-  }
-  
-  $query="UPDATE User SET ".
-  "user_lastname="._esc($guest['user_lastname']).",".
-  "user_firstname="._esc($guest['user_firstname']).",".
-  "user_address="._esc($guest['user_addresse']).",".
-  "user_address1="._esc($guest['user_addresse1']).",".
-  "user_zip="._esc($guest['user_zip']).",".
-  "user_city="._esc($guest['user_city']).",".
-  "user_state="._esc($guest['user_state']).",".
-  "user_country="._esc($guest['user_country']).",".
-  "user_email="._esc($guest['user_email']).",".
-  "user_phone="._esc($guest['user_phone']).",".
-  "user_fax="._esc($guest['user_fax'])." WHERE user_id=".$guest['user_id']."";   
-  
-  //echo $query;
-  if($result=ShopDB::query($query)){
-    return $guest['user_id'];
-  }
-}
 
 function create_guest (&$guest,&$err,$short=FALSE,$mandatory=0){
   return _create_user($guest,3,$err,$short,$mandatory);
@@ -187,9 +84,11 @@ global $_SHOP;
 			}
   		$tpl=$engine->getTemplate($tpl);
 	  	$email=&new htmlMimeMail();
+      $activation = base64_encode("$user_id|".date('c')."|$active");
 
-  		$link= $_SHOP->root."index.php?register_user=on&action=activate&x=".$user_id."&y=".$active;
-  		$row['link']=$link;
+  		$row['link']== $_SHOP->root."index.php?action=activate&z=". $activation;
+  		$row['activatecode'] = $activation;
+
   		$tpl->build($email,$row);
       // echo      $user_id;
   		if($email->send($tpl->to)){
@@ -204,7 +103,53 @@ global $_SHOP;
   }
 }
 
-function update_member2 (&$member,&$err,$mandatory=0){
+function _create_user ($guest,$status,&$err,$short,$mandatory=0){
+
+	if(!$mandatory){
+	  $mandatory=array('user_lastname','user_firstname','user_addresse',
+		'user_zip','user_city','user_country');
+		if(!$short){
+			$mandatory[]='user_email';
+			$mandatory[]='check_condition';
+		}
+	}
+
+	foreach($mandatory as $field){
+		if(empty($guest[$field])){$err[$field]=mandatory;}
+	}
+
+	if(!empty($guest['user_email'])){
+		if(!eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $guest['user_email'])){
+    	$err['user_email']=not_valid_email;
+		}
+	}
+  if(!empty($err)){
+    return FALSE;
+  }
+
+  $query="insert into User ( user_lastname, user_firstname, user_address,".
+  "user_address1,user_zip,user_city,user_state,user_country,user_email,user_phone,user_fax,user_status)".
+  " VALUES (".
+  _esc($guest['user_lastname']).",".
+  _esc($guest['user_firstname']).",".
+  _esc($guest['user_addresse']).",".
+  _esc($guest['user_addresse1']).",".
+  _esc($guest['user_zip']).",".
+  _esc($guest['user_city']).",".
+  _esc($guest['user_state']).",".
+  _esc($guest['user_country']).",".
+  _esc($guest['user_email']).",".
+  _esc($guest['user_phone']).",".
+  _esc($guest['user_fax']).",".
+  "'$status')";
+
+  //echo $query;
+  if($result=ShopDB::query($query) and $user=shopDB::insert_id()){
+    return $user;
+  }
+}
+
+function update_member (&$member,&$err,$mandatory=0){
 
   if(!empty($member['user_id']) or !empty($member['password1']))
   {
@@ -247,24 +192,7 @@ function update_member2 (&$member,&$err,$mandatory=0){
      }
 }
 
-function load_user ($user_id){
-  $query="select * from User where user_id="._esc((int)$user_id);
-  if(!$user=ShopDB::query_one_row($query)){
-    return FALSE;
-  }
-  
-  return $user;
-}
 
-function auth_username(){
-  //this value is set in functions/init.php
-  return $_SESSION['_SHOP_AUTH_USER_NAME'];
-}
-
-function auth_userdata(){
-  //this value is set in functions/init.php
-  return $_SESSION['_SHOP_AUTH_USER_DATA'];
-}
 
 function check_email_mx($email){
     if(preg_match('#.+@(?<host>.+)#',$email,$match) > 0 and getmxrr($match['host'],$mxhosts)){

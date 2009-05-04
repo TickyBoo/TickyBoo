@@ -34,13 +34,8 @@
  
  */
 
-require_once("classes/ShopDB.php");
-require_once("classes/AUIComponent.php");
 
-require_once("functions/datetime_func.php");
-//require_once("functions/order_func.php");
-//require_once("classes/Place.php");
-//require_once("classes/Order.php");
+require_once("classes/AUIComponent.php");
 
 class OrderView extends AUIComponent{
   var $page_length=15;
