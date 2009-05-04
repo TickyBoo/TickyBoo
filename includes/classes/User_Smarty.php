@@ -239,7 +239,7 @@ class User_Smarty {
     $pwd = substr(md5(uniqid(rand())), 0, 8);
     $pwd_md5=md5($pwd);
     
-    require_once("classes/ShopDB.php");
+    
     
     $query="SELECT * from auth,User where username=".ShopDB::quote($email)." and auth.user_id=User.user_id";
     if(!$row=ShopDB::query_one_row($query)){

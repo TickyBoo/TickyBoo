@@ -107,7 +107,7 @@ class eph_ideal extends payment{
     $response = $ideal->RequestTransaction(
         	$_POST['ideal_issuer'],
         	$order->order_id,
-        	$order->$order->order_total_price,
+        	$order->$order->order_total_price *100,
         	$order->order_description(),
         	$order->EncodeSecureCode(),
         	EXPIRATIONPERIOD,

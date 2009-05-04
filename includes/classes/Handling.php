@@ -33,7 +33,7 @@
  */
 
 
-require_once("classes/ShopDB.php");
+
 
 class Handling {
 

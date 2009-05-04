@@ -34,7 +34,7 @@
  
  */
 
-require_once("classes/ShopDB.php");
+
 
 
 class PlaceMapZone{ 

@@ -34,7 +34,7 @@
  
  */
 
-require_once("classes/ShopDB.php");
+
 
 if (!defined('PM_ZONE')) {
   define('PM_ZONE',0);

@@ -34,7 +34,7 @@
  
  */
 
-require_once("classes/ShopDB.php");
+
 class Category {
  function select ($event_id,$only_published=TRUE,$with_stats=FALSE){
    if($only_published){

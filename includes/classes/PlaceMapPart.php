@@ -34,7 +34,7 @@
 
  */
 
-require_once("classes/ShopDB.php");
+
 
 define('PM_ZONE', 0);
 define('PM_LABEL', 0);

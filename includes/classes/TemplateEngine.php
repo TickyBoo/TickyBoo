@@ -69,7 +69,7 @@
     }
     
 		//if not: load the template record from db
-    require_once("classes/ShopDB.php");
+    
     $query="SELECT * FROM Template WHERE template_name='$name'";
     if(!$data=ShopDB::query_one_row($query)){
       return FALSE;

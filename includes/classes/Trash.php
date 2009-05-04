@@ -34,7 +34,7 @@
  
  */
 
-require_once("classes/ShopDB.php");
+
 require_once("classes/Order.php");
 require_once("classes/Event.php");
 

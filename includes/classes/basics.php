@@ -347,5 +347,52 @@ function check_event($event_date){
 		}
 	}
 }
+function formatDate($edate){
+   global $_SHOP;
+   ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
+   //$lang=$_SERVER["INTERFACE_LANG"];
+   $lang=$_SHOP->lang;
+   setlocale(LC_TIME, get_loc($lang));
+   $pdate= strftime ("%a %e %b %Y", mktime (0,0,0, $regs[2], $regs[3], $regs[1]));
+   return $pdate;
+ }
+
+function formatAdminDate($edate,$year4=true){
+   ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
+   If ($year4) {
+     $pdate=$regs[3]."-".$regs[2]."-".$regs[1];
+   } else {
+     $pdate=$regs[3]."-".$regs[2]."-".substr($regs[1], -2);
+   }
+   return $pdate;
+ }
+
+function formatTime($time){
+  list($h,$m,$s)=split(":",$time);
+
+  if(strlen($h) or strlen($m)){
+    //return strftime("%X",mktime($h,$m));
+		return $h."h".$m;
+  }
+}
+
+function get_loc($lang){
+  switch($lang){
+    case "de":
+      return "de_DE";
+      break;
+    case "en":
+      return "en";
+      break;
+    case "fr":
+      return "fr_FR";
+      break;
+    case "it":
+      return "it_IT";
+      break;
+
+
+  }
+}
 
 ?>

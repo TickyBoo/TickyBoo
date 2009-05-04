@@ -28,7 +28,7 @@
  * clear to you.
  */
 
-require_once("classes/ShopDB.php");
+
 require_once("classes/Ticket.php");
 require_once("classes/Seat.php");
 require_once('classes/Handling.php');

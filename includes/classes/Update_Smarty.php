@@ -1,5 +1,5 @@
 <?php
-require_once("classes/ShopDB.php");
+
 require_once("classes/Time.php");
 require_once('classes/Order.php');
 

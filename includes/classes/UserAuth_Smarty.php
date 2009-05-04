@@ -116,7 +116,7 @@ class UserAuth_Smarty {
     $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
     $this->user_prefs=$prefs;
   
-    require_once("classes/ShopDB.php");
+    
     $query="update User set user_prefs="._esc($this->user_prefs)."
             where user_id="._esc($auth['user_id'])." limit 1";
 	    

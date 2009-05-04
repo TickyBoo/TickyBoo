@@ -35,7 +35,7 @@
  */
 
 //corbeil system v0.1beta
-require_once("classes/ShopDB.php");
+
 require_once("classes/Discount.php");
 require_once("classes/update.php");
 

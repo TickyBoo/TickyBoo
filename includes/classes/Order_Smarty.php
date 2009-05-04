@@ -159,7 +159,7 @@ class Order_Smarty {
   }
 
   function order_list ($params, $content, &$smarty,&$repeat){
-    require_once("classes/ShopDB.php");
+    
     
     if ($repeat) {
 			
@@ -284,7 +284,7 @@ class Order_Smarty {
   }
   
   function tickets ($params, $content, &$smarty,&$repeat){
-    require_once("classes/ShopDB.php");
+    
     
     if ($repeat) {
       if(!$params['order_id']){
