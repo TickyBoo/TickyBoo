@@ -162,6 +162,7 @@ define("delete_ticket","Delete the ticket? Ticket Nr:");
 define("discount","Discount");
 define("discounts","Discounts");
 define("discount_add_title","Add a discount");
+define("discount_update_title","Update Discount");
 define("discount_id","Discount nr");
 define("discount_name","Discount Name");
 define("discount_title","All discounts");
@@ -914,9 +915,9 @@ define("zone","Zone");
 
 //new defines
 define('unpublish_event_group','unpublish_event_group' );
-define('unpublish','unpublish');
+define('unpublish','Unpublish');
 define('publish_event_group', 'publish_event_group');
-define('publish', 'publish' );
+define('publish', 'Publish' );
 define('Archive','Archive' );
 define('reservated','Reservated');
 define('category_status', 'category_status' );
