@@ -44,8 +44,8 @@ $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
 $smarty->compile_id   = 'webshop';
 $smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
 $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
-
-$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+echo $_SHOP->includes_dir . "shop_plugins".DS;
+$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins".DS);
 $smarty->display($fond . '.tpl');
 session_write_close();
 ?>

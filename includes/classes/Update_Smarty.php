@@ -151,7 +151,7 @@ class Update_Smarty {
   	if($res=ShopDB::query($query)){
   	  while($row = shopDB::fetch_array($res)){
   			//echo "BANG!<br> ";
-  			If ((!Order::Check_payment($row['order_id']) and
+  			If (!Order::Check_payment($row['order_id']) and
         	  ($_SHOP->shopconfig_restime >= 10)) {
   			  Order::order_delete($row['order_id']);
         }

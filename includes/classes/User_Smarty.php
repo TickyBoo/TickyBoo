@@ -465,7 +465,7 @@ class User_Smarty {
         return "<b>".act_uselink."</b>";
     }
   }
-  
+}
   
 
 }

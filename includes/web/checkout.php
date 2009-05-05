@@ -125,7 +125,7 @@ die();
     $smarty->assign('errors', $errors);
 
     If ($errors) {
-      return "user";
+      return "checkout_user";
     } else
       return "checkout_preview";
   }
@@ -186,9 +186,9 @@ die();
     $hand= $myorder->order_handling;
     $pm_return = $hand->on_submit($myorder,$errors);
     $smarty->assign('errors', $errors);
-    if empty($pm_return)) {
+    if (empty($pm_return)) {
       return '';
-    elseif (is_string($pm_return)) {
+    } elseif (is_string($pm_return)) {
       $order->obj = $myorder;
       $smarty->assign('confirmtext', $pm_return);
       return "checkout_confirm";
