@@ -51,4 +51,22 @@
   </tr>
   <tr><td class='TblHigher' nowrap>
      {user->user_email}</td></tr>
+  <tr><td class='TblHigher' nowrap>
+     <div align='right'><a href='' onclick="BasicPopup(this);" >{!edit!}</a></div>
+  </td></tr>
+
 </table>
+
+{literal}
+<script  type="text/javascript">
+function BasicPopup(a)
+{
+//  window.status =a.className;
+//	p = a.className.substring(a.className.lastIndexOf(' ')).split('.');
+	var url = a.href;
+	if (window.open(url, a.target || "_blank", 'toolbar=0,location=0,directories=0,status=0,menubar=0'.concat(
+  	',width=', "640",	',height=',  "400",	',scrollbars=',  "1", ',resizable=', "1")))
+		{ return false; }
+}
+</script>
+{/literal}
