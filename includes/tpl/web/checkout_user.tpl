@@ -30,8 +30,8 @@
  *}
 
 {include file="header.tpl" name=!pers_info! header=!user_notice!}
-  {if $errors}
-     <div class='error'>{$errors}</div><br>
+  {if $user_errors}
+     <div class='error'>{$user_errors._error}</div><br>
   {/if}
 <center>
   <form action='checkout.php?action=register' method=post >
@@ -77,6 +77,7 @@
     <table cellpadding="5" width='80%'>
       <tr>
         <td  colspan="2" align='right'>
+          <input type='submit' name='type' value='guest'>
           <input type='submit' name='submit_login' value='{!continue!}'>
         </td>
       </tr>

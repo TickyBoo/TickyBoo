@@ -111,10 +111,9 @@ die();
   }
 
   Function registerAction ($smarty){
-    $type = 'guest';
-    if (!isset($_POST['submit']) or ($type=$_POST['type'])) {
-      $errors['_error'] = con('RegisterError');
-    } elseif ($type =='guest') {
+    global $user;
+    $type = 'guest';   print_r($_POST);
+    if ($type =='guest') {
       $smarty->assign('newuser_id',$user->guest_f($_POST, $errors));
     } elseif ($type=='member') {
       $smarty->assign('newuser_id',$user->Member_f($_POST, $errors));
@@ -122,7 +121,7 @@ die();
       $errors['_error'] = con('RegisterError');
 
     $smarty->assign('reg_type', $type);
-    $smarty->assign('errors', $errors);
+    $smarty->assign('user_errors', $errors);
 
     If ($errors) {
       return "checkout_user";
