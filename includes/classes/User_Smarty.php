@@ -300,7 +300,7 @@ class User_Smarty {
     }
 
     if($guest_id = create_guest($guest,$err,$short,$mandatory)){
-      $this->_login_guest($guest_id);
+      $this->login_guest_f($guest_id);
       return $guest_id;
     }  
   }
@@ -420,12 +420,12 @@ class User_Smarty {
     require_once('classes/ShopDB.php');
     $query="SELECT * 
 			FROM `User` 
-	    	WHERE user_id=".ShopDB::quote($user_id)." 
+	    	WHERE user_id="._esc((int)$user_id)."
 	      	AND user_status=3
 	    	LIMIT 1";
       
 
-    if($result=ShopDB::query($query) and $user=shopDB::fetch_assoc($result)){
+    if($user=ShopDB::query_one_row($query)){
       $user['is_guest']=true;
       $_SESSION['_SHOP_USER']=$user;
       $this->_fill($user);

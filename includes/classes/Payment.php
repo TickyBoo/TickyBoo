@@ -50,7 +50,11 @@ class Payment {
 
   function on_submit(&$order, &$err ){}
 
-  function on_return(&$order, $accepted ){}
+  function on_return(&$order, $accepted ){
+     return array('approved'=>$accepted,
+                  'transaction_id'=>false,
+                  'response'=> '');
+  }
 
   function on_notify(&$order){}
 

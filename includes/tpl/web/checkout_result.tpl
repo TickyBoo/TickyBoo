@@ -35,9 +35,9 @@
 <table class="table_midtone">
   <tr>
     <td>
-      {if $pm_return.approved}
          {!pay_reg!}!<br>
 		    {!order_id!} <b>{$shop_order.order_id}</b><br>
+      {if $pm_return.approved}
 		    {if $pm_return.transaction_id}
           {!trx_id!}   <b>{$pm_return.transaction_id}</b><br>
         {/if}

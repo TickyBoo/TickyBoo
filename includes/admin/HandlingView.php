@@ -159,9 +159,10 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		}
 
 		echo "<tr><td class='admin_name'>".$this->con(handling_sale_mode)."</td>
-			<td class='admin_value'><input type='checkbox' name='handling_sale_mode_a[]' value='sp' $chk_sp>
+			<td class='admin_value'>
+        <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp>
 			".$this->con(sp)."&nbsp;
-			<input type='checkbox' name='handling_sale_mode_a[]' value='www' $chk_www>
+			<input type='checkbox' name='sale_mode[www]' value='www' $chk_www>
 			".$this->con(www)."</td></tr>";
 
 	#  }

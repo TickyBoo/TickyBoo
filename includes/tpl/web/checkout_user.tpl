@@ -65,7 +65,7 @@
           <table cellpadding="0" cellspacing="0" width='100%'>
             <tr>
               <td >
-                <input type='text' name='user_nospam' size='30' maxlength="50" value='' ><br>
+                <input type='text' name='user_nospam' size='10' maxlength="10" value='' ><br>
                 <sup> {!nospam_info!} </sup><span class='error'>{$user_errors.user_nospam}</span>
               </td>
               <td align='center'>
@@ -95,7 +95,7 @@
 {*  <div onclick='ShowLogin();' ><input type='radio' onclick='ShowLogin();' id='showlogin' /> click here to login as member. {!login_member_here!} </div> *}
   <center>
   
-  <form action='kasse.php#member' method='post' >
+  <form action='checkout.php#member' method='post' >
     <a name="member"></a>
     <table  cellpadding='2' bgcolor='white' width='80%' id='member' >
       <tr>

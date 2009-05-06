@@ -198,7 +198,7 @@ class Update_Smarty {
   
   // Will check last time the update script was run and return the time in mins
   function lastrun(){
-
+  global $_SHOP;
 	$time=Time::StringToTime($_SHOP->shopconfig_lastrun);
 	$remain=Time::countdown($time,$_SHOP->shopconfig_lastrun_int);
 	$return=$remain['justmins'];

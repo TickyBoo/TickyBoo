@@ -36,11 +36,11 @@
 </tr>
 <tr>
   <td class='TblLower'> {!address!}&nbsp;* </td>
-  <td class='TblHigher'><input type='text' name='user_address' size='30'  maxlength='75' value='{$user_data.user_address}'><span class='error'>{$user_errors.user_addresse}</span></td>
+  <td class='TblHigher'><input type='text' name='user_address' size='30'  maxlength='75' value='{$user_data.user_address}'><span class='error'>{$user_errors.user_address}</span></td>
 </tr>
 <tr>
   <td class='TblLower'> {!address!} 2 </td>
-  <td class='TblHigher'><input type='text' name='user_address1' size='30'  maxlength='75' value='{$user_data.user_address1}'><span class='error'>{$user_errors.user_addresse1}</span></td>
+  <td class='TblHigher'><input type='text' name='user_address1' size='30'  maxlength='75' value='{$user_data.user_address1}'><span class='error'>{$user_errors.user_address1}</span></td>
 </tr>
 <tr>
   <td class='TblLower'> {!zip!}&nbsp;* </td>

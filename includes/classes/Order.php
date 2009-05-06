@@ -109,6 +109,7 @@ class Order {
       if($order and $complete){
         if ($order->order_handling_id) {
           $order->handling= Handling::load($order->order_handling_id);
+          $order->order_handling= &$order->handling;
         }
 //        $order->places = Ticket::loadall($order_id);
        }
@@ -289,8 +290,8 @@ class Order {
     $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
 
      if(!$order=ShopDB::query_one_row($query)){
-      echo "<div class=error>".cannot_find_order."</div>";
-      ShopDB::rollback('order_delete_ticket');
+      echo "<div class=error>".cannot_find_order.'@order_delete_ticket.'.$order_id."</div>";
+      ShopDB::rollback("order_delete_ticket($order_id)");
       return FALSE;
     }
 
@@ -412,8 +413,8 @@ class Order {
     }
     // Added v1.3.4 Checks to see if the order has allready been canceled.
     if($order['order_status']=='cancel'){
-  	echo "<div class=error>".order_allready_cancelled."</div>";
-  	ShopDB::rollback('order_delete');
+  	echo "<div class=error>".order_allready_cancelled."@order_delete ($order_id)</div>";
+  	ShopDB::rollback('order_delete'." ($order_id)");
   	return FALSE;
     }
 
@@ -912,20 +913,20 @@ class Order {
 
       if (($order==null) and isset($this)) $order = $this;
       if ($order==null) $order = Order::load($code[1], true);
-      if ($order == null) return false;
+      if ($order == null) return -1;
 
       $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
                   $order->order_handling_id .':'. $order->order_total_price;
 
 //      ShopDB::dblogging('decode:'.$text.'|'.$md5);
 
-      if ($code[0] > time()) return false;
-      if ($code[1] <> $order->order_id) return false;
+      if ($code[0] > time()) return -2;
+      if ($code[1] <> $order->order_id) return -3;
       $code2 = md5($md5);
-      if ($code[2] <> $code2) return false;
+      if ($code[2] <> $code2) return -4;
       return true;
     } else
-      return false;
+      return -5;
   }
 }
 ?>

@@ -268,7 +268,7 @@ define("export_submit","Export It!");		//added lou5
 define("export_entrant_title","Export Attendees");		//added lou5
 define("export_entrant","Orders");		//added lou5
 define("export_entrant_event","Choose Event");		//added lou5
-define("export_entrant_NotSended","Not sent");		//added lou5
+//define("export_entrant_NotSended","Not sent");		//added lou5
 define("export_xml_event","Event in XML");
 define("export_xml_event_event","Choose an event");
 define("export_xml_event_file","Filename");

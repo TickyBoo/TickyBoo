@@ -35,7 +35,7 @@
  */
 
 
-require_once('classes/handling.php');
+require_once('classes/Handling.php');
 
 function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 

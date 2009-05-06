@@ -111,10 +111,10 @@ class Handling {
 				if(in_array($key, $pm->extras))
 					$this->extra[$key] = $val;
     }
-    if (isset($arr['sale_mode']))
-      $this->sale_mode = $arr['sale_mode'];
+    if (isset($data['sale_mode']))
+      $this->sale_mode = $data['sale_mode'];
 //    print_r($this);
-    return $return ;
+    return ;
   }
   
 	function clear() {
@@ -352,7 +352,11 @@ class Handling {
 
   function on_return(&$order, $accepted) {
   	if($pm=$this->pment()){
-      return $pm->on_return($order, $appoved);
+      return $pm->on_return($order, $accepted);
+  	} else {
+      return array('approved'=>$accepted,
+                   'transaction_id'=>false,
+                   'response'=> '');
   	}
   }
 

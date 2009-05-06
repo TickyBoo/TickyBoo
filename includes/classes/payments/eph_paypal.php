@@ -90,6 +90,18 @@ class EPH_paypal extends payment{
       </form>";
 	}
 	
+  function on_return(&$order, $result){
+    If ($result) {
+      return array('approved'=>$result,
+                   'transaction_id'=>$_REQUEST['txn_id'],
+                   'response'=> '');
+    } else {
+      return array('approved'=>$result,
+                   'transaction_id'=>false,
+                   'response'=> '');
+    }
+  }
+  
   function on_notify(&$order){
 //    require_once('classes/Order.php');
     global $_SHOP;
@@ -124,34 +136,23 @@ class EPH_paypal extends payment{
     $return = false;
   	if(eregi("VERIFIED",$result)===false) {
         $debug.="NOT OK\n";
-    } elseif($_POST["payment_status"]!="Completed") {
-        $debug.=$_POST["payment_status"]."\n";
-    } elseif($_POST["receiver_email"]!=$receiver_email) {
+    } elseif(($_POST["receiver_email"]!=$receiver_email) or ($_POST["business"]!=$receiver_email)) {
         $debug.="wrong receiver_email\n";
     } elseif($_POST["mc_gross"]<$order_total) {
         $debug.="Invalid payment\n";
+    } elseif($_POST["payment_status"]!="Completed") {
+        $debug.=$_POST["payment_status"]."\n";
     } else {
         $debug.="OK\n";
         $return =true;
     	  $order->order_payment_id=$_POST['txn_id'];
         $order->set_payment_status('payed');
     }
+  //  ShopDB::dblogging($debug);
     $handle=fopen(INC."tmp".DS."paypal.log","a");
     fwrite($handle,$debug);
     fclose($handle);
     return $return;
-  }
-
-  function on_return(&$order, $result){
-    If ($result) {
-      return array('approved'=>$result,
-                   'transaction_id'=>$_REQUEST['txn_id'],
-                   'response'=> '');
-    } else {
-      return array('approved'=>$result,
-                   'transaction_id'=>false,
-                   'response'=> '');
-    }
   }
 }
 ?>
