@@ -30,7 +30,7 @@
 
   global $_SHOP;
 
-  If (!defined('PHP_SELF')) define('PHP_SELF',$_SERVER['PHP_SELF']);
+  if (!defined('PHP_SELF')) define('PHP_SELF',$_SERVER['PHP_SELF']);
 
 //check if the site is online  
   require_once("classes/ShopDB.php");

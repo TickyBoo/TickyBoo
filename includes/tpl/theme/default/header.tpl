@@ -27,7 +27,9 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't 
  * clear to you.
  */
- *}{config_load file="shop_$_SHOP_lang.conf"}<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+ *}
+{config_load file="shop_$_SHOP_lang.conf"}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <title>FusionTicket</title>
@@ -46,7 +48,7 @@
 <div class="mainbody">
 <img class="spacer" src='images/dot.gif' height="1px"><br>
 <img src="images/fusion.png" align="bottom">
-<BR>
+<br />
 
 <div id="navbar">
     <ul>
@@ -56,7 +58,8 @@
 	{#calendar#}</a>
 <li><a href='programm.php'>
 	{#program#}</a>
-</ul><br>
+</ul>
+<br />
 </div>
 <div  width='100%' align=right valign=top>
 		<a href="?setlang=en">[en]</a>

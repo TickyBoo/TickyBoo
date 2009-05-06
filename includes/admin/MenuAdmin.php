@@ -54,7 +54,7 @@ class MenuAdmin extends AUIComponent {
         <tr><td  class='menu_admin_item'><a href='view_impexp.php' class='menu_admin_link'>" . export_admin . " / " . import_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_template.php' class='menu_admin_link'>" . template_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_handling.php' class='menu_admin_link'>" . payment_admin . "</a></td></tr>
-    		<tr><td  class='menu_admin_item'><a href='view_options.php' class='menu_admin_link'>" . order_admin . " Options</a></td></tr>
+    		<tr><td  class='menu_admin_item'><a href='view_options.php' class='menu_admin_link'>" . order_options . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_salepoint.php' class='menu_admin_link'>" . salepoint_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_control.php' class='menu_admin_link'>" . control_admin . "</a></td></tr>
 		    <tr><td  class='menu_admin_item'><a href='view_organizer.php' class='menu_admin_link'>" . organizer_admin . "</a></td></tr>

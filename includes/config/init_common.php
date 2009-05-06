@@ -120,7 +120,7 @@
                    INC.'pear'.PATH_SEPARATOR.
                    get_include_path());
   
-  Include_once('classes/basics.php');
+  include_once('classes/basics.php');
 
   ini_set("magic_quotes_runtime",0);
   ini_set('allow_call_time_pass_reference',0);
