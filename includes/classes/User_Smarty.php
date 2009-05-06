@@ -227,10 +227,10 @@ class User_Smarty {
   function _update_user ($guest, $status, &$err, $short, $mandatory=0){
 
   	if(!$mandatory){
-  	  $mandatory=array('user_lastname','user_firstname','user_addresse',
-  		'user_zip','user_city','user_country');
+  	  $mandatory=array('user_lastname','user_firstname','user_address',
+  		                 'user_zip','user_city','user_country');
   		if(!$short){
-  			$mandatory[]='Required';
+  			$mandatory[]='user_password';
   		}
   	}
 

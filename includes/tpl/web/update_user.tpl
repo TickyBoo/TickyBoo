@@ -26,79 +26,37 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
-{*
-Replication is not allowed under the Open source software act, this file
-may be edited but may not be used as yours or redistributed.
-*}
 
-<form action="index.php?personal_page=details&action=update" method=post >
-  <table cellpadding="3" class="main">
+{if $usekasse}
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
+<meta http-equiv="Content-Language" content="nl" >
 
-    {if $smarty.session.id}
-    <tr>
-      <td colspan="2">
-        <h4 align="center">{$smarty.session.id}
-          {assign var=$smarty.session.id value=''}
-   	    </h4>
-      </td>
-    </tr>
+<link rel="shortcut icon" href="images\favicon.ico" >
+<link rel="icon" href="images\animated_favicon1.gif" type="image/gif" >
+<link REL='stylesheet' HREF='style.php' TYPE='text/css' >
+
+</head>
+<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE"> <br >
+  <center>
+  <form action="checkout.php?action=edituser" method='post'>
+{else}
+  <form action="shop.php?personal_page=details&action=update" method='post'>
+{/if}
+  <table cellpadding="3" class="main" bgcolor='white'>
+    {include file='user_form.tpl'}
+    {if $user->is_member}
+      <tr>
+      	<td class='TblLower'>Current password </td>
+          <td class='TblHigher'><input type='password' name='password1' size='15'  maxlength='10'>
+            <div class='error'>{$user_errors.password}</div>
+         </td>
+      </tr>
     {/if}
-    <tr>
-      <td class='TblLower'>First Name</td>
-      <td><input type="text" name="user_firstname" size='30' maxlength='50' value="{user->user_firstname}" /><span class='error'>{$user_errors.user_firstname}</span></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Last Name</td>
-      <td class='TblHigher'><input type="text" name="user_lastname" size='30' maxlength='50' value="{user->user_lastname}" /><span class='error'>{$user_errors.user_lastname}</span></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Address 1</td>
-      <td class='TblHigher'><input type="text" name="user_addresse" size='30'  maxlength='75' value="{user->user_address}" /><span class='error'>{$user_errors.user_addresse}</span></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Address 2</td>
-      <td class='TblHigher'><input type="text" name="user_uddresse1" size='30'  maxlength='75' value="{user->user_address2}" /></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Post Code</td>
-  	  <td class='TblHigher'><input type='text' name='user_zip' size='8'  maxlength='20' value='{$user->user_zip}'><span class='error'>{$user_errors.user_zip}</span></td>
-  	</tr>
-  	<tr>
-      <td class='TblLower'>City</td>
-      <td class='TblHigher'><input type="text" name="user_city" size='30'  maxlength='50' value="{user->user_city}" /><span class='error'>{$user_errors.user_city}</span></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>County</td>
-      <td class='TblHigher'><input type="text" name="user_state" size='30'  maxlength='50' value="{$user->user_state}" /><span class='error'>{$user_errors.user_state}</span></td>
-    </tr>
-    <tr>
-      <td class='TblLower' >Country</td>
-      <td class='TblHigher'>
-    <select name='user_country'>
-      {include file="countries.tpl" selected=$user->user_country}
-    </select><span class='error'>{$user_errors.user_country}</span>
-    </td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Phone Number</td>
-      <td class='TblHigher'><input type="text" name="user_phone" size='30'  maxlength='50' value="{user->user_phone}" /></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Fax</td>
-      <td class='TblHigher'><input type="text" name="user_fax" size='30'  maxlength='50' value="{user->user_fax}" /></td>
-    </tr>
-    <tr>
-      <td class='TblLower'>Email</td>
-      <td class='TblHigher'><input name="user_email" type="text" value="{user->user_email}" size='30'  maxlength='50' readonly="true" d /><span class='error'>{$user_errors.user_email}</span></td>
-    </tr>
-    <tr>
-    	<td class='TblLower'>Current password </td>
-        <td class='TblHigher'><input type='password' name='password1' size='15'  maxlength='10'>
-          <div class='error'>{$user_errors.password}</div>
-       </td>
-    </tr>
-    </tr>
-  </table>
+  </tr>
+  </table>  <br>
   <div align="center">
      <input type='submit' name='submit_update' value='Update'>
   </div>

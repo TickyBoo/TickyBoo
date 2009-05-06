@@ -28,6 +28,9 @@
  *}
 {include file="header.tpl" name=!shopping_cart! header=!Handling_cont_mess!}
 
+    {if $smarty.session.new_member eq true}
+      {include file="just_registred.tpl"}
+    {/if}
 
 		{if $order_error}
       <div class='error'>{$order_error}</div><br>

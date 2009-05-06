@@ -27,16 +27,42 @@
  * clear to you.
  *}
 
-{include file="header.tpl" name=!pwd_forgot!}
+<html>
+<head>
+<title>{!pwd_forgot!}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
+<meta http-equiv="Content-Language" content="nl" >
+
+<link rel="shortcut icon" href="images\favicon.ico" >
+<link rel="icon" href="images\animated_favicon1.gif" type="image/gif" >
+<link REL='stylesheet' HREF='style.php' TYPE='text/css' >
+
+</head>
+<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE"> <br>
+  <center>
+    <table border="0" cellpadding="5" cellspacing="5" width="600" bgcolor='#ffefd2'>
+      <tr>
+        <td>
+           <h2>{!forgot_password!}</h2>
+        </td>
+      </tr>
+      <tr>
+        <td valign=top>
 
 {if $smarty.get.email}
   {if $user->forgot_password_f($smarty.get.email) }
-    <div class='success'>{!pwd_sent!}{!pwd_is_sent!}.</div>
+    <div class='success'>{!pwd_is_sent!}.</div>
   {else}
     <div class='error'>{!pwd_err!}</div>
   {/if}
-{else}  
-  <form action='forgot_password.php' method='get'>  
+  <br><br>
+</td>
+</tr>
+</table>
+  <br>
+  <button onclick="window.close();">Close</button>
+{else}
+  <form action='forgot_password.php' method='get'>
     <table width='100%' align='center'>
       <tr><td  colspan='2'>{!pwd_note!}<br><br></td></tr>
       <tr>
@@ -45,6 +71,10 @@
       </tr>
     </table>
   </form>
+ </td>
+</tr>
+</table>
 {/if}
-
-{include file="footer.tpl"}
+</center>
+</body>
+</html>

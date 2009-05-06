@@ -51,7 +51,7 @@
   <td class='TblHigher'><input type='text' name='user_city' size='30'  maxlength='50' value='{$user_data.user_city}'><span class='error'>{$user_errors.user_city}</span></td>
 </tr>
 <tr>
-  <td class='TblLower'> {!state!}&nbsp;* </td>
+  <td class='TblLower'> {!state!}&nbsp;</td>
   <td class='TblHigher'><input type='text' name='user_state' size='30' maxlength="50" value='{$user_data.user_state}'><span class='error'>{$user_errors.user_state}</span></td>
 </tr>
 <tr>

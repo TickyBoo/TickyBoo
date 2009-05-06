@@ -45,11 +45,6 @@
             {$shop_category.pm_name} - {$shop_category.category_name} ({valuta value=$shop_category.category_price})
           </td>
         </tr>
-        {if not $user->logged}
-          <tr><td  align='center'>
-          {!sign_in_first!}
-          </td></tr>
-        {/if}
         {if $shop_category.category_numbering neq 'none'}
           <tr>
             <td  align='center'>
@@ -97,11 +92,7 @@
         {/if}
       <br>
       <center>
-        {if not $user->logged}
-        	<p>{!Please_login!}</p>
-        {else}
-          <input type='submit' name='submit' value='{!reserve!}'>
-        {/if}
+         <input type='submit' name='submit' value='{!reserve!}'>
   	  </center>
       <input type='hidden' name='category' value='{$shop_category.category_id}'>
       <input type='hidden' name='event' value='{$shop_category.category_event_id}'>

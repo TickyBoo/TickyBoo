@@ -33,10 +33,10 @@
   {if $user_errors}
      <div class='error'>{$user_errors._error}</div><br>
   {/if}
-  <div onclick='ShowRegister();'><input type='radio' onclick='ShowRegister();' id='showregister' /> click here to register as parton.  {!register_quest_here!} </div>
+{*  <div onclick='ShowRegister();'><input type='radio' onclick='ShowRegister();' id='showregister' /> click here to register as parton.  {!register_quest_here!} </div> *}
   <center>
-  <form action='checkout.php?action=register' method='post'  id='guest'>
-    <table cellpadding="2" bgcolor='white' width='80%'>
+  <form action='checkout.php?action=register' method='post'  >
+    <table cellpadding="2" bgcolor='white' width='80%' id='guest'>
       <tr>
         <td colspan='2' class='TblHeader'> {!guest!} </td>
       </tr>
@@ -60,7 +60,7 @@
         <td class='TblHigher'><input type='password' name='password2' size='10'  maxlength='10'></td>
       </tr>
       <tr>
-        <td class='TblLower' vAlign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
+        <td class='TblLower' valign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
         <td class='TblHigher' valign='top'>
           <table cellpadding="0" cellspacing="0" width='100%'>
             <tr>
@@ -92,12 +92,12 @@
 
 
 <br>
-  <div onclick='ShowLogin();' ><input type='radio' onclick='ShowLogin();' id='showlogin' /> click here to login as member. {!login_member_here!} </div>
+{*  <div onclick='ShowLogin();' ><input type='radio' onclick='ShowLogin();' id='showlogin' /> click here to login as member. {!login_member_here!} </div> *}
   <center>
   
-  <form action='kasse.php#member' method='post' id='member' >
+  <form action='kasse.php#member' method='post' >
     <a name="member"></a>
-    <table  cellpadding='2' bgcolor='white' width='80%'>
+    <table  cellpadding='2' bgcolor='white' width='80%' id='member' >
       <tr>
         <td colspan='2' class='TblHeader'> {!member!}
        </td>
@@ -199,7 +199,7 @@ function BasicPopup(a)
   }
   
   ShowPasswords(getElement('type'));
-  HiddenBoth();
+//  HiddenBoth();
   
 </script>
 {/literal}

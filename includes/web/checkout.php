@@ -65,8 +65,8 @@ if (isset($_REQUEST['sor'])) {
       $action !== 'login' ) {
     $smarty->display('checkout_user.tpl');
 //    session_write_close();
+
     exit();
-    echo "error here";
   }
   if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
       $smarty->display($fond . '.tpl');
@@ -74,8 +74,14 @@ if (isset($_REQUEST['sor'])) {
 //  session_write_close();
   exit();
 }
-
-redirect("index.php?action=cart_view",403);
+if ($action = 'edituser') {
+  echo "
+    <script>
+      window.close();
+    </script>";
+} else {
+  redirect("index.php?action=cart_view",403);
+}
 die();
 
   function setordervalues($aorder, $smarty){
@@ -101,13 +107,33 @@ die();
 
   Function loginAction ($smarty){
     global $user;
-    if (!$user->logged) {      print_r($_POST);
+    if (!$user->logged) {
   	  If (! $user->login_f($_POST['username'], $_POST['password'], $errors)) {
   	    $smarty->assign('login_error',$errors);
   	    return "checkout_user";
       }
     }
     return "checkout_preview";
+  }
+
+  Function usereditAction ($smarty){
+    global $user;
+    
+    if ($_POST.submit_update) {
+      if ($user->update_member_f($_POST, $errors)) {
+        echo "
+          <script>
+             window.opener.location.href = window.opener.location.href;
+             window.close();
+          </script>";
+        return "";
+      }
+      $smarty->assign('user_errors', $errors);
+      $smarty->assign('user_data',   $_POST);
+    } else {
+      $smarty->assign('user_data',   $_SESSION['_SHOP_USER']);
+    }
+    return "user_update";
   }
 
   Function registerAction ($smarty){
@@ -120,10 +146,10 @@ die();
     } else
       $errors['_error'] = con('RegisterError');
 
-    $smarty->assign('reg_type', $type);
-    $smarty->assign('user_errors', $errors);
-
     If ($errors) {
+      $smarty->assign('user_data',   $_POST);
+      $smarty->assign('reg_type',    $type);
+      $smarty->assign('user_errors', $errors);
       return "checkout_user";
     } else
       return "checkout_preview";
