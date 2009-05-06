@@ -43,7 +43,7 @@ $smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
 $smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
 $smarty->assign('organizer', $_SHOP->organizer_data);
 
-$smarty->template_dir = $_SHOP->tpl_dir . 'web'.DS;
+$smarty->template_dir = array($_SHOP->tpl_dir.'web'.DS.'custum'.DS, $_SHOP->tpl_dir.'web'.DS);
 $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
 $smarty->compile_id   = 'webshop';
 $smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
