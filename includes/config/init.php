@@ -49,7 +49,7 @@
     }   	  
   }
   foreach($res as $key => $value){
-    If ($key != 'status') {
+    if ($key != 'status') {
       $_SHOP->$key = $value;
     }
   }

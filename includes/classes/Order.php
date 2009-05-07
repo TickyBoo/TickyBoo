@@ -37,6 +37,13 @@ require_once('classes/Handling.php');
 class Order {
 
   var $places=array();
+  public $order_user_id = 0;
+  public $order_session = 0;
+  public $order_handling_id = 0;
+  public $order_place = "www";
+  public $no_fee = false;
+  public $no_cost = false;
+  public $order_handling = null;
 
   function Order ($order_user_id, $sid, $handling_id, $dummy, $no_fee, $no_cost, $place='www'){
 
@@ -161,7 +168,7 @@ class Order {
   }
   
   function save_full (){
-    if(!ShopDB::begin()){return FALSE;}
+ 	  if(!ShopDB::begin()){return FALSE;}
     
     if(!$this->save()){ShopDB::rollback();return FALSE;}
       
@@ -170,7 +177,12 @@ class Order {
     return $this->order_id;
   }
   
+  /**
+   * Save order function, will take parmaters from the class varibles constructor.
+   */ 
   function save () {
+  	
+  	global $_SHOP;
 
     if($this->order_id){
       return FALSE; //already saved
@@ -180,11 +192,13 @@ class Order {
 	if(!$this->no_fee){
 		$fee=$this->order_handling->calculate_fee($parzial);
 	}else{
-		$fee=0;}
+		$fee=0;
+	}
 	if($this->no_cost) {
 		$total=0;
 	}else{
-		$total=$parzial+$fee;}
+		$total=$parzial+$fee;
+	}
 
     $fee=number_format($fee, 2, '.', '');
     $total=number_format($total, 2, '.', '');
@@ -193,35 +207,41 @@ class Order {
     $this->order_total_price=$total;
     $this->order_fee=$fee;
     
+    $order_date_expire = 60;
 	if($this->order_handling->handling_id=='1'){
 		$order_status="res";
+		$order_date_expire = $_SHOP->shopconfig_restime;
 	}else{
 		$order_status="ord";
+		$order_date_expire = $this->order_handling->handling_expires_min;
 	}
+	
     $this->order_date =date('d-m-Y');
-    $query="INSERT INTO `Order` (
-      order_user_id,
-      order_session_id,
-      order_tickets_nr,
-      order_total_price,
-      order_date,
-      order_handling_id,
-      order_status,
-      order_fee,
-  	  order_place
-      ) VALUES (".
-      ShopDB::quote($this->order_user_id).",".      
-      ShopDB::quote($this->order_session_id).",".
-      ShopDB::quote($this->size()).",".      
-      ShopDB::quote($total).",".      
-      "NOW(),".      
-      ShopDB::quote($this->order_handling->handling_id).",".
-      ShopDB::quote($order_status).",".
-      ShopDB::quote($fee).",".
-	    ShopDB::quote($this->order_place)."
-	  )";
-
-
+    
+    $query = "INSERT INTO `order` (
+		`order_user_id`, 
+		`order_session_id`,
+		`order_tickets_nr`, 
+		`order_total_price`, 
+		`order_date`, 
+		`order_handling_id`, 
+		`order_status`, 
+		`order_fee`, 
+		`order_place`, 
+		`order_date_expire`
+		) VALUES ( ".
+      	ShopDB::quote($this->order_user_id).",".      
+      	ShopDB::quote($this->order_session_id).",".
+      	ShopDB::quote($this->size()).",".      
+      	ShopDB::quote($total).",".      
+      	"NOW(),".      
+      	ShopDB::quote($this->order_handling->handling_id).",".
+      	ShopDB::quote($order_status).",".
+      	ShopDB::quote($fee).",".
+	    ShopDB::quote($this->order_place).", 
+	    (NOW()+INTERVAL ".$order_date_expire." MINUTE)
+		);";
+		
     if(ShopDB::query($query)){
       $order_id=ShopDB::insert_id();
       $this->order_id=$order_id;
