@@ -43,5 +43,5 @@
   $_SHOP->auth_login="login";
   $_SHOP->auth_password="password";
   
-  require_once("functions/init.php");
+  require_once("init.php");
 ?>
