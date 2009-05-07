@@ -60,7 +60,7 @@ $menu[]=new MenuAdmin();
   $legende="<center>
   <table width='190' class='menu_admin' cellspacing='2'>
   <tr><td align='center' class='menu_admin_title'>".legende."</td></tr>
-  <tr><td class='admin_order_res' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".Reservated."</td></tr>
+  <tr><td class='admin_order_res' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".reserved."</td></tr>
   <tr><td class='admin_order_ord' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".ordered."</td></tr>
   <tr><td class='admin_order_send' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".sended."</td></tr>
   <tr><td class='admin_order_payed' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".payed."</td></tr>
