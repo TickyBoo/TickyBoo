@@ -920,7 +920,7 @@ define('unpublish','Unpublish');
 define('publish_event_group', 'publish_event_group');
 define('publish', 'Publish' );
 define('Archive','Archive' );
-define('reservated','Reservated');
+define('reserved','Reserved');//chris updated
 define('category_status', 'category_status' );
 define('category_new_size_title', 'Change catagory size');
 define('category_new_size','New size');
