@@ -107,12 +107,12 @@
         {/if}
         {assign var='user_data' value=$smarty.post}
         {if $user->logged}
-        	{include file="update_user.tpl"}
+        	{include file="user_update.tpl"}
         {else}
 			{include file="personal_page.tpl"}
         {/if}
       {else}
-	  	{include file="update_user.tpl"}
+	  	{include file="user_update.tpl"}
       {/if}
     {elseif $smarty.get.personal_page eq 'orders'}
     	{if $smarty.post.action eq 'order_res'}
