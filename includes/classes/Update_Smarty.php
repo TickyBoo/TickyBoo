@@ -59,8 +59,8 @@ class Update_Smarty {
 				}
 			}
 			if ( $_SHOP->shopconfig_maxres > 1 ) {
-				if ( isset($_SESSION['_SHOP_USER']) and $user = $_SESSION['_SHOP_USER'] and $user['user_status'] ==
-					2 ) {
+				if ( isset($_SESSION['_SHOP_USER']) and $user = $_SESSION['_SHOP_USER'] and 
+             $user['user_status'] ==2 ) {
 					$query = "SELECT * FROM User WHERE user_id=" . ShopDB::quote( $user['user_id'] ) .
 						" AND user_status='2'";
 					if ( !$res = ShopDB::query($query) ) {
@@ -86,25 +86,24 @@ class Update_Smarty {
 		$smarty->assign( "update_view", $enabled );
 	}
 	/*
-	* function test(){
-	* $time=Time::StringToTime('2008-02-24 19:00:20');
-	* $array=Time::countdown($time);
-	* 
-	* echo("{$array['justmins']} remaining");
-	* 
-	* $query="SELECT * FROM `Handling` WHERE handling_delunpaid='Yes' ";
-	* $query2="SELECT * FROM `Handling` LEFT JOIN `Order` 
-	* ON handling_id=order_handling_id 
-	* WHERE order_organizer_id={$_SHOP->organizer_id}
-	* AND handling_delunpaid='Yes' 
-	* AND (now() - interval $ttl minute) > order_date
-	* AND order_status NOT IN ('trash','res','cancel')  
-	* AND order_payment_status !='payed' 
-	* AND order_place!='pos'";
-	* 
-	* }
-	*/
+  function test(){
+	$time=Time::StringToTime('2008-02-24 19:00:20');
+	$array=Time::countdown($time);
 	
+	echo("{$array['justmins']} remaining");
+	
+	$query="SELECT * FROM `Handling` WHERE handling_delunpaid='Yes' ";
+	$query2="SELECT * FROM `Handling` LEFT JOIN `Order` 
+			ON handling_id=order_handling_id 
+			WHERE order_organizer_id={$_SHOP->organizer_id}
+			AND handling_delunpaid='Yes' 
+		  	AND (now() - interval $ttl minute) > order_date
+			AND order_status NOT IN ('trash','res','cancel')  
+			AND order_payment_status !='payed' 
+			AND order_place!='pos'";
+  }
+	*/
+
 	/**
 	 * Countdown now used the order_date_expire.
 	 * Could be simplified down as there shouldnt be the need for the two
@@ -133,8 +132,7 @@ class Update_Smarty {
 		} else {
 			$order_id = $this->secure_url_param( $params['order_id'] );
 			$query = "SELECT * FROM `Order` WHERE order_id=" . ShopDB::quote( $order_id ) .
-				"
-					AND order_status NOT IN ('cancel','trash') LIMIT 1";
+				"	AND order_status NOT IN ('cancel','trash') LIMIT 1";
 			if ( $res = ShopDB::query($query) ) {
 				$result = shopDB::fetch_assoc( $res );
 				$query = "SELECT * FROM `Handling` WHERE handling_id=" . ShopDB::quote( $result['order_handling_id'] ) .
@@ -168,8 +166,8 @@ class Update_Smarty {
 		if ( $res = ShopDB::query($query) ) {
 			while ( $row = shopDB::fetch_array($res) ) {
 				//echo "BANG!<br> ";
-				if ( !Order::Check_payment($row['order_id']) and ($_SHOP->shopconfig_restime >=
-					10) ) {
+				if ( !Order::Check_payment($row['order_id']) and 
+           ($_SHOP->shopconfig_restime >=	10) ) {
 					Order::order_delete( $row['order_id'] );
 				}
 			}
@@ -196,9 +194,7 @@ class Update_Smarty {
 			$query = "SELECT * FROM `Handling` 
 	  			WHERE handling_delunpaid='Yes'
 				AND handling_expires_min > 10 ";
-			$res = ShopDB::query( $query );
-
-			if ( $res ) {
+	  if($res=ShopDB::query($query)){
 				//Cycles through Handling's
 				while ( $row = ShopDB::fetch_array($res) ) {
 
@@ -210,8 +206,7 @@ class Update_Smarty {
 				  		AND order_place != 'pos' 
 				  		AND order_handling_id = " . ShopDB::quote( $row['handling_id'] );
 
-					$resultOrder = ShopDB::query( $query2 );
-					if ( $resultOrder ) {
+			if($resultOrder=ShopDB::query($query2)){
 						//Cycles through orders to see if they should be canceled!
 						while ( $roword = shopDB::fetch_array($resultOrder) ) {
 							Order::order_delete( $roword['order_id'] );
@@ -229,10 +224,10 @@ class Update_Smarty {
 		}
 	}
 
-	//global $_SHOP;
+  
 	// Will check last time the update script was run and return the time in mins
 	function lastrun() {
-
+  global $_SHOP;
 		$time = Time::StringToTime( $_SHOP->shopconfig_lastrun );
 		$remain = Time::countdown( $time, $_SHOP->shopconfig_lastrun_int );
 		$return = $remain['justmins'];
@@ -252,6 +247,8 @@ class Update_Smarty {
 	}
 
 	function secure_url_param( $num = false, $nonum = false ) {
+  global $_SHOP;
+
 		if ( $num ) {
 			$correct = is_numeric( $num );
 			if ( $correct ) {
@@ -270,7 +267,7 @@ class Update_Smarty {
 			if ( $correct ) {
 				return $nonum;
 			} elseif ( !$correct ) {
-				echo "No Such Varible";
+	  	  echo "No Such Variable";
 				$nonum = "This";
 				return $nonum;
 			}

@@ -52,7 +52,6 @@ define('FT_ERROR', 1);
 
 /**
  * print out type and content of the given variable if DEBUG-define (in config/core.php) > 0
- * 
  * @param mixed $var     Variable to debug
  * @param boolean $escape  If set to true variables content will be html-escaped
  */

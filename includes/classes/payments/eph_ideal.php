@@ -49,7 +49,7 @@ class eph_ideal extends payment{
   public $extras = array('pm_ideal_merchantid', 'pm_ideal_subid', 'pm_ideal_key',
                          'pm_ideal_keypass', 'pm_ideal_pcert', 'pm_ideal_certficate',
                          'pm_ideal_issuer','pm_ideal_test');
-  public $mandatory = array('pm_ideal_MERCHANTID', ); // is only used in project vazant.
+  public $mandatory = array('pm_ideal_merchantid' ); // is only used in project vazant.
 
   function admin_form (){
     return "{gui->input name='pm_ideal_merchantid'}".
@@ -84,12 +84,12 @@ class eph_ideal extends payment{
 		$trans = array (" " => "&nbsp");
 		foreach ($Issuers as $issuerName => $entry)	{
 			$issuerList[$entry->getIssuerID()] =
-        strtr(str_pad($entry->getIssuerID(), 20), $trans) . "&nbsp;"
-				. $entry->getIssuerName() . "&nbsp;-&nbsp;"
-				. $entry->getIssuerListType()
+        strtr(str_pad($entry->getIssuerID(), 20), $trans) . "&nbsp;" .
+				$entry->getIssuerName() . "&nbsp;-&nbsp;" .
+				$entry->getIssuerListType()
 				;
 		}
-		$issuerList .= "</option>\n";
+		print_r($issuerList);
     $_SHOP->smarty->assign('ideal_issuers',$issuerList );
 
     return "
@@ -206,6 +206,7 @@ class eph_ideal extends payment{
   }
 
   function init_ideal(){
+    global $_SHOP;
     if (!$this->pm_ideal_test) {
       $url= 'ssl://ideal.secure-ing.com:443/ideal/iDeal';
     } else {
@@ -213,23 +214,26 @@ class eph_ideal extends payment{
     }
     
     $config = array(
-        'PRIVATEKEY'      => $this->pm_ideal_key,
-        'PRIVATEKEYPASS'  => $this->pm_ideal_keypass,
-        'PRIVATECERT'     => $this->pm_ideal_pcert,
-        'CERTIFICATE0'    => $this->pm_ideal_certficate,
+        'PRIVATEKEY'      => "$this->pm_ideal_key",
+        'PRIVATEKEYPASS'  => "$this->pm_ideal_keypass",
+        'PRIVATECERT'     => "$this->pm_ideal_pcert",
+        'CERTIFICATE0'    => "$this->pm_ideal_certficate",
         
-        'ACQUIRERURL'     => $url,
+        'ACQUIRERURL'     => "$url",
         #'ROXY'=Vul hier een proxyserver in (gebruik dit ALLEEN als de webshop achter een proxyserver zit)
         #'ROXYACQURL'=vul hier de url van de acquirer in (gebruik dit ALLEEN als de webshop achter een proxyserver zit)
         'ACQUIRERTIMEOUT' => ACQUIRERTIMEOUT,
 
-        'MERCHANTID'      => $this->pm_ideal_merchantid,
-        'SUBID'           => $this->pm_ideal_subid,
+        'MERCHANTRETURNURL' => $_SHOP->root,
+        'MERCHANTID'      => "$this->pm_ideal_merchantid",
+        'SUBID'           => ($this->pm_ideal_subid)?$this->pm_ideal_subid:'0',
         'EXPIRATIONPERIOD'=> EXPIRATIONPERIOD,
         'LOGFILE'         => INC.'tmp'.DS.'ideal_connect.log',
-        'TraceLevel'      => TRACELEVEL,
+        'TraceLevel'      => TRACE_DEBUG.TRACE_ERROR,
         );
+ //   print_r( $config) ; print_r($this);
     return new iDEALConnector($config);
+    
 
   }
 }

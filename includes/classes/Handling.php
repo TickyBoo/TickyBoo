@@ -341,7 +341,7 @@ class Handling {
   	if($pm=$this->pment()){
       $return = $pm->on_confirm($order);
   	}
-    return $this->handling_html_template.'<br>'.$return;
+    return (is_array($return))?$return:$this->handling_html_template.'<br>'.$return;
   }
 
   function on_submit(&$order, &$errors) {

@@ -74,7 +74,7 @@ if (isset($_REQUEST['sor'])) {
 //  session_write_close();
   exit();
 }
-if ($action = 'edituser') {
+if ($action == 'edituser') {
   echo "
     <script>
       window.close();
@@ -191,13 +191,22 @@ die();
       $hand= $myorder->order_handling;
       $confirmtext = $hand->on_confirm($myorder);
 
-      $smarty->assign('confirmtext', $confirmtext);
+      if (is_array($confirmtext)) {
+
+        $smarty->assign('pm_return',$confirmtext);
+        if(!$confirmtext['approved'])
+           $myorder->order_delete($myorder->order_id );
+        unset( $_SESSION['_SHOP_order']);
+        return "checkout_result";
+      } else {
       if ($hand->is_eph()) {
         $_SESSION['_SHOP_order'] = $myorder;
       }
       $order->obj = $myorder;
+        $smarty->assign('confirmtext', $confirmtext);
       return "checkout_confirm";
     }
+  }
   }
 
   function  submitaction($smarty) {
@@ -219,12 +228,13 @@ die();
       $order->obj = $myorder;
       $smarty->assign('confirmtext', $pm_return);
       return "checkout_confirm";
-    } else
+    } else  {
       $smarty->assign('pm_return',$pm_return);
       if(!$pm_return['approved'])
-         $myorder->order_delete($order_id );
+         $myorder->order_delete($myorder->order_id );
       unset( $_SESSION['_SHOP_order']);
       return "checkout_result";
+    }
   }
 
   function  printaction($smarty) {
@@ -244,7 +254,6 @@ die();
   }
 
   function  acceptaction($smarty) {
-    echo 'im here: Payment accepted.'; print_r($_POST);
     $myorder = is($_SESSION['_SHOP_order'],nil);
     if($test=Order::DecodeSecureCode($myorder)<1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -257,7 +266,7 @@ die();
 
     $pm_return = $hand->on_return($myorder, true);
     $smarty->assign('pm_return',$pm_return);
-    If (!$pm_return.approved) {
+    If (!$pm_return['approved']) {
        print_r($pm_return);
        $myorder->order_delete($myorder->order_id );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
@@ -268,7 +277,6 @@ die();
   }
 
   function  cancelaction($smarty) {
-    echo 'im here: Payment canceled. !!!'; print_r($_POST);
     $myorder = is($_SESSION['_SHOP_order'],null);
     if($test = Order::DecodeSecureCode($myorder)<1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -294,7 +302,8 @@ die();
        ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
        return;
     }
-    $hand=$myorder->handling;
+    ShopDB::dblogging("notify action ($test): $myorder->order_id.\n");
+    $hand=$myorder->order_handling;
     $hand->on_notify($myorder);
   }
 session_write_close();

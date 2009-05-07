@@ -112,8 +112,8 @@ class EPH_paypal extends payment{
     }
 //     $url=$this->pm_paypal_url;
     $receiver_email=$this->pm_paypal_business;
-    if (!is_numeric($_POST['item_number']) and ($_POST['item_number']<>$order->order_id)) {
-      ShopDB::dblogging(print_r($_POST, true));
+    if (!isset($_POST['item_number']) or !is_numeric($_POST['item_number']) or ($_POST['item_number']<>$order->order_id)) {
+      ShopDB::dblogging("Notification error, order No missmatch: \n". print_r($_POST, true));
       return;
     }
     $debug ="date: ".date('r')."\n";

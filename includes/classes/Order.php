@@ -218,7 +218,7 @@ class Order {
 	
     $this->order_date =date('d-m-Y');
     
-    $query = "INSERT INTO `order` (
+    $query = "INSERT INTO `Order` (
 		`order_user_id`, 
 		`order_session_id`,
 		`order_tickets_nr`, 

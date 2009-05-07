@@ -43,7 +43,7 @@ class ShopDB {
           if (isset($_SHOP->db_name)) {
              $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
                             or die ("Could not connect: " . mysqli_connect_errno());
-             ShopDB::checkdatabase(true, false);
+             ShopDB::checkdatabase(false, false);
           } else {
              echo 'db init - ';
              Print_r($_SHOP);
@@ -372,6 +372,10 @@ private static function TableCreateData( $tablename )
       } elseif (strpos($tables, "(\r ")) {
           $tables = str_replace("\r", "\n", $tables);
       }
+      $tables = str_replace(" default ", " DEFAULT ", $tables);
+      $tables = str_replace(" auto_increment", " AUTO_INCREMENT", $tables);
+      $tables = str_replace(" on update ", " ON UPDATE ", $tables);
+
       // Split the query into lines, so we can easily handle it. We know lines are separated by $crlf (done few lines above).
       $sql_lines = explode("\n", $tables);
       $sql_count = count($sql_lines);
@@ -423,14 +427,14 @@ private static function TableCreateData( $tablename )
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
           } else {
               $update = true;
-              $sql = '';
+              $sql = '';               Print_r( $fields);
               foreach ($fields['fields'] as $key => $info) {
-                 $sql .= ", `" . $key . "` " . $info;
+                 $sql .= ", `" . $key . "` " . $info."\n";
               }
-              If ((isset($fields['keys'])) and (count($fields['keys']) > 0))
-                  foreach ($fields['keys'] as $info) $sql .= ', ' . $info;
+              If ((isset($fields['key'])) and (count($fields['key']) > 0))
+                  foreach ($fields['key'] as $info) $sql .= ', ' . $info."\n";
               $sql = "CREATE TABLE `$tablename` (" . substr($sql, 2) . ")";
-              if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine'];
+              if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
           }
           If ($update) {
              echo $sql."<br>\n";
@@ -442,7 +446,7 @@ private static function TableCreateData( $tablename )
              if ($logall)  $error .= $sql."\n";
           }
       }
-      self::Upgrade_Autoincrements();
+//      self::Upgrade_Autoincrements();
       self::dblogging("[SQLupdate:] Finnish \n");
       return $error;
     }

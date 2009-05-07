@@ -6,7 +6,7 @@
 
 // Make sure to use a path outside the www-root that you can protect properly
 
-define( "SECURE_PATH", "includes".DS."security" );
+define( "SECURE_PATH", dirname(__FILE__));
 
 /*
 If you did not change the directory structure you can use the following path:

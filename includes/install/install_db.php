@@ -6,14 +6,12 @@ $tbls['Admin']['fields'] = array(
   'admin_login' => " varchar(10) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(32) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
-  'control_organizer_id' => " int(11) NOT NULL DEFAULT '0'",
   'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
 $tbls['Admin']['key'] = array(
   "admin_login" => "KEY `admin_login` (`admin_login`)");
 $tbls['Admin']['engine'] = MyISAM;
 
 $tbls['Control']['fields'] = array(
-  'control_organizer_id' => " int(11) NOT NULL DEFAULT '0'",
   'control_login' => " varchar(20) NOT NULL DEFAULT ''",
   'control_password' => " varchar(32) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
@@ -365,8 +363,8 @@ $tbls['Payment_log']['fields'] = array(
   'payment_log_action' => " varchar(255) NOT NULL",
   'payment_log_blog' => " text NOT NULL");
 $tbls['Payment_log']['key'] = array(
-  "Payment_log_id" => "primary key id (payment_log_id)",
-  "Payment_log_order_id" => "KEY 'order_id' ('order_id')");
+  "Payment_log_id" => "primary key payment_log_id (payment_log_id)",
+  "Payment_log_order_id" => "KEY `payment_log_order_id` (`payment_log_order_id`)");
 $tbls['Payment_log']['engine'] = MyISAM;
 
 $tbls['Sessions']['fields'] = array(
