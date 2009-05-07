@@ -43,6 +43,7 @@ class ShopDB {
           if (isset($_SHOP->db_name)) {
              $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
                             or die ("Could not connect: " . mysqli_connect_errno());
+             ShopDB::checkdatabase(true, true);
           } else {
              echo 'db init - ';
              Print_r($_SHOP);
@@ -329,6 +330,26 @@ class ShopDB {
         }
     }
 
+    function checkdatabase($update=false, $viewonly=false){
+      global $_SHOP;
+      $logfile = $_SHOP->tmp_dir.'databasehist.log';
+      $dbstructfile = INC.'install'.DS.'install_db.php';
+      if (!$update and file_exists(INC.'tmp'.DS.'databasehist.log')) {
+        $update = filectime($logfile) < filectime($dbstructfile);
+      } else {
+        $update = true;
+      }
+
+      if ($update) {
+        require_once($dbstructfile);
+        if ($errors = ShopDB::DatabaseUpgrade($tbls, true, $viewonly)) {
+          $handle=fopen($logfile,"a");
+          fwrite($handle, date('c',time()).": \n". $errors. "\n");
+          fclose($handle);
+        }
+      }
+    }
+
 
     /*
     * $DB_Struction needs to be a array with the tablename as key and a second array with fields/index's
@@ -336,46 +357,95 @@ class ShopDB {
     *   => Array('ID', 'int(11) NOT NULL auto_increment');
     *
     */
-    function DatabaseUpgrade($Struction)
+private static function TableCreateData( $tablename )
+  {
+    $result = self::query_one_row('SHOW CREATE TABLE ' ."`$tablename`");
+    if ($result) {
+      $tables = $result['Create Table'];
+    }
+    $keys = array ();
+    unset($result);
+    if ($tables) {
+      // Convert end of line chars to one that we want (note that MySQL doesn't return query it will accept in all cases)
+      if (strpos($tables, "(\r\n ")) {
+          $tables = str_replace("\r\n", "\n", $tables);
+      } elseif (strpos($tables, "(\r ")) {
+          $tables = str_replace("\r", "\n", $tables);
+      }
+      // Split the query into lines, so we can easily handle it. We know lines are separated by $crlf (done few lines above).
+      $sql_lines = explode("\n", $tables);
+      $sql_count = count($sql_lines);
+      // lets find first line with constraints
+      for ($i = 1; $i < $sql_count; $i++) {
+         $sql_line = trim($sql_lines[$i]);
+         if (substr($sql_line,-1) ==',') $sql_line = substr($sql_line,0,-1);
+         if (preg_match('/^[\s]*(CONSTRAINT|FOREIGN|PRIMARY|UNIQUE)*[\s]+(KEY)+/', $sql_lines[$i])) {
+            $keys['keys'][] = $sql_line;
+         } else if (preg_match('/(ENGINE)+/', $sql_line)) {
+         } else {
+           $x = strpos( $sql_line,' ');
+           $key = substr($sql_line,0,$x);
+           if (strpos("`'\"", substr($key,0,1)) !== false) {
+             $key = substr($key,1,-1);
+           }
+           $keys['fields'][$key] = substr($sql_line,$x);
+         }
+      }
+    }
+    Return $keys;
+  }
+
+    function DatabaseUpgrade($Struction, $logall =false, $viewonly=false)
     {
         $error = '';
-        foreach ($Struction as $tablename => $fields) {
-            if (!is_array($fields)) continue;
-            $tblFields = array();
-            $update = false;
-//            echo $tablename.': '.nl2br(print_r($fields,true));
-            If (self::TableExists("$tablename")) {
-                $sql = "";
-                $tblFields = self::FieldList($tablename);
-                $oldkey = '';
-                foreach ($fields['fields'] as $key => $info) {
-                    if (!$tblFields or !in_array($key, $tblFields)) {
-                        $update = true;
-                        $sql .= ', ADD ' . $key . " " . $info;
-                        $sql .= ($oldkey != '')?' FIRST':' AFTER ' . $oldkey;
-                    }
-                    $oldkey = $key;
+        
+      foreach ($Struction as $tablename => $fields) {
+          $update = false;
+          If ($tblFields = self::TableCreateData($tablename)) {
+              $sql = "";
+              $oldkey = '';
+              foreach ($fields['fields'] as $key => $info) {
+                if (!array_key_exists($key, $tblFields['fields'])) {
+                    $update = true;
+                    $sql .= ', ADD `' . $key . "` " . $info;
+                    $sql .= (($oldkey == '')?' FIRST':' AFTER ' . $oldkey)."\n";
+                } elseif ((trim($info)) != (trim($tblFields['fields'][$key]))) {
+                    echo "mod: {".$info."}\n     {". $tblFields['fields'][$key]."}\n";
+                    $update = true;
+                    $sql .= ', MODIFY `' . $key . "` " . $info."\n";
                 }
-                $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
-            } else {
-                $update = true;
-                $sql = '';
-                foreach ($fields['fields'] as $key => $info) {
-                   $sql .= ", `" . $key . "` " . $info."\n";
+                $oldkey = $key;
+              }
+              foreach ($tblFields['fields'] as $key => $info) {
+                if (!array_key_exists($key, $fields['fields'])) {
+                    echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".<br>\n";
                 }
-                If ((isset($fields['key'])) and (count($fields['key']) > 0))
-                    foreach ($fields['key'] as $key => $info) $sql .= ', ' . $info."\n";
-                $sql = "CREATE TABLE `$tablename` (\n" . substr($sql, 2) . ")";
-                if ($fields['auto_increment']) $sql .= ' AUTO_INCREMENT='.$fields['auto_increment'];
-                if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine'];
-            }
-            If ($update) {
-               // echo nl2br($sql)."<br><br>\n";
-                $result = self::query($sql, false);
-                if (!$result) $error .= '<B>' .self::error () . '</b><br>' . $sql . '<br>';
-            }
-        }
-        return $error;
+              }
+              $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
+          } else {
+              $update = true;
+              $sql = '';
+              foreach ($fields['fields'] as $key => $info) {
+                 $sql .= ", `" . $key . "` " . $info;
+              }
+              If ((isset($fields['keys'])) and (count($fields['keys']) > 0))
+                  foreach ($fields['keys'] as $info) $sql .= ', ' . $info;
+              $sql = "CREATE TABLE `$tablename` (" . substr($sql, 2) . ")";
+              if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine'];
+          }
+          If ($update) {
+             echo $sql."<br>\n";
+//             self::dblogging("[SQLupdate:] ".$sql."\n");
+             If (!$viewonly) {
+               $result = self::query($sql);
+               if (!$result) $error .= '<B>' .self::error ().":</b>\n";
+             }
+             if ($logall)  $error .= $sql."\n";
+          }
+      }
+      self::Upgrade_Autoincrements();
+      self::dblogging("[SQLupdate:] Finnish \n");
+      return $error;
     }
 
     function Upgrade_Autoincrements()
