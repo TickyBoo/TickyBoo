@@ -43,7 +43,7 @@ class ShopDB {
           if (isset($_SHOP->db_name)) {
              $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
                             or die ("Could not connect: " . mysqli_connect_errno());
-             ShopDB::checkdatabase(true, true);
+             ShopDB::checkdatabase(true, false);
           } else {
              echo 'db init - ';
              Print_r($_SHOP);
@@ -397,8 +397,7 @@ private static function TableCreateData( $tablename )
 
     function DatabaseUpgrade($Struction, $logall =false, $viewonly=false)
     {
-        $error = '';
-        
+      $error = '';
       foreach ($Struction as $tablename => $fields) {
           $update = false;
           If ($tblFields = self::TableCreateData($tablename)) {
@@ -410,7 +409,7 @@ private static function TableCreateData( $tablename )
                     $sql .= ', ADD `' . $key . "` " . $info;
                     $sql .= (($oldkey == '')?' FIRST':' AFTER ' . $oldkey)."\n";
                 } elseif ((trim($info)) != (trim($tblFields['fields'][$key]))) {
-                    echo "mod: {".$info."}\n     {". $tblFields['fields'][$key]."}\n";
+                    echo "mod: {".$tblFields['fields'][$key]."}\n     {".$info."}\n";
                     $update = true;
                     $sql .= ', MODIFY `' . $key . "` " . $info."\n";
                 }
