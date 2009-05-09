@@ -6,14 +6,14 @@
  * Distribué sous la licence GPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.20 - 06/04/2009
+ * @version		3.21 - 05/05/2009
  */
 
 if (!defined('__CLASS_HTML2PDF__'))
 {
-	define('__CLASS_HTML2PDF__', '3.20');
+	define('__CLASS_HTML2PDF__', '3.21');
 
-	// vous pouvez utiliser cette fonction de bug comme suit
+	// vous pouvez utiliser cette fonction de debug comme suit
 	// pour voir le temps et la mémoire utilisés (sous linux) pour la conversion :
 	//	echo HTML2PDFgetTimerDebug();
 	//	$html2pdf->WriteHTML($content);
@@ -63,6 +63,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		
 		var $sub_html		= null;		// sous html
 		var $sub_part		= false;	// indicateur de sous html
+		var $isSubPart		= false;	// indique que le convertisseur courant est un sous html
 		
 		var $pdf			= null;		// objet PDF
 		var $maxX			= 0;		// zone maxi X
@@ -93,6 +94,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 		var $lstChamps		= array();	// liste des champs
 		var $lstSelect		= array();	// options du select en cours
 		var $previousCall	= null;		// dernier appel
+		var $isInTfoot		= false;	// indique si on est dans un tfoot
+		var $pageMarges		= array();	// marges spécifiques dues aux floats
+		var $isAfterFloat	= false;	// indique si on est apres un float
 		
 		/**
 		 * Constructeur
@@ -194,6 +198,59 @@ if (!defined('__CLASS_HTML2PDF__'))
 		}
 		
 		/**
+		* recuperer les positions x minimales et maximales en fonction d'une hauteur
+		*
+		* @param	float	y
+		* @return	array(float, float)
+		*/
+		function getMargins($y)
+		{
+			$y = floor($y*100);
+			$x = array($this->pdf->lMargin, $this->pdf->w-$this->pdf->rMargin);
+			
+			foreach($this->pageMarges as $m_y => $m_x)
+				if ($m_y<=$y) $x = $m_x;
+			
+			return $x;
+		}
+		
+		/**
+		* ajouter une marge suite a un float
+		*
+		* @param	string	left ou right
+		* @param	float	x1
+		* @param	float	y1
+		* @param	float	x2
+		* @param	float	y2
+		* @return	null
+		*/
+		function addMargins($float, $x1, $y1, $x2, $y2)
+		{
+			$old1 = $this->getMargins($y1);
+			$old2 = $this->getMargins($y2);
+			if ($float=='left')  $old1[0] = $x2;
+			if ($float=='right') $old1[1] = $x1;
+			
+			$y1 = floor($y1*100);
+			$y2 = floor($y2*100);
+
+			foreach($this->pageMarges as $m_y => $m_x)
+			{
+				if ($m_y<$y1) continue;				
+				if ($m_y>$y2) break;	
+				if ($float=='left'  && $this->pageMarges[$m_y][0]<$x2) unset($this->pageMarges[$m_y]);
+				if ($float=='right' && $this->pageMarges[$m_y][1]>$x1) unset($this->pageMarges[$m_y]);
+			}
+
+			$this->pageMarges[$y1] = $old1;
+			$this->pageMarges[$y2] = $old2;
+			
+			ksort($this->pageMarges);
+			
+			$this->isAfterFloat = true;
+		}
+	
+		/**
 		* définir des nouvelles marges et sauvegarder les anciennes
 		*
 		* @param	float	marge left
@@ -203,8 +260,11 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/
 		function saveMargin($ml, $mt, $mr)
 		{
-			$this->marges[] = array('l' => $this->pdf->lMargin, 't' => $this->pdf->tMargin, 'r' => $this->pdf->rMargin);
+			$this->marges[] = array('l' => $this->pdf->lMargin, 't' => $this->pdf->tMargin, 'r' => $this->pdf->rMargin, 'page' => $this->pageMarges);
 			$this->pdf->SetMargins($ml, $mt, $mr);
+
+			$this->pageMarges = array();
+			$this->pageMarges[floor($mt*100)] = array($ml, $this->pdf->w-$mr);
 		}
 						
 		/**
@@ -220,15 +280,18 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$ml = $old['l'];
 				$mt = $old['t'];
 				$mr = $old['r'];
+				$mP = $old['page'];
 			}
 			else
 			{
 				$ml = $this->margeLeft;
 				$mt = 0;
 				$mr = $this->margeRight;
+				$mP = array($mt => array($ml, $this->pdf->w-$mr));
 			}
 			
 			$this->pdf->SetMargins($ml, $mt, $mr);
+			$this->pageMarges = $mP;
 		}
 		
 		/**
@@ -318,6 +381,20 @@ if (!defined('__CLASS_HTML2PDF__'))
 		}
 				
 		/**
+		* saut de ligne avec une hauteur spécifique
+		*
+		* @param	float		hauteur de la ligne
+		* @return	null
+		*/
+		function setNewLine($h)
+		{
+			$this->pdf->Ln($h);
+			
+			list($lx, $rx) = $this->getMargins($this->pdf->y);
+			$this->pdf->x=$lx;
+		}
+			
+		/**
 		* création d'une nouvelle page avec une orientation particuliere
 		*
 		* @param	string		sens P=portrait ou L=landscape
@@ -345,7 +422,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->pdf->tMargin = $this->defaultTop;
 			$this->pdf->AddPage($this->sens);
 			
-			if (!$this->sub_part)
+			if (!$this->sub_part && !$this->isSubPart)
 			{
 				if (is_array($this->background))
 				{
@@ -364,8 +441,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 			
 			$this->SetMargins();
-			$this->pdf->setX($this->margeLeft);
-			$this->pdf->setY($this->margeTop);
+			$this->pdf->y = $this->margeTop;			
+			list($lx, $rx) = $this->getMargins($this->pdf->y);
+			$this->pdf->x=$lx;
 		}
 		
 		/** 
@@ -426,6 +504,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 										array($this->defaultLeft,$this->defaultTop,$this->defaultRight,$this->defaultBottom),
 										true
 									);
+			$sub_html->isSubPart = true;
 			$sub_html->setTestTdInOnePage($this->testTDin1page);
 			
 			$sub_html->style->css			= $this->style->css;
@@ -1370,6 +1449,12 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$txt = $param['txt'];
 			$txt = str_replace('&euro;', '€', $txt);
 
+			if ($this->isAfterFloat)
+			{
+				$txt = preg_replace('/^([\s]*)([^\s])/isU', '$2', $txt);
+				$this->isAfterFloat = false;
+			}
+
 			$txt = html_entity_decode($txt, ENT_QUOTES, 'ISO-8859-15');
 //			$txt = utf8_decode(html_entity_decode($txt, ENT_QUOTES, 'UTF-8'));
 
@@ -1391,11 +1476,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 			
 			$maxX = 0;										// plus grande largeur du texte apres retour à la ligne
-			$left	= $this->pdf->lMargin;					// marge de gauche
-			$right	= $this->pdf->w-$this->pdf->rMargin;	// marge de droite
-			$w = $this->pdf->GetStringWidth($txt);			// largeur du texte
 			$x = $this->pdf->getX();						// position du texte
 			$y = $this->pdf->getY();
+			$w = $this->pdf->GetStringWidth($txt);			// largeur du texte
+			list($left, $right) = $this->getMargins($y);	// marges autorisees
 			$nb = 0;										// nbr de lignes découpées
 	
 			// tant que ca ne rentre pas sur la ligne et qu'on a du texte => on découpe
@@ -1430,7 +1514,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$w = $this->pdf->GetStringWidth($str);
 
 				// ecriture du bout de phrase extrait et qui rentre
-				$this->pdf->Cell(($align=='L' ? $w : $this->style->value['width']), $h+$dh, $str, 0, 0, $align, $fill, $this->inLink);
+				$wc = ($align=='L' ? $w : $this->style->value['width']);
+				if ($right - $left<$wc) $wc = $right - $left;
+				$this->pdf->Cell($wc, $h+$dh, $str, 0, 0, $align, $fill, $this->inLink);
 				$this->maxH = max($this->maxH, $this->style->getLineHeight());
 				
 				// détermination de la largeur max
@@ -1456,6 +1542,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 					// ligne suplémentaire. au bout de 1000 : trop long => erreur
 					$nb++;
 					if ($nb>1000) HTML2PDF::makeError(2, __FILE__, __LINE__, array($txt, $right-$left, $this->pdf->GetStringWidth($txt))); 
+
+					list($left, $right) = $this->getMargins($y);	// marges autorisees
 				}
 			}
 
@@ -1519,6 +1607,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$h = 72./96.*$hi;					
 			}
 			
+			// detection du float
+			$float = $this->style->getFloat();
+			if ($float && $this->maxH) $this->o_BR(array());
+
 			// position d'affichage
 			$x = $this->pdf->getX();
 			$y = $this->pdf->getY();
@@ -1538,31 +1630,72 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$y+=($hT-$h);
 			}
 
+			$yc = $y-$this->style->value['margin']['t'];
+
 			// détermination de la position réelle d'affichage en fonction du text-align du parent
 			$old = isset($this->style->table[count($this->style->table)-1]) ? $this->style->table[count($this->style->table)-1] : $this->style->value;
-			$parent_w = $old['width'] ? $old['width'] : $this->pdf->w - $this->pdf->lMargin - $this->pdf->rMargin;
-			if ($parent_w>$w)
-			{
+
 				if ($old['width'])
 				{
-					if ($this->style->value['text-align']=='center')		$x = $x + 0.5*($parent_w - $w);		
-					else if ($this->style->value['text-align']=='right')	$x = $x + $parent_w - $w;
+				$parent_w = $old['width'];
+				$parent_x = $x;
 				}
 				else
 				{
-					if ($this->style->value['text-align']=='center')		$x = $this->pdf->lMargin + 0.5*($parent_w - $w);		
-					else if ($this->style->value['text-align']=='right')	$x = $this->pdf->rMargin - $w;					
+ 				$parent_w = $this->pdf->w - $this->pdf->lMargin - $this->pdf->rMargin;
+				$parent_x = $this->pdf->lMargin;
 				}
+			
+			if ($float)
+			{
+				list($lx, $rx) = $this->getMargins($yc);
+				$parent_x = $lx;
+				$parent_w = $rx-$lx;
+			}
+
+			if ($parent_w>$w && $float!='left')
+			{
+				if ($float=='right' || $this->style->value['text-align']=='right')	$x = $parent_x + $parent_w - $w-$this->style->value['margin']['r']-$this->style->value['margin']['l'];
+				else if ($this->style->value['text-align']=='center')				$x = $parent_x + 0.5*($parent_w - $w);
 			}
 			
 			// affichage de l'image, et positionnement à la suite
-			$this->pdf->Image($src, $x, $y, $w, $h, '', $this->inLink);				
-			$this->pdf->SetX($x+$w);
+			if (!$this->sub_part && !$this->isSubPart) $this->pdf->Image($src, $x, $y, $w, $h, '', $this->inLink);
 
-			// position MAX
+			$x-= $this->style->value['margin']['l'];
+			$y-= $this->style->value['margin']['t'];
+			$w+= $this->style->value['margin']['l'] + $this->style->value['margin']['r'];
+			$h+= $this->style->value['margin']['t'] + $this->style->value['margin']['b'];
+
+			if ($float=='left')
+			{
+				$this->maxX = max($this->maxX, $x+$w);
+				$this->maxY = max($this->maxY, $y+$h);
+
+				$this->addMargins($float, $x, $y, $x+$w, $y+$h);
+
+				list($lx, $rx) = $this->getMargins($yc);
+				$this->pdf->x = $lx;
+				$this->pdf->y = $yc;				
+	 		}
+			else if ($float=='right')
+			{
+//				$this->maxX = max($this->maxX, $x+$w);
+				$this->maxY = max($this->maxY, $y+$h);
+
+				$this->addMargins($float, $x, $y, $x+$w, $y+$h);
+
+				list($lx, $rx) = $this->getMargins($yc);
+				$this->pdf->x = $lx;
+				$this->pdf->y = $yc;
+			}
+			else
+			{
+				$this->pdf->SetX($x+$w);
 			$this->maxX = max($this->maxX, $x+$w);
 			$this->maxY = max($this->maxY, $y+$h);
  			$this->maxH = max($this->maxH, $h);
+		}
 		}
 		
 		/**
@@ -1580,6 +1713,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/	
 		function Rectangle($x, $y, $w, $h, $border, $padding, $margin, $background)
 		{
+			if ($this->sub_part || $this->isSubPart) return false;
 			if ($h===null) return false;
 			
 			$x+= $margin;
@@ -1994,7 +2128,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($this->maxH==0) $this->maxY = max($this->maxY, $y+$h);
 			
 			// si le saut de ligne rentre => on le prend en compte, sinon nouvelle page
-			if ($y+$h<$this->pdf->h - $this->pdf->bMargin)	$this->pdf->Ln($h);
+			if ($y+$h<$this->pdf->h - $this->pdf->bMargin) $this->setNewLine($h);
 			else											$this->setNewPage();
 				
 			$this->maxH = 0;
@@ -3169,7 +3303,6 @@ if (!defined('__CLASS_HTML2PDF__'))
 						$HTML2PDF_TABLEAU[$param['num']][$mode]['height']+= $h;	
 					}
 				}
-//				echo '<pre>';print_r($HTML2PDF_TABLEAU[$param['num']]);echo '</pre>';
 
 				// calcul des dimensions du tableau - Largeur
 				$HTML2PDF_TABLEAU[$param['num']]['width'] = $HTML2PDF_TABLEAU[$param['num']]['marge']['l'] + $HTML2PDF_TABLEAU[$param['num']]['marge']['r'];
@@ -3308,7 +3441,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$hfoot = $HTML2PDF_TABLEAU[$param['num']]['tfoot']['height'];
 				
 				// si la ligne ne rentre pas dans la page => nouvelle page
-				if ($HTML2PDF_TABLEAU[$param['num']]['td_y'] + $HTML2PDF_TABLEAU[$param['num']]['marge']['b'] + $ty +$hfoot> $this->pdf->h - $this->pdf->bMargin)
+				if (!$this->isInTfoot && $HTML2PDF_TABLEAU[$param['num']]['td_y'] + $HTML2PDF_TABLEAU[$param['num']]['marge']['b'] + $ty +$hfoot> $this->pdf->h - $this->pdf->bMargin)
 				{
 					if (count($HTML2PDF_TABLEAU[$param['num']]['tfoot']['code']))
 					{
@@ -3321,7 +3454,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 						$HTML2PDF_TABLEAU[$param['num']]['td_curr'] = 0;
 						$this->parse_pos = 0;
 						$this->parsing->code = $HTML2PDF_TABLEAU[$param['num']]['tfoot']['code'];
+						$this->isInTfoot = true;
 						$this->MakeHTMLcode();
+						$this->isInTfoot = false;
 						
 						$this->parse_pos = 	$OLD_parse_pos;
 						$this->parsing->code = $OLD_parse_code;

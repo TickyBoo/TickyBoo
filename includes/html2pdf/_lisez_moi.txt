@@ -7,14 +7,14 @@
 **  Copyright 2000-2009 par Laurent Minguet          **
 *******************************************************
 *******************************
-* HTML2PDF v3.20 - 06/04/2009 *
+* HTML2PDF v3.21 - 05/05/2009 *
 *******************************
 
 Utilisation :
 ------------
  - regardez les exemples fournis pour voir le fonctionnement.
 
- - les formulaires ne marchent QUE avec ADOBE READER 8 et ADIB
+ - les formulaires ne marchent QUE avec ADOBE READER 8 et ADOBE READER 9.0
  
  - il est TRES IMPORTANT de fournir du HTML 4.01 valide au convertisseur,
    mais seulement ce que contient le <body>
@@ -57,6 +57,9 @@ Utilisation :
          
 Modification :
 -------------
+ 3.21 : ajout de la propriété css FLOAT pour la balise IMG
+        correction sur la gestion des TFOOT
+        correction sur le positionnement des images
  3.20 : ajout de la gestion des margins pour la balise DIV
         ajout de la gestion de la propriete css LINE-HEIGHT
         correction sur l'interpretation de la valeur de certains styles CSS (background-image, background-position, ...)
@@ -165,6 +168,7 @@ Informations :
  Programmeur :	Spipu
 		email   : webmaster@spipu.net
 		site    : http://html2pdf.fr/
+        wiki    : http://html2pdf.fr/wiki.php
 		support : http://html2pdf.fr/forum.php
 		
 Remerciement :

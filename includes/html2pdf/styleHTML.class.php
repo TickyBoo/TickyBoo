@@ -6,7 +6,7 @@
  * Distribué sous la licence GPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.20 - 06/04/2009
+ * @version		3.21 - 05/05/2009
  */
  
 if (!defined('__CLASS_STYLEHTML__'))
@@ -975,6 +975,13 @@ if (!defined('__CLASS_STYLEHTML__'))
 			return $this->pdf->h - $this->pdf->tMargin - $this->pdf->bMargin;
 		}
 		
+		function getFloat()
+		{
+			if ($this->value['float']=='left')	return 'left';
+			if ($this->value['float']=='right')	return 'right';
+			return null;
+		}
+				
 		function getLastAbsoluteX()
 		{
 			for($k=count($this->table); $k>0; $k--)
@@ -988,7 +995,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		{
 			for($k=count($this->table); $k>0; $k--)
 			{
-				if ($this->table[$k-1]['x'] && $this->table[$k-1]['position']) return $this->table[$k-1]['y'];
+				if ($this->table[$k-1]['y'] && $this->table[$k-1]['position']) return $this->table[$k-1]['y'];
 			}
 			return $this->pdf->tMargin;
 		}

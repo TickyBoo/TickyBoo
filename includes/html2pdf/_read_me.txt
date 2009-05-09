@@ -6,14 +6,14 @@
 **  Copyright 2000-2009 by Laurent Minguet            **
 ********************************************************
 *******************************
-* HTML2PDF v3.20 - 2009-04-06 *
+* HTML2PDF v3.21 - 2009-05-05 *
 *******************************
 
 How to use :
 ------------
  - Look at the examples provided to see how it works.
 
- - forms work only with ADOBE READER 9
+ - forms work only with ADOBE READER 8 and 9.0
  
  - It is very important to provide valid HTML 4.01 to the converter,
    but only what is in the <body>
@@ -69,6 +69,7 @@ Informations :
  Programmer : Spipu
       email    : webmaster@spipu.net
       web site : http://html2pdf.fr/
+      wiki     : http://html2pdf.fr/wiki.php
       support  : http://html2pdf.fr/forum.php
 
 Thanks :
