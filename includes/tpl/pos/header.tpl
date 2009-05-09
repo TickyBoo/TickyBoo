@@ -29,70 +29,71 @@
  */
  *}
  {* config_load file="shop_$_SHOP_lang.conf" *}
-<HTML>
-<head>
-<meta HTTP-EQUIV="content-type" CONTENT="text/html; charset=UTF-8">
-<title>FusionTicket: Salepoint</title>
-<link REL='stylesheet' HREF='style.css' TYPE='text/css'>
-{literal}
-<script language="JavaScript"><!--
-browser_version= parseInt(navigator.appVersion);
-browser_type = navigator.appName;
-if (browser_type == "Microsoft Internet Explorer" && (browser_version >= 4)) {
-document.write("<link REL='stylesheet' HREF='style_ie.css' TYPE='text/css'>");
-}else if (browser_type == "Netscape" && (browser_version >= 4)) {
-document.write("<link REL='stylesheet' HREF='style_nn.css' TYPE='text/css'>");
-}else{
-document.write("<link REL='stylesheet' HREF='style_nn.css' TYPE='text/css'>");
-}
-// --></script>  
-{/literal}
-</head>
-<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 >
-<center> 
-<table border='0' style="border:#45436d 1px solid;" width="750"  cellspacing="0" cellpadding="0" bgcolor="#ffffff" >
-  <tr>
-  	<td colspan='6' style='padding-left:20px;padding-bottom:5px;'>
-	  <a href='index.php'><img src="images/logo_vvs.png" border="0"></a>
-  	</td>
-  </tr>
-  <tr>
-  <td colspan="6">
-  <table>
-	<tr>
-  	<td width="33%" align="center">
-	  	<a class="shop_link" style="font-size:16px;" href="index.php?action=home">{!pos_homepage!}</a>
-	</td>
-	<td width="34%" align="center">
-		<a class="shop_link" style="font-size:16px;" href="index.php?process=on">{!pos_processtickets!}</a>
-    </td>
-	<td width="33%" align="center">
-		<a class="shop_link" style="font-size:16px;" href="index.php?action=book_tickets">{!pos_Book Tickets</a>
-    </td>
-    </tr>
-  </table>
-  </td>
-  </tr>
-  <tr>
-  	<td width='125' valign="top"  style='padding-left:20px;border-top:#45436d 1px solid;border-bottom:#45436d 1px solid; padding-bottom:5px; padding-top:5px;'>
-		<a class='shop_link' href='index.php?action=show_evgroup'>{!event_groups!}</a>
-	</td>
-	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='index.php?action=calendar'>{!calendar!}</a>
-	</td>
-	<td width='125'valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='index.php?action=view_cart'>{!shopping_cart_pos!}</a>
-	</td>
-	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='index.php?action=view_orders'>{!orders!}</a>
-	</td>
-	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
-		<a class='shop_link' href='index.php?action=view_options'>{!preferences!}</a>
-	</td>
-	<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;padding-right:40px;">
-		<a class='shop_link' href='index.php?action=logout'>{!logout!}</a>
-	</td>
-  </tr>
-  <tr>
-  	<td colspan='6' align='center'  style='padding-top:8px;padding-left:10px;padding-right:10px;padding-bottom:10px;'>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<title>FusionTicket: Box Office / Sale Point </title>
+		<link rel='stylesheet' href='style.css' type='text/css'/>
+		{literal}
+		<script language="JavaScript">
+		<!--
+			browser_version= parseInt(navigator.appVersion);
+			browser_type = navigator.appName;
+			if (browser_type == "Microsoft Internet Explorer" && (browser_version >= 4)) {
+				document.write("<link rel='stylesheet' href='style_ie.css' type='text/css'>");
+			}else if (browser_type == "Netscape" && (browser_version >= 4)) {
+				document.write("<link rel='stylesheet' href='style_nn.css' type='text/css'>");
+			}else{
+				document.write("<link rel='stylesheet' href='style_nn.css' type='text/css'>");
+			}
+		// -->
+		</script>{/literal}
+	</head>
+	<body style="margin:0;">
+		<center> 
+			<table border='0' style="border:#45436d 1px solid;" width="750"  cellspacing="0" cellpadding="0" bgcolor="#ffffff" >
+				<tr>
+  					<td colspan='6' style='padding-left:20px;padding-bottom:5px;'>
+	  					<a href='index.php'><img src="images/logo_vvs.png" border="0"/></a>
+  					</td>
+  				</tr>
+  				<tr>
+  					<td colspan="6">
+  						<table>
+							<tr>
+  								<td width="33%" align="center">
+	  								<a class="shop_link" style="font-size:16px;" href="index.php?action=home">{!pos_homepage!}</a>
+								</td>
+								<td width="34%" align="center">
+									<a class="shop_link" style="font-size:16px;" href="index.php?process=on">{!pos_processtickets!}</a>
+    							</td>
+								<td width="33%" align="center">
+									<a class="shop_link" style="font-size:16px;" href="index.php?action=book_tickets">{!pos_booktickets!}</a>
+    							</td>
+    						</tr>
+  						</table>
+  					</td>
+  				</tr>
+  				<tr>
+					<td width='125' valign="top"  style='padding-left:20px;border-top:#45436d 1px solid;border-bottom:#45436d 1px solid; padding-bottom:5px; padding-top:5px;'>
+						<a class='shop_link' href='index.php?action=show_evgroup'>{!event_groups!}</a>
+					</td>
+					<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
+						<a class='shop_link' href='index.php?action=calendar'>{!calendar!}</a>
+					</td>
+					<td width='125'valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
+						<a class='shop_link' href='index.php?action=view_cart'>{!shopping_cart_pos!}</a>
+					</td>
+					<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
+						<a class='shop_link' href='index.php?action=view_orders'>{!orders!}</a>
+					</td>
+					<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;">
+						<a class='shop_link' href='index.php?action=view_options'>{!preferences!}</a>
+					</td>
+					<td width='125' valign="top" align='center' style="border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;padding-bottom:5px; padding-top:5px;padding-right:40px;">
+						<a class='shop_link' href='index.php?action=logout'>{!logout!}</a>
+					</td>
+  				</tr>
+  				<tr>
+  					<td colspan='6' align='center'  style='padding-top:8px;padding-left:10px;padding-right:10px;padding-bottom:10px;'>
 

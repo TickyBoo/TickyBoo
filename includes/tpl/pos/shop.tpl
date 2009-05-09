@@ -2,6 +2,7 @@
 %%copyright%% 
 *}
 {include file="header.tpl"}
+
 {$smarty.post.action}
 
 {if $smarty.get.action eq home}

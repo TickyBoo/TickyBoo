@@ -1,53 +1,41 @@
 <?php
-require_once("../includes/config/init_common.php");
 
-require_once('smarty/Smarty.class.php');
-require_once('classes/MyCart_Smarty.php');
-require_once('classes/UserAuth_Smarty.php');
-require_once('classes/User_Smarty.php');
-require_once('classes/Order_Smarty.php');
+require_once ( "../includes/config/init_common.php" );
 
-require_once("config/init_spoint.php");
+require_once ( 'smarty/Smarty.class.php' );
+require_once ( 'classes/MyCart_Smarty.php' );
+require_once ( 'classes/UserAuth_Smarty.php' );
+require_once ( 'classes/User_Smarty.php' );
+require_once ( 'classes/Order_Smarty.php' );
+
+require_once ( "config/init_spoint.php" );
 
 global $_SHOP;
 
-
-
-
-
-
-
-
-
-
-
-
 $smarty = new Smarty;
 
-$cart_s = new MyCart_Smarty($smarty);
-$user_s = new UserAuth_Smarty($smarty);
-$user = new User_Smarty($smarty);
-$order = new Order_Smarty($smarty);
+$cart_s = new MyCart_Smarty( $smarty );
+$user_s = new UserAuth_Smarty( $smarty );
+$user = new User_Smarty( $smarty );
+$order = new Order_Smarty( $smarty );
 
-$smarty->assign('_SHOP_root', $_SHOP->root);
-$smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
-$smarty->assign('_SHOP_lang', $_SHOP->lang);
-$smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
+$smarty->assign( '_SHOP_root', $_SHOP->root );
+$smarty->assign( '_SHOP_root_secured', $_SHOP->root_secured );
+$smarty->assign( '_SHOP_lang', $_SHOP->lang );
+$smarty->assign( '_SHOP_theme', $_SHOP->theme_dir );
 
-$smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
-$smarty->assign('organizer', $_SHOP->organizer_data);
-
-$smarty->template_dir = $_SHOP->tpl_dir . 'web'.DS;
-$smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
-$smarty->compile_id   = 'pos';
-$smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
-$smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
-
-$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
-
-$smarty->display($fond . '.tpl');
+$smarty->assign( 'organizer_currency', $_SHOP->organizer_data->organizer_currency );
+$smarty->assign( 'organizer', $_SHOP->organizer_data );
 
 
-$smarty->display($fond . '.tpl');
+$smarty->template_dir = $_SHOP->tpl_dir . 'pos' . DS;
+$smarty->compile_dir = $_SHOP->tmp_dir; // . '/web/templates_c/';
+$smarty->compile_id = 'pos';
+$smarty->cache_dir = $_SHOP->tmp_dir; // . '/web/cache/';
+$smarty->config_dir = $_SHOP->includes_dir . 'lang' . DS;
+
+$smarty->plugins_dir = array( "plugins", $_SHOP->includes_dir . "shop_plugins" );
+
+$smarty->display( $fond . '.tpl' );
 
 ?>
