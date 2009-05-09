@@ -1,0 +1,23 @@
+/*
+CSS Styles Provided Under the Fusionticket GPLv3 licence
+*/
+#header {
+	overflow: auto;
+}
+#header img {
+	cursor: pointer;
+	display: block;
+	margin: 5px;
+	text-align: left;
+}
+
+#btn-middle {
+	margin: 0 auto;
+	width: 500px;
+	display: block;
+	overflow: auto;
+	text-align: center;
+}
+.ui-state-default {
+	padding: 5px;
+}

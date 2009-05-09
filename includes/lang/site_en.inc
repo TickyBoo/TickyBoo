@@ -961,6 +961,6 @@ define('pos_checkdetails' ,'Check the details, If cash or check Click "Confirm a
 define('pos_checkdetails2','Check the details, And Procced to "Confirm" or "Cancel" the order.');
 define('pos_checkdate','First Check you have the right date, Then choose catergory of seats, this just determins the cost and area. Then click continue.');
 define('pos_homepage','Home Page');
-define('pos_processtickets','Process Tickets');
+define('pos_currenttickets','Current Tickets');
 define('pos_booktickets','Book Tickets');
 ?>

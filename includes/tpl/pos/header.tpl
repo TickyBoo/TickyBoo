@@ -28,7 +28,6 @@
  * clear to you.
  */
  *}
- {* config_load file="shop_$_SHOP_lang.conf" *}
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />

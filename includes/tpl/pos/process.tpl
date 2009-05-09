@@ -30,7 +30,7 @@
  *}
 <table>
   <tr>
-  	<td colspan=2>
+  	<td colspan='2'>
    	  <h2>{!pos_processoptions!}</h2>
   	</td>
   </tr>
@@ -39,13 +39,12 @@
       {!pos_listpaidunprocessed!}
   	</td>
   	<td>
-  	  <a href="index.php?process=paid">{!Paid List</a>
+  	  <a href="index.php?process=paid">{!pos_paidlist!}</a>
   	</td>
   </tr>
   <tr>
   	<td>
   	  {!pos_listpaidunsent!}
-  	  <p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>
   	</td>
   	<td>
   	  <a href="index.php?process=processed">{!pos_unsentlist!}</a>

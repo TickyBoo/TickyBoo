@@ -1,11 +1,14 @@
 {*
 %%copyright%% 
 *}
-{include file="header.tpl"}
 
+
+{*
+{include file="header.tpl"}
+*}
 {$smarty.post.action}
 
-{if $smarty.get.action eq home}
+{if $smarty.get.action eq 'home'}
 	{include file='index.tpl'}
 	
 {elseif $smarty.get.action eq save_prefs}
@@ -22,7 +25,7 @@
    {include file='view_orders.tpl'}
 
 {elseif $smarty.post.action eq submit_info}
-	{if not $smarty.post.exst_user }   {*or not $smarty.post.exst_user = 1 *}
+	{if not $smarty.post.exst_user }   {*or not $smarty.post.exst_user = 1 {*} 
   		{user->login_guest user_id=$smarty.post.exst_user}
   	{else}
 		{user->guest data=$smarty.post short='true'}
@@ -40,7 +43,7 @@
   
 
 {elseif $smarty.post.action eq submit_reserve}
-  {if not $smarty.post.exst_user } {* neq '1'*}
+  {if not $smarty.post.exst_user } {* neq '1'  {*}
 	{user->login_guest user_id=$smarty.post.exst_user}
   {else}
 	{user->guest data=$smarty.post short='true'}
@@ -195,7 +198,8 @@
 	{/if}
 {else}
 
-  {include file="index.tpl"}
+  {include file="new_layout_all.tpl"}
 {/if}
-
+{*
 {include file="footer.tpl"}
+*}
