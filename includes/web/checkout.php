@@ -84,6 +84,21 @@ if ($action == 'edituser') {
 }
 die();
 
+  function getsecurecode() {
+    if (isset($_POST['sor'])) {
+      $return = $_POST['sor'];
+    } elseif (isset($_GET['sor'])) {
+      $return = $_GET['sor'];
+    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
+      $return = substr($action, 1);
+    } else {
+      Print_r($_REQUEST); Print_r($_SERVER);
+      $return ='';
+    }
+//    echo $return;
+    return $return;
+  }
+
   function setordervalues($aorder, $smarty){
     if (!is_object($aorder)) exit;
     if (isset($aorder) and isset($aorder->places)) {
@@ -210,10 +225,11 @@ die();
   }
 
   function  submitaction($smarty) {
-    $myorder = is($_SESSION['_SHOP_order'],nil);
-    if($test = Order::DecodeSecureCode($myorder) <1) {
-      header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
-      ShopDB::dblogging("accept error ($test): $myorder->order_id\n". print_r($myorder, true));
+    $myorder = is($_SESSION['_SHOP_order'],null);
+    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    if($test < 1) {
+  //    header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
+      ShopDB::dblogging("submit error ($test): $myorder->order_id\n". print_r($myorder, true));
 
       unset( $_SESSION['_SHOP_order']);
       return;
@@ -240,7 +256,8 @@ die();
   function  printaction($smarty) {
     Global $order;
     $myorder = is($_SESSION['_SHOP_order'],null);
-    if($test =Order::DecodeSecureCode($myorder)<1) {
+    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
       echo 'print error' ; print_r($myorder);
@@ -255,19 +272,21 @@ die();
 
   function  acceptaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],nil);
-    if($test=Order::DecodeSecureCode($myorder)<1) {
-      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
+    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    if($test < 1) {
+      echo "accept error ($test): $myorder->order_id\n". print_r($myorder, true);
+      //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("accept error ($test): $myorder->order_id\n". print_r($myorder, true));
       unset( $_SESSION['_SHOP_order']);
       return;
     }
+ //   echo "accept ok ($test): $myorder->order_id\n". print_r($myorder, true);
     $hand=$myorder->order_handling;
     setordervalues($myorder, $smarty);
 
     $pm_return = $hand->on_return($myorder, true);
     $smarty->assign('pm_return',$pm_return);
     If (!$pm_return['approved']) {
-       print_r($pm_return);
        $myorder->order_delete($myorder->order_id );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
        
@@ -278,14 +297,14 @@ die();
 
   function  cancelaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
-    if($test = Order::DecodeSecureCode($myorder)<1) {
+    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("cancel error ($test): $myorder->order_id\n". print_r($myorder, true));
       unset( $_SESSION['_SHOP_order']);
       return;
     }
     setordervalues($myorder, $smarty);
-    print_r($myorder);
     $hand=$myorder->order_handling;
     $myorder->order_delete($myorder->order_id );
     $pm_return = $hand->on_return($myorder, false );
@@ -297,7 +316,8 @@ die();
 
   function  notifyaction() {
     $myorder = is($_SESSION['_SHOP_order'], null);
-    if(($test = Order::DecodeSecureCode($myorder))<1) {
+    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    if($test < 1) {
        header('HTTP/1.1 502 Action not allowed', true, 502);
        ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
        return;
@@ -306,5 +326,5 @@ die();
     $hand=$myorder->order_handling;
     $hand->on_notify($myorder);
   }
-session_write_close();
+//session_write_close();
 ?>

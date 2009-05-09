@@ -81,37 +81,33 @@ class eph_ideal extends payment{
     }
 
     $Issuers =& $response->getIssuerFullList();
-		$trans = array (" " => "&nbsp");
 		foreach ($Issuers as $issuerName => $entry)	{
-			$issuerList[$entry->getIssuerID()] =
-        strtr(str_pad($entry->getIssuerID(), 20), $trans) . "&nbsp;" .
-				$entry->getIssuerName() . "&nbsp;-&nbsp;" .
-				$entry->getIssuerListType()
-				;
+			$issuerList[] = array($entry->getIssuerID(), $entry->getIssuerName()) ;
 		}
-		print_r($issuerList);
     $_SHOP->smarty->assign('ideal_issuers',$issuerList );
 
+    //print_r($order);
+    
     return "
-      <form name='ideal_ing' action='' method='post' onsubmit='this.submit.disabled=true;return true;'>
-        <input type='hidden' name='action' value='submit'>
+      {gui->StartForm name='ideal_ing' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
+        {gui->hidden name='action' value='submit'}
+        {gui->hidden name='sor' value='".Order::EncodeSecureCode($order,'')."'}
         {gui->selection name='ideal_issuer' options=\$ideal_issuers}
-        <div align='right'>
-        <input type='submit' value='{!pay!}' name='submit2'>
-        </div>
-      </form>";
+      {gui->EndForm title=!pay! align='right' noreset=true}";
 	}
 
   function on_submit($order) {
+    global $_SHOP;
     $ideal = $this->init_ideal();
+    $url = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode(null);
     $response = $ideal->RequestTransaction(
         	$_POST['ideal_issuer'],
         	$order->order_id,
-        	$order->$order->order_total_price *100,
+        	$order->order_total_price *100,
         	$order->order_description(),
-        	$order->EncodeSecureCode(),
+        	$order->order_id,
         	EXPIRATIONPERIOD,
-        	$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode() );
+          $url)	;
     if ($response->IsResponseError()) {
       return array('approved'=>false,
                    'transaction_id'=>$response->getErrorCode().' - '.$response->getErrorMessage(),
@@ -120,21 +116,16 @@ class eph_ideal extends payment{
 		$acquirerID = $response->getAcquirerID();
 		$issuerAuthenticationURL = $response->getIssuerAuthenticationURL();
 		$transactionID = $response->getTransactionID();
-  	$query = "update `Order`
-  					set order_payment_id="._esc(transactionID)."
-  					where order_id="._esc($order->order_id);
-    ShopDB::query($query);
     $order->order_payment_id=$transactionID;
-    header('location:'.$transactionID);
+    $order->set_payment_status('pending');
+    header('location:'.$issuerAuthenticationURL);
     return '';
   }
   
-  function on_notify(&$order){
-  }
-  
   function on_return(&$order, $result){
-  	$transactionID = $_POST["TransactionID"];
-  	$response = $iDEALConnector->RequestTransactionStatus( $transactionID );
+    global $_SHOP;
+    $ideal = $this->init_ideal();
+  	$response = $ideal->RequestTransactionStatus( $order->order_payment_id );
 
     if ($response->IsResponseError()){
       return array('approved'=>false,
@@ -159,19 +150,19 @@ class eph_ideal extends payment{
 		// IDEAL_TX_STATUS_OPEN  		Transactie staat nog open
     $status = $response->getStatus();
 
-  	if (in_array($status, array(IDEAL_TX_STATUS_SUCCESS))) {
+   if ($status = IDEAL_TX_STATUS_SUCCESS) {
 	    $order->order_payment_id=$transactionID;
       $order->set_payment_status('payed');
-    }
-
-    $result = in_array($status, array(IDEAL_TX_STATUS_SUCCESS, IDEAL_TX_STATUS_OPEN));
-
-    If ($result) {
       return array('approved'=>true,
                    'transaction_id'=>$transactionID ,
                    'response'=> 'Naam: '.$consumerName. "<br>".
                                 'Plaats: '.$consumerCity."<br>".
                                 'Nummer: '.$consumerAccountNumber);
+
+   } elseif ($status = IDEAL_TX_STATUS_OPEN) {
+      return array('approved'=>true,
+                   'transaction_id'=>$transactionID ,
+                   'response'=> con('eph_ideal_waitingaception'));
     } else {
       return array('approved'=>false,
                    'transaction_id'=>$transactionID ,
@@ -179,9 +170,10 @@ class eph_ideal extends payment{
     }
   }
   
-  function on_check(&$order, $result){
-  	$transactionID = $order->order_payment_id;
-  	$response = $iDEALConnector->RequestTransactionStatus( $transactionID );
+  function on_check(&$order){
+    global $_SHOP;
+    $ideal = $this->init_ideal();
+  	$response = $ideal->RequestTransactionStatus( $order->order_payment_id );
 
     if (!$response->IsResponseError()){
       // De status is een integer en kan middels een aantal
@@ -199,7 +191,7 @@ class eph_ideal extends payment{
         $order->set_payment_status('payed');
         return true;
       } elseif (in_array($status, array(IDEAL_TX_STATUS_CANCELLED, IDEAL_TX_STATUS_EXPIRED ))) {
-        $order->set_payment_status('payed');
+        $order->order_delete($order->order_id, $response->GetStatusText());
         return true;
       }
     }
@@ -229,9 +221,8 @@ class eph_ideal extends payment{
         'SUBID'           => ($this->pm_ideal_subid)?$this->pm_ideal_subid:'0',
         'EXPIRATIONPERIOD'=> EXPIRATIONPERIOD,
         'LOGFILE'         => INC.'tmp'.DS.'ideal_connect.log',
-        'TraceLevel'      => TRACE_DEBUG.TRACE_ERROR,
+        'TRACELEVEL'      => TRACE_DEBUG.TRACE_ERROR,
         );
- //   print_r( $config) ; print_r($this);
     return new iDEALConnector($config);
     
 

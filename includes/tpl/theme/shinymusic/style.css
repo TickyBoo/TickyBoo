@@ -135,19 +135,19 @@ select{background-color:#cccccc;}
 
 TABLE.mycal_table
 {
-  width: 100%
-  height:155px;
+  width: 100%;
+  height: 155px;
   font-size:11;
   background: #F0F5F9;
 /*  bordercolorlight="#D3D8DB" bordercolordark="#E8EFF6"*/
-  border: 2px solid #C0C0C0
-  color  : #000000
+  border: 2px solid #C0C0C0;
+  color  : #000000;
 }
 
 .mycal_table TR
 {
 	height: 20px;
-  COLOR: #00000;
+  color: #00000;
 }
 
 
@@ -178,7 +178,7 @@ TABLE.mycal_table
 	margin: 0 auto;
 	padding: 0;
 	position: relative;
-  width: 1000;
+    width: 1000;
 	height: 22px;
 	background: #ffffff url(images/mid_navback.gif) 0 100% repeat-x;
 	font: bold 12px Verdana, Helvetica, Arial, sans-serif;

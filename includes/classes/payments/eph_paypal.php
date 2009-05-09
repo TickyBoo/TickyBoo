@@ -122,14 +122,14 @@ class EPH_paypal extends payment{
     $order_id    = $_POST['item_number'];
     $order_total = $order->order_total_price;
 
-    $debug.="order_id : $order_id\n";
-    $debug.="bedrag   : $order_total\n";
+    $debug.="Order_id : $order_id\n";
+    $debug.="Amount   : $order_total\n";
     
     $_POST["cmd"]="_notify-validate";
 
     $result=$this->url_post($url,$_POST);
 
-    $debug.=print_r($_POST,true);
+//    $debug.=print_r($_POST,true);
 
     $debug.="res : $result\n";
 

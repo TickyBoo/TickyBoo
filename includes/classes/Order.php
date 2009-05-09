@@ -326,7 +326,7 @@ class Order {
     //if the order has only one ticket, the whole order will be deleted/canceled instead of just the ticket!
     if($order['order_tickets_nr']==1){
       ShopDB::rollback('order_delete_ticket');
-      return Order::order_delete($order_id, 0, $user_id);
+      return Order::order_delete($order_id, 'deleted_all_tickets');
     }
 
     // If deleteing a reserved ticket
@@ -409,7 +409,7 @@ class Order {
    return $order->order_handling->on_check($order);
   }
   
-  function order_delete ($order_id){
+  function order_delete ($order_id, $reason = 0){
     global $_SHOP;
 
     if(!ShopDB::begin('order_delete')){
@@ -469,17 +469,11 @@ class Order {
     }
 
 
-    /*
-    $query="DELETE FROM Seat WHERE seat_order_id='$order_id'
-    if(!$res=ShopDB::query($query)){
-      echo "<div class=error>".order_not_canceled."</div>";
-      ShopDB::rollback();
-      return FALSE;
-    }
-    */
-
-    $query="UPDATE  `Order` set order_status='cancel'
-            where order_id='$order_id' ";
+    $query="UPDATE  `Order`
+            set order_status='cancel',
+                order_reason="._esc($reason).",
+                order_reason_date= NOW
+            where order_id="._esc($order_id);
 
     if(!$res=ShopDB::query($query)){
       ShopDB::rollback('order_delete');
@@ -636,7 +630,9 @@ class Order {
   	}
 
   	//Change old order, change its status and give the it the id of the new order.
-  	$query="UPDATE  `Order` SET order_status='cancel'
+  	$query="UPDATE  `Order` SET
+          order_status='cancel', 
+          order_reason='reserve_to_order'
   			WHERE order_id='$order_id'";
   	if(!$res=ShopDB::query($query)){
   		echo "<div class=error>$order_id ".order_cannot_reemit."(cant up old ord)</div>";
@@ -790,7 +786,7 @@ class Order {
       }
     }
 
-    if($field=='order_payment_status' and $new_status=='payed' and $this->order_payment_id){
+    if($field=='order_payment_status' and  $this->order_payment_id){ //$new_status=='payed' and
       $suppl = ", order_payment_id='{$this->order_payment_id}'";
     }
 
@@ -917,33 +913,38 @@ class Order {
 
     if ($order == null) $order = $this;
     if ($order == null) return '';
-    if (!$order->order_tickets_nr ) $order->order_tickets_nr = $this->size();
+    if (!$order->order_tickets_nr ) $order->order_tickets_nr = $order->size();
     $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
            $order->order_handling_id .':'. $order->order_total_price;
-    $code = time().':'.$order->order_id.':'. md5($md5).':'.$order->order_session_id;
-//    ShopDB::dblogging('encode:'.$code.'|'.$md5);
-    return $item.base64_encode($code);
+    $code = base64_encode(base_convert(time(),10,36).':'. base_convert($order->order_id,10,36).':'. md5($md5, true));
+
+//    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.md5($md5));
+    return $item. urlencode ($code); //
   }
 
   function DecodeSecureCode(&$order, $code ='') {
     If (empty($code) and isset($_REQUEST['sor'])) $code =$_REQUEST['sor'];
     If (!empty($code)) {
-      $text = base64_decode($code);
+      $text = base64_decode(urldecode( $code));
       $code = explode(':',$text);
+      //print_r( $code );
+      $code[0] = base_convert($code[0],36,10);
+      $code[1] = base_convert($code[1],36,10);
+      //print_r( $code );
+//      print_r( $order );
 
       if (($order==null) and isset($this)) $order = $this;
-      if ($order==null) $order = Order::load($code[1], true);
+      if ($order==null) $order = self::load($code[1], true);
       if ($order == null) return -1;
 
       $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
                   $order->order_handling_id .':'. $order->order_total_price;
 
-//      ShopDB::dblogging('decode:'.$text.'|'.$md5);
-
-      if ($code[0] > time()) return -2;
+//      ShopDB::dblogging('decode:'.$text.'|'.$md5.'|'.$code[2].'='.md5($md5, true));
+    //  print_r( $order );
+//      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;
-      $code2 = md5($md5);
-      if ($code[2] <> $code2) return -4;
+      if ($code[2] <> md5($md5, true)) return -4;
       return true;
     } else
       return -5;

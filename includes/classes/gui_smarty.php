@@ -125,7 +125,7 @@ class Gui_smarty {
     $enctype  = is($params['enctype'],'application/x-www-form-urlencoded');
     $method   = is($params['method'],'post');
     $onsubmit = is($params['onsubmit'],'');
-    $url      = $this->_URL( $params, $smarty, array('name','class','width','method','title','enctype','onsubmit', 'data' ));
+    $url      = is($params['action']);//$this->_URL( $params, $smarty, array('name','class','width','method','title','enctype','onsubmit', 'data' ));
     If( isset($params['data'])) {
       $this->guidata = $params['data'];
     }
@@ -145,9 +145,18 @@ class Gui_smarty {
 
   function EndForm($params, &$smarty) //($colspan = 2)
   {
-    $return = "<tr><td align='center' class='gui_value' colspan='2'>\n".
-              "<input type='submit' name='submit' value='" . con('gui_save','submit') . "'>".
-              "<input type='reset' name='reset' value='" . con('gui_reset','reset') . "'></td></tr>\n";
+    $name     = is($params['name'],'submit');
+    $align    = is($params['align'],'center');
+    $title    = is($params['title'], con('gui_save','submit'));
+    $class    = is($params['class'],'gui_value');
+    $noreset  = is($params['noreset'], false);
+    $onclick  = is($params['onclick'],'');
+    $return = "<tr><td align='$align' class='$class' colspan='2'>\n".
+              "<input type='submit' name='$name' value='" . $title . "'>";
+    if (!$noreset) {
+      $return .= "&nbsp; <input type='reset' name='reset' value='" . con('gui_reset','reset') . "'>\n";
+    }
+    $return .= "</td></tr>\n";
     if ($this->FormDepth) {
       $return .= "</form>\n";
       $this->FormDepth --;
@@ -254,7 +263,7 @@ class Gui_smarty {
     If (!is_array($opt)) {
       $opt  = explode('|',$opt);
     }
-    print_r($opt);
+//    print_r($opt);
     // $val=array('both','rows','none');
     $sel[$this->guidata[$name]] = " selected ";
 

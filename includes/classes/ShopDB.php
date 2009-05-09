@@ -419,11 +419,11 @@ private static function TableCreateData( $tablename )
                 }
                 $oldkey = $key;
               }
-              foreach ($tblFields['fields'] as $key => $info) {
+/*              foreach ($tblFields['fields'] as $key => $info) {
                 if (!array_key_exists($key, $fields['fields'])) {
                     echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".<br>\n";
                 }
-              }
+              } */
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
           } else {
               $update = true;
