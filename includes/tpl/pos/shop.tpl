@@ -3,10 +3,12 @@
 *}
 
 
-{*
-{include file="header.tpl"}
-*}
+{if $smarty.get.ajax neq 'yes' and $smarty.post.ajax neq 'yes'}
+	{include file="header.tpl"}
+{/if}
+
 {$smarty.post.action}
+
 
 {if $smarty.get.action eq 'home'}
 	{include file='index.tpl'}
@@ -198,8 +200,9 @@
 	{/if}
 {else}
 
-  {include file="new_layout_all.tpl"}
+  {include file="index.tpl"}
 {/if}
-{*
-{include file="footer.tpl"}
-*}
+
+{if $smarty.get.ajax neq 'yes' and $smarty.post.ajax neq 'yes'}
+	{include file="footer.tpl"}
+{/if}

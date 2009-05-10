@@ -3,6 +3,7 @@
 	var bindForms = function(){
 		$("form").submit(function(){
 			$(this).ajaxSubmit({
+				data:{ajax:"yes"},
 				success: function(html){
 					$("#right").html(html);
 				}
@@ -17,6 +18,7 @@
 		   		$.ajax({
 		        	type: "GET",
 		        	url: url,
+		        	data: {ajax:'yes'},
 		        	cache:false,
 		        	success: function(html){
 		        		$("#right").html(html);
@@ -30,10 +32,10 @@
 	bindLinks();
 	
 	$("#btn_home").click(function(){
-		$("#right").load("index.php?action=home");		
+		$("#right").load("index.php?action=home", {ajax:"yes"});		
 	});
 	$("#btn_order").click(function(){
-		$("#right").load("index.php?action=calendar");
+		$("#right").load("index.php?action=calendar", {ajax:"yes"});
 	});
 	
 	$().ajaxSend(function(evt, request, settings){
