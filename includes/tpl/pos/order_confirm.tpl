@@ -100,7 +100,9 @@
     </script>
 {/literal}
 <br><center><table width='600' border='0'><tr><td align='center'>
+{if !$update->run_as_demo}
 <form action='index.php' method='post'>
+{/if}
     <input type='submit' name='print_tickets' value='{!confirm_and_print!}'>
     <input type='hidden' name='order_id' value='{$order_id}'>
     <input type='hidden' name='action' value='print_tickets'>
