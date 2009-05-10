@@ -45,8 +45,10 @@
     	{include file="user_address.tpl" title="on"}
   	</td>
   	<td valign='top' align="right">
+  {if !$update->run_as_demo}
      	<form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
         <input type='hidden' name='action' value='confirm' />
+  {/if}
     	  <table border=0 width='90%' cellpadding="5" bgcolor='white'>
       		<tr>
       		  <td colspan='3' class='TblHeader' align='left'>{!handlings!}</td>
@@ -82,13 +84,19 @@
     		</table>
     		<br >
   	    <input type='submit' name='submit' value='{!order_it!}'>
+  {if !$update->run_as_demo}
   		</form>
+  {/if}
   		{* update->view event_date=$min_date user=user->user_id *}
   		{if $update_view.can_reserve }
-        <form action='?action="reserve' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+  		  {if !$update->run_as_demo}
+        <form action='?action=reserve' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+        {/if}
   		  	{!orclick!}
     			<input type='submit' name='submit_reserve' value='{!reserve!}'>
+  {if !$update->run_as_demo}
     		</form>
+  {/if}
   		{/if}
   	</td>
   </tr>

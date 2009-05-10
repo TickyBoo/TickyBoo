@@ -336,7 +336,8 @@ $tbls['ShopConfig']['fields'] = array(
   'shopconfig_maxres' => " int(11) NOT NULL DEFAULT '10'",
   'status' => " char(3) NOT NULL DEFAULT 'ON'",
   'res_delay' => " int(11) NOT NULL DEFAULT '660'",
-  'cart_delay' => " int(11) NOT NULL DEFAULT '600'" );
+  'cart_delay' => " int(11) NOT NULL DEFAULT '600'",
+  'run_as_demo' => " int(3) NOT NULL DEFAULT '0'" );
 $tbls['ShopConfig']['engine'] = 'MyISAM';
 
 $tbls['Template']['fields'] = array(
