@@ -34,7 +34,7 @@ $.fn.checkboxAreaSelect = function(){
     $(document).mousedown(function(e){
         cbAS.startX = e.pageX;
         cbAS.startY = e.pageY; /*record where the mouse started */
-        $("body").append("<div id='cbAS_dragbox'></div>"); /*create a graphic indicator of select area */
+        $("body").append("<div id='cbAS_dragbox' class='dragbox'></div>"); /*create a graphic indicator of select area */
         	$("#cbAS_dragbox").css({ 
         		"background-color":"#f00",
         		filter:"alpha(opacity=20)",
@@ -70,27 +70,30 @@ $.fn.checkboxAreaSelect = function(){
      If they have, do work on them. Also reset things that started on mouse-down */
     $(document).mouseup(function(e){
         cbAS.mouseIsDown = false; /*clear currently dragging flag */
-        $("#cbAS_dragbox").remove(); /*get rid of select box */
+        $(".dragbox").remove(); /*get rid of select box */
         endX = e.pageX;
         endY = e.pageY; /*discover where mouse was released x&y */
-	
-	/*for each checkbox on the page check if its within the drag-area*/
-		var ckBox;
-        $("form :checkbox").each(function(){
-        	ckBox = $(this);
-            box_top = ckBox.position().top + (ckBox.height()/2);   /*checkboxes have an area */
-            box_left = ckBox.position().left + (ckBox.width()/2);  /*so find their centerpoint */
-            if( (box_top > cbAS.startY && box_top < endY ) || (box_top < cbAS.startY && box_top > endY )){
-				if( (box_left > cbAS.startX && box_left < endX ) || (box_left < cbAS.startX && box_left > endX )){
-				    /*if checkbox was in the drag area */
-				    if(e.shiftKey){
-						ckBox.attr("checked",false); /*uncheck due to shift key */	  
-					} else {
-						ckBox.attr("checked",true);  /*check the box */						  
-                    }
-				}
-	    	}     
-		});/*close each*/
+        
+        // if the mouse hasnt moved dont bother checking the check boxes as the mouse hasnt been dragged.
+        if((endX != cbAS.startX) || (endY != cbAS.startY)){
+			/*for each checkbox on the page check if its within the drag-area*/
+			var ckBox;
+	        $("form :checkbox").each(function(){
+	        	ckBox = $(this);
+	            box_top = ckBox.position().top + (ckBox.height()/2);   /*checkboxes have an area */
+	            box_left = ckBox.position().left + (ckBox.width()/2);  /*so find their centerpoint */
+	            if( (box_top > cbAS.startY && box_top < endY ) || (box_top < cbAS.startY && box_top > endY )){
+					if( (box_left > cbAS.startX && box_left < endX ) || (box_left < cbAS.startX && box_left > endX )){
+					    /*if checkbox was in the drag area */
+					    if(e.shiftKey){
+							ckBox.attr("checked",false); /*uncheck due to shift key */	  
+						} else {
+							ckBox.attr("checked",true);  /*check the box */						  
+	                    }
+					}
+		    	}     
+			});/*close each*/
+		}
     });/*close mouseup*/
     
 };/*close checkboxAreaSelect*/

@@ -30,53 +30,68 @@
  *
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
- *}<table class='pm_box'>
-  <tr><td>
-    {if $smarty.get.category_id}
-      {assign var=category_id value=$smarty.get.category_id}
-    {elseif $smarty.post.category}
-      {assign var=category_id value=$smarty.post.category}
-    {/if}
-    {if $category_id}
-      {category category_id=$category_id event='on' placemap='on'}
-        <table width='100%' cellpadding='2' cellspacing='0' class='pm_info'>
-          <tr><td class='title' align='center'>{$shop_category.event_name}</td></tr>
-          <tr><td class='title' align='center'>
-            {$shop_category.event_date|date_format:"%e %b %Y"} - {$shop_category.event_time|date_format:" %Hh%M"}
-          </td></tr>
-          <tr><td class='title' align='center'>
-            {$shop_category.ort_name} - {$shop_category.category_name} ({$shop_category.category_price})
-          </td></tr>
-          {if $shop_category.category_numbering neq 'none'}
-            <tr><td class='help' align='center'>
-              {!select_seat!}{!select_seat_info!}
-            </td></tr>
-            <tr><td class='help' align='center'>
-              {!click_on_reserve!}
-            </td></tr>
-          {/if}
-          {if $shop_category.category_numbering eq "rows"}
-            <tr><td class='choice_info' align='center'>
-              <b>{!only_rows_numbered!}</b>
-            </td></tr>
-          {/if}
-        </table>
-        <form name='f' action='index.php' method='post'>
-          <center>
-            {if $shop_category.category_numbering eq 'none'}
-              <br><br>
-              <span class='title'> {!number_seats!} : </span>
-              <input type='text' name='place' size=4 maxlength=2>
-            {else}
-              {placemap category=$shop_category}
-            {/if}
-            <input type='submit' name='submit' value='{#reserve#}'>
-      	  </center>
-          <input type='hidden' name='category' value='{$shop_category.category_id}'>
-          <input type='hidden' name='event' value='{$shop_category.category_event_id}'>
-          <input type='hidden' name='action' value='addtocart'>
-        </form>
-      {/category}
-    {/if}
-  </td></tr>
+ *}
+<table class='pm_box'>
+	<tr>
+		<td>
+			{if $smarty.get.category_id}
+      			{assign var=category_id value=$smarty.get.category_id}
+    		{elseif $smarty.post.category}
+      			{assign var=category_id value=$smarty.post.category}
+    		{/if}
+    		{if $category_id}
+   				{category category_id=$category_id event='on' placemap='on'}
+					<table width='100%' cellpadding='2' cellspacing='0' class='pm_info'>
+          				<tr>
+							<td class='title' align='center'>
+								<a href="index.php?category_id={$smarty.get.category_id}"><h1>{$shop_category.event_name}</h1></a>
+							</td>
+						</tr>
+						<tr>
+							<td class='title' align='center'>
+            					{$shop_category.event_date|date_format:"%e %b %Y"} - {$shop_category.event_time|date_format:" %Hh%M"}
+          					</td>
+					  	</tr>
+          				<tr>
+						  	<td class='title' align='center'>
+            					{$shop_category.ort_name} - {$shop_category.category_name} ({$shop_category.category_price})
+          					</td>
+					  	</tr>
+          				{if $shop_category.category_numbering neq 'none'}
+   						<tr>
+					   		<td class='help' align='center'>
+              					{!select_seat!}{!select_seat_info!}
+            				</td>
+						</tr>
+            			<tr>
+							<td class='help' align='center'>
+              					{!click_on_reserve!}
+            				</td>
+						</tr>
+          				{/if}
+          				{if $shop_category.category_numbering eq "rows"}
+            			<tr>
+							<td class='choice_info' align='center'>
+              					<b>{!only_rows_numbered!}</b>
+            				</td>
+						</tr>
+          				{/if}
+        			</table>
+        			<form name='f' action='index.php' method='post'>
+       					{if $shop_category.category_numbering eq 'none'}
+              				<br /><br />
+              				<span class='title'> {!number_seats!} : </span>
+              				<input type='text' name='place' size='4' maxlength='2' />
+            			{else}
+              				{placemap category=$shop_category}
+            			{/if}
+            			<input type='submit' name='submit' value='{!pos_holdtickets!}' />
+          				<input type='hidden' name='category' value='{$shop_category.category_id}' />
+          				<input type='hidden' name='event' value='{$shop_category.category_event_id}' />
+          				<input type='hidden' name='action' value='addtocart' />
+        			</form>
+  				{/category}
+   			{/if}
+   		</td>
+   	</tr>
 </table>

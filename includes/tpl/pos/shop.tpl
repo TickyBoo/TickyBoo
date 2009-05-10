@@ -84,6 +84,7 @@
   
 {elseif $smarty.post.action eq 'confirm'}
   {include file='view_orders.tpl'}
+  
 {elseif $smarty.post.action eq 'order_tickets'}
   {if $smarty.post.handling}
     {handling handling_id=$smarty.post.handling}
@@ -135,21 +136,24 @@
 {elseif $smarty.get.action eq "view_cart"}
   {include file="cart_view.tpl"}  
 
+{* From single event view, will either load discounts or seating chart depending on catagory selected. *}
 {elseif $smarty.get.category_id}
-  {if $smarty.get.qty} 
-    {assign var='last_item' value=$cart->add_item_f($smarty.get.event_id,$smarty.get.category_id,$smarty.get.qty,'mode_kasse')}
-      {if $last_item}
-        {include file="discount.tpl" event_id=$smarty.get.event_id category_id=$smarty.get.category_id}  
-      {else}
-        {include file="event.tpl"}
-      {/if}
-    {else} 
-      {include file="category.tpl"} 
-    {/if}
-  
+	{* if an amount was specified try to add them to the cart else take them to the approriate seating cart*}
+	{if $smarty.get.qty} 
+		{assign var='last_item' value=$cart->add_item_f($smarty.get.event_id, $smarty.get.category_id, $smarty.get.qty, 'mode_kasse')}
+		{* if the last item was successfully added take them to discounts else back to event page.*}	
+		{if $last_item}
+        	{include file="discount.tpl" event_id=$smarty.get.event_id category_id=$smarty.get.category_id}  
+      	{else}
+        	{include file="event.tpl"}
+      	{/if}
+	{else}
+    	{include file="category.tpl"} 
+	{/if}
+
+{* Loads single event *}
 {elseif $smarty.get.event_id}
   {include file="event.tpl"}
-
 
 {elseif $smarty.get.event_group_id}
   {include file="event_group.tpl"}   

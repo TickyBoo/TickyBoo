@@ -894,4 +894,8 @@ define('category_new_size','category_new_size');
 define('act_oke',     'Your account is now active. You may now log in.');
 define('act_error',   'Your account could not be activated. Please re-check the link or contact the system administrator.');
 define('act_uselink', 'Please use the link that has been sent to your email address.');
+
+//new pos
+define('pos_holdtickets','Hold Tickets');
+
 ?>

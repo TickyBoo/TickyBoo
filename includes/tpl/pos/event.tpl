@@ -180,7 +180,7 @@ function setQtyShown(){
 </script>
 {/literal}
 
-<form id="form-cat-select" class="form" name='catselect' method='get' action='index.php'>
+<form name='catselect' method='get' action='index.php'>
 	<table  class='cat_choice' cellpadding='5' width='100%' border='0'>
 		<tr>
 			<td class='title' colspan='3' >

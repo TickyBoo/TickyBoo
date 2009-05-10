@@ -963,4 +963,5 @@ define('pos_checkdate','First Check you have the right date, Then choose catergo
 define('pos_homepage','Home Page');
 define('pos_currenttickets','Current Tickets');
 define('pos_booktickets','Book Tickets');
+define('pos_holdtickets','Hold Tickets');
 ?>

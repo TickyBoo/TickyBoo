@@ -75,18 +75,30 @@ class MyCart_Smarty {
       $smarty->assign("cart_error",$this->error);
     }
   }
-
-  function add_item_f ($event_id,$category_id,$seats,$mode='mode_web',$reserved=false){
-    if(!$mode){
-      $mode='mode_web';
-    }
-    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved);
-    if($res){
-      return $res;
-    }else{
-      return FALSE;
-    }
-  }
+  
+	/**
+	* @name add item function 
+	* 
+	* Used to add seats to the cart. Will check if the selected seats are free.
+	* 
+	* @param event_id : required
+	* @param category_id : required
+	* @param seats : int no of seats for that category : required
+	* @param mode : where the order is being made options('mode_web'|'mode_kasse')
+	* @param reserved : set to true if you want to reserve only.
+	* @return boolean : will return true if that many seats are avalible.
+	*/
+	function add_item_f ($event_id,$category_id,$seats,$mode='mode_web',$reserved=false){
+	    if(!$mode){
+	    	$mode='mode_web';
+		}
+	    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved);
+	    if($res){
+	    	return $res;
+	    }else{
+	    	return FALSE;
+	    }
+	}
 
 
   function remove_item ($params, &$smarty){
