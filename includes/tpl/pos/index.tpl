@@ -40,15 +40,15 @@
    </tr>
   <tr>
     <td class="sub_title"><strong>To Order</strong> tickets please click "Book Tickets".</td>
-    <td><b><a href="index.php?action=calendar">Book Tickets</a></b></td>
+    <td><b><a class="link" href="index.php?action=calendar">Book Tickets</a></b></td>
   </tr>
   <tr>
     <td class="sub_title"><strong>To Reserve</strong> seats please click "Reserve Tickets".</td>
-    <td><b><a href="index.php?action=calendar">Reserve Tickets</a></b></td>
+    <td><b><a class="link" href="index.php?action=calendar">Reserve Tickets</a></b></td>
   </tr>
   <tr>
     <td class="sub_title"><strong>To Proccess</strong> Paid Tickets.</td> 
-	<td><b><a href="index.php?process=on">Process Tickets</a></b></td>
+	<td><b><a class="link" href="index.php?process=on">Process Tickets</a></b></td>
     <td></td>
   </tr>
   <tr>

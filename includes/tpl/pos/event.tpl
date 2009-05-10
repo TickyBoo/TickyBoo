@@ -31,34 +31,55 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}{event event_id=$smarty.get.event_id ort='on'}
+ *}
+ {literal}
+ <script type="text/javascript">
+ 
+ </script>
+ {/literal}
+ 
+{event event_id=$smarty.get.event_id ort='on'}
 
 <table width='100%' border='0' cellpadding='5' class='event_details'>
-<tr><td  class='title'>{$shop_event.event_name}  {if $shop_event.event_mp3}<a style='color:#996633;text-decoration:none;' href='{$shop_event.event_mp3}'>[<img src='images/audio-small.png' border='0' valign='bottom'>]</a> {/if}
-</td>
-</tr>
-<tr>
-	<td class="help">{!pos_checkdate!}
-	</td>
-</tr>
-<tr><td  class='event_info_item' >  {$shop_event.event_date|date_format:"%a %e %b %Y"} {$shop_event.ort_name}
-{if $shop_event.ort_phone}
-    {!phone!}
-{$shop_event.ort_phone}
-{/if}
-{if $shop_event.ort_url}
-    {!homepage!}
-<a class=event_url href='{$shop_event.ort_url}'>{$shop_event.ort_url}</a>
-{/if}
-</td></tr>
-<tr><td  class='event_info_item' > 
-    {!doors_open!}{$shop_event.event_open|date_format:" %Hh%M"}
-    {!event_start!}
-{$shop_event.event_time|date_format:" %Hh%M"}</td></tr>
-
-<tr><td class='event_description_big'>{$shop_event.event_text}</td></tr>
+	<tr>
+		<td class='title'>
+			<a class="link" href="index.php?event_id={$shop_event.event_id}"><h1>{$shop_event.event_name}</h1></a>  
+			{if $shop_event.event_mp3}
+				<a style='color:#996633;text-decoration:none;' href='{$shop_event.event_mp3}'>[<img src='images/audio-small.png' border='0' />]</a> 
+			{/if}
+		</td>
+	</tr>
+	<tr>
+		<td class="help">
+			{!pos_checkdate!}
+		</td>
+	</tr>
+	<tr>
+		<td  class='event_info_item' >  
+			{$shop_event.event_date|date_format:"%a %e %b %Y"}  
+			{$shop_event.ort_name} 
+			{if $shop_event.ort_phone}
+				<br /> 
+				{!phone!}: {$shop_event.ort_phone}
+			{/if}
+			{if $shop_event.ort_url}
+				<br />
+    			{!homepage!}: <a class='event_url' href='{$shop_event.ort_url}'>{$shop_event.ort_url}</a>
+			{/if}
+		</td>
+	</tr>
+	<tr>
+		<td  class='event_info_item' > 
+    		{!doors_open!}: {$shop_event.event_open|date_format:" %Hh%M"}<br />
+			{!event_start!}: {$shop_event.event_time|date_format:" %Hh%M"}
+		</td>
+	</tr>
+	<tr>
+		<td class='event_description_big'>{$shop_event.event_text}
+		</td>
+	</tr>
 </table>
-<br>
+<br />
 
 <table width='100%' border='0' cellpadding='5' class='cat_details'>
 <tr>
@@ -87,12 +108,12 @@
     {if $shop_category.cs_free>0}
       {$shop_category.category_price}&nbsp;&nbsp;
           {if $shop_category.cs_free/$shop_category.cs_total ge 0.2}
-             <img src='images/green.png'> {$shop_category.cs_free}/{$shop_category.cs_total}
+             <img src='images/green.png' /> {$shop_category.cs_free}/{$shop_category.cs_total}
           {else}
-             <img src='images/orange.png'> {$shop_category.cs_free}/{$shop_category.cs_total}
+             <img src='images/orange.png' /> {$shop_category.cs_free}/{$shop_category.cs_total}
           {/if}
     {else}
-      <img src='images/red.png'>    
+      <img src='images/red.png' />    
       {!category_sold!}
     {/if}  
     </td>
@@ -129,7 +150,7 @@
     {!prices_in!}&nbsp;{$organizer_currency}
 
 </td></tr>
-</table><br>
+</table><br />
 
 <script><!--
 var unnum_cats=new Array;
@@ -159,23 +180,33 @@ function setQtyShown(){
 </script>
 {/literal}
 
-<form name='catselect' method='get' action='index.php'>
-   <table  class='cat_choice' cellpadding='5' width='100%' border='0'>
-   <tr><td class='title' colspan='3' >    
-    {!select_category!}
-</td></tr>
-<tr><td width='50%' align='right'><select name='category_id' onchange='setQtyShown()' id='cat_select'>
-   {$opt_array}
-</select></td>
-<td class='category_item' align='left'>
-<div id='qqq'  align='left'>x&nbsp;<input type='text' name='qty' size=4 maxlength=2>
-</div></td>
-<td  align='left' class='category_value'>
-<input type='submit' name='submit_cat' value='{!continue!}'></td></tr>
-</table>
-<input type='hidden' name='event_id' value='{$smarty.get.event_id}'>
-</form><br>
-<script><!-- 
+<form id="form-cat-select" class="form" name='catselect' method='get' action='index.php'>
+	<table  class='cat_choice' cellpadding='5' width='100%' border='0'>
+		<tr>
+			<td class='title' colspan='3' >
+		   		{!select_category!}
+			</td>
+		</tr>
+		<tr>
+			<td width='50%' align='right'>
+				<select name='category_id' onchange='setQtyShown()' id='cat_select'>
+   				{$opt_array}
+				</select>
+			</td>
+			<td class='category_item' align='left'>
+				<div id='qqq'  align='left'>x&nbsp;<input type='text' name='qty' size='4' maxlength='2' /></div>
+			</td>
+			<td  align='left' class='category_value'>
+				<input type='submit' name='submit_cat' value='{!continue!}' />
+			</td>
+		</tr>
+	</table>
+	<input type='hidden' name='event_id' value='{$smarty.get.event_id}' />
+</form>
+<br />
+<script>
+<!-- 
   setQtyShown();
---></script>
+-->
+</script>
 {/event}

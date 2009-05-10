@@ -1,6 +1,7 @@
  $(document).ready(function(){
+	$(".loading").hide();
  	
-   $(".ui-state-default").hover(
+	$(".ui-state-default").hover(
 		function(){ 
 			$(this).addClass("ui-state-hover"); 
 		},
