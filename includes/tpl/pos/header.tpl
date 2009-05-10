@@ -39,12 +39,13 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/pos.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen" />
-		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.validate.js"></script>
-		<script type="text/javascript" src="scripts/jquery/DD_roundies.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.ajaxmanager.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.form.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.checkboxselect.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>		
 		{literal}
@@ -63,11 +64,11 @@
 					<img src="images/LoadingImageSmall.gif" width="48" height="47" alt="Loading data, please wait" />
 				</div>
 				<h2>Fusion Ticket - Box Office <span style="color:red; font-size:14px;"><i>[AJAX Beta]</i></span></h2>
-				<div id="btn-middle">
-					<button id="btn_home" class="ui-state-default ui-corner-all" type="button">{!pos_homepage!}</button></li>
-					<button id="btn_order" class="ui-state-default ui-corner-all" type="button">{!pos_booktickets!}</button></li>
-					<button id="btn_current_order" class="ui-state-default ui-corner-all" type="button">{!pos_currenttickets!}</button></li>
-				</div>
+				<ul>
+					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_homepage!}</a></li>
+					<li><a href="index.php?action=calendar" accesskey="h" tabindex="10">{!pos_booktickets!}</a></li>
+					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_currenttickets!}</a></li>
+				</ul>
 			</div>
 
 			<div id="right">

@@ -1,5 +1,12 @@
  $(document).ready(function(){
  	
+ 	var ajaxManager = $.manageAjax.create('ajaxMan',{
+ 		queue:true,
+ 		abortOld:true,
+ 		maxRequests: 4,
+ 		cacheResponse: false,
+ 	});
+ 	
 	var bindForms = function(){
 		$("form").submit(function(){
 			$(this).ajaxSubmit({
@@ -11,32 +18,30 @@
 			return false;
 		});
 	}
+	
 	var bindLinks = function(){
 		//$("a:not([href^='http'])").click(function () { //does not work after rebind in ie8.
 		$("a").click(function () {
 	    	var url = $(this).attr('href');
-		   		$.ajax({
-		        	type: "GET",
-		        	url: url,
-		        	data: {ajax:'yes'},
-		        	cache:false,
-		        	success: function(html){
-		        		$("#right").html(html);
-		        	}
-		   		});
-    			return false;
+	   		ajaxManager.clear();
+	   		ajaxManager.add({
+    			type: "GET",
+	        	url: url,
+	        	data: {ajax:'yes'},
+	        	cache:false,
+	        	success: function(html){
+	        		$("#right").html(html);
+	        	}
+	    	})
+		   	//$.ajax({});
+			return false;
 		});
 	}
 	
+	$(document).checkboxAreaSelect();
 	bindForms();
 	bindLinks();
 	
-	$("#btn_home").click(function(){
-		$("#right").load("index.php?action=home", {ajax:"yes"});		
-	});
-	$("#btn_order").click(function(){
-		$("#right").load("index.php?action=calendar", {ajax:"yes"});
-	});
 	
 	$().ajaxSend(function(evt, request, settings){
 		$(".loading").show();	
