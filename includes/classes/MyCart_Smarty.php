@@ -83,12 +83,12 @@ class MyCart_Smarty {
 	* 
 	* @param event_id : required
 	* @param category_id : required
-	* @param seats : int no of seats for that category : required
+	* @param seats : int[] (array) or int : required
 	* @param mode : where the order is being made options('mode_web'|'mode_kasse')
 	* @param reserved : set to true if you want to reserve only.
 	* @return boolean : will return true if that many seats are avalible.
 	*/
-	function add_item_f ($event_id,$category_id,$seats,$mode='mode_web',$reserved=false){
+	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false){
 	    if(!$mode){
 	    	$mode='mode_web';
 		}

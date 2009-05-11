@@ -104,14 +104,14 @@
   {/if}
  
  
- 
+{* Trys to add the order to the cart from the seating chart. *}
 {elseif $smarty.post.action eq 'addtocart'}
-  {assign var='last_item' value=$cart->add_item_f($smarty.post.event,$smarty.post.category,$smarty.post.place,'mode_kasse')}
-  {if $last_item}
-    {include file="discount.tpl" event_id=$smarty.post.event category_id=$smarty.post.category}
-  {else}
-    {include file="category.tpl"}
-   {/if}
+	{assign var='last_item' value=$cart->add_item_f($smarty.post.event, $smarty.post.category, $smarty.post.place, 'mode_kasse')}
+  	{if $last_item}
+		{include file="discount.tpl" event_id=$smarty.post.event category_id=$smarty.post.category}
+  	{else}
+    	{include file="category.tpl"}
+   	{/if}
    
 {elseif $smarty.post.action eq 'reorder'}
   {include file="view_reorder.tpl"}
