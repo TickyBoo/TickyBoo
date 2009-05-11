@@ -100,17 +100,19 @@
     </script>
 {/literal}
 <br><center><table width='600' border='0'><tr><td align='center'>
-{if !$update->run_as_demo}
+{if !$update->is_demo()}
 <form action='index.php' method='post'>
+    <input type='hidden' name='action' value='print_tickets'>
 {/if}
     <input type='submit' name='print_tickets' value='{!confirm_and_print!}'>
     <input type='hidden' name='order_id' value='{$order_id}'>
-    <input type='hidden' name='action' value='print_tickets'>
     </form>
 </td><td align='center'>
     <form action='index.php' method='post'>
     <input type='submit' name='cancel_order' value='{!cancel_order!}' onclick='return confirmSubmit()'>
     <input type='hidden' name='action' value='cancel_order'>
     <input type='hidden' name='order_id' value='{$order_id}'>
+{if !$update->is_demo()}
     </form>
+{/if}
     </td></tr></table></center>

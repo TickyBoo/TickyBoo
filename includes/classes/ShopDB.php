@@ -413,17 +413,28 @@ private static function TableCreateData( $tablename )
                     $sql .= ', ADD `' . $key . "` " . $info;
                     $sql .= (($oldkey == '')?' FIRST':' AFTER ' . $oldkey)."\n";
                 } elseif ((trim($info)) != (trim($tblFields['fields'][$key]))) {
-                    echo "mod: {".$tblFields['fields'][$key]."}\n     {".$info."}\n";
+                    echo "mod: {".$tblFields['fields'][$key]."}<br>\n     {".$info."}<br>\n";
                     $update = true;
                     $sql .= ', MODIFY `' . $key . "` " . $info."\n";
                 }
                 $oldkey = $key;
               }
-/*              foreach ($tblFields['fields'] as $key => $info) {
+              if (isset( $fields['remove'])) {
+                foreach ($fields['remove'] as $key) {
+                  if (array_key_exists($key, $tblFields['fields'])) {
+                      $sql .= ', DROP COLUMN `' . $key . "`\n";
+                      $update = true;
+                      unset($tblFields['fields'][$key]);
+                  }
+                }
+              }
+
+
+              foreach ($tblFields['fields'] as $key => $info) {
                 if (!array_key_exists($key, $fields['fields'])) {
                     echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".<br>\n";
                 }
-              } */
+              }
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
           } else {
               $update = true;
@@ -437,7 +448,7 @@ private static function TableCreateData( $tablename )
               if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
           }
           If ($update) {
-             echo $sql."<br>\n";
+             echo ($sql)."<br>\n";//nl3br(
 //             self::dblogging("[SQLupdate:] ".$sql."\n");
              If (!$viewonly) {
                $result = self::query($sql);

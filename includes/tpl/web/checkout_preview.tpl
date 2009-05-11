@@ -45,7 +45,7 @@
     	{include file="user_address.tpl" title="on"}
   	</td>
   	<td valign='top' align="right">
-  {if !$update->run_as_demo}
+  {if !$update->is_demo()}
      	<form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
         <input type='hidden' name='action' value='confirm' />
   {/if}
@@ -84,17 +84,19 @@
     		</table>
     		<br >
   	    <input type='submit' name='submit' value='{!order_it!}'>
-  {if !$update->run_as_demo}
+  {if !$update->is_demo()}
   		</form>
+  {else}
+     <div class='error'><br> For safety issues we have disabled the order button. </div>
   {/if}
   		{* update->view event_date=$min_date user=user->user_id *}
   		{if $update_view.can_reserve }
-  		  {if !$update->run_as_demo}
+      {if !$update->is_demo()}
         <form action='?action=reserve' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
         {/if}
   		  	{!orclick!}
     			<input type='submit' name='submit_reserve' value='{!reserve!}'>
-  {if !$update->run_as_demo}
+  {if !$update->is_demo()}
     		</form>
   {/if}
   		{/if}

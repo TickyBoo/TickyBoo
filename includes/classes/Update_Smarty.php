@@ -10,6 +10,7 @@ class Update_Smarty {
 
 		$smarty->register_object( "update", $this, array('view', 'countdown') );
 		$smarty->assign_by_ref( "update", $this );
+    $smarty->assign('run_as_demo',$_SHOP->ShopConfig_run_as_demo);
 
 		//if(!$dont_run){
 		//Set to same as $_SHOP->shopconfig_lastrun_int for testing mode.
@@ -26,13 +27,11 @@ class Update_Smarty {
 		}
 		//}
 	}
-	function __get( $key ) {
-		global $_SHOP;
-		if ( stripos('ShopConfig_', $key) !== false ) {
-			return $__SHOP->$key;
-		}
-	}
 
+  function is_demo() {
+  	global $_SHOP; //print_r( $_SHOP  );
+    return  $_SHOP->shopconfig_run_as_demo;
+  }
 	//Used for returning results so a template can know if a button/item should be enabled
 	function view( $params, &$smarty ) {
 
