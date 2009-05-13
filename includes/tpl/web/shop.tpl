@@ -26,8 +26,9 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}{strip}{* include file="header.tpl" *}
+ 
 {if $smarty.post.action eq "addtocart"}
-  {assign var='last_item' value=$cart->add_item_f($smarty.post.event,$smarty.post.category,$smarty.post.place,'mode_web')}
+  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id,$smarty.post.category_id,$smarty.post.place,'mode_web')}
   {if $last_item}
     {include file="discount.tpl"}
   {else}
@@ -48,13 +49,13 @@
 {elseif $smarty.get.action eq "view_cart"}
   {include file="cart_view.tpl"}
   
-{elseif $smarty.get.category_id}
-  {if $smarty.get.qty} 
-    {assign var='last_item' value=$cart->add_item_f($smarty.get.event_id,$smarty.get.category_id,$smarty.get.qty)}
+{elseif $smarty.post.category_id} Ik ben hier.
+  {if $smarty.post.qty}
+    {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id,$smarty.post.category_id,$smarty.post.qty)}
     {if $last_item}
       {include file="discount.tpl"}
     {else}
-      {include file="event.tpl" event_id=$smarty.get.event_id}
+      {include file="event.tpl" event_id=$smarty.post.event_id}
     {/if}
   {else} 
     {include file="category.tpl"}

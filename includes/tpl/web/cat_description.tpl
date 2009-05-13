@@ -122,7 +122,8 @@
   {/literal}
 
   {if $shop_event.event_date ge $smarty.now|date_format:"%Y-%m-%d"}
-    <form name='catselect' method='get' action='index.php'>
+    <form name='catselect' method='post' action='index.php'>
+      {ShowFormToken}
       <table  class='table_midtone'>
         <tr>
           <td class='title2' colspan='3' >
@@ -157,7 +158,7 @@
             </td>
             <td  align='left'>
               <input type='submit' name='submit_cat' value='{!continue!}'>
-              <input type='hidden' name='event_id' value='{$smarty.get.event_id}'>
+              <input type='hidden' name='event_id' value='{$smarty.request.event_id}'>
             </td>
           {/if}
         </tr>

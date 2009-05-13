@@ -34,7 +34,10 @@
 {/if}
 {if !$user->logged}
 
-  <form method='post' action='index.php?action=login' style='margin-top:0px;'>
+  <form method='post' action='index.php' style='margin-top:0px;'>
+    <input type="hidden" name="action" value="login">
+    {showFormToken name='login'}
+
     {include file="header.tpl" name=!login! header=!memberinfo!}
 
     {if $smarty.get.action neq "logout" and $smarty.get.action neq "login"}

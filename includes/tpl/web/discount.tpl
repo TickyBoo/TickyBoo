@@ -27,13 +27,8 @@
  * clear to you.
  *}
 
-{if $smarty.post.event}
-  {assign var='event_id' value=$smarty.post.event}
-  {assign var='category_id' value=$smarty.post.category}
-{else}
-  {assign var='event_id' value=$smarty.get.event_id}
-  {assign var='category_id' value=$smarty.get.category_id}
-{/if}
+{assign var='event_id'    value=$smarty.post.event_id}
+{assign var='category_id' value=$smarty.post.category_id}
 
 {if $event_id}
   {discount all='on' event_id=$event_id }{/discount}
@@ -41,6 +36,7 @@
     {include file="header.tpl" name=!discounts!}
     {category event='on' category_id=$category_id}
       <form action='index.php' method='post'>
+        {ShowFormToken name='Discounts'}
         <table class="table_midtone">
           <tr>
             <td valign='top'>

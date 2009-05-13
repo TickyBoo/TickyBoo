@@ -35,7 +35,10 @@
   {/if}
 {*  <div onclick='ShowRegister();'><input type='radio' onclick='ShowRegister();' id='showregister' /> click here to register as parton.  {!register_quest_here!} </div> *}
   <center>
-  <form action='checkout.php?action=register' method='post'  >
+  <form action='checkout.php' method='post'  >
+    {ShowFormToken name='UserRegister'}
+    <input type='hidden' name='action' value='register'>
+    
     <table cellpadding="2" bgcolor='white' width='80%' id='guest'>
       <tr>
         <td colspan='2' class='TblHeader'> {!guest!} </td>
@@ -96,6 +99,7 @@
   <center>
   
   <form action='checkout.php#member' method='post' >
+    {showFormToken name='UserLogin'}
     <a name="member"></a>
     <table  cellpadding='2' bgcolor='white' width='80%' id='member' >
       <tr>

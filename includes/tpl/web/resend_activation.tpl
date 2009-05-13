@@ -38,6 +38,7 @@
   {/if}
 {else}  
   <form action='resend_activation.php' method='post'>  
+    {showFormToken name='resend_activation'}
     <table width='80%' align='center'>
       <tr><td class='title' colspan='2' align='center'>
         {!act_notarr!}

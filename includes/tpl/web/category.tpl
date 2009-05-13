@@ -27,16 +27,17 @@
  * clear to you.
  *}
 
-{if $smarty.get.category_id}
-  {assign var="category_id" value=$smarty.get.category_id}
-{elseif $smarty.post.category}
-  {assign var="category_id" value=$smarty.post.category}
-{/if}
+{assign var="category_id" value=$smarty.post.category_id}
+
 {category category_id=$category_id event='on' placemap='on'}
 
   {if $shop_category.category_numbering neq 'none'}
     {include file="header.tpl" name=!elect_seats! }
     <form name='f' action='index.php' method='post'>
+      {ShowFormToken name='categorys'}
+      <input type='hidden' name='category_id' value='{$shop_category.category_id}'>
+      <input type='hidden' name='event_id' value='{$shop_category.category_event_id}'>
+      <input type='hidden' name='action' value='addtocart'>
       <table class='pm_info'>
         <tr><td class='title' align='center'>{$shop_category.event_name}</td></tr>
         <tr>
@@ -93,10 +94,7 @@
       <br>
       <center>
          <input type='submit' name='submit' value='{!reserve!}'>
-  	  </center>
-      <input type='hidden' name='category' value='{$shop_category.category_id}'>
-      <input type='hidden' name='event' value='{$shop_category.category_event_id}'>
-      <input type='hidden' name='action' value='addtocart'>
+  	  /center>
     </form>
   {else}
     {include file="event.tpl"}

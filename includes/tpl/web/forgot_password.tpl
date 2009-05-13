@@ -50,7 +50,7 @@
         <td valign=top>
 
 {if $smarty.get.email}
-  {if $user->forgot_password_f($smarty.get.email) }
+  {if $user->forgot_password_f($smarty.post.email) }
     <div class='success'>{!pwd_is_sent!}.</div>
   {else}
     <div class='error'>{!pwd_err!}</div>
@@ -62,7 +62,8 @@
   <br>
   <button onclick="window.close();">Close</button>
 {else}
-  <form action='forgot_password.php' method='get'>
+  <form action='forgot_password.php' method='post'>
+   {showFormToken name='resendpassword'}
     <table width='100%' align='center'>
       <tr><td  colspan='2'>{!pwd_note!}<br><br></td></tr>
       <tr>

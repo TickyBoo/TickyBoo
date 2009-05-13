@@ -12,12 +12,12 @@ class Gui_smarty {
 	*
 	* @var string
 	*/
-	var $base = null;
-	var $width = '95%';
-	var $FormDepth = 0;
+	var $base       = null;
+	var $width      = '95%';
+	var $FormDepth  = 0;
 	var $_ShowLabel = True;
-	var $gui_name = 'gui_name';
-	var $gui_value = 'gui_value';
+	var $gui_name   = 'gui_name';
+	var $gui_value  = 'gui_value';
   public $guidata = array();
 
   function __construct  (&$smarty){
@@ -25,14 +25,18 @@ class Gui_smarty {
     $smarty->register_object("gui",$this);
     $smarty->assign_by_ref("gui",$this);
 
+    $smarty->register_function('ShowFormToken', array($this,'ShowFormToken'));
     $smarty->register_function('valuta', array($this,'valuta'));
+    $smarty->register_function('print_r', array($this,'print_r'));
+    $smarty->register_modifier('clear', 'modifier_clrear');
+
   }
 
-  function _URL(  $params, $smarty, $skiping)
+  function url($params, $smarty, $skipnames)
   {
     GLOBAL $_SHOP;
-   If (isset($params['url'])) {
-      return $this->base.$params['url'];
+    If (isset($params['url'])) {
+      return $_SHOP->root.$params['url'];
     } else {
       If (!is_array($skipnames)) {$skipnames= array();}
     //  print_r($params);
@@ -47,11 +51,10 @@ class Gui_smarty {
      // print_r($urlparams);
       return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
     }
-
   }
 
   function print_r ($params,&$smarty) {
-    return nl2br(print_r($params['var'],true));
+    return nl2br(print_r(htmlentities($params['var']),true));
   }
   
   function fillarr ($params,&$smarty)
@@ -85,6 +88,17 @@ class Gui_smarty {
       return;
   }
 
+
+  function showFormToken ($params, &$smarty) {
+    $name = is($params['name'],'FormToken');
+ //   if (!isset($_SESSION['tokens'][$name])) {
+      $_SESSION['tokens'][$name]['n'] = md5(mt_rand());
+      $_SESSION['tokens'][$name]['t'] = time();
+      $token = $_SESSION['tokens'][$name]['n'];
+   // }
+    $name = $name.'_'.base_convert(mt_rand(), 10,36);
+    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars($token)."'/>";
+  }
 /**
  * build a href link
  * @param string $title what the link should say
@@ -129,14 +143,14 @@ class Gui_smarty {
     If( isset($params['data'])) {
       $this->guidata = $params['data'];
     }
-
     $return = "<table class='$class' width='$width' border=0 cellspacing='1' cellpadding='4'>\n";
     if ($title) {
       $return .= "<tr><th class='$class_title' colspan='2'>$title</th></tr>\n";
     }
     If ($method <> 'node') {
-      $return .= "<form action='$url' name='$name' method='$method' enctype='$enctype'";
+      $return .= "<form action='$url' name='$name' method='post' enctype='$enctype'";
       $return .= ($onsubmit)?" onsubmit ='$onsubmit'>":">";
+      $return .= self::showFormToken( $params, $smarty);
       $this->FormDepth ++;
       $this->_ShowLabel = True;
     }
@@ -617,4 +631,24 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
 */
 
 }
+
+function strip_tags_in_big_string($textstring){
+    while (strlen($textstring) != 0)
+        {
+        $temptext = strip_tags(substr($textstring,0,1024));
+        $safetext .= $temptext;
+        $textstring = substr_replace($textstring,'',0,1024);
+        }
+    return $safetext;
+}
+
+function modifier_clean($string, $type='ALL') {
+  switch (strtolower($type)) {
+    case 'all'  : $string = strip_tags_in_big_string ($string);
+    case 'strip': $string = $string;
+    case 'html' : $string = htmlentities($string);
+  }
+  return $string;
+}
+
 ?>

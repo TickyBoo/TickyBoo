@@ -43,7 +43,7 @@ class ShopDB {
           if (isset($_SHOP->db_name)) {
              $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
                             or die ("Could not connect: " . mysqli_connect_errno());
-             ShopDB::checkdatabase(false, false);
+             ShopDB::checkdatabase(true, false);
           } else {
              echo 'db init - ';
              Print_r($_SHOP);

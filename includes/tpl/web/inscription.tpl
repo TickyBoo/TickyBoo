@@ -28,7 +28,10 @@
  *}
  {include file="header.tpl" name=!becomemember! header=!memberinfo!}
 
-<form action='index.php?action=register&register_user=on' method='post'>
+<form action='index.php' method='post'>
+  <input type='hidden' name='action' value='register'>
+  <input type='hidden' name='register_user' value='on'>
+  {showFormToken name='register_user'}
   <center>
     <table class="table_dark" cellpadding="3" bgcolor='white' width='85%'>
       {include file="user_form.tpl"}

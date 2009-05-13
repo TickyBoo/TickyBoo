@@ -29,7 +29,6 @@
  */
 
   global $_SHOP;
-
   if (!defined('PHP_SELF')) define('PHP_SELF',$_SERVER['PHP_SELF']);
 
 //check if the site is online  
@@ -59,16 +58,49 @@
   session_name($_SHOP->session_name);
   session_start();
 
+
 //  if (isset($_REQUEST['action'])) {$action=$_REQUEST['action'];} else { $action=false;}
 
 //authentifying (if needed)
+  $accepted = true;
+  foreach ($_POST as  $key => $value) {
+    if (substr($key,0,3) === '___') {
+      $name = substr($key,3) ;
+      $name = substr($name,0, strpos($name,'_'));
+      if (!isset($_SESSION['tokens'][$name])) {
+        $accepted = false;
+      } elseif($_SESSION['tokens'][$name]['n'] == $value ) {
+        echo $token_age = time() - $_SESSION['tokens'][$name]['t'];
+        if ($token_age >= 300) {
+          /* token is valid, but has expired */
+          echo "clean me up !!!\n<br>";
+          foreach ($_POST as  $delkey => $value) {
+             unset($_REQUEST[$delkey]);
+          }
+          if (isset($_POST['action'])) {
+            $action = $_POST['action'];
+          }
+          unset($_POST);
+          $_POST['action'] = $action;
+        }
+      } else
+        $accepted = false;
+      break;
+    }
+  }
+  if (!$accepted) {
+     session_unset();
+     session_destroy();
+     die('Access Denied');
+  }
+
 
   if(isset($_SHOP->auth_required)){
   
     if(!isset($_SHOP->auth_dsn)){
       $_SHOP->auth_dsn="mysql://".$_SHOP->db_uname.":".$_SHOP->db_pass."@".$_SHOP->db_host."/".$_SHOP->db_name;
     }
-  
+
     //authentication stuff
     require_once "Auth/Auth.php";  
   
@@ -181,9 +213,7 @@
 		
     if($res=ShopDB::query($query) and $data=shopDB::fetch_object($res)){
       $_SESSION['_SHOP_ORGANIZER_DATA']= $data;
-      $_SESSION['_SHOP_ORGANIZER_ID']  = $data->organizer_id;
 		}
 	}
   $_SHOP->organizer_data=$_SESSION['_SHOP_ORGANIZER_DATA'];
-  $_SHOP->organizer_id = $_SESSION['_SHOP_ORGANIZER_ID'];
 ?>

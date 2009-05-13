@@ -50,7 +50,10 @@
   	<tr>
   		<td class="login_title">{!member!}</td>
   	</tr>
-    <form method=post action=index.php?action=login style='margin-top:0px;'>
+    <form method='post' action='index.php' style='margin-top:0px;'>
+    <input type="hidden" name="action" value="login">
+    {showFormToken name='login'}
+
     {if $smarty.get.action neq "logout" and $smarty.get.action neq "login"}
       <input type="hidden" name="uri" value="{$smarty.server.REQUEST_URI}">
     {/if}

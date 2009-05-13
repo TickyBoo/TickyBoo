@@ -86,7 +86,9 @@
 			  {/update->countdown}
 			  </td>
 			</tr>
-			<form name='f' action='index.php?personal_page=orders' method='post'>
+			<form name='f' action='index.php' method='post'>
+       <input type='hidden' name='personal_page' value='orders'>
+       {showFormToken name='reorder'}
 			{order->tickets order_id=$shop_order.order_id min_date='on' }
 			<input type='hidden' name='min_date' value='{$shop_ticket_min_date}'>
 			{/order->tickets}

@@ -47,6 +47,7 @@
   	<td valign='top' align="right">
   {if !$update->is_demo()}
      	<form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+        {showFormToken name='OrderHandling'}
         <input type='hidden' name='action' value='confirm' />
   {/if}
     	  <table border=0 width='90%' cellpadding="5" bgcolor='white'>
@@ -92,7 +93,9 @@
   		{* update->view event_date=$min_date user=user->user_id *}
   		{if $update_view.can_reserve }
       {if !$update->is_demo()}
-        <form action='?action=reserve' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+        <form action='' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+        <input type='hidden' name='action' value='reserve'>
+        {showFormToken name='ReservHandling'}
         {/if}
   		  	{!orclick!}
     			<input type='submit' name='submit_reserve' value='{!reserve!}'>

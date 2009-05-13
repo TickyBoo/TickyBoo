@@ -133,7 +133,11 @@
 	  </tr>
 	    <tr>
 		  	<td colspan="2">
-		  	<form name='f' action='index.php?personal_page=orders' method='post'>
+		  	<form name='f' action='index.php' method='post'>
+          <input type='hidden' name='personal_page' value='orders'>
+  			  <input type="hidden" name="order_id" value='{$shop_order.order_id}'>
+	  		  <input type='hidden' name='action' value='order_res'>
+          {showFormToken name='reorder'}
 			  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
 			  <center>
 				<tr>
@@ -161,9 +165,7 @@
 				{/handling}
 			  </table>
 			  <br>
-			  <input type="hidden" name="order_id" value='{$shop_order.order_id}'>
 			  <input type='submit' name='submit_payment' value='{!order_it!}'>
-			  <input type='hidden' name='action' value='order_res'>
 			  </center>
 			  </form>
 			</td>
