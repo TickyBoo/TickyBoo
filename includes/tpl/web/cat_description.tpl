@@ -134,14 +134,14 @@
 
           {if $shop_event.pm_image}
             <td colspan='3'>
-              <IMG SRC="files/{$shop_event.pm_image}"  BORDER=0  USEMAP="#ort_map">
-              <MAP NAME="ort_map">
+              <img src="files/{$shop_event.pm_image}"  border='0'  usemap="#ort_map">
+              <map name="ort_map">
                 {category event_id=$shop_event.event_id stats="on"}
                   {if $shop_category.cs_free gt 0}
-                    <AREA {$shop_category.category_data} href="index.php?category_id={$shop_category.category_id}&event_id={$smarty.get.event_id}">
+                    <area href="index.php?category_id={$shop_category.category_id}&event_id={$smarty.get.event_id}" {$shop_category.category_data}>
                   {/if}
                 {/category}
-              </MAP>
+              </map>
             </td>
           {else}
             <td width='50%' align='right'>
