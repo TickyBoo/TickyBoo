@@ -38,7 +38,11 @@
     <td  valign="top" align='center' width='50%'>
       <table class="small_table_dark" width="100%">
         {if $shop_event.event_image}
-          <tr><td align='left'><a  href='index.php?event_id={$shop_event.event_id}'><img src="files/{$shop_event.event_image}" align='middle' style="margin:15px;"></a></td></tr>
+          <tr><td align='left'>
+            <a href='index.php?event_id={$shop_event.event_id}'>
+              <img src="files/{$shop_event.event_image}" align='middle' style="margin:15px;">
+            </a>
+          </td></tr>
         {/if}
         <tr>
           <td valign='top' align='left'>

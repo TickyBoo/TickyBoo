@@ -265,8 +265,7 @@ die();
       return;
     }
 
-    require_once("functions/order_func.php");
-    print_order($myorder->order_id, '', 'stream', false, 1);
+    Order::print_order($myorder->order_id, '', 'stream', false, 1);
     return;
   }
 

@@ -99,7 +99,7 @@
   <center>
   
   <form action='checkout.php#member' method='post' >
-    {showFormToken name='UserLogin'}
+    {ShowFormToken name='UserLogin'}
     <a name="member"></a>
     <table  cellpadding='2' bgcolor='white' width='80%' id='member' >
       <tr>

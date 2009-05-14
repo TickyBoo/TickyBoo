@@ -50,6 +50,6 @@
     </tr>
   {/event}
 </table>
-{include file="navigation.tpl" first=$smarty.get.first  tot_count=$shop_event.tot_count part_count=$shop_event.part_count length=$length}
+{gui->navigation offset=$smarty.get.first count=$shop_event.tot_count maxpages=$shop_event.part_count length=$length}
 
 {include file='footer.tpl'}

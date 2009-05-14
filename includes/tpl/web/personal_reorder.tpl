@@ -137,7 +137,7 @@
           <input type='hidden' name='personal_page' value='orders'>
   			  <input type="hidden" name="order_id" value='{$shop_order.order_id}'>
 	  		  <input type='hidden' name='action' value='order_res'>
-          {showFormToken name='reorder'}
+          {ShowFormToken name='reorder'}
 			  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
 			  <center>
 				<tr>

@@ -216,7 +216,6 @@ class TemplateView extends AdminView{
       if (!$this->template_check($_POST, $err)){
         $this->template_form($_POST, $err, template_update_title);
       }else{
-     echo $row['template_text'],'<hr>';
         $query = "UPDATE Template SET
     template_name=" . _ESC($_POST['template_name']) . ",
     template_type=" . _ESC($_POST['template_type']) . ",
@@ -244,7 +243,6 @@ class TemplateView extends AdminView{
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
-     echo $row['template_text'],'<hr>';
      $this->template_form($row, $err, template_update_title);
     }elseif ($_GET['action'] == 'view'){
       $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);

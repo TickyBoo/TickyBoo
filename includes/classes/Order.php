@@ -949,5 +949,149 @@ class Order {
     } else
       return -5;
   }
+  
+  function print_order ($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
+    require_once("classes/TemplateEngine.php");
+    require_once("html2pdf/html2pdf.class.php");
+    require_once('classes/Handling.php');
+    require_once('classes/gui_smarty.php');
+
+  	global $_SHOP;
+    $orderqry = '
+        SELECT * FROM `Order` left join User     on (order_user_id= user_id)
+                              left join Handling on (order_handling_id = handling_id)
+        where order_id = '.ShopDB::quote($order_id);
+
+    $seatqry = '
+        SELECT * FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id
+                           left join Event    on event_id = seat_event_id
+                           left join Ort      on ort_id = event_ort_id
+                           left join Category on category_id = seat_category_id
+        WHERE seat_order_id = '.ShopDB::quote($order_id);
+
+
+    if(!$order=ShopDB::query_one_row($orderqry)){
+      echo 'error';
+      return FALSE;
+    }
+
+    if(!$res=ShopDB::query($seatqry)){
+      echo 'error 1';
+      return FALSE;
+    }
+
+    while($data=shopDB::fetch_assoc($res)){
+  		if($data['category_numbering']=='none'){
+  			$data['seat_nr']='0';
+  			$data['seat_row_nr']='0';
+  		}else if($data['category_numbering']=='rows'){
+  			$data['seat_nr']='0';
+  		}else if($data['category_numbering']=='seat'){
+  			$data['seat_row_nr']='0';
+  		}
+  		//compute  barcode
+  		$data['barcode_text']= sprintf("%08d%s", $data['seat_id'], $data['seat_code']);
+      //save the data for the bill
+      $key = "({$data['category_id']},{$data['discount_id']})";
+
+      if(!isset($order['bill'][$key])){
+        $order['bill'][$key]=array(
+          'event_name'=>$data['event_name'],
+          'event_date'=>$data['event_date'],
+          'ort_name'=>$data['ort_name'],
+          'ort_city'=>$data['ort_city'],
+  				'qty'=>1,
+  				'category_name'=>$data['category_name'],
+  				'seat_price'=>$data['seat_price'],
+  				'discount_name'=>$data['discount_name']
+        );
+      }else{
+        $order['bill'][$key]['qty']++;
+      }
+      $seats[] = $data;
+    }
+    //calculating the sub-total
+    foreach(array_keys($order['bill']) as $key){
+      $order['bill'][$key]['total']= $order['bill'][$key]['seat_price'] * $order['bill'][$key]['qty'];
+    }
+    $order['order_subtotal'] = $order['order_total_price'] - $order['order_fee'];
+
+
+    $hand=Handling::load($order['order_handling_id']);
+  	$order['user_country_name']= gui_smarty::getCountry($order['user_country']);
+
+    if($hand->pdf_paper_size){
+    	$paper_size=$hand->pdf_paper_size;
+    	$paper_orientation=$hand->pdf_paper_orientation;
+    }else{
+    	$paper_size=$_SHOP->pdf_paper_size;
+    	$paper_orientation=$_SHOP->pdf_paper_orientation;
+    }
+    $te  = new TemplateEngine();
+    $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+
+   	if(!$bill_template){
+  		$bill_template=$hand->handling_pdf_template;
+  	}
+    $first_page = true;
+  	if($bill_template and ($subj & 2)){
+  		//loading the template
+  		if($tpl =& $te->getTemplate($bill_template)){
+  			$first_page=FALSE;
+  			//applying the template
+  			$tpl->write($pdf, $order);
+  		}else{
+  			echo "<div class=err>".no_template." : $bill_template </div>";
+  			return FALSE;
+  		}
+  	}
+
+    foreach($seats as $seat) {
+  		if($hand->handling_pdf_ticket_template){
+        $tpl_id=$hand->handling_pdf_ticket_template;
+  		}else if($data['category_template']){
+        $tpl_id=$data['category_template'];
+      }else if($data['event_template']){
+        $tpl_id=$data['event_template'];
+      }else{
+  		  $tpl_id=false;
+  		}
+
+      if($tpl_id and ($subj & 1)){
+  			//load the template
+  			if(!$tpl =& $te->getTemplate($tpl_id)){
+  				user_error(no_template.": name: {$tpl_id} cat: {$data['category_id']}, event: {$data['event_id']}");
+  				return FALSE;
+  			}
+
+  //	if(!$first_page){
+  //		$pdf->setNewPage();
+  //	}
+  			$first_page=FALSE;
+
+  			//print the ticket
+  			$tpl->write($pdf,array_merge($seat,$order));
+  		}
+    }
+    if(!$first_page){
+  //        $pdf->output($order_file_name, 'P');
+
+      //composing filename without extension
+      $order_file_name = "order_".$order_id.'.pdf';
+        //producing the output
+      if($mode=='file'){
+        $pdf->output($_SHOP->ticket_dir.DS.$order_file_name, 'F');
+      }else if($mode=='stream'){
+        if($print){
+          $pdf->output($order_file_name, 'P');
+        }else{
+          $pdf->output($order_file_name, 'I');
+        }
+      }else if($mode=='data'){
+        $pdf_data=$pdf->output($order_file_name, 'S');
+      }
+      return $pdf_data;
+    }
+  }
 }
 ?>

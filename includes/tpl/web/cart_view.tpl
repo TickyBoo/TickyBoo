@@ -39,7 +39,7 @@
   <tr>
     <td width="50%" align="left">
       <form method='post' action="index.php">
-        {showFormToken name='moretickets'}
+        {ShowFormToken name='moretickets'}
         {if $event_id}
            <input type='hidden' name='event_id' value='{$event_id}' />
         {/if}
@@ -49,7 +49,7 @@
     <td align="right">
       {if $cart->can_checkout_f()}
         <form action="checkout.php" method='post' >
-          {showFormToken name='checkout'}
+          {ShowFormToken name='checkout'}
           <input name="go_pay" value="{!checkout!}" type="submit">
         </form>
       {/if}

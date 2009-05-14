@@ -12,12 +12,12 @@ class Gui_smarty {
 	*
 	* @var string
 	*/
-	var $base       = null;
 	var $width      = '95%';
 	var $FormDepth  = 0;
 	var $_ShowLabel = True;
 	var $gui_name   = 'gui_name';
 	var $gui_value  = 'gui_value';
+	var $errors     = array();
   public $guidata = array();
 
   function __construct  (&$smarty){
@@ -25,10 +25,10 @@ class Gui_smarty {
     $smarty->register_object("gui",$this);
     $smarty->assign_by_ref("gui",$this);
 
-    $smarty->register_function('ShowFormToken', array($this,'ShowFormToken'));
+    $smarty->register_function('ShowFormToken', array($this,'showFormToken'));
     $smarty->register_function('valuta', array($this,'valuta'));
     $smarty->register_function('print_r', array($this,'print_r'));
-    $smarty->register_modifier('clear', 'modifier_clrear');
+    $smarty->register_modifier('clean', 'smarty_modifier_clean');
 
   }
 
@@ -54,7 +54,7 @@ class Gui_smarty {
   }
 
   function print_r ($params,&$smarty) {
-    return nl2br(print_r(htmlentities($params['var']),true));
+    return nl2br(print_r($params['var'],true));
   }
   
   function fillarr ($params,&$smarty)
@@ -91,13 +91,13 @@ class Gui_smarty {
 
   function showFormToken ($params, &$smarty) {
     $name = is($params['name'],'FormToken');
- //   if (!isset($_SESSION['tokens'][$name])) {
+    if (!isset($_SESSION['tokens'][$name])) {
       $_SESSION['tokens'][$name]['n'] = md5(mt_rand());
-      $_SESSION['tokens'][$name]['t'] = time();
-      $token = $_SESSION['tokens'][$name]['n'];
-   // }
+    }
+    $_SESSION['tokens'][$name]['t'] = time();
+    $token = $_SESSION['tokens'][$name]['n'];
     $name = $name.'_'.base_convert(mt_rand(), 10,36);
-    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars($token)."'/>";
+    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'-'.$token))."'/>";
   }
 /**
  * build a href link
@@ -271,6 +271,7 @@ class Gui_smarty {
     $prefix = is($params['prefix']);
     $mult =   is($params['multiselect']);
     $con  =   is($params['con']);
+    $nokey =  is($params['nokey'], false);
 
     $mult = ($mult)?'multiple':'';
 
@@ -283,16 +284,16 @@ class Gui_smarty {
 
     $return = "<select name='$name' $mult>\n";
 
-    foreach($opt as $v) {
-        if (is_array($v)) {
-          list($v, $n) = $v;
-        } elseif (strpos($v, '~')!==false) {
-          list($v, $n) = explode('~',$v);
-        } else {
-         $n = $v;
+    foreach($opt as $v => $n) {
+        if (is_array($n)) {
+          list($v, $n) = $n;
+        } elseif (strpos($n, '~')!==false) {
+          list($v, $n) = explode('~',$n);
+        } elseif($nokey) {
+          $v = $n;
         }
         $cap = ($prefix or $con)?con($prefix.$n):$n;
-        $return .= "<option value='$v'{$sel[$v]}>" . $cap . "</option>\n";
+        $return .= "<option value='". htmlspecialchars($v)."' {$sel[$v]}>" .  htmlspecialchars($cap) . "</option>\n";
     }
 
     return $this->showlabel($name, $return. "</select>");
@@ -642,11 +643,11 @@ function strip_tags_in_big_string($textstring){
     return $safetext;
 }
 
-function modifier_clean($string, $type='ALL') {
+function smarty_modifier_clean($string, $type='ALL') {
   switch (strtolower($type)) {
     case 'all'  : $string = strip_tags_in_big_string ($string);
     case 'strip': $string = $string;
-    case 'html' : $string = htmlentities($string);
+    case 'html' : $string = htmlentities($string, ENT_QUOTES);
   }
   return $string;
 }

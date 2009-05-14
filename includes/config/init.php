@@ -65,26 +65,29 @@
   $accepted = true;
   foreach ($_POST as  $key => $value) {
     if (substr($key,0,3) === '___') {
-      $name = substr($key,3) ;
-      $name = substr($name,0, strpos($name,'_'));
+      $key = substr($key,3) ;
+      $name = substr($key,0, strpos($key,'_'));
       if (!isset($_SESSION['tokens'][$name])) {
         $accepted = false;
-      } elseif($_SESSION['tokens'][$name]['n'] == $value ) {
-        echo $token_age = time() - $_SESSION['tokens'][$name]['t'];
-        if ($token_age >= 300) {
-          /* token is valid, but has expired */
-          echo "clean me up !!!\n<br>";
-          foreach ($_POST as  $delkey => $value) {
-             unset($_REQUEST[$delkey]);
+      } else {
+        $testme = sha1 ($key.'-'.$_SESSION['tokens'][$name]['n']);
+        if($testme === $value ) {
+          $token_age = time() - $_SESSION['tokens'][$name]['t'];
+          if ($token_age >= 300) {
+            /* token is valid, but has expired */
+            echo "clean me up !!!\n<br>";
+            foreach ($_POST as  $delkey => $value) {
+               unset($_REQUEST[$delkey]);
+            }
+            if (isset($_POST['action'])) {
+              $action = $_POST['action'];
+            }
+            unset($_POST);
+            $_POST['action'] = $action;
           }
-          if (isset($_POST['action'])) {
-            $action = $_POST['action'];
-          }
-          unset($_POST);
-          $_POST['action'] = $action;
-        }
-      } else
-        $accepted = false;
+        } else
+          $accepted = false;
+      }
       break;
     }
   }

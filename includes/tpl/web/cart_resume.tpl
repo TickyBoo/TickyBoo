@@ -94,7 +94,7 @@
         		<tr>
         		  <td align='center' class='cart_content' colspan='2'>
           			<form action="checkout.php" method='post'>
-          			   {showFormToken name='ReservHandling'}
+          			   {ShowFormToken name='ReservHandling'}
             			<input type="submit" name="go_pay" value="{!checkout!}">
           			</form>
         	    </td>

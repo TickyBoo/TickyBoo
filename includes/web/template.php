@@ -25,7 +25,7 @@ echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 $smarty = new Smarty;
 
-$cart   = new Gui_smarty($smarty);
+$gui    = new Gui_smarty($smarty);
 $cart   = new MyCart_Smarty($smarty);
 $user   = new User_Smarty($smarty);
 $order  = new Order_Smarty($smarty);
@@ -44,7 +44,7 @@ $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
 $smarty->compile_id   = 'webshop';
 $smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
 $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
-$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins".DS);
+$smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins".DS);
 $smarty->display($fond . '.tpl');
 session_write_close();
 ?>

@@ -96,8 +96,8 @@ if($_GET["action"]=='list_all' or $_GET["action"]=='list_type' or $_GET["action"
 }
 
 if($_GET['action']=='print' and $_GET['order_id']>0){
-  require_once("functions/order_func.php");
-  print_order($_GET['order_id'],'','stream');
+  require_once("classes/Order.php");
+  Order::print_order($_GET['order_id'],'','stream');
   exit;
 }
 

@@ -46,7 +46,10 @@
     		{elseif $shop_order.order_status eq "ord"}{!pers_ord!}
     		{else}{!pers_unknown!}
     		{/if}</td>
-    		<td class='admin_info'><a href='?personal_page=orders&id={$shop_order.order_id}'><img border='0' src='images/view.png'> {!view_order!}</a>
+    		<td class='admin_info'>
+          <a href='?personal_page=orders&id={$shop_order.order_id}'>
+            <img border='0' src='images/view.png'> {!view_order!}
+          </a>
     		</td>
       </tr>
     {/order->order_list}

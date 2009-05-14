@@ -48,47 +48,44 @@ may be edited but may not be used as yours or redistributed.
             </tr>
             <tr>
               <td>{!firstname!}</td>
-              <td>{user->user_firstname}</td>
+              <td>{user->user_firstname|clean}</td>
             </tr>
             <tr>
               <td>{!lastname!}</td>
-              <td>{user->user_lastname}</td>
+              <td>{user->user_lastname|clean}</td>
             </tr>
             <tr>
               <td>{!address!} 1</td>
-              <td>{user->user_address}</td>
+              <td>{user->user_address|clean}</td>
             </tr>
             <tr>
               <td>{!address!} 2</td>
-              <td>{user->user_address2}</td>
+              <td>{user->user_address2|clean}</td>
             </tr>
             <tr>
               <td>{!zip!}</td>
-			        <td>{user->user_zip}</td>
+			        <td>{user->user_zip|clean}</td>
             </tr>
             <tr>
               <td>{!city!}</td>
-              <td>{user->user_city}</td>
+              <td>{user->user_city|clean}</td>
             </tr>
             <tr>
               <td>{!state!}</td>
-              <td>{user->user_state}</td>
+              <td>{user->user_state|clean}</td>
             </tr>
-            <tr>
-              <td>{!country!}</td>
-              <td>{include file="countries.tpl" code=$user->user_country}</td>
-            </tr>
+            {gui->selectcountry name='user_country' value=$user->user_country}
             <tr>
               <td>{!phone!}</td>
-              <td>{user->user_phone}</td>
+              <td>{user->user_phone|clean}</td>
             </tr>
             <tr>
               <td>{!fax!}</td>
-              <td>{user->user_fax}</td>
+              <td>{user->user_fax|clean}</td>
             </tr>
             <tr>
               <td>{!email!}</td>
-              <td>{user->user_email}</td>
+              <td>{user->user_email|clean}</td>
             </tr>
         </table>
 	  </td>

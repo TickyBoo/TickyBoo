@@ -27,7 +27,7 @@
  * clear to you.
  *}{strip}{* include file="header.tpl" *}
  
-{if $smarty.post.action eq "addtocart"}
+{if $smarty.request.action eq "addtocart"}
   {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id,$smarty.post.category_id,$smarty.post.place,'mode_web')}
   {if $last_item}
     {include file="discount.tpl"}
@@ -35,7 +35,7 @@
     {include file="category.tpl"}
   {/if}
 
-{elseif $smarty.post.action eq "adddiscount"}
+{elseif $smarty.request.action eq "adddiscount"}
   {cart->set_discounts event_id=$smarty.post.event_id 
     category_id=$smarty.post.category_id item_id=$smarty.post.item_id
     discounts=$smarty.post.discount }
@@ -46,10 +46,10 @@
   {$cart->remove_item_f($smarty.get.event_id,$smarty.get.cat_id,$smarty.get.item)}
   {include file="cart_view.tpl"}
 
-{elseif $smarty.get.action eq "view_cart"}
+{elseif $smarty.request.action eq "view_cart"}
   {include file="cart_view.tpl"}
   
-{elseif $smarty.post.category_id} Ik ben hier.
+{elseif $smarty.request.category_id}
   {if $smarty.post.qty}
     {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id,$smarty.post.category_id,$smarty.post.qty)}
     {if $last_item}
@@ -61,16 +61,19 @@
     {include file="category.tpl"}
   {/if}
 
-{elseif $smarty.get.event_id}
+{elseif $smarty.request.event_id}
   {include file="event.tpl"  event_id=$smarty.get.event_id}
 
-{elseif $smarty.get.event_group_id}
+{elseif $smarty.request.event_group_id}
   {include file="event_group.tpl"}
 
-{elseif $smarty.get.event_groups}
+{elseif $smarty.request.event_groups}
   {include file="event_groups.tpl"}
 
-{elseif $smarty.get.action eq 'login'}
+{elseif $smarty.request.event_type}
+  {include file="event_type.tpl"}
+
+{elseif $smarty.request.action eq 'login'}
 	{user->login username=$smarty.post.username password=$smarty.post.password uri=$smarty.post.uri}
 	{if $login_error.error AND not $user->logged}
   		{include file="loginerror.tpl"}
@@ -78,10 +81,10 @@
     {include file="last_event_list.tpl"}
 	{/if}
 
-{elseif $smarty.get.register_user}
-  {if $smarty.get.action eq 'login'}
+{elseif $smarty.request.register_user}
+  {if $smarty.request.action eq 'login'}
     {user->login username=$smarty.post.username password=$smarty.post.password}
-  {elseif $smarty.get.action eq 'register'}
+  {elseif $smarty.request.action eq 'register'}
     {if $smarty.post.submit_info}
       {user->guest data=$smarty.post}
     {elseif $smarty.post.submit_register}
@@ -95,14 +98,11 @@
     {include file="last_event_list.tpl"}
   {/if}  
 
-{elseif $smarty.get.event_type}
-  {include file="event_type.tpl"}
-  
-{elseif $smarty.get.personal_page}
+{elseif $smarty.request.personal_page}
   {if $user->logged}
     {include file="header.tpl"}
-  	{if $smarty.get.personal_page eq 'details'}
-	    {if $smarty.get.action eq 'update'}
+  	{if $smarty.request.personal_page eq 'details'}
+	    {if $smarty.request.action eq 'update'}
       	{if $smarty.post.submit_update}
       		{user->update_member data=$smarty.post}
         {/if}
@@ -115,15 +115,15 @@
       {else}
 	  	{include file="user_update.tpl"}
       {/if}
-    {elseif $smarty.get.personal_page eq 'orders'}
-    	{if $smarty.post.action eq 'order_res'}
+    {elseif $smarty.request.personal_page eq 'orders'}
+    	{if $smarty.request.action eq 'order_res'}
     	  {order->res_to_order order_id=$smarty.post.order_id handling_id=$smarty.post.handling}
   		  {if $order_success}
   			  {include file="personal_orders.tpl"}
   		  {else} 
 		 	    <div class='error'>Error</div>
   		  {/if}
-  		{elseif $smarty.post.action eq 'reorder'}
+  		{elseif $smarty.request.action eq 'reorder'}
   			{include file="personal_reorder.tpl"}
   		{elseif $smarty.get.id}
     		{include file="personal_order.tpl"}

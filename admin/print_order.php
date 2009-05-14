@@ -31,9 +31,9 @@
 
 
 require_once("../includes/config/init_admin.php");
-require_once("functions/order_func.php");
+require_once("classes/Order.php");
 
 if($_GET['order_id']>0){
-  print_order($_GET['order_id'],'','stream');
+  Order::print_order($_GET['order_id'],'','stream');
 }
 ?>

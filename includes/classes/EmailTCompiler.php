@@ -325,8 +325,7 @@ class EmailTCompiler {
 				}
 
 				
-				$res.=$pre."require_once('functions/order_func.php')".$post;
-        $res.=$pre.'$mail->addAttachment( print_order('.$r_data.",'".$order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf')".$post;         
+       $res.=$pre.'$mail->addAttachment( Order::print_order('.$r_data.",'".$order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf')".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $res.=$pre."require_once('classes/Order.php')".$post;

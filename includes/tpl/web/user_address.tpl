@@ -33,21 +33,21 @@
     {/if}
   </tr>
   <tr><td class='TblHigher' nowrap>
-     {user->user_firstname} {user->user_lastname}
+     {user->user_firstname|clean} {user->user_lastname|clean}
   </tr>
   <tr><td class='TblHigher' nowrap>
-     {user->user_address}
+     {user->user_address|clean}
+  </tr>
+  {if $user->user_address1|clean}
+    <tr><td class='TblHigher' nowrap>
+       {user->user_address1|clean}
+    </tr>
+  {/if}
+  <tr><td class='TblHigher' nowrap>
+     {user->user_zip|clean} {user->user_city|clean}
   </tr>
   <tr><td class='TblHigher' nowrap>
-     {if $user->user_address1}
-       {user->user_address1}
-  </tr>
-  <tr><td class='TblHigher' nowrap>
-     {/if}
-     {user->user_zip} {user->user_city}
-  </tr>
-  <tr><td class='TblHigher' nowrap>
-    {gui->viewcountry value=$user->user_country}
+    {gui->viewcountry value=$user->user_country|clean}
   </tr>
   <tr><td class='TblHigher' nowrap>
      {user->user_email}</td></tr>

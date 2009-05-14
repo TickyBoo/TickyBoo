@@ -36,7 +36,7 @@
 
   <form method='post' action='index.php' style='margin-top:0px;'>
     <input type="hidden" name="action" value="login">
-    {showFormToken name='login'}
+    {ShowFormToken name='login'}
 
     {include file="header.tpl" name=!login! header=!memberinfo!}
 

@@ -47,7 +47,7 @@
   	<td valign='top' align="right">
   {if !$update->is_demo()}
      	<form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
-        {showFormToken name='OrderHandling'}
+        {ShowFormToken name='OrderHandling'}
         <input type='hidden' name='action' value='confirm' />
   {/if}
     	  <table border=0 width='90%' cellpadding="5" bgcolor='white'>
@@ -95,7 +95,7 @@
       {if !$update->is_demo()}
         <form action='' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
         <input type='hidden' name='action' value='reserve'>
-        {showFormToken name='ReservHandling'}
+        {ShowFormToken name='ReservHandling'}
         {/if}
   		  	{!orclick!}
     			<input type='submit' name='submit_reserve' value='{!reserve!}'>

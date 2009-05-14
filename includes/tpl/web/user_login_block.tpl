@@ -52,7 +52,7 @@
   	</tr>
     <form method='post' action='index.php' style='margin-top:0px;'>
     <input type="hidden" name="action" value="login">
-    {showFormToken name='login'}
+    {ShowFormToken name='login'}
 
     {if $smarty.get.action neq "logout" and $smarty.get.action neq "login"}
       <input type="hidden" name="uri" value="{$smarty.server.REQUEST_URI}">
@@ -61,13 +61,17 @@
   		<td class="login_content">{!email!}</td>
   	</tr>
   	<tr>
-  		<td class="login_content" style='padding-left:25px;'><input type=input name=username size=20 style='font-size:10px;' ></td>
+  		<td class="login_content" style='padding-left:25px;'>
+        <input type='input' name='username' size=20 style='font-size:10px;' >
+      </td>
   	</tr>
   	<tr>
   		<td  class="login_content">{!password!}</td>
   	</tr>
   	<tr>
-  		<td class="login_content" style='padding-left:25px;'><input type=password name=password size=20 style='font-size:10px;'>&nbsp;<input type=submit value='OK' style='font-size:10px;'/></td>
+  		<td class="login_content" style='padding-left:25px;'>
+        <input type='password' name='password' size=20 style='font-size:10px;'>&nbsp;<input type='submit' value='{!OK!}' style='font-size:10px;'/>
+      </td>
   	</tr>
   	<tr>
   		<td class="login_content">

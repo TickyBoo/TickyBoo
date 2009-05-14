@@ -396,14 +396,13 @@ class Order_Smarty {
   
   function order_print ($params,&$smarty){
 
-    require_once("functions/order_func.php");
-    if($params['print_prefs']=='pdf'){
+   if($params['print_prefs']=='pdf'){
       $print=FALSE;
     }else{
       $print=TRUE;
     }
     
-    print_order($params['order_id'],'','stream',$print);    
+    Order::print_order($params['order_id'],'','stream',$print);
   }
   
   function secure_url_param($num=FALSE, $nonum=FALSE) 

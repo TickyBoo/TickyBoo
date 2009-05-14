@@ -67,7 +67,7 @@ produced '.date("l dS of F Y h:i:s A").'
 
 */
 require_once("smarty/Smarty.class.php");
-require_once("html2pdf/html2pdf.class.php");
+require_once("classes/gui_smarty.php");
 
 
 class '.$out_class_name.' {
@@ -78,24 +78,28 @@ class '.$out_class_name.' {
   function write($pdf, $data){
     global $_SHOP;
 
-    $input = '."'" .addslashes($input)."'".';
+    $input = '."'".
+    htmlentities  ($input, ENT_QUOTES, 'UTF-8')."'".';
 
     $smarty = new Smarty;
+    $gui    = new gui_smarty($smarty);
+    
     $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
     $smarty->cache_dir    = $_SHOP->tmp_dir;
     $smarty->compile_dir  = $_SHOP->tmp_dir;
     $smarty->compile_id   = "HTML2PDF";
-
+   // print_r($_SHOP);
     $smarty->assign("_SHOP_lang", $_SHOP->lang);
-    $smarty->assign("organizer_currency", $_SHOP->organizer_data->organizer_currency);
-    $smarty->assign("organizer", $_SHOP->organizer_data);
+  //  $smarty->assign("organizer", $_SHOP->organizer_data);
+    $smarty->assign((array)$_SHOP->organizer_data);
     $smarty->assign($data);
     $smarty->assign("OrderData",$data);
 
-    $smarty->my_template_source = stripslashes($input);
-    $input = $smarty->fetch("text:".'.$out_class_name.');
-    $pdf->WriteHTML($input, false);
+    $smarty->my_template_source = html_entity_decode ($input, ENT_QUOTES, "UTF-8");
+    $htmlresult = $smarty->fetch("text:".'.$out_class_name.');
+    $pdf->WriteHTML($htmlresult, false);
     unset($smarty);
+    unset($gui);
   }
 }
 ';

@@ -48,7 +48,7 @@
 	//internal function: loads, initializes the template object, and updates cache
   function &try_load ($name, $t_class_name, $code){
     global $_SHOP;
-
+//    var_dump($code);
     eval($code);
     if(class_exists($t_class_name)){
       $tpl=&new $t_class_name;
