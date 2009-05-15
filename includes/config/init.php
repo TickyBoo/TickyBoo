@@ -29,12 +29,20 @@
  */
 
   global $_SHOP;
-  if (!defined('PHP_SELF')) define('PHP_SELF',$_SERVER['PHP_SELF']);
 
 //check if the site is online  
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
-  
+
+  $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
+  $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
+  $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
+  $_SERVER['SCRIPT_URL'] = clean($_SERVER['SCRIPT_URL'] ,'HTML');
+
+  if (!defined('PHP_SELF'))
+    define('PHP_SELF',$_SERVER['PHP_SELF']);
+
+
   $query="SELECT * FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){

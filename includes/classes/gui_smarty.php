@@ -633,23 +633,9 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
 
 }
 
-function strip_tags_in_big_string($textstring){
-    while (strlen($textstring) != 0)
-        {
-        $temptext = strip_tags(substr($textstring,0,1024));
-        $safetext .= $temptext;
-        $textstring = substr_replace($textstring,'',0,1024);
-        }
-    return $safetext;
-}
 
 function smarty_modifier_clean($string, $type='ALL') {
-  switch (strtolower($type)) {
-    case 'all'  : $string = strip_tags_in_big_string ($string);
-    case 'strip': $string = $string;
-    case 'html' : $string = htmlentities($string, ENT_QUOTES);
-  }
-  return $string;
+  return clean($string);
 }
 
 ?>

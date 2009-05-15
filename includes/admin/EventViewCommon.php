@@ -186,12 +186,12 @@ class EventViewCommon extends AdminView {
         return $types;
     }
 
-    function select_types ($name, &$data, &$err)
-    {
+    function select_types ($name, &$data, &$err) {
+        global $_SHOP;
         $sel[$data["$name"]] = " selected ";
         echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
               <td class='admin_value'> <select name='$name'>";
-        $types = $this->get_event_types();
+        $types = $_SHOP->event_type_enum;
         // print_r($types);
         foreach($types as $k => $v) {
             echo "<option value='" . $v . "' " . $sel[$v] . ">" . $this->con($v) . "</option>\n";

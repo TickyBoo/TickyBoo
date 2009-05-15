@@ -153,43 +153,32 @@ function __autoload ($class_name ) {
  * @param  string $key Environment variable name.
  * @return string Environment variable setting.
  */
-function env($key)
-{
-
-   if ($key == 'HTTPS')
-   {
-      if (isset($_SERVER) && !empty($_SERVER))
-      {
+function env($key){
+   if ($key == 'HTTPS') {
+      if (isset($_SERVER) && !empty($_SERVER)) {
          return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
-      } else
-      {
+      } else {
          return (strpos(env('SCRIPT_URI'), 'https://') === 0);
       }
    }
 
-   if (isset($_SERVER[$key]))
-   {
+   if (isset($_SERVER[$key])) {
       return $_SERVER[$key];
-   } elseif (isset($_ENV[$key]))
-   {
+   } elseif (isset($_ENV[$key])) {
       return $_ENV[$key];
-   } elseif (getenv($key) !== false)
-   {
+   } elseif (getenv($key) !== false) {
       return getenv($key);
    }
 
-   if ($key == 'DOCUMENT_ROOT')
-   {
+   if ($key == 'DOCUMENT_ROOT') {
       $offset = 0;
-      if (!strpos(env('SCRIPT_NAME'), '.php'))
-      {
+      if (!strpos(env('SCRIPT_NAME'), '.php')) {
          $offset = 4;
       }
-      return substr(env('SCRIPT_FILENAME'), 0, strlen(env('SCRIPT_FILENAME')) - (strlen
-         (env('SCRIPT_NAME')) + $offset));
+      return substr(env('SCRIPT_FILENAME'), 0, strlen(env('SCRIPT_FILENAME')) -
+                                               (strlen(env('SCRIPT_NAME')) + $offset));
    }
-   if ($key == 'PHP_SELF')
-   {
+   if ($key == 'PHP_SELF') {
       return r(env('DOCUMENT_ROOT'), '', env('SCRIPT_FILENAME'));
    }
    return null;
@@ -393,4 +382,34 @@ function get_loc($lang){
   }
 }
 
+function strip_tags_in_big_string($textstring){
+    while (strlen($textstring) != 0)
+        {
+        $temptext = strip_tags(substr($textstring,0,1024));
+        $safetext .= $temptext;
+        $textstring = substr_replace($textstring,'',0,1024);
+        }
+    return $safetext;
+}
+
+function wp_entities($string, $encode = 1){
+
+$a = (int) $encode;
+$original = array("'"   ,"\""   ,"#"    ,"("    ,")");
+$entities = array("&%39","&%34;","&%35;","&#40;","&#41;");
+
+if($a == 1)
+    return str_replace($original, $entities, $string);
+else
+    return str_replace($entities, $original, $string);
+}
+
+function clean($string, $type='ALL') {
+  switch (strtolower($type)) {
+    case 'all'  : $string = strip_tags_in_big_string ($string);
+    case 'strip': $string = $string;
+    case 'html' : $string = wp_entities(htmlentities($string, ENT_QUOTES));
+  }
+  return $string;
+}
 ?>
