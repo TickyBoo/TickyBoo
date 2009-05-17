@@ -97,7 +97,7 @@ class Gui_smarty {
     $_SESSION['tokens'][$name]['t'] = time();
     $token = $_SESSION['tokens'][$name]['n'];
     $name = $name.'_'.base_convert(mt_rand(), 10,36);
-    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'-'.$token))."'/>";
+    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'-'.$token.'-'.$_SERVER["REMOTE_ADDR"]))."'/>";
   }
 /**
  * build a href link

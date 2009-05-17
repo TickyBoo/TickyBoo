@@ -16,8 +16,8 @@ $smarty = new Smarty;
 
 $cart_s = new MyCart_Smarty( $smarty );
 $user_s = new UserAuth_Smarty( $smarty );
-$user = new User_Smarty( $smarty );
-$order = new Order_Smarty( $smarty );
+$user   = new User_Smarty( $smarty );
+$order  = new Order_Smarty( $smarty );
 
 $smarty->assign( '_SHOP_root', $_SHOP->root );
 $smarty->assign( '_SHOP_root_secured', $_SHOP->root_secured );
@@ -29,12 +29,12 @@ $smarty->assign( 'organizer', $_SHOP->organizer_data );
 
 
 $smarty->template_dir = $_SHOP->tpl_dir . 'pos' . DS;
-$smarty->compile_dir = $_SHOP->tmp_dir; // . '/web/templates_c/';
-$smarty->compile_id = 'pos';
-$smarty->cache_dir = $_SHOP->tmp_dir; // . '/web/cache/';
-$smarty->config_dir = $_SHOP->includes_dir . 'lang' . DS;
+$smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
+$smarty->compile_id   = 'pos';
+$smarty->cache_dir    = $_SHOP->tmp_dir; // . '/web/cache/';
+$smarty->config_dir   = $_SHOP->includes_dir . 'lang' . DS;
 
-$smarty->plugins_dir = array( "plugins", $_SHOP->includes_dir . "shop_plugins" );
+$smarty->plugins_dir  = array( "plugins", $_SHOP->includes_dir . "shop_plugins" );
 
 $smarty->display( $fond . '.tpl' );
 

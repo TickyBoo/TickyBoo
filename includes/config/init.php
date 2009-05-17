@@ -78,7 +78,7 @@
       if (!isset($_SESSION['tokens'][$name])) {
         $accepted = false;
       } else {
-        $testme = sha1 ($key.'-'.$_SESSION['tokens'][$name]['n']);
+        $testme = sha1 ($key.'-'.$_SESSION['tokens'][$name]['n'].'-'.$_SERVER["REMOTE_ADDR"]);
         if($testme === $value ) {
           $token_age = time() - $_SESSION['tokens'][$name]['t'];
           if ($token_age >= 300) {
