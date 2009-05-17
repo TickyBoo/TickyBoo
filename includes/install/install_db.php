@@ -398,7 +398,7 @@ $tbls['Payment_log']['engine'] = 'MyISAM';
 $tbls['Payment_log']['remove'] = array ()   ;
 
 $tbls['Sessions']['fields'] = array(
-  'Sessions_id' => " varchar(32) NOT NULL",
+  'Sessions_id' => " varchar(32) NOT NULL DEFAULT ''",
   'Sessions_access' => " int(10) unsigned DEFAULT NULL",
   'Sessions_data' => " text");
 $tbls['Sessions']['key'] = array(

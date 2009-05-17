@@ -96,7 +96,13 @@ class Handling {
 
 //    echo $this->handling_sale_mode,'|';
 //		If (is_string($this->handling_sale_mode)) {
-      $this->sale_mode = array_fill_keys(explode(",", $this->handling_sale_mode),true);
+      $keys  = explode(",", $this->handling_sale_mode);
+      if (count($keys)>0) {
+        $this->sale_mode = array_combine($keys,array_fill(0,count($keys),true));
+      } else {
+        $this->sale_mode = array();
+      }
+//      $this->sale_mode = array_fill_keys(explode(",", $this->handling_sale_mode),true);
 //      print_r($this->sale_mode);
 //    }
 //		}
