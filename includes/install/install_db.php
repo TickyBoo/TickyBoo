@@ -2,7 +2,7 @@
 $tbls = array();
 
 $tbls['Admin']['fields'] = array(
-  'admin_id' => " int(11) NOT NULL ",
+  'admin_id' => " int(11) NOT NULL DEFAULT '0'",
   'admin_login' => " varchar(10) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(32) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
@@ -47,7 +47,7 @@ $tbls['User']['fields'] = array(
   'user_email' => " varchar(50) NOT NULL DEFAULT ''",
   'user_status' => " tinyint(4) NOT NULL DEFAULT '0'",
   'user_prefs' => " varchar(50) DEFAULT NULL",
-  'user_owner_id' => " int(11) NOT NULL",
+  'user_owner_id' => " int(11) NOT NULL DEFAULT '0'",
   'user_order_total' => " int(11) NOT NULL DEFAULT '0'",
   'user_current_tickets' => " int(6) NOT NULL DEFAULT '0'",
   'user_total_tickets' => " int(11) NOT NULL DEFAULT '0'");
@@ -384,12 +384,12 @@ $tbls['Template']['remove'] = array ('template_organizer_id')   ;
 
 $tbls['Payment_log']['fields'] = array(
   'payment_log_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'payment_log_order_id' => " int(11) NOT NULL",
-  'payment_log_date' => " datetime NOT NULL",
-  'payment_log_ipn_server_ip' => " varchar(255) NOT NULL",
+  'payment_log_order_id' => " int(11) NOT NULL DEFAULT '0'",
+  'payment_log_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+  'payment_log_ipn_server_ip' => " varchar(255) NOT NULL DEFAULT ''",
   'payment_log_ipn_server_info' => " text NOT NULL",
   'payment_log_ipn_server_result' => " text NOT NULL",
-  'payment_log_action' => " varchar(255) NOT NULL",
+  'payment_log_action' => " varchar(255) NOT NULL DEFAULT ''",
   'payment_log_blog' => " text NOT NULL");
 $tbls['Payment_log']['key'] = array(
   "Payment_log_id" => "primary key payment_log_id (payment_log_id)",
