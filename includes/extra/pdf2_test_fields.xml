@@ -1,0 +1,3 @@
+<templatefile type='pdf2'><page style="font-size: 10pt">
+{print_r var=$OrderData}
+</page></templatefile>

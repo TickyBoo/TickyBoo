@@ -1,7 +1,0 @@
-<templatefile type='pdf'><?xml version="1.0" encoding="utf-8"?>
-<template invert="790" lang="ru">
-<static>
-<font name="Helvetica"/>
-<text value="ВАШ БИЛЕТ" x="42" y="75" size="20"/>
-</static>
-</template></templatefile>
