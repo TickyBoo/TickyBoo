@@ -35,8 +35,8 @@ require_once ("admin/AdminPage.php");
 require_once ("classes/AUIBico.php");
 
 // ($_SERVER["PATH_INFO"] == '/event')
-    require_once ("admin/EventPropsView.php");
-    $body = new EventPropsView(700);
+    require_once ("admin/indexview.php");
+    $body = new indexview(700);
 
 // width=200 for menu ...Change it to your preferd width;
 // 700 total table

@@ -28,7 +28,6 @@
  * clear to you.
  */
   global $_SHOP;
-//  echo '-'.$pad."<br>\n";
 
 	define('DS', DIRECTORY_SEPARATOR);
 	define('ROOT',dirname(dirname(dirname(__FILE__))).DS);
