@@ -31,7 +31,7 @@
 {assign var='length' value='15'}
 {assign var=start_date value=$smarty.now|date_format:"%Y-%m-%d"}
 <table class='table_dark'>
-  {event start_date=$start_date sub='on' ort='on' load_organizer='on' place_map='on' order="event_date,event_time" first=$smarty.get.first length=$length}
+  {event start_date=$start_date sub='on' ort='on' place_map='on' order="event_date,event_time" first=$smarty.get.first length=$length}
     {assign var='month' value=$shop_event.event_date|date_format:"%B"}
     {if $month neq  $month1}
      <tr><td colspan='4' class='title' style='text-decoration:underline;'><br>{$shop_event.event_date|date_format:"%B %Y"}</td></tr>

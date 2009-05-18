@@ -52,7 +52,7 @@
   <tr><td class='TblHigher' nowrap>
      {user->user_email}</td></tr>
   <tr><td class='TblHigher' nowrap>
-     <div align='right'><a href='?action=useredit' onclick="BasicPopup(this);" >{!edit!}</a></div>
+     <div align='right'><a target='_blank' href='?action=useredit' onclick="BasicPopup(this);" >{!edit!}</a></div>
   </td></tr>
 
 </table>

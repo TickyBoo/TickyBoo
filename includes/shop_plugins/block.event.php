@@ -113,10 +113,6 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
       $where.=" and event_rep LIKE '%main%'";
     }
 
-    if($params['load_organizer']){
-      $from.=', Organizer';
-    }
-
     if($params['first']){
 			$params['first']=(int)$params['first'];
       $limit='limit '.$params['first'];

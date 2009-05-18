@@ -441,14 +441,14 @@ class Gui_smarty {
 function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
   {
     $name     = is($params['name'],'offset');
-    $offset  = is($params['offset'],0);
-    $matches = is($params['count'],0);
+    $offset   = is($params['offset'],0);
+    $matches  = is($params['count'],0);
     $stepsize = is($params['length'],10);
     $maxpages = is($params['maxpages'],10);
     $params['action'] = is($params['action'],$this->action);
    // If ($matches<=$stepsize ) {return "";}
 
-    $url     = $this->_URL( $params, $smarty, array('name',$name,'maxpages','count','length'));
+    $url     = $this->url( $params, $smarty, array('name',$name,'maxpages','count','length'));
 
     $breaker = ( strpos($url,'?')===false)?'?':'&';
     $output = '';
