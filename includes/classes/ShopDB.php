@@ -62,6 +62,14 @@ class ShopDB {
         }
 
     }
+
+    function GetServerInfo () {
+        global $_SHOP;
+        if (!$_SHOP->link) {
+           self::init();
+        }
+        return mysqli_get_server_info($_SHOP->link);
+    }
     
     function begin ($name='')
     {

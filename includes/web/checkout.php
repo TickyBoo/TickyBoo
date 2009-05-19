@@ -134,7 +134,7 @@ die();
 
   Function usereditAction ($smarty){
     global $user;
-    
+    $smarty->assign('usekasse',true);
     if ($_POST.submit_update) {
       if ($user->update_member_f($_POST, $errors)) {
         echo "
@@ -147,6 +147,7 @@ die();
       $smarty->assign('user_errors', $errors);
       $smarty->assign('user_data',   $_POST);
     } else {
+      print_r($_SESSION);
       $smarty->assign('user_data',   $_SESSION['_SHOP_USER']);
     }
     return "user_update";

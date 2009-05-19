@@ -172,7 +172,8 @@ class OrtView extends AdminView {
     function draw ()
     {
         global $_SHOP;
-
+        echo $_POST['action'];
+        
         if (preg_match('/_pm$/', $_REQUEST['action']) or preg_match('/_pmz$/', $_REQUEST['action']) or
             preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
             require_once('admin/PlaceMapView2.php');
@@ -191,6 +192,7 @@ class OrtView extends AdminView {
                 $ort = new ort;
                 $ort->_fill($_POST);
                 if (!$ort_id = $ort->save()) {
+                   echo "can't save";
                     return 0;
                 }
                 if (!$this->photo_post($_POST, $ort_id)) {

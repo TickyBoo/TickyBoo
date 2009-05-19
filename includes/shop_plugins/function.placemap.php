@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 %%%copyright%%%
 * phpMyTicket - ticket reservation system
@@ -33,6 +33,7 @@
 * clear to you.
 
 */
+require_once ("classes/PlaceMapPart.php");
 
 function smarty_function_placemap($params, &$smarty)
 {
@@ -68,34 +69,9 @@ function smarty_function_placemap($params, &$smarty)
     {
         global $_SHOP;
 
-        switch ($_SHOP->lang) {
-            case 'ru':
-                $l_row = ' Ряд ';
-                $l_seat = ' Место ';
-                break;
-            case 'sv':
-                $l_row = ' Rad ';
-                $l_seat = ' Plats ';
-                break;
-            case 'de':
-                $l_row = ' Reihe ';
-                $l_seat = ' Platz ';
-                break;
-            case 'fr':
-                $l_row = ' Rang ';
-                $l_seat = ' Place ';
-                break;
-            case 'it':
-                $l_row = ' Fila ';
-                $l_seat = ' Posto ';
-                break;
-            case 'en':
-                $l_row = ' Row ';
-                $l_seat = ' Seat ';
-                break;
-        }
+        $l_row = ' '.con('placemap_Row').' ';
+        $l_seat = ' '.con('placemap_Seat').' ';
 
-        require_once ("classes/PlaceMapPart.php");
         $cat_ident = $category['category_ident'];
         $cat_num = 0;
         switch ($category['category_numbering']) {

@@ -964,4 +964,20 @@ define('pos_homepage','Home Page');
 define('pos_currenttickets','Current Tickets');
 define('pos_booktickets','Book Tickets');
 define('pos_holdtickets','Hold Tickets');
+define('shopconfig_delunpaid','Global Delete Unpaid Orders');
+define('shopconfig_user_activate','Users need to activate');
+define('index_admin','Home');
+define('current_version','version:');
+define('InfoWebVersion',   "Server Software");
+define('InfoPhpVersion',   "PHP Version");
+define('InfoMysqlVersion', "MySQL Version");
+define('InfoUserCount',    "User count:");
+define('InfoGroupCount',   "Group count:");
+define('InfoVenueCount',   "Venue count:");
+define('InfoEventCount',   "Event count:");
+define("system_summary","System Summary");
+
+
+//Users Need to activate?
+
 ?>

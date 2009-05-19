@@ -29,6 +29,7 @@
  */
 
   global $_SHOP;
+  
 
 //check if the site is online  
   require_once("classes/ShopDB.php");

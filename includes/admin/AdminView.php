@@ -43,19 +43,14 @@ class AdminView extends AUIComponent {
         $this->width=$width;
     }
 
-    function con($name)
-    {
-        if (defined($name)) {
-            return constant($name);
-        } else {
-            return $name;
-        }
+    function con($name) {
+      return con($name);
     }
 
-    function print_field ($name, &$data, $prefix = '')
-    {
-        echo "<tr><td class='admin_name' width='40%'>$prefix" . $this->con($name) . "</td>
-              <td class='admin_value'>{$data[$name]}</td></tr>\n";
+    function print_field ($name, &$data, $prefix='') {
+
+        echo "<tr><td class='admin_name' width='40%'>$prefix" , $this->con($name) , "</td>
+              <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
     }
 
     function print_field_o ($name, &$data)
@@ -276,7 +271,7 @@ class AdminView extends AUIComponent {
    <select name='$name'>\n";
 
         foreach($opt as $k => $v) {
-            echo "<option value='$k'{$sel[$k]}>$v</option>\n";
+            echo "<option value='$k'{$sel[$k]}>".$this->con($v)."</option>\n";
         }
 
         echo "</select><span class='err'>{$err[$name]}</span>
@@ -352,7 +347,7 @@ class AdminView extends AUIComponent {
     function form_head ($name, $width = 0, $colspan = 2)
     {
         echo "<table class='admin_form' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='$colspan'>$name</td></tr>";
+        echo "<tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr>";
     }
 
     function form_foot($colspan = 2)

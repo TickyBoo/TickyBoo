@@ -65,7 +65,7 @@ class Ort{
         	     ort_url=".ShopDB::quote($this->ort_url);
 
     if($this->ort_id){
-      $query="update Ort $query where ort_id={$this->ort_id}";
+      $query="update Ort $query where ort_id={(int)$this->ort_id}";
     }else{
       $query="insert Ort $query";
     }

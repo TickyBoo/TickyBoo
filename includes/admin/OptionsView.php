@@ -73,10 +73,10 @@ class OptionsView extends AdminView{
 function option_form (&$data, &$err,$title,$mode){
 	global $_SHOP;
 	
-	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 	echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>"; 
-	
+	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+
 	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 	
 	$this->print_input('shopconfig_lastrun_int',$data, $err,5,3);
@@ -84,40 +84,22 @@ function option_form (&$data, &$err,$title,$mode){
 	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
 	$this->print_input('shopconfig_maxres',$data, $err,5,3);
 	//this will tell the auto scripts to check POS orders or not.
-	unset($sel);
-	$sel[$data["shopconfig_check_pos"]]=" selected ";
-		echo "<tr><td class='admin_name'  width='40%'>Check POS Orders</td>
-		<td class='admin_value'><select name='shopconfig_check_pos'>";
-		echo "<option value='No' ".$sel['No'].">No</option>\n";
-		echo "<option value='Yes' ".$sel['Yes'].">Yes</option>\n";
-		echo "</select><span class='err'>{$err["shopconfig_check_pos"]}</span></td></tr>\n";
-	// Delete unpaid orders global setting.
-	unset($sel);
-	$sel[$data["shopconfig_delunpaid"]]=" selected ";
-		echo "<tr><td class='admin_name'  width='40%'>Global Delete Unpaid Orders</td>
-		<td class='admin_value'><select name='shopconfig_delunpaid'>";
-		echo "<option value='No' ".$sel['No'].">No</option>\n";
-		echo "<option value='Yes' ".$sel['Yes'].">Yes</option>\n";
-		echo "</select><span class='err'>{$err["shopconfig_delunpaid"]}</span></td></tr>\n";		
+	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');
 	
+  $this->print_select_assoc('shopconfig_check_pos',$data,$err,$yesno);
+  $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
+
 	$this->print_input('shopconfig_posttocollect',$data, $err,25,100);
-	
-	unset($sel);
-	$sel[$data["shopconfig_user_activate"]]=" selected ";
-		echo "<tr><td class='admin_name'  width='40%'>Users Need to activate?</td>
-		     <td class='admin_value'><select name='shopconfig_user_activate'>";
-		echo "<option value='No' ".$sel['No'].">No</option>\n";
-		echo "<option value='Yes' ".$sel['Yes'].">Yes</option>\n";
-		echo "</select><span class='err'>{$err["shopconfig_user_activate"]}</span></td></tr>\n";
-	
+  $this->print_select_assoc('shopconfig_user_activate',$data,$err,$yesno);
+
 	echo "<input type='hidden' name='action' value='update'>\n";
 	
 	echo "<tr><td align='center' class='admin_value' colspan='2'>
   	<input type='submit' name='save' value='".save."'> ";
 	
 	echo "<input type='reset' name='reset' value='".res."'></td></tr>";
-  	echo "</table>\n";
-  	echo "</form>\n";
+	echo "</form>\n";
+ 	echo "</table>\n";
 
 }
 function options_check (&$data, &$err){

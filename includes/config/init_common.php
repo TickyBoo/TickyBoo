@@ -43,6 +43,12 @@
     echo "<a href='inst/index.php'>Install me now!</a>";
     exit;
     }
+
+  if (!defined('CURRENT_VERSION')) {
+    define('CURRENT_VERSION','Unknow');
+  }
+  
+
  /*
 	if (ini_get('register_globals')) {
 

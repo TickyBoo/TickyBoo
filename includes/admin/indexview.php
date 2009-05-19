@@ -1,36 +1,29 @@
 <?PHP
 /* %%%copyright%%%     */
 $licention = <<<EOQ
- * phpMyTicket - ticket reservation system
- * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
- *
- * This file is part of phpMyTicket.
- *
- * This file may be distributed and/or modified under the terms of the
- * "GNU General Public License" version 2 as published by the Free
- * Software Foundation and appearing in the file LICENSE included in
- * the packaging of this file.
- *
- * Licencees holding a valid "phpmyticket professional licence" version 1
- * may use this file in accordance with the "phpmyticket professional licence"
- * version 1 Agreement provided with the Software.
- *
- * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
- * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.
- *
- * The "phpmyticket professional licence" version 1 is available at
- * http://www.phpmyticket.com/ and in the file
- * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to
- * info@phpmyticket.com.
- * Further contact information is available at http://www.phpmyticket.com/
- *
- * The "GNU General Public License" (GPL) is available at
- * http://www.gnu.org/copyleft/gpl.html.
- *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't
- * clear to you.
+  FusionTicket - ticket reservation system
+    Copyright (C) 2007-2009 Christopher Jenkins. All rights reserved.
+
+  Original Design:
+ 	phpMyTicket - ticket reservation system
+  	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+
+  This file is part of fusionTicket.
+
+  This file may be distributed and/or modified under the terms of the
+  "GNU General Public License" version 3 as published by the Free
+  Software Foundation and appearing in the file LICENSE included in
+  the packaging of this file.
+
+  This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
+  THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+  The "GNU General Public License" (GPL) is available at
+  http://www.gnu.org/copyleft/gpl.html.
+
+  Contact info@fusionticket.com if any conditions of this licencing isn't
+  clear to you.
 EOQ;
 
 require_once("admin/AdminView.php");
@@ -42,37 +35,41 @@ class IndexView extends AdminView {
   function draw() {
     if(!isset($_REQUEST['tab'])) $_REQUEST['tab']=0;
 
-    $menu = array("License"=>"?tab=0", "Information"=>"?tab=1", "Configuration"=>"?tab=2", "Owner"=>'?Tab=3');
+    $menu = array("Information"=>"?tab=0", "Owner"=>'?tab=1', "Configuration"=>"?tab=2");
     echo $this->PrintTabMenu($menu, (int)$_REQUEST['tab'], "left");
 
     switch ((int)$_REQUEST['tab'])
        {
        case 0:
            global $licention;
-           $content .= nl2br(htmlspecialchars($licention));
-           break;
-       case 1:
-           $content .= "<tr>\n<td>".$this->UI_Label("Fusion Ticket ".con('Current_version'))."</td>\n<td>".CURRENT_VERSION."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoWebVersion'))."</td>\n<td>".$_SERVER['SERVER_SOFTWARE'] ."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoPhpVersion'))."</td>\n<td>".phpversion ()."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoMysqlVersion'))."</td>\n<td>".ShopDB::GetServerInfo ()."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoUserCount'))."</td>\n<td>".$this->Users_Count ()."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoGroupCount'))."</td>\n<td>".$this->Groups_Count ()."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoVenueCount'))."</td>\n<td>".$this->Docs_Count ()."</td>\n</tr>";
-           $content .= "<tr>\n<td>".$this->UI_Label(con('InfoEventCount'))."</td>\n<td>".$this->Files_Count ()."</td>\n</tr>";
+       	 	 $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION,'100%',2);
+        	 echo "<tr><td class='admin_value' width='100%' colspan=2>" ;
+           echo "<p>".nl2br(htmlspecialchars($licention)),'</p>';
+           echo "</td></tr>";
+        	 echo "<tr><td class='admin_list_title' width='100%' colspan=2>" ;
+           echo con('system_summary');
+           echo "</td></tr>";
+            $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
+            $this->print_field('InfoPhpVersion',  phpversion ());
+            $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
+            $this->print_field('InfoUserCount',   $this->Users_Count ());
+            $this->print_field('InfoGroupCount',  $this->Groups_Count ());
+            $this->print_field('InfoVenueCount',  $this->Docs_Count ());
+            $this->print_field('InfoEventCount',  $this->Files_Count ());
+		       echo "</table>\n";
            break;
        
-       case 2:
-           $viewer = new OptionsView();
+       case 1:
+           $viewer = new OrganizerView('100%');
            $viewer->draw();
            break;
 
-       case 3:
-           $viewer = new OrganizerView();
+       case 2:
+           $viewer = new OptionsView('100%');
            $viewer->draw();
            break;
+
        }
-    echo $content;
   }
 
  
@@ -124,7 +121,22 @@ class IndexView extends AdminView {
 	return $str;
 }
 
- 
+  function Users_Count () {
+    return '';
+  }
+  
+  function Groups_Count (){
+    return '';
+  }
+
+  function Docs_Count () {
+    return '';
+  }
+
+  function Files_Count (){
+    return '';
+  }
+
 }
 
 ?>
