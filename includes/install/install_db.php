@@ -57,17 +57,17 @@ $tbls['User']['engine'] = 'InnoDB';
 $tbls['User']['remove'] = array ('user_organizer_ids') ;
 //$tbls['User']['AUTO_INCREMENT'] = 48;
 
-$tbls['Auth']['fields'] = array(
+$tbls['auth']['fields'] = array(
   'user_id' => " int(11) NOT NULL DEFAULT '0'",
   'username' => " varchar(50) NOT NULL DEFAULT ''",
   'password' => " varchar(35) NOT NULL DEFAULT ''",
   'active' => " varchar(38) DEFAULT 'not null'",
   'user_group' => " int(11) NOT NULL DEFAULT '0'");
-$tbls['Auth']['key'] = array(
+$tbls['auth']['key'] = array(
   "username" => "PRIMARY KEY id (username)",
   "password" => "KEY (`password`)");
-$tbls['Auth']['engine'] = 'MyISAM';
-$tbls['Auth']['remove'] = array ('owner_id','userlevel');
+$tbls['auth']['engine'] = 'MyISAM';
+$tbls['auth']['remove'] = array ('owner_id','userlevel');
 
 $tbls['Category']['fields'] = array(
   'category_id' => " int(11) NOT NULL AUTO_INCREMENT",
