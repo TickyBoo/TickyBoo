@@ -51,11 +51,11 @@
   
 {elseif $smarty.request.category_id}
   {if $smarty.post.qty}
-    {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id,$smarty.post.category_id,$smarty.post.qty)}
+    {assign var='last_item' value=$cart->add_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.qty)}
     {if $last_item}
       {include file="discount.tpl"}
     {else}
-      {include file="event.tpl" event_id=$smarty.post.event_id}
+      {include file="event.tpl" event_id=$smarty.request.event_id}
     {/if}
   {else} 
     {include file="category.tpl"}

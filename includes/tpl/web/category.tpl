@@ -27,7 +27,7 @@
  * clear to you.
  *}
 
-{assign var="category_id" value=$smarty.post.category_id}
+{assign var="category_id" value=$smarty.request.category_id}
 
 {category category_id=$category_id event='on' placemap='on'}
 
