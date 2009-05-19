@@ -11,14 +11,12 @@ php_flag magic_quotes_gpc off
 php_flag allow_call_time_pass_reference off
 
 # Recomended error reporting for production environment
-#php_flag display_errors off
-#php_flag log_erros on
+php_flag display_errors off
+php_flag log_erros on
 
 # Recommended error reporting for test environment
-php_flag display_errors on
-hp_flag log_erros off
+#php_flag display_errors on
+#php_flag log_erros off
 
 
-AddType text/plain;charset=UTF-8 php
-
-
+#AddType text/plain;charset=UTF-8 php
