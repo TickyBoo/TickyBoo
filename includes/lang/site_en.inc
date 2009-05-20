@@ -976,7 +976,7 @@ define('InfoGroupCount',   "Group count:");
 define('InfoVenueCount',   "Venue count:");
 define('InfoEventCount',   "Event count:");
 define("system_summary","System Summary");
-
+define("unused_guests","Unused guests");
 
 //Users Need to activate?
 

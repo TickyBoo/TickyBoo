@@ -45,17 +45,21 @@ class GarbageView extends AdminView{
 		$stats=Trash::stats();
 		
 		echo "<tr class='admin_list_row_0'>
-		<td class='admin_list_item'>".event."</td>
+		<td class='admin_list_item'>".con('event')."</td>
 		<td class='admin_list_item' align='right'>".$stats['event']."</td></tr>";
 	
 		echo "<tr class='admin_list_row_1'>
-		<td class='admin_list_item'>".seat."</td>
+		<td class='admin_list_item'>".con('seat')."</td>
 		<td class='admin_list_item' align='right'>".$stats['seat']."</td></tr>";
 	
 		echo "<tr class='admin_list_row_0'>
-		<td class='admin_list_item'>".order."</td>
+		<td class='admin_list_item'>".con('order')."</td>
 		<td class='admin_list_item' align='right'>".$stats['order']."</td></tr>";
 	
+		echo "<tr class='admin_list_row_1'>
+		<td class='admin_list_item'>".con('unused_guests') ."</td>
+		<td class='admin_list_item' align='right'>".$stats['guests']."</td></tr>";
+
 		echo "</table></form>";
 	
 		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?empty=true'>".empty_trash."</a></center>";

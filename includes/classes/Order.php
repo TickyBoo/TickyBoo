@@ -208,13 +208,13 @@ class Order {
     $this->order_fee=$fee;
     
     $order_date_expire = 60;
-	if($this->order_handling->handling_id=='1'){
-		$order_status="res";
-		$order_date_expire = $_SHOP->shopconfig_restime;
-	}else{
-		$order_status="ord";
-		$order_date_expire = $this->order_handling->handling_expires_min;
-	}
+  	if($this->order_handling->handling_id=='1'){
+  		$order_status="res";
+  		$order_date_expire = $_SHOP->shopconfig_restime;
+  	}else{
+  		$order_status="ord";
+  		$order_date_expire = $this->order_handling->handling_expires_min;
+  	}
 	
     $this->order_date =date('d-m-Y');
     
@@ -471,8 +471,8 @@ class Order {
 
     $query="UPDATE  `Order`
             set order_status='cancel',
-                order_reason="._esc($reason).",
-                order_reason_date= NOW
+                order_responce="._esc($reason).",
+                order_responce_date= NOW()
             where order_id="._esc($order_id);
 
     if(!$res=ShopDB::query($query)){

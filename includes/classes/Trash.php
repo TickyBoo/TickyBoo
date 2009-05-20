@@ -37,6 +37,7 @@
 
 require_once("classes/Order.php");
 require_once("classes/Event.php");
+require_once("classes/User.php");
 
 
 class Trash {
@@ -69,6 +70,7 @@ class Trash {
 		if($data=ShopDB::query_one_row($query)){
 		  $res['order']=$data['count'];
 		}				
+		$res['guests']= User::cleanup();
 		
 		return $res;
 
@@ -78,6 +80,7 @@ class Trash {
 	  Order::toTrash();
 		Event::emptyTrash();
 		Order::emptyTrash();
+		User::cleanup(0,true);
 	}
 }
 
