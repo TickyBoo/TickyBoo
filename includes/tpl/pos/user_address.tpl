@@ -39,7 +39,7 @@
 		<td align="left">
 			<table width='50%' border='0' cellspacing='1' cellpadding='5' align='left' style='padding-left:50px;'>
 				{include file="user_form.tpl"}
-				<tr>
+				{*<tr>
 					<td class='user_item'>{!without_fee!}</td>
 					<td  class='user_value'><input type='checkbox' class='checkbox' name='no_fee' value='1'></td>
 				</tr>
@@ -53,14 +53,14 @@
 		  			<input type='hidden' name='action' value='submit_info'>
 		  			<input type='submit' name='submit_info' value='{#continue#}'>
 					</td>
-		  		</tr>
+		  		</tr> *}
 			</table>
 		</td>
-		<td>
+{*		<td>
 			<table>
 				<tr>
 					<td colspan="2" class="title">
-						{pos_exsistingusers!}
+						{!pos_exsistingusers!}
 					</td>
 				</tr>
 				<tr>
@@ -80,7 +80,7 @@
 					</td>
 				</tr>
 			</table>
-		</td>
+		</td> *}
 	</tr>
 </table>
 </form>

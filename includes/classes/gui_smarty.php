@@ -272,7 +272,7 @@ class Gui_smarty {
     $mult =   is($params['multiselect']);
     $con  =   is($params['con']);
     $nokey =  is($params['nokey'], false);
-
+    $nolabel = is($params['nolabel'], false);
     $mult = ($mult)?'multiple':'';
 
     If (!is_array($opt)) {
@@ -296,7 +296,7 @@ class Gui_smarty {
         $return .= "<option value='". htmlspecialchars($v)."' {$sel[$v]}>" .  htmlspecialchars($cap) . "</option>\n";
     }
 
-    return $this->showlabel($name, $return. "</select>");
+    return $this->showlabel($name, $return. "</select>", $nolabel);
   }
 
   protected function Loadcountrys() {

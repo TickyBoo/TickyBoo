@@ -32,7 +32,7 @@
  * clear to you.
  
  *}{assign var="cart_empty" value=$cart->is_empty_f()}
-{if $cart_empty }
+{if $cart_empty and !$cart_show_always}
 
   <table cellpadding='5' cellspacing='1' width='100%' bgcolor="#ffffff" >
     <tr><td class='title' align='center'>{!shopping_cart_pos!}
@@ -43,26 +43,43 @@
 
 {else}
 
-  <table  cellpadding='5' cellspacing='0' width='100%' border='0'>
-    <tr><td class='title' colspan='4' align='center' valign='top'  bgcolor="#ffffff">
+  <table  cellpadding='5' cellspacing='0' width='100%' border='1'>
+{*    <tr><td class='title' colspan='4' align='center' valign='top'  bgcolor="#ffffff">
        {!shopping_cart_pos!}
     </td></tr>
     <tr><td class='help' colspan='4' align='center' valign='top'  bgcolor="#ffffff">
         {!Pos_Cart_info!}
-    </td></tr>
-    <tr><td class='view_cart_title' valign='top'  bgcolor="#ffffff">
-       {!event!}
-    </td>
-    <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
-        {!tickets!}
-    </td>
-    <td class='view_cart_title'  valign='top'  bgcolor="#ffffff">
-        {!total!}
-    </td>
-    <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
-        {!expires_in!}
-    </td>
+    </td></tr> *}
+    <tr>
+      <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
+         {!event!}
+      </td>
+      <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
+          {!tickets!}
+      </td>
+      <td class='view_cart_title'  valign='top'  bgcolor="#ffffff">
+          {!total!}
+      </td>
+      <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
+          {!expires_in!}
+      </td>
     </tr>
+    {if $cart_empty}
+    <tr>
+      <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
+         &nbsp;
+      </td>
+      <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
+         &nbsp;
+      </td>
+      <td class='view_cart_title'  valign='top'  bgcolor="#ffffff">
+         &nbsp;
+      </td>
+      <td class='view_cart_title' valign='top'  bgcolor="#ffffff">
+         &nbsp;
+      </td>
+    </tr>
+    {/if}
     {cart->items}
 
     <tr class='view_cart_tr'>
@@ -119,9 +136,15 @@
     </td></tr>
 
     {/cart->items}
-     <tr><td class='view_cart_total' colspan='3'  bgcolor="#ffffff">
+     <tr>
+      <td class='view_cart_total' colspan='2'  bgcolor="#ffffff">
         {!total_price!}
-     </td><td class='view_cart_total'   bgcolor="#ffffff"> {cart->total_price|string_format:"%.2f"} {$organizer_currency}
-   </td></tr>
- </table>
+      </td>
+      <td class='view_cart_total'   bgcolor="#ffffff"> {cart->total_price|string_format:"%.2f"} {$organizer_currency}
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+{if !$cart_show_always}
+  </table> hgh
+{/if}
 {/if}

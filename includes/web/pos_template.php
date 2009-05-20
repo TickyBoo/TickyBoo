@@ -7,17 +7,19 @@ require_once ( 'classes/MyCart_Smarty.php' );
 require_once ( 'classes/UserAuth_Smarty.php' );
 require_once ( 'classes/User_Smarty.php' );
 require_once ( 'classes/Order_Smarty.php' );
-
+require_once('classes/gui_smarty.php');
+require_once('classes/Update_Smarty.php');
 require_once ( "config/init_spoint.php" );
 
 global $_SHOP;
 
 $smarty = new Smarty;
-
+$gui    = new Gui_smarty($smarty);
 $cart_s = new MyCart_Smarty( $smarty );
 $user_s = new UserAuth_Smarty( $smarty );
 $user   = new User_Smarty( $smarty );
 $order  = new Order_Smarty( $smarty );
+$update = new Update_Smarty($smarty);
 
 $smarty->assign( '_SHOP_root', $_SHOP->root );
 $smarty->assign( '_SHOP_root_secured', $_SHOP->root_secured );
