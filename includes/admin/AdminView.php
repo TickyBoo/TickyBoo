@@ -378,7 +378,7 @@ class AdminView extends AUIComponent {
 
         if ($data['remove_' . $name . $suffix]==1) {
             $query = "UPDATE $table SET $img_field='' WHERE $id_field='$id'";
-//            unlink( $_SHOP->user_files_dir . "/" .$data['remove_' . $name . $suffix]);
+//            unlink( $_SHOP->files_dir . "/" .$data['remove_' . $name . $suffix]);
             
         } else
         if (!empty($_FILES[$img_field]) and !empty($_FILES[$img_field]['name']) and !empty($_FILES[$img_field]['tmp_name'])) {
@@ -393,11 +393,11 @@ class AdminView extends AUIComponent {
 
             $doc_name = $img_field . '_' . $id . '.' . $ext;
 
-            if (!move_uploaded_file ($_FILES[$img_field]['tmp_name'], $_SHOP->user_files_dir . "/" . $doc_name)) {
+            if (!move_uploaded_file ($_FILES[$img_field]['tmp_name'], $_SHOP->files_dir . "/" . $doc_name)) {
                 return false;
             }
 
-            chmod($_SHOP->user_files_dir . "/" . $doc_name, $_SHOP->file_mode);
+            chmod($_SHOP->files_dir . "/" . $doc_name, $_SHOP->file_mode);
             $query = "UPDATE $table SET $img_field='$doc_name' WHERE $id_field='$id'";
         }
 

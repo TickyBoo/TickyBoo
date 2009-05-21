@@ -45,7 +45,7 @@ $_SHOP->auth_table = "Admin";
 $_SHOP->auth_login = "admin_login";
 $_SHOP->auth_password = "admin_password";
 
-$_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3');
+$_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3' );
 
 require_once("init.php");
 ?>
