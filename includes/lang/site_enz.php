@@ -1,10 +1,5 @@
 <?php
-define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved
-        tickets are released back to sale, so please either order more tickets or continue
-        with your order. <br><br>To change your tickets remove the ones you have reserved
-        and click &#146;Order More Tickets&#146;.");
-
-deFine("actions","Actions");
+define("actions","Actions");
 define("act_err","User not found or allready activated (check error code)");
 define("act_is_sent","Your activation email has been sent to your e-mail");
 define("act_mess_line","Please check you email to activate your account.<br><br>");
@@ -12,8 +7,6 @@ define("act_name","Activate account");
 define("act_notarr","Activation email still not arrived?");
 define("act_note","Put your e-mail address in. Click on &#146;Send&#146; and a new activation 
         email will be sent to your e-mail address.");
-define("act_norecived","If you haven&#146;t recived an activation email within a few hours, please follow  the following <strong>link</strong>");
-
 define("act_send","Send");
 define("add","Add");
 define("address1","Address");
@@ -53,6 +46,10 @@ define("cancel_ticket","Cancel ticket");
 define("cannot_find_seat","Cannot find seat");
 define("cannot_seal","Internal error: Cannot seal credit card info");
 define("cannot_store","Internal error: Cannot store credit card info");
+define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved 
+        tickets are released back to sale, so please either order more tickets or continue 
+        with your order. <br><br>To change your tickets remove the ones you have reserved
+        and click &#146;Order More Tickets&#146;.");
 define("cart_empty","Your cart is empty.");
 define("cart_empty_pos","No orders to be finished");
 define("cart_not_updated","Cart is not updated");
@@ -165,7 +162,6 @@ define("delete_ticket","Delete the ticket? Ticket Nr:");
 define("discount","Discount");
 define("discounts","Discounts");
 define("discount_add_title","Add a discount");
-define("discount_update_title","Update Discount");
 define("discount_id","Discount nr");
 define("discount_name","Discount Name");
 define("discount_title","All discounts");
@@ -255,7 +251,7 @@ define("excel_admin","Excel");
 define("expired","EXPIRED");
 define("expired_tickets","Expired tickets:");
 define("expires_in","Expires in");
-define("export_entrant_NotSended","'Not Sent' orders only");
+define("expert_entrant_NotSended","'Not Sent' orders only");
 define("export_admin","Export");
 define("export_admin_title","Export Data");
 define("export_cc","Credit Cards");
@@ -268,10 +264,10 @@ define("export_templates","Templates");		//added lou5
 define("export_template_id","Choose Template ");	//added lou5
 define("export_template_file","Filename");		//added lou5
 define("export_submit","Export It!");		//added lou5
-define("export_entrant_title","Export Attendees");		//added lou5
+define("export_entrant_title","Export Orders");		//added lou5
 define("export_entrant","Orders");		//added lou5
 define("export_entrant_event","Choose Event");		//added lou5
-//define("export_entrant_NotSended","Not sent");		//added lou5
+define("export_entrant_NotSended","Not sent");		//added lou5
 define("export_xml_event","Event in XML");
 define("export_xml_event_event","Choose an event");
 define("export_xml_event_file","Filename");
@@ -337,6 +333,8 @@ define("homepage","Homepage");
 define("humour","Humour");
 //I
 define("id","ID");
+define("If you haven&#146;t recived an activation email within a few hours, please follow 
+        the following <strong>link</strong>","");
 define("img_loading_problem","Image loading Problem");
 define("import","Import");
 define("import_csv_file","Filename");		//added lou5
@@ -417,7 +415,13 @@ define("Mostly you will recive your email straight away. If you didn&#146;t reci
 define("MP3_loading_problem","Loading problem MP3 file");
 define("multi","Add subevent");
 define("music","Music");
+
 //N
+define("nav_first","[First]");
+define("nav_prev","<|");
+define("nav_next","|>");
+define("nav_last","[Last]");
+
 define("new","new");
 define("new_event_image","New  picture");
 define("new_order_created","New order created");
@@ -470,7 +474,7 @@ define("ordernumber","Order Number");
 define("order","Order");
 define("orders","Orders");
 define("ordertickets","To Order Tickets Click below:");
-define("order_admin","Orders / Tickets");
+define("order_admin","Orders");
 define("order_allready_cancelled","Order Allready cancelled");
 define("order_canceled","Order cancelled");
 define("order_cannot_change_to_payed","Can not change status to &#146;Payed&#146;");
@@ -492,7 +496,6 @@ define("order_payment_mode","Payment mode");
 define("order_payment_status","Payment status");
 define("order_price","Total Price");
 define("order_reg","Order registered");
-define("order_options","Order / Site Options");
 define("order_shipment_mode","Shipment mode");
 define("order_shipment_status","Shipment status");
 define("order_status","Status");
@@ -577,7 +580,7 @@ define("payed_and_send","Payed and Sent");
 define("payhere","<br><br>To Pay Now, Check Here:");
 define("payment","Payment");
 define("payment_add_title","Add a type of payment");
-define("payment_admin","Order Handlings");
+define("handling_admin","Order Handlings");
 define("payment_cc","Credit card");
 define("payment_email_template","Email Template");
 define("payment_fee_fixe","Fix fee ");
@@ -917,11 +920,11 @@ define("zone","Zone");
 
 //new defines
 define('unpublish_event_group','unpublish_event_group' );
-define('unpublish','Unpublish');
+define('unpublish','unpublish');
 define('publish_event_group', 'publish_event_group');
-define('publish', 'Publish' );
+define('publish', 'publish' );
 define('Archive','Archive' );
-//define('reserved','Reserved');//chris updated
+define('reservated','Reservated');
 define('category_status', 'category_status' );
 define('category_new_size_title', 'Change catagory size');
 define('category_new_size','New size');
@@ -962,23 +965,10 @@ define('pos_checkdetails' ,'Check the details, If cash or check Click "Confirm a
 define('pos_checkdetails2','Check the details, And Procced to "Confirm" or "Cancel" the order.');
 define('pos_checkdate','First Check you have the right date, Then choose catergory of seats, this just determins the cost and area. Then click continue.');
 define('pos_homepage','Home Page');
-define('pos_currenttickets','Current Tickets');
+define('pos_processtickets','Process Tickets');
 define('pos_booktickets','Book Tickets');
-define('pos_holdtickets','Hold Tickets');
-define('shopconfig_delunpaid','Global Delete Unpaid Orders');
-define('shopconfig_user_activate','Users need to activate');
-define('index_admin','Home');
-define('current_version','version:');
-define('InfoWebVersion',   "Server Software");
-define('InfoPhpVersion',   "PHP Version");
-define('InfoMysqlVersion', "MySQL Version");
-define('InfoUserCount',    "User count:");
-define('InfoGroupCount',   "Group count:");
-define('InfoVenueCount',   "Venue count:");
-define('InfoEventCount',   "Event count:");
-define("system_summary","System Summary");
-define("unused_guests","Unused guests");
 
-//Users Need to activate?
-
+define('dts_month_arr','January|February|March|April|May|June|July|August|September|October|November|December');
+define('dts_day_arr','Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday');
+define('handling_email_template[ord]','testme order');
 ?>
