@@ -7,7 +7,7 @@
     $dir = $_SHOP->includes_dir.DS.'lang';
 	  if ($handle = opendir($dir)) {
 		   while (false !== ($file = readdir($handle))) {
-             if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^site_(.*?\w+).inc/", $file, $matches))
+             if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^site_(.*?\w+).inc/", $file, $matches)&& $matches[1]!='en')
                 { $content[$matches[1]] = $file ;}
           }
 		   closedir($handle);
@@ -15,31 +15,87 @@
     print_r($content );
     return $content;
   }
+
+  function findinside( $string) {
+      preg_match_all('/define\(["\']([a-zA-Z0-9_]+)["\'],[ ]*(.*?)\);/si',  $string, $m); //.'/i'
+      return array_combine( $m[1],$m[2]);
+  }
+
+  if (isset($_GET['load'])) {
+    $string1 = file_get_contents('includes/lang/site_en.inc');
+    $string2 = file_get_contents("includes/lang/site_{$_GET['lang']}.inc");
+
+    $en = findinside($string1);
+    $du = findinside($string2);
+
+    $diff1= array_diff_key($en, $du);
+    $diff2= array_diff_key($du, $en);
+  }
+
+  if ($_GET['load']=='update_1') {
+     if (count($diff2)===0) {
+       die('noting to update');
+     } elseif (!is_writable('includes/lang/site_en.inc')) {
+       die('This file is not writable.');
+     } else {
+       $string1 .= "<"."?php\n";
+       $string1 .= "// defines added at: ".date('c')."\n";
+       foreach ($diff2 as $key =>$value) {
+         $string1 .= "define('$key', $value);\n";
+       }
+       $string1 .= "?>";
+       file_put_contents('includes/lang/site_en.inc',$string1, FILE_TEXT );
+     }
+     die("done");
+
+  }elseif ($_GET['load']=='update_2') {
+     if (count($diff1)===0) {
+       die('noting to update');
+     } elseif (!is_writable("includes/lang/site_{$_GET['lang']}.inc")) {
+       die('This file is not writable.');
+     } else {
+       $string2 .= "<"."?php\n";
+       $string2 .= "// defines added at: ".date('c')."\n";
+       foreach ($diff1 as $key =>$value) {
+         $string2 .= "define('$key', $value);\n";
+       }
+       $string1 .= "?>";
+       file_put_contents("includes/lang/site_{$_GET['lang']}.inc",$string1, FILE_TEXT );
+     }
+     die("done");
+  } elseif ($_GET['load']=='grid')  {
+    echo "<table><tbody>\n";
+    foreach ($diff1 as $key =>$value) {
+      echo "<tr id='$key'>\n  <td>$key</td>\n  <td>".htmlentities($value)."</td>\n  <td>&nbsp;</td>\n</tr>\n";
+    }
+    foreach ($diff2 as $key =>$value) {
+      echo "<tr id='$key'>\n  <td>$key</td>\n  <td>&nbsp;</td>\n  <td>".htmlentities($value)."</td>\n</tr>\n";
+    }
+    If (count($diff1)==0 and count($diff2)==0) {
+      echo "<tr id='???'>\n  <td>&nbsp;</td>\n  <td>no data</td>\n  <td>&nbsp;</td>\n</tr>\n";
+    }
+    echo "</tbody></table>";
+    exit;
+  };
 ?>
+
 <html>
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>FusionTicket: Language editor </title>
-		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.1.custom.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="css/pos.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/ingrid.css" media="screen" />
 		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/DD_roundies.js"></script>
     <script type="text/javascript" src="scripts/jquery/jquery.ingrid-0.9.2.js"></script>
 
 		<script type="text/javascript">
        $(document).ready(function() {
           var mycombo = $("#combo");
+          var lang = 'nl';
       		var mygrid1 = $("#table1").ingrid({
-      			url: 'remote.php',
-      			extraParams: {load: true, lang: 'nl' } ,
+      			url: 'langedit.php',
+      			extraParams: {load: 'grid', lang: lang } ,
       			height: 450,
       			headerHeight: 25,
       			savedStateLoad: true,
@@ -53,16 +109,23 @@
           });
 
       		$('#update_1').click(function(){
-      			// the 'g' object is ingrid - call methods like so:
-      			mygrid1.g.p.setPage(20)
+             $.get("langedit.php", { load: "update_1", lang: lang }, function(data){
+                if (data== 'done') {
+                  mygrid1.g.load({lang: lang });
+                } else alert(data);}, "text");
+      		});
+
+      		$('#update_2').click(function(){
+             $.get("langedit.php", { load: "update_2", lang: lang }, function(data){
+                if (data== 'done') {
+                  mygrid1.g.load({lang: lang });
+                } else alert(data);}, "text");
       		});
 
       		$('#combo').change(function(){
-      			// the 'g' object is ingrid - call methods like so:
-      			var lang = this.options[this.selectedIndex].value;
+      			lang = this.options[this.selectedIndex].value;
             mygrid1.g.load({lang: lang }, function(){
                 $('#secLang').text(lang);
-                alert( lang);
             }   );
       		});
 
@@ -70,8 +133,8 @@
 
 		</script>
  	</head>
-	<body>
-  <select id='combo'>
+	<body bgcolor='#FFFFFF'>
+  Select the languagefile: <select id='combo'>
 <?Php
   $opt = load();
   $sel['nl'] = " selected='selected' ";
@@ -80,14 +143,12 @@
   }
 ?>
 </select>
-
-
     <table id='table1' cellspacing='1' cellpadding='4'>
       <thead>
          <tr>
            <th>Key</th>
-           <th>EN</th>
-           <th id='secLang'>NL</th>
+           <th>en</th>
+           <th id='secLang'>nl</th>
          </tr>
       </thead>
       <tbody></tbody>

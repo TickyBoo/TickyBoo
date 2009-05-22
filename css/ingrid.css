@@ -79,6 +79,10 @@ table.datagrid th div.grid-col-resize {
 	overflow:hidden;
 }
 
+div.datagrid {
+ background-color: #FFFFFF;
+}
+
 table.datagrid thead {
 }
 

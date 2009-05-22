@@ -981,4 +981,31 @@ define("unused_guests","Unused guests");
 
 //Users Need to activate?
 
+?><?php
+// defines added at: 2009-05-22T13:20:39+02:00
+define('Reservated', 'Reservated');
+?><?php
+// defines added at: 2009-05-22T13:34:27+02:00
+define('imp_export_admin', "Import /Export");
+define('guest_info', "Vul hieronder uw gegevens in, zodat wij de kaarten aan u kunnen toesturen.<br> Bent u al vaste klant? Vul dan onderaan dit scherm uw emailadres en wachtwoord in.");
+define('mand_all', "Alle velden zijn verplicht.");
+define('password1', "Kies uw wachtwoord");
+define('eventlist_info', 'Klik op de datum om kaarten te bestellen.');
+define('shop_info2', "Voor dit concert kunnen geen kaarten worden gereserveerd.<BR /><BR />Route informatie is beschikbaar door de locatie te klikken. ");
+define('cart_total', "Aantal kaarten:");
+define('user_address2', "Adres");
+define('user_nospam', "Veiligheidscode");
+define('nospam_info', "Neem de veiligheidscode over vanuit<br>het plaatje hiernaast.");
+define('payment_fee', "Kosten");
+define('per_mail', "per email");
+define('pwd_min', "(min 6 letters)");
+define('pwd_second_missing', "Bevestig wachtwoord is niet ingevuld");
+define('pwd_to_short', "Het gekozen wachtwoord is te kort");
+define('pwd_not_thesame', "Opgegeven wachtwoord komt niet overheen met de bevestigde wachtwoord");
+define('invalid_zip', "Postcode onjuist ingegeven");
+?><?php
+// defines added at: 2009-05-22T14:19:24+02:00
+define('www', 'webshop');
+define('dts_month_arr', 'January|February|March|April|May|June|July|August|September|October|November|December');
+define('dts_day_arr', 'Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday');
 ?>
