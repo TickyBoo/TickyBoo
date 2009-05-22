@@ -1,5 +1,5 @@
 <?php
-  include_once('includes\config\init_common.php');
+  include_once('includes/config/init_common.php');
 
   function load() {
     global $_SHOP;

@@ -243,6 +243,7 @@ class Handling {
 
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
+    include_once(INC.'classes'.DS.'TemplateEngine.php');
 
     $ok=TRUE;
 	

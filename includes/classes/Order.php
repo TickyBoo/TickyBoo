@@ -924,13 +924,16 @@ class Order {
 
   function DecodeSecureCode(&$order, $code ='') {
     If (empty($code) and isset($_REQUEST['sor'])) $code =$_REQUEST['sor'];
+   //
     If (!empty($code)) {
-      $text = base64_decode(urldecode( $code));
+      //$code = urldecode( $code) ;
+     // print_r( $code );
+      $text = base64_decode($code);
       $code = explode(':',$text);
-      //print_r( $code );
+    //  print_r( $text );
       $code[0] = base_convert($code[0],36,10);
       $code[1] = base_convert($code[1],36,10);
-      //print_r( $code );
+//      print_r( $code );
 //      print_r( $order );
 
       if (($order==null) and isset($this)) $order = $this;

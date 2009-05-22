@@ -86,7 +86,7 @@ die();
 
   function getsecurecode() {
     if (isset($_POST['sor'])) {
-      $return = $_POST['sor'];
+      $return = urldecode( $_POST['sor']);
     } elseif (isset($_GET['sor'])) {
       $return = $_GET['sor'];
     } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
@@ -95,7 +95,7 @@ die();
       Print_r($_REQUEST); Print_r($_SERVER);
       $return ='';
     }
-//    echo $return;
+  //  echo $return;
     return $return;
   }
 
@@ -261,12 +261,12 @@ die();
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
-      echo 'print error' ; print_r($myorder);
+      echo "print error $test" ; print_r($myorder);
       unset( $_SESSION['_SHOP_order']);
       return;
     }
 
-    Order::print_order($myorder->order_id, '', 'stream', false, 1);
+    Order::print_order($myorder->order_id, '', 'stream');
     return;
   }
 
