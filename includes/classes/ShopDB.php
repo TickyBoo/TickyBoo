@@ -41,9 +41,20 @@ class ShopDB {
 
         if (!isset($_SHOP->link)) {
           if (isset($_SHOP->db_name)) {
-             $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name)
-                            or die ("Could not connect: " . mysqli_connect_errno());
-             ShopDB::checkdatabase(false, false);
+              $DB_Hostname = $_SHOP->db_host;
+        			$pos = strpos($DB_Hostname,':');
+              if ($pos!= false) {
+                 $port = substr($DB_Hostname,$pos+1);
+                 $DB_Hostname = substr($DB_Hostname,0, $pos);
+              } else
+                $port = 3306;
+             if ($_SHOP->link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name, $port)){
+                ShopDB::checkdatabase(false, false);
+                return true;
+             } else {
+                die ("Could not connect: " . mysqli_connect_errno());
+                return false;
+             }
           } else {
              echo 'db init - ';
              Print_r($_SHOP);

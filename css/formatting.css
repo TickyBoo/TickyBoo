@@ -1,0 +1,119 @@
+/* All of POS */
+a{ font-family:Verdana; color:#FF8000; font-weight:bold; text-decoration:none; cursor: pointer;}
+
+a:hover{ font-family:Verdana; color:#FF8000; font-weight:bold; text-decoration:underline; }
+
+.title{font-family:Verdana; color:#996633; font-weight:bold;}
+
+.help{font-family:Verdana; color:blue; font-size: 11px;}
+
+
+/* Category Page / Seating Chart */
+
+.pm_box {
+	text-align: center;
+	margin: 0 auto;
+}
+.pm_free {
+	background-color:#0d0;
+	width:18px; height:18px; 
+	border-right:#00ff00 1px solid;	border-bottom:#00ff00 1px solid;
+	padding:0px;
+}
+.pm_resp {
+	background-color:#FFA500;
+	width:18px; height:18px; 
+	border-right:#00ff00 1px solid;	border-bottom:#00ff00 1px solid;
+	padding:0px;
+}
+.pm_occupied {
+	background-color:#d00;
+	width:18px; height:18px;
+	border-top:#000000 1px solid; border-left:#000000 1px solid;
+	padding:0px;
+}
+.pm_none { 
+	background-color:#fff; padding:0px; 
+	width: 18px; height: 18px;
+}
+
+input.pm_check{
+	width:19px; height:19px;
+	margin:0px;border:0px
+}
+
+td.pm_nosale{background-color:#d2d2d2;width:19px; height:19px;}
+td.label_T{color:#666666;font-size:12px;text-align:center;}
+td.label_E{color:#666666;font-size:12px;text-align:center;background-image:url('images/exit.gif');height:19px;width:19px;}
+td.label_RE{color:#666666;font-size:12px;text-align:center;border:#cccccc 1px solid;background-color:#eeffff;height:19px;width:19px;}
+td.label_RW{color:#666666;font-size:12px;text-align:center;border:#cccccc 1px solid;background-color:#eeffff;height:19px;width:19px;}
+td.label_SS{color:#666666;font-size:12px;text-align:center;border:#cccccc 1px solid;background-color:#eeffff;height:19px;width:19px;}
+td.label_SN{color:#666666;font-size:12px;text-align:center;border:#cccccc 1px solid;background-color:#eeffff;height:19px;width:19px;}
+
+
+/* Individual Event page */ 
+.event_description{font-family:Georgia; color:#000000;font-size:10px;text-align:justify;}
+.event_description_big{font-family:Georgia; color:#000000;font-size:12px;text-align:justify;}
+.event_data{font-family:Verdana; color:#000000;font-weight:bold;font-size:11px; }
+.shop_link{font-family:Verdana; color:#FF8000;font-weight:bold;TEXT-DECORATION:none;font-size:11px;}
+.shop_link:hover{font-family:Verdana; color:#FF8000;font-weight:bold;TEXT-DECORATION:underline;font-size:11px; }
+.menu{border-top:#45436d 1px solid; padding-top:5px;}
+.menu_td{padding-left:10px;padding-bottom:10px; font-family:Verdana; font-weight:bold;}
+.menu_langs{border-top:#45436d 1px solid;border-bottom:#45436d 1px solid; padding-top:5px;padding-bottom:5px;}
+.langs_link{color:#996633;font-family:Verdana;font-weight:bold;TEXT-DECORATION:none;font-size:11px;}
+.langs_link:hover{color:#996633;font-family:Verdana;font-weight:bold;TEXT-DECORATION:underline;font-size:11px;}
+.event_info_item{font-family:Verdana; color:#000000;font-weight:bold;font-size:11px; }
+.event_info_value{font-family:Verdana; color:#000000;font-size:11px; }
+.note{font-family:Verdana; color:#000000;font-size:10px;}
+.cat_info_item{font-family:Verdana; color:#000000;font-weight:bold;font-size:12px; }
+.cat_info_value{font-family:Verdana; color:#000000;font-size:12px; }
+.cart_menu{padding-left:32px;font-family:Verdana; color:#000000;font-size:11px;font-style: italic;}
+.cart_menu_title{font-family:Verdana; color:#996633;font-size:12px;font-weight:bold;}
+.choice_info{font-family:Georgia; color:#000000;font-size:12px;}
+.view_cart_title{font-family:Verdana; color:#996633; font-weight:bold;font-size:12px;}
+/*.view_cart_td{font-family:Verdana; color:#000000;font-size:12px;}*/
+.view_cart_td{font-family: Arial, Helvetica, sans-serif;
+color: #000000;
+font-size: 11px;
+word-spacing: 2px;
+line-height: 12px;}
+.view_cart_total{font-family:Verdana; color:#000000;font-size:14px;font-weight:bold;}
+.order_ptotal{font-family:Verdana; color:#000000;font-size:12px;}
+
+.admin_order_ord{background-color:#99ccff;}
+.admin_order_payed{background-color:#99ffcc;}
+.admin_order_send{background-color:#ffcccc;}
+.admin_order_cancel{background-color:#cccccc;}
+.admin_order_reemit{background-color:#ffffcc;}
+.admin_order_res{background-color:#FFA500;}
+.admin_list_row_0{background-color:#F3F3F3}
+.admin_list_row_1{background-color:#E3E3E3}
+
+INPUT,SELECT{
+COLOR : #996633;
+BORDER: #45436d 1px solid;
+BACKGROUND-COLOR:#f5f4f4;}
+INPUT:hover{
+COLOR : #ff8000;
+BORDER: #45436d 1px solid;
+BACKGROUND-COLOR:#f5f4f4;}
+p.title_group{font-family:Verdana; color:#996633; font-weight:bold;margin-left:210px;}
+p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;margin-left:210px;text-align:justify;}
+.cart_resume{border:#45436d 1px solid; background-color:#ffffff; padding:10px;}
+.user_item{font-family:Verdana; color:#999999;font-size:12px;font-weight:bold;}
+.menu_login{padding-left:10px;padding-bottom:10px; font-family:Verdana; font-weight:bold;font-size:10px;color:#996633;}
+.user_address{font-family:Verdana; color:#000000;font-size:11px;}
+.user_address_td{font-family:Verdana; color:#000000;font-size:12px;}
+.payment_form{font-family:Verdana; color:#000000;font-size:12px;}
+.calendar{font-family:Arial; color:#000000;font-size:12px;}
+.cal_link{font-family:Arial; color:#000000;font-size:12px;TEXT-DECORATION:none;}
+.cal_link:hover{font-family:Arial; color:#666666;font-size:12px;TEXT-DECORATION:underline;}
+.festival{border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;
+          font-family:Arial; color:#000000;font-size:12px;background-color:#d6d6d6;}
+.list{font-family:Verdana; color:#333333;font-size:12px;TEXT-DECORATION:none;}
+.list:hover{font-family:Verdana; color:#666666;font-size:12px;TEXT-DECORATION:underline;}
+.discount_item{font-family:Verdana; color:#000000;font-weight:bold;font-size:12px; }
+.discount_value{font-family:Verdana; color:#000000;font-size:12px; }
+.printer{font-family:Verdana; color:#000000;font-size:12px;}
+.admin_info{font-family:Verdana; color:#000000;font-size:12px;}
+.subtitle{font-family:Verdana; color:#333333;font-size:12px; font-weight:bold;}

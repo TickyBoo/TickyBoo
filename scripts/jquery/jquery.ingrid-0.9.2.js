@@ -35,6 +35,8 @@ jQuery.fn.ingrid = function(o){
 		minColWidth: 60,								// minimum column width
 		headerHeight: 30,								// height of our header
 		headerClass: 'grid-header-bg',	// header bg
+		footerHeight: 33,								// height of our header
+		footerClass: 'grid-header-bg',	// header bg
 		resizableCols: true,						// make columns resizable via drag + drop
 		
 		gridClass: 'datagrid',							// class of head & body
@@ -42,6 +44,7 @@ jQuery.fn.ingrid = function(o){
 		colClasses: [],													// array of classes : i.e. ['','grid-col-2','','']
 		rowHoverClass: 'grid-row-hover',				// hovering over a row? use this class
 		rowSelection: true,											// allow row selection?
+		MultiSelect: false,
 		rowSelectedClass: 'grid-row-sel',				// hovering over a row? use this class
 		onRowSelect: function(tr, selected){},	// function to call when row is clicked
 		
@@ -101,7 +104,7 @@ jQuery.fn.ingrid = function(o){
 		
 	};
 	jQuery.extend(cfg, o);
-
+  var lastselected;
 	// break into 2 tables: header, body.
 	// create header table
 	var cols = new Array();
@@ -248,6 +251,32 @@ jQuery.fn.ingrid = function(o){
 							}
 						});
 	}
+  if (this.find('tfoot')) {
+  	var f = jQuery('<table cellpadding="0" cellspacing="0"></table>')
+  					.html(this.find('tfoot'))
+  					.addClass(cfg.gridClass)
+  					.addClass(cfg.footerClass)
+  					.height(cfg.footerHeight)
+  					.extend({
+  						cols : cols
+  					});
+  	// initialize columns
+  	f.find('th').each(function(i){
+
+  		// init width
+  		jQuery(this).width(cfg.colWidths[i]);
+
+  		// put column text in a div, make unselectable
+  		var col_label = jQuery('<div />')
+  										.html(jQuery(this).html())
+  										.css({float: 'left', display: 'block'})
+  										.css('-moz-user-select', 'none')
+  										.css('-khtml-user-select', 'none')
+  										.css('user-select', 'none')
+  										.attr('unselectable', 'on');
+
+  	});
+  }
 	// paging?
 	// if so create a paging toolbar
 	if (cfg.paging) {
@@ -370,6 +399,9 @@ jQuery.fn.ingrid = function(o){
 		h : h,
 		b : b
 	});
+	if (f) {
+		g.append(f).extend({ f : f });
+	}
 	if (cfg.paging) {
 		g.append(p).extend({ p : p });
 	}
@@ -383,6 +415,12 @@ jQuery.fn.ingrid = function(o){
 		position: 'absolute',
 		zIndex: '0'
 	}).appendTo(g);
+	if (f) {
+   	var gapf = jQuery('<div />').width(cfg.scrollbarW).addClass(cfg.footerClass).height(cfg.footerHeight).css({
+  		position: 'absolute',
+  		zIndex: '0'
+  	}).appendTo(g);
+  }
 	// ...a loading modal mask
 	var modalmask = jQuery('<div />').html(cfg.loadingHtml).addClass(cfg.loadingClass).css({
 		position: 'absolute',		
@@ -597,10 +635,14 @@ jQuery.fn.ingrid = function(o){
 			b.width(outer_w);
 
 			if (p) p.width(outer_w);
-			
+
 			if (gap) {
 				var pos = h.offset();
 				gap.css('left', outer_w - cfg.scrollbarW + pos.left).css('top', pos.top);
+			}
+			if (f) {
+				var pos = f.offset();
+				gapf.css('left', outer_w - cfg.scrollbarW + pos.left).css('top', pos.top).css('_height',pos.height);
 			}
 		},
 		
@@ -637,17 +679,30 @@ jQuery.fn.ingrid = function(o){
 					// bind row selection behaviors
 					if (cfg.rowSelection == true) {
 						jQuery(this).click(function(){
-							if (jQuery(this).attr('_selected')) {
-								jQuery(this).attr('_selected') == 'true' ?
-									jQuery(this).attr('_selected', 'false').removeClass(cfg.rowSelectedClass) :
-									jQuery(this).attr('_selected', 'true').addClass(cfg.rowSelectedClass);
-								
-							} else {
-								jQuery(this).attr('_selected', 'true').addClass(cfg.rowSelectedClass);
-							}
-							if (cfg.onRowSelect) {
-								cfg.onRowSelect(this, (jQuery(this).attr('_selected') == 'true' ? true : false) );
-							}
+              if (cfg.MultiSelect == true) {
+                var oldstate = jQuery(this).attr('_selected');
+  							if (jQuery(this).attr('_selected')) {
+  								jQuery(this).attr('_selected') == 'true' ?
+  									jQuery(this).attr('_selected', 'false').removeClass(cfg.rowSelectedClass) :
+  									jQuery(this).attr('_selected', 'true').addClass(cfg.rowSelectedClass);
+
+  							} else {
+  								jQuery(this).attr('_selected', 'true').addClass(cfg.rowSelectedClass);
+  							}
+  						} else {
+                  if (lastselected) {
+    								jQuery(lastselected).attr('_selected', 'false').removeClass(cfg.rowSelectedClass) ;
+                  }
+                  lastselected = this;
+                  jQuery(this).removeClass(cfg.rowHoverClass).addClass(cfg.rowClasses[cursor]);
+  								jQuery(this).attr('_selected', 'true').addClass(cfg.rowSelectedClass);
+  						}
+  						if (oldstate != jQuery(this).attr('_selected')) {
+  							if (cfg.onRowSelect) {
+  								cfg.onRowSelect(this, (jQuery(this).attr('_selected') == 'true' ? true : false) );
+  							}
+              }
+  							
 						});
 						// was this row Id previously selected?
 						if (str_ids.indexOf( '|' + jQuery(this).attr('id') + '|' ) != -1) {

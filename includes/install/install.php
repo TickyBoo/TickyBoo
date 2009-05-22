@@ -406,23 +406,27 @@ function file_to_db($filename)
 			$DB_Username=$_SESSION['DB_Username'];
 			$DB_Password=$_SESSION['DB_Password'];
 			$DB_Database=$_SESSION['DB_Database'];
-			// Test Database Connectivity
-			if(!@mysql_connect ($DB_Hostname,$DB_Username,$DB_Password))
+			$pos = strpos($DB_Hostname,':');
+      if ($pos!= false) {
+         $port = substr($DB_Hostname,$pos+1);
+         $DB_Hostname = substr($DB_Hostname,0, $pos);
+      } else
+        $port = 3306;
+			if(!@mysqli_connect ($DB_Hostname, $DB_Username, $DB_Password, $DB_Database, $port))
 				{
 				Install_Form_Open (INST_DATABASE,'');
-				echo "<font size=\"5\" color=\"#3366CC\">Error</font><br />\n";
-				echo "A database connection could not be established using the settings you have provided.";
-				Install_Form_Rollback ();
-				Install_Form_Close ();
+				echo "<font size='5' color='#3366CC'>Error</font><br />\n";
+				echo "A database connection could not be established using the settings you have provided.<br>";
+				echo mysqli_connect_error();
 				}
-			elseif(!@mysql_select_db ($DB_Database))
+/*			elseif(!@mysql_select_db ($DB_Database))
 			  {
 				Install_Form_Open (INST_DATABASE,'');
 				echo "<font size=\"5\" color=\"#3366CC\">Error</font><br />\n";
 				echo "The database could not be selected using the database name you have provided.";
 				Install_Form_Rollback ();
 				Install_Form_Close ();
-				}
+				}*/
 			else
 				{
   			Install_Form_Open (INST_UPGRADE,'Validate_Inst_Database()');
@@ -497,10 +501,19 @@ function file_to_db($filename)
         require_once("../includes/classes/ShopDB.php");
         if ($install_mode == 'NORMAL')
           {
-          $_SHOP->link = new mysqli($_SESSION['DB_Hostname'],
+          $DB_Hostname = $_SESSION['DB_Hostname'];
+    			$pos = strpos($DB_Hostname,':');
+          if ($pos != false) {
+             $port = substr($DB_Hostname,$pos+1);
+             $DB_Hostname = substr($DB_Hostname,0, $pos);
+          } else
+            $port = 3306;
+
+          $_SHOP->link = new mysqli($DB_Hostname,
                                     $_SESSION['DB_Username'],
                                     $_SESSION['DB_Password'],
-                                    $_SESSION['DB_Database']);
+                                    $_SESSION['DB_Database']
+                                    $port);
           }
         else
           {

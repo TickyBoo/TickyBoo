@@ -13,18 +13,17 @@ table.datagrid {
 }
 
 table.datagrid td {
-	padding: 2px;
+	padding: 5px;
 	text-align: left;
 	overflow: hidden;
-	white-space: nowrap;
 }
 
 table.datagrid tr  {
-	height: 25px;
+	height: 20px;
 }
 
 table.datagrid th  {
-	padding: 2px;
+	padding: 5px;
 	text-align: left;
 	font-weight: normal;
 }

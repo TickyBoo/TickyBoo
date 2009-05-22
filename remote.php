@@ -6,10 +6,18 @@
     }
 
     $en = findinside('includes/lang/site_en.inc');
-    $du = findinside('includes/lang/site_nlz.php');
-    ksort($en, SORT_LOCALE_STRING);
+    $du = findinside("includes/lang/site_{$_GET['lang']}.inc");
+  //  ksort($en, SORT_LOCALE_STRING);
+
+    $str  = '';
+    while (list($k, $v) = each($_GET)) {
+    	$str .= $k . '=' . $v . ', ';
+    }
     echo "<table><tbody>\n";
-    foreach ($en as $key =>$value) {
+  //   echo "<tr id='----'>\n  <td>$str</td>\n  <td></td>\n  <td></td>\n</tr>\n";
+
+    $diff= array_diff_key($en, $du);
+    foreach ($diff as $key =>$value) {
       $keyx=(isset($du[$key]))?$key:"<b>$key</b>";
       echo "<tr id='$key'>\n  <td>$keyx</td>\n  <td>".htmlentities($value)."</td>\n  <td>";
       echo(isset($du[$key]))?htmlentities($du[$key]):"&nbsp;","</td>\n</tr>\n";
