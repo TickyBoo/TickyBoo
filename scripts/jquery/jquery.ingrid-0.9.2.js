@@ -196,7 +196,7 @@ jQuery.fn.ingrid = function(o){
 	});
 	var b = jQuery('<div />')
 					.html( jQuery('<table cellpadding="0" cellspacing="0"></table>').html( this.find('tbody') ).width( h.width() ).addClass(cfg.gridClass) )
-					.css('overflow', 'auto')
+					.css('overflow', 'visable')
 					.height(cfg.height).addClass(cfg.gridClass);
 			
 	

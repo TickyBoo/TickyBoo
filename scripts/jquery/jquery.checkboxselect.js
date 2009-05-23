@@ -26,12 +26,13 @@
  * Released under GPL version 3
  *
  ****************************************/
-$.fn.checkboxAreaSelect = function(){
+$.fn.checkboxAreaSelect = function(tbl){
 	
 	var cbAS = new Object();
 
     /*when a mouse clicks down, prepair to start a drag*/
-    $(document).mousedown(function(e){
+    $('#seats').mousedown(function(e){
+      if (!cbAS.mouseIsDown) {
         cbAS.startX = e.pageX;
         cbAS.startY = e.pageY; /*record where the mouse started */
         $("body").append("<div id='cbAS_dragbox' class='dragbox'></div>"); /*create a graphic indicator of select area */
@@ -44,56 +45,82 @@ $.fn.checkboxAreaSelect = function(){
     			top: cbAS.startY + "px", 
                 width: "0px", 
                 height: "0px"});
-		cbAS.mouseIsDown = true; /*flag that the mouse is down */
+		    cbAS.mouseIsDown = 1; /*flag that the mouse is down */
+		  }
     });/*close mousedown*/
     
     /*if the mouse is moving run this*/
-    $(document).mousemove(function(e){
-        if(cbAS.mouseIsDown){ /*check if they are currently dragging the mouse*/
-            dragHeight = e.pageY - cbAS.startY;
-            dragWidth = e.pageX - cbAS.startX; /*find the x & y diff of where they are and where they started */
-	    
-	    /*make the colored box fit the mouse movements */
-            if (dragHeight < 0 && dragWidth < 0){ /* up and to the left */
-				$("#cbAS_dragbox").css({ height: -dragHeight ,  width: -dragWidth, left: e.pageX, top: e.pageY});
-	    	} else if (dragHeight < 0 && dragWidth > 0){ /*up and to the right */
-				$("#cbAS_dragbox").css({ height: -dragHeight ,  width: dragWidth, left: cbAS.startX, top: e.pageY});
-	    	} else if (dragHeight > 0 && dragWidth < 0){ /* down and to the left */
-				$("#cbAS_dragbox").css({ height: dragHeight ,  width: -dragWidth, left: e.pageX, top: cbAS.startY});
-	    	} else { /* down and to the right */
-				$("#cbAS_dragbox").css({ height: dragHeight , width: dragWidth, left: cbAS.startX, top: cbAS.startY});
-	    	}
+    $('#seats').mousemove(function(e){
+        if(cbAS.mouseIsDown == 1){ /*check if they are currently dragging the mouse*/
+          dragHeight = e.pageY - cbAS.startY;
+          dragWidth = e.pageX - cbAS.startX; /*find the x & y diff of where they are and where they started */
+
+  	    /*make the colored box fit the mouse movements */
+          if (dragHeight < 0 && dragWidth < 0){ /* up and to the left */
+  				$("#cbAS_dragbox").css({ height: -dragHeight ,  width: -dragWidth, left: e.pageX, top: e.pageY});
+  	    	} else if (dragHeight < 0 && dragWidth > 0){ /*up and to the right */
+  				$("#cbAS_dragbox").css({ height: -dragHeight ,  width: dragWidth, left: cbAS.startX, top: e.pageY});
+  	    	} else if (dragHeight > 0 && dragWidth < 0){ /* down and to the left */
+  				$("#cbAS_dragbox").css({ height: dragHeight ,  width: -dragWidth, left: e.pageX, top: cbAS.startY});
+  	    	} else { /* down and to the right */
+  				$("#cbAS_dragbox").css({ height: dragHeight , width: dragWidth, left: cbAS.startX, top: cbAS.startY});
+  	    	}
         }
     });
 
     /* when they release the mouse button, check if they have dragged over any checkboxes,
      If they have, do work on them. Also reset things that started on mouse-down */
-    $(document).mouseup(function(e){
-        cbAS.mouseIsDown = false; /*clear currently dragging flag */
-        $(".dragbox").remove(); /*get rid of select box */
-        endX = e.pageX;
-        endY = e.pageY; /*discover where mouse was released x&y */
-        
-        // if the mouse hasnt moved dont bother checking the check boxes as the mouse hasnt been dragged.
-        if((endX != cbAS.startX) || (endY != cbAS.startY)){
-			/*for each checkbox on the page check if its within the drag-area*/
-			var ckBox;
-	        $("form :checkbox").each(function(){
-	        	ckBox = $(this);
-	            box_top = ckBox.position().top + (ckBox.height()/2);   /*checkboxes have an area */
-	            box_left = ckBox.position().left + (ckBox.width()/2);  /*so find their centerpoint */
-	            if( (box_top > cbAS.startY && box_top < endY ) || (box_top < cbAS.startY && box_top > endY )){
-					if( (box_left > cbAS.startX && box_left < endX ) || (box_left < cbAS.startX && box_left > endX )){
-					    /*if checkbox was in the drag area */
-					    if(e.shiftKey){
-							ckBox.attr("checked",false); /*uncheck due to shift key */	  
-						} else {
-							ckBox.attr("checked",true);  /*check the box */						  
-	                    }
-					}
-		    	}     
-			});/*close each*/
-		}
+    $('#seats').mouseup(function(e){
+      cbAS.mouseIsDown = false; /*clear currently dragging flag */
+      $(".dragbox").remove(); /*get rid of select box */
+      endX = e.pageX;
+      endY = e.pageY; /*discover where mouse was released x&y */
+      
+      // if the mouse hasnt moved dont bother checking the check boxes as the mouse hasnt been dragged.
+      if((endX != cbAS.startX) || (endY != cbAS.startY)){
+  			/*for each checkbox on the page check if its within the drag-area*/
+	    	var ckBox;
+	    //	var mouse =document.body.style.cursor;
+	    //	document.body.style.cursor='wait';
+        seats = $('#seats');
+        var pos = seats.position();
+	    	rows = seats.find('tr');
+	    	cols = rows.eq(0).find('td');
+	    	h = Math.round(seats.height() / rows.size());
+	    	w = Math.round(seats.width()  / cols.size());
+	      	$("body").prepend(h). prepend(':');
+	      	$("body").prepend(w). prepend('|');
+	      	$("body").prepend(pos.left). prepend(':');
+	      	$("body").prepend(pos.top). prepend('|');
+	      	$("body").prepend(endX). prepend(':');
+	      	$("body").prepend(endY). prepend(' | ');
+	    	begX = Math.round(((cbAS.startX - pos.left) / w)-0.5);
+	    	begY = Math.round(((cbAS.startY - pos.top)  / h)+0.5);
+	    	endX = Math.round(((endX - pos.left) / w)-0.5);
+	    	endY = Math.round(((endY - pos.top)  / h)+0.5);
+	      	$("body").prepend(begX). prepend(':');
+	      	$("body").prepend(endX). prepend('|');
+	      	$("body").prepend(begY). prepend(':');
+	      	$("body").prepend(endY). prepend(' | ');
+	    	rows.slice(begY,endY).each(function(i, row){
+          //this.style.background = "blue";
+          $(this).find('td').slice(begX,endX).each(function(j,col){<br/>
+
+          });
+        });
+/*   			for (y=begY; y<endY; y++) {
+          var tr = rows.eq(y).find('td');
+	    	  for (x=begX; x<endX; x++) {
+            var td = tr.eq(x).css("background-color", "blue");
+         // $("body").prepend(tr.size( )).prepend('|');
+//
+//            var td = tr.children().css("color", "red");
+            //td.prepend('X');// find(":checkbox").each(function(){
+  		    }
+  		  } */
+	   // 	document.body.style.cursor= mouse;
+  		}
+      cbAS.mouseIsDown = false; /*clear currently dragging flag */
     });/*close mouseup*/
-    
-};/*close checkboxAreaSelect*/
+  
+  };/*close checkboxAreaSelect*/

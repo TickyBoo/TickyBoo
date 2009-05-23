@@ -92,7 +92,7 @@
 		<script type="text/javascript">
        $(document).ready(function() {
           var mycombo = $("#combo");
-          var lang = 'nl';
+          var lang = mycombo.val();
       		var mygrid1 = $("#table1").ingrid({
       			url: 'langedit.php',
       			extraParams: {load: 'grid', lang: lang } ,
@@ -107,7 +107,7 @@
       			paging: false,
       			sorting: false
           });
-
+          $('#secLang').text(mycombo.val());
       		$('#update_1').click(function(){
              $.get("langedit.php", { load: "update_1", lang: lang }, function(data){
                 if (data== 'done') {
@@ -123,9 +123,9 @@
       		});
 
       		$('#combo').change(function(){
-      			lang = this.options[this.selectedIndex].value;
+      			lang = mycombo.val();
             mygrid1.g.load({lang: lang }, function(){
-                $('#secLang').text(lang);
+                $('#secLang').text(mycombo.val());
             }   );
       		});
 
