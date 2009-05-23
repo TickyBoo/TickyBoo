@@ -92,13 +92,13 @@ $.fn.checkboxAreaSelect = function(tbl){
           z = endX;
           endX = cbAS.startX;
           cbAS.startX = z;
-          $('body').prepend('Xswap ');
+         // $('body').prepend('Xswap ');
         }
         if (cbAS.startY > endY) {
           z = endY;
           endY = cbAS.startY;
           cbAS.startY = z;
-          $('body').prepend('Yswap ');
+      //    $('body').prepend('Yswap ');
         }
 
 	    	begX = Math.round(((cbAS.startX - pos.left) / w)-0.5);
@@ -107,7 +107,13 @@ $.fn.checkboxAreaSelect = function(tbl){
 	    	endY = Math.round(((endY - pos.top)  / h)+0.5);
 	    	rows.slice(begY,endY).each(function(i, row){
           $(this).find('td').slice(begX,endX).each(function(j,col){
-            this.style.background = "blue";
+         //   this.style.background = "blue";
+      	    if(e.shiftKey){
+      			$(this).find(":checkbox").attr("checked",false); /*uncheck due to shift key */
+                          } else {
+      			$(this).find(":checkbox").attr("checked",true);  /*check the box */
+                    }
+
           });
         });
 /*   			for (y=begY; y<endY; y++) {
