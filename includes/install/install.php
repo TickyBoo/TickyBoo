@@ -512,7 +512,7 @@ function file_to_db($filename)
           $_SHOP->link = new mysqli($DB_Hostname,
                                     $_SESSION['DB_Username'],
                                     $_SESSION['DB_Password'],
-                                    $_SESSION['DB_Database']
+                                    $_SESSION['DB_Database'],
                                     $port);
           }
         else
