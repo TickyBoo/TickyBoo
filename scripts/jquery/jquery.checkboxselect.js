@@ -88,24 +88,26 @@ $.fn.checkboxAreaSelect = function(tbl){
 	    	cols = rows.eq(0).find('td');
 	    	h = Math.round(seats.height() / rows.size());
 	    	w = Math.round(seats.width()  / cols.size());
-	      	$("body").prepend(h). prepend(':');
-	      	$("body").prepend(w). prepend('|');
-	      	$("body").prepend(pos.left). prepend(':');
-	      	$("body").prepend(pos.top). prepend('|');
-	      	$("body").prepend(endX). prepend(':');
-	      	$("body").prepend(endY). prepend(' | ');
+        if (cbAS.startX > endX) {
+          z = endX;
+          endX = cbAS.startX;
+          cbAS.startX = z;
+          $('body').prepend('Xswap ');
+        }
+        if (cbAS.startY > endY) {
+          z = endY;
+          endY = cbAS.startY;
+          cbAS.startY = z;
+          $('body').prepend('Yswap ');
+        }
+
 	    	begX = Math.round(((cbAS.startX - pos.left) / w)-0.5);
 	    	begY = Math.round(((cbAS.startY - pos.top)  / h)+0.5);
 	    	endX = Math.round(((endX - pos.left) / w)-0.5);
 	    	endY = Math.round(((endY - pos.top)  / h)+0.5);
-	      	$("body").prepend(begX). prepend(':');
-	      	$("body").prepend(endX). prepend('|');
-	      	$("body").prepend(begY). prepend(':');
-	      	$("body").prepend(endY). prepend(' | ');
 	    	rows.slice(begY,endY).each(function(i, row){
-          //this.style.background = "blue";
-          $(this).find('td').slice(begX,endX).each(function(j,col){<br/>
-
+          $(this).find('td').slice(begX,endX).each(function(j,col){
+            this.style.background = "blue";
           });
         });
 /*   			for (y=begY; y<endY; y++) {
