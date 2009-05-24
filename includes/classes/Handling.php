@@ -132,25 +132,26 @@ class Handling {
       $this->_sment->free;
       unset($this->_sment);
     }
-	}	
-  function load ($handling_id){
-    global $_SHOP;
+	}
+		
+	function load ($handling_id){
+    	global $_SHOP;
     
-    if(isset($_SHOP->_handling_cache[$handling_id])){
-      return $_SHOP->_handling_cache[$handling_id];
-    }
-    
-    $query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($handling_id);
-    if($res=ShopDB::query_one_row($query)){
-      $hand=new Handling;
-      $hand->_fill($res);
-      $hand->templates=Handling::_unser_templates($res['handling_email_template']);
+    	if(isset($_SHOP->_handling_cache[$handling_id])){
+      		return $_SHOP->_handling_cache[$handling_id];
+    	}
+		
+		$query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($handling_id);
+    	if($res=ShopDB::query_one_row($query)){
+      		$hand=new Handling;
+      		$hand->_fill($res);
+      		$hand->templates=Handling::_unser_templates($res['handling_email_template']);
 			$hand->_unser_extra();
 			$hand->_unser_pdf_format();
-      $_SHOP->_handling_cache[$handling_id]=&$hand;
-      return $hand;
-    }
-  }
+      		$_SHOP->_handling_cache[$handling_id]=&$hand;
+      		return $hand;
+    	}
+  	}
 	
   function load_all ($handling_sale_mode=''){
     global $_SHOP;
@@ -380,17 +381,19 @@ class Handling {
   	}
   }
 
-  function pment() {
-    if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
-    $file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";
-    if (file_exists($file)){
-      if (!isset($this->_pment)){
-        $name = "EPH_".$this->handling_payment;
-        $this->_pment = new $name($this);
-        $this->extras = $this->_pment->extras;
-      }
-    }
-    return $this->_pment;
+	function pment() {
+	    if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
+    	
+		$file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";
+	    
+		if (file_exists($file)){
+      		if (!isset($this->_pment)){
+        		$name = "EPH_".$this->handling_payment;
+        		$this->_pment = new $name($this);
+        		$this->extras = $this->_pment->extras;
+      		}
+    	}
+    	return $this->_pment;
   }
 
   function sment() {

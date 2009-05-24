@@ -53,73 +53,82 @@ $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
 
 if (isset($_REQUEST['sor'])) {
-  if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
-      $smarty->display($fond . '.tpl');
-  }
-//  session_write_close();
-  exit();
+	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
+		$smarty->display($fond . '.tpl');
+	}
+	//  session_write_close();
+  	exit();
 
-} elseIf ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
-  If (!$user->logged and
-      $action !== 'register' and
-      $action !== 'login' ) {
-    $smarty->display('checkout_user.tpl');
-//    session_write_close();
-
-    exit();
-  }
-  if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
-      $smarty->display($fond . '.tpl');
-  }
+} elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
+  	if (!$user->logged and
+		$action !== 'register' and
+      	$action !== 'login' ) {
+    	$smarty->display('checkout_user.tpl');
+	//  session_write_close();
+    	exit();
+	}
+  	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
+    	$smarty->display($fond . '.tpl');
+  	}
 //  session_write_close();
-  exit();
+  	exit();
 }
 if ($action == 'edituser') {
-  echo "
-    <script>
-      window.close();
-    </script>";
+	echo "<script>window.close();</script>";
 } else {
-  redirect("index.php?action=cart_view",403);
+	redirect("index.php?action=cart_view",403);
 }
 die();
 
-  function getsecurecode() {
-    if (isset($_POST['sor'])) {
-      $return = urldecode( $_POST['sor']);
-    } elseif (isset($_GET['sor'])) {
-      $return = $_GET['sor'];
-    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
-      $return = substr($action, 1);
-    } else {
-      Print_r($_REQUEST); Print_r($_SERVER);
-      $return ='';
-    }
-  //  echo $return;
-    return $return;
-  }
-
-  function setordervalues($aorder, $smarty){
-    if (!is_object($aorder)) exit;
-    if (isset($aorder) and isset($aorder->places)) {
-      foreach($aorder->places as $ticket){
-        $seats[$ticket->id]=TRUE;
-      }
-    }
-    $smarty->assign('order_success',true);
-    $smarty->assign('order_id',$aorder->order_id);
-    $smarty->assign('order_fee',$aorder->order_fee);
-    $smarty->assign('order_total_price',$aorder->order_total_price);
-    $smarty->assign('order_partial_price',$aorder->order_partial_price);
-    $smarty->assign('order_tickets_nr',$aorder->size());
-    $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
-    $smarty->assign('order_payment_mode',$aorder->order_payment_mode);
-
-    $smarty->assign('shop_handling', (array)$aorder->order_handling);
-    $smarty->assign('shop_order', (array)$aorder);
-
-    $smarty->assign('order_seats_id',$seats);
-  }
+	function getsecurecode() {
+	    if (isset($_POST['sor'])) {
+     		$return = urldecode( $_POST['sor']);
+	    } elseif (isset($_GET['sor'])) {
+	      	$return = $_GET['sor'];
+	    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
+	      	$return = substr($action, 1);
+	    } else {
+	      	print_r($_REQUEST); Print_r($_SERVER);
+	      	$return ='';
+	    }
+  	//  echo $return;
+    	return $return;
+  	}
+  	
+  	/**
+  	 * @name SetOrderValues
+  	 * 
+  	 * Used to set the order values using the smarty assign methods, which can then be used
+  	 * by the plugable payments.
+  	 * 
+  	 * @author Niels
+  	 * @since 1.0
+  	 * @uses Smarty, Smarty_Order
+  	 * @param aorder : Order Object [required]
+  	 * @param smarty : Smarty Object [required]
+  	 * @return null loads the values to smarty vars
+  	 */
+  	function setordervalues($aorder, $smarty){
+    	if (!is_object($aorder)) exit;
+    	if (isset($aorder) and isset($aorder->places)) {
+      		foreach($aorder->places as $ticket){
+        		$seats[$ticket->id]=TRUE;
+      		}
+    	}
+	    $smarty->assign('order_success',true);
+	    $smarty->assign('order_id',$aorder->order_id);
+	    $smarty->assign('order_fee',$aorder->order_fee);
+	    $smarty->assign('order_total_price',$aorder->order_total_price);
+	    $smarty->assign('order_partial_price',$aorder->order_partial_price);
+	    $smarty->assign('order_tickets_nr',$aorder->size());
+	    $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
+	    $smarty->assign('order_payment_mode',$aorder->order_payment_mode);
+	
+	    $smarty->assign('shop_handling', (array)$aorder->order_handling);
+	    $smarty->assign('shop_order', (array)$aorder);
+	
+	    $smarty->assign('order_seats_id',$seats);
+	}
 
   Function loginAction ($smarty){
     global $user;
@@ -191,39 +200,40 @@ die();
     }
   }
 
-  function confirmaction($smarty) {
-    global $order, $cart;
-    if (!isset($_SESSION['_SHOP_order'])) {
-      $myorder = $order->make_f($_POST['handling_id'],"www");
-    } else
-      $myorder = $_SESSION['_SHOP_order'];
+	function confirmaction($smarty) {
+    	global $order, $cart;
+    	if (!isset($_SESSION['_SHOP_order'])) {
+      		$myorder = $order->make_f($_POST['handling_id'],"www");
+    	} else {
+			$myorder = $_SESSION['_SHOP_order'];
+		}
 
-    If (!$myorder) {
-      $smarty->assign('order_error', $order->error);
-      return "checkout_preview";
-    } else {
-      setordervalues($myorder, $smarty);
-      $cart->destroy_f();
-      $hand= $myorder->order_handling;
-      $confirmtext = $hand->on_confirm($myorder);
+    	if (!$myorder) {
+      		$smarty->assign('order_error', $order->error);
+      		return "checkout_preview";
+    	} else {
+      		setordervalues($myorder, $smarty);
+      		$cart->destroy_f();
+      		$hand= $myorder->order_handling;
+      		$confirmtext = $hand->on_confirm($myorder);
 
-      if (is_array($confirmtext)) {
+      		if (is_array($confirmtext)) {
 
-        $smarty->assign('pm_return',$confirmtext);
-        if(!$confirmtext['approved'])
-           $myorder->order_delete($myorder->order_id );
-        unset( $_SESSION['_SHOP_order']);
-        return "checkout_result";
-      } else {
-      if ($hand->is_eph()) {
-        $_SESSION['_SHOP_order'] = $myorder;
-      }
-      $order->obj = $myorder;
-        $smarty->assign('confirmtext', $confirmtext);
-      return "checkout_confirm";
-    }
-  }
-  }
+        		$smarty->assign('pm_return',$confirmtext);
+        		if(!$confirmtext['approved'])
+           			$myorder->order_delete($myorder->order_id );
+       			unset( $_SESSION['_SHOP_order']);
+        		return "checkout_result";
+      		} else {
+      			if ($hand->is_eph()) {
+        			$_SESSION['_SHOP_order'] = $myorder;
+      			}
+      			$order->obj = $myorder;
+        		$smarty->assign('confirmtext', $confirmtext);
+      			return "checkout_confirm";
+    		}
+  		}
+  	}
 
   function  submitaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
