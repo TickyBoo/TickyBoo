@@ -1,11 +1,7 @@
-td, th {
+table.datagrid td, th {
 	font: 11px Tahoma; 
 	margin: 0px;
 	border-bottom: 1px solid #ABABAB;
-}
-
-body {
-	padding : 20px;
 }
 
 table.datagrid {
@@ -13,7 +9,7 @@ table.datagrid {
 }
 
 table.datagrid td {
-	padding: 5px;
+	padding-left: 5px;
 	text-align: left;
 	overflow: hidden;
 }
@@ -23,7 +19,7 @@ table.datagrid tr  {
 }
 
 table.datagrid th  {
-	padding: 5px;
+	padding-left: 5px;
 	text-align: left;
 	font-weight: normal;
 }

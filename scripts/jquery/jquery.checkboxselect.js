@@ -80,8 +80,6 @@ $.fn.checkboxAreaSelect = function(tbl){
       if((endX != cbAS.startX) || (endY != cbAS.startY)){
   			/*for each checkbox on the page check if its within the drag-area*/
 	    	var ckBox;
-	    //	var mouse =document.body.style.cursor;
-	    //	document.body.style.cursor='wait';
         seats = $('#seats');
         var pos = seats.position();
 	    	rows = seats.find('tr');
@@ -116,19 +114,8 @@ $.fn.checkboxAreaSelect = function(tbl){
 
           });
         });
-/*   			for (y=begY; y<endY; y++) {
-          var tr = rows.eq(y).find('td');
-	    	  for (x=begX; x<endX; x++) {
-            var td = tr.eq(x).css("background-color", "blue");
-         // $("body").prepend(tr.size( )).prepend('|');
-//
-//            var td = tr.children().css("color", "red");
-            //td.prepend('X');// find(":checkbox").each(function(){
-  		    }
-  		  } */
 	   // 	document.body.style.cursor= mouse;
   		}
-      cbAS.mouseIsDown = false; /*clear currently dragging flag */
     });/*close mouseup*/
   
   };/*close checkboxAreaSelect*/

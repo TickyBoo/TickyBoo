@@ -196,7 +196,8 @@ jQuery.fn.ingrid = function(o){
 	});
 	var b = jQuery('<div />')
 					.html( jQuery('<table cellpadding="0" cellspacing="0"></table>').html( this.find('tbody') ).width( h.width() ).addClass(cfg.gridClass) )
-					.css('overflow', 'visable')
+					.css('overflow', 'auto')
+					.css('overflow-y', 'scroll')
 					.height(cfg.height).addClass(cfg.gridClass);
 			
 	
@@ -251,8 +252,10 @@ jQuery.fn.ingrid = function(o){
 							}
 						});
 	}
-  if (this.find('tfoot')) {
-  	var f = jQuery('<table cellpadding="0" cellspacing="0"></table>')
+	var f = false;
+  if (this.find('tfoot').size() != 0) {
+    console.log(this.find('tfoot').size());
+  	f = jQuery('<table cellpadding="0" cellspacing="0"></table>')
   					.html(this.find('tfoot'))
   					.addClass(cfg.gridClass)
   					.addClass(cfg.footerClass)
@@ -395,7 +398,7 @@ jQuery.fn.ingrid = function(o){
 
 	// create a container div to for our main grid object
 	// append & extend grid {g} with header {h}, body {b}, paging {p}, resize handle {z}
-	var g = jQuery('<div />').append(h).append(b).extend({
+	var g = jQuery('<div align="left" />').append(h).append(b).extend({
 		h : h,
 		b : b
 	});
@@ -415,11 +418,12 @@ jQuery.fn.ingrid = function(o){
 		position: 'absolute',
 		zIndex: '0'
 	}).appendTo(g);
+	var gapf  = false;
 	if (f) {
-   	var gapf = jQuery('<div />').width(cfg.scrollbarW).addClass(cfg.footerClass).height(cfg.footerHeight).css({
+   	gapf = jQuery('<div />').width(cfg.scrollbarW).addClass(cfg.footerClass).height(cfg.footerHeight).css({
   		position: 'absolute',
   		zIndex: '0'
-  	}).appendTo(g);
+  	}).text('r').appendTo(g);
   }
 	// ...a loading modal mask
 	var modalmask = jQuery('<div />').html(cfg.loadingHtml).addClass(cfg.loadingClass).css({
@@ -430,19 +434,20 @@ jQuery.fn.ingrid = function(o){
 	// create methods on our grid object
 	g.extend({
 		load : function(params, cb) {
+			if (cfg.type.toUpperCase()=='NONE')	return this;
 			var data = jQuery.extend(cfg.extraParams, params);
 			
 			/*
 			alert(this + ' ...is jQuery')
 			alert(this[0] + ' ...is the div, id="' + this.attr('id') + '"')
 			*/
-			
+
 			// show loading canvas
 			modalmask.width(b.width()).show();
-			
-			// save selected rows
+				// save selected rows
 			g.saveSelectedRows();
-			
+
+
 			jQuery.ajax({
 				type: cfg.type.toUpperCase(),
 				url: cfg.url,
@@ -640,7 +645,7 @@ jQuery.fn.ingrid = function(o){
 				var pos = h.offset();
 				gap.css('left', outer_w - cfg.scrollbarW + pos.left).css('top', pos.top);
 			}
-			if (f) {
+      if (f) {
 				var pos = f.offset();
 				gapf.css('left', outer_w - cfg.scrollbarW + pos.left).css('top', pos.top).css('_height',pos.height);
 			}
