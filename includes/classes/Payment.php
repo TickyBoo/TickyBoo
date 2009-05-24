@@ -1,5 +1,6 @@
 <?php
 class Payment {
+	
   public $handling;
   public $extras    = array ();
   public $mandatory = array();

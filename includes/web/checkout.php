@@ -212,16 +212,17 @@ die();
       		$smarty->assign('order_error', $order->error);
       		return "checkout_preview";
     	} else {
-      		setordervalues($myorder, $smarty);
-      		$cart->destroy_f();
-      		$hand= $myorder->order_handling;
-      		$confirmtext = $hand->on_confirm($myorder);
+      		setordervalues($myorder, $smarty); //assign order vars
+      		$cart->destroy_f(); // destroy cart
+      		$hand = $myorder->order_handling; // get the payment handling object
+      		$confirmtext = $hand->on_confirm($myorder); // get the payment button/method... 
 
       		if (is_array($confirmtext)) {
 
         		$smarty->assign('pm_return',$confirmtext);
-        		if(!$confirmtext['approved'])
+        		if(!$confirmtext['approved']) {
            			$myorder->order_delete($myorder->order_id );
+				}
        			unset( $_SESSION['_SHOP_order']);
         		return "checkout_result";
       		} else {

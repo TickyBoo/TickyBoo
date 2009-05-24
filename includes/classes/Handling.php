@@ -38,6 +38,7 @@
 class Handling {
 
   var $templates;
+  protected $_pment = null;
 
   function _ser_templates($templates){
     if(is_array($templates)){
@@ -293,9 +294,14 @@ class Handling {
     }
     return $ok;
 	}
-	function is_eph() {
-    return ($this->pment())?true:false;
-  }
+	
+	/**
+	 * @return true if the handling uses an extended payment handler (ie paypal, ideal)
+	 * @access public
+	 */
+	public function is_eph() {
+    	return ($this->pment())?true:false;
+  	}
   
   // Loads default extras for payment method eg."pm_paypal_View.php"
   function extra_init(){
@@ -344,14 +350,25 @@ class Handling {
       return $pm->admin_form();
   	}
   }
-
-  function on_confirm($order) {
-    $return ='';
-  	if($pm=$this->pment()){
-      $return = $pm->on_confirm($order);
+  	/**
+  	 * @name OnConfirm
+  	 * 
+  	 * The function is used to get the payment form/method from
+  	 * the extended payment handler.
+  	 * 
+  	 * @param order : the order object [Required]
+  	 * @return Array or html
+  	 * @access public
+  	 * @author Niels
+  	 * @uses Order Object, EPH Object
+  	 */
+	public function on_confirm($order) {
+    	$return ='';
+  		if($pm=$this->pment()){
+      		$return = $pm->on_confirm($order);
+  		}
+    	return (is_array($return))?$return:$this->handling_html_template.'<br>'.$return;
   	}
-    return (is_array($return))?$return:$this->handling_html_template.'<br>'.$return;
-  }
 
   function on_submit(&$order, &$errors) {
   	if($pm=$this->pment()){
@@ -380,8 +397,21 @@ class Handling {
       return $pm->on_check($order);
   	}
   }
-
-	function pment() {
+	/**
+	 * @name PaymentMethod
+	 * 
+	 * Will load the eph file and create the eph object
+	 * 
+	 * @example : eph_paypal.php would be loaded and the eph object would be created like:
+	 *  EPH_paypal then added the to this handling object on _pment varible.
+	 * 
+	 * @return null
+	 * @since 1.0
+	 * @author Niels
+	 * @uses EPH Object
+	 * @access private
+	 */  
+	private function pment() {
 	    if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
     	
 		$file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";

@@ -2,7 +2,7 @@
  * %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- * Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
+ * Copyright (C) 2007-2009 Christopher Jenkins. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
