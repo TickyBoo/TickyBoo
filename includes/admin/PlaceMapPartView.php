@@ -361,7 +361,7 @@ class PlaceMapPartView extends AdminView {
                         }
 
                         if ($sty) {
-                            $sty = "style='$sty'";
+                            $sty = "style='$sty nowrap'";
                         }
                     }
 

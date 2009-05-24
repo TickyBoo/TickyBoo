@@ -80,7 +80,7 @@ $.fn.checkboxAreaSelect = function(tbl){
       if((endX != cbAS.startX) || (endY != cbAS.startY)){
   			/*for each checkbox on the page check if its within the drag-area*/
 	    	var ckBox;
-        seats = $('#seats');
+        var seats = $('#seats');
         var pos = seats.position();
 	    	rows = seats.find('tr');
 	    	cols = rows.eq(0).find('td');

@@ -398,7 +398,7 @@ jQuery.fn.ingrid = function(o){
 
 	// create a container div to for our main grid object
 	// append & extend grid {g} with header {h}, body {b}, paging {p}, resize handle {z}
-	var g = jQuery('<div align="left" />').append(h).append(b).extend({
+	var g = jQuery('<div align="left" />').width('99%').append(h).append(b).extend({
 		h : h,
 		b : b
 	});
@@ -571,6 +571,25 @@ jQuery.fn.ingrid = function(o){
 			}
 		},
 		
+		selected : function(id, state) {
+      if (id) {
+        if (lastselected) {
+					jQuery(lastselected).attr('_selected', 'false').removeClass(cfg.rowSelectedClass) ;
+          lastselected = false;
+
+        }
+        row = $(this).find('#'.id);
+        if ((state) && (row)) {
+          ;
+          lastselected = row;
+          jQuery(row).removeClass(cfg.rowHoverClass).addClass(cfg.rowClasses[cursor]);
+				  jQuery(row).attr('_selected', 'true').addClass(cfg.rowSelectedClass);
+        }
+        return this;
+      } else {
+        return lastselected;
+      }
+		},
 		// returns single <th> el
 		getHeader : function(i, cb) {
 			var th = this.find('th').slice(i, i+1);
@@ -686,6 +705,7 @@ jQuery.fn.ingrid = function(o){
 						jQuery(this).click(function(){
               if (cfg.MultiSelect == true) {
                 var oldstate = jQuery(this).attr('_selected');
+                $('body').prepend(oldstate);
   							if (jQuery(this).attr('_selected')) {
   								jQuery(this).attr('_selected') == 'true' ?
   									jQuery(this).attr('_selected', 'false').removeClass(cfg.rowSelectedClass) :

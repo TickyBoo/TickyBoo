@@ -34,6 +34,8 @@
 
  */
 
+require_once('classes/PlaceMapZone.php');
+require_once('classes/PlaceMapCategory.php');
 
 
 define('PM_ZONE', 0);
@@ -105,24 +107,24 @@ class PlaceMapPart { // ZRS
             $query = "update PlaceMapPart set
             pmp_pm_id={$this->pmp_pm_id},
             pmp_event_id='{$this->pmp_event_id}',
-    	    pmp_name=" . ShopDB::quote($this->pmp_name) . ",
-    	    pmp_width={$this->pmp_width},
-    	    pmp_height={$this->pmp_height},
-    	    pmp_data=" . ShopDB::quote($data) . ",
-    	    pmp_expires='{$this->pmp_expires}',
-    	    pmp_scene='{$this->pmp_scene}',
-    	    pmp_shift='{$this->pmp_shift}'
-    	    where pmp_id='{$this->pmp_id}'";
+      	    pmp_name=" . ShopDB::quote($this->pmp_name) . ",
+            pmp_width={$this->pmp_width},
+      	    pmp_height={$this->pmp_height},
+      	    pmp_data=" . ShopDB::quote($data) . ",
+      	    pmp_expires='{$this->pmp_expires}',
+      	    pmp_scene='{$this->pmp_scene}',
+      	    pmp_shift='{$this->pmp_shift}'
+      	    where pmp_id='{$this->pmp_id}'";
         } else {
             $query = "insert into PlaceMapPart (
                  pmp_pm_id,
-		 pmp_event_id,
-    	         pmp_name,
-	         pmp_width,
-	         pmp_height,
-   	         pmp_data,
-		 pmp_scene,
-		 pmp_shift
+		             pmp_event_id,
+    	           pmp_name,
+	               pmp_width,
+	               pmp_height,
+   	             pmp_data,
+		             pmp_scene,
+		             pmp_shift
                ) VALUES (
 	         {$this->pmp_pm_id},
 		 '{$this->pmp_event_id}',
@@ -208,8 +210,6 @@ class PlaceMapPart { // ZRS
             $new_pmp->_fill($res);
             $new_pmp->pmp_data = PlaceMapPart::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
 
-            require_once('classes/PlaceMapZone.php');
-            require_once('classes/PlaceMapCategory.php');
             $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pm_id);
             $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pm_id);
 
@@ -230,8 +230,6 @@ class PlaceMapPart { // ZRS
                 $new_pmp->_fill($data);
                 $new_pmp->pmp_data = PlaceMapPart::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
 
-                require_once('classes/PlaceMapZone.php');
-                require_once('classes/PlaceMapCategory.php');
                 $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pm_id);
                 $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pm_id);
 
