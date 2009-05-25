@@ -1,7 +1,12 @@
-table.datagrid td, th {
+table.datagrid td {
 	font: 11px Tahoma;
 	margin: 0px;
 	border-bottom: 1px solid #ABABAB;
+}
+
+div.datagrid {
+	border-left: 1px solid #ABABAB;
+	border-right: 1px solid #ABABAB;
 }
 
 table.datagrid {

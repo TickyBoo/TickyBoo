@@ -68,7 +68,7 @@ class PlaceMapCategoryView extends AdminView {
     
     function category_form (&$data, &$err)
     {
-        echo "<form action='{$_SERVER['PHP_SELF']}' method=post>";
+        echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
 
         $this->form_head(category_update_title);
 
@@ -179,7 +179,6 @@ class PlaceMapCategoryView extends AdminView {
     function draw ()
     {
         global $_SHOP;
-
         if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
             if (!$pm = PlaceMap::load($_GET['pm_id'])) {
@@ -193,24 +192,18 @@ class PlaceMapCategoryView extends AdminView {
             if (!$pm = PlaceMap::load($_POST['pm_id'])) {
                 return;
             }
-
             if (!$this->category_check($_POST, $err)) {
                 $this->category_form($_POST, $err);
             } else {
-                require_once('classes/PlaceMap.php');
-                if (!$pm = PlaceMap::load($_POST['pm_id']) ) {
-                    return;
-                }
+                $category = new PlaceMapCategory( $_POST['pm_id'],
+                                                  $_POST['category_name'],
+                                                  $_POST['category_price'],
+                                                  $_POST['category_template'],
 
-                $category = new PlaceMapCategory($_POST['pm_id'],
-                    $_POST['category_name'],
-                    $_POST['category_price'],
-                    $_POST['category_template'],
-                    $_POST['category_color'],
-                    $_POST['category_numbering'],
-                    $_POST['category_size'],
-                    // $_POST['category_max'],
-                    $pm->pm_event_id, 0);
+                                                  $_POST['category_color'],
+                                                  $_POST['category_numbering'],
+                                                  $_POST['category_size'],
+                                                  $pm->pm_event_id);
                 $category->category_data = $_POST['category_data'];
 
                 $category->save();

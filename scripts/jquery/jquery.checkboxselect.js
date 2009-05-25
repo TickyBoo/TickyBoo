@@ -70,7 +70,8 @@ $.fn.checkboxAreaSelect = function(tbl){
 
     /* when they release the mouse button, check if they have dragged over any checkboxes,
      If they have, do work on them. Also reset things that started on mouse-down */
-    $('#seats').mouseup(function(e){
+    $('body').mouseup(function(e){
+      if (!cbAS.mouseIsDown) return;
       cbAS.mouseIsDown = false; /*clear currently dragging flag */
       $(".dragbox").remove(); /*get rid of select box */
       endX = e.pageX;
@@ -103,6 +104,10 @@ $.fn.checkboxAreaSelect = function(tbl){
 	    	begY = Math.round(((cbAS.startY - pos.top)  / h)+0.5);
 	    	endX = Math.round(((endX - pos.left) / w)-0.5);
 	    	endY = Math.round(((endY - pos.top)  / h)+0.5);
+	    	if (begX< 0) begX =0;
+	    	if (begY< 0) begY =0;
+	    	if (endX>= w) endX =w-1;
+	    	if (endY>= h) endY =h-1;
 	    	rows.slice(begY,endY).each(function(i, row){
           $(this).find('td').slice(begX,endX).each(function(j,col){
          //   this.style.background = "blue";

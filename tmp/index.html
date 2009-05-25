@@ -13,18 +13,33 @@
       type_id = 0;
       
     $(document).ready(function() {
-      var mycombo = $("#type");
-      mycombo.change(function() {
-        var val = mycombo.val();
-        $('#text').hide();
-        if (val=='T') $('#text').show();
-        mycats.g.selected('?',false);
-        myzones.g.selected('?',false);
-        type_id = val;
-        myid = 0;
-        loadgrid();
-      });
       $('#text').hide();
+      $('#seats').checkboxAreaSelect();
+  		mytypes = $("#types").ingrid({
+      			url: 'remote.php',
+      			type: 'none',
+	          extraParams: {load: 'zones'} ,
+      			height: 60,
+      			headerHeight: 20,
+      			savedStateLoad: true,
+      			initialLoad: true,
+      			colWidths: [200-25],		// width of each column
+      			rowClasses: ['grid-row-style1','grid-row-style2'],
+      			resizableCols: false,
+      			rowSelection: true,
+      			paging: false,
+      			sorting: false,
+				    onRowSelect: function(tr, selected){
+              var val = $(tr).attr('id');
+              $('#text').hide();
+              if (val=='T') $('#text').show();
+              myzones.g.selected('?',false);
+              mycats.g.selected('?',false);
+              type_id = val;
+              loadgrid();
+            }
+
+          });
       $('#seats').checkboxAreaSelect();
   		myzones = $("#zones").ingrid({
       			url: 'remote.php',
@@ -34,15 +49,15 @@
       			headerHeight: 20,
       			savedStateLoad: true,
       			initialLoad: true,
-      			colWidths: [10,200-40,70,20],		// width of each column
+      			colWidths: [10,200-46,70,20],		// width of each column
       			rowClasses: ['grid-row-style1','grid-row-style2'],
       			resizableCols: false,
       			rowSelection: true,
       			paging: false,
       			sorting: false,
 				    onRowSelect: function(tr, selected){
+              mytypes.g.selected('?',false);
               mycats.g.selected('?',false);
-              mycombo.val('');
               type_id = 'Z';
               myid = $(tr).attr('id');
               loadgrid();
@@ -64,8 +79,8 @@
       			paging: false,
       			sorting: false,
 				    onRowSelect: function(tr, selected){
+              mytypes.g.selected('?',false);
               myzones.g.selected('?',false);
-              mycombo.val('');
               type_id = 'C';
               myid = $(tr).attr('id');
               loadgrid();
@@ -82,41 +97,7 @@
         $('#seats').find('tbody').html($tbl.find('tbody').html());
       }, 'thml');
   }
-  </script>
-</head>
-        <body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 ><center>
-          <table border='0' width='800'  cellspacing='0' cellpadding='0' bgcolor='#ffffff' >
-             <tr>
-               <td  colspan='2' style='padding-left:20px;padding-bottom:5px;'>
-               <img src='../admin/images/logo_admin.png'>
-               </td>
-             </tr>
-            <tr><td style='padding-left:20px;border-top:#cccccc 1px solid;border-bottom:#cccccc 1px solid; padding-bottom:5px; padding-top:5px;' valign='bottom'><font color='#555555'><b>Welcome Lumensoft int dgf</b></font></td>
-                <td  align='right' style='padding-right:20px;border-top:#cccccc 1px solid;border-bottom:#cccccc 1px solid; '>
-                <select name='setlang' onChange='set_lang(this)'><option value='en' selected>English</option><option value='de' >Deutsch</option><option value='nl' >Nederlands</option></select></td></tr></table>
-                <br>
-            <table border=0 width='800' class='aui_bico'><tr>
-              <td class='aui_bico_menu' width='200' valign=top>
-        <table width='190' class='menu_admin' cellspacing='1' >
-        <tr><td  class='menu_admin_title'>Administration</td></tr>
 
-        <tr><td  class='menu_admin_item'><a href='index.php' class='menu_admin_link'>Home</a></td></tr>
-        <tr><td></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_ort.php' class='menu_admin_link'>Venues</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_event_group.php' class='menu_admin_link'>Event Groups</a></td></tr>
-		    <tr><td  class='menu_admin_item'><a href='view_event.php' class='menu_admin_link'>Events</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_order.php' class='menu_admin_link'>Orders / Tickets</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_search.php' class='menu_admin_link'>Search</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_stats.php' class='menu_admin_link'>Stats</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_impexp.php' class='menu_admin_link'>Export / Import</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_template.php' class='menu_admin_link'>Templates</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_handling.php' class='menu_admin_link'>Order Handlings</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_salepoint.php' class='menu_admin_link'>Points of sale</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_control.php' class='menu_admin_link'>Ticket takers</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_garbage.php' class='menu_admin_link'>Garbage</a></td></tr><tr><td></td></tr><tr><td  class='menu_admin_item'>
-       <a href='/beta5/admin/view_event.php?action=logout' class='menu_admin_link'>Log out</a></td></tr>
-       </table>
-    <script><!--
     function cc(col,state){
       form=window.document.thisform;
       for(r=0;r<100;r++){
@@ -134,8 +115,21 @@
       }
     }
     --></script>
+</head>
+<body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 ><center>
+  <table border='0' width='800'  cellspacing='0' cellpadding='0' bgcolor='#ffffff' >
+     <tr>
+       <td  colspan='2' style='padding-left:20px;padding-bottom:5px;'>
+       <img src='../admin/images/logo_admin.png'>
+       </td>
+     </tr>
+    <tr><td style='padding-left:20px;border-top:#cccccc 1px solid;border-bottom:#cccccc 1px solid; padding-bottom:5px; padding-top:5px;' valign='bottom'><font color='#555555'><b>Welcome Lumensoft int dgf</b></font></td>
+        <td  align='right' style='padding-right:20px;border-top:#cccccc 1px solid;border-bottom:#cccccc 1px solid; '>
+        <select name='setlang' onChange='set_lang(this)'><option value='en' selected>English</option><option value='de' >Deutsch</option><option value='nl' >Nederlands</option></select></td></tr></table>
+        <br>
+    <table border=0 width='800' class='aui_bico'><tr>
     </center><br></td><td class='aui_bico_body' valign='top'>
-      <table class='admin_form' width='600' border=0 cellspacing='1' cellpadding='5'>
+      <table class='admin_form' width='800' border=0 cellspacing='1' cellpadding='5'>
         <tr>
           <td class='admin_list_title' colspan='1'>
              36 Petite Salle Demo Theatre
@@ -165,50 +159,81 @@
       <input type='hidden' name='action' value='coucou'>
       <input type='hidden' name='pmp_id' value='36'>
 
-      <table border=0 cellpadding=0 cellspacing=0 width="600">
+      <table border=0 cellpadding=0 cellspacing=0 width="800">
         <tr>
           <td align="center" height=3 class="admin_value" colspan="2"> </td>
         </tr>
         <tr>
-          <td align='left' valign='top'>
+          <td align='left' width='300' valign='top'>
             <table class='admin_list' width='99%' cellspacing='1' cellpadding='4'>
               <tr>
                 <td class='admin_list_title' align='center'>Zones</td>
               </tr>
             </table>
-            <table id='zones' class='admin_list'>
+            <table id='zones'>
               <thead>
                  <tr><th>&nbsp;</th><th>Name</th><th>Seats</th><th>&nbsp;</th></tr>
               </thead>
               <tbody></tbody>
+              <tfoot>
+                 <tr><th>&nbsp;</th><th>Name</th><th>Seats</th><th>&nbsp;</th></tr>
+              </tfoot>
             </table>
           </td>
-          <td width="50%" align='right' valign='top'>
+          <td width="300" align='center' valign='top'>
             <table class='admin_list' width='99%' cellspacing='1' cellpadding='4'>
               <tr><td class='admin_list_title' colspan='6' align='center'>Categories</td></tr>
             </table>
-            <table id='cats' class='admin_list'>
+            <table id='cats'>
                <thead>
                  <tr><th>&nbsp;</th><th>Name</th><th>Price</th><th>Seats</th><th>type</th></tr>
               </thead>
               <tbody></tbody>
+               <tfoot>
+                 <tr><th>&nbsp;</th><th>Name</th><th>Price</th><th>Seats</th><th>type</th></tr>
+              </tfoot>
             </table>
           </td>
+          <td width="200" align='right' valign='top' >
+            <table class='admin_list' width='99%' cellspacing='1' cellpadding='4'>
+              <tr><td class='admin_list_title' align='center'>Other</td></tr>
+            </table>
+            <table id='types' width='99%' >
+             <thead>
+               <tr><th>Type</th></tr>
+             </thead>
+             <tbody>
+                <tr id='T'><td>Text</td></tr>
+                <tr id='RE'><td>Row nr. right</td></tr>
+                <tr id='RW'><td>Left row nr. </td></tr>
+                <tr id='SS'><td>Nr of seat below</td></tr>
+                <tr id='SN'><td>Nr.of seat above</td></tr>
+                <tr id='E'><td>Exit</td></tr>
+             </tbody>
+             <tfoot>
+                <th>
+                  <input type='text' id='text' value='' size='20' maxlength='100'>&nbsp;
+                </th>
+             </tfoot>
+            </table>
+           </td>
         </tr>
          <tr>
           <td align='center' id='test' height=3 class='admin_value' colspan='2'> </td>
         </tr>
       </table>
-      <table width="600" cellspacing='1' cellpadding='1' border=0 class='admin_form' >
+      <table width="800" cellspacing='1' cellpadding='1' border=0 class='admin_form' >
         <tr>
           <td>
-            <div style="overflow: auto; height: 350px; width:595px;" align='center' valign='center'>
+            <div style="overflow: auto; height: 350px; width:795px;" align='center' valign='center'>
               <table id='seats' cellspacing=0 cellpadding=0  border=0>
                 <tbody></tbody>
               </table>
             </div>
           </td>
         </tr>
+     </table>
+      <table border=0 cellpadding=0 cellspacing=0 width="800">
        <tr>
           <td align='center' height=3 class='admin_value' colspan='2'> </td>
         </tr>
@@ -216,22 +241,6 @@
           <td colspan=2 align='left' valign='top' >
             <table class='admin_form' width='100%' border=0 cellspacing='1' cellpadding='4'>
               <tr>
-                <td class='admin_name'  width='20%' >Type</td>
-                <td class='admin_name' width='20%' >
-                  <select name='label_type' id='type' >
-                    <option value=''>- select -</option>
-                    <option value='T'>Text</option>
-                    <option value='RE'>Row nr. right</option>
-                    <option value='RW'>Left row nr. </option>
-                    <option value='SS'>Nr of seat below</option>
-                    <option value='SN'>Nr.of seat above</option>
-                    <option value='E'>Exit</option>
-                  </select><span class='err'></span>
-                </td>
-                <td class='admin_name' width='30%'>
-                  <input type='text' id='text' name='label_text' value='' size='20' maxlength='100'>
-                  <span class='err'></span>
-                </td>
                 <td align='right' class='admin_name'>
                   <input type='button' name='def_label_pmp' value='Update'/>
    	            </td>

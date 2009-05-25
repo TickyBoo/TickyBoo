@@ -195,7 +195,7 @@ jQuery.fn.ingrid = function(o){
 		jQuery(this).width( cfg.colWidths[i] )								
 	});
 	var b = jQuery('<div />')
-					.html( jQuery('<table cellpadding="0" cellspacing="0"></table>').html( this.find('tbody') ).width( h.width() ).addClass(cfg.gridClass) )
+					.html( jQuery('<table cellpadding="0" cellspacing="0"></table>').html( this.find('tbody') ).width( '100%' ).addClass(cfg.gridClass) )
 					.css('overflow', 'auto')
 					.css('overflow-y', 'scroll')
 					.height(cfg.height).addClass(cfg.gridClass);
@@ -398,7 +398,7 @@ jQuery.fn.ingrid = function(o){
 
 	// create a container div to for our main grid object
 	// append & extend grid {g} with header {h}, body {b}, paging {p}, resize handle {z}
-	var g = jQuery('<div align="left" />').width('99%').append(h).append(b).extend({
+	var g = jQuery('<div align="left" />').append(h).append(b).addClass(cfg.gridClass).attr('width', $(this).attr('width')).extend({
 		h : h,
 		b : b
 	});
@@ -414,16 +414,16 @@ jQuery.fn.ingrid = function(o){
 
 	// create some other piece-parts, like
 	// ...a gap filler to fill gap over scrollport		
-	var gap = jQuery('<div />').width(cfg.scrollbarW).addClass(cfg.headerClass).height(cfg.headerHeight).css({
+	var gap = jQuery('<div />').width(cfg.scrollbarW+2).addClass(cfg.headerClass).height(cfg.headerHeight).css({
 		position: 'absolute',
 		zIndex: '0'
 	}).appendTo(g);
 	var gapf  = false;
 	if (f) {
-   	gapf = jQuery('<div />').width(cfg.scrollbarW).addClass(cfg.footerClass).height(cfg.footerHeight).css({
+   	gapf = jQuery('<div />').width(cfg.scrollbarW+2).addClass(cfg.footerClass).height(cfg.footerHeight).css({
   		position: 'absolute',
   		zIndex: '0'
-  	}).text('r').appendTo(g);
+  	}).appendTo(g);
   }
 	// ...a loading modal mask
 	var modalmask = jQuery('<div />').html(cfg.loadingHtml).addClass(cfg.loadingClass).css({
@@ -662,11 +662,12 @@ jQuery.fn.ingrid = function(o){
 
 			if (gap) {
 				var pos = h.offset();
-				gap.css('left', outer_w - cfg.scrollbarW + pos.left).css('top', pos.top);
+				gap.css('left', h.width() + pos.left).css('top', pos.top);
 			}
       if (f) {
+				f.width(h.width);
 				var pos = f.offset();
-				gapf.css('left', outer_w - cfg.scrollbarW + pos.left).css('top', pos.top).css('_height',pos.height);
+				gapf.css('left', (h.width() + pos.left)-2).css('top', pos.top).css('_height',pos.height);
 			}
 		},
 		

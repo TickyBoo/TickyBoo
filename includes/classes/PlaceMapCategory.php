@@ -42,13 +42,14 @@ class PlaceMapCategory{
   var $category_size;
 
   function PlaceMapCategory (	$category_pm_id=0,
-  								$category_name=0,
-                				$category_price=0,
-                             	$category_template=0,
-								$category_color=0,
-			     				$category_numbering=0,
-								$category_size=0,
-								$category_event_id=0 )
+                              $category_name=0,
+                              $category_price=0,
+                              $category_template=0,
+
+                              $category_color=0,
+                              $category_numbering=0,
+                              $category_size=0,
+                              $category_event_id=0 )
   {
     if($category_pm_id){
       $this->category_pm_id=$category_pm_id;
@@ -58,7 +59,7 @@ class PlaceMapCategory{
       $this->category_color=$category_color;
       $this->category_numbering=$category_numbering;
       $this->category_size=$category_size;
-      $this->category_event_id=$category_event_id;
+      $this->category_event_id=(int)$category_event_id;
     }
   }
 
@@ -71,7 +72,7 @@ class PlaceMapCategory{
 	        category_price=".ShopDB::quote($this->category_price).",
 	        category_template=".ShopDB::quote($this->category_template).",
 	        category_color=".ShopDB::quote($this->category_color).",
-                category_numbering=".ShopDB::quote($this->category_numbering).",
+          category_numbering=".ShopDB::quote($this->category_numbering).",
 	        category_size=".ShopDB::quote($this->category_size).",
 	        category_event_id=".ShopDB::quote($this->category_event_id).",
 	        category_pmp_id=".ShopDB::quote($this->category_pmp_id).",
@@ -83,18 +84,18 @@ class PlaceMapCategory{
 			$this->category_ident=$this->_find_ident($this->category_pm_id);
 		}
          $query="insert into Category (
-        		category_name,
-    	        category_price,
-    	        category_template,
-	         	category_color,
-	         	category_size,
-		 		category_numbering,
-		 		category_event_id,
-		 		category_pmp_id,
-		 		category_status,
-		 		category_pm_id,
-		 		category_data,
-		 		category_ident
+            category_name,
+            category_price,
+            category_template,
+            category_color,
+            category_size,
+            category_numbering,
+            category_event_id,
+            category_pmp_id,
+            category_status,
+            category_pm_id,
+            category_data,
+            category_ident
                ) VALUES (
 	         ".ShopDB::quote($this->category_name).",
 	         ".ShopDB::quote($this->category_price).",
