@@ -34,6 +34,9 @@
 //check if the site is online  
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
+  
+  is($_SERVER['SCRIPT_URI'],"");
+  is($_SERVER['SCRIPT_URL'],"");
 
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');

@@ -29,11 +29,16 @@ class Payment {
 
   	public function admin_form ( ){}
   	
-  	public function admin_check(&$data, &$errors){return true;}
+  	public function admin_check(&$data, &$errors){
+  		return $this->field_check($arr, $err);
+	}
 
 	function init (){}
-
-	public function check ($arr, &$err){
+	
+	/**
+	 * Used to check the manditory fields defined in the manditory array
+	 */
+	public function check (&$arr, &$err){
   		foreach($this->mandatory as $field){
   			if(empty($arr[$field])){$err[$field]=con('mandatory');}
   		}
@@ -63,28 +68,59 @@ class Payment {
 
   function on_check(&$order){ return false;}
   
-  public function encodeCallback(){}
+  public function encodeCallback(){return "";}
   
-  public function decodeCallback(){}
+  public function decodeCallback(){return true;}
   
 //****************************************************************************//
 
 	protected function encodeEPHCallback($ephCode){
 		
-		$code = base64_encode(base_convert(time(),10,36).':'. base_convert($this->handling_id,10,36).':'. md5($ephCode, true));
+		$code = base64_encode($this->handling_payment.':'.base_convert($this->handling_id,10,36).':'.$ephCode);
 		
-		return "callback=".urlencode ($code);
+		return "callback=".urlencode($code);
 	}
 	
 	/**
-	 * @return handling Object
+	 * Payment::decodeEPHCallback()
+	 * 
+	 * It will break down the callback hash, find which eph then check against its validation method
+	 * to check that the handling id matches the settings within the eph.
+	 * The handling object filled will then be returned on successfull decode and validation.
+	 * 
+	 * @return handling Object or null.
 	 * @uses Handling
+	 * @since 1.0b5
 	 */
 	public function decodeEPHCallback($callbackCode){
+		require_once('classes/Handling.php');
+		
 		if (empty($callbackCode) and isset($_REQUEST['callback'])) $callbackCode =$_REQUEST['callback'];
 		
 		if(!empty($callbackCode)){
 			
+			$hand = null; //handling var
+			
+  			$text = base64_decode($callbackCode);
+      		$code = explode(':',$text);
+    		//  print_r( $text );
+      		$code[1] = base_convert($code[1],36,10);
+      		
+      		if(is_numeric($code[1])){
+	  			$hand = Handling::load($code[1]);	  			
+	  		}
+	  		if($hand == null){
+	  			return null;
+			}
+	  		if($hand->is_eph()){
+				if($hand->handling_payment != $code[0]){
+					return null;
+				}
+				if($hand->isValidCallback($code[2])){
+					return $hand;
+				}
+	  		}
+	  		return null;
 		}
 	}
 

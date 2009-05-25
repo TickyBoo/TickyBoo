@@ -53,12 +53,17 @@ $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
 
 if (isset($_REQUEST['sor'])) {
-	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
+	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"sor")))) {
 		$smarty->display($fond . '.tpl');
 	}
 	//  session_write_close();
   	exit();
-
+}elseif(isset($_REQUEST['callback'])){
+	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"callback")))) {
+		$smarty->display($fond . '.tpl');
+	}
+	//  session_write_close();
+  	exit();
 } elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
   	if (!$user->logged and
 		$action !== 'register' and
@@ -80,11 +85,11 @@ if ($action == 'edituser') {
 }
 die();
 
-	function getsecurecode() {
-	    if (isset($_POST['sor'])) {
-     		$return = urldecode( $_POST['sor']);
-	    } elseif (isset($_GET['sor'])) {
-	      	$return = $_GET['sor'];
+	function getsecurecode($type='sor') {
+		if (isset($_POST[$type])) {
+     		$return = urldecode( $_POST[$type]);
+	 	} elseif (isset($_GET[$type])) {
+	    	$return = urldecode($_GET[$type]);
 	    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
 	      	$return = substr($action, 1);
 	    } else {
@@ -327,17 +332,28 @@ die();
     return "checkout_result";
   }
 
-  function  notifyaction($smarty, $type="sor") {
-    $myorder = is($_SESSION['_SHOP_order'], null);
-    $test = Order::DecodeSecureCode($myorder, getsecurecode());
-    if($test < 1) {
-       header('HTTP/1.1 502 Action not allowed', true, 502);
-       ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
-       return;
-    }
-    ShopDB::dblogging("notify action ($test): $myorder->order_id.\n");
-    $hand=$myorder->order_handling;
-    $hand->on_notify($myorder);
-  }
+	function  notifyaction($smarty, $type="sor") {
+		if($type == "sor"){
+			$myorder = is($_SESSION['_SHOP_order'], null);
+			$test = Order::DecodeSecureCode($myorder, getsecurecode($type));
+			if($test < 1) {
+		   		header('HTTP/1.1 502 Action not allowed', true, 502);
+		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
+		   		return;
+			}
+			ShopDB::dblogging("notify action ($test): $myorder->order_id.\n");
+			$hand=$myorder->order_handling;
+			$hand->on_notify($myorder);
+		}elseif($type == "callback"){
+			$hand = Payment::decodeEPHCallback(getsecurecode($type));
+			if($hand == null){
+				header('HTTP/1.1 502 Action not allowed', true, 502);
+				ShopDB::dblogging("notify error : ($hand)\n". print_r($hand, true));
+				return;
+			}
+			$order = null;
+			$hand->on_notify($order);
+		}
+  	}
 //session_write_close();
 ?>

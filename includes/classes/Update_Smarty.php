@@ -10,7 +10,7 @@ class Update_Smarty {
 
 		$smarty->register_object( "update", $this, array('view', 'countdown') );
 		$smarty->assign_by_ref( "update", $this );
-    $smarty->assign('run_as_demo',$_SHOP->ShopConfig_run_as_demo);
+    	$smarty->assign('run_as_demo',$_SHOP->shopconfig_run_as_demo);
 
 		//if(!$dont_run){
 		//Set to same as $_SHOP->shopconfig_lastrun_int for testing mode.

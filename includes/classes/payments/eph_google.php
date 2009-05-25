@@ -67,7 +67,9 @@ class EPH_google extends Payment{
 	}
 	
 	public function admin_check(&$data, &$err){
+		parent::check($data, $err);
 		global $_SHOP;
+		
 		$data['pm_google_callback_link'] = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();
 		
 		return true;
@@ -124,9 +126,7 @@ class EPH_google extends Payment{
 		$googleCart->SetRequestBuyerPhone(true);
 		
 		$ftData = array('order-id'=>$order->order_id);
-		
 		$merchantPrivateData = new MerchantPrivateData($ftData);
-		
 		$googleCart->SetMerchantPrivateData($merchantPrivateData);
 		
 		
@@ -134,15 +134,26 @@ class EPH_google extends Payment{
 		return $googleCart->CheckoutButtonCode("SMALL");
 	}
 	
-	public function encodeCallback(){
-    	$md5 = $this->pm_google_merchant_id;
-    	$code = md5($md5, true);
-    	
-    	return $this->encodeEPHCallback($code);
+	public function on_notify(&$order){
+		echo "hello mr api!";
+		
 	}
 	
-	public function decodeCallback(){
+	public function encodeCallback(){
+    	$sha1 = $this->pm_google_merchant_id;
+    	$hash = sha1($sha1, true);
+    	
+    	return $this->encodeEPHCallback($hash);
+	}
+	
+	public function decodeCallback($ephHash){
+		$sha1 = $this->pm_google_merchant_id;
 		
+		if($ephHash <> sha1($sha1,true)){
+			return false;
+		}else{
+			return true;
+		}
 	}
 	
 }

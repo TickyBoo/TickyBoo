@@ -71,8 +71,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 			$data['handling_sale_mode']=implode(',',$data['handling_sale_mode_a']);
 	 	}
 
-	 	$this->save_paper_format('pdf_paper',$data,$err);	 	
-	 	$hand->extra_check($data, $err);
+	 	$this->save_paper_format('pdf_paper',$data,$err);
 	 	$hand->admin_check($data, $err);
 
    		return empty($err);

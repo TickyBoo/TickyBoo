@@ -155,6 +155,7 @@ class Handling {
       		$_SHOP->_handling_cache[$handling_id]=&$hand;
       		return $hand;
     	}
+    	return null;
   	}
 	
   function load_all ($handling_sale_mode=''){
@@ -336,11 +337,6 @@ class Handling {
     }
   }
 
-	function extra_check(&$data, &$errors){
-		if($pm=$this->pment()){
-	  		return $pm->check($data, $errors);
-		} else return true;
-	}
 	
 	function admin_view(){
 		if($pm=$this->pment()){
@@ -360,6 +356,21 @@ class Handling {
 		}else{
 			return true;
 		}
+	}
+		
+	/**
+	 * Handling::isValidCallback()
+	 * 
+	 * Will ask the eph to verify its details set in the encodeCallback method.
+	 * 
+	 * @param string $code
+	 * @return boolean : true
+	 * @since 1.0b5 
+	 */
+	public function isValidCallback($code){
+		if($pm=$this->pment()){
+			return $pm->decodeCallback($code);
+  		}	
 	}
 	  
   	/**
@@ -417,7 +428,7 @@ class Handling {
 	 * @example : eph_paypal.php would be loaded and the eph object would be created like:
 	 *  EPH_paypal then added the to this handling object on _pment varible.
 	 * 
-	 * @return null
+	 * @return EPH Object
 	 * @since 1.0
 	 * @author Niels
 	 * @uses EPH Object
