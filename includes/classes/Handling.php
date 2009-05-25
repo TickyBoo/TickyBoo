@@ -86,14 +86,17 @@ class Handling {
 
 	function _unser_extra(){
 		if(!empty($this->handling_extra)){
-      $this->extra=unserialize($this->handling_extra);
-		}  else
-       $this->extra= array();
-    if ( $pm = $this->pment()) {
-			foreach($this->extra as $key => $val)
-				if(in_array($key, $pm->extras))
+      		$this->extra=unserialize($this->handling_extra);
+		} else {
+			$this->extra= array();
+		}
+    	if ( $pm = $this->pment()) {
+			foreach($this->extra as $key => $val){
+				if(in_array($key, $pm->extras)){
 					$this->$key = $val;
-    }
+				}
+			}
+    	}
 
 //    echo $this->handling_sale_mode,'|';
 //		If (is_string($this->handling_sale_mode)) {
@@ -109,20 +112,20 @@ class Handling {
 //		}
 	}
 
-  function _fill ($data, $nocheck=false){
-    foreach($data as $k=>$v){
-      $this->$k=$v;
-    }
-    if ( $pm = $this->pment()) {
+	function _fill ($data, $nocheck=false){
+    	foreach($data as $k=>$v){
+      		$this->$k=$v;
+    	}
+    	if ( $pm = $this->pment()) {
 			foreach($data as $key => $val)
 				if(in_array($key, $pm->extras))
 					$this->extra[$key] = $val;
-    }
-    if (isset($data['sale_mode']))
-      $this->sale_mode = $data['sale_mode'];
-//    print_r($this);
-    return ;
-  }
+    	}
+    	if (isset($data['sale_mode']))
+      		$this->sale_mode = $data['sale_mode'];
+	   //print_r($this);
+    	return ;
+  	}
   
 	function clear() {
 	  parent::clear();
@@ -333,23 +336,32 @@ class Handling {
     }
   }
 
-  function extra_check(&$data, &$errors){
-  	if($pm=$this->pment()){
-      return $pm->check($data, $errors);
-  	} else return true;
-  }
+	function extra_check(&$data, &$errors){
+		if($pm=$this->pment()){
+	  		return $pm->check($data, $errors);
+		} else return true;
+	}
+	
+	function admin_view(){
+		if($pm=$this->pment()){
+	  		return $pm->admin_view();
+		}
+	}
 
-  function admin_view(){
-  	if($pm=$this->pment()){
-      return $pm->admin_view();
-  	}
-  }
-
-  function admin_form(){
-  	if($pm=$this->pment()){
-      return $pm->admin_form();
-  	}
-  }
+	function admin_form(){
+		if($pm=$this->pment()){
+	    	return $pm->admin_form();
+		}
+	}
+	
+	function admin_check(&$data, &$errors){
+		if($pm = $this->pment()){
+			return $pm->admin_check($data, $errors);
+		}else{
+			return true;
+		}
+	}
+	  
   	/**
   	 * @name OnConfirm
   	 * 

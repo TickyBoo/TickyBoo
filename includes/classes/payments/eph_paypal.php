@@ -52,9 +52,9 @@ class EPH_paypal extends payment{
 	}
 
 	function init (){
-  	$this->handling_text_payment    = "PayPal";
+  		$this->handling_text_payment    = "PayPal";
 		$this->handling_text_payment_alt= "PayPal";
-    $this->handling_html_template  .= "";
+    	$this->handling_html_template  .= "";
 		$this->pm_paypal_test  = true;
 	}
 
@@ -78,7 +78,7 @@ class EPH_paypal extends payment{
         <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."'>
         <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."'>
         <input type='hidden' name='cancel_return' value='".$_SHOP->root_secured. 'checkout_cancel.php?'.$order->EncodeSecureCode()."'>
-        <input type='hidden' name='currency_code' value='{$_SHOP->organizer_currency}'>
+        <input type='hidden' name='currency_code' value='{$_SHOP->organizer_data->organizer_currency}'>
         <input type='hidden' name='undefined_quantity' value='0'>
         <input type='hidden' name='no_shipping' value='1'>
         <input type='hidden' name='no_note' value='1'>

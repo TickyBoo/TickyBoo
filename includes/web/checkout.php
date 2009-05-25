@@ -202,13 +202,15 @@ die();
 
 	function confirmaction($smarty) {
     	global $order, $cart;
+	    
     	if (!isset($_SESSION['_SHOP_order'])) {
       		$myorder = $order->make_f($_POST['handling_id'],"www");
     	} else {
 			$myorder = $_SESSION['_SHOP_order'];
 		}
-
+		
     	if (!$myorder) {
+    		
       		$smarty->assign('order_error', $order->error);
       		return "checkout_preview";
     	} else {
@@ -325,7 +327,7 @@ die();
     return "checkout_result";
   }
 
-  function  notifyaction() {
+  function  notifyaction($smarty, $type="sor") {
     $myorder = is($_SESSION['_SHOP_order'], null);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
     if($test < 1) {

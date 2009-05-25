@@ -179,6 +179,9 @@ class Order {
   
   /**
    * Save order function, will take parmaters from the class varibles constructor.
+   * 
+   * @since 1.0
+   * @updated 1.0 beta5 
    */ 
   function save () {
   	
@@ -208,6 +211,10 @@ class Order {
     $this->order_fee=$fee;
     
     $order_date_expire = 60;
+    if(!$this->order_handling->handling_expires_min){
+    	$this->order_handling->handling_expires_min = 20;
+    }
+    
   	if($this->order_handling->handling_id=='1'){
   		$order_status="res";
   		$order_date_expire = $_SHOP->shopconfig_restime;

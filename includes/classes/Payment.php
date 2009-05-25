@@ -2,7 +2,7 @@
 class Payment {
 	
   public $handling;
-  public $extras    = array ();
+  public $extras    = array();
   public $mandatory = array();
   
 	function __construct (&$handling) {
@@ -17,26 +17,28 @@ class Payment {
     }
   }
 
-  protected function __set($name, $value) {
-    if ($this->handling) {
-      return $this->handling->$name = $value;
-    } else {
-      return false;
-    }
-  }
+	protected function __set($name, $value) {
+		if ($this->handling) {
+	  		return $this->handling->$name = $value;
+		} else {
+	  		return false;
+		}
+	}
 
-	function admin_view ( ){}
+	public function admin_view ( ){}
 
-  function admin_form ( ){}
+  	public function admin_form ( ){}
+  	
+  	public function admin_check(&$data, &$errors){return true;}
 
 	function init (){}
 
-	function check ($arr, &$err){
-  	foreach($this->mandatory as $field){
-  		if(empty($arr[$field])){$err[$field]=con('mandatory');}
+	public function check ($arr, &$err){
+  		foreach($this->mandatory as $field){
+  			if(empty($arr[$field])){$err[$field]=con('mandatory');}
+  		}
+    	return (count($err)==0);
   	}
-    return (count($err)==0);
-  }
 
 	
 	function on_handle($order, $new_status, $old_status, $field){
@@ -61,7 +63,30 @@ class Payment {
 
   function on_check(&$order){ return false;}
   
+  public function encodeCallback(){}
+  
+  public function decodeCallback(){}
+  
 //****************************************************************************//
+
+	protected function encodeEPHCallback($ephCode){
+		
+		$code = base64_encode(base_convert(time(),10,36).':'. base_convert($this->handling_id,10,36).':'. md5($ephCode, true));
+		
+		return "callback=".urlencode ($code);
+	}
+	
+	/**
+	 * @return handling Object
+	 * @uses Handling
+	 */
+	public function decodeEPHCallback($callbackCode){
+		if (empty($callbackCode) and isset($_REQUEST['callback'])) $callbackCode =$_REQUEST['callback'];
+		
+		if(!empty($callbackCode)){
+			
+		}
+	}
 
   protected function url_post ($url,&$data){
     global $_SHOP;

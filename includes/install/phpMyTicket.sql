@@ -1,5 +1,5 @@
-﻿INSERT INTO `Admin` (`admin_login`, `admin_password`,`admin_id`, `admin_status`) VALUES
-('demo','c514c91e4ed341f263e458d44b3bb0a7',3,'organizer');
+﻿INSERT INTO `Admin` (`admin_id`,`admin_login`, `admin_password`,`admin_id`, `admin_status`) VALUES
+('3','demo','c514c91e4ed341f263e458d44b3bb0a7',3,'organizer');
 
 INSERT INTO `SPoint` (`login`, `password`) VALUES
 ('demo', 'c514c91e4ed341f263e458d44b3bb0a7');

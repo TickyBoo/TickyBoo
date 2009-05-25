@@ -74,13 +74,13 @@ class Order_Smarty {
 
     $order = new Order($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
     $cart->iterate('_collect', $order);
+    
 
     //begin the transaction
     if(!ShopDB::begin()){
       $this->error =con('reservate_failed');
       return; 
     }
-
 /*
     //move places from reserved to ordered state
     if(!command($order,session_id(),$user_id)){

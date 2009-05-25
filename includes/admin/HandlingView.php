@@ -63,19 +63,20 @@ function print_select_tpl ($name,$type,&$data,&$err){
   </td></tr>\n";
 }
 
-  function handling_check ($hand, &$data, &$err){
-   global $_SHOP;
-   if(empty($data['handling_pdf_template'])){$err['handling_pdf_template']=mandatory;}
-   if($data['handling_sale_mode_a']){
-		 $data['handling_sale_mode']=implode(',',$data['handling_sale_mode_a']);
-	 }
+	function handling_check (&$hand, &$data, &$err){
+   		global $_SHOP;
+   		if(empty($data['handling_pdf_template'])){$err['handling_pdf_template']=mandatory;}
+   		
+ 		if($data['handling_sale_mode_a']){
+			$data['handling_sale_mode']=implode(',',$data['handling_sale_mode_a']);
+	 	}
 
-	 $this->save_paper_format('pdf_paper',$data,$err);
-	 $hand->extra_check($data, $err);
+	 	$this->save_paper_format('pdf_paper',$data,$err);	 	
+	 	$hand->extra_check($data, $err);
+	 	$hand->admin_check($data, $err);
 
-   return empty($err);
-
-  }
+   		return empty($err);
+  	}
 
   function handling_form ($data, $err, $title){
 		global $_SHOP;
@@ -185,7 +186,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 			$this->print_large_area('handling_text_payment',$data,$err,3,92,'');
 			$this->print_large_area('handling_text_shipment',$data,$err,3,92,'');
 			$this->print_large_area('handling_html_template',$data,$err,20,95,'',"class='codepress html'");
-		  $this->extra_form($h, $data, $err);
+		  	$this->extra_form($h, $data, $err);
 		}
 
 		if($data['handling_id']){
@@ -256,55 +257,56 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".add."</a></center>";
   }
 
-  function draw (){
-	global $_SHOP;
-	  if($_GET['action']=='remove' and $_GET['handling_id']>0){
-	    $hand=new Handling();
-	    $hand->handling_id=$_GET['handling_id'];
-	    $hand->delete();
-	    $this->handling_list();
-	  }elseif($_GET['action']=='edit'){
-	    $hand=Handling::load($_GET["handling_id"]);
-	    $this->handling_form((array)$hand, $err, payment_update_title);
-	  }elseif($_POST['action']=='update'){
-	  	$hand=new Handling();
-      if(!$this->handling_check($hand, $_POST, $err)){
-	      $this->handling_form($_POST, $err, handling_update_title);
-	      return 0;
-	  	}
-
-	  	$hand->_fill($_POST);
-	  	$hand->templates['ord']=$_POST['handling_email_template_ord'];
-	  	$hand->templates['send']=$_POST['handling_email_template_send'];
-	  	$hand->templates['payed']=$_POST['handling_email_template_payed'];
-	  	$hand->save();
-
-	  	$this->handling_list();
-	  	// adding new payments here then they are compiled.
-	  }elseif($_POST['action']=='insert'){
-	    $hand=new Handling();
-	    if(!$this->handling_check($hand, $_POST, $err)){
-	      $this->handling_form($_POST,$err,handling_add_title);
-	    }else{
-	      $hand->_fill($_POST);
-	      $hand->templates['ord']=$_POST['handling_email_template_ord'];
-	      $hand->templates['send']=$_POST['handling_email_template_send'];
-	      $hand->templates['payed']=$_POST['handling_email_template_payed'];
-
-  	  	  //Adds the default fields
-  		  $this->extra_init($hand);
-  		  $hand->extra_init();
-  		// The new handling method is saved
-       	$id=$hand->save();
-    		$hand_a=(array)$hand;
-    		$this->handling_form($hand_a, $err, payment_update_title);
-  	 	}
-   	}elseif($_GET['action']=='add'){
-    	$this->handling_form(array(), $err, handling_add_title);
-  	}else{
-		  $this->handling_list();
-	  }
-  }
+	function draw (){
+		global $_SHOP;
+  		if($_GET['action']=='remove' and $_GET['handling_id']>0){
+    		$hand=new Handling();
+		    $hand->handling_id=$_GET['handling_id'];
+		    $hand->delete();
+		    $this->handling_list();
+  		}elseif($_GET['action']=='edit'){
+    		$hand=Handling::load($_GET["handling_id"]);
+    		$this->handling_form((array)$hand, $err, payment_update_title);
+  		}elseif($_POST['action']=='update'){
+  			$hand=Handling::load($_POST["handling_id"]);
+			    			
+  			if(!$this->handling_check($hand, $_POST, $err)){
+      			$this->handling_form($_POST, $err, handling_update_title);
+      			return 0;
+  			}
+  			
+		  	$hand->_fill($_POST);
+		  	$hand->templates['ord']=$_POST['handling_email_template_ord'];
+		  	$hand->templates['send']=$_POST['handling_email_template_send'];
+		  	$hand->templates['payed']=$_POST['handling_email_template_payed'];
+		  	$hand->save();
+	
+		  	$this->handling_list();
+ 			// adding new payments here then they are compiled.
+  		}elseif($_POST['action']=='insert'){
+    		$hand=new Handling();
+    		if(!$this->handling_check($hand, $_POST, $err)){
+      			$this->handling_form($_POST,$err,handling_add_title);
+    		}else{
+		      $hand->_fill($_POST);
+		      $hand->templates['ord']=$_POST['handling_email_template_ord'];
+		      $hand->templates['send']=$_POST['handling_email_template_send'];
+		      $hand->templates['payed']=$_POST['handling_email_template_payed'];
+	
+	  	  	  //Adds the default fields
+	  		  $this->extra_init($hand);
+	  		  $hand->extra_init();
+			// The new handling method is saved
+			  $id=$hand->save();
+			  $hand_a=(array)$hand;
+			  $this->handling_form($hand_a, $err, payment_update_title);
+ 			}
+		}elseif($_GET['action']=='add'){
+			$this->handling_form(array(), $err, handling_add_title);
+		}else{
+	  		$this->handling_list();
+  		}
+  	}
 
 function extra_form($hand, &$data, &$err){
   Global $_SHOP;
