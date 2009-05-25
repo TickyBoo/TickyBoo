@@ -261,27 +261,27 @@ class MyCart_Smarty {
 
     require_once ("classes/Seat.php");
     require_once ("classes/Event.php");
-    require_once ("classes/Category.php");
+    require_once ("classes/PlaceMapCategory.php");
 
   	// Loads event details
     if(!$event=Event::load($event_id)){
       return FALSE;
     }
     // Loads cat details
-    if(!$category=Category::load($category_id)){
+    if(!$category_numbering = PlaceMapCategory::getCategoryNumbering($category_id)){
       return FALSE;
     }
 
     //checks the seating numbering.
-    if($category->category_numbering=='none'){
+    if($category_numbering=='none'){
       if(!($places>0)){
         $this->error=places_empty;
         return FALSE;
       }
       $newp = $this->places;
-    }else if($category->category_numbering=='rows' or
-             $category->category_numbering=='both' or
-	           $category->category_numbering=='seat')
+    }else if($category_numbering=='rows' or
+             $category_numbering=='both' or
+	           $category_numbering=='seat')
     {
       if(!is_array($places) or empty($places)){
         $this->error=places_empty;
@@ -289,7 +289,7 @@ class MyCart_Smarty {
       }
       $newp = count($places);
     }else{
-      user_error("unknown: category_numbering '{$category->category_numbering}' category_id '{$category->category_id}'");
+      user_error("unknown: category_numbering '{$category_numbering}' category_id '{$category_id}'");
       return FALSE;
     }
 
@@ -311,7 +311,7 @@ class MyCart_Smarty {
       }
     }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category->category_numbering, $reserved)){
+    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved)){
 
 	  //if cart empty create new cart
       if(!isset($cart)){

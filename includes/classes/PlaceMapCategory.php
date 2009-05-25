@@ -355,6 +355,16 @@ class PlaceMapCategory{
     return $category_ident;
   }
 
+  function getCategoryNumbering($category_id = 0){
+    if ($that and $this->category_numbering) {
+      return $this->category_numbering;
+    } else {
+      $query="select category_numbering from Category where category_id=$category_id";
+      if(!$res=ShopDB::query_one_row($query)){return;}
+      return $res['category_numbering'];
+    }
+  }
+  
   function _fill ($data){
     foreach($data as $k=>$v){
       $this->$k=$v;
