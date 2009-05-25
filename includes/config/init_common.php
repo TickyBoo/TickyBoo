@@ -83,10 +83,10 @@
 
   //temporary folder
   //should be writeable by php
-  $_SHOP->tmp_dir=INC."tmp".DS;
+  $_SHOP->tmp_dir=INC."temp".DS;
 
   //where smarty templates and other tpl related stuff lives
-  $_SHOP->tpl_dir=INC."tpl".DS;
+  $_SHOP->tpl_dir=INC."template".DS;
   
   // this selects the theme that you like to use.
   $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS."default".DS;
