@@ -73,13 +73,8 @@
 {elseif $smarty.request.event_type}
   {include file="event_type.tpl"}
 
-{elseif $smarty.request.action eq 'login'}
-	{user->login username=$smarty.post.username password=$smarty.post.password uri=$smarty.post.uri}
-	{if $login_error.error AND not $user->logged}
-  		{include file="loginerror.tpl"}
-  {else}
-    {include file="last_event_list.tpl"}
-	{/if}
+{elseif $smarty.request.action eq 'login' and $smarty.request.type != 'block'}
+	{include file="user_login.tpl"}
 
 {elseif $smarty.request.register_user}
   {if $smarty.request.action eq 'login'}

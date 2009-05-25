@@ -27,8 +27,16 @@
  * clear to you.
  *}
 
-{if $smarty.get.action eq 'login'}
+{if $smarty.post.action eq 'login'}
 	{user->login username=$smarty.post.username password=$smarty.post.password uri=$smarty.post.uri}
+  {if $login_error}
+
+    <script language="javascript" type="text/javascript">
+       alert("{$login_error|nl2br}");
+      </script>
+  {/if}
+
+
 {elseif $smarty.get.action eq 'logout'}
 	{user->logout}
 {/if}
@@ -52,6 +60,7 @@
   	</tr>
     <form method='post' action='index.php' style='margin-top:0px;'>
     <input type="hidden" name="action" value="login">
+    <input type="hidden" name="type" value="block">
     {ShowFormToken name='login'}
 
     {if $smarty.get.action neq "logout" and $smarty.get.action neq "login"}
@@ -70,7 +79,7 @@
   	</tr>
   	<tr>
   		<td class="login_content" style='padding-left:25px;'>
-        <input type='password' name='password' size=20 style='font-size:10px;'>&nbsp;<input type='submit' value='{!OK!}' style='font-size:10px;'/>
+        <input type='password' name='password' size=20 style='font-size:10px;'>&nbsp;<input type='submit' value='{!login_button!}' style='font-size:10px;'/>
       </td>
   	</tr>
   	<tr>
