@@ -47,7 +47,7 @@ function search_form (&$data){
 
   echo "<form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_user")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_user")."</td></tr>"; 
   $this->print_input('user_lastname',$data, $err,25,100);
   $this->print_input('user_firstname',$data, $err,25,100);
   $this->print_input('user_zip',$data, $err,25,100);
@@ -68,7 +68,7 @@ function search_form (&$data){
   
   echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_place")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_place")."</td></tr>"; 
   $query="select event_id,event_name,event_date,event_time from Event where event_rep LIKE '%sub%'
           and event_pm_id IS NOT NULL order by event_date,event_time";
   if(!$res=ShopDB::query($query)){
@@ -97,7 +97,7 @@ function search_form (&$data){
   
   echo "<br><form method='GET' action='view_order.php'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_order")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_order")."</td></tr>"; 
   $this->print_input('order_id',$data, $err,11,11);
   echo "<tr><td align='center' class='admin_value' colspan='2'>
   <input type='hidden' name='action' value='details'/>\n
@@ -107,7 +107,7 @@ function search_form (&$data){
 
   echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_codebar")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_codebar")."</td></tr>"; 
   $this->print_input('codebar',$data, $err,25,21);
   echo "<tr><td align='center' class='admin_value' colspan='2'>
   <input type='hidden' name='action' value='search_codebar'/>\n
@@ -342,12 +342,12 @@ function result_codebar (){
     }
 */
     $this->print_field("seat_id",$ticket);
-    echo "<tr><td class='admin_name' width='40%'>".$this->con(order_id)."</td>
+    echo "<tr><td class='admin_name' width='40%'>".con('order_id')."</td>
     <td class='admin_value'>
     <a class='link' href='view_order.php?order_id={$ticket["order_id"]}&action=details'>
     {$ticket["order_id"]}</a>
     </td></tr>\n";
-    echo "<tr><td class='admin_name' width='40%'>".$this->con(user)."</td>
+    echo "<tr><td class='admin_name' width='40%'>".con('user')."</td>
     <td class='admin_value'>
     <a class='link' href='view_user.php?user_id={$ticket["user_id"]}'>
     {$ticket["user_firstname"]} {$ticket["user_lastname"]}</a>
@@ -360,7 +360,7 @@ function result_codebar (){
     $this->print_field("event_date",$ticket);
     $this->print_field("event_time",$ticket);
 
-    echo "<tr><td class='admin_name' width='40%'>".$this->con(place)."</td>
+    echo "<tr><td class='admin_name' width='40%'>".con('place')."</td>
     <td class='admin_value'>";
 
     if($ticket['category_numbering']=='both'){
@@ -386,7 +386,7 @@ function result_codebar (){
 
     if(isset($ticket[color_code])){  
         echo "<tr>
-	<td class='admin_name' width='40%'>".$this->con(color_code)."</td>
+	<td class='admin_name' width='40%'>".con('color_code')."</td>
 	<td  bgcolor='{$ticket[color_code]}' style='border: #999999 1px dashed;'> &nbsp </td></tr>";
     }
     echo "</table>";

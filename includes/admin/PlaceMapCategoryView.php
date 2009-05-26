@@ -153,7 +153,7 @@ class PlaceMapCategoryView extends AdminView {
             echo "<td class='admin_list_item' width=10 bgcolor='{$category->color_code}'>&nbsp;</td>\n";
             echo "<td class='admin_list_item' width='50%'>{$category->category_name} ({$category->category_status})</td>\n";
             echo "<td class='admin_list_item'>{$category->category_size} &agrave; {$category->category_price} </td>\n";
-            echo "<td class='admin_list_item' >" . $this->con($category->category_numbering) . " </td>\n";
+            echo "<td class='admin_list_item' >" . con($category->category_numbering) . " </td>\n";
 
             echo "<td class='admin_list_item' width=40 align=right>";
             if ($mine) {
@@ -265,7 +265,7 @@ class PlaceMapCategoryView extends AdminView {
 
         $sel[$data[$name]] = " selected ";
 
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
   <td class='admin_value'>
    <select name='$name'>
    <option value=''></option>\n";
@@ -291,7 +291,7 @@ class PlaceMapCategoryView extends AdminView {
         } else {
             $field = no_color;
         }
-        echo "<tr><td class='admin_name' width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name' width='40%'>" . con($name) . "</td>
     <td class='admin_value'>
     <table width='40' $st><tr><td width='40'>$field&nbsp;</td></tr></table>
     </td></tr>\n";
@@ -309,7 +309,7 @@ class PlaceMapCategoryView extends AdminView {
         } else {
             $sel[0] = " checked";
         }
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
   <td class='admin_value'><table border=1><tr>
   <td align='center'><input type=radio name='$name' value='0' " . $sel[0] . " >X</td>\n";
 
@@ -333,12 +333,12 @@ class PlaceMapCategoryView extends AdminView {
             $sel['both'] = " selected ";
         }
 
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
   <td class='admin_value'>
    <select name='$name'>\n";
 
         foreach($opt as $v) {
-            echo "<option value='$v'{$sel[$v]}>" . $this->con($name . "_" . $v) . "</option>\n";
+            echo "<option value='$v'{$sel[$v]}>" . con($name . "_" . $v) . "</option>\n";
         }
 
         echo "</select><span class='err'>{$err[$name]}</span>

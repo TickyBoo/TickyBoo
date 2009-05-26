@@ -202,7 +202,7 @@ class PlaceMapZoneView extends AdminView {
         } else {
             $field = no_color;
         }
-        echo "<tr><td class='admin_name' width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name' width='40%'>" . con($name) . "</td>
     <td class='admin_value'>
     <table width='40' $st><tr><td width='40'>$field&nbsp;</td></tr></table>
     </td></tr>\n";

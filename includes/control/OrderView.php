@@ -138,7 +138,7 @@ function link ($action,$order_id,$img,$confirm=FALSE,$con_msg='',$param=null){
       $psep="&";
     }
     
-    return "<a href='javascript:if(confirm(\"".$this->con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}'>".
+    return "<a href='javascript:if(confirm(\"".con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}'>".
          "<img border='0' src='images/$img'></a>";
   }
   return "<a href='".$_SERVER['PHP_SELF']."?action=$action&order_id=$order_id'>".
@@ -224,7 +224,7 @@ function print_place_status ($place_status){
 }
 
   function print_field ($name, &$data){
-    echo "<tr><td class='admin_name' width='20%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name' width='20%'>".con($name)."</td>
     <td class='admin_value'>
     {$data[$name]}
     </td></tr>\n";
@@ -232,7 +232,7 @@ function print_place_status ($place_status){
 
 
   function print_input ($name, &$data, &$err){
-    echo "<tr><td class='admin_name'  width='20%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name'  width='20%'>".con($name)."</td>
     <td class='admin_value'><input type='text' name='$name' value='".htmlentities($data[$name],ENT_QUOTES)."' size='$size' maxlength='$max'>
     <span class='admin_err'>{$err[$name]}</span>
     </td></tr>\n";

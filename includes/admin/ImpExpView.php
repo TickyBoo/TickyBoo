@@ -86,7 +86,7 @@ class ImpExpView extends AdminView {
 		foreach($types as $type){
      echo "<tr class='admin_list_row_$alt'> 
            <td class='admin_list_item'>
-					 <a href='?export_type=$type' class='link'>".$this->con('export_'.$type)."</a>
+					 <a href='?export_type=$type' class='link'>".con('export_'.$type)."</a>
 					 </td></tr>";
 		}
 		echo "</table>\n";
@@ -99,7 +99,7 @@ class ImpExpView extends AdminView {
 		foreach($types as $type){
       echo "<tr class='admin_list_row_$alt'>
             <td class='admin_list_item'>
-	  	      <a href='?import_type=$type' class='link'>".$this->con('import_'.$type)."</a>
+	  	      <a href='?import_type=$type' class='link'>".con('import_'.$type)."</a>
 	 				  </td></tr>";
 		}
 		echo "</table>\n";

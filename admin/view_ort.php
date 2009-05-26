@@ -29,25 +29,8 @@
  */
 
 require_once("../includes/config/init_admin.php");
-
-require_once ("admin/MenuAdmin.php");
-require_once ("admin/AdminPage.php");
-require_once ("classes/AUIBico.php");
 require_once ("admin/OrtView.php");
 
 $body = new OrtView();
-
-// width=200 for menu ...Change it to your preferd width;
-// 700 total table
-$page=new AdminPage(800);
-$page->setTitle("Administration");
-
-$bico=new AUIBico(200,800);
-
-$page->set("body",$bico);
-
-$bico->setmenu(new MenuAdmin());
-$bico->setbody($body);
-
-$page->draw();
+$body->drawall();
 ?>

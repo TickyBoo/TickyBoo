@@ -40,14 +40,14 @@ class ControlView extends AdminView{
 
 function control_view (&$data){
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td colspan='2' class='admin_list_title'>".control_view."</td></tr>";   
+  echo "<tr><td colspan='2' class='admin_list_title'>".con('control_view')."</td></tr>";
   
   
   $this->print_field('control_login',$data);
   $ids=explode(",",$data["control_event_ids"]);
   $set=array();
   if(!empty($ids) and $ids[0]!=""){
-    echo "<tr><td class='admin_name' valign='top'>".$this->con(control_event_ids)."</td>
+    echo "<tr><td class='admin_name' valign='top'>".con('control_event_ids')."</td>
           <td class='admin_value'>";
     foreach($ids as $id){
       $query="select event_name, event_date, event_time from Event where event_id="._esc($id);
@@ -100,7 +100,7 @@ global $_SHOP;
     return;
   }
     
-  echo "<tr><td  class='admin_name' width='40%' valign='top'>".$this->con('control_event_ids')."</td>
+  echo "<tr><td  class='admin_name' width='40%' valign='top'>".con('control_event_ids')."</td>
         <td class='admin_value'>";//&nbsp;</td></tr><tr><td class='admin_value' colspan='2' align='center'>";
   echo "<select multiple size='10' name='control_event_ids[]'>";
   while($row=shopDB::fetch_array($res)){

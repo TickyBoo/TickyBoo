@@ -35,21 +35,40 @@
  */
 
 require_once("classes/AUIComponent.php");
+require_once("admin/AdminPage.php");
 
 class AdminView extends AUIComponent {
+    var $page_width = 800;
+    var $title = "Administration";
+    var $ShowMenu = true;
 
-    function AdminView($width='500')
+    function AdminView ($width=0)
     {
-        $this->width=$width;
+       if ($width) {
+         $this->width = $width;
+       }
     }
 
-    function con($name) {
-      return con($name);
-    }
+    function extramenus(&$menu){}
+       
+    function drawall() {
 
+        // width=200 for menu ...Change it to your preferd width;
+        // 700 total table
+        $page = new AdminPage($this->page_width, $this->title);
+        if ($this->ShowMenu) {
+          require_once ("admin/adminmenu.php");
+          $menu[] = new MenuAdmin();
+          $this->extramenus($menu);
+          $page->setmenu($menu);
+        }
+        $page->setbody($this);
+        $page->draw();
+    }
+    
     function print_field ($name, &$data, $prefix='') {
 
-        echo "<tr><td class='admin_name' width='40%'>$prefix" , $this->con($name) , "</td>
+        echo "<tr><td class='admin_name' width='40%'>$prefix" , con($name) , "</td>
               <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
     }
 
@@ -62,7 +81,7 @@ class AdminView extends AUIComponent {
 
     function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '')
     {
-        echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
               <td class='admin_value'><input type='text' name='$name' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
               <span class='err'>{$err[$name]}</span>
               </td></tr>\n";
@@ -89,7 +108,7 @@ class AdminView extends AUIComponent {
     {
         $papers = array('A4', 'LETTER', 'LEGAL' , '4A0', '2A0', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'RA0', 'RA1', 'RA2', 'RA3', 'RA4', 'SRA0', 'SRA1', 'SRA2', 'SRA3', 'SRA4', 'LETTER', 'LEGAL', 'EXECUTIVE', 'FOLIO');
 
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
             <td class='admin_value'>
         		<table>";
 
@@ -105,13 +124,13 @@ class AdminView extends AUIComponent {
                 }
 
                 echo "<tr>
-        		<td><label><input type=radio name='" . $name . "_option' value=1 {$sel_opt[1]}>" . $this->con("page_format_default") . "</label></td>
+        		<td><label><input type=radio name='" . $name . "_option' value=1 {$sel_opt[1]}>" . con("page_format_default") . "</label></td>
         		<td>&nbsp;</td>
         		</label>
         		</tr>";
 
                 echo "<tr>
-        		<td><label><input type=radio name='" . $name . "_option' value=2 {$sel_opt[2]}>" . $this->con("page_format_std") . " : </label></td>
+        		<td><label><input type=radio name='" . $name . "_option' value=2 {$sel_opt[2]}>" . con("page_format_std") . " : </label></td>
         		<td><select name='" . $name . "_size_std'>";
 
                 foreach($papers as $paper) {
@@ -121,14 +140,14 @@ class AdminView extends AUIComponent {
                 echo "</select>
 
         		<select name='" . $name . "_orientation'>
-        		<option value='portrait' " . $sel_ort['portrait'] . ">" . $this->con("page_orientation_portrait") . "</option>
-        		<option value='landscape' " . $sel_ort['landscape'] . ">" . $this->con("page_orientation_landscape") . "</option>
+        		<option value='portrait' " . $sel_ort['portrait'] . ">" . con("page_orientation_portrait") . "</option>
+        		<option value='landscape' " . $sel_ort['landscape'] . ">" . con("page_orientation_landscape") . "</option>
         		</select>
         		</td>
         		</tr>";
 
                 echo "<tr>
-        		<td><label><input type=radio name='" . $name . "_option' value=3 {$sel_opt[3]}>" . $this->con("page_format_custom") . "(pt) : </label></td>
+        		<td><label><input type=radio name='" . $name . "_option' value=3 {$sel_opt[3]}>" . con("page_format_custom") . "(pt) : </label></td>
         		<td>
         		x1<input name='" . $name . "_size_cst[0]' size=3 value='" . $nsc[0] . "'>
         		y1<input name='" . $name . "_size_cst[1]' size=3 value='" . $nsc[1] . "'>
@@ -148,7 +167,7 @@ class AdminView extends AUIComponent {
         if ($data[$name]) {
             $chk = 'checked';
         }
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
                 <td class='admin_value'><input type='checkbox' name='$name' value='1' $chk>
                 <span class='err'>{$err[$name]}</span>
                 </td></tr>\n";
@@ -156,7 +175,7 @@ class AdminView extends AUIComponent {
 
     function print_area ($name, &$data, &$err, $rows = 6, $cols = 40, $suffix = '')
     {
-        echo "<tr><td class='admin_name'>$suffix" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
                 <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
                 <span class='err'>{$err[$name]}</span>
                 </td></tr>\n";
@@ -164,7 +183,7 @@ class AdminView extends AUIComponent {
 
     function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='')
     {
-        echo "<tr><td colspan='2' class='admin_name'>$suffix" . $this->con($name) . "</td></tr>
+        echo "<tr><td colspan='2' class='admin_name'>$suffix" . con($name) . "</td></tr>
                 <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
                 <span class='err'>{$err[$name]}</span>
                 </td></tr>\n";
@@ -185,7 +204,7 @@ class AdminView extends AUIComponent {
                 array_push($set, $row);
             }
         }
-        echo "<tr><td class='admin_name'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'>" . con($name) . "</td>
     <td class='admin_value'>";
         if (!empty($set)) {
             foreach ($set as $value) {
@@ -205,7 +224,7 @@ class AdminView extends AUIComponent {
             $m = $data["$name-m"];
             $s = $data["$name-s"];
         }
-        echo "<tr><td class='admin_name'>$suffix" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
              <td class='admin_value'>
              <input type='text' name='$name-h' value='$h' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-m'])\"> :
              <input type='text' name='$name-m' value='$m' size='2' maxlength='2'>
@@ -224,7 +243,7 @@ class AdminView extends AUIComponent {
             $d = $data["$name-d"];
         }
         $nm = $name . "-m";
-        echo "<tr><td class='admin_name'>$suffix" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
               <td class='admin_value'>
               <input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > -
               <input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> -
@@ -235,7 +254,7 @@ class AdminView extends AUIComponent {
 
     function print_url ($name, &$data, $prefix = '')
     {
-        echo "<tr><td class='admin_name' width='40%'>$prefix" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name' width='40%'>$prefix" . con($name) . "</td>
     <td class='admin_value'>
     <a href='{$data[$name]}' target='blank'>{$data[$name]}</a>
     </td></tr>\n";
@@ -246,12 +265,12 @@ class AdminView extends AUIComponent {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
 
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
               <td class='admin_value'>
                <select name='$name'>\n";
 
         foreach($opt as $v) {
-            echo "<option value='$v'{$sel[$v]}>" . $this->con($name . "_" . $v) . "</option>\n";
+            echo "<option value='$v'{$sel[$v]}>" . con($name . "_" . $v) . "</option>\n";
         }
 
         echo "</select><span class='err'>{$err[$name]}</span>
@@ -266,12 +285,12 @@ class AdminView extends AUIComponent {
             $mu = 'multiple';
         }
 
-        echo "<tr><td class='admin_name'  width='40%' $mu>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%' $mu>" . con($name) . "</td>
   <td class='admin_value'>
    <select name='$name'>\n";
 
         foreach($opt as $k => $v) {
-            echo "<option value='$k'{$sel[$k]}>".$this->con($v)."</option>\n";
+            echo "<option value='$k'{$sel[$k]}>".con($v)."</option>\n";
         }
 
         echo "</select><span class='err'>{$err[$name]}</span>
@@ -280,7 +299,7 @@ class AdminView extends AUIComponent {
 
     function print_color ($name, &$data, &$err)
     {
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
         <td class='admin_value'>
         <select name='$name'>\n";
 
@@ -308,7 +327,7 @@ class AdminView extends AUIComponent {
 
         if ($data[$name]) {
             $src = $this->user_url($data[$name]);
-            echo "<tr><td class='admin_name'  width='40%'>$prefix" . $this->con($name) . "</td>";
+            echo "<tr><td class='admin_name'  width='40%'>$prefix" . con($name) . "</td>";
             if ($type == 'img') {
                 echo "<td class='admin_value'><img width=300 src='$src'>";
             } else {
@@ -323,12 +342,12 @@ class AdminView extends AUIComponent {
         global $_SHOP;
 
         if (!$data[$name]) {
-            echo "\n<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) . "</td>
+            echo "\n<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input type='file' name='$name'><span class='err'>{$err[$name]}</span></td></tr>\n";
         } else {
             $src = $this->user_url($data[$name]);
 
-            echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) . "</td>
+            echo "<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'>";
 
             if ($type == 'img') {
@@ -337,9 +356,9 @@ class AdminView extends AUIComponent {
                 echo "<a href='$src'>{$data[$name]}</a>";
             }
 
-            echo "</td></tr><tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+            echo "</td></tr><tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
             <td class='admin_value'><input type='file' name='$name'><span class='err'>{$err[$name]}</span></td></tr>";
-            echo "<tr><td class='admin_name'  width='40%'>" . $this->con("remove_image") . "</td>
+            echo "<tr><td class='admin_name'  width='40%'>" . con("remove_image") . "</td>
             <td class='admin_value'><input type='checkbox'  name='remove_$name' value='1'>" . yes . "</td></tr>\n";
         }
     }

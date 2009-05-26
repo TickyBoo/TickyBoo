@@ -77,8 +77,8 @@ function order_details ($order_id){
   $this->print_field('order_total_price',$order);
   $this->print_field('order_date',$order);
 
-  $order['order_shipment_status']=$this->con($order['order_shipment_status']);
-  $order['order_payment_status']=$this->con($order['order_payment_status']);
+  $order['order_shipment_status']=con($order['order_shipment_status']);
+  $order['order_payment_status']=con($order['order_payment_status']);
 
   $this->print_field('order_shipment_status',$order);
   $this->print_field('order_payment_status',$order);
@@ -168,7 +168,7 @@ function order_details ($order_id){
        $psep="&";
      }
 
-     return "<a href='javascript:if(confirm(\"".$this->con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}'>".
+     return "<a href='javascript:if(confirm(\"".con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}'>".
           "<img border='0' src='images/$img'></a>";
    }
    return "<a href='".$_SERVER['PHP_SELF']."?action=$action&order_id=$order_id'>".
@@ -291,8 +291,8 @@ function order_list (){
       cellpadding='4' border='0'>\n";
       echo "<tr><td class='admin_list_title' colspan='4' align='center'>
       <a href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand' class=link>".
-      $this->con($obj->handling_shipment)." / ".
-      $this->con($obj->handling_payment)."  <a href='view_handling.php?action=view&handling_id={$obj->handling_id}' class=link> (#{$obj->handling_id} {$obj->handling_sale_mode})</a></td></tr>\n";
+      con($obj->handling_shipment)." / ".
+      con($obj->handling_payment)."  <a href='view_handling.php?action=view&handling_id={$obj->handling_id}' class=link> (#{$obj->handling_id} {$obj->handling_sale_mode})</a></td></tr>\n";
 
 		}
 		$alt=$this->_order_status_color((array)$obj);
@@ -361,8 +361,8 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 
   echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
   echo "<tr><td class='admin_list_title' colspan='5' align='center'>".
-  "<a href='view_handling.php?action=view&handling_id={$hand->handling_id}' class=link>#{$hand->handling_id} ({$hand->handling_sale_mode})</a> ".$this->con($hand->handling_shipment).' / '.
-                   $this->con($hand->handling_payment).
+  "<a href='view_handling.php?action=view&handling_id={$hand->handling_id}' class=link>#{$hand->handling_id} ({$hand->handling_sale_mode})</a> ".con($hand->handling_shipment).' / '.
+                   con($hand->handling_payment).
 		   " ({$tr[$order_shipment_status]}/{$tr[$order_payment_status]})
   </td></tr>\n";
 
@@ -482,6 +482,44 @@ function print_order_status ($order){
     <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reemited_id']}'>
     {$order['order_reemited_id']}</a> )";
   }
-                                                         }
+
+
+  }
+  function extramenus(&$menu) {
+    $menu[]="
+    <table width='190' class='menu_admin' cellspacing='2'>
+    <tr><td align='center' class='menu_admin_title'>".legende."</td></tr>
+    <tr><td class='admin_order_res' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".reserved."</td></tr>
+    <tr><td class='admin_order_ord' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".ordered."</td></tr>
+    <tr><td class='admin_order_send' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".sended."</td></tr>
+    <tr><td class='admin_order_payed' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".payed."</td></tr>
+    <tr><td class='admin_order_cancel' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".canceled."</td></tr>
+    <tr><td class='admin_order_reemit' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".reemited."</td></tr>
+    <tr><td class='admin_order_payedsend' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".payed_and_send."</td></tr>
+    </table><br>";
+
+    if($_GET["action"]=='list_all' or $_GET["action"]=='list_type' or $_GET["action"]=='details'){
+      $sty="style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'";
+      $menu[]="
+      <table width='190' class='menu_admin' cellspacing='2'>
+      <tr><td align='center' class='menu_admin_title'>".possible_actions."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='images/view.png' border='0'> ".view_order_details."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='images/printer.gif' border='0'> ".print_order."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='images/ord.png' border='0'> ".change_order_to_ord."</td></tr>
+
+      <tr><td class='menu_admin_item' $sty><img src='images/mail.png' border='0'> ".send_order_post."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='images/no_mail.png' border='0'> ".no_send_order_post."</td></tr>
+
+      <!--tr><td class='menu_admin_item' $sty><img src='images/email.png' border='0'> ".send_order_email."</td></tr-->
+      <tr><td class='menu_admin_item' $sty><img src='images/pig.png' border='0'> ".change_order_to_payed."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='images/no_pig.png' border='0'> ".change_order_to_no_payed."</td></tr>
+
+      <tr><td class='menu_admin_item' $sty><img src='images/remis.png' border='0'> ".reemit_order_menu."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='images/trash.png' border='0'> ".cancel_order."</td></tr>
+
+      </table>";
+    }
+  }
+
 }
 ?>

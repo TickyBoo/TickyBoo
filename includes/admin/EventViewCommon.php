@@ -48,7 +48,7 @@ class EventViewCommon extends AdminView {
             return;
         }
 
-        echo "<tr><td class='admin_name'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'>" . con($name) . "</td>
               <td class='admin_value'><select name='$name'>\n";
 
         if ($data[$name]) {
@@ -88,7 +88,7 @@ class EventViewCommon extends AdminView {
 
         $sel[$data[$name]] = " selected ";
 
-        echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
                 <td class='admin_value'>
                   <select name='$name'>
                    <option value=''></option>\n";
@@ -115,7 +115,7 @@ class EventViewCommon extends AdminView {
 
         $sel[$data[$name]] = " selected ";
 
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
               <td class='admin_value'>
                <select name='$name'>
                <option value=''></option>\n";
@@ -137,9 +137,9 @@ class EventViewCommon extends AdminView {
             $chk_post = "checked";
         }
 
-        echo "<tr><td class='admin_name' rowspan='2'>" . $this->con($name) . "<div class='err'>{$err[$name]}</div></td>
-              <td class='admin_value'><label><input type='checkbox' name='{$name}[1]' value='CC' $chk_cc>" . $this->con(payment_cc) . "</label></td>
-              </tr><tr><td class='admin_value'><label><input type='checkbox' name='{$name}[2]' value='POST' $chk_post>" . $this->con(payment_post) . "</label></td></tr>\n";
+        echo "<tr><td class='admin_name' rowspan='2'>" . con($name) . "<div class='err'>{$err[$name]}</div></td>
+              <td class='admin_value'><label><input type='checkbox' name='{$name}[1]' value='CC' $chk_cc>" . con(payment_cc) . "</label></td>
+              </tr><tr><td class='admin_value'><label><input type='checkbox' name='{$name}[2]' value='POST' $chk_post>" . con(payment_post) . "</label></td></tr>\n";
     }
 
     function print_select_ort ($name, &$data, &$err)
@@ -149,7 +149,7 @@ class EventViewCommon extends AdminView {
             return;
         }
 
-        echo "<tr><td class='admin_name'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'>" . con($name) . "</td>
     <td class='admin_value'><select name='$name'>\n";
 
         $sel[$data[$name]] = 'selected';
@@ -189,19 +189,19 @@ class EventViewCommon extends AdminView {
     function select_types ($name, &$data, &$err) {
         global $_SHOP;
         $sel[$data["$name"]] = " selected ";
-        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
               <td class='admin_value'> <select name='$name'>";
         $types = $_SHOP->event_type_enum;
         // print_r($types);
         foreach($types as $k => $v) {
-            echo "<option value='" . $v . "' " . $sel[$v] . ">" . $this->con($v) . "</option>\n";
+            echo "<option value='" . $v . "' " . $sel[$v] . ">" . con($v) . "</option>\n";
         }
         echo "</select><span class='err'>{$err[$name]}</span></td></tr>\n";
     }
     function print_type ($name, &$data)
     {
-        echo "<tr><td class='admin_name' width='40%'>" . $this->con($name) . "</td>
-              <td class='admin_value'>" . $this->con($data[$name]) . "
+        echo "<tr><td class='admin_name' width='40%'>" . con($name) . "</td>
+              <td class='admin_value'>" . con($data[$name]) . "
               </td></tr>\n";
     }
 }

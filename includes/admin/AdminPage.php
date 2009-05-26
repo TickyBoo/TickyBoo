@@ -37,12 +37,15 @@
 require_once("classes/AUIComponent.php");
 
 class AdminPage extends AUIComponent {
+    var $menu_width = 200;
     var $key = array();
     var $description = array();
+    var $title = '';
 
-    function AdminPage($width = 700)
+    function AdminPage($width = 800, $title = '')
     {
         $this->width = $width;
+        $this->title = $title;
     }
 
     function addKey($kk)
@@ -50,12 +53,45 @@ class AdminPage extends AUIComponent {
         array_push($this->key, $kk);
     }
 
+    function setmenu($menu)
+    {
+        $this->set("menu",$menu);
+        if (is_object($menu)) {$menu->setWidth($this->menu_width-10);}
+    }
+
+    function setbody($body)
+    {
+        $this->set("body",$body);
+    }
+
+    function drawcontent()
+    {
+        echo "<table border=0 width='" . $this->width . "' class='aui_bico'><tr>";
+        if ($menu = $this->items["menu"]) {
+          echo "<td class='aui_bico_menu' width='" . $this->menu_width . "' valign=top>\n";
+          $this->drawChild($menu);
+          echo "</td>";
+        }
+        echo "<td class=aui_bico_body valign=top>";
+
+        $body = $this->items["body"];
+        if (is_object($body)) {
+          If ($menu) {
+            $body->setWidth($this->width - $this->menu_width);
+          } else {
+            $body->setWidth($this->width);
+          }
+        }
+        $this->drawChild($body);
+        echo"</td></tr></table>\n";
+    }
+
     function draw()
     {
         global $_SHOP;
 
         $this->drawHead();
-        $this->drawChild($this->items["body"]);
+        $this->drawcontent();
         $this->drawFoot();
     }
 
@@ -66,7 +102,7 @@ class AdminPage extends AUIComponent {
             $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
         }
         if (isset($_SHOP->system_status_off) and $_SHOP->system_status_off) {
-            $errmsg = "<div class=error>SYSTEM IS HALTED</div>";
+            $this->errmsg = "<div class=error>SYSTEM IS HALTED</div>";
         }
          //+'&href={$_SERVER["REQUEST_URI"]}'
         echo "<head>
@@ -80,11 +116,34 @@ class AdminPage extends AUIComponent {
 			lang = box.options[box.selectedIndex].value;
 			if (lang) location.href = '?setlang='+lang;
 		}
+    // Author: Matt Kruse <matt@mattkruse.com>
+    // WWW: http://www.mattkruse.com/
+    TabNext();
+    // Function to auto-tab field
+    // Arguments:
+    // obj :  The input object (this)
+    // event: Either 'up' or 'down' depending on the keypress event
+    // len  : Max length of field - tab when input reaches this length
+    // next_field: input object to get focus after this one
+    var field_length=0;
+    function TabNext(obj, event, len, next_field) {
+      if (event == \"down\") {
+        field_length=obj.value.length;
+      }
+      else if (event == \"up\") {
+        if (obj.value.length != field_length) {
+          field_length=obj.value.length;
+          if (field_length == len) {
+            next_field.focus();
+          }
+        }
+      }
+    }
         -->
 		</script>
-        </head>
-        <body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 >";
-        if (isset($errmsg)) echo "<div class=''error'>$errmsg</div>";
+  </head>
+  <body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 >";
+        if (isset($this->errmsg)) echo "<div class=''error'>$this->errmsg</div>";
         echo "<center><table border='0' width='" . $this->width . "'  cellspacing='0' cellpadding='0' bgcolor='#ffffff' >
              <tr>
                <td  colspan='2' style='padding-left:20px;padding-bottom:5px;'>
@@ -103,39 +162,7 @@ class AdminPage extends AUIComponent {
         }
         echo "</select>";
 
-        /*
-echo "<a class='link_head' href='?setlang='.$lang.'>[]</a>
-    <a class='link_head' href='?setlang=fr'>[fr]</a>
-    <a class='link_head' href='?setlang=it'>[it]</a>
-    <a class='link_head' href='?setlang=en'>[en]</a>
-*/
         echo"</td></tr></table><br>";
-        // echo "<table width='700' border='0' bgcolor='#333344' style='color:#cccccc;'><tr><td align='right'>";
-        // $this->drawOrganizer();
-        // echo "</td></tr></table><br> ";
-        echo "<script><!--
-            // Author: Matt Kruse <matt@mattkruse.com>
-            // WWW: http://www.mattkruse.com/
-            TabNext()
-            // Function to auto-tab field
-            // Arguments:
-            // obj :  The input object (this)
-            // event: Either 'up' or 'down' depending on the keypress event
-            // len  : Max length of field - tab when input reaches this length
-            // next_field: input object to get focus after this one
-            var field_length=0;
-            function TabNext(obj,event,len,next_field) {
-            if (event == \"down\") {
-            field_length=obj.value.length;
-            }
-            else if (event == \"up\") {
-            if (obj.value.length != field_length) {
-            field_length=obj.value.length;
-            if (field_length == len) {
-            next_field.focus();
-            }}}}
-            -->
-            </script>";
     }
 
     function drawFoot()
@@ -155,7 +182,7 @@ echo "<a class='link_head' href='?setlang='.$lang.'>[]</a>
     function drawOrganizer ()
     {
         global $_SHOP;
-        echo "<font color='#555555'><b>" . welcome . " " . $_SHOP->organizer_data->organizer_name . "</b></font>";
+        echo "<font color='#555555'><b>" . con('welcome') . " " . $_SHOP->organizer_data->organizer_name . "</b></font>";
     }
 }
 ?>

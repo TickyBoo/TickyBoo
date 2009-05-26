@@ -49,7 +49,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
   $sel[$data[$name]]=" selected ";
 
-  echo "<tr><td class='admin_name'  width='40%'>".$this->con($name)."</td>
+  echo "<tr><td class='admin_name'  width='40%'>".con($name)."</td>
   <td class='admin_value'>
    <select name='$name'>
    <option value=''></option>\n";
@@ -88,9 +88,9 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		if($data['handling_id']){
       $h = handling::load($data['handling_id']);
 			echo "<tr><td class='admin_name'>".con('handling_payment')."</td>
-			<td class='admin_value'>".$this->con($data['handling_payment'])."</td></tr>";
+			<td class='admin_value'>".con($data['handling_payment'])."</td></tr>";
 			echo "<tr><td class='admin_name'>".con('handling_shipment')."</td>
-			<td class='admin_value'>".$this->con($data['handling_shipment'])."</td></tr>";
+			<td class='admin_value'>".con($data['handling_shipment'])."</td></tr>";
 		}else{
       $h = new Handling();
 			echo "<tr><td class='admin_name'  width='40%'>".con('handling_payment')."</td>
@@ -99,19 +99,19 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
   		$sel = array($data["handling_payment"]=>" selected ");
 			foreach($pay as $k=>$v){
-				 echo "<option value='$v' ".$sel[$v].">".$this->con($v)."</option>\n";
+				 echo "<option value='$v' ".$sel[$v].">".con($v)."</option>\n";
 			}
 			echo "</select><span class='err'>{$err["handling_payment"]}</span></td></tr>\n";
 
 
 //			$sel[$data["handling_shipment"]]=" selected ";
 
-			echo "<tr><td class='admin_name'  width='40%'>".$this->con(handling_shipment)."</td>
+			echo "<tr><td class='admin_name'  width='40%'>".con(handling_shipment)."</td>
 			<td class='admin_value'><select name='handling_shipment'>";
 			$send=$h->get_shipment();
  	  	$sel = array($data["handling_shipment"]=>" selected ");
 			foreach($send as $k=>$v){
-				echo "<option value='$v' ".$sel[$v].">".$this->con($v)."</option>\n";
+				echo "<option value='$v' ".$sel[$v].">".con($v)."</option>\n";
 			}
 			echo "</select><span class='err'>{$err["handling_shipment"]}</span></td></tr>\n";
 		}
@@ -146,7 +146,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
 
 	#  if($data['handling_sale_mode']){
-	#    echo "<tr><td class='admin_name'>".$this->con(handling_sale_mode)."</td>
+	#    echo "<tr><td class='admin_name'>".con(handling_sale_mode)."</td>
 	#    <td class='admin_value'>".$data['handling_sale_mode']."</td></tr>";
 	#  }else{
 		//if 'sp' is present set the tick box ticked same fore www.
@@ -158,12 +158,12 @@ function print_select_tpl ($name,$type,&$data,&$err){
 			$chk_www='checked';
 		}
 
-		echo "<tr><td class='admin_name'>".$this->con(handling_sale_mode)."</td>
+		echo "<tr><td class='admin_name'>".con(handling_sale_mode)."</td>
 			<td class='admin_value'>
         <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp>
-			".$this->con(sp)."&nbsp;
+			".con(sp)."&nbsp;
 			<input type='checkbox' name='sale_mode[www]' value='www' $chk_www>
-			".$this->con(www)."</td></tr>";
+			".con(www)."</td></tr>";
 
 	#  }
 		$this->print_select_tpl('handling_pdf_template','pdf2',$data,$err);
@@ -225,8 +225,8 @@ function print_select_tpl ($name,$type,&$data,&$err){
 				 	echo "<td class='admin_list_item'>".reserved."</td>\n";
 				 	echo "<td class='admin_list_item' colspan=3>&nbsp;</td>";
 				}else{
-					echo  "<td  class='admin_list_item'>".$this->con($hand->handling_payment)."</td>";
-					echo "<td class='admin_list_item'>".$this->con($hand->handling_shipment)."</td>\n";
+					echo  "<td  class='admin_list_item'>".con($hand->handling_payment)."</td>";
+					echo "<td class='admin_list_item'>".con($hand->handling_shipment)."</td>\n";
   				echo "<td class='admin_list_item' align='right'>";
     				$perc=$hand->handling_fee_percent;
     				$fixe=$hand->handling_fee_fix;

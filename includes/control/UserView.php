@@ -151,7 +151,7 @@ function print_order_status ($order_status){
  }  
 }
   function print_field ($name, &$data){
-    echo "<tr><td class='admin_name' width='20%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name' width='20%'>".con($name)."</td>
     <td class='admin_value'>
     {$data[$name]}
     </td></tr>\n";
@@ -159,7 +159,7 @@ function print_order_status ($order_status){
 
 
   function print_input ($name, &$data, &$err){
-    echo "<tr><td class='admin_name'  width='20%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name'  width='20%'>".con($name)."</td>
     <td class='admin_value'><input type='text' name='$name' value='".htmlentities($data[$name],ENT_QUOTES)."' size='$size' maxlength='$max'>
     <span class='admin_err'>{$err[$name]}</span>
     </td></tr>\n";

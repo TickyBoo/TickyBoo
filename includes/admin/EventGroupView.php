@@ -149,21 +149,21 @@ function photo_post ($data, $event_group_id){
   function select_types ($name,&$data,&$err){
     global $_SHOP;
     $sel[$data["$name"]]=" selected ";
-    echo "<tr><td class='admin_name'  width='40%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name'  width='40%'>".con($name)."</td>
      <td class='admin_value'> <select name='$name'>";
     $types= & $_SHOP->event_group_type_enum;
   //print_r($types);
      foreach($types as $k=>$v){
-       echo "<option value='".$v."' ".$sel[$v].">".$this->con($v)."</option>\n";
+       echo "<option value='".$v."' ".$sel[$v].">".con($v)."</option>\n";
       }
      echo "</select><span class='err'>{$err[$name]}</span></td></tr>\n";
   
   
   }
     function print_type ($name, &$data){
-    echo "<tr><td class='admin_name' width='40%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name' width='40%'>".con($name)."</td>
     <td class='admin_value'>
-    ".$this->con($data[$name])."
+    ".con($data[$name])."
     </td></tr>\n";
   } 
 

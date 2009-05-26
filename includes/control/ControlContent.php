@@ -237,7 +237,7 @@ if($_SHOP->event_ids !=''){
   global $_SHOP;
   echo "<form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='100%' cellspacing='1' cellpadding='2'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_user")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_user")."</td></tr>"; 
   $this->print_input('user_lastname',$data, $err,25,100);
   $this->print_input('user_firstname',$data, $err,25,100);
   $this->print_input('user_zip',$data, $err,25,100);
@@ -258,7 +258,7 @@ if($_SHOP->event_ids !=''){
   
   echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='100%' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_place")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_place")."</td></tr>"; 
   $query="select event_id,event_name,event_date,event_time from Event
           where event_status!='unpub' and event_rep LIKE '%sub%' 
   	  and FIELD(event_id,{$_SHOP->event_ids})>0 
@@ -288,7 +288,7 @@ if($_SHOP->event_ids !=''){
   echo "</table></form>\n";
   echo "<br><form method='GET' action='view_order.php'>\n";
   echo "<table class='admin_form' width='100%' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".$this->con("search_title_order")."</td></tr>"; 
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_order")."</td></tr>"; 
   $this->print_input('order_id',$data, $err,11,11);
   echo "<tr><td  class='admin_value' colspan='2'>
   <input type='hidden' name='action' value='details'/>\n
@@ -305,7 +305,7 @@ if($_SHOP->event_ids !=''){
   }
 
   function print_field ($name, &$data){
-    echo "<tr><td class='admin_name' width='20%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name' width='20%'>".con($name)."</td>
     <td class='admin_value'>
     {$data[$name]}
     </td></tr>\n";
@@ -313,7 +313,7 @@ if($_SHOP->event_ids !=''){
 
 
   function print_input ($name, &$data, &$err){
-    echo "<tr><td class='admin_name'  width='20%'>".$this->con($name)."</td>
+    echo "<tr><td class='admin_name'  width='20%'>".con($name)."</td>
     <td class='admin_value'><input type='text' name='$name' value='".htmlentities($data[$name],ENT_QUOTES)."' size='$size' maxlength='$max'>
     <span class='admin_err'>{$err[$name]}</span>
     </td></tr>\n";
