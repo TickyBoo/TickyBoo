@@ -254,7 +254,7 @@ jQuery.fn.ingrid = function(o){
 	}
 	var f = false;
   if (this.find('tfoot').size() != 0) {
-    console.log(this.find('tfoot').size());
+  //  console.log(this.find('tfoot').size());
   	f = jQuery('<table cellpadding="0" cellspacing="0"></table>')
   					.html(this.find('tfoot'))
   					.addClass(cfg.gridClass)
@@ -665,7 +665,7 @@ jQuery.fn.ingrid = function(o){
 				gap.css('left', h.width() + pos.left).css('top', pos.top);
 			}
       if (f) {
-				f.width(h.width);
+				f.width(h.width());
 				var pos = f.offset();
 				gapf.css('left', (h.width() + pos.left)-2).css('top', pos.top).css('_height',pos.height);
 			}
