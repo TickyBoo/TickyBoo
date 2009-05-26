@@ -89,7 +89,7 @@ die();
 		if (isset($_POST[$type])) {
      		$return = urldecode( $_POST[$type]);
 	 	} elseif (isset($_GET[$type])) {
-	    	$return = urldecode($_GET[$type]);
+	    	$return = $_GET[$type];
 	    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
 	      	$return = substr($action, 1);
 	    } else {
@@ -345,6 +345,7 @@ die();
 			$hand=$myorder->order_handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "callback"){
+			require_once('classes/Payment.php');
 			$hand = Payment::decodeEPHCallback(getsecurecode($type));
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);

@@ -90,12 +90,12 @@
             base64_decode(substr($_SERVER['Authorization'],
             strpos($_SERVER['Authorization'], " ") + 1)));
       } else {
-        $this->SendFailAuthenticationStatus(
-              "Failed to Get Basic Authentication Headers",$die);
+      	$this->log->LogError("A Response Failed to get headers \n");
+        $this->SendFailAuthenticationStatus("Failed to Get Basic Authentication Headers" , $die);
         return false;
       }
-      if($compare_mer_id != $this->merchant_id 
-         || $compare_mer_key != $this->merchant_key) {
+      if($compare_mer_id != $this->merchant_id || $compare_mer_key != $this->merchant_key) {
+      	$this->log->LogError("A Response Failed to authenticate \n");
         $this->SendFailAuthenticationStatus("Invalid Merchant Id/Key Pair",$die);
         return false;
       }
@@ -215,7 +215,6 @@
   
         $this->xml_parser = new gc_xmlparser($request);
         $this->root = $this->xml_parser->GetRoot();
-        $this->serial = $this->xml_parser->GetSerial();
         $this->data = $this->xml_parser->GetData();
       }
       return array($this->root, $this->data);

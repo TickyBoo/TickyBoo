@@ -123,8 +123,29 @@ class Order {
 
       return $order;
     }
-
   }
+  
+	public function loadFromPaymentId($payment_id, $handling_id, $complete=false){
+		global $_SHOP;
+    
+    	$query="select * from `Order`  
+    		WHERE order_payment_id = "._esc($payment_id)." 
+			AND order_handling_id = "._esc($handling_id);
+   		
+	   	if($data=ShopDB::query_one_row($query)){
+      		$order=new Order(0,0,0,0,0,0);
+      		$order->_fill($data);
+      		
+      		if($order and $complete){
+        		if ($order->order_handling_id) {
+          			$order->handling= Handling::load($order->order_handling_id);
+          			$order->order_handling= &$order->handling;
+        		}
+			//$order->places = Ticket::loadall($order_id);
+       		}
+      		return $order;
+    	}	
+	}
 
   function load_ext ($order_id){
     global $_SHOP;
@@ -518,6 +539,38 @@ class Order {
     $order=Order::load($order_id);
     $order->set_status ('res');
   }
+  	
+	/**
+	 * Order::set_payment_id()
+	 * 
+	 * Use to set the payment id for a third party EPH such as:
+	 * Google, iDEAL, PayPal.
+	 * 
+	 * @param int $order_id
+	 * @param mixed $payment_id
+	 * @return boolean
+	 */
+	public function set_payment_id($order_id, $payment_id=null){
+		$order=Order::load($order_id);
+		
+		if(!ShopDB::begin()){return FALSE;}
+		
+		$query="UPDATE `Order`
+			SET order_payment_id="._esc($payment_id)."  
+            WHERE order_id="._esc($order_id);
+            
+		
+		if(!ShopDB::query($query)){
+			ShopDB::rollback();
+			return FALSE;
+		}
+		
+		if(!ShopDB::commit()){ShopDB::rollback();return FALSE;}
+		
+		return true;
+		
+		
+	}
 
   function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$place='www'){
 

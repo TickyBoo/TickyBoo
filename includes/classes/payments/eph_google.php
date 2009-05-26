@@ -34,8 +34,12 @@ require_once('google/library/googlecart.php');
 require_once('google/library/googleitem.php');
 require_once('google/library/googleshipping.php');
 require_once('google/library/googletax.php');
+require_once('google/library/googleresponse.php');
+require_once('google/library/googleresult.php');
+require_once('google/library/googlerequest.php');
 
 require_once('classes/Payment.php');
+require_once('classes/Order.php');
 	
 class EPH_google extends Payment{
 	
@@ -57,7 +61,7 @@ class EPH_google extends Payment{
            "{gui->input name='pm_google_merchant_key'}".
            "{gui->checkbox name='pm_google_sandbox'}".
 		   "{gui->view name='pm_google_callback_link'}";
-           
+		   
            return $form;
 	}
 	
@@ -135,7 +139,166 @@ class EPH_google extends Payment{
 	}
 	
 	public function on_notify(&$order){
-		echo "hello mr api!";
+		global $_SHOP;
+		
+		define('RESPONSE_HANDLER_ERROR_LOG_FILE', 'googleerror.log');
+		define('RESPONSE_HANDLER_LOG_FILE', 'googlemessage.log');
+		
+		$merchant_id = $this->pm_google_merchant_id;  // Your Merchant ID
+      	$merchant_key = $this->pm_google_merchant_key;  // Your Merchant Key
+      	$server_type = "sandbox";
+      	$currency = $_SHOP->organizer_data->organizer_currency;
+      	
+      	if($this->pm_google_sandbox){
+			$server_type = "sandbox";
+		}else{
+			$server_type = "live";
+		}
+		
+		$Gresponse = new GoogleResponse($merchant_id, $merchant_key);		
+		$Grequest = new GoogleRequest($merchant_id, $merchant_key, $server_type, $currency);
+		
+		//Setup the log file
+		$Gresponse->SetLogFiles(RESPONSE_HANDLER_ERROR_LOG_FILE, RESPONSE_HANDLER_LOG_FILE, L_ALL);
+		
+		// Retrieve the XML sent in the HTTP POST request to the ResponseHandler
+		$xml_response = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents("php://input");
+		if (get_magic_quotes_gpc()) {
+			$xml_response = stripslashes($xml_response);
+		}
+		list($root, $data) = $Gresponse->GetParsedXML($xml_response);
+		$Gresponse->SetMerchantAuthentication($merchant_id, $merchant_key);
+		$status = $Gresponse->HttpAuthentication();
+		if(! $status) {
+			die('authentication failed');
+		}
+		
+		$google_order_id = $data[$root]['google-order-number']['VALUE'];
+		
+		switch ($root) {
+			case "request-received": {
+			  break;
+			}
+			case "error": {
+			  break;
+			}
+			case "diagnosis": {
+			  break;
+			}
+			case "checkout-redirect": {
+			  break;
+			}
+			case "new-order-notification": {
+				//Get Order Id
+				$order_id = $data[$root]['shopping-cart']['merchant-private-data']['order-id']['VALUE'];
+				if(is_numeric($order_id)){
+					if(Order::set_payment_id($order_id,$google_order_id)){
+						$Gresponse->SendAck();
+					}				
+				}
+				$Gresponse->SendServerErrorStatus("500 The server can't update the order id please try later.", true);				
+				break;
+			}
+			case "order-state-change-notification": {
+				$Gresponse->SendAck();
+				$new_financial_state = $data[$root]['new-financial-order-state']['VALUE'];
+				$new_fulfillment_order = $data[$root]['new-fulfillment-order-state']['VALUE'];
+				$order = Order::loadFromPaymentId($google_order_id,$this->handling_id);
+			
+				switch($new_financial_state) {
+					case 'REVIEWING': {
+				  		break;
+					}
+					case 'CHARGEABLE': {
+				  		//$Grequest->SendProcessOrder($data[$root]['google-order-number']['VALUE']);
+				  		//$Grequest->SendChargeOrder($data[$root]['google-order-number']['VALUE'],'');
+				  		break;
+					}
+					case 'CHARGING': {
+				  		break;
+					}
+					case 'CHARGED': {
+				  		break;
+					}
+					case 'PAYMENT_DECLINED': {
+						$order->set_payment_status('none');
+				  		$Grequest->SendBuyerMessage($google_order_id,
+						   "Sorry, your payment for ".$_SHOP->organizer_data->organizer_name." has been declined. 
+						   Please login for more info.", true);
+				  		break;
+					}
+					case 'CANCELLED': {
+						$order->set_payment_status('none');
+				  		$Grequest->SendBuyerMessage($google_order_id,
+						   "Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled. 
+						   Please login for more info.", true);
+				  		break;
+					}
+					case 'CANCELLED_BY_GOOGLE': {
+						$order->set_payment_status('none');
+				  		$Grequest->SendBuyerMessage($google_order_id,
+						   "Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled by Google. 
+						   Please login for more info.", true);
+				  		break;
+					}
+					default:
+				  		break;
+				}
+				
+				switch($new_fulfillment_order) {
+					case 'NEW': {
+				  		break;
+					}
+					case 'PROCESSING': {
+				  		break;
+					}
+					case 'DELIVERED': {
+				  		break;
+					}
+					case 'WILL_NOT_DELIVER': {
+				  		break;
+					}
+					default:
+				  		break;
+				}
+			  break;
+			}
+			case "charge-amount-notification": {
+				
+				$google_total_charge_amount = $data[$root]['total-charge-amount']['VALUE'];
+				$order = Order::loadFromPaymentId($google_order_id,$this->handling_id);
+			  	//$Grequest->SendDeliverOrder($data[$root]['google-order-number']['VALUE'],
+			  	//    <carrier>, <tracking-number>, <send-email>);
+			  	
+			  	if($google_total_charge_amount < $order->order_total_price){
+			  		$amount = $order->order_total_price - $google_total_charge_amount;
+			  		$Grequest->SendChargeOrder($google_order_id,$amount);
+			  	}elseif($google_total_charge_amount >= $order->order_total_price){
+			  		$order->set_payment_status("payed");
+			  		$Grequest->SendArchiveOrder($google_order_id);	
+			  	}else{
+			  		$Gresponse->SendServerErrorStatus("500 The server couldn't match the amounts paid please try later.", true);
+			  	}
+			  	$Gresponse->SendAck();
+				break;
+			}
+			case "chargeback-amount-notification": {
+			  $Gresponse->SendAck();
+			  break;
+			}
+			case "refund-amount-notification": {
+			  $Gresponse->SendAck();
+			  break;
+			}
+			case "risk-information-notification": {
+			  $Gresponse->SendAck();
+			  break;
+			}
+			default:
+			  $Gresponse->SendBadRequestStatus("Invalid or not supported Message");
+			  break;
+		}
+		
 		
 	}
 	
@@ -154,6 +317,33 @@ class EPH_google extends Payment{
 		}else{
 			return true;
 		}
+	}
+	
+	/* In case the XML API contains multiple open tags
+	 with the same value, then invoke this function and
+	 perform a foreach on the resultant array.
+	 This takes care of cases when there is only one unique tag
+	 or multiple tags.
+	 Examples of this are "anonymous-address", "merchant-code-string"
+	 from the merchant-calculations-callback API
+	*/
+	function get_arr_result($child_node) {
+		$result = array();
+		if(isset($child_node)) {
+	  		if(is_associative_array($child_node)) {
+	    		$result[] = $child_node;
+	  		} else {
+	    		foreach($child_node as $curr_node){
+	      			$result[] = $curr_node;
+	    		}
+	  		}
+		}
+		return $result;
+	}
+	
+	/* Returns true if a given variable represents an associative array */
+	function is_associative_array( $var ) {
+		return is_array( $var ) && !is_numeric( implode( '', array_keys( $var ) ) );
 	}
 	
 }

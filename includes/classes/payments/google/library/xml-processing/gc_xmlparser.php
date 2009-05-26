@@ -103,7 +103,6 @@
       
       if(xml_parse_into_struct($xmlp, $input, $vals, $index)) {
         $this->root = $this->_foldCase($vals[0]['tag']);
-        $this->serial = $this->$vals[0]['attributes']['serial-number'];
         $this->params = $this->xml2ary($vals);
       }
       xml_parser_free($xmlp);
@@ -200,9 +199,5 @@
       return $this->params; 
     }
     
-    /* Returns the serial number from the root */
-    function GetSerial() {
-      return $this->serial; 
-    }
   }
 ?>
