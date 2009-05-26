@@ -109,7 +109,7 @@
       <tr>
         <td colspan="2" class='TblHigher'>{!member_info!}
        {if $login_error}
-         <div class='error'> - {$login_error} </div>
+         <div class='error'> {$login_error.msg}{$login_error.info} </div>
        {/if}
         </td>
       </tr>

@@ -73,49 +73,39 @@ class User_Smarty {
   	}else{
 	  	$smarty->assign("login_error",$err);
 	  }
+	  
 	
   }
 
   function login_f ($username, $password, &$err){
     require_once('classes/ShopDB.php');
     
-  	$sql="SELECT auth.username,User.*
-              FROM auth,User
-  	    	WHERE auth.user_id=User.user_id
-  	      	AND username=".ShopDB::quote($username)."
-  	      	AND password="._esc(md5($password))."
-       	  	AND user_status=2
-  		  	LIMIT 1";
 
-  	if(!$res=ShopDB::query_one_row($sql)){
-  		$err =con('log_err_wrong_usr');
-  		return false;
-  	}
   	$sql = "SELECT *
-  		FROM auth,User
-  		WHERE username=".ShopDB::quote($username)."
-  		AND password="._esc(md5($password))."
-  		AND user_status=2
-  		AND User.user_id=".ShopDB::quote($res['user_id'])."
-  		AND auth.user_id=User.user_id
-  		AND auth.active IS NULL
+  		FROM auth left join User on auth.user_id=User.user_id
+  		WHERE auth.username="._esc($username)."
+  		AND auth.password="._esc(md5($password))."
+  		AND User.user_status=2
   		LIMIT 1";
 
-  	if(!$query=ShopDB::query($sql) and $error['error']) {
-  		$err =con('log_err_not_act');
+  	if(!$res=ShopDB::query_one_row($sql)){
+  		$err['msg'] =con('log_err_wrong_usr');
+  		$err['info'] =con('log_err_wrong_usr_info');
+  		return false;
+  	}
+  	if($res['active']) {
+  		$err['msg'] =con('log_err_not_act');
+  		$err['info'] =con('log_err_not_act_info');
   		return FALSE;
   	}
-  	if($res and $query){
-	  	$res['is_member']=true;
-    	$_SESSION['_SHOP_USER']=$res;
-    	$this->_fill($res);
-    	$this->logged=true;
-    	$this->is_member=true;
-    	return $res['user_id'];
-  	}
-		$err =con('log_err_unknown');
-  	return FALSE;
-  
+    unset($res['password']);
+    unset($res['active']);
+  	$res['is_member']=true;
+  	$_SESSION['_SHOP_USER']=$res;
+  	$this->_fill($res);
+  	$this->logged=true;
+  	$this->is_member=true;
+  	return $res['user_id'];
   }
 
   function logout ($params,&$smarty){
@@ -218,7 +208,7 @@ class User_Smarty {
 	  //header("location: index.php?personal_page=details");
       return $user_id;
     }else{
-      $err['password']="Incorrect password";
+      $err['password']="Invalid data";
       return FALSE;
     }
 	return false;

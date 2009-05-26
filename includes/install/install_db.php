@@ -232,6 +232,7 @@ $tbls['Order']['fields'] = array(
   'order_responce_date' => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'");
 $tbls['Order']['key'] = array(
   "order_id" => "PRIMARY KEY id (order_id)",
+  "order_payments" => "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
   "order_status" => "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)");
 $tbls['Order']['engine'] = 'InnoDB';
 $tbls['Order']['remove'] = array ('order_organizer_id')   ;

@@ -2,7 +2,7 @@
 define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved
         tickets are released back to sale, so please either order more tickets or continue
         with your order. <br><br>To change your tickets remove the ones you have reserved
-        and click &#146;Order More Tickets&#146;.");
+        and click &apos;Order More Tickets&apos;.");
 
 deFine("actions","Actions");
 define("act_err","User not found or allready activated (check error code)");
@@ -10,9 +10,9 @@ define("act_is_sent","Your activation email has been sent to your e-mail");
 define("act_mess_line","Please check you email to activate your account.<br><br>");
 define("act_name","Activate account");
 define("act_notarr","Activation email still not arrived?");
-define("act_note","Put your e-mail address in. Click on &#146;Send&#146; and a new activation 
+define("act_note","Put your e-mail address in. Click on &apos;Send&apos; and a new activation
         email will be sent to your e-mail address.");
-define("act_norecived","If you haven&#146;t recived an activation email within a few hours, please follow  the following <strong>link</strong>");
+define("act_norecived","If you haven&apos;t recived an activation email within a few hours, please follow  the following <strong>link</strong>");
 
 define("act_send","Send");
 define("add","Add");
@@ -21,7 +21,7 @@ define("address","Address");
 define("administration","Administration");
 define("admin_list","List");
 define("admin_select_organizer","Select an organizer");
-define("agb_name","Put your sales conditions in &#146;agb.html&#146;");
+define("agb_name","Put your sales conditions in &apos;agb.html&apos;");
 define("agenda_only","Agenda only");
 define("agrement","I have read and agree to the General Terms of Sale.");
 define("alreadyexist","This e-mail is already registered in our database!");
@@ -46,9 +46,9 @@ define("by_post","Send by post");
 define("calendar","Calendar");
 define("cancel","Cancel order?");
 define("canceled","Cancelled");
-define("cancel_and_delete","Status changed to &#146;Canceled&#146; and tickets deleted");
-define("cancel_order","Status changed to &#146;Canceled&#146; and tickets deleted");
-define("cancel_order_now","Status changed to &#146;Canceled&#146;");
+define("cancel_and_delete","Status changed to &apos;Canceled&apos; and tickets deleted");
+define("cancel_order","Status changed to &apos;Canceled&apos; and tickets deleted");
+define("cancel_order_now","Status changed to &apos;Canceled&apos;");
 define("cancel_ticket","Cancel ticket");
 define("cannot_find_seat","Cannot find seat");
 define("cannot_seal","Internal error: Cannot seal credit card info");
@@ -101,15 +101,15 @@ define("cc_number","Card number");
 define("cc_owner","Name on the card");
 define("change_event","Change event");
 define("change_order_status_failed","Can not change status");
-define("change_order_to_no_payed","Change status to &#146;Not paid&#146;");
-define("change_order_to_ord","Change status to &#146;Ordered&#146;");
-define("change_order_to_payed","Change status to &#146;Paid&#146;");
-define("change_status_to_no_payed","Change status to &#146;no paid&#146;?");
-define("change_status_to_no_send","Change status to &#146;not sent&#146;?");
-define("change_status_to_ord","Change status to &#146;ordered&#146;?");
-define("change_status_to_payed","Change status to &#146;Paid&#146;?");
-define("change_status_to_send","Change status to &#146;Sent&#146;?");
-define("change_status_to_send_email","Change status to &#146;Sent&#146; and send by e-mail?");
+define("change_order_to_no_payed","Change status to &apos;Not paid&apos;");
+define("change_order_to_ord","Change status to &apos;Ordered&apos;");
+define("change_order_to_payed","Change status to &apos;Paid&apos;");
+define("change_status_to_no_payed","Change status to &apos;no paid&apos;?");
+define("change_status_to_no_send","Change status to &apos;not sent&apos;?");
+define("change_status_to_ord","Change status to &apos;ordered&apos;?");
+define("change_status_to_payed","Change status to &apos;Paid&apos;?");
+define("change_status_to_send","Change status to &apos;Sent&apos;?");
+define("change_status_to_send_email","Change status to &apos;Sent&apos; and send by e-mail?");
 define("charges","Charges");
 define("check","Check");
 define("checked","Checked");
@@ -127,7 +127,7 @@ define("city","City");
 define("classics","Classical music");
 define("clear","Clear");
 define("click_here","Click here, please");
-define("click_on_reserve","2.Click on &#146;Reserve&#146;");
+define("click_on_reserve","2.Click on &apos;Reserve&apos;");
 define("codebar","Barcode");
 define("com","Ordered");
 define("comp","Compiled");
@@ -296,7 +296,7 @@ define("flip","Flip");
 define("folklore","Folklore");
 define("forgot_pass","Forgotten your password?");
 define("forgot_password","Forgotten your password?");
-define("forgot_pass_note","Introduce here your e-mail address.<br /> Click on Send password 
+define("forgot_pass_note","Introduce here your e-mail address.<br /> Click on Send password
         and a new password will be send to you by e-mail");
 define("forgot_pwd","Forgot my password.");
 define("free","Free");
@@ -351,7 +351,7 @@ define("import_xml_submit","Import it!");
 define("import_xml_title","Import Data");	//changed lou5  (same field used in 3 different pages)
 define("indexpage","Index");
 define("info1","1.Select your seat(s) please");
-define("info2","2.Click on &#146;Reservate&#146;");
+define("info2","2.Click on &apos;Reservate&apos;");
 define("internal_error","Internal error");
 define("invalid","invalid");
 define("invalid_date","Invalid Date");
@@ -366,7 +366,7 @@ define("jazz","Jazz");
 //K
 define("kasse","Check out");
 define("kassecontent","Check out");
-define("kasse_empty","Il n&#146;y a pas de commandes en suspens");
+define("kasse_empty","Il n&apos;y a pas de commandes en suspens");
 define("kasse_lang","Language");
 define("kasse_name","Name of point of sale");
 define("kasse_nickname","Login");
@@ -385,34 +385,34 @@ define("lang","Language");
 define("lastname","Last name");
 define("lastpage","Last page");
 define("legende","Explanation");
-define("limit","Unfortunatly you have exceeded amount of alowed reserved tickets. To check 
+define("limit","Unfortunatly you have exceeded amount of alowed reserved tickets. To check
         your orders click <a href='index.php?personal_page=orders'>here</a>.");
 define("login","Login name");
 define("login_invalid","Invalid login");
 define("login_name","Login name");
 define("logout","Log out");
 define("log_error","Login Error");
-define("log_err_not_act","<p>This account hasn&#146;t been activated yet.<br />Please 
-        activate your account!</p><p>Please check your email for the activation email. Also 
-        check your spam folder. Then follow the link to activate your account</p><p>If you 
-        still haven&#146;t recieved anything after a hour please click <a href='resend_activation.php'
+define("log_err_not_act","You are not activated.");
+define("log_err_not_act_info","<br />Please activate your account!<p>Please check your email for the activation email. Also
+        check your spam folder. Then follow the link to activate your account</p><p>If you
+        still haven&apos;t recieved anything after a hour please click <a href='resend_activation.php'
         here</a> to resend activation email.</p>");
-define("log_err_wrong_usr","Wrong username or password! Please try again, remembering that 
-        the username and password are case sensitive.<br />If you have forgoten your username 
-        or password please click <a href='forgot_password.php'>here</a>");
+define("log_err_wrong_usr","Wrong user login! ");
+define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />If you have forgoten your username
+        or password please click <a href='forgot_password.php'>here</a></p>");
 define("longdate_format","%Y-%m-%d %H:%M:%S");
 //M
 define("mandatory","This field is mandatory");
 define("map","Chart");
 define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send
-        me information about future events and other pepper related matters, and that they 
+        me information about future events and other pepper related matters, and that they
         will not pass on my details to any 3rd party.");
-define("memberinfo","Please enter your details below. To buy tickets you are required to 
+define("memberinfo","Please enter your details below. To buy tickets you are required to
         sign up, it is recommend that you sign up before you go to reserve tickets.");
 define("member","Member");
 define("member_info","Please enter your email address and password ");
 define("minutes","min.");
-define("Mostly you will recive your email straight away. If you didn&#146;t reciveive our 
+define("Mostly you will recive your email straight away. If you didn&apos;t reciveive our
         email, please check your spam folder too.","");
 define("MP3_loading_problem","Loading problem MP3 file");
 define("multi","Add subevent");
@@ -448,7 +448,7 @@ define("not_valid_email","E-mail is invalid");
 define("not_valid_event","Event is not valid");
 define("no_color","No color");
 define("no_result","No result");
-define("no_send_order_post","Change status to &#146;Not sent&#146;");
+define("no_send_order_post","Change status to &apos;Not sent&apos;");
 define("no_tick_res","You have no tickets reserved.");
 define("number_seats","Number of seats");
 define("number_tickets","Number of tickets");
@@ -473,8 +473,8 @@ define("ordertickets","To Order Tickets Click below:");
 define("order_admin","Orders / Tickets");
 define("order_allready_cancelled","Order Allready cancelled");
 define("order_canceled","Order cancelled");
-define("order_cannot_change_to_payed","Can not change status to &#146;Payed&#146;");
-define("order_cannot_change_to_send","Can not set status to &#146;Sent&#146;");
+define("order_cannot_change_to_payed","Can not change status to &apos;Payed&apos;");
+define("order_cannot_change_to_send","Can not set status to &apos;Sent&apos;");
 define("order_cannot_reemit","Can not reemit");
 define("order_date","Order date");
 define("order_details","Order details");
@@ -543,7 +543,7 @@ define("ort_address","Address");
 define("ort_add_title","Add venue");
 define("ort_admin","Venues");
 define("ort_city","City");	//changed lou5
-define("ort_state","State");	//added lou5	
+define("ort_state","State");	//added lou5
 define("ort_country","Country");
 define("ort_country_name","Country");
 define("ort_fax","Fax");
@@ -618,8 +618,8 @@ define("phone","Phone Number");
 define("place","Seat");
 define("places","Seat Nr.");
 define("places_empty","Select a seat, please");
-define("places_freed","Seats set to &#146;Free&#146; state");
-define("places_not_freed","Seats not set to &#146;Free&#146; state");
+define("places_freed","Seats set to &apos;Free&apos; state");
+define("places_not_freed","Seats not set to &apos;Free&apos; state");
 define("places_occupied","Sorry! The selected seats were taken by another customer.");
 define("places_remains"," Remain seats");
 define("places_toomuch","This number of seats cannot be reservated");
@@ -634,7 +634,7 @@ define("place_seat","Seat");
 define("place_seat_nr","Seat number");
 define("place_status_not_updated","Error: seat status not updated");
 define("place_without_nr","Seat without number");
-define("pleaselogin","Please login or register.<br /> To signup please follow the 
+define("pleaselogin","Please login or register.<br /> To signup please follow the
         link: <a href='index.php?register_user=on'>Register</a>");
 define("Please_login","Please login or register to reserve seats.");
 define("pmp_height","Part height");
@@ -705,7 +705,7 @@ define("purge","purge");
 define("pwd_err","User not found or other problem occured");
 define("pwd_forgot","Forgotten your password?");
 define("pwd_is_sent","Your new password was sent to your e-mail");
-define("pwd_note","Introduce here your e-mail address. Click on &#146;Send password&#146; 
+define("pwd_note","Introduce here your e-mail address. Click on &apos;Send password&apos;
         and a new password will be sent to you by e-mail");
 define("pwd_send","Send password");
 //R
@@ -715,8 +715,8 @@ define("redefine_pm_zone","Zone redefine");
 define("reemited","Reemitted");
 define("reemitted","Reemitted");
 define("reemit_order","Reemit the order with a new order no. and cancel this order?");
-define("reemit_order_menu","Emit a new order with a new order number and order status &#146;
-        Ordered&#146;. Put this order to status &#146;Reemited&#146;");
+define("reemit_order_menu","Emit a new order with a new order number and order status &apos;
+        Ordered&apos;. Put this order to status &apos;Reemited&apos;");
 define("reemit_ticket","Reemit the ticket (recalculate unique barcode)? Ticket Nr:");
 define("register","Register Here");
 define("regist_weiter","Register");
@@ -763,8 +763,8 @@ define("select_seat","1.Select your seat(s) please");
 define("sended","Sent");
 define("send","Sent");
 define("send_orders_printer","Send Orders to printer");
-define("send_order_email","Send order by e-mail and change status to &#146;Sent&#146;");
-define("send_order_post","Change status to &#146;Sent&#146;?");
+define("send_order_email","Send order by e-mail and change status to &apos;Sent&apos;");
+define("send_order_post","Change status to &apos;Sent&apos;?");
 define("send_password","Send password");
 define("sent","Sent");
 define("shared_ort_title","Shared venues");
@@ -779,9 +779,9 @@ define("shopconfig_restime_remind","When reminder email is sent");
 define("shop","Order tickets");
 define("shopping_cart","Your shopping cart");
 define("shopping_cart_pos","Shopping cart");
-define("shop_condition","Conditions: Information collected by the Organizers will 
+define("shop_condition","Conditions: Information collected by the Organizers will
         be stored to handle post and payment. "); //changed lou5 (replaced Valborg Foundation)
-define("shop_info","Select the desired number of tickets. Click on &#146;Next&#146;, to 
+define("shop_info","Select the desired number of tickets. Click on &apos;Next&apos;, to
         check and confirm your order. The tickets will be send to you by post.");
 define("shortdate_format","%e %b %Y");
 define("show_text_stats","Text"); //added lou5
@@ -839,7 +839,7 @@ define("time_format","%H:%M");
 define("time_stamp","Time");
 define("tnx_here","here");
 define("tnx_mbr","Thank you!");
-define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your 
+define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your
         order follow the proccess below.<br><br>To view your order click");
 define("too_low","Please entre a number larger than 0");
 define("total","Total");
@@ -871,10 +871,10 @@ define("user_firstname","First Name");
 define("user_id","ID");
 define("user_lastname","Last Name");
 define("user_nickname","Nickname");
-define("user_notice","To order your tickets please the following fields and click on &#146;
-        Continue&#146;. Fields with (*) are mandatory. This information will stay confidential.
+define("user_notice","To order your tickets please the following fields and click on &apos;
+        Continue&apos;. Fields with (*) are mandatory. This information will stay confidential.
         We will not give out your information or sell it to others. Yo can also choose to
-        become member and not to fill this form another time you order tickets.</i>Members 
+        become member and not to fill this form another time you order tickets.</i>Members
         entrance is at the bottom of this page.</i>");
 define("user_organizer_ids","Organizer");
 define("user_phone","Phone");
@@ -936,7 +936,7 @@ define('pos_cart_info','Check the tickets below: to add more click "Order More T
        'To reserve the tickets click "Reserve Tickets Button".<br>');
 define('select_seat_info', ', the seat name will appear if you hover your mouse over it.<br>'.
        'Free Seats are Green, Red Seats are Taken.');
-       
+
 define('pos_timestampt','Time stamp');
 define('pos_deleteorder','Delete Order?');
 define('pos_reorder_info','To Order Tickets Click below:<br><font color="red">WARNING old order is CANCELED on Re-Order! </font>');

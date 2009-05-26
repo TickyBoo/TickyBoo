@@ -46,6 +46,7 @@ class MenuAdmin extends AUIComponent {
         <tr><td  class='menu_admin_title'>" . administration . "</td></tr>
 
         <tr><td  class='menu_admin_item'><a href='index.php' class='menu_admin_link'>" . index_admin . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_users.php' class='menu_admin_link'>" . users_admin . "</a></td></tr>
         <tr><td></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_ort.php' class='menu_admin_link'>" . ort_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_event_group.php' class='menu_admin_link'>" . event_group_admin . "</a></td></tr>
@@ -56,8 +57,6 @@ class MenuAdmin extends AUIComponent {
         <tr><td  class='menu_admin_item'><a href='view_impexp.php' class='menu_admin_link'>" . export_admin . " / " . import_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_template.php' class='menu_admin_link'>" . template_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_handling.php' class='menu_admin_link'>" . payment_admin . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_salepoint.php' class='menu_admin_link'>" . salepoint_admin . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_control.php' class='menu_admin_link'>" . control_admin . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_garbage.php' class='menu_admin_link'>" . garbage . "</a></td></tr>";
 //        <tr><td  class='menu_admin_item'><a href='view_file.php' class='menu_admin_link'>".file_admin."</a></td></tr>
 //    		<tr><td  class='menu_admin_item'><a href='view_options.php' class='menu_admin_link'>" . order_options . "</a></td></tr>

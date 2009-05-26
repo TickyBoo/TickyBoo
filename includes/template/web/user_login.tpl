@@ -44,15 +44,9 @@
       <input type="hidden" name="uri" value="{$smarty.server.REQUEST_URI}">
     {/if}
     <center>
-      {if $login_error.error}
+      {if $login_error}
         <div style="width:'80%';" class='error' align='left'>
-          {if $login_error.msg eq 1}
-            {!log_err_wrong_usr!}
-          {elseif $login_error.msg eq 2}
-             {!log_err_not_act!}
-          {else}
-            {!log_error! ($login_error.msg)!}
-          {/if}
+            {$login_error.msg}{$login_error.info}
         </div>
           <br>
       {/if}

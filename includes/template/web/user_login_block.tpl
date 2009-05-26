@@ -29,23 +29,16 @@
 
 {if $smarty.post.action eq 'login'}
 	{user->login username=$smarty.post.username password=$smarty.post.password uri=$smarty.post.uri}
-  {if $login_error}
-
-    <script language="javascript" type="text/javascript">
-       alert("{$login_error|nl2br}");
-      </script>
-  {/if}
-
-
 {elseif $smarty.get.action eq 'logout'}
 	{user->logout}
 {/if}
+
 {if $user->logged}
 <table  width="195px" border="0" cellpadding="0" cellspacing="0" class="cart_table">
 	<tr>
 		<td class="login_title" >{!member!}</td>
 	</tr>
-	<tr>
+  	<tr>
 		<td class="login_content">{!welcome!} <b>{user->user_firstname} {user->user_lastname}</b>!
 			<br>
 			<li><a  href='index.php?personal_page=on'>{!pers_page!}</a></li>
@@ -58,6 +51,13 @@
   	<tr>
   		<td class="login_title">{!member!}</td>
   	</tr>
+  {if $login_error}
+	<tr>
+    <td colspan="2" class='TblHigher'>
+         <div class='error'> {$login_error.msg}</div>
+    </td>
+	</tr>
+  {/if}
     <form method='post' action='index.php' style='margin-top:0px;'>
     <input type="hidden" name="action" value="login">
     <input type="hidden" name="type" value="block">

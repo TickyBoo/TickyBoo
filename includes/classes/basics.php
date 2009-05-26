@@ -395,8 +395,8 @@ function strip_tags_in_big_string($textstring){
 function wp_entities($string, $encode = 1){
 
 $a = (int) $encode;
-$original = array("'"   ,"\""   ,"#"    ,"("    ,")");
-$entities = array("&%39","&%34;","&%35;","&#40;","&#41;");
+$original = array("'"   ,"\""   ,"#"    ,"("    ,")","'"  );
+$entities = array("&%39;","&%34;","&%35;","&#40;","&#41;","&apos;");
 
 if($a == 1)
     return str_replace($original, $entities, $string);
@@ -406,6 +406,9 @@ else
 
 function clean($string, $type='ALL') {
   switch (strtolower($type)) {
+    case 'revert':
+       return  htmlspecialchars_decode(wp_entities($string,0),ENT_QUOTES );
+       break;
     case 'all'  : $string = strip_tags_in_big_string ($string);
     case 'strip': $string = $string;
     case 'html' : $string = wp_entities(htmlentities($string, ENT_QUOTES));

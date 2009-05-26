@@ -635,7 +635,7 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
 
 
 function smarty_modifier_clean($string, $type='ALL') {
-  return clean($string);
+  return clean($string, $type);
 }
 
 ?>

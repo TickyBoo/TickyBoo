@@ -27,48 +27,40 @@ $licention = <<<EOQ
 EOQ;
 
 require_once("admin/AdminView.php");
-require_once("admin/OptionsView.php");
-require_once("admin/OrganizerView.php");
 
-class IndexView extends AdminView {
+class UsersView extends AdminView {
 
   function draw() {
     if(isset($_REQUEST['tab'])) {
-      $_SESSION['_INDEX_tab'] = (int)$_REQUEST['tab'];
+      $_SESSION['_ADMIN_tab'] = (int)$_REQUEST['tab'];
     }
 
+    $menu = array("Admins"=>"?tab=0", "Organizers"=>'?tab=1', "Sale points"=>"?tab=2", "Controlers"=>"?tab=3");
+    echo $this->PrintTabMenu($menu, (int)$_SESSION['_ADMIN_tab'], "left");
 
-    $menu = array("Information"=>"?tab=0", "Owner"=>'?tab=1', "Configuration"=>"?tab=2");
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_INDEX_tab'], "left");
-
-    switch ((int)$_SESSION['_INDEX_tab'])
+    switch ((int)$_SESSION['_ADMIN_tab'])
        {
        case 0:
-           global $licention;
-       	 	 $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION,'100%',2);
-        	 echo "<tr><td class='admin_value' width='100%' colspan=2>" ;
-           echo "<p>".nl2br(htmlspecialchars($licention)),'</p>';
-           echo "</td></tr>";
-        	 echo "<tr><td class='admin_list_title' width='100%' colspan=2>" ;
-           echo con('system_summary');
-           echo "</td></tr>";
-            $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
-            $this->print_field('InfoPhpVersion',  phpversion ());
-            $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
-            $this->print_field('InfoUserCount',   $this->Users_Count ());
-            $this->print_field('InfoGroupCount',  $this->Groups_Count ());
-            $this->print_field('InfoVenueCount',  $this->Docs_Count ());
-            $this->print_field('InfoEventCount',  $this->Files_Count ());
-		       echo "</table>\n";
+           require_once ('adminuserview.php');
+           $viewer = new AdminUserView('100%');
+           $viewer->draw('admin');
            break;
-       
+
        case 1:
-           $viewer = new OrganizerView('100%');
+           require_once ('adminuserview.php');
+           $viewer = new AdminUserView('100%');
+           $viewer->draw('organizer');
+           break;
+
+       case 1:
+           require_once ('SalepointView.php');
+           $viewer = new salepointView('100%');
            $viewer->draw();
            break;
 
        case 2:
-           $viewer = new OptionsView('100%');
+           require_once ('ControlView.php');
+           $viewer = new controlView('100%');
            $viewer->draw();
            break;
 
