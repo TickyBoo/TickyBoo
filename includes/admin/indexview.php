@@ -49,16 +49,16 @@ class IndexView extends AdminView {
         	 echo "<tr><td class='admin_value' width='100%' colspan=2>" ;
            echo "<p>".nl2br(htmlspecialchars($licention)),'</p>';
            echo "</td></tr>";
-        	 echo "<tr><td class='admin_list_title' width='100%' colspan=2>" ;
-           echo con('system_summary');
-           echo "</td></tr>";
-            $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
-            $this->print_field('InfoPhpVersion',  phpversion ());
-            $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
-            $this->print_field('InfoUserCount',   $this->Users_Count ());
-            $this->print_field('InfoGroupCount',  $this->Groups_Count ());
-            $this->print_field('InfoVenueCount',  $this->Docs_Count ());
-            $this->print_field('InfoEventCount',  $this->Files_Count ());
+		       echo "</table>\n<br>";
+
+      	 	 $this->form_head( con('system_summary'),'100%',2);
+           $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
+           $this->print_field('InfoPhpVersion',  phpversion ());
+           $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
+           $this->print_field('InfoUserCount',   $this->Users_Count ());
+           $this->print_field('InfoGroupCount',  $this->Groups_Count ());
+           $this->print_field('InfoVenueCount',  $this->Docs_Count ());
+           $this->print_field('InfoEventCount',  $this->Files_Count ());
 		       echo "</table>\n";
            break;
        

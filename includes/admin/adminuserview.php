@@ -55,7 +55,7 @@ global $_SHOP;
          <tr> <td class='admin_name'>".con('password2')."</td>
          <td class='admin_value'><input type='password' name='password2' size='10'  maxlength='10'></td></tr>";
 
-  if($data['control_login']){
+  if($data['admin_id']){
     echo "<input type='hidden' name='admin_id' value='{$data['admin_id']}'/>\n";
     echo "<input type='hidden' name='action' value='update'/>\n";
   }else{
@@ -110,7 +110,7 @@ function draw ($admintype) {
         user_error(shopDB::error());
         return 0;
       }
-      $this->control_list();
+      $this->admin_list();
     }
   }elseif($_POST['action']=='update'){
     $_POST['admin_status'] = $admintype;
@@ -165,7 +165,7 @@ function admin_check (&$data, &$err){
   }
   if($data["action"]=='update'){
     if($pass=$data["old_password"]){
-       $query="select admin_password from Admin where admin_id="._esc($data["control_id"]);
+       $query="select admin_password from Admin where admin_id="._esc($data["admin_id"]);
        if(!$row=ShopDB::query_one_row($query)){
           user_error(shopDB::error());
           return 0;

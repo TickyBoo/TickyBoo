@@ -52,13 +52,13 @@ class UsersView extends AdminView {
            $viewer->draw('organizer');
            break;
 
-       case 1:
-           require_once ('SalepointView.php');
-           $viewer = new salepointView('100%');
+       case 2:
+           require_once ('SPointView.php');
+           $viewer = new SPointView('100%');
            $viewer->draw();
            break;
 
-       case 2:
+       case 3:
            require_once ('ControlView.php');
            $viewer = new controlView('100%');
            $viewer->draw();
@@ -116,21 +116,6 @@ class UsersView extends AdminView {
 	return $str;
 }
 
-  function Users_Count () {
-    return '';
-  }
-  
-  function Groups_Count (){
-    return '';
-  }
-
-  function Docs_Count () {
-    return '';
-  }
-
-  function Files_Count (){
-    return '';
-  }
 
 }
 

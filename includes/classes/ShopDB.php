@@ -353,7 +353,7 @@ class ShopDB {
       global $_SHOP;
       $logfile = $_SHOP->tmp_dir.'databasehist.log';
       $dbstructfile = INC.'install'.DS.'install_db.php';
-      if (!$update and file_exists(INC.'tmp'.DS.'databasehist.log')) {
+      if (!$update and file_exists($_SHOP->tmp_dir.'databasehist.log')) {
         $update = filectime($logfile) < filectime($dbstructfile);
       } else {
         $update = true;

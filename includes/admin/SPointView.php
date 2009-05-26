@@ -184,10 +184,10 @@ class SPointView extends AdminView {
 				}
 
 				if ( $user_id = shopDB::insert_id() ) {
-					$query = "insert into SPoint (login,password,user_id) VALUES (
-      '" . _ESC( $_POST['user_nickname'] ) . "',
-      '" . _ESC( md5($_POST['password1']) ) . "',
-      '" . _ESC( $user_id ) . "')";
+					$query = "insert into SPoint (login, password, user_id) VALUES (
+                    " . _ESC( $_POST['user_nickname'] ) . ",
+                    " . _ESC( md5($_POST['password1']) ) . ",
+                    " . _ESC( $user_id ) . ")";
 
 					if ( !ShopDB::query($query) ) {
 						user_error( shopDB::error() );
@@ -220,10 +220,11 @@ class SPointView extends AdminView {
 
 				if ( isset($_POST["old_password"]) and isset($_POST["new_password1"]) and isset
 					($_POST['user_nickname']) ) {
-					$query = "UPDATE SPoint set login=" . _ESC( $_POST['user_nickname'] ) . ",
-           password=" . _ESC( md5($_POST['new_password1']) ) . " where user_id=" .
-						_ESC( $_POST["user_id"] ) . "
-	     and password=" . _ESC( md5($_POST['old_password']) );
+					$query = "UPDATE SPoint set
+               login=" . _ESC( $_POST['user_nickname'] ) . ",
+               password=" . _ESC( md5($_POST['new_password1']) ) . "
+             where user_id=" . _ESC( $_POST["user_id"] ) . "
+	           and password=" . _ESC( md5($_POST['old_password']) );
 
 					if ( !ShopDB::query($query) ) {
 						user_error( shopDB::error() );
@@ -237,8 +238,8 @@ class SPointView extends AdminView {
 			$this->spoint_form( $row, $err, spoint_add_title );
 
 		} elseif ( $_GET['action'] == 'edit' ) {
-			$query = "SELECT * FROM User,SPoint WHERE User.user_id=" . _esc( $_GET['user_id'] ) .
-				" and SPoint.user_id=User.user_id";
+			$query = "SELECT * FROM User left join SPoint on SPoint.user_id = User.user_id
+                  WHERE User.user_id=" . _esc( (int)$_GET['user_id'] ) ;
 			if ( !$row = ShopDB::query_one_row($query) ) {
 				user_error( shopDB::error() );
 				return 0;
@@ -248,16 +249,21 @@ class SPointView extends AdminView {
 
 			$this->spoint_form( $row, $err, spoint_update_title, 'update' );
 		} elseif ( $_GET['action'] == 'remove' and $_GET['user_id'] > 0 ) {
-			$query = "DELETE User.*, SPoint.* FROM User,SPoint WHERE User.user_id='{$_GET['user_id']}' AND User.user_id=SPoint.user_id";
+			$query = "DELETE FROM User WHERE user_id="._esc((int)$_GET['user_id']);
+			if ( !ShopDB::query($query) ) {
+				user_error( shopDB::error() );
+				return 0;
+			}
+			$query = "DELETE FROM SPoint WHERE user_id="._esc((int)$_GET['user_id']);
 			if ( !ShopDB::query($query) ) {
 				user_error( shopDB::error() );
 				return 0;
 			}
 			$this->spoint_list();
 		} elseif ( $_GET['action'] == 'view' ) {
-			$query = "SELECT * FROM User, SPoint WHERE User.user_id= " . _esc( $_GET['user_id'] ) .
-				" and SPoint.user_id=User.user_id ";
-
+			$query = "SELECT * FROM User left join SPoint on SPoint.user_id = User.user_id
+                   WHERE User.user_id=" . _esc( (int)$_GET['user_id']."
+                   and user.user_status=1" ) ;
 			if ( !$row = ShopDB::query_one_row($query) ) {
 				user_error( shopDB::error() );
 				return 0;
