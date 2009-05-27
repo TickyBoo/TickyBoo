@@ -294,7 +294,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 	
 	  	  	  //Adds the default fields
 	  		  $this->extra_init($hand);
-	  		  $hand->extra_init();
+	  		  $hand->admin_init();
 			// The new handling method is saved
 			  $id=$hand->save();
 			  $hand_a=(array)$hand;

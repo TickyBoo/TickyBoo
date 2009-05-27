@@ -47,20 +47,8 @@ class EPH_google extends Payment{
 		'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order');
   	public $mandatory = array('pm_google_merchant_id', 'pm_google_merchant_key'); // is only used in project vazant.
   	 	
- 	public function init (){
-  		$this->handling_text_payment    = "Google Checkout";
-		$this->handling_text_payment_alt= "Google Checkout";
-		//$this->handling_html_template  .= "";
-		$this->pm_google_sandbox = true;
-		$this->pm_on_google_cancel_cancel_order = true;
-		$this->pm_on_user_cancel_cancel_order = false;
-		$this->pm_on_refund_cancel_order = false;
-		$this->pm_google_callback_link = "Generated On Save";
-		return "Google";
-	}
-	
 	 public function admin_init(){
-  		$this->handling_text_payment    = "Google Checkout";
+ 		$this->handling_text_payment    = "Google Checkout";
 		$this->handling_text_payment_alt= "Google Checkout";
 		//$this->handling_html_template  .= "";
 		$this->pm_google_sandbox = true;
@@ -89,7 +77,7 @@ class EPH_google extends Payment{
 	}
 	
 	public function admin_check(&$data, &$err){
-		parent::check($data, $err);
+		parent::admin_check($data, $err);
 		global $_SHOP;
 		
 		$data['pm_google_callback_link'] = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();

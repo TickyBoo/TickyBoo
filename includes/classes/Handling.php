@@ -308,9 +308,9 @@ class Handling {
   	}
   
   // Loads default extras for payment method eg."pm_paypal_View.php"
-  function extra_init(){
+  function admin_init(){
   	if($pm=$this->pment()){
-      $pm->init();
+      $pm->admin_init();
   	} else {
     	switch ($this->handling_payment) {
         case "invoice"  : $this->handling_text_payment=  "Invoice";
@@ -322,7 +322,7 @@ class Handling {
   	  }
     }
   	if($sm=$this->sment()){
-      $sm->init();
+      $sm->admin_init();
   	} else {
     	switch ($this->handling_shipment) {
         case "email"    : $this->handling_text_shipment=  "By e-mail";

@@ -33,12 +33,12 @@ class Payment {
   		return $this->field_check($arr, $err);
 	}
 
-	function init (){}
+	function admin_init (){}
 	
 	/**
 	 * Used to check the manditory fields defined in the manditory array
 	 */
-	public function check (&$arr, &$err){
+	public function admin_check (&$arr, &$err){
   		foreach($this->mandatory as $field){
   			if(empty($arr[$field])){$err[$field]=con('mandatory');}
   		}
