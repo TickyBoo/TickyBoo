@@ -528,12 +528,13 @@ class Order {
     $order=Order::load($order_id);
     $order->set_shipment_status('send');
   }
-
+  
   function set_payed ($order_id, $dummy=0, $user_id=0){
 
     $order=Order::load($order_id);
     $order->set_payment_status ('payed');
   }
+  
   function set_reserved ($order_id, $dummy=0, $user_id=0){
 
     $order=Order::load($order_id);

@@ -372,6 +372,48 @@ class Handling {
 			return $pm->decodeCallback($code);
   		}	
 	}
+	
+	/**
+	 * Handling::decodeEPHCallback()
+	 * 
+	 * It will break down the callback hash, find which eph then check against its validation method
+	 * to check that the handling id matches the settings within the eph.
+	 * The handling object filled will then be returned on successfull decode and validation.
+	 * 
+	 * @return handling Object or null.
+	 * @uses Handling
+	 * @since 1.0b5
+	 */
+	public function decodeEPHCallback($callbackCode){
+		
+		if (empty($callbackCode) and isset($_REQUEST['cbr'])) $callbackCode =$_REQUEST['cbr'];
+		
+		if(!empty($callbackCode)){
+			
+			$hand = null; //handling var
+			
+  			$text = base64_decode($callbackCode);
+      		$code = explode(':',$text);
+    		//  print_r( $text );
+      		$code[1] = base_convert($code[1],36,10);
+      		
+      		if(is_numeric($code[1])){
+	  			$hand = Handling::load($code[1]);	  			
+	  		}
+	  		if($hand == null){
+	  			return null;
+			}
+	  		if($hand->is_eph()){
+				if($hand->handling_payment != $code[0]){
+					return null;
+				}
+				if($hand->isValidCallback($code[2])){
+					return $hand;
+				}
+	  		}
+	  		return null;
+		}
+	}
 	  
   	/**
   	 * @name OnConfirm
@@ -420,6 +462,7 @@ class Handling {
       return $pm->on_check($order);
   	}
   }
+  	
 	/**
 	 * @name PaymentMethod
 	 * 

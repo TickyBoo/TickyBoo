@@ -58,8 +58,8 @@ if (isset($_REQUEST['sor'])) {
 	}
 	//  session_write_close();
   	exit();
-}elseif(isset($_REQUEST['callback'])){
-	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"callback")))) {
+}elseif(isset($_REQUEST['cbr'])){
+	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"cbr")))) {
 		$smarty->display($fond . '.tpl');
 	}
 	//  session_write_close();
@@ -344,9 +344,9 @@ die();
 			ShopDB::dblogging("notify action ($test): $myorder->order_id.\n");
 			$hand=$myorder->order_handling;
 			$hand->on_notify($myorder);
-		}elseif($type == "callback"){
-			require_once('classes/Payment.php');
-			$hand = Payment::decodeEPHCallback(getsecurecode($type));
+		}elseif($type == "cbr"){
+			require_once('classes/Handling.php');
+			$hand = Handling::decodeEPHCallback(getsecurecode($type));
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);
 				ShopDB::dblogging("notify error : ($hand)\n". print_r($hand, true));

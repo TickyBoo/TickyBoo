@@ -43,15 +43,31 @@ require_once('classes/Order.php');
 	
 class EPH_google extends Payment{
 	
-	public $extras = array('pm_google_merchant_id', 'pm_google_merchant_key','pm_google_sandbox','pm_google_callback_link');
+	public $extras = array('pm_google_merchant_id', 'pm_google_merchant_key','pm_google_sandbox','pm_google_callback_link',
+		'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order');
   	public $mandatory = array('pm_google_merchant_id', 'pm_google_merchant_key'); // is only used in project vazant.
   	 	
  	public function init (){
   		$this->handling_text_payment    = "Google Checkout";
 		$this->handling_text_payment_alt= "Google Checkout";
 		//$this->handling_html_template  .= "";
-		$this->pm_google_sandbox  = true;
-		$this->pm_google_callback_link = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();
+		$this->pm_google_sandbox = true;
+		$this->pm_on_google_cancel_cancel_order = true;
+		$this->pm_on_user_cancel_cancel_order = false;
+		$this->pm_on_refund_cancel_order = false;
+		$this->pm_google_callback_link = "Generated On Save";
+		return "Google";
+	}
+	
+	 public function admin_init(){
+  		$this->handling_text_payment    = "Google Checkout";
+		$this->handling_text_payment_alt= "Google Checkout";
+		//$this->handling_html_template  .= "";
+		$this->pm_google_sandbox = true;
+		$this->pm_on_google_cancel_cancel_order = true;
+		$this->pm_on_user_cancel_cancel_order = false;
+		$this->pm_on_refund_cancel_order = false;
+		$this->pm_google_callback_link = "Generated On Save";
 	}
 	
 	public function admin_form (){
@@ -60,8 +76,10 @@ class EPH_google extends Payment{
 		$form = "{gui->input name='pm_google_merchant_id'}".
            "{gui->input name='pm_google_merchant_key'}".
            "{gui->checkbox name='pm_google_sandbox'}".
-		   "{gui->view name='pm_google_callback_link'}";
-		   
+		   "{gui->view name='pm_google_callback_link'}".
+		   "{gui->checkbox name='pm_on_google_cancel_cancel_order'}".
+		   "{gui->checkbox name='pm_on_user_cancel_cancel_order'}".
+		   "{gui->checkbox name='pm_on_refund_cancel_order'}";
            return $form;
 	}
 	
@@ -121,10 +139,10 @@ class EPH_google extends Payment{
       	$googleCart->AddDefaultTaxRules($tax_rule);
       
       	// Specify <edit-cart-url>
-      	$googleCart->SetEditCartUrl("".$_SHOP->root_secured.'checkout.php');
+      	//$googleCart->SetEditCartUrl($_SHOP->root_secured.'checkout.php');
 		
 		// Specify "Return to xyz" link
-		$googleCart->SetContinueShoppingUrl("".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."");
+		$googleCart->SetContinueShoppingUrl($_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode());
 		
 		// Request buyer's phone number
 		$googleCart->SetRequestBuyerPhone(true);
@@ -192,8 +210,12 @@ class EPH_google extends Payment{
 				//Get Order Id
 				$order_id = $data[$root]['shopping-cart']['merchant-private-data']['order-id']['VALUE'];
 				if(is_numeric($order_id)){
-					if(Order::set_payment_id($order_id,$google_order_id)){
+					if(Order::set_payment_id($order_id,"google:".$google_order_id)){
+						$order = Order::load($order_id);
+						$order->set_payment_status('pending');
+											
 						$Gresponse->SendAck();
+						$Grequest->SendMerchantOrderNumber($google_order_id,$order_id);
 					}				
 				}
 				$Gresponse->SendServerErrorStatus("500 The server can't update the order id please try later.", true);				
@@ -203,7 +225,7 @@ class EPH_google extends Payment{
 				$Gresponse->SendAck();
 				$new_financial_state = $data[$root]['new-financial-order-state']['VALUE'];
 				$new_fulfillment_order = $data[$root]['new-fulfillment-order-state']['VALUE'];
-				$order = Order::loadFromPaymentId($google_order_id,$this->handling_id);
+				$order = Order::loadFromPaymentId("google:".$google_order_id,$this->handling_id);
 			
 				switch($new_financial_state) {
 					case 'REVIEWING': {
@@ -221,24 +243,38 @@ class EPH_google extends Payment{
 				  		break;
 					}
 					case 'PAYMENT_DECLINED': {
-						$order->set_payment_status('none');
+						$order->set_payment_status('pending');
 				  		$Grequest->SendBuyerMessage($google_order_id,
 						   "Sorry, your payment for ".$_SHOP->organizer_data->organizer_name." has been declined. 
-						   Please login for more info.", true);
+						   Your order is pending, Please login for more info.", true);
 				  		break;
 					}
 					case 'CANCELLED': {
-						$order->set_payment_status('none');
-				  		$Grequest->SendBuyerMessage($google_order_id,
-						   "Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled. 
-						   Please login for more info.", true);
+						if($this->pm_on_user_cancel_cancel_order){
+							Order::order_delete($order->order_id,"Canceled By Google Checkout (User Canceled).");
+							$Grequest->SendBuyerMessage($google_order_id,
+						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled. 
+						   		Your order has been canceled, please login into Google Checkout for more info.", true);
+				   		}else{
+				   			$order->set_payment_status('none');
+				  			$Grequest->SendBuyerMessage($google_order_id,
+						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled. 
+						   		Your order is not paid!, please login into Google Checkout for more info.", true);
+				   		}
 				  		break;
 					}
 					case 'CANCELLED_BY_GOOGLE': {
-						$order->set_payment_status('none');
-				  		$Grequest->SendBuyerMessage($google_order_id,
-						   "Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled by Google. 
-						   Please login for more info.", true);
+						if($this->pm_on_google_cancel_cancel_order){
+							Order::order_delete($order->order_id,"Canceled By Google Checkout (Possible Fraud).");
+							$Grequest->SendBuyerMessage($google_order_id,
+						   		"Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled by Google. 
+						   		Your order has been canceled, please login into Google Checkout more info.", true);
+						}else{
+							$order->set_payment_status("pending");
+							$Grequest->SendBuyerMessage($google_order_id,
+						   		"Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled by Google. 
+						   		Your order is pending, please login into Google Checkout for more info.", true);
+						}
 				  		break;
 					}
 					default:
@@ -266,7 +302,7 @@ class EPH_google extends Payment{
 			case "charge-amount-notification": {
 				
 				$google_total_charge_amount = $data[$root]['total-charge-amount']['VALUE'];
-				$order = Order::loadFromPaymentId($google_order_id,$this->handling_id);
+				$order = Order::loadFromPaymentId("google:".$google_order_id,$this->handling_id);
 			  	//$Grequest->SendDeliverOrder($data[$root]['google-order-number']['VALUE'],
 			  	//    <carrier>, <tracking-number>, <send-email>);
 			  	
@@ -287,8 +323,15 @@ class EPH_google extends Payment{
 			  break;
 			}
 			case "refund-amount-notification": {
-			  $Gresponse->SendAck();
-			  break;
+				$Gresponse->SendAck();
+				$order = Order::loadFromPaymentId("google:".$google_order_id,$this->handling_id);
+				
+				if($this->pm_on_refund_cancel_order){
+					Order::order_delete($order->order_id,"Refunded By Google Checkout.");
+				}
+				$Grequest->SendBuyerMessage($google_order_id,
+					"Your order for ".$_SHOP->organizer_data->organizer_name." has been refunded.", true);
+			  	break;
 			}
 			case "risk-information-notification": {
 			  $Gresponse->SendAck();
@@ -299,6 +342,11 @@ class EPH_google extends Payment{
 			  break;
 		}
 		
+		
+	}
+	
+	
+	public function getOrder(){
 		
 	}
 	
