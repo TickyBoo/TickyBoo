@@ -371,7 +371,7 @@ class AdminView extends AUIComponent {
 
     function form_foot($colspan = 2)
     {
-        echo "<tr><td align='center' class='admin_value' colspan='2'>
+        echo "<tr><td align='center' class='admin_value' colspan='$colspan'>
           <input type='submit' name='submit' value='" . save . "'>
           <input type='reset' name='reset' value='" . res . "'></td></tr>";
         echo "</table>\n";

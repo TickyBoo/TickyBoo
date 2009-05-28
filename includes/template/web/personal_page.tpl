@@ -74,7 +74,7 @@ may be edited but may not be used as yours or redistributed.
               <td>{!state!}</td>
               <td>{user->user_state|clean}</td>
             </tr>
-            {gui->selectcountry name='user_country' value=$user->user_country}
+            {gui->viewcountry name='user_country' value=$user->user_country}
             <tr>
               <td>{!phone!}</td>
               <td>{user->user_phone|clean}</td>

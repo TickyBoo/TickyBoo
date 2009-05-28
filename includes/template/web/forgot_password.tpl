@@ -25,9 +25,7 @@
  *
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
- *}
-
-<html>
+ *}<html>
 <head>
 <title>{!pwd_forgot!}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
@@ -35,47 +33,43 @@
 
 <link rel="shortcut icon" href="images\favicon.ico" >
 <link rel="icon" href="images\animated_favicon1.gif" type="image/gif" >
-<link REL='stylesheet' HREF='style.php' TYPE='text/css' >
+<link rel='stylesheet' href='style.php' type='text/css' >
 
 </head>
-<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE"> <br>
-  <center>
-    <table border="0" cellpadding="5" cellspacing="5" width="600" bgcolor='#ffefd2'>
+<body topmargin="0" leftmargin="0" style='align:left;'> <br><center>
+
+  <table border="0" cellpadding="5" cellspacing="5" width="600" class="login_table"  >
+    <tr>
+      <td colspan=2  class="TblLower">
+         <h2>{!forgot_password!}</h2>
+      </td>
+    </tr>
+    {if $smarty.post.email}
       <tr>
-        <td>
-           <h2>{!forgot_password!}</h2>
+        <td valign=top  class="TblHigher" >
+          {if $user->forgot_password_f($smarty.post.email) }
+            <div class='success'>{!pwd_is_sent!}.</div>
+          {else}
+            <div class='error'>{!pwd_err!}</div>
+          {/if}
+          <br><br>
         </td>
       </tr>
-      <tr>
-        <td valign=top>
-
-{if $smarty.get.email}
-  {if $user->forgot_password_f($smarty.post.email) }
-    <div class='success'>{!pwd_is_sent!}.</div>
-  {else}
-    <div class='error'>{!pwd_err!}</div>
-  {/if}
-  <br><br>
-</td>
-</tr>
-</table>
-  <br>
-  <button onclick="window.close();">Close</button>
-{else}
-  <form action='forgot_password.php' method='post'>
-   {ShowFormToken name='resendpassword'}
-    <table width='100%' align='center'>
-      <tr><td  colspan='2'>{!pwd_note!}<br><br></td></tr>
-      <tr>
-        <td>{!email!}</td>
-        <td><input type='text' name='email' size='30'> &nbsp; <input type='submit' name='submit' value="{!pwd_send!}"></td>
-      </tr>
     </table>
-  </form>
- </td>
-</tr>
-</table>
-{/if}
+    <br>
+    <button onclick="window.close();">Close</button>
+  {else}
+      <form action='forgot_password.php' method='post'>
+        {ShowFormToken name='resendpassword'}
+        <tr><td  colspan='2'>{!pwd_note!}<br><br></td></tr>
+        <tr>
+          <td>{!email!}</td>
+          <td><input type='text' name='email' size='30'> &nbsp; <input type='submit' name='submit' value="{!pwd_send!}"></td>
+        </tr>
+      </table>
+    </form>
+  {/if}
 </center>
+
 </body>
 </html>

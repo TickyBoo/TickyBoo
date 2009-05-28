@@ -4,7 +4,7 @@ require_once ( "../includes/config/init_common.php" );
 
 require_once ( 'smarty/Smarty.class.php' );
 require_once ( 'classes/MyCart_Smarty.php' );
-require_once ( 'classes/UserAuth_Smarty.php' );
+require_once ( 'classes/POS_Smarty.php' );
 require_once ( 'classes/User_Smarty.php' );
 require_once ( 'classes/Order_Smarty.php' );
 require_once('classes/gui_smarty.php');
@@ -16,7 +16,7 @@ global $_SHOP;
 $smarty = new Smarty;
 $gui    = new Gui_smarty($smarty);
 $cart_s = new MyCart_Smarty( $smarty );
-$user_s = new UserAuth_Smarty( $smarty );
+$pos    = new pos_Smarty( $smarty );
 $user   = new User_Smarty( $smarty );
 $order  = new Order_Smarty( $smarty );
 $update = new Update_Smarty($smarty);

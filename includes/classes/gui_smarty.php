@@ -511,9 +511,9 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
     //print_r($smarty);
     $name = is($params['name']);
     return $this->showlabel(con('captcha'),
-           "  <table cellpadding='0' cellspacing='0' width='100%'>\n".
+           "  <table cellpadding='0' cellspacing='0' width='350'>\n".
            "  <tr><td valign='top'>\n".
-           "     <input type='hidden' name='__nospam__' value='".base64_encode($name)."' >\n".
+           "     <input type='hidden' name='_~nospam~_' value='".base64_encode($name)."' >\n".
            "     <input type='text' name='user_nospam' size='10' maxlength='10' value='' ><br>\n".
            "     <sup>".con('captcha_info')."</sup>\n".
            "  </td><td align='right'>\n".

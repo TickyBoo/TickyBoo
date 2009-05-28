@@ -104,6 +104,7 @@ $.fn.checkboxAreaSelect = function(tbl){
 	    	begY = Math.round(((cbAS.startY - pos.top)  / h)+0.5);
 	    	endX = Math.round(((endX - pos.left) / w)-0.5);
 	    	endY = Math.round(((endY - pos.top)  / h)+0.5);
+
 	    	if (begX< 0) begX =0;
 	    	if (begY< 0) begY =0;
 	    	if (endX>= w) endX =w-1;

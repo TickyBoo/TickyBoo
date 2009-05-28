@@ -79,7 +79,7 @@
     
     //trying to load already compiled template
     if($data['template_status']=='comp'){
-      if($tpl=&$this->try_load($name, $t_class_name, $data['template_code'])) {
+      if($tpl= TemplateEngine::try_load($name, $t_class_name, $data['template_code'])) {
         return $tpl;
       }
     }
@@ -126,7 +126,7 @@
 				return FALSE;
       }
     }
-    return True;
+    return false;
   }
 }
 ?>

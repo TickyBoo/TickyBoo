@@ -37,8 +37,9 @@
     {!act_err!}</div>
   {/if}
 {else}  
-  <form action='resend_activation.php' method='post'>  
+  <form action='index.php' method='post'>
     {ShowFormToken name='resend_activation'}
+    <input type='hidden' name='action' value='resend_activation'>
     <table width='80%' align='center'>
       <tr><td class='title' colspan='2' align='center'>
         {!act_notarr!}

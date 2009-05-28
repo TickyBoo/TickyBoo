@@ -62,6 +62,7 @@
 
   
 {else}
+  {assign var='user_data' value=$smarty.session._SHOP_USER}
   <form action="index.php" method='post'>
     {ShowFormToken name='UserUpdate'}
     <input type='hidden' name='action' value='update'>
@@ -74,8 +75,8 @@
     {if $user->is_member}
       <tr>
       	<td class='TblLower'>Current password </td>
-          <td class='TblHigher'><input type='password' name='password1' size='15'  maxlength='10'>
-            <div class='error'>{$user_errors.password}</div>
+          <td class='TblHigher'><input type='password' name='old_password' size='15'  maxlength='10'>
+            <div class='error'>{$user_errors.old_password}</div>
          </td>
       </tr>
     {/if}

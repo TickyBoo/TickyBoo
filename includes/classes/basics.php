@@ -415,4 +415,16 @@ function clean($string, $type='ALL') {
   }
   return $string;
 }
+/**
+ * This function creates a md5 password code to allow login true WWW-Authenticate
+ *
+ */
+function sha1pass($user, $pass) {
+	return '*'.sha1(md5($user.':'.AUTH_REALM.':'.$pass).'~'.$user);
+}
+
+function is_base64_encoded($data){
+  return preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $data);
+}
+
 ?>

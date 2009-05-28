@@ -28,6 +28,14 @@
  * clear to you.
  */
 
+/**
+ * This define is used to store the passwords, pleace do not change this after
+ * there are uses registrated to the system.
+ * This this will invalided all given passwords in the system.
+ */
+define ('AUTH_REALM','Fusion Ticket Login');
+
+
   global $_SHOP;
   
 
@@ -35,13 +43,15 @@
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
   
-  is($_SERVER['SCRIPT_URI'],"");
-  is($_SERVER['SCRIPT_URL'],"");
-
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
-  $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
-  $_SERVER['SCRIPT_URL'] = clean($_SERVER['SCRIPT_URL'] ,'HTML');
+
+  if (isset($_SERVER['SCRIPT_URI'])) {
+    $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
+  }
+  if (isset($_SERVER['SCRIPT_URL'])) {
+    $_SERVER['SCRIPT_URL'] = clean($_SERVER['SCRIPT_URL'] ,'HTML');
+  }
 
   if (!defined('PHP_SELF'))
     define('PHP_SELF',$_SERVER['PHP_SELF']);
@@ -83,22 +93,9 @@
         $accepted = false;
       } else {
         $testme = sha1 ($key.'-'.$_SESSION['tokens'][$name]['n'].'-'.$_SERVER["REMOTE_ADDR"]);
-        if($testme === $value ) {
-          $token_age = time() - $_SESSION['tokens'][$name]['t'];
-          if ($token_age >= 300) {
-            /* token is valid, but has expired */
-            echo "clean me up !!!\n<br>";
-            foreach ($_POST as  $delkey => $value) {
-               unset($_REQUEST[$delkey]);
-            }
-            if (isset($_POST['action'])) {
-              $action = $_POST['action'];
-            }
-            unset($_POST);
-            $_POST['action'] = $action;
-          }
-        } else
+        if($testme !== $value ) {
           $accepted = false;
+        }
       }
       break;
     }

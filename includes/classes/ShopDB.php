@@ -38,6 +38,8 @@ class ShopDB {
     function init ()
     {
         global $_SHOP;
+        unset($_SHOP->db_errno);
+        unset($_SHOP->db_error);
 
         if (!isset($_SHOP->link)) {
           if (isset($_SHOP->db_name)) {
@@ -71,7 +73,6 @@ class ShopDB {
         if (isset($_SHOP->link)) {
            $_SHOP->link->close();
         }
-
     }
 
     function GetServerInfo () {
@@ -86,6 +87,8 @@ class ShopDB {
     {
         global $_SHOP;
         if (!isset($_SHOP->db_trx_startedi)) {
+            unset($_SHOP->db_errno);
+            unset($_SHOP->db_error);
             if (!$_SHOP->link) {
                 self::init();
             }
@@ -108,6 +111,8 @@ class ShopDB {
     {
         global $_SHOP;
         if ($_SHOP->db_trx_startedi==1) {
+            unset($_SHOP->db_errno);
+            unset($_SHOP->db_error);
             if ($_SHOP->link->commit()) {
                 $_SHOP->link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
@@ -129,6 +134,8 @@ class ShopDB {
     {
         global $_SHOP;
         if ($_SHOP->db_trx_startedi) {
+            unset($_SHOP->db_errno);
+            unset($_SHOP->db_error);
             if ($_SHOP->link->rollback()) {
                 $_SHOP->link->autocommit(true);
                 self::dblogging("[Rollback {$name}] {$_SHOP->db_trx_started}");
@@ -158,14 +165,15 @@ class ShopDB {
   					$item = self::quote($item);
   				$query = vsprintf(str_replace('?', '%s', $query), array_slice($args, 1));
   			}
+        unset($_SHOP->db_errno);
+        unset($_SHOP->db_error);
 
         $res = $_SHOP->link->query($query);
         if (!$res) {
-            $_SHOP->db_errno  =$_SHOP->link->errno ;
+            $_SHOP->db_errno  = $_SHOP->link->errno ;
+            $_SHOP->db_error  = mysqli_error($_SHOP->link);
             self::dblogging("[Error: {$_SHOP->db_errno}] ".$query);
-            self::dblogging($_SHOP->db_error= mysqli_error($_SHOP->link));
-            $_SHOP->db_errno  =$_SHOP->link->errno ;
-
+            self::dblogging($_SHOP->db_error);
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 $_SHOP->db_trx_started = false;
             }
@@ -248,13 +256,13 @@ class ShopDB {
         return $result->num_rows ;
     }
 
-    function error()
-      {
+    function error() {
+      global $_SHOP;
       return $_SHOP->db_error;
       }
     
-    function errno()
-      {
+    function errno(){
+      global $_SHOP;
       return $_SHOP->db_errno;
       }
 
@@ -354,17 +362,44 @@ class ShopDB {
       $logfile = $_SHOP->tmp_dir.'databasehist.log';
       $dbstructfile = INC.'install'.DS.'install_db.php';
       if (!$update and file_exists($_SHOP->tmp_dir.'databasehist.log')) {
-        $update = filectime($logfile) < filectime($dbstructfile);
+        $update = filemtime($logfile) < filemtime($dbstructfile);
       } else {
         $update = true;
       }
 
       if ($update) {
+        ob_start();
         require_once($dbstructfile);
         if ($errors = ShopDB::DatabaseUpgrade($tbls, true, $viewonly)) {
           $handle=fopen($logfile,"a");
           fwrite($handle, date('c',time()).": \n". $errors. "\n");
           fclose($handle);
+        }
+
+        $result = ob_get_contents();
+        ob_end_clean();
+        If ($result) {
+          require_once('admin'.DS.'AdminView.php');
+          echo "
+<style type='text/Css'>
+.admin_name{
+    background-color:#ededed;
+    color:#999999;
+    font-size: 12px;
+    font-weight:bold;}
+.admin_value{background-color:#fafafa}
+.admin_form{border: #cccccc 1px solid;}
+admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
+
+</style>";
+
+          echo "<center>";
+          AdminView::form_head(con('Update database structure'),'800',1);
+          echo "<tr><td class='admin_value'>".nl2br(str_replace(' ','&nbsp;',$result));
+          echo "</td></tr><tr><td align='center' class='admin_value'><form action='index.php'>
+            <input type='submit' name='submit' value='" . con('home') . "'></form></td></tr>";
+          echo "</table>\n";
+          die();
         }
       }
     }
@@ -426,13 +461,15 @@ private static function TableCreateData( $tablename )
           If ($tblFields = self::TableCreateData($tablename)) {
               $sql = "";
               $oldkey = '';
+              $txt = '';
               foreach ($fields['fields'] as $key => $info) {
                 if (!array_key_exists($key, $tblFields['fields'])) {
+                    echo "Add $tablename.$key $info\n";
                     $update = true;
                     $sql .= ', ADD `' . $key . "` " . $info;
                     $sql .= (($oldkey == '')?' FIRST':' AFTER ' . $oldkey)."\n";
                 } elseif ((trim($info)) != (trim($tblFields['fields'][$key]))) {
-                    echo "mod: {".$tblFields['fields'][$key]."}<br>\n     {".$info."}<br>\n";
+                    echo "mod $tablename.$key:\n     {".$tblFields['fields'][$key]."}\n     {".$info."}\n";
                     $update = true;
                     $sql .= ', MODIFY `' . $key . "` " . $info."\n";
                 }
@@ -441,6 +478,7 @@ private static function TableCreateData( $tablename )
               if (isset( $fields['remove'])) {
                 foreach ($fields['remove'] as $key) {
                   if (array_key_exists($key, $tblFields['fields'])) {
+                      echo "del $tablename.$key:\n";
                       $sql .= ', DROP COLUMN `' . $key . "`\n";
                       $update = true;
                       unset($tblFields['fields'][$key]);
@@ -451,7 +489,7 @@ private static function TableCreateData( $tablename )
 
               foreach ($tblFields['fields'] as $key => $info) {
                 if (!array_key_exists($key, $fields['fields'])) {
-                    echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".<br>\n";
+                    echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".\n";
                 }
               }
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
@@ -467,13 +505,16 @@ private static function TableCreateData( $tablename )
               if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
           }
           If ($update) {
-             echo ($sql)."<br>\n";//nl3br(
+             //echo ($sql)."\n";//nl3br(
 //             self::dblogging("[SQLupdate:] ".$sql."\n");
+             if ($logall)  $error .= $sql."\n";
              If (!$viewonly) {
                $result = self::query($sql);
-               if (!$result) $error .= '<B>' .self::error ().":</b>\n";
+               if (!$result) {
+                 echo '<B>' .self::error ().".</b>\n\n";
+                 $error .= self::error ()."\n\n";
+               }
              }
-             if ($logall)  $error .= $sql."\n";
           }
       }
 //      self::Upgrade_Autoincrements();

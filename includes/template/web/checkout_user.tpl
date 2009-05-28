@@ -137,16 +137,6 @@
 {!user_notice!}<br><br>
 {literal}
 <script  type="text/javascript">
-function BasicPopup(a)
-{
-//  window.status =a.className;
-//	p = a.className.substring(a.className.lastIndexOf(' ')).split('.');
-	var url = a.href;
-	if (window.open(url, a.target || "_blank", 'toolbar=0,location=0,directories=0,status=0,menubar=0'.concat(
-  	',width=', "640",	',height=',  "200",	',scrollbars=',  "1", ',resizable=', "1")))
-		{ return false; }
-}
-
   function getElement(id){
        if(document.all) {return document.all(id);}
        if(document.getElementById) {return document.getElementById(id);}

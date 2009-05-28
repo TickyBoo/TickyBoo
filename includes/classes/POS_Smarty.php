@@ -106,24 +106,43 @@ class pos_Smarty {
 	}
 
   function load_patron ($params,&$smarty){
-    $this->load_patron_f($params['prefs']);
+    $this->load_patron_f($params['user_id']);
   }
 
-  function load_patron_f ($prefs){
+  function load_patron_f ($user_id){
+    $this->user = User::load_user($user_id);
   }
 
-  function new_patron ($params,&$smarty){
-    $this->new_patron_f($params['prefs']);
+  function register_patron ($params,&$smarty){
+    if (!$this->register_f($param['ismember'], $params['data'], $err, $params['mandatory']) ) {
+  		$smarty->assign('user_errors',$err);
+    }
   }
 
-  function new_patron_f ($prefs){
+  function register_patron_f ($ismember, &$data, &$err, $mandatory_l=0){
+    $data['user_owner_id'] = $this->user_id;
+    $type =($ismember)?2:3;
+    if($user_id = User::register($type, $data, $err, convMandatory($mandatory_l))){
+      $this->user = User::load_user($user_id);
+    }
+    return $res;
   }
 
   function update_patron ($params,&$smarty){
-    $this->uodate_patron_f($params['prefs']);
+    if (!$this->update_patron_f($params['data'], $err, $params['mandatory']) ) {
+  		$smarty->assign('user_errors',$err);
+    }
   }
 
-  function update_patron_f ($prefs){
+  function update_patron_f (&$member,&$err, $mandatory_l=0){
+    If ($this->user_id <> $member['user_id']) {
+      die('System error while changing user data');
+    }
+   /// $data['user_owner_id'] = $this->user_id;
+    if($user_id = User::update($data, $err, convMandatory($mandatory_l))){
+      $this->user = User::load_user($user_id);
+    }
+    return $res;
   }
 
 

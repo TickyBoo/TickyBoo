@@ -26,9 +26,8 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}{strip}{* include file="header.tpl" *}
- 
 {if $smarty.request.action eq "addtocart"}
-  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id,$smarty.post.category_id,$smarty.post.place,'mode_web')}
+  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id, $smarty.post.category_id, $smarty.post.place, 'mode_web')}
   {if $last_item}
     {include file="discount.tpl"}
   {else}
@@ -42,6 +41,8 @@
   {include file="cart_view.tpl"}
 {elseif $smarty.get.action eq 'activate'}
   {include file="activate.tpl"}
+{elseif $smarty.request.action eq 'resend_activation'}
+  {include file="resend_activation.tpl"}
 {elseif $smarty.get.action eq "remove"}
   {$cart->remove_item_f($smarty.get.event_id,$smarty.get.cat_id,$smarty.get.item)}
   {include file="cart_view.tpl"}
@@ -80,15 +81,11 @@
   {if $smarty.request.action eq 'login'}
     {user->login username=$smarty.post.username password=$smarty.post.password}
   {elseif $smarty.request.action eq 'register'}
-    {if $smarty.post.submit_info}
-      {user->guest data=$smarty.post}
-    {elseif $smarty.post.submit_register}
-      {user->member data=$smarty.post}
-    {/if}
+    {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
     {assign var='user_data' value=$smarty.post}
   {/if}
   {if not $user->logged}
-      {include file="inscription.tpl"}
+      {include file="user_register.tpl"}
   {else}
     {include file="last_event_list.tpl"}
   {/if}  
@@ -99,16 +96,16 @@
   	{if $smarty.request.personal_page eq 'details'}
 	    {if $smarty.request.action eq 'update'}
       	{if $smarty.post.submit_update}
-      		{user->update_member data=$smarty.post}
+      		{user->update data=$smarty.post}
         {/if}
         {assign var='user_data' value=$smarty.post}
-        {if $user->logged}
+        {if $user_errors}
         	{include file="user_update.tpl"}
         {else}
-			{include file="personal_page.tpl"}
+			    {include file="personal_page.tpl"}
         {/if}
       {else}
-	  	{include file="user_update.tpl"}
+	    	{include file="user_update.tpl"}
       {/if}
     {elseif $smarty.request.personal_page eq 'orders'}
     	{if $smarty.request.action eq 'order_res'}

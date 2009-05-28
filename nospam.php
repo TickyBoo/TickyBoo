@@ -23,14 +23,14 @@ imagefilledrectangle($im, 0, 0, 100, 46, imagecolorallocate($im, rand(120,255), 
  }
 // hier - font.ttf' vervangen met de locatie van je eigen font bestand
 $font = 'includes/fonts/Gibberish.ttf';
-$text = '23456789ABCEFGHJKNPRST';
+$text = '2346789ABCEFGHKNPRT';
 // schaduw toevoegen
 // voorkomen dat afbeelding ge-cached wordt
   for ($i = 0; $i < 2500; $i++) {
   	$color_pixel  = imagecolorallocatealpha ($im, mt_rand(200, 255), mt_rand(200, 255), mt_rand(200, 255),64);
 		ImageSetPixel($im, rand(0, 100), rand(0, 46), $color_pixel);
  }
- $white = imagecolorallocate($im,mt_rand(010,120), mt_rand(010,120), mt_rand(010,120)); // 0,0,0); //
+ $white = imagecolorallocate($im,0,0,0); //mt_rand(010,120), mt_rand(010,120), mt_rand(010,120)); //
 
  for ($i = 0; $i < 5; $i++) {
    $char = substr($text,rand(0,strlen($text)-1),1);

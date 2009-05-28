@@ -185,7 +185,7 @@ define("end_date","End date");
 define("enter_guest","Personal information");
 define("entrance","At the entrance");
 define("error","Error");
-define("error_loading_user","Error occurdt when lading user data ");
+define("error_loading_user","Error occurdt when loading user data ");
 define("et_church","Church music");
 define("et_cinema","Cinema");
 define("et_classics","Classical music");

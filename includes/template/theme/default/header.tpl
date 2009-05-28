@@ -44,7 +44,7 @@
 <meta scheme="countdown1" name="servertime" content="{$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'} GMT+00:00">
 </head>
 
-<body>
+<body class='main_side'>
 <div class="mainbody">
 <img class="spacer" src='images/dot.gif' height="1px"><br>
 <img src="images/fusion.png" align="bottom">
