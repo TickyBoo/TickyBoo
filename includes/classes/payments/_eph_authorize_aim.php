@@ -56,7 +56,7 @@ class EPH_authorize_aim Extends Payment{
 //    $this->print_field('pm_yp_docs',$docs);
 	}
 
-	function init (){
+	function admin_init (){
 		$form1= '<div class="cc_div">
               To validate your order please introduce your payment information and
               click on "Pay". <br> At once that your payment is completed, you receive
@@ -71,10 +71,7 @@ class EPH_authorize_aim Extends Payment{
 		$this->pm_authorize_aim_test     = TRUE;
 	}
 
-	function check ( &$data, &$err ){
-   	return TRUE;
-	}
-	
+
   function on_confirm(&$order ) {
     Global $_SHOP;
     if (!isset($_POST['cc_name'])) {
@@ -184,6 +181,7 @@ class EPH_authorize_aim Extends Payment{
 					if($this->_check_order($order,$res)){
 
 						$order->order_payment_id=$transaction_id;
+      	    Order::set_payment_id('auth_aim:'.$order->order_id,$transactionID)
 						$order->set_payment_status('payed');
 						$return['approved']=TRUE;
 

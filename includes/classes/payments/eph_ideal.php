@@ -63,7 +63,7 @@ class eph_ideal extends payment{
            "{gui->input name='pm_ideal_certficate'}";
 	}
 
-	function init (){
+	function admin_init (){
   	$this->handling_text_payment    = "iDEAL";
 		$this->handling_text_payment_alt= "iDEAL";
 //    $this->handling_html_template  .= "";
@@ -117,7 +117,9 @@ class eph_ideal extends payment{
 		$issuerAuthenticationURL = $response->getIssuerAuthenticationURL();
 		$transactionID = $response->getTransactionID();
     $order->order_payment_id=$transactionID;
+    Order::set_payment_id('ideal:'.$order->order_id,$transactionID)
     $order->set_payment_status('pending');
+
     header('location:'.$issuerAuthenticationURL);
     return '';
   }
@@ -135,9 +137,9 @@ class eph_ideal extends payment{
 		// Geldige response.
 		$acquirerID = $response->getAcquirerID();
 
-		$consumerName = $response->getConsumerName();
+		$consumerName  = $response->getConsumerName();
   	$consumerAccountNumber = $response->getConsumerAccountNumber();
-    $consumerCity = $response->getConsumerCity();
+    $consumerCity  = $response->getConsumerCity();
     $transactionID = $response->getTransactionID();
 
     // De status is een integer en kan middels een aantal
@@ -152,6 +154,7 @@ class eph_ideal extends payment{
 
    if ($status = IDEAL_TX_STATUS_SUCCESS) {
 	    $order->order_payment_id=$transactionID;
+	    Order::set_payment_id('ideal:'.$order->order_id,$transactionID)
       $order->set_payment_status('payed');
       return array('approved'=>true,
                    'transaction_id'=>$transactionID ,
@@ -188,6 +191,7 @@ class eph_ideal extends payment{
 
     	if (in_array($status, array(IDEAL_TX_STATUS_SUCCESS))) {
   	    $order->order_payment_id=$transactionID;
+  	    Order::set_payment_id('ideal:'.$order->order_id,$transactionID)
         $order->set_payment_status('payed');
         return true;
       } elseif (in_array($status, array(IDEAL_TX_STATUS_CANCELLED, IDEAL_TX_STATUS_EXPIRED ))) {

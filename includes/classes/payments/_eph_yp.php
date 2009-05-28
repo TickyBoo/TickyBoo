@@ -51,13 +51,9 @@ class eph_yp extends Payment{
 //    $this->print_field('pm_yp_docs',$docs);
 	}
 
-	function init ( ){
+	function admin_init ( ){
     $this->handling_html_template .= "";
 		$this->pm_yp_url = 'https://yellowpaytest.postfinance.ch/checkout/Yellowpay.aspx?userctrl=Invisible';
-	}
-
-	function check ( &$data, &$err ){
-		return TRUE;
 	}
 
   function on_confirm(&$order){

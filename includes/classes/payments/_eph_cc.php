@@ -45,7 +45,7 @@ class EPH_cc extends payment{
     return "{gui->area name='pm_cc_pubkey'}";
 	}
 
-	function init (){
+	function admin_init (){
     global $_SHOP;
 				
 		$form1= 
@@ -63,9 +63,6 @@ class EPH_cc extends payment{
 		$this->handling_text_payment_alt = 'Credit Card';
 	}
 
-	function check ( &$data, &$err ){
-		return TRUE;
-	}
 	
   function on_confirm(&$order) {
     if (!isset($_POST['cc_name'])) {

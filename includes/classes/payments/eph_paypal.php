@@ -51,7 +51,7 @@ class EPH_paypal extends payment{
            "{gui->checkbox name='pm_paypal_test'}";
 	}
 
-	function init (){
+	function admin_init (){
   		$this->handling_text_payment    = "PayPal";
 		$this->handling_text_payment_alt= "PayPal";
     	$this->handling_html_template  .= "";
@@ -92,6 +92,8 @@ class EPH_paypal extends payment{
 	
   function on_return(&$order, $result){
     If ($result) {
+	    Order::set_payment_id('paypal:'.$order->order_id,$_POST['txn_id'])
+      $order->set_payment_status('pending');
       return array('approved'=>$result,
                    'transaction_id'=>$_REQUEST['txn_id'],
                    'response'=> '');
@@ -146,6 +148,7 @@ class EPH_paypal extends payment{
         $debug.="OK\n";
         $return =true;
     	  $order->order_payment_id=$_POST['txn_id'];
+  	    Order::set_payment_id('paypal:'.$order->order_id,$_POST['txn_id'])
         $order->set_payment_status('payed');
     }
   //  ShopDB::dblogging($debug);

@@ -52,7 +52,7 @@ class EPH_authorize_sim extends AdminView{
            "{gui->checkbox name='pm_authorize_sim_test'} ";
 	}
 
-	function init( ){
+	function admin_init( ){
     $this->handling_html_template .= '';
 		$this->pm_authorize_sim_test   = TRUE;
 	}
@@ -110,6 +110,8 @@ class EPH_authorize_sim extends AdminView{
 
 		if($_POST['x_response_code']==1){
 		  $order->order_payment_id=$_POST['x_trans_id'];
+	    Order::set_payment_id('auth_sim:'.$order->order_id,$_POST['x_trans_id'])
+
 		  $order->set_payment_status('payed');
     }else{
 			return array('approved'=>false, 'responce'=>$$_POST['x_response_text']);
