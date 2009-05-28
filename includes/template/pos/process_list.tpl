@@ -109,7 +109,7 @@
   		  {assign var='to' value="`$smarty.get.toy`-`$smarty.get.tom`-`$smarty.get.tod` 23:59:59.999999"}
 		{/if}
 
-		{order->order_list status="payed" not_status="pros" first=$smarty.get.first length=$length start_date=$from end_date=$to}
+		{order->order_list status="payed" not_status="pros" not_sent=true first=$smarty.get.first length=$length start_date=$from end_date=$to}
 		{counter print=false assign=count}  
 		{if $count lt ($length+1)}    
 
@@ -174,9 +174,12 @@
 		</td>
 	  </tr>
 	</table>
-	<br>
+	<br />
 	{include file='menu_order.tpl'}
   </td>
+</tr>
+<tr>
+	<td colspan="2" width='33%' align="left" bgcolor="lightgrey" ><a href="index.php?process=on">Back to {!pos_currenttickets!}</a></td>
 </tr>
 </table>
 

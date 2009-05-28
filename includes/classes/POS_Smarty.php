@@ -35,15 +35,15 @@
  */
 require_once('classes/User.php');
 
-class pos_Smarty {
+class POS_Smarty {
 
   var $logged;
 
-  function pos_Smarty (&$smarty){
+  function POS_Smarty (&$smarty){
     if(isset($_SESSION['_SHOP_POS_USER'])){
       $user=$_SESSION['_SHOP_POS_USER'];
     }else{
-      $user=UserAuth_Smarty::_load();
+      $user=POS_Smarty::_load();
       $_SESSION['_SHOP_POS_USER']=$user;
     }
 

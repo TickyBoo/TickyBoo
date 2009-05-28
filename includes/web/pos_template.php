@@ -16,7 +16,7 @@ global $_SHOP;
 $smarty = new Smarty;
 $gui    = new Gui_smarty($smarty);
 $cart_s = new MyCart_Smarty( $smarty );
-$pos    = new pos_Smarty( $smarty );
+$pos    = new POS_Smarty( $smarty );
 $user   = new User_Smarty( $smarty );
 $order  = new Order_Smarty( $smarty );
 $update = new Update_Smarty($smarty);

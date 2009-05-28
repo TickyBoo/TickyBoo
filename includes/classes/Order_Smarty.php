@@ -192,17 +192,35 @@ class Order_Smarty {
 	if($params['place']) {
 	  $where .=" and order_place='{$params['place']}'";
 	}
-	if($params['not_status']){
-		if($params['not_status']=="payed" and $params['status']!="payed"){
-			$where .=" AND order_payment_status!='{$params['not_status']}' ";
-		}elseif($params['not_status']=="send" and $params['status']!="send"){
-			$where .=" AND order_shipment_status!='{$params['not_status']}' ";
-		}else{
-			$where .="AND order_status!='{$params['not_status']}' ";
-		}
+	
+	if($params['not_sent']){
+		$where .=" AND order_shipment_status != 'send' ";
 	}
 	
-	  	
+	if($params['not_status']){
+      	$types=explode(",",$params['not_status']);
+      	if(count($types) <= 1){
+			if($params['not_status']=="payed" and $params['status']!="payed"){
+				$where .=" AND order_payment_status!='{$params['not_status']}' ";
+			}elseif($params['not_status']=="send" and $params['status']!="send"){
+				$where .=" AND order_shipment_status!='{$params['not_status']}' ";
+			}else{
+				$where .="AND order_status!='{$params['not_status']}' ";
+			}
+      	}else{
+      		$first=true;
+      		foreach($types as $type){
+      			$type=_esc($type);
+      			if($first){
+      				$notIn .= $type;
+					  $first = false;	
+      			}else{
+      				$notIn .= ",".$type;
+      			}
+			}
+      		$where .= " AND order_status NOT IN ( {$notIn} )";
+      	}
+ 	}	  	
 	  	
       if($params['order']){
         $order_by="order by Shop::{$params['order']}";
@@ -370,6 +388,7 @@ class Order_Smarty {
   function set_status_f($order_id,$status){
 	return Order::set_status_order($order_id,$status);
   }
+  
   function set_send_f($order_id){
   	global $_SHOP;
 	return Order::set_send($order_id, 0, $this->user_auth_id);
