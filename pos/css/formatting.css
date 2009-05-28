@@ -7,6 +7,12 @@ a:hover{ font-family:Verdana; color:#FF8000; font-weight:bold; text-decoration:u
 
 .help{font-family:Verdana; color:blue; font-size: 11px;}
 
+/* Save Messages */
+
+.success {
+	color: green;
+	font-size: 14px;
+}
 
 /* Category Page / Seating Chart */
 

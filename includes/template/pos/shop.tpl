@@ -7,9 +7,6 @@
 	{include file="header.tpl"}
 {/if}
 
-{$smarty.post.action}
-
-
 {if $smarty.get.action eq 'home'}
 	{include file='index.tpl'}
 	
@@ -169,38 +166,70 @@
 {elseif $smarty.get.action eq 'calendar'}
 	{include file="calendar.tpl"}
 	
-{elseif $smarty.get.process}
-	{if $smarty.get.process eq "paid"}
-		{if $smarty.get.order_id}
-		  {if $smarty.get.action eq 'change_status'}
-  			{if $order->set_status_f($smarty.get.order_id,'pros') }
-    		<div class='succes'>
-    			{!order_status_changed!}
-    		</div>
-  			{/if}
-  		  {/if}
-		  {include file="process_view_paid.tpl"}
+{elseif $smarty.get.action eq 'order'}
+	{include file="order.tpl"}	
+	
+{elseif $smarty.get.process or $smarty.post.process}
+	{if $smarty.get.process eq "paid" or $smarty.post.process eq "paid"}
+		{if $smarty.get.order_id or $smarty.post.order_id}		  
+  		  	{if $smarty.post.action eq "update_note"}
+				{order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
+				<div class='success'>
+    				{$order_note}
+    			</div>
+    			{include file="process_view_paid.tpl"}	
+		  	{elseif $smarty.get.action eq 'change_status'}
+	  			{if $order->set_status_f($smarty.get.order_id,'pros') }
+	    			<div class='success'>
+	    				{!order_status_changed!}
+   					</div>
+					{include file="process_list.tpl"}
+				{else}
+  					{include file="process_view_paid.tpl"}
+  				{/if}
+			{else}
+				{include file="process_view_paid.tpl"}		
+		  	{/if}
 		{else}
 		  {include file="process_list.tpl"}
 		{/if}
-	{elseif $smarty.get.process eq "processed"}
-		{if $smarty.get.order_id}
-		  {if $smarty.get.action eq 'send'}
-  			{$order->set_send_f($smarty.get.order_id,'pros') }
-    		<div class='succes'>
-    			{!order_status_changed!}
-    		</div>
-  		  {/if}
-  		  {include file="process_view_pros.tpl"}
+	{elseif $smarty.get.process eq "processed" or $smarty.post.process eq "processed"}
+		{if $smarty.get.order_id or $smarty.post.order_id}
+			{if $smarty.get.action eq 'send'}
+				{$order->set_status_f($smarty.get.order_id,'ord')}
+  				{$order->set_send_f($smarty.get.order_id) }
+   				<div class='success'>
+	    			{!order_status_changed!}
+	    		</div>
+	    		{include file="process_listpros.tpl"}
+  		  	{elseif $smarty.post.action eq "update_note"}
+				{order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
+				<div class='success'>
+    				{$order_note}
+    			</div>
+    			{include file="process_view_pros.tpl"}
+			{else}
+				{include file="process_view_pros.tpl"}			
+			{/if}
   		{else}
 		  {include file="process_listpros.tpl"}
 		{/if}
-	{elseif $smarty.get.process eq "sent"}
-		{include file="process_listsent.tpl"}
+	{elseif $smarty.get.process eq "sent" or $smarty.post.process eq "sent"}
+		{if $smarty.get.order_id or $smarty.post.order_id}
+			{if $smarty.post.action eq "update_note"}
+				{order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
+				<div class='success'>
+    				{$order_note}
+    			</div>
+ 			{/if}
+			{include file="process_view_sent.tpl"}
+		{else}
+			{include file="process_listsent.tpl"}
+		{/if}
 	{elseif $smarty.get.process eq "reserved"}
 		{include file="process_listres.tpl"}
 	{else}
-		{include file="process.tpl"}
+		{include file="currenttickets.tpl"}
 	{/if}
 {else}
 

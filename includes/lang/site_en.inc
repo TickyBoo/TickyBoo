@@ -45,7 +45,7 @@ define("by_post","Send by post");
 //C
 define("calendar","Calendar");
 define("cancel","Cancel order?");
-define("canceled","Cancelled");
+define("canceled","Canceled");
 define("cancel_and_delete","Status changed to &apos;Canceled&apos; and tickets deleted");
 define("cancel_order","Status changed to &apos;Canceled&apos; and tickets deleted");
 define("cancel_order_now","Status changed to &apos;Canceled&apos;");
@@ -953,11 +953,13 @@ define('pos_processorder','Processed Order? The Order ID and Ticket IDs been not
 define('pos_clicktoproc','Click To Finish Processing!');
 define('pos_nextunprocessed','Next Unprocessed Paid Order');
 define('pos_clicktoview','Click to View and Process');
-define('pos_processoptions','Process Options');
 define('pos_listpaidunprocessed','<p>List of <u>paid</u> <b>but</b> <u>Unprocessed</u> orders</p>');
 define('pos_listpaidunsent','<p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>');
+define('pos_listpaidsent','<p>List of <u>completed/sent</u> orders</p>');
 define('pos_paidlist','Paid List');
 define('pos_unsentlist','UnSent List');
+define('pos_sentlist','Sent List');
+define('pos_sentorders','Sent Orders');
 define('pos_checkdetails' ,'Check the details, If cash or check Click "Confirm and Print"<br>If you have to pay with Credit/Debit Card click the "PayNow" button and Follow the Paypal instructions.');
 define('pos_checkdetails2','Check the details, And Procced to "Confirm" or "Cancel" the order.');
 define('pos_checkdate','First Check you have the right date, Then choose catergory of seats, this just determins the cost and area. Then click continue.');

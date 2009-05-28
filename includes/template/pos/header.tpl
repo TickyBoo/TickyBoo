@@ -66,8 +66,8 @@
 				<h2>Fusion Ticket - Box Office <span style="color:red; font-size:14px;"><i>[AJAX Beta]</i></span></h2>
 				<ul>
 					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_homepage!}</a></li>
-					<li><a href="index.php?action=calendar" accesskey="h" tabindex="10">{!pos_booktickets!}</a></li>
-					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_currenttickets!}</a></li>
+					<li><a href="index.php?action=order" accesskey="b" tabindex="11">{!pos_booktickets!}</a></li>
+					<li><a href="index.php?process=on" accesskey="t" tabindex="12">{!pos_currenttickets!}</a></li>
 				</ul>
 			</div>
 

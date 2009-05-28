@@ -161,6 +161,7 @@ define ('AUTH_REALM','Fusion Ticket Login');
     $_auth = new Auth('DB',$params,'loginFunction');
     $_auth ->setSessionName($_SHOP->session_name); 
     $_auth ->setLoginCallback('loginCallback'); 
+    is($action,"");
     if ($action == 'logout') {
       $_auth->logout();
       session_destroy();

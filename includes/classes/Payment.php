@@ -29,18 +29,14 @@ class Payment {
 
   	public function admin_form ( ){}
   	
-  	public function admin_check(&$data, &$errors){
-  		return $this->field_check($arr, $err);
-	}
-
 	function admin_init (){}
 	
 	/**
 	 * Used to check the manditory fields defined in the manditory array
 	 */
-	public function admin_check (&$arr, &$err){
+	public function admin_check (&$data, &$err){
   		foreach($this->mandatory as $field){
-  			if(empty($arr[$field])){$err[$field]=con('mandatory');}
+  			if(empty($data[$field])){$err[$field]=con('mandatory');}
   		}
     	return (count($err)==0);
   	}

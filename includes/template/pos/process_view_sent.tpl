@@ -26,23 +26,24 @@
  */
  *}
 <form name='f' action='index.php' method='post'>
-<table width='700'>
+<table width='700' align="center">
   <tr>
   	<td class='title' colspan='5' align='center'>
-      {!unprocessed_paid!}
-	  </td>
+    Paid and sent orders.
+	</td>
   </tr>
-	{assign var='order_id' value=$smarty.get.order_id}
+  
+ 	{assign var='order_id' value=$smarty.get.order_id}
 	{if !$smarty.get.order_id }
 		{assign var='order_id' value=$smarty.post.order_id}
 	{/if}
   
-  	{order->order_list first=1 length=1 status="payed" not_status="pros"}
-  		{assign var='next_order_id' value=$shop_order.order_id}
-	{/order->order_list}
-
-	{order->order_list order_id=$order_id length=1}
-  <tr>
+  	{order->order_list first=1 length=1 status="sent" not_status="pros"}
+  		{assign var='next_order_id' value=$order_id}
+  	{/order->order_list}
+  	
+  	{order->order_list order_id=$order_id}
+ 	<tr>
 	<td  width='50%' valign='top'>
 	
   	  <table  cellspacing='1' cellpadding='4' border='0'>
@@ -54,8 +55,8 @@
 		  		<td align='center'>
 				  {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
       				<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a> 
-      				<a href='javascript:if(confirm("{!pos_deleteorder!}")){literal}{location.href="index.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
-      				<img border='0' src='images/trash.png'></a>
+      				<a href='javascript:if(confirm("Delete Order?")){literal}{location.href="shop.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
+      				<img border='0' src='images/trash.png' /></a>
    					{/if}
   				  </td>
 				</tr>
@@ -63,7 +64,7 @@
   		  </td>
   		</tr>
   		<tr>
-		  <td class='admin_info'>Next UnProc Paid Order ID</td>
+		  <td class='admin_info'>Next Paid Sent Order ID</td>
 		  <td class='subtitle'>{$next_order_id}</td>
 		</tr>
   		<tr>
@@ -100,39 +101,41 @@
 		  {/if}
 		  </td>
 		</tr>
-		{if $shop_order.order_status eq "res"}
-			{* order->tickets order_id=$shop_order.order_id limit=1}
+		{*if $shop_order.order_status eq "res"}
+			{ order->tickets order_id=$shop_order.order_id limit=1}
 			<input type='hidden' name='category' value='{$shop_ticket.seat_category_id}'>
         	<input type='hidden' name='event' value='{$shop_ticket.seat_event_id}'>
-        	{/order->tickets *}
+        	{/order->tickets }
 			<input type='hidden' name='action' value='reorder'>
 			<input type="hidden" name="user_id" value="{$shop_order.order_user_id}" >
 			<input type="hidden" name="order_id" value="{$shop_order.order_id}" >
 		<tr>
-		  <td colspan="2" align="left"> {!pos_reorder_info!}<br>
+		  <td colspan="2" align="left">
+		  To Order Tickets Click below:<br>
+		  <font color="red">WARNING old order is CANCELED on Re-Order! </font><br>
 		  	<center>
 			  <input type='submit' name='submit' value='Order'>
 			</center>
 		  </td>
 		</tr>
-		{/if}
+		{/if *}
 		<tr>
-		  <td class="admin_info">{!paymentstatus!}</td>
+		  <td class="admin_info">Payment {!status!}</td>
 		  <td class="subtitle">
 		  {if $shop_order.order_payment_status eq "none"}
-		    <font color="#FF0000">{!notpaid!}</font>
+		    <font color="#FF0000">Not Paid</font>
 		  {elseif $shop_order.order_payment_status eq "payed"}
-		  	<font color='green'>{!paid!}</font>
+		  	<font color='#00CC00'>{!paid!}</font>
 		  {/if}
 		  </td>
 		</tr>
 		<tr>
-		  <td class="admin_info">{!shipmentstatus!}</td>
+		  <td class="admin_info">Shipment {!status!}</td>
 		  <td class="subtitle">
 		  {if $shop_order.order_shipment_status eq "none"}
-		  	<font color="#FF0000">{!notsent!}</font>
+		  	<font color="#FF0000">Not {!sent!}</font>
 		  {elseif $shop_order.order_shipment_status eq "send"}
-		  	<font color='green'>{!sent!}</font>
+		  	<font color='#00CC00'>{!sent!}</font>
 		  {/if}
   	  	  </td>
 		</tr>
@@ -140,48 +143,48 @@
 	</td>
 	<td width="50%" valign="top">
  	  <table width="100%">
-		<tr>
-	 	  <td class="title" colspan=2 valign="top">{!pers_info!}</td>
+		<tr> 
+	 	  <td class="title" valign="top">User Information</td>
 		  <td class="title" valign="top">&nbsp;</td>
 		</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_firstname!}</td>
+		  <td class="admin_info" valign="top">First Name</td>
 		  <td class="sub_title" valign="top">{$user_order.user_firstname}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_lastname!}</td>
+		  <td class="admin_info" valign="top">Second Name</td>
 		  <td class="sub_title" valign="top">{$user_order.user_lastname}</td>
 	  	</tr>
 		<tr>
-		  <td class="admin_info" valign="top">{!user_Address!} </td>
+		  <td class="admin_info" valign="top">Address </td>
 		  <td class="sub_title" valign="top">{$user_order.user_address}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_Address1!}</td>
+		  <td class="admin_info" valign="top">Address 2</td>
 		  <td class="sub_title" valign="top">{$user_order.user_address1}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_zip!}</td>
+		  <td class="admin_info" valign="top">ZIP</td>
 		  <td class="sub_title" valign="top">{$user_order.user_zip}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_city!}</td>
+		  <td class="admin_info" valign="top">City</td>
 		  <td class="sub_title" valign="top">{$user_order.user_city}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_state!}</td>
+		  <td class="admin_info" valign="top">State</td>
 		  <td class="sub_title" valign="top">{$user_order.user_state}</td>
 	  	</tr>
 		<tr>
-		  <td class="admin_info" valign="top">{!user_country!}</td>
-		  <td class="sub_title" valign="top">{include file="countries.tpl" code=$user_order.user_country}</td>
+		  <td class="admin_info" valign="top">Country</td>
+		  <td class="sub_title" valign="top">{$user_order.user_country}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_phone!}</td>
+		  <td class="admin_info" valign="top">Phone</td>
 		  <td class="sub_title" valign="top">{$user_order.user_phone}</td>
 	  	</tr>
 	  	<tr>
-		  <td class="admin_info" valign="top">{!user_email!}</td>
+		  <td class="admin_info" valign="top">Email</td>
 		  <td class="sub_title" valign="top">{$user_order.user_email}</td>
 	  	</tr>
  	  </table>
@@ -192,10 +195,10 @@
   	<td colspan="2">
   	  <table width='100%' bgcolor="lightgrey">
   		<tr>
-  		  <td width='33%' align="left"><a href="index.php?process=paid">{!pos_gotounprocessed!}</a></td>
-  		  <td width='34%' align="center"><a href='javascript:if(confirm("{!pos_processorder!}")){literal}{location.href="index.php?process=paid&order_id={/literal}{$shop_order.order_id}{literal}&action=change_status";}{/literal}'>
-      				{!pos_clicktoproc!}</a></td>
-  		  <td width='33%' align="right"><a href="index.php?process=paid&order_id={$next_order_id}">{!pos_nextunprocessed!}</a></td>
+  		  <td width='33%' align="left"><a href="shop.php?process=sent">Click to go back to list of Sent Orders</a></td>
+  		  <!--<td width='34%' align="center"><a href='javascript:if(confirm("Processed Order? The Order ID and Ticket IDs been noted?")){literal}{location.href="shop.php?process=paid&order_id={/literal}{$shop_order.order_id}{literal}&action=change_status";}{/literal}'> 
+      				Click To Finish Processing!</a></td> -->
+  		  <td width='33%' align="right"><a href="shop.php?process=sentd&order_id={$next_order_id}">Next Sent Order</a></td>
 		</tr>
 	  </table>
 	</td>
@@ -205,7 +208,7 @@
 	
   	  <table width='100%' cellspacing='1' cellpadding='4'>
 		<tr>
-		  <td class='title' colspan='8'>{!tickets!}<br></td>
+		  <td class='title' colspan='8'>{#tickets#}<br></td>
 		</tr>   
 		<tr>
 			<td class='subtitle'>{!id!}</td>
@@ -230,33 +233,34 @@
 		  {if not $shop_ticket.category_numbering or $shop_ticket.category_numbering eq "both"}
 		  	{$shop_ticket.seat_row_nr}  -  {$shop_ticket.seat_nr}
 		  {elseif $shop_ticket.category_numbering eq "rows"}
-		  	{!row!}{$shop_ticket.seat_row_nr}
+		  	{#row#}{$shop_ticket.seat_row_nr}
 		  {else}
 		  	---
 		  {/if}</td>
 		  <td class='admin_info'>{$shop_ticket.discount_name}</td>
 		  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
-		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="index.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
+		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{#cancel_ticket#}  {$shop_ticket.seat_id}?")){literal}{location.href="shop.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
 		</tr>
 		{/order->tickets}
 	  </table>
-	<br>
+	<br />
 	</td>
   </tr>
   	<tr>
-		<form name='f' action='index.php' method='post'>
-  			<input type="hidden" name="process" value="paid" />
-  			<input type="hidden" name="action" value="update_note" />
-  			<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
-  		<td>Notes about order and tickets:<br />
-	  		<textarea name="note" cols="40" rows="8" wrap="VIRTUAL">{$shop_order.order_note}</textarea>
-  		</td>
-  		<td>
-  			<b>Remember to save after any changes!!</b>
-	  		<br />
-	  		<input type="submit" value="Save Note" />
-  		</td>
-  		</form>
+	  	<td>Notes about order and tickets:<br />
+			<form name='f' action='index.php' method='post'>
+	  			<input type="hidden" name="process" value="sent" />
+	  			<input type="hidden" name="action" value="update_note" />
+	  			<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+	  			<textarea name="note" cols="40" rows="8">{$shop_order.order_note}</textarea>
+	  	</td>
+	  	<td>
+	  		<b>Remember to save after any changes!!</b>
+			<br />
+			<input type="submit" value="Save Note" />
+			</form>
+	  	</td>
+  		  		
   	</tr>
 </table>
 </form>

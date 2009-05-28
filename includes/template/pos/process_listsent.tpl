@@ -24,15 +24,15 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't 
  * clear to you.
  */
- 
  *}
+
 <table border='0' width='100%' >
   <tr>
 	<td>
 	  <table width='100%' cellspacing='1' cellpadding='5' border=0>
 		<tr>
 		  <td class='title' colspan='5' align='center'>
-    		{!unprocessed_paid!}
+    		{!pos_sentorders!}
 		  </td>
 		</tr>
     	<tr>
@@ -65,21 +65,21 @@
 			-->
 		  </script>
 		  {/literal}
-		  <form action='index.php' method='get'>
-		  	<input type='hidden' name='action' value='view_orders'>
+		  <form action='shop.php' method='get'>
+		  	<input type='hidden' name='action' value='view_orders' />
 			<table border='0' width='100%' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
 			  <tr>
 			  	<td class='admin_info'>{!from!}</td>
   				<td class='note'>
-				  <input type='text' name='fromd' value='{$smarty.get.fromd}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromm'])" /> -
-  				  <input type='text' name='fromm' value='{$smarty.get.fromm}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromy'])" /> -
-  				  <input type='text' name='fromy' value='{$smarty.get.fromy}' size='4' maxlength='4'/> (dd-mm-yyyy)
+				  <input type='text' name='fromd' value='{$smarty.get.fromd}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromm'])" > -
+  				  <input type='text' name='fromm' value='{$smarty.get.fromm}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromy'])"> -
+  				  <input type='text' name='fromy' value='{$smarty.get.fromy}' size='4' maxlength='4'> (dd-mm-yyyy)
   				</td>
 				<td class='admin_info'>{!to!}</td>
   				<td class='note'>
-				  <input type='text' name='tod' value='{$smarty.get.tod}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['tom'])" /> - 
-				  <input type='text' name='tom' value='{$smarty.get.tom}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['toy'])" /> -
-  				  <input type='text' name='toy' value='{$smarty.get.toy}' size='4' maxlength='4' /> (dd-mm-yyyy)
+				  <input type='text' name='tod' value='{$smarty.get.tod}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['tom'])" > - 
+				  <input type='text' name='tom' value='{$smarty.get.tom}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['toy'])"> -
+  				  <input type='text' name='toy' value='{$smarty.get.toy}' size='4' maxlength='4'> (dd-mm-yyyy)
   				</td>
 				<td class='admin_info' colspan='2'>
 				  <input type='submit' name='submit' value='submit' />
@@ -90,11 +90,12 @@
 		  </td>
 		</tr>
 		<tr class='subtitle'>
-		  <td>ID</td>
+		 <td>ID</td>
 		  <td>{!total_price!}</td>
 		  <td>{!tickets!}</td>
 		  <td>{!timestamp!}</td>
 		  <td>{!actions!}</td>
+		  <!--<td>{!actions!}</td>-->
 		</tr>
 		{assign var='length' value='15'}
 
@@ -109,7 +110,7 @@
   		  {assign var='to' value="`$smarty.get.toy`-`$smarty.get.tom`-`$smarty.get.tod` 23:59:59.999999"}
 		{/if}
 
-		{order->order_list status="payed" not_status="pros" first=$smarty.get.first length=$length start_date=$from end_date=$to}
+		{order->order_list status="send" first=$smarty.get.first length=$length start_date=$from end_date=$to}
 		{counter print=false assign=count}  
 		{if $count lt ($length+1)}    
 
@@ -134,11 +135,11 @@
 		  <td class='admin_info'>{$shop_order.order_date}</td>
 		  <!--<td class='admin_info'></td>-->
 		  <td class='admin_info' align="right">
-		  	<a href='index.php?process=paid&order_id={$shop_order.order_id}'>{!pos_clicktoview!}</a>
+		  	<a href='shop.php?process=sent&order_id={$shop_order.order_id}'>Click to View</a> 
 		  {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
 			<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a> 
-			<a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="index.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
-			<img border='0' src='images/trash.png'></a>
+			<a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="shop.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
+			<img border='0' src='images/trash.png' /></a>
 		  {else}
 		  </td>
 		  {/if}
@@ -147,14 +148,14 @@
 		{/order->order_list}
   	  </table>
 <!-- navigation -->
-	  <table width='100%' border=0><tr>
+	  <table width='100%' border='0' ><tr>
 		<td width='33%' align='left'>
 
 		{if $smarty.get.first gt 0}
 		  {if ($smarty.get.first-$length) lt 0}
-		    <a href='index.php?action=view_orders&first=0'>&lt;&lt;&lt; {!prev!}</a>
+		    <a href='shop.php?action=view_orders&first=0'>&lt;&lt;&lt; {!prev!}</a>
 		  {else}
-		    <a href='index.php?action=view_orders&first={$smarty.get.first-$length}&{$dates}'>&lt;&lt;&lt; {!prev!}</a>
+		    <a href='shop.php?action=view_orders&first={$smarty.get.first-$length}&{$dates}'>&lt;&lt;&lt; {!prev!}</a>
 		  {/if}
 		{/if}
 		</td>
@@ -169,14 +170,13 @@
 		</td>
 		<td align='right'  width='33%'>
 		{if $count eq $length}
-		  <a href='index.php?action=view_orders&first={$smarty.get.first+$length}&{$dates}'>{!next!} &gt;&gt;&gt;</a>
+		  <a href='shop.php?action=view_orders&first={$smarty.get.first+$length}&{$dates}'>{!next!} &gt;&gt;&gt;</a>
 		{/if}
 		</td>
 	  </tr>
 	</table>
-	<br>
+	<br />
 	{include file='menu_order.tpl'}
   </td>
 </tr>
 </table>
-

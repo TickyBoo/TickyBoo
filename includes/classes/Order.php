@@ -94,6 +94,16 @@ class Order {
     
 */
   }
+  
+	function save_order_note($order_id,$note){
+		$sql = "UPDATE `Order` SET order_note="._esc($note)."
+				WHERE order_status NOT IN ('trash','cancel') AND order_id="._esc($order_id);
+		if(!$res=ShopDB::query($sql)){
+			return "No such Order ID";
+		}else{
+			return "Note Changed Successfully";
+		}
+	}
 
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
     //echo "$event_id,$category_id,$place_id,{$this->order_user_id},{$this->order_session_id},$price,$discount";

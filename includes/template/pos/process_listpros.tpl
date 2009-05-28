@@ -66,23 +66,23 @@
 		  </script>
 		  {/literal}
 		  <form action='index.php' method='get'>
-		  	<input type='hidden' name='action' value='view_orders'>
-			<table border=0 width='100%' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
+		  	<input type='hidden' name='action' value='view_orders' />
+			<table border='0' width='100%' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
 			  <tr>
 			  	<td class='admin_info'>{!from!}</td>
   				<td class='note'>
-				  <input type='text' name='fromd' value='{$smarty.get.fromd}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromm'])" > -
-  				  <input type='text' name='fromm' value='{$smarty.get.fromm}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['fromy'])"> -
-  				  <input type='text' name='fromy' value='{$smarty.get.fromy}' size='4' maxlength='4'> (dd-mm-yyyy)
+				  <input type='text' name='fromd' value='{$smarty.get.fromd}' size='2' maxlength='2' onkeydown="TabNext(this,'down',2)" onkeyup="TabNext(this,'up',2,this.form['fromm'])" /> -
+  				  <input type='text' name='fromm' value='{$smarty.get.fromm}' size='2' maxlength='2' onkeydown="TabNext(this,'down',2)" onkeyup="TabNext(this,'up',2,this.form['fromy'])" /> -
+  				  <input type='text' name='fromy' value='{$smarty.get.fromy}' size='4' maxlength='4'/> (dd-mm-yyyy)
   				</td>
 				<td class='admin_info'>{!to!}</td>
   				<td class='note'>
-				  <input type='text' name='tod' value='{$smarty.get.tod}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['tom'])" > - 
-				  <input type='text' name='tom' value='{$smarty.get.tom}' size='2' maxlength='2' onKeyDown="TabNext(this,'down',2)" onKeyUp="TabNext(this,'up',2,this.form['toy'])"> -
-  				  <input type='text' name='toy' value='{$smarty.get.toy}' size='4' maxlength='4'> (dd-mm-yyyy)
+				  <input type='text' name='tod' value='{$smarty.get.tod}' size='2' maxlength='2' onkeydown="TabNext(this,'down',2)" onkeyup="TabNext(this,'up',2,this.form['tom'])" /> - 
+				  <input type='text' name='tom' value='{$smarty.get.tom}' size='2' maxlength='2' onkeydown="TabNext(this,'down',2)" onkeyup="TabNext(this,'up',2,this.form['toy'])" /> -
+  				  <input type='text' name='toy' value='{$smarty.get.toy}' size='4' maxlength='4' /> (dd-mm-yyyy)
   				</td>
-				<td class='admin_info' colspan=2>
-				  <input type='submit' name='submit' value='submit'>
+				<td class='admin_info' colspan='2'>
+				  <input type='submit' name='submit' value='submit' />
 				</td>
 			  </tr>
 			</table>
@@ -93,7 +93,7 @@
 		  <td>ID</td>
 		  <td>{!total_price!}</td>
 		  <td>{!tickets!}</td>
-		  <td>{!timestamp}</td>
+		  <td>{!timestamp!}</td>
 		  <td>{!actions!}</td>
 		  <!--<td>{!actions!}</td>-->
 		</tr>
@@ -139,7 +139,7 @@
 		  {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
 			<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='images/printer.gif'></a> 
 			<a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="index.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
-			<img border='0' src='images/trash.png'></a>
+			<img border='0' src='images/trash.png' /></a>
 		  {else}
 		  </td>
 		  {/if}
@@ -148,7 +148,7 @@
 		{/order->order_list}
   	  </table>
 <!-- navigation -->
-	  <table width='100%' border=0><tr>
+	  <table width='100%' border='0'><tr>
 		<td width='33%' align='left'>
 
 		{if $smarty.get.first gt 0}
@@ -175,7 +175,7 @@
 		</td>
 	  </tr>
 	</table>
-	<br>
+	<br />
 	{include file='menu_order.tpl'}
   </td>
 </tr>

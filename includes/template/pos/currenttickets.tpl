@@ -31,7 +31,7 @@
 <table>
   <tr>
   	<td colspan='2'>
-   	  <h2>{!pos_processoptions!}</h2>
+   	  <h2>{!pos_currenttickets!}</h2>
   	</td>
   </tr>
   <tr>
@@ -49,5 +49,13 @@
   	<td>
   	  <a href="index.php?process=processed">{!pos_unsentlist!}</a>
   	</td>
+  </tr>
+  <tr>
+	<td>
+	  {!pos_listpaidsent!}
+	</td>
+	<td>
+	  <a href="shop.php?process=sent">{!pos_sentlist!}</a>
+	</td>
   </tr>
 </table>

@@ -385,6 +385,13 @@ class Order_Smarty {
     return Order::set_reserved($order_id, 0, $this->user_auth_id);
   }
   
+	// added for manual Pepper system - Legacy
+
+	function save_order_note($params,&$smarty){		
+		$ret=Order::save_order_note($params['order_id'],$params['note']);
+		$smarty->assign('order_note',$ret);
+	}
+  
   function set_payed ($params,&$smarty){
     $this->set_payed_f($params['order_id']);
   }

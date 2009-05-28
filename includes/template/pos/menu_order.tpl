@@ -32,12 +32,12 @@
  * clear to you.
  *}  <table width='100%'  cellspacing='2' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
   <tr>
-  <td class='admin_info'><img src='images/dot.gif' class='admin_order_ord' width=15 height=15> {!ordered!}</td>
-  <td class='admin_info'><img src='images/dot.gif' class='admin_order_send' width=15 height=15> {!sent!}</td>
-  <td class='admin_info'><img src='images/dot.gif' class='admin_order_payed' width=15 height=15> {!paid!}</td>
-  <td class='admin_info'><img src='images/dot.gif' class='admin_order_cancel' width=15 height=15> {!cancelled!}</td>
-  <td class='admin_info'><img src='images/dot.gif' class='admin_order_reemit' width=15 height=15> {!reemitted!}</td>
-  <td class='admin_info'><img src='images/dot.gif' class='admin_order_res' width=15 height=15> {!reserved!}</td>
+  <td class='admin_info'><img src='images/dot.gif' class='admin_order_ord' width='15' height='15' /> {!ordered!}</td>
+  <td class='admin_info'><img src='images/dot.gif' class='admin_order_send' width='15' height='15' /> {!sent!}</td>
+  <td class='admin_info'><img src='images/dot.gif' class='admin_order_payed' width='15' height='15' /> {!paid!}</td>
+  <td class='admin_info'><img src='images/dot.gif' class='admin_order_cancel' width='15' height='15' /> {!canceled!}</td>
+  <td class='admin_info'><img src='images/dot.gif' class='admin_order_reemit' width='15' height='15' /> {!reemitted!}</td>
+  <td class='admin_info'><img src='images/dot.gif' class='admin_order_res' width='15' height='15' /> {!reserved!}</td>
   </tr>
   </table>
 <br>

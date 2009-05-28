@@ -31,10 +31,15 @@
     {!processed_unsent!}
 	</td>
   </tr>
-  {order->order_list first=1 length=1 status="pros" not_status="send"}
-  {assign var='next_order_id' value=$shop_order.order_id}
-  {/order->order_list}
-  {order->order_list order_id=$smarty.get.order_id}
+  	{assign var='order_id' value=$smarty.get.order_id}
+	{if !$smarty.get.order_id }
+		{assign var='order_id' value=$smarty.post.order_id}
+	{/if}
+  	
+	{order->order_list first=1 length=1 status="pros" not_status="send"}
+  		{assign var='next_order_id' value=$order_id}
+  	{/order->order_list}
+  	{order->order_list order_id=$order_id}
   <tr>
 	<td  width='50%' valign='top'>
 	
@@ -98,9 +103,9 @@
 			<input type='hidden' name='category' value='{$shop_ticket.seat_category_id}'>
         	<input type='hidden' name='event' value='{$shop_ticket.seat_event_id}'>
         	{/order->tickets *}
-			<input type='hidden' name='action' value='reorder'>
-			<input type="hidden" name="user_id" value="{$shop_order.order_user_id}" >
-			<input type="hidden" name="order_id" value="{$shop_order.order_id}" >
+			<input type='hidden' name='action' value='reorder' />
+			<input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
+			<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
 		<tr>
 		  <td colspan="2" align="left">
 		  To Order Tickets Click below:<br>
@@ -117,7 +122,7 @@
 		  {if $shop_order.order_payment_status eq "none"}
 		    <font color="#FF0000">Not Paid</font>
 		  {elseif $shop_order.order_payment_status eq "payed"}
-		  	<font color='green'>{!paid!}</font>
+		  	<font color='#00CC00'>{!paid!}</font>
 		  {/if}
 		  </td>
 		</tr>
@@ -127,7 +132,7 @@
 		  {if $shop_order.order_shipment_status eq "none"}
 		  	<font color="#FF0000">Not {!sent!}</font>
 		  {elseif $shop_order.order_shipment_status eq "send"}
-		  	<font color='green'>{!sent!}</font>
+		  	<font color='#00CC00'>{!sent!}</font>
 		  {/if}
   	  	  </td>
 		</tr>
@@ -169,7 +174,7 @@
 	  	</tr>
 		<tr>
 		  <td class="admin_info" valign="top">{!user_country!}</td>
-		  <td class="sub_title" valign="top">{include file="countries.tpl" code=$user_data.user_country}</td>
+		  <td class="sub_title" valign="top">{include file="countries.tpl" code=$user_order.user_country}</td>
 	  	</tr>
 	  	<tr>
 		  <td class="admin_info" valign="top">{!user_phone!}</td>
@@ -203,20 +208,22 @@
 		  <td class='title' colspan='8'>{!tickets!}<br></td>
 		</tr>   
 		<tr>
-		  <td class='subtitle'>{!id!}</td>
-		  <td class='subtitle'>{!event!}</td>
-		  <td class='subtitle'>{!category!}</td>
-		  <td class='subtitle'>{!zone!}</td>
-		  <td class='subtitle'>{!seat!}</td>
-		  <td class='subtitle'>{!discount!}</td>
-		  <td class='subtitle'>{!price!}</td>
+			<td class='subtitle'>{!id!}</td>
+			<td class='subtitle'>{!event!}</td>
+			<td class='subtitle'>{!event_date!}</td>
+			<td class='subtitle'>{!category!}</td>
+			<td class='subtitle'>{!zone!}</td>
+			<td class='subtitle'>{!seat!}</td>
+			<td class='subtitle'>{!discount!}</td>
+			<td class='subtitle'>{!price!}</td>
 		</tr>
 		{order->tickets order_id=$shop_order.order_id}
 		{counter assign='row' print=false}
-		<input type='hidden' name='place[]' value='{$shop_ticket.seat_id}'>
+		<input type='hidden' name='place[]' value='{$shop_ticket.seat_id}'/>
 		<tr class='admin_list_row_{$row%2}'>
 		  <td class='admin_info'>{$shop_ticket.seat_id}</td>
 		  <td class='admin_info'>{$shop_ticket.event_name}</td>
+		  <td class='admin_info'><b>{$shop_ticket.event_date}</b></td>
 		  <td class='admin_info'>{$shop_ticket.category_name}</td>
 		  <td class='admin_info'>{$shop_ticket.pmz_name}</td>
 		  <td class='admin_info'>
@@ -229,13 +236,28 @@
 		  {/if}</td>
 		  <td class='admin_info'>{$shop_ticket.discount_name}</td>
 		  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
-		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="index.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png'></a></td>
+		  <td class='admin_info' align='center'><a href='javascript:if(confirm("{!cancel_ticket!}  {$shop_ticket.seat_id}?")){literal}{location.href="index.php?action=cancel_ticket&order_id={/literal}{$shop_ticket.seat_order_id}&ticket_id={$shop_ticket.seat_id}{literal}";}{/literal}'><img border='0' src='images/trash.png' /></a></td>
 		</tr>
 		{/order->tickets}
 	  </table>
-	<br>
+	<br />
 	</td>
   </tr>
+ 	<tr>
+		<form name='f' action='index.php' method='post'>
+  			<input type="hidden" name="process" value="sent" />
+  			<input type="hidden" name="action" value="update_note" />
+  			<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+  		<td>Notes about order and tickets:<br />
+	  		<textarea name="note" cols="40" rows="8">{$shop_order.order_note}</textarea>
+  		</td>
+  		<td>
+  			<b>Remember to save after any changes!!</b>
+	  		<br />
+	  		<input type="submit" value="Save Note" />
+  		</td>
+  		</form>
+  	</tr>
 </table>
 </form>
 <br>
