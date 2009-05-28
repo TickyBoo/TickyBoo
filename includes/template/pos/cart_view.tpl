@@ -31,7 +31,7 @@
 </tr>
 {handling sp='on'}  
 {* example: how to restrict handlings
- if ($shop_handling.handling_id neq 29) or ($user_auth->user_id eq 1265) *}
+ if ($shop_handling.handling_id neq 29) or ($pos->user_id eq 1265) *}
 <tr><td class='payment_form'>
 {if $shop_handling.handling_shipment eq 'sp'}
 <input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}'>

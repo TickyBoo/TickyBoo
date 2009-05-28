@@ -45,10 +45,17 @@ class User_Smarty {
     }
     $smarty->register_object("user",$this);
     $smarty->assign_by_ref("user",$this);
-
-    
   }
 
+  function load($params,&$smarty){
+   $this->load_f($params['user_id']);
+  }
+
+  function load_f($user_id){
+    $user = User::load_user($params['user_id']);
+    $this->_fill($user);
+    $this->logged=true;
+  }
 
   function login ($params,&$smarty){
   	$this->login_f($params['username'],$params['password'],$err);
@@ -78,15 +85,15 @@ class User_Smarty {
 
  /* User data gets subbmitted to here */ 
   function register ($params, &$smarty){
-    if(!$this->register_f($params['ismember'], $params['data'], $err, $params['mandatory'], $params['secure'] )){
+    if(!$this->register_f($params['ismember'], $params['data'], $err, $params['mandatory'], $params['secure'],$params['short'] )){
       $smarty->assign('user_errors',$err);
     }
   }
 
 /*The next bit of code creates users */
-  function register_f ($ismember, &$member,&$err, $mandatory_l=0, $secure=''){
+  function register_f ($ismember, &$member,&$err, $mandatory_l=0, $secure='', $short=0 ){
     $type =($ismember)?2:3;
-    if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure)){ /* $res == the returned $user_id from create_member in user_func.php */
+    if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
   	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
       echo "<script>window.location.href='{$url}';</script>";
       exit;
@@ -99,17 +106,17 @@ class User_Smarty {
 /////////////////////
 
   function update($params,&$smarty){
-  	if(!$this->update_f($params['data'],$err,$params['mandatory'])){
+  	if(!$this->update_f($params['data'],$err,$params['mandatory'],$params['short'])){
   		$smarty->assign('user_errors',$err);
 	  }
   }
   
-  function update_f (&$member, &$err, $mandatory_l=0){
+  function update_f (&$member, &$err, $mandatory_l=0, $short){
     If ($this->user_id <> $member['user_id']) {
       die('System error while changing user data');
     }
     $mandatory = convMandatory($mandatory_l);
-    if (User::Update($member, $err, $mandatory_l=0)) {
+    if (User::Update($member, $err, $mandatory_l=0, $short)) {
       $user = User::load_user($this->user_id);
       $this->_fill($user);
       $this->logged=true;

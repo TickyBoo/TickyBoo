@@ -90,7 +90,7 @@ class User{
   }
 
   function is_logged (){
-    return (!isset($_SESSION['SHOP_USER']))? 0: 1;
+    return (!isset($_SESSION['_SHOP_USER']))? 0: 1;
   }
 
   function validate_user ($status, $data, &$err, $mandatory=0, $secure, $short) {

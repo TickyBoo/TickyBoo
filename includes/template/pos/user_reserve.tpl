@@ -72,7 +72,7 @@
 					<td>
 					</td>
 					<td valign="right">
-						{assign var=users value=$user_auth->get_users_f() }
+						{assign var=users value=$pos->list_patrons() }
 						<select size="28" name="exst_user">
 						<option value="1">{!pos_newuser!}</option>
 						{$users}

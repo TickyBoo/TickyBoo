@@ -41,9 +41,9 @@
     {user->login username=$smarty.post.username password=$smarty.post.password'}
   {elseif $smarty.get.action eq 'register'}
     {if $smarty.post.submit_info}
-      {user->guest data=$smarty.post}
+      {user->register data=$smarty.post short=true}
     {elseif $smarty.post.submit_register}
-      {user->member data=$smarty.post}
+      {user->register ismember=true data=$smarty.post short=true}
     {/if}
   {/if}
   {if not $user->logged}
@@ -57,7 +57,7 @@
       {if $order_success}
         {include file="order_confirm.tpl"}
 	{cart->destroy}
-	{if $user->is_guest}{user->logout}{/if}
+	{if !$user->is_member}{user->logout}{/if}
       {else}
         <div class='error'>{$order_error}</div> 	
       {/if}	

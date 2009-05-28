@@ -36,15 +36,15 @@
 <tr><td class='title' colspan='2'>
     {!address!}</a>
 </td></tr>
-<tr><td class='user_address_td'>{user_auth->user_firstname} 
- {user_auth->user_lastname}</td></tr>
- <tr><td class='user_address_td'>{user_auth->user_address}</td></tr>
- {if $user_auth->user_address1}
- <tr><td class='user_address_td'>{user_auth->user_address1}</td></tr> 
+<tr><td class='user_address_td'>{pos->user_firstname}
+ {pos->user_lastname}</td></tr>
+ <tr><td class='user_address_td'>{pos->user_address}</td></tr>
+ {if $pos->user_address1}
+ <tr><td class='user_address_td'>{pos->user_address1}</td></tr>
  {/if}
-<tr><td class='user_address_td'>{user_auth->user_zip} {user_auth->user_city}</td></tr>
-<tr><td class='user_address_td'>{country code=$user_auth->user_country}</td></tr>
-<tr><td class='user_address_td'>{user_auth->user_email}</td></tr></table>
+<tr><td class='user_address_td'>{pos->user_zip} {pos->user_city}</td></tr>
+<tr><td class='user_address_td'>{country code=$pos->user_country}</td></tr>
+<tr><td class='user_address_td'>{pos->user_email}</td></tr></table>
 <br><br><form action='index.php' method='GET'>
 <table width='100%' border='0' cellspacing='0' cellpadding='3' >
 <tr><td class='title' colspan='2' >
@@ -52,8 +52,8 @@
 </td></tr>
 <tr><td width='300'>
 <select name='user_prefs' >
-<option value="pdt" {if $user_auth->user_prefs eq "pdt"} selected {/if}>{!send_orders_printer!}</option>
-<option value="pdf" {if $user_auth->user_prefs eq "pdf"} selected {/if}>{!open_with_acrobat!}</option>
+<option value="pdt" {if $pos->user_prefs eq "pdt"} selected {/if}>{!send_orders_printer!}</option>
+<option value="pdf" {if $pos->user_prefs eq "pdf"} selected {/if}>{!open_with_acrobat!}</option>
 </select>
 </td><td align='left'>
 <input type='hidden' name='action' value='save_prefs'>

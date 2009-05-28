@@ -31,9 +31,9 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}{if $user_auth->user_prefs eq "pdf"}
+ *}{if $pos->user_prefs eq "pdf"}
 {if $smarty.get.mode eq "doit"}
-{order->order_print print_prefs=$user_auth->user_prefs order_id=$smarty.get.order_id}
+{order->order_print print_prefs=$pos->user_prefs order_id=$smarty.get.order_id}
 {else}
 <script type='text/javascript'>
 <!--
@@ -43,5 +43,5 @@ F1.focus();
 </script>
 {/if}
 {else}
-{order->order_print print_prefs=$user_auth->user_prefs order_id=$smarty.get.order_id}
+{order->order_print print_prefs=$pos->user_prefs order_id=$smarty.get.order_id}
 {/if}

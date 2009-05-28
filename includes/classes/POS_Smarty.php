@@ -43,8 +43,8 @@ class POS_Smarty {
     if(isset($_SESSION['_SHOP_POS_USER'])){
       $user=$_SESSION['_SHOP_POS_USER'];
     }else{
-      $user=POS_Smarty::_load();
-      $_SESSION['_SHOP_POS_USER']=$user;
+       $user=POS_Smarty::_load();
+       $_SESSION['_SHOP_POS_USER']=$user;
     }
 
     $smarty->register_object("pos",$this);
@@ -59,9 +59,7 @@ class POS_Smarty {
 
 
   function _load (){
-
     $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
-    
     $query="select *
             from User 
 	    where user_id="._esc($auth['user_id']) ." limit 1";
@@ -69,9 +67,7 @@ class POS_Smarty {
     if($result=ShopDB::query($query) and $user=shopDB::fetch_assoc($result)){
       return $user;
     }
-    
     return FALSE;
-  
   }
 
   function _fill ($user){
@@ -104,47 +100,6 @@ class POS_Smarty {
 		}
 		return $options;
 	}
-
-  function load_patron ($params,&$smarty){
-    $this->load_patron_f($params['user_id']);
-  }
-
-  function load_patron_f ($user_id){
-    $this->user = User::load_user($user_id);
-  }
-
-  function register_patron ($params,&$smarty){
-    if (!$this->register_f($param['ismember'], $params['data'], $err, $params['mandatory']) ) {
-  		$smarty->assign('user_errors',$err);
-    }
-  }
-
-  function register_patron_f ($ismember, &$data, &$err, $mandatory_l=0){
-    $data['user_owner_id'] = $this->user_id;
-    $type =($ismember)?2:3;
-    if($user_id = User::register($type, $data, $err, convMandatory($mandatory_l))){
-      $this->user = User::load_user($user_id);
-    }
-    return $res;
-  }
-
-  function update_patron ($params,&$smarty){
-    if (!$this->update_patron_f($params['data'], $err, $params['mandatory']) ) {
-  		$smarty->assign('user_errors',$err);
-    }
-  }
-
-  function update_patron_f (&$member,&$err, $mandatory_l=0){
-    If ($this->user_id <> $member['user_id']) {
-      die('System error while changing user data');
-    }
-   /// $data['user_owner_id'] = $this->user_id;
-    if($user_id = User::update($data, $err, convMandatory($mandatory_l))){
-      $this->user = User::load_user($user_id);
-    }
-    return $res;
-  }
-
 
   function set_prefs ($params,&$smarty){
     $this->set_prefs_f($params['prefs']);

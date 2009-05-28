@@ -11,7 +11,7 @@
 	{include file='index.tpl'}
 	
 {elseif $smarty.get.action eq save_prefs}
-   {user_auth->set_prefs prefs=$smarty.get.user_prefs}
+   {pos->set_prefs prefs=$smarty.get.user_prefs}
    {include file='view_options.tpl'}
 
 {elseif $smarty.get.action eq view_options}
@@ -25,9 +25,9 @@
 
 {elseif $smarty.post.action eq submit_info}
 	{if not $smarty.post.exst_user }   {*or not $smarty.post.exst_user = 1 {*} 
-  		{user->login_guest user_id=$smarty.post.exst_user}
+  		{user->load user_id=$smarty.post.exst_user}
   	{else}
-		{user->guest data=$smarty.post short='true'}
+	  	{user->register data=$smarty.post short='true'}
   	{/if}
 	{if $user->logged}
 		{order->make handling=$smarty.post.handling user_id=$user->user_id place='pos' no_fee=$smarty.post.no_fee no_cost=$smarty.post.no_cost}
