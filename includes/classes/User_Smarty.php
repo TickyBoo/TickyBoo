@@ -111,20 +111,21 @@ class User_Smarty {
 	  }
   }
   
-  function update_f (&$member, &$err, $mandatory_l=0, $short){
-    If ($this->user_id <> $member['user_id']) {
-      die('System error while changing user data');
-    }
-    $mandatory = convMandatory($mandatory_l);
-    if (User::Update($member, $err, $mandatory_l=0, $short)) {
-      $user = User::load_user($this->user_id);
-      $this->_fill($user);
-      $this->logged=true;
-      return true;
-    } else {
-      return false;
-    }
-  }
+  	function update_f (&$member, &$err, $mandatory_l=0, $short){
+  		if ($this->user_id <> $member['user_id']) {
+      		die('System error while changing user data');
+    	}
+    	$mandatory = convMandatory($mandatory_l);
+    	
+		if (User::Update($member, $err, $mandatory_l=0, $short)) {
+      		$user = User::load_user($this->user_id);
+      		$this->_fill($user);
+      		$this->logged=true;
+      		return true;
+    	} else {
+      		return false;
+    	}
+  	}
 
 /////////////////
 /////////////////  

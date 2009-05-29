@@ -397,7 +397,7 @@ define("log_err_not_act_info","<br />Please activate your account!<p>Please chec
         check your spam folder. Then follow the link to activate your account</p><p>If you
         still haven&apos;t recieved anything after a hour please click <a href='resend_activation.php'
         here</a> to resend activation email.</p>");
-define("log_err_wrong_usr","Wrong user login! ");
+define("log_err_wrong_usr","Wrong username or password! ");
 define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />If you have forgoten your username
         or password please click <a href='forgot_password.php'>here</a></p>");
 define("longdate_format","%Y-%m-%d %H:%M:%S");
@@ -992,19 +992,19 @@ define('imp_export_admin', "Import /Export");
 define('guest_info', "Vul hieronder uw gegevens in, zodat wij de kaarten aan u kunnen toesturen.<br> Bent u al vaste klant? Vul dan onderaan dit scherm uw emailadres en wachtwoord in.");
 define('mand_all', "Alle velden zijn verplicht.");
 define('password1', "Kies uw wachtwoord");
-define('eventlist_info', 'Klik op de datum om kaarten te bestellen.');
+define('eventlist_info', 'Please select an upcomming event from below.');
 define('shop_info2', "Voor dit concert kunnen geen kaarten worden gereserveerd.<BR /><BR />Route informatie is beschikbaar door de locatie te klikken. ");
-define('cart_total', "Aantal kaarten:");
-define('user_address2', "Adres");
-define('user_nospam', "Veiligheidscode");
-define('nospam_info', "Neem de veiligheidscode over vanuit<br>het plaatje hiernaast.");
-define('payment_fee', "Kosten");
+define('cart_total', "Shopping Cart Total:");
+define('user_address2', "Address");
+define('user_nospam', "Security Code");
+define('nospam_info', "Please type the code to the right into the box.");
+define('payment_fee', "Fee");
 define('per_mail', "per email");
 define('pwd_min', "(min 6 letters)");
-define('pwd_second_missing', "Bevestig wachtwoord is niet ingevuld");
-define('pwd_to_short', "Het gekozen wachtwoord is te kort");
-define('pwd_not_thesame', "Opgegeven wachtwoord komt niet overheen met de bevestigde wachtwoord");
-define('invalid_zip', "Postcode onjuist ingegeven");
+define('pwd_second_missing', "Second Password missing.");
+define('pwd_to_short', "Password too short.");
+define('pwd_not_thesame', "The passwords you entered do not match.");
+define('invalid_zip', "Postcode you entered is invalid");
 ?><?php
 // defines added at: 2009-05-22T14:19:24+02:00
 define('www', 'webshop');

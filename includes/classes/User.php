@@ -187,82 +187,88 @@ class User{
     return $user_id;
   }
 
-  function update (&$data, &$err, $mandatory=0, $short=0){
+	function update (&$data, &$err, $mandatory=0, $short=0){
 
-    if(!empty($data['user_id'])) {
+    	if(!empty($data['user_id'])) {
     
-      /////////////////////////
-      ///Check user password///
-      /////////////////////////
+			/////////////////////////
+			///Check user password///
+			/////////////////////////
 
-    	$query="SELECT username, password, user_status
-              FROM User left join auth on auth.user_id=User.user_id
-              WHERE User.user_id="._esc((int)$data['user_id'])."
-              and password="._esc(md5($data['old_password']));
+    		$query="SELECT username, password, user_status 
+              	FROM User left join auth on auth.user_id=User.user_id
+              	WHERE User.user_id="._esc((int)$data['user_id'])."
+              	AND password="._esc(md5($data['old_password']));
               
-      if (!$user=ShopDB::query_one_row($query)){
-    	  $err['old_password']=con("incorrect_password");
-    	} elseif($user['user_status']==2) {
-        if (empty($data['old_password'])) {
-          $err['old_password'] = con('mandatory');
-        }
-      	If ($user ['username']<> $data['user_email'] and !isset($err['user_email'])) {
-        	$query="select count(*) as count from auth where username="._esc($member['user_email']);
-        	if ($row=ShopDB::query_one_row($query) and $row['count']>0){
-        		$err['user_email']=con('alreadyexist') ;
-        	}
-        }
-      }
+      		if (!$user=ShopDB::query_one_row($query)){
+      			$err['old_password']=con("incorrect_password");
+    		} elseif($user['user_status']==2) {
+        		if (empty($data['old_password'])) {
+          			$err['old_password'] = con('mandatory');
+        		}
+      			if ($user ['username']<> $data['user_email'] and !isset($err['user_email'])) {
+        			$query="select count(*) as count from auth where username="._esc($member['user_email']);
+				
+					if ($row=ShopDB::query_one_row($query) and $row['count']>0){
+						$err['user_email']=con('alreadyexist') ;
+        			}
+        		}
+      		}
 
-      User::validate_user($user['user_status'], $data, $err, $mandatory, 0,  $short);
-      print_r($err);
-      if(!empty($err)){
-        return FALSE;
-      }
+      		User::validate_user($user['user_status'], $data, $err, $mandatory, 0,  $short);
+      		//print_r($err);
+      		if(!empty($err)){
+        		return FALSE;
+      		}
 
-      $set = array();
-      $user_id =$data['user_id'];
-      unset($data['user_id']);
-      $fields = ShopDB::FieldList('User');
-      foreach($fields as $field) {
-        if (isset($data[$field])) {
-          $set[] = "$field="._esc($data[$field]);
-        }
-      }
-      if ($set) {
-        $set = implode(",\n",$set);
+      		$set = array();
+      		$user_id =$data['user_id'];
+      		unset($data['user_id']);
+      		$fields = ShopDB::FieldList('User');
+      		foreach($fields as $field) {
+        		if (isset($data[$field])) {
+          			$set[] = "$field="._esc($data[$field]);
+        		}
+      		}
+      		
+			if ($set) {
+        		$set = implode(",\n",$set);
 
-        $query="UPDATE User SET $set
-                WHERE user_id="._esc((int)$user_id);
-      	if(!ShopDB::query($query)){
-      	  return FALSE;
-      	}
-      }
+        		$query="UPDATE User SET $set
+                	WHERE user_id="._esc((int)$user_id);
+      			
+				if(!ShopDB::query($query)){
+      	  			return FALSE;
+      			}
+      		}
 
-    	$set = array();
-    	If ($user ['username']<> $data['user_email']) {
-        $set[] = "username="._esc($data['user_email']);
-      }
-      if (!empty($data['password1'])) {
-        $set[] = "password="._esc($data['password1']);
-      }
-      If ($set) {
-        $set = implode(',',$set);
-      	$query="UPDATE auth SET $set
-                WHERE user_id="._esc((int)$user_id);
+    		$set = array();
+   			if ($user ['username']<> $data['user_email']) {
+        		$set[] = "username="._esc($data['user_email']);
+      		}
+      		
+      		if (!empty($data['password1'])) {
+        		$set[] = "password="._esc($data['password1']);
+      		}
+      		
+      		if ($set) {
+        		$set = implode(',',$set);
+      			$query="UPDATE auth SET $set
+                	WHERE user_id="._esc((int)$user_id);
 
-      	if(!ShopDB::query($query)){
-          echo 'krok-';
-      	  return FALSE;
-      	}
-      }
-    	$data['is_member']=$data['user_status']==2;
-    	$_SESSION['_SHOP_USER']=$data;
-      return true;
-    }else{
-      die("Missing user id. System halted.");
-    }
-  }
+      			if(!ShopDB::query($query)){
+          			echo 'krok-';
+      	  			return FALSE;
+      			}
+      		}
+      		
+    		$data['is_member']=$data['user_status']==2;
+    		$_SESSION['_SHOP_USER']=$data;
+      		return true;
+    	}else{
+      		die("Missing user id. System halted.");
+    	}
+  	}
 
   function Activate($userdata, &$errors){
     if (!is_base64_encoded($userdata)) {

@@ -91,32 +91,38 @@
   {/if}  
 
 {elseif $smarty.request.personal_page}
-  {if $user->logged}
-    {include file="header.tpl"}
-  	{if $smarty.request.personal_page eq 'details'}
-	    {if $smarty.request.action eq 'update'}
-      	{if $smarty.post.submit_update}
-      		{user->update data=$smarty.post}
-        {/if}
-        {assign var='user_data' value=$smarty.post}
-        {if $user_errors}
-        	{include file="user_update.tpl"}
-        {else}
-			    {include file="personal_page.tpl"}
-        {/if}
-      {else}
-	    	{include file="user_update.tpl"}
-      {/if}
-    {elseif $smarty.request.personal_page eq 'orders'}
-    	{if $smarty.request.action eq 'order_res'}
-    	  {order->res_to_order order_id=$smarty.post.order_id handling_id=$smarty.post.handling}
-  		  {if $order_success}
-  			  {include file="personal_orders.tpl"}
-  		  {else} 
-		 	    <div class='error'>Error</div>
-  		  {/if}
+	{if $user->logged}
+    	{include file="header.tpl"}
+  		{if $smarty.request.personal_page eq 'details'}
+  			
+  			{assign var='user_data' value=$smarty.session._SHOP_USER}
+   			{if $smarty.post}
+        		{assign var='user_data' value=$smarty.post}
+        	{/if}
+  		
+	    	{if $smarty.request.action eq 'update'}
+      			{if $smarty.post.submit_update}
+      				{user->update data=$smarty.post}
+        		{/if}
+        		
+				{if $user_errors}
+        			{include file="user_update.tpl"}
+        		{else}
+			    	{include file="personal_page.tpl"}
+        		{/if}
+      		{else}
+	    		{include file="user_update.tpl"}
+      		{/if}
+		{elseif $smarty.request.personal_page eq 'orders'}
+    		{if $smarty.request.action eq 'order_res'}
+    	  		{order->res_to_order order_id=$smarty.post.order_id handling_id=$smarty.post.handling}
+  		  	{if $order_success}
+				{include file="personal_orders.tpl"}
+  		  	{else} 
+		 		<div class='error'>Error</div>
+  		  	{/if}
   		{elseif $smarty.request.action eq 'reorder'}
-  			{include file="personal_reorder.tpl"}
+			{include file="personal_reorder.tpl"}
   		{elseif $smarty.get.id}
     		{include file="personal_order.tpl"}
     	{else}

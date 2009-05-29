@@ -28,7 +28,7 @@
  *}
  {gui->setdata errors=$user_errors}
 <tr>
-  <td class='TblLower'> {!firstname!}&nbsp;* </td>
+  <td class='TblLower' width="120px"> {!firstname!}&nbsp;* </td>
   <td class='TblHigher'><input type='text' name='user_firstname' size='30' maxlength='50' value='{$user_data.user_firstname|clean}'><span class='error'>{$user_errors.user_firstname}</span></td>
 </tr>
 <tr>

@@ -132,6 +132,9 @@ a:hover{text-decoration:underline;color:#000000;}
 #navbar ul li a:hover {
 	background: url(images/back1.gif) 0 100% repeat-x;
 }
+
+.TblLower { text-align: left;}
+
 .table_dark{background-color:#FFFFFF;width:100%;}
 .div_dark{width:550px;padding:10px;background-color:#FFFFFF; }
 .div_midtone{width:550px; background-color:#FFFFFF; padding:10px; color:#333333;}
@@ -185,3 +188,8 @@ _input.pm_check{width:14px; height:14px;margin:0px;border:0px}
 _input.checkbox{margin:0px;border:0px;padding:0px;background-color:#666666;}
 _input.checkbox_dark{margin:0px;border:0px;padding:0px;background-color:#333333;}
 
+/* Form Validation */
+
+label.form-error{color:#FF0066; font-weight:bold;font-size:12px;}
+input.form-error {background-color:#FF0066;}
+label.form-valid {color:#00BB22;}

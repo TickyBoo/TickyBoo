@@ -49,10 +49,10 @@
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>		
 		{literal}
-		<script type="text/javascript">
-			$(document).ready(function(){
- 			});
-		</script>
+			<script type="text/javascript">
+				$(document).ready(function(){
+	 			});
+			</script>
 		{/literal}
 	</head>
 	

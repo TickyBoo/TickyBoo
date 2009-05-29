@@ -64,7 +64,7 @@
         {/if}
 
         {if $shop_category.category_numbering eq 'none'}
-          </table><br>
+          </table><br />
           <center>
             <table border="0" cellspacing="0" cellpadding="5">
               <tr>
@@ -86,15 +86,15 @@
                 </td>
               </tr>
             {/if}
-          </table><br><br>
+          </table><br /><br />
           <center>
             {placemap  category=$shop_category}
           </center>
         {/if}
-      <br>
+      <br />
       <center>
-         <input type='submit' name='submit' value='{!reserve!}'>
-  	  /center>
+         <input type='submit' name='submit' value='{!reserve!}' />
+  	  </center>
     </form>
   {else}
     {include file="event.tpl"}
