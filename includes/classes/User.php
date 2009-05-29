@@ -114,7 +114,7 @@ class User{
 
     User::check_NoSpam($secure, $data, $err);
     
-    if (!$short) {
+    if (!$short and $status==2) {
 
       if(empty($data['password1'])) {
         if (empty($data['user_id'])){
@@ -179,8 +179,7 @@ class User{
         	return FALSE;
         }
         if (!User::SendActivatieCode($data, $active, $myerror)) {
-           $err['user_email'] = $myerror;
-        	return FALSE;
+           $err = $myerror;
         }
       }
     }
@@ -257,7 +256,6 @@ class User{
                 	WHERE user_id="._esc((int)$user_id);
 
       			if(!ShopDB::query($query)){
-          			echo 'krok-';
       	  			return FALSE;
       			}
       		}

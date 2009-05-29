@@ -27,7 +27,6 @@
  * clear to you.
  *}
 {include file="header.tpl" name=!shop! header=!shop_info!}
-
 {event event_id=$event_id ort='on' place_map='on' event_status='pub' limit=1}
   {include file="event_description.tpl" info_plus="on"}
   {if $shop_event.event_rep neq 'main'}

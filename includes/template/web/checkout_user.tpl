@@ -30,16 +30,16 @@
  *}
 
 {include file="header.tpl" name=!pers_info! header=!user_notice!}
+  <br/>
   {if $user_errors}
      <div class='error'>{$user_errors._error}</div><br>
   {/if}
-{*  <div onclick='ShowRegister();'><input type='radio' onclick='ShowRegister();' id='showregister' /> click here to register as parton.  {!register_quest_here!} </div> *}
-  <center>
+  <table width='100%'> <tr><td valign='top'>
   <form action='checkout.php' method='post'  >
     {ShowFormToken name='UserRegister'}
     <input type='hidden' name='action' value='register'>
     
-    <table cellpadding="2" bgcolor='white' width='80%' id='guest'>
+    <table cellpadding="2" bgcolor='white' width='100%' id='guest'>
       <tr>
         <td colspan='2' class='TblHeader'> {!guest!} </td>
       </tr>
@@ -48,7 +48,7 @@
       </tr>
       <tr>
         <td colspan='2' class='TblLower'>
-          <input type='checkbox' name='type' id='type' onclick='ShowPasswords(this);' value='check' {if $smarty.post.type} checked {/if} /> {!becomemember!}
+          <input type='checkbox' name='ismember' id='type' onclick='ShowPasswords(this);' value='true' {if $smarty.post.type} checked {/if} /> {!becomemember!}
         </td>
       </tr>
       {include file="user_form.tpl"}
@@ -91,17 +91,12 @@
     </table>
 
   </form>
-   </center>
-
-
-<br>
+  </td><td valign='top' align='right'>
 {*  <div onclick='ShowLogin();' ><input type='radio' onclick='ShowLogin();' id='showlogin' /> click here to login as member. {!login_member_here!} </div> *}
-  <center>
-  
   <form action='checkout.php#member' method='post' >
     {ShowFormToken name='UserLogin'}
     <a name="member"></a>
-    <table  cellpadding='2' bgcolor='white' width='80%' id='member' >
+    <table  cellpadding='2' bgcolor='white' width='95%' id='member'>
       <tr>
         <td colspan='2' class='TblHeader'> {!member!}
        </td>
@@ -132,9 +127,10 @@
       </tr>
     </table>
   </form>
-  </center>
+  </td></tr></table>
+<br> {*
 <hr>
-{!user_notice!}<br><br>
+{!user_notice!}*}<br><br>
 {literal}
 <script  type="text/javascript">
   function getElement(id){

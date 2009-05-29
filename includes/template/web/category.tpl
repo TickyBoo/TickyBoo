@@ -97,7 +97,7 @@
   	  </center>
     </form>
   {else}
-    {include file="event.tpl"}
+    {include file="event.tpl" event_id=$smarty.request.event_id}
   {/if}
 {/category}
 

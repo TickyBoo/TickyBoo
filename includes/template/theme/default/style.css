@@ -24,13 +24,15 @@ h3	{
 	line-height:20px;
 	}
 body.main_side{
-	margin-left: 150px;
-	margin-right: 150px;
+/*	margin-left: 150px;
+	margin-right: 150px; */
+
+  float: center;
 	
 }
 	
 .mainbody{
-	width:100%;
+	width:800;
 	position: relative;
 	
 }

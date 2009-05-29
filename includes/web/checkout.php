@@ -169,20 +169,15 @@ die();
 
   Function registerAction ($smarty){
     global $user;
-    $type = 'guest';
-    if ($type =='guest') {
-      $smarty->assign('newuser_id',$user->guest_f($_POST, $errors));
-    } elseif ($type=='member') {
-      $smarty->assign('newuser_id',$user->Member_f($_POST, $errors));
-    } else
-      $errors['_error'] = con('RegisterError');
-
-    If ($errors) {
+    is($_POST['ismember'],false);
+    $user_id = $user->register_f($_POST['ismember'], $_POST, $errors, 0, 'user_nospam');
+    If (!$user_id ) {
       $smarty->assign('user_data',   $_POST);
       $smarty->assign('reg_type',    $type);
       $smarty->assign('user_errors', $errors);
       return "checkout_user";
     } else
+      $smarty->assign('newuser_id', $user_id);
       return "checkout_preview";
   }
 

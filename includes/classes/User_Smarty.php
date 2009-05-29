@@ -91,12 +91,14 @@ class User_Smarty {
   }
 
 /*The next bit of code creates users */
-  function register_f ($ismember, &$member,&$err, $mandatory_l=0, $secure='', $short=0 ){
+  function register_f ($ismember, &$member, &$err, $mandatory_l=0, $secure='', $short=0 ){
     $type =($ismember)?2:3;
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
-  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
-      echo "<script>window.location.href='{$url}';</script>";
-      exit;
+//  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
+//      echo "<script>window.location.href='{$url}';</script>";
+      echo $res;
+      $this->load_f($res);
+      return $res;
     }  
     return false;
 //    echo "error";
@@ -147,8 +149,10 @@ class User_Smarty {
   
   function _fill ($user){ ///????
     $this->_clean();
-    foreach($user as $k=>$v){
-      $this->$k=$v; /// What does this do? Sets User_Smary->$k as $v ?
+    if (is_array($user)) {
+      foreach($user as $k=>$v){
+        $this->$k=$v; /// What does this do? Sets User_Smary->$k as $v ?
+      }
     }
   }
 
