@@ -82,14 +82,14 @@ class eph_ideal extends payment{
 
     $Issuers =& $response->getIssuerFullList();
 		foreach ($Issuers as $issuerName => $entry)	{
-			$issuerList[] = array($entry->getIssuerID(), $entry->getIssuerName()) ;
+			$issuerList[$entry->getIssuerID()] = $entry->getIssuerName();
 		}
     $_SHOP->smarty->assign('ideal_issuers',$issuerList );
 
     //print_r($order);
     
     return "
-      {gui->StartForm name='ideal_ing' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
+      {gui->StartForm name='iDealING' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
         {gui->hidden name='action' value='submit'}
         {gui->hidden name='sor' value='".Order::EncodeSecureCode($order,'')."'}
         {gui->selection name='ideal_issuer' options=\$ideal_issuers}
@@ -117,7 +117,7 @@ class eph_ideal extends payment{
 		$issuerAuthenticationURL = $response->getIssuerAuthenticationURL();
 		$transactionID = $response->getTransactionID();
     $order->order_payment_id=$transactionID;
-    Order::set_payment_id('ideal:'.$order->order_id,$transactionID)
+    Order::set_payment_id('ideal:'.$order->order_id,$transactionID) ;
     $order->set_payment_status('pending');
 
     header('location:'.$issuerAuthenticationURL);
@@ -154,7 +154,7 @@ class eph_ideal extends payment{
 
    if ($status = IDEAL_TX_STATUS_SUCCESS) {
 	    $order->order_payment_id=$transactionID;
-	    Order::set_payment_id('ideal:'.$order->order_id,$transactionID)
+	    Order::set_payment_id('ideal:'.$order->order_id,$transactionID);
       $order->set_payment_status('payed');
       return array('approved'=>true,
                    'transaction_id'=>$transactionID ,
@@ -191,7 +191,7 @@ class eph_ideal extends payment{
 
     	if (in_array($status, array(IDEAL_TX_STATUS_SUCCESS))) {
   	    $order->order_payment_id=$transactionID;
-  	    Order::set_payment_id('ideal:'.$order->order_id,$transactionID)
+  	    Order::set_payment_id('ideal:'.$order->order_id,$transactionID);
         $order->set_payment_status('payed');
         return true;
       } elseif (in_array($status, array(IDEAL_TX_STATUS_CANCELLED, IDEAL_TX_STATUS_EXPIRED ))) {
@@ -224,7 +224,7 @@ class eph_ideal extends payment{
         'MERCHANTID'      => "$this->pm_ideal_merchantid",
         'SUBID'           => ($this->pm_ideal_subid)?$this->pm_ideal_subid:'0',
         'EXPIRATIONPERIOD'=> EXPIRATIONPERIOD,
-        'LOGFILE'         => INC.'tmp'.DS.'ideal_connect.log',
+        'LOGFILE'         => $_SHOP->tmp_dir.'ideal_connect.log',
         'TRACELEVEL'      => TRACE_DEBUG.TRACE_ERROR,
         );
     return new iDEALConnector($config);

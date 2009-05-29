@@ -92,7 +92,7 @@ class EPH_paypal extends payment{
 	
   function on_return(&$order, $result){
     If ($result) {
-	    Order::set_payment_id('paypal:'.$order->order_id,$_POST['txn_id'])
+	    Order::set_payment_id('paypal:'.$order->order_id,$_POST['txn_id']);
       $order->set_payment_status('pending');
       return array('approved'=>$result,
                    'transaction_id'=>$_REQUEST['txn_id'],
@@ -148,7 +148,7 @@ class EPH_paypal extends payment{
         $debug.="OK\n";
         $return =true;
     	  $order->order_payment_id=$_POST['txn_id'];
-  	    Order::set_payment_id('paypal:'.$order->order_id,$_POST['txn_id'])
+  	    Order::set_payment_id('paypal:'.$order->order_id,$_POST['txn_id']) ;
         $order->set_payment_status('payed');
     }
   //  ShopDB::dblogging($debug);
