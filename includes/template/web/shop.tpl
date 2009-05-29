@@ -87,7 +87,7 @@
   {if not $user->logged}
       {include file="user_register.tpl"}
   {else}
-    {include file="last_event_list.tpl"}
+     {include file="activate.tpl"}
   {/if}  
 
 {elseif $smarty.request.personal_page}

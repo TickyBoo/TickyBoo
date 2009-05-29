@@ -26,10 +26,23 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't 
  * clear to you.
  *}
+ {literal}
+<script  type="text/javascript">
+function UserPopup(a)
+{
+	var url = a.href;
+	if (window.open(url, a.target || "_blank", 'toolbar=0,location=0,directories=0,status=0,menubar=0'.concat(
+  	',width=', "640",	',height=',  "400",	',scrollbars=',  "1", ',resizable=', "1")))
+		{ return false; }
+}
+</script>
+{/literal}
+
 <table border=0 cellpadding="3" bgcolor='white' width='90%'>
   <tr>
     {if $title eq "on"}
-      <td class='TblHeader'>{!your_addr!}</td>
+      <td class='TblHeader'>
+        {!your_addr!}</td>
     {/if}
   </tr>
   <tr><td class='TblHigher' nowrap>
@@ -47,26 +60,14 @@
      {user->user_zip|clean} {user->user_city|clean}
   </tr>
   <tr><td class='TblHigher' nowrap>
-    {gui->viewcountry value=$user->user_country|clean}
+    {gui->viewcountry value=$user->user_country|clean nolabel=true}
   </tr>
   <tr><td class='TblHigher' nowrap>
      {user->user_email}</td></tr>
   <tr><td class='TblHigher' nowrap>
-     <div align='right'><a target='_blank' href='?action=useredit' onclick="BasicPopup(this);" >{!edit!}</a></div>
+     <div align='right'><a target='editaddress' href='?action=useredit' onclick="UserPopup(this);" >{!edit!}</a></div>
+
   </td></tr>
 
 </table>
 
-{literal}
-<script  type="text/javascript">
-function BasicPopup(a)
-{
-//  window.status =a.className;
-//	p = a.className.substring(a.className.lastIndexOf(' ')).split('.');
-	var url = a.href;
-	if (window.open(url, a.target || "_blank", 'toolbar=0,location=0,directories=0,status=0,menubar=0'.concat(
-  	',width=', "640",	',height=',  "400",	',scrollbars=',  "1", ',resizable=', "1")))
-		{ return false; }
-}
-</script>
-{/literal}

@@ -25,7 +25,6 @@ require_once('classes/gui_smarty.php');
 
 require_once("config/init_shop.php");
 
-
 $smarty = new Smarty;
 $_SHOP->smarty = $smarty;
 
@@ -78,7 +77,8 @@ if (isset($_REQUEST['sor'])) {
 //  session_write_close();
   	exit();
 }
-if ($action == 'edituser') {
+
+if ($action == 'useredit') {
 	echo "<script>window.close();</script>";
 } else {
 	redirect("index.php?action=cart_view",403);
@@ -148,20 +148,20 @@ die();
 
   Function usereditAction ($smarty){
     global $user;
+
     $smarty->assign('usekasse',true);
-    if ($_POST.submit_update) {
-      if ($user->update_member_f($_POST, $errors)) {
+    if (isset($_POST['submit_update'])) {
+      if ($user->update_f($_POST, $errors)) {
         echo "
           <script>
              window.opener.location.href = window.opener.location.href;
              window.close();
           </script>";
-        return "";
+        die('The End');
       }
       $smarty->assign('user_errors', $errors);
       $smarty->assign('user_data',   $_POST);
     } else {
-      print_r($_SESSION);
       $smarty->assign('user_data',   $_SESSION['_SHOP_USER']);
     }
     return "user_update";

@@ -52,7 +52,7 @@ class User_Smarty {
   }
 
   function load_f($user_id){
-    $user = User::load_user($params['user_id']);
+    $user = User::load_user($user_id);
     $this->_fill($user);
     $this->logged=true;
   }
@@ -96,7 +96,6 @@ class User_Smarty {
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
 //  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
 //      echo "<script>window.location.href='{$url}';</script>";
-      echo $res;
       $this->load_f($res);
       return $res;
     }  
@@ -113,7 +112,7 @@ class User_Smarty {
 	  }
   }
   
-  	function update_f (&$member, &$err, $mandatory_l=0, $short){
+  	function update_f (&$member, &$err, $mandatory_l=0, $short=0){
   		if ($this->user_id <> $member['user_id']) {
       		die('System error while changing user data');
     	}

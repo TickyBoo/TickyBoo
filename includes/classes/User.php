@@ -46,11 +46,14 @@ class User{
   var $is_member = false;
 
   function load_user ($user_id){
-    $query="select * from User where user_id='$user_id'";
+    $query="select user.*, auth.active
+            from User left join auth on auth.user_id=User.user_id
+            where User.user_id='$user_id'";
     if(!$user=ShopDB::query_one_row($query)){
       return FALSE;
     }
-  	$user['is_member']= ($user['user_status']==2);
+  	$user['is_member'] = ($user['user_status']==2);
+    $user['active']    = (empty($user['active']));
   	$_SESSION['_SHOP_USER']=$user;
     return $user;
   }
@@ -139,7 +142,7 @@ class User{
 
     User::validate_user($status, $data, $err, $mandatory, $secure, $short);
 
-    if ($status = 2) {
+    if ($status == 2) {
       $query="select count(*) as count from auth where username="._esc($member['user_email']);
       if($row = ShopDB::query_one_row($query) and $row['count']>0){
         $_USER_ERROR['user_email']=con('alreadyexist');
@@ -196,20 +199,19 @@ class User{
 
     		$query="SELECT username, password, user_status 
               	FROM User left join auth on auth.user_id=User.user_id
-              	WHERE User.user_id="._esc((int)$data['user_id'])."
-              	AND password="._esc(md5($data['old_password']));
+              	WHERE User.user_id="._esc((int)$data['user_id']);
               
-      		if (!$user=ShopDB::query_one_row($query)){
-      			$err['old_password']=con("incorrect_password");
+    		if (!$user=ShopDB::query_one_row($query)){
+        		die('System error while changing user data.');
     		} elseif($user['user_status']==2) {
         		if (empty($data['old_password'])) {
-          			$err['old_password'] = con('mandatory');
-        		}
-      			if ($user ['username']<> $data['user_email'] and !isset($err['user_email'])) {
+          		$err['old_password'] = con('mandatory');
+        		} elseif ($user['password']!==md5($data['old_password']) ) {
+      	  		$err['old_password']=con("incorrect_password");
+            } elseif ($user ['username']<> $data['user_email'] and !isset($err['user_email'])) {
         			$query="select count(*) as count from auth where username="._esc($member['user_email']);
-				
-					if ($row=ShopDB::query_one_row($query) and $row['count']>0){
-						$err['user_email']=con('alreadyexist') ;
+	            if ($row=ShopDB::query_one_row($query) and $row['count']>0){
+						     $err['user_email']=con('alreadyexist') ;
         			}
         		}
       		}
@@ -229,7 +231,7 @@ class User{
           			$set[] = "$field="._esc($data[$field]);
         		}
       		}
-      		
+
 			if ($set) {
         		$set = implode(",\n",$set);
 

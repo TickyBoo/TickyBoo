@@ -29,8 +29,6 @@
 <!-- user_update.tpl -->
 {if $usekasse}
 	{if $smarty.post.submit_update}
-    	{user->update_member data=$smarty.post}
-    
 	   	{if count($user_errors) eq 0}
 	    	<script>
 	        	window.opener.location.href = window.opener.location.href;
@@ -55,12 +53,10 @@
 	
 	<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE"> 
 	<br />
-	{print_r var=$user_errors}
-  	
 	<center>
 		<form action="checkout.php" method='post'>
 			{ShowFormToken name='UserUpdate'}
- 			<input type='hidden' name='action' value='edituser' />
+ 			<input type='hidden' name='action' value='useredit' />
 {else}
 
 <form action="index.php" method='post' id="update_user">
@@ -68,10 +64,9 @@
    	<input type='hidden' name='action' value='update' />
    	<input type='hidden' name='personal_page' value='details' />
 {/if}
-	
+ 	<input type='hidden' name='user_id' value='{user->user_id}' />
 	<table cellpadding="3" class="main" bgcolor='white'>
-    	<input type='hidden' name='user_id' value='{user->user_id}' />
-    
+
 		{include file='user_form.tpl'}
 		
     	{if $user->is_member}

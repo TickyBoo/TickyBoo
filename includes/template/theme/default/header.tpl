@@ -36,12 +36,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel='stylesheet' href='style.php' type='text/css' />
 		
-		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
+{*		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.maskedinput-1.2.2.js"></script>
-		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
+		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script> *}
 		
 		<script type="text/javascript" src="scripts/countdownpro.js" defer="defer"></script>
 		
