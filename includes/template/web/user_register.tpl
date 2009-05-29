@@ -48,7 +48,7 @@
       <tr>
         <td class='TblLower' valign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
         <td class='TblHigher' valign='top'>
-          <table cellpadding="0" cellspacing="0" width='350'>
+          <table cellpadding="0" cellspacing="0" width='400'>
             <tr>
               <td >
                 <input type='text' name='user_nospam' size='10' maxlength="10" value='' ><br>
