@@ -34,23 +34,35 @@
   {if $user_errors}
      <div class='error'>{$user_errors._error}</div><br>
   {/if}
-  <table width='100%'> <tr><td valign='top'>
+{*  <table width='100%'> <tr><td valign='top'> *}
   <form action='checkout.php' method='post'  >
     {ShowFormToken name='UserRegister'}
     <input type='hidden' name='action' value='register'>
     
     <table cellpadding="2" bgcolor='white' width='100%' id='guest'>
       <tr>
-        <td colspan='2' class='TblHeader'> {!guest!} </td>
+        <td colspan='2' class='TblHeader'>
+          {if $user->mode() <= '1'}
+            {!becomemember!}
+          {elseif $user->mode() eq '2'}
+            {!becomememberorguest!}
+          {else}
+            {!becomeguest!}
+          {/if}
+        </td>
       </tr>
       <tr>
         <td colspan="2" class='TblHigher'>{!guest_info!}</td>
       </tr>
-      <tr>
-        <td colspan='2' class='TblLower'>
-          <input type='checkbox' name='ismember' id='type' onclick='ShowPasswords(this);' value='true' {if $smarty.post.type} checked {/if} /> {!becomemember!}
-        </td>
-      </tr>
+      {if $user->mode() <= '1'}
+        <input type='hidden' name='ismember' id='type' value='true'/>
+      {elseif $user->mode() eq '2'}
+        <tr>
+          <td colspan='2' class='TblLower'>
+            <input type='checkbox' name='ismember' id='type' onclick='ShowPasswords(this.checked);' value='true' {if $smarty.post.ismember} checked {/if} /> {!becomemember!}
+          </td>
+        </tr>
+      {/if}
       {include file="user_form.tpl"}
       <tr id='passwords_tr1' >
         <td class='TblLower'>{!password1!} *</td>
@@ -91,8 +103,7 @@
     </table>
 
   </form>
-  </td><td valign='top' align='right'>
-{*  <div onclick='ShowLogin();' ><input type='radio' onclick='ShowLogin();' id='showlogin' /> click here to login as member. {!login_member_here!} </div> *}
+{*  </td><td valign='top' align='right'>
   <form action='checkout.php#member' method='post' >
     {ShowFormToken name='UserLogin'}
     <a name="member"></a>
@@ -127,7 +138,7 @@
       </tr>
     </table>
   </form>
-  </td></tr></table>
+  </td></tr></table> *}
 <br> {*
 <hr>
 {!user_notice!}*}<br><br>
@@ -140,56 +151,29 @@
   function ShowPasswords(a){
 
        if(tr1=getElement('passwords_tr1')){
-         if (a.checked) {
+         if (a) {
            tr1.style.display='';
          } else {
            tr1.style.display='none';
          }
        }
        if(tr2=getElement('passwords_tr2')){
-         if (a.checked) {
+         if (a) {
            tr2.style.display='';
          } else {
            tr2.style.display='none';
          }
        }
+  }
+  {/literal}
 
-  }
-  function ShowLogin(){
-       if(tr=getElement('showlogin')){
-           tr.checked =true;
-       }
-       if(tr1=getElement('member')){
-           tr1.style.display='';
-       }
-       if(tr2=getElement('guest')){
-           tr2.style.display='none';
-       }
+  {if $user->mode() <= '1'}
+       ShowPasswords(true);
+  {elseif $user->mode() eq '2'}
+    ShowPasswords(getElement('type').checked);
+  {else}
+    ShowPasswords(false);
+  {/if}
 
-  }
-  function ShowRegister(){
-       if(tr=getElement('showregister')){
-           tr.checked =true;
-       }
-       if(tr1=getElement('member')){
-           tr1.style.display='none';
-       }
-       if(tr2=getElement('guest')){
-           tr2.style.display='';
-       }
-
-  }
-  function HiddenBoth(){
-       if(tr1=getElement('member')){
-           tr1.style.display='none';
-       }
-       if(tr2=getElement('guest')){
-           tr2.style.display='none';
-       }
-  }
-  
-  ShowPasswords(getElement('type'));
-//  HiddenBoth();
-  
 </script>
-{/literal}
+{include file='footer.tpl'}
