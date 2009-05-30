@@ -66,13 +66,13 @@
       {include file="user_form.tpl"}
       <tr id='passwords_tr1' >
         <td class='TblLower'>{!password1!} *</td>
-        <td class='TblHigher'><input type='password' name='password1' size='10'  maxlength='10'>
+        <td class='TblHigher'><input autocomplete='off' type='password' name='password1' size='10'  maxlength='10'>
            {!pwd_min!} <div class='error'>{$user_errors.password}</div>
         </td>
       </tr>
       <tr id='passwords_tr2'>
         <td class='TblLower'> {!confirmpassword!} *</td>
-        <td class='TblHigher'><input type='password' name='password2' size='10'  maxlength='10'></td>
+        <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10'></td>
       </tr>
       <tr>
         <td class='TblLower' valign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
