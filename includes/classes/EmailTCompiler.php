@@ -303,12 +303,9 @@ class EmailTCompiler {
 		}		
 		
     if(isset($data['html'])){
-      if(isset($data['text'])){
-        $res.=$pre.'$mail->setHtml('.$data['html'].",".$data['text'].")".$post;
-      }else{
-        $res.=$pre.'$mail->setHtml('.$data['html'].")".$post;
-      }
-    }else if(isset($data['text'])){
+      $res.=$pre.'$mail->setHtml('.$data['html'].")".$post;
+    }
+    if(isset($data['text'])){
       $res.=$pre.'$mail->setText('.$data['text'].")".$post;
     }
     
@@ -325,13 +322,14 @@ class EmailTCompiler {
 				}
 
 				
-       $res.=$pre.'$mail->addAttachment( Order::print_order('.$r_data.",'".$order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf')".$post;
+       $res.=$pre.'$mail->addAttachment( Order::print_order('.$r_data.",'".
+             $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf')".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $res.=$pre."require_once('classes/Order.php')".$post;
           $res.=$pre.'$order=Order::load('.$r_data.')'.$post;         
           $res.=$pre.'$order->set_shipment_status(\'send\')'.$post;         
-	}
+	      }
       }
     }
     
@@ -483,14 +481,6 @@ class EmailTCompiler {
   
     xml_parser_free($this->xml_parser);
 
-
-    if(empty($this->errors)){
-     
-      if(!empty($this->vars)){
-        $vars="function get_used_vars(){ return ".$this->make_uses($this->vars).";}\n";
-      }else{
-        $vars='';
-      }
     $xyz =
 '/*this is a generated code. do not edit!
 produced '.date("l dS of F Y h:i:s A").'
@@ -502,8 +492,6 @@ class '.$out_class_name.' {
 
   function '.$out_class_name.'(){}
 '.$this->build.'
-
-'.$vars.'
 }
 ';
 //    echo nl2br($xyz);

@@ -80,6 +80,7 @@ function smarty_function_sendmail ($params,&$smarty) {
   $tpl=&$te->getTemplate($template);
   
   $email = new htmlMimeMail();
+  
   $tpl->build($email,$data,$_SHOP->lang);
 
   if($attach_files){

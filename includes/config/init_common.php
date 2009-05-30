@@ -34,12 +34,7 @@
   define('INC',ROOT.'includes'.DS);
 	define('CLASSES',INC.'classes'.DS);
 
-  if (file_exists(INC.'config'.DS."init_config.php"))
-    {
-    require_once(INC.'config'.DS."init_config.php");
-    }
-  else
-    {
+  if (!file_exists(INC.'config'.DS."init_config.php")){
     echo "<a href='inst/index.php'>Install me now!</a>";
     exit;
     }
@@ -152,5 +147,18 @@
 	$_SHOP->event_type_enum = array('','classics','jazz','blues','funk','pop','rock','folklore','theater','sacred','ballet',
                                   'opera','humour','music','other','cinema','party','exposition');
   $_SHOP->event_group_type_enum = array('','festival','tournee','theatre');
+  
+
+  $_SHOP->mail_mode = 'mail'; // 'mail', 'sendmail', 'smtp'
+  $_SHOP->mail_smtp_host = null;
+  $_SHOP->mail_smtp_port = null;
+  $_SHOP->mail_smtp_auth = null;
+  $_SHOP->mail_smtp_user = null;
+  $_SHOP->mail_smtp_pass = null;
+  $_SHOP->mail_smtp_helo = null;
+  
+  $_SHOP->mail_sendmail  = null;
+
+  require_once(INC.'config'.DS."init_config.php");
 
 ?>

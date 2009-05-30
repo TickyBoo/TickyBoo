@@ -1,14 +1,16 @@
 <?php
-/**
-* o------------------------------------------------------------------------------o
-* | This package is dual licensed as GPL and a commercial license.               |
-* | If you use the code commercially (or if you don't want to be restricted by   |
-* | the GPL license), you will need the commercial license. It's only £49 (GBP - |
-* | roughly $98 depending on the exchange rate) and helps me out a lot. Thanks.  |
-* o------------------------------------------------------------------------------o
-*
-* © Copyright Richard Heyes
-*/
+    /**
+    * o------------------------------------------------------------------------------o
+    * | This package is licensed under the Phpguru license. A quick summary is       |
+    * | that for commercial use, there is a small one-time licensing fee to pay. For |
+    * | registered charities and educational institutes there is a reduced license   |
+    * | fee available. You can read more  at:                                        |
+    * |                                                                              |
+    * |                  http://www.phpguru.org/static/license.html                  |
+    * o------------------------------------------------------------------------------o
+    *
+    * © Copyright 2008,2009 Richard Heyes
+    */
 
 /**
 *
@@ -69,58 +71,58 @@
 * @package Mail
 */
 
-class Mail_mimePart {
-
-   /**
+class Mail_MIMEPart
+{
+    /**
     * The encoding type of this part
     * @var string
     */
-    var $_encoding;
+    private $encoding;
 
-   /**
+    /**
     * An array of subparts
     * @var array
     */
-    var $_subparts;
+    private $subparts;
 
-   /**
+    /**
     * The output of this part after being built
     * @var string
     */
-    var $_encoded;
+    private $encoded;
 
-   /**
+    /**
     * Headers for this part
     * @var array
     */
-    var $_headers;
+    private $headers;
 
-   /**
+    /**
     * The body of this part (not encoded)
     * @var string
     */
-    var $_body;
+    private $body;
 
     /**
-     * Constructor.
-     *
-     * Sets up the object.
-     *
-     * @param $body   - The body of the mime part if any.
-     * @param $params - An associative array of parameters:
-     *                  content_type - The content type for this part eg multipart/mixed
-     *                  encoding     - The encoding to use, 7bit, 8bit, base64, or quoted-printable
-     *                  cid          - Content ID to apply
-     *                  disposition  - Content disposition, inline or attachment
-     *                  dfilename    - Optional filename parameter for content disposition
-     *                  description  - Content description
-     *                  charset      - Character set to use
-     * @access public
-     */
-    function Mail_mimePart($body = '', $params = array())
+    * Constructor.
+    *
+    * Sets up the object.
+    *
+    * @param $body   - The body of the mime part if any.
+    * @param $params - An associative array of parameters:
+    *                  content_type - The content type for this part eg multipart/mixed
+    *                  encoding     - The encoding to use, 7bit, 8bit, base64, or quoted-printable
+    *                  cid          - Content ID to apply
+    *                  disposition  - Content disposition, inline or attachment
+    *                  dfilename    - Optional filename parameter for content disposition
+    *                  description  - Content description
+    *                  charset      - Character set to use
+    * @access public
+    */
+    public function __construct($body = '', $params = array())
     {
         if (!defined('MAIL_MIMEPART_CRLF')) {
-            define('MAIL_MIMEPART_CRLF', defined('MAIL_MIME_CRLF') ? MAIL_MIME_CRLF : "\r\n", TRUE);
+            define('MAIL_MIMEPART_CRLF', defined('MAIL_MIME_CRLF') ? MAIL_MIME_CRLF : "\r\n", true);
         }
 
         foreach ($params as $key => $value) {
@@ -130,7 +132,7 @@ class Mail_mimePart {
                     break;
 
                 case 'encoding':
-                    $this->_encoding = $value;
+                    $this->encoding = $value;
                     $headers['Content-Transfer-Encoding'] = $value;
                     break;
 
@@ -169,41 +171,38 @@ class Mail_mimePart {
             $headers['Content-Type'] = 'text/plain';
         }
 
-        //Default encoding
-        if (!isset($this->_encoding)) {
-            $this->_encoding = '7bit';
+        // Default encoding
+        if (!isset($this->encoding)) {
+            $this->encoding = '7bit';
         }
 
         // Assign stuff to member variables
-        $this->_encoded  = array();
-        $this->_headers  = $headers;
-        $this->_body     = $body;
+        $this->encoded  = array();
+        $this->headers  = $headers;
+        $this->body     = $body;
     }
 
     /**
-     * encode()
-     *
-     * Encodes and returns the email. Also stores
-     * it in the encoded member variable
-     *
-     * @return An associative array containing two elements,
-     *         body and headers. The headers element is itself
-     *         an indexed array.
-     * @access public
-     */
-    function encode()
+    * Encodes and returns the email. Also stores
+    * it in the encoded member variable
+    *
+    * @return An associative array containing two elements,
+    *         body and headers. The headers element is itself
+    *         an indexed array.
+    */
+    public function encode()
     {
-        $encoded =& $this->_encoded;
+        $encoded =& $this->encoded;
 
-        if (!empty($this->_subparts)) {
+        if (!empty($this->subparts)) {
             srand((double)microtime()*1000000);
             $boundary = '=_' . md5(uniqid(rand()) . microtime());
-            $this->_headers['Content-Type'] .= ';' . MAIL_MIMEPART_CRLF . "\t" . 'boundary="' . $boundary . '"';
+            $this->headers['Content-Type'] .= ';' . MAIL_MIMEPART_CRLF . "\t" . 'boundary="' . $boundary . '"';
 
             // Add body parts to $subparts
-            for ($i = 0; $i < count($this->_subparts); $i++) {
+            for ($i = 0; $i < count($this->subparts); $i++) {
                 $headers = array();
-                $tmp = $this->_subparts[$i]->encode();
+                $tmp = $this->subparts[$i]->encode();
                 foreach ($tmp['headers'] as $key => $value) {
                     $headers[] = $key . ': ' . $value;
                 }
@@ -213,49 +212,40 @@ class Mail_mimePart {
             $encoded['body'] = '--' . $boundary . MAIL_MIMEPART_CRLF .
                                implode('--' . $boundary . MAIL_MIMEPART_CRLF, $subparts) .
                                '--' . $boundary.'--' . MAIL_MIMEPART_CRLF;
-
         } else {
-            $encoded['body'] = $this->_getEncodedData($this->_body, $this->_encoding) . MAIL_MIMEPART_CRLF;
+            $encoded['body'] = $this->getEncodedData($this->body, $this->encoding) . MAIL_MIMEPART_CRLF;
         }
 
         // Add headers to $encoded
-        $encoded['headers'] =& $this->_headers;
+        $encoded['headers'] =& $this->headers;
 
         return $encoded;
     }
 
     /**
-     * &addSubPart()
-     *
-     * Adds a subpart to current mime part and returns
-     * a reference to it
-     *
-     * @param $body   The body of the subpart, if any.
-     * @param $params The parameters for the subpart, same
-     *                as the $params argument for constructor.
-     * @return A reference to the part you just added. It is
-     *         crucial if using multipart/* in your subparts that
-     *         you use =& in your script when calling this function,
-     *         otherwise you will not be able to add further subparts.
-     * @access public
-     */
-    function &addSubPart($body, $params)
+    * Adds a subpart to current mime part and returns
+    * a reference to it
+    *
+    * @param $body   The body of the subpart, if any.
+    * @param $params The parameters for the subpart, same
+    *                as the $params argument for constructor.
+    * @return A reference to the part you just added.
+    */
+    public function addSubPart($body, $params)
     {
-        $this->_subparts[] = new Mail_mimePart($body, $params);
-        return $this->_subparts[count($this->_subparts) - 1];
+        $this->subparts[] = new Mail_MIMEPart($body, $params);
+        
+        return $this->subparts[count($this->subparts) - 1];
     }
 
     /**
-     * _getEncodedData()
-     *
-     * Returns encoded data based upon encoding passed to it
-     *
-     * @param $data     The data to encode.
-     * @param $encoding The encoding type to use, 7bit, base64,
-     *                  or quoted-printable.
-     * @access private
-     */
-    function _getEncodedData($data, $encoding)
+    * Returns encoded data based upon encoding passed to it
+    *
+    * @param $data     The data to encode.
+    * @param $encoding The encoding type to use, 7bit, base64,
+    *                  or quoted-printable.
+    */
+    private function getEncodedData($data, $encoding)
     {
         switch ($encoding) {
             case '8bit':
@@ -264,7 +254,7 @@ class Mail_mimePart {
                 break;
 
             case 'quoted-printable':
-                return $this->_quotedPrintableEncode($data);
+                return $this->quotedPrintableEncode($data);
                 break;
 
             case 'base64':
@@ -277,17 +267,13 @@ class Mail_mimePart {
     }
 
     /**
-     * quoteadPrintableEncode()
-     *
-     * Encodes data to quoted-printable standard.
-     *
-     * @param $input    The data to encode
-     * @param $line_max Optional max line length. Should
-     *                  not be more than 76 chars
-     *
-     * @access private
-     */
-    function _quotedPrintableEncode($input , $line_max = 76)
+    * Encodes data to quoted-printable standard.
+    *
+    * @param $input    The data to encode
+    * @param $line_max Optional max line length. Should
+    *                  not be more than 76 chars
+    */
+    private function quotedPrintableEncode($input , $line_max = 76)
     {
         $lines  = preg_split("/\r?\n/", $input);
         $eol    = MAIL_MIMEPART_CRLF;

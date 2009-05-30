@@ -1041,7 +1041,7 @@ class Order {
                            left join Event    on event_id = seat_event_id
                            left join Ort      on ort_id = event_ort_id
                            left join Category on category_id = seat_category_id
-                           left join placemapzone on seat_zone_id = pmz_id
+                           left join PlaceMapZone on seat_zone_id = pmz_id
         WHERE seat_order_id = '.ShopDB::quote($order_id);
 
 
@@ -1145,7 +1145,7 @@ class Order {
   			$first_page=FALSE;
 
   			//print the ticket
-  			$tpl->write($pdf,array_merge($seat,$order));
+  			$tpl->write($pdf,array_merge($seat,$order), true);
   		}
     }
     if(!$first_page){

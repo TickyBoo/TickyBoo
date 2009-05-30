@@ -75,7 +75,7 @@ class '.$out_class_name.' {
   var $object_id;
   var $engine;
 
-  function write($pdf, $data){
+  function write($pdf, $data, $testme=false){
     global $_SHOP;
 
     $input = '."'".
@@ -97,7 +97,7 @@ class '.$out_class_name.' {
 
     $smarty->my_template_source = html_entity_decode ($input, ENT_QUOTES, "UTF-8");
     $htmlresult = $smarty->fetch("text:".'.$out_class_name.');
-    $pdf->WriteHTML($htmlresult, false);
+    $pdf->WriteHTML($htmlresult, $testme);
     unset($smarty);
     unset($gui);
   }

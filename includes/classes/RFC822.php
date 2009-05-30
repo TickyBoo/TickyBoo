@@ -1,14 +1,16 @@
 <?php
-/**
-* o------------------------------------------------------------------------------o
-* | This package is dual licensed as GPL and a commercial license.               |
-* | If you use the code commercially (or if you don't want to be restricted by   |
-* | the GPL license), you will need the commercial license. It's only £49 (GBP - |
-* | roughly $98 depending on the exchange rate) and helps me out a lot. Thanks.  |
-* o------------------------------------------------------------------------------o
-*
-* © Copyright Richard Heyes
-*/
+    /**
+    * o------------------------------------------------------------------------------o
+    * | This package is licensed under the Phpguru license. A quick summary is       |
+    * | that for commercial use, there is a small one-time licensing fee to pay. For |
+    * | registered charities and educational institutes there is a reduced license   |
+    * | fee available. You can read more  at:                                        |
+    * |                                                                              |
+    * |                  http://www.phpguru.org/static/license.html                  |
+    * o------------------------------------------------------------------------------o
+    *
+    * © Copyright 2008,2009 Richard Heyes
+    */
 
 /**
 * RFC 822 Email address list validation Utility
@@ -32,71 +34,71 @@ class Mail_RFC822
 {
     /**
      * The address being parsed by the RFC822 object.
-     * @var string $address
+     * @private string $address
      */
-    var $address = '';
+    private $address = '';
 
     /**
      * The default domain to use for unqualified addresses.
-     * @var string $default_domain
+     * @private string $default_domain
      */
-    var $default_domain = 'localhost';
+    private $default_domain = 'localhost';
 
     /**
      * Should we return a nested array showing groups, or flatten everything?
-     * @var boolean $nestGroups
+     * @private boolean $nestGroups
      */
-    var $nestGroups = true;
+    private $nestGroups = true;
 
     /**
      * Whether or not to validate atoms for non-ascii characters.
-     * @var boolean $validate
+     * @private boolean $validate
      */
-    var $validate = true;
+    private $validate = true;
 
     /**
      * The array of raw addresses built up as we parse.
-     * @var array $addresses
+     * @private array $addresses
      */
-    var $addresses = array();
+    private $addresses = array();
 
     /**
      * The final array of parsed address information that we build up.
-     * @var array $structure
+     * @private array $structure
      */
-    var $structure = array();
+    private $structure = array();
 
     /**
      * The current error message, if any.
-     * @var string $error
+     * @private string $error
      */
-    var $error = null;
+    private $error = null;
 
     /**
      * An internal counter/pointer.
-     * @var integer $index
+     * @private integer $index
      */
-    var $index = null;
+    private $index = null;
 
     /**
      * The number of groups that have been found in the address list.
-     * @var integer $num_groups
+     * @private integer $num_groups
      * @access public
      */
-    var $num_groups = 0;
+    private $num_groups = 0;
 
     /**
      * A variable so that we can tell whether or not we're inside a
      * Mail_RFC822 object.
-     * @var boolean $mailRFC822
+     * @private boolean $mailRFC822
      */
-    var $mailRFC822 = true;
+    private $mailRFC822 = true;
     
     /**
     * A limit after which processing stops
-    * @var int $limit
+    * @private int $limit
     */
-    var $limit = null;
+    private $limit = null;
 
 
     /**
@@ -111,7 +113,7 @@ class Mail_RFC822
      * 
      * @return object Mail_RFC822 A new Mail_RFC822 object.
      */
-    function Mail_RFC822($address = null, $default_domain = null, $nest_groups = null, $validate = null, $limit = null)
+    function __construct($address = null, $default_domain = null, $nest_groups = null, $validate = null, $limit = null)
     {
         if (isset($address))        $this->address        = $address;
         if (isset($default_domain)) $this->default_domain = $default_domain;

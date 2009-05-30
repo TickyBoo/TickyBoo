@@ -96,7 +96,18 @@ function option_form (&$data, &$err,$title,$mode){
            '2'=>con('act_restrict_w_guest'),
            '3'=>con('act_restrict_quest_only')));
 
-	echo "<input type='hidden' name='action' value='update'>\n";
+ 	echo "</table>\n<br>";
+	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+	echo "<tr><td class='admin_list_title' colspan='2'>".con('mail_options_title')."</td></tr>";
+    $this->print_select_assoc('shopconfig_user_activate',$data,$err,
+     array('0'=>con('act_restrict_all'),
+           '1'=>con('act_restrict_later'),
+           '2'=>con('act_restrict_w_guest'),
+           '3'=>con('act_restrict_quest_only')));
+
+
+	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+  echo "<input type='hidden' name='action' value='update'>\n";
 	
 	echo "<tr><td align='center' class='admin_value' colspan='2'>
   	<input type='submit' name='save' value='".save."'> ";
