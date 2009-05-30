@@ -1021,4 +1021,10 @@ define('act_restrict_w_guest'   , 'New members and guests');
 define('act_restrict_quest_only', 'Only guest users');
 define('admin_user_title','All system administrators');
 define('organizer_user_title','All event organizers');
+define('act_enter_code','You can speedup your activation by fill the activation code that is send to you by email in the inputbox below. Or click on the link in the email.');
+define('act_enter_title','Fill you activation code here');
+define('act_code','Activation code:');
+
+
+
 ?>

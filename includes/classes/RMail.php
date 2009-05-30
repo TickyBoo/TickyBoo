@@ -716,7 +716,6 @@ class Rmail
         }
 
         $this->build();
-
         switch ($type) {
             case 'mail':
                 $subject = '';
@@ -774,7 +773,6 @@ class Rmail
                 require_once(dirname(__FILE__) . '/smtp.php');
                 require_once(dirname(__FILE__) . '/RFC822.php');
                 $smtp = &smtp::connect($this->smtp_params);
-                
                 // Parse recipients argument for internet addresses
                 foreach ($recipients as $recipient) {
                     $addresses = Mail_RFC822::parseAddressList($recipient, $this->smtp_params['helo'], null, false);
@@ -816,7 +814,6 @@ class Rmail
                 } else {
                     $send_params['from'] = 'postmaster@' . $this->smtp_params['helo'];
                 }
-
                 // Send it
                 if (!$smtp->send($send_params)) {
                     $this->errors = $smtp->getErrors();

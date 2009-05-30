@@ -29,11 +29,11 @@
 <table class="table_dark" >
   <tr>
     <td>
-      {!tnx_mbr!}
+      {!act_is_sent!}
     </td>
   </tr>
   <tr><td>
-    {!note_mbr!}
+    {!act_mess_line!}
   </td></tr>
 </table>
 

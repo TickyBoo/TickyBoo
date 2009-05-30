@@ -480,7 +480,7 @@ class EmailTCompiler {
     }
   
     xml_parser_free($this->xml_parser);
-
+    if (!$this->errors) {
     $xyz =
 '/*this is a generated code. do not edit!
 produced '.date("l dS of F Y h:i:s A").'

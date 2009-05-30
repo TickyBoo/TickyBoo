@@ -18,6 +18,7 @@ class HtmlMimemail extends RMail{
 
     public function send($recipients, $type = null) {
       global $_SHOP;
+      
       if(is_null($type)) $type = is($_SHOP->mail_mode,'mail');
       parent::setSMTPParams($_SHOP->mail_smtp_host,
                             $_SHOP->mail_smtp_port,
@@ -28,7 +29,7 @@ class HtmlMimemail extends RMail{
       if (!is_null($_SHOP->mail_sendmail)) {
         parent::setSendmailPath($_SHOP->mail_sendmail);
       }
-      parent::send($recipients,$type);
+      return parent::send($recipients,$type);
     }
 }
 ?>

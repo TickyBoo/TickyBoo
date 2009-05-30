@@ -127,8 +127,10 @@ class smtp
 
             // Do we auth or not? Note the distinction between the auth variable and auth() function
             if ($this->auth AND !$this->authenticated) {
-                if(!$this->auth())
+                if(!$this->auth()){
+                    echo 'auth err';
                     return false;
+                }
             }
 
             $this->mail($this->from);
@@ -142,6 +144,7 @@ class smtp
             }
 
             if (!$this->data()) {
+                echo 'data err';
                 return false;
             }
 
@@ -155,8 +158,10 @@ class smtp
             $this->send_data($body);
             $this->send_data('.');
 
-            $result = (substr(trim($this->get_data()), 0, 3) === '250');
+            $get = $this->get_data();
+            $result = (substr(trim($get), 0, 3) === '250');
             //$this->rset();
+            if (!$result) $this->errors[] = $get;
             return $result;
         } else {
             $this->errors[] = 'Not connected!';

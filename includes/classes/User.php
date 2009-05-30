@@ -54,7 +54,7 @@ class User{
     }
   	$user['is_member'] = ($user['user_status']==2);
     $user['active']    = (empty($user['active']));
-  	$_SESSION['_SHOP_USER']=$user;
+  	$_SESSION['_SHOP_USER']=$user_id;
     return $user;
   }
 
@@ -83,7 +83,7 @@ class User{
     unset($res['password']);
     unset($res['active']);
   	$res['is_member']=true;
-  	$_SESSION['_SHOP_USER']=$res;
+  	$_SESSION['_SHOP_USER']=$res['user_id'];
   	return $res;
   }
 
@@ -262,8 +262,8 @@ class User{
       			}
       		}
       		
-    		$data['is_member']=$data['user_status']==2;
-    		$_SESSION['_SHOP_USER']=$data;
+//    		$data['is_member']=$data['user_status']==2;
+//    		$_SESSION['_SHOP_USER']=$data;
       		return true;
     	}else{
       		die("Missing user id. System halted.");
@@ -303,9 +303,9 @@ class User{
 
     $query="SELECT user_id, active, user.* from auth left join User as auth.user_id=User.User_id where auth.username="._esc($email);
     if (!$row=ShopDB::query_one_row($query)) {
-  		$this->errors = con("log_err_wrong_usr");
+  		$errors = con("log_err_wrong_usr");
   	} elseif ($row['active']==null) {
-  		$this->errors = con("log_err_isactive");
+  		$errors = con("log_err_isactive");
 	 	} else {
   		$active = md5(uniqid(rand(), true));
   		$query="UPDATE `auth` SET active='$active' WHERE user_id=".$row['user_id']." LIMIT 1";
@@ -373,8 +373,9 @@ class User{
   function forgot_password($email){
     global $_SHOP;
 
-    $query="SELECT user_id from auth where username=".ShopDB::quote($email);
+    $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
+      echo 'username not found';
       return FALSE;
     }
 
@@ -389,14 +390,18 @@ class User{
       $email = new htmlMimeMail();
 
       $tpl=$engine->getTemplate('forgot_passwd');
-      $row = $this->values;
+//      $row = $this->values;
       $row['new_password']=$pwd;
       $tpl->build($email, $row);
-
       if($email->send($tpl->to)){
         return true;
+      } else {
+        echo 'cant send email:';
+        print_r($email->errors);
       }
-    }
+    } else
+        echo 'cant set new password';
+
   }
 
 }

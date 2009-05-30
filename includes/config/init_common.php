@@ -96,7 +96,6 @@
 
 	//where uploaded files lives (event images, ..)
 	//should be writable
-  $_SHOP->files_url=$_SHOP->root."files/";
   $_SHOP->files_dir=ROOT."files";
 
   //mode for directories and files created by phpMyTicket
@@ -160,5 +159,7 @@
   $_SHOP->mail_sendmail  = null;
 
   require_once(INC.'config'.DS."init_config.php");
+  
+  $_SHOP->files_url=$_SHOP->root."files/";
 
 ?>
