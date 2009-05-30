@@ -1,7 +1,6 @@
 $(document).ready(function(){
 	$("#update_user").validate(update_user);
-	$.mask.definitions['0']='[0-9 ]';
-	$(":input[name='user_phone']").mask("00000000000000");
+	//$(":input[name='user_phone']").mask("00000000000000");
 	
 });
 
@@ -35,7 +34,8 @@ var update_user = {
 			email :true
 		},
 		old_password : {
-			required : true
+			required : true,
+			minlength : 6
 		}
 		
 	},
@@ -68,7 +68,8 @@ var update_user = {
 			email : "Please enter a valid email address"
 		},
 		old_password : {
-			required : "Required"
+			required : "Required",
+			minlength : "Your Password is too short."
 		}
 	},
 	errorClass: "form-error",
