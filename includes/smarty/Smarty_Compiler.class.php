@@ -1853,7 +1853,7 @@ class Smarty_Compiler extends Smarty{
       $output = '@' . substr($var_name, 1);
     }else{
       $_val = $this->_parse_var_props($var_name);
-      $output = '@constant(' . $_val . ')';
+      $output = '@con(' . $_val . ')';
     }
     $this->_parse_modifiers($output, $modifiers);
     return $output;
@@ -2086,7 +2086,7 @@ class Smarty_Compiler extends Smarty{
           $compiled_ref = '@' . substr($indexes[0], 1);
         }else{
           $_val = $this->_parse_var_props(substr($indexes[0], 1));
-          $compiled_ref = '@constant(' . $_val . ')';
+          $compiled_ref = '@con(' . $_val . ')';
         }
         $_max_index = 1;
         break;

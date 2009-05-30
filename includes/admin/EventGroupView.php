@@ -104,7 +104,7 @@ function event_group_list (){
   
   $alt=0;
   echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='8' align='center'>".event_group_title."</td></tr>\n";
+  echo "<tr><td class='admin_list_title' colspan='8' align='center'>".con('event_group_title')."</td></tr>\n";
   
   while($row=shopDB::fetch_assoc($res)){
 
@@ -113,11 +113,11 @@ function event_group_list (){
      echo "<td  class='admin_list_item' width='100%'>{$row['event_group_name']}</td>";
      echo "<td class='admin_list_item' nowrap>\n";
      if($row['event_group_status']=='unpub'){
-       echo "<a class='link' href='javascript:if(confirm(\"".publish_event_group."\")){location.href=\"view_event_group.php?action=publish&event_group_id={$row['event_group_id']}\";}'>
+       echo "<a class='link' href='javascript:if(confirm(\"".con('publish_event_group')."\")){location.href=\"view_event_group.php?action=publish&event_group_id={$row['event_group_id']}\";}'>
                <img src='images/publish.jpg' width=16 border='0' alt='".publish."' title='".publish."'></a>\n";
      }
      if($row['event_group_status']=='pub'){   
-       echo "<a class='link' href='javascript:if(confirm(\"".unpublish_event_group."\")){location.href=\"view_event_group.php?action=unpublish&event_group_id={$row['event_group_id']}\";}'>
+       echo "<a class='link' href='javascript:if(confirm(\"".con('unpublish_event_group')."\")){location.href=\"view_event_group.php?action=unpublish&event_group_id={$row['event_group_id']}\";}'>
              <img src='images/unpublish.jpg' width=16 border='0' alt='".unpublish."' title='".unpublish."'></a>\n";
      }
 

@@ -142,7 +142,7 @@ class OrtView extends AdminView {
         }
 
         $alt = 0;
-        echo "<table class='admin_list' width='$this->width' cellpadding='5' cellspacing='1'>\n";
+        echo "<table class='admin_list' width='$this->width' cellpadding='4' cellspacing='1'>\n";
         echo "<tr><td class='admin_list_title' colspan='5' align='center'>" . ort_title . "</td></tr>\n";
 
         while ($row = shopDB::fetch_assoc($res)) {

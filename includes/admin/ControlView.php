@@ -135,7 +135,7 @@ global $_SHOP;
   }
   
   $alt=0;
-  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='3' border=0>\n";
+  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border=0>\n";
   echo "<tr><td class='admin_list_title' colspan='2' align='center'>".control_title."</td></tr>\n";
   
   

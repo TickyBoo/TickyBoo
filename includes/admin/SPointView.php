@@ -82,6 +82,7 @@ class SPointView extends AdminView {
 		$this->print_input( 'user_address1', $data, $err, 30, 75 );
 		$this->print_input( 'user_zip', $data, $err, 8, 20 );
 		$this->print_input( 'user_city', $data, $err, 30, 50 );
+		$this->print_input( 'user_state', $data, $err, 30, 50 );
 		echo "<td class='admin_name'>" . country . "</td><td class='admin_value'>";
 		$this->print_countrylist( 'user_country', $data['user_country'], $err );
 		echo "</td></tr>";
@@ -135,7 +136,7 @@ class SPointView extends AdminView {
 		}
 
 		$alt = 0;
-		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='3'>\n";
+		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 		echo "<tr><td class='admin_list_title' colspan='8' align='center'>" .
 			spoint_title . "</td></tr>\n";
 
@@ -166,12 +167,13 @@ class SPointView extends AdminView {
 			if ( !$this->spoint_check($_POST, $err) ) {
 				$this->spoint_form( $_POST, $err, spoint_add_title );
 			} else {
-				$query = "INSERT INTO User (user_lastname, user_address,user_address1,user_zip,user_city,user_country,user_email,user_phone,user_prefs,user_fax,user_status)" .
+				$query = "INSERT INTO User (user_lastname, user_address,user_address1,user_zip,user_city,user_state,user_country,user_email,user_phone,user_prefs,user_fax,user_status)" .
 					" VALUES (" . _ESC( $_POST['kasse_name'] ) . ",
             " . _ESC( $_POST['user_address'] ) . ",
             " . _ESC( $_POST['user_address1'] ) . ",
             " . _ESC( $_POST['user_zip'] ) . ",
             " . _ESC( $_POST['user_city'] ) . ",
+            " . _ESC( $_POST['user_state'] ) . ",
             " . _ESC( $_POST['user_country'] ) . ",
             " . _ESC( $_POST['user_email'] ) . ",
      		" . _ESC( $_POST['user_phone'] ) . ",
@@ -206,6 +208,7 @@ class SPointView extends AdminView {
             user_address1=" . _ESC( $_POST['user_address1'] ) . ",
             user_zip=" . _ESC( $_POST['user_zip'] ) . ",
             user_city=" . _ESC( $_POST['user_city'] ) . ",
+            user_state=" . _ESC( $_POST['user_state'] ) . ",
             user_country=" . _ESC( $_POST['user_country'] ) . ",
             user_email=" . _ESC( $_POST['user_email'] ) . ",
 	          user_phone=" . _ESC( $_POST['user_phone'] ) . ",

@@ -46,6 +46,10 @@ class User_Smarty {
     $smarty->register_object("user",$this);
     $smarty->assign_by_ref("user",$this);
   }
+  function mode(){
+    global $_SHOP;
+    return (int)$_SHOP->shopconfig_user_activate;
+  }
 
   function load($params,&$smarty){
    $this->load_f($params['user_id']);
@@ -97,6 +101,7 @@ class User_Smarty {
 //  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
 //      echo "<script>window.location.href='{$url}';</script>";
       $this->load_f($res);
+      $this->new_member = $ismember;
       return $res;
     }  
     return false;

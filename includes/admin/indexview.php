@@ -45,13 +45,13 @@ class IndexView extends AdminView {
        {
        case 0:
            global $licention;
-       	 	 $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION,'100%',2);
-        	 echo "<tr><td class='admin_value' width='100%' colspan=2>" ;
+       	 	 $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION,$this->width,1);
+        	 echo "<tr><td class='admin_value'>" ;
            echo "<p>".nl2br(htmlspecialchars($licention)),'</p>';
            echo "</td></tr>";
 		       echo "</table>\n<br>";
 
-      	 	 $this->form_head( con('system_summary'),'100%',2);
+      	 	 $this->form_head( con('system_summary'),$this->width,2);
            $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
            $this->print_field('InfoPhpVersion',  phpversion ());
            $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
@@ -63,12 +63,12 @@ class IndexView extends AdminView {
            break;
        
        case 1:
-           $viewer = new OrganizerView('100%');
+           $viewer = new OrganizerView($this->width);
            $viewer->draw();
            break;
 
        case 2:
-           $viewer = new OptionsView('100%');
+           $viewer = new OptionsView($this->width);
            $viewer->draw();
            break;
 

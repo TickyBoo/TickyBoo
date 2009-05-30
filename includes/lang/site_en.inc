@@ -5,7 +5,7 @@ define("cart_cont_mess","Please check your order. You have 15 minutes before you
         and click &apos;Order More Tickets&apos;.");
 
 deFine("actions","Actions");
-define("act_err","User not found or allready activated (check error code)");
+define("act_err","User not found or allready activated.");
 define("act_is_sent","Your activation email has been sent to your e-mail");
 define("act_mess_line","Please check you email to activate your account.<br><br>");
 define("act_name","Activate account");
@@ -968,7 +968,7 @@ define('pos_currenttickets','Current Tickets');
 define('pos_booktickets','Book Tickets');
 define('pos_holdtickets','Hold Tickets');
 define('shopconfig_delunpaid','Global Delete Unpaid Orders');
-define('shopconfig_user_activate','Users need to activate');
+define('shopconfig_user_activate','Users checkout level');
 define('index_admin','Home');
 define('current_version','version:');
 define('InfoWebVersion',   "Server Software");
@@ -989,11 +989,11 @@ define('Reservated', 'Reservated');
 ?><?php
 // defines added at: 2009-05-22T13:34:27+02:00
 define('imp_export_admin', "Import /Export");
-define('guest_info', "Vul hieronder uw gegevens in, zodat wij de kaarten aan u kunnen toesturen.<br> Bent u al vaste klant? Vul dan onderaan dit scherm uw emailadres en wachtwoord in.");
-define('mand_all', "Alle velden zijn verplicht.");
-define('password1', "Kies uw wachtwoord");
+define('guest_info', "Fill your details here, so that the ticket can be send to you. <br> Already a regular customer? Fill at the right side, your email address and password.");
+define('mand_all', "All inputfields are mandatory.");
+define('password1', "Choice password");
 define('eventlist_info', 'Please select an upcomming event from below.');
-define('shop_info2', "Voor dit concert kunnen geen kaarten worden gereserveerd.<BR /><BR />Route informatie is beschikbaar door de locatie te klikken. ");
+define('shop_info2', "For this event are no tickets for sale.");
 define('cart_total', "Shopping Cart Total:");
 define('user_address2', "Address");
 define('user_nospam', "Security Code");
@@ -1011,4 +1011,14 @@ define('www', 'webshop');
 define('dts_month_arr', 'January|February|March|April|May|June|July|August|September|October|November|December');
 define('dts_day_arr', 'Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday');
 define("login_button","OK");
+?><?PHP
+define("becomememberorguest","Register as member or quest");
+define("becomeguest","Register as guest");
+define("users_admin","System managers");
+define('act_restrict_all'       , 'Only activated members');
+define('act_restrict_later'     , 'New members are allowed');
+define('act_restrict_w_guest'   , 'New members and guests');
+define('act_restrict_quest_only', 'Only guest users');
+define('admin_user_title','All system administrators');
+define('organizer_user_title','All event organizers');
 ?>

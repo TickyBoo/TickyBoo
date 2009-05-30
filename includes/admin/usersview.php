@@ -42,25 +42,25 @@ class UsersView extends AdminView {
        {
        case 0:
            require_once ('adminuserview.php');
-           $viewer = new AdminUserView('100%');
+           $viewer = new AdminUserView($this->width);
            $viewer->draw('admin');
            break;
 
        case 1:
            require_once ('adminuserview.php');
-           $viewer = new AdminUserView('100%');
+           $viewer = new AdminUserView($this->width);
            $viewer->draw('organizer');
            break;
 
        case 2:
            require_once ('SPointView.php');
-           $viewer = new SPointView('100%');
+           $viewer = new SPointView($this->width);
            $viewer->draw();
            break;
 
        case 3:
            require_once ('ControlView.php');
-           $viewer = new controlView('100%');
+           $viewer = new controlView($this->width);
            $viewer->draw();
            break;
 

@@ -47,7 +47,7 @@ class OptionsView extends AdminView{
 	      		shopconfig_check_pos="._ESC($_POST['shopconfig_check_pos']).",
 	      		shopconfig_delunpaid="._ESC($_POST['shopconfig_delunpaid']).",
 	      		shopconfig_posttocollect="._ESC($_POST['shopconfig_posttocollect']).",
-	      		shopconfig_user_activate="._ESC($_POST['shopconfig_user_activate']).",
+	      		shopconfig_user_activate="._ESC((int)$_POST['shopconfig_user_activate']).",
 	      		shopconfig_maxres="._ESC($_POST['shopconfig_maxres'])."
 	      		limit 1";
 				
@@ -76,7 +76,7 @@ function option_form (&$data, &$err,$title,$mode){
 	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 	echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>"; 
 	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
-
+//  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
 	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 	
 	$this->print_input('shopconfig_lastrun_int',$data, $err,5,3);
@@ -90,7 +90,11 @@ function option_form (&$data, &$err,$title,$mode){
   $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
 
 	$this->print_input('shopconfig_posttocollect',$data, $err,25,100);
-  $this->print_select_assoc('shopconfig_user_activate',$data,$err,$yesno);
+  $this->print_select_assoc('shopconfig_user_activate',$data,$err,
+     array('0'=>con('act_restrict_all'),
+           '1'=>con('act_restrict_later'),
+           '2'=>con('act_restrict_w_guest'),
+           '3'=>con('act_restrict_quest_only')));
 
 	echo "<input type='hidden' name='action' value='update'>\n";
 	
