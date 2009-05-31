@@ -36,12 +36,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel='stylesheet' href='style.php' type='text/css' />
 		
-{*		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
+		<!-- Must be included in all templates -->
+		
+		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+		
+		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.maskedinput-1.2.2.js"></script>
-		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script> *}
+		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
 		
 		<script type="text/javascript" src="scripts/countdownpro.js" defer="defer"></script>
 		
@@ -51,6 +56,8 @@
 		<meta scheme="countdown1" name="s_hidezero" content="1" />
 		<meta scheme="countdown1" name="event_msg" content="0! " />
 		<meta scheme="countdown1" name="servertime" content="{$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'} GMT+00:00" />
+		
+		<!-- End Required Headers -->
 	</head>
 
 	<body class='main_side'>   <center>

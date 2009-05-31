@@ -27,23 +27,30 @@
  * clear to you.
  *}
  {include file="header.tpl" name=!becomemember! header=!memberinfo!}
-<form action='index.php' method='post'>
-  <input type='hidden' name='action' value='register'>
-  <input type='hidden' name='ismember' value='true'>
-  <input type='hidden' name='register_user' value='on'>
+<form action='index.php' method='post' id="user-register">
+  <input type='hidden' name='action' value='register' />
+  <input type='hidden' name='ismember' value='true' />
+  <input type='hidden' name='register_user' value='on' />
   {ShowFormToken name='registeruser'}
   <center>
     <table class="table_dark" cellpadding="3" bgcolor='white' width='85%'>
       {include file="user_form.tpl"}
+      	<tr>
+  			<td class='TblLower' > {!confirmemail!}&nbsp;* </td>
+  			<td class='TblHigher'>
+		  		<input autocomplete='off' type='text' name='user_email2' size='30'  maxlength='50' value='{$user_data.user_email2|clean}'/>
+			  	<span class='error'>{$user_errors.user_email}</span>
+		  	</td>
+		</tr>
       <tr>
         <td class='TblLower'>{!password!} *</td>
-        <td class='TblHigher'><input type='password' name='password1' size='10'  maxlength='10'>
+        <td class='TblHigher'><input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
            {!pwd_min!} <div class='error'>{$user_errors.password}</div>
         </td>
       </tr>
       <tr>
         <td class='TblLower'> {!confirmpassword!} *</td>
-        <td class='TblHigher'><input type='password' name='password2' size='10'  maxlength='10'></td>
+        <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
       </tr>
       <tr>
         <td class='TblLower' valign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
@@ -51,18 +58,19 @@
           <table cellpadding="0" cellspacing="0" width='400'>
             <tr>
               <td >
-                <input type='text' name='user_nospam' size='10' maxlength="10" value='' ><br>
-                <sup> {!nospam_info!} </sup><br><span class='error'>{$user_errors.user_nospam}</span>
+                <input type='text' name='user_nospam' size='10' maxlength="10" value='' />
+				<br/>
+                <sup> {!nospam_info!} </sup><br /><span class='error'>{$user_errors.user_nospam}</span>
               </td>
               <td align='center'>
-                <img src="nospam.php?name=user_nospam" alt='' border=1>
+                <img src="nospam.php?name=user_nospam" alt='' border='1' />
               </td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
-    <br>
+    <br />
     <table class="table_dark" cellpadding="3" width='85%'>
       <tr>
         <td>

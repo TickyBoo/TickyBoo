@@ -147,8 +147,8 @@
                                   'opera','humour','music','other','cinema','party','exposition');
   $_SHOP->event_group_type_enum = array('','festival','tournee','theatre');
   
-
-  $_SHOP->mail_mode = 'mail'; // 'mail', 'sendmail', 'smtp'
+  // 'mail', 'sendmail', 'smtp'
+  $_SHOP->mail_mode = 'mail'; 
   $_SHOP->mail_smtp_host = null;
   $_SHOP->mail_smtp_port = null;
   $_SHOP->mail_smtp_auth = null;

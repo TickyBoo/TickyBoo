@@ -134,6 +134,7 @@ define("comp","Compiled");
 define("compilation_succeed","Success - Template compiled");
 define("compile_all","Compile all");
 define("conditions"," I have read and agree to the General Terms of Sale.");
+define("confirmemail","Confirm E-mail Address");
 define("confirmpassword","Confirm password");
 define("confirm_and_print","Confirm and Print");
 define("confirm_no","No");

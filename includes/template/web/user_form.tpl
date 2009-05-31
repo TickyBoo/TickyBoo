@@ -66,5 +66,5 @@
 </tr>
 <tr>
   <td class='TblLower' > {!email!}&nbsp;* </td>
-  <td class='TblHigher'><input type='text' name='user_email' size='30'  maxlength='50' value='{$user_data.user_email|clean}'><span class='error'>{$user_errors.user_email}</span></td>
+  <td class='TblHigher'><input type='text' name='user_email' size='30'  maxlength='50' value='{$user_data.user_email|clean}' id="email" /><span class='error'>{$user_errors.user_email}</span></td>
 </tr>
