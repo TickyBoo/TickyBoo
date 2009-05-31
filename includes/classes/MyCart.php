@@ -132,7 +132,7 @@ class Cart {
       $event =& $this->event_items[$event_id];
       if(!$event->load_info()){
         $this->invalid=TRUE;
-	return FALSE;
+	      return FALSE;
       }
     }    
     return TRUE;
@@ -149,7 +149,6 @@ class Cart {
     }
     return FALSE;
   }
-
 
   //BOOL iter_func($event_item,$cat_item,$place_item[,$data])
   //returns 1=continue iterate or 0=stop
@@ -168,7 +167,10 @@ class Cart {
   function overview (){
     global $_SHOP;
   
-    $data=array('valid'=>0,'expired'=>0,'minttl'=>$_SHOP->cart_delay,'secttl'=>$_SHOP->cart_delay);
+    $data=array('valid'=>0,
+                'expired'=>0,
+                'minttl'=>$_SHOP->cart_delay,
+                'secttl'=>$_SHOP->cart_delay);
     $classname = "Cart";
     $this->iterate(array($classname,'_overview'),$data);
     return $data;

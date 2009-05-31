@@ -98,7 +98,9 @@ function option_form (&$data, &$err){
            '3'=>con('act_restrict_quest_only')));
 
  	$this->print_input('shopconfig_maxres',$data, $err,5,3);
-	$this->print_input('shopconfig_posttocollect',$data, $err,25,100);
+	$this->print_input('shopconfig_posttocollect',$data, $err,25,3);
+	$this->print_input('res_delay' ,$data, $err, 5, 3);
+  $this->print_input('cart_delay',$data, $err, 5, 3);
 
  	echo "</table>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";

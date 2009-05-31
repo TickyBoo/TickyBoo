@@ -108,9 +108,9 @@ class Place {
         $query="SELECT place_id FROM Place 
                 WHERE place_event_id='$event_id'
                 and place_category_id='$category_id'
-		and place_row_nr='$row_nr' 
-	        and place_status='free' LIMIT $count
-	        FOR UPDATE";
+		            and place_row_nr='$row_nr'
+	              and place_status='free' LIMIT $count
+	              FOR UPDATE";
         
         if(!$res=ShopDB::query($query)){
           $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'place:115');

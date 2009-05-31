@@ -773,7 +773,7 @@ define("shipment_price","Charges");
 define("shopcart","Shopping Cart");
 define("shopconfig_lastrun","Last Time Run");
 define("shopconfig_lastrun_int","Order check interval");
-define("shopconfig_posttocollect","How long before it changes to alt payment");
+define("shopconfig_posttocollect","Switch to Alt paymment");
 define("shopconfig_restime","Reservation time. (<10 = off)");
 define("shopconfig_restime_remind","When reminder email is sent");
 define("shop","Order tickets");
@@ -1030,6 +1030,8 @@ define('nav_next',' > ');
 define('nav_last','last');
 define('shopconfig_check_pos',"Don't check POS orders");
 define('shopconfig_maxres','Max tickets allowed');
+res_delay
+
 
 
 ?>
