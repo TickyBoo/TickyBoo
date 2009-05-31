@@ -10,22 +10,6 @@ class Update_Smarty {
 
 		$smarty->register_object( "update", $this, array('view', 'countdown') );
 		$smarty->assign_by_ref( "update", $this );
-    	$smarty->assign('run_as_demo',$_SHOP->shopconfig_run_as_demo);
-
-		//if(!$dont_run){
-		//Set to same as $_SHOP->shopconfig_lastrun_int for testing mode.
-		if ( $this->lastrun() <= '0' ) {
-			//Checks to see if res time is enabled anything more than 9 will delete
-			if ( $_SHOP->shopconfig_restime >= 10 ) {
-				$run = $this->check_reserved();
-			}
-			if ( $_SHOP->shopconfig_delunpaid == "Yes" ) {
-				$run = $this->delete_unpaid();
-			}
-
-			$run = $this->saveupdate();
-		}
-		//}
 	}
 
   function is_demo() {
@@ -58,26 +42,17 @@ class Update_Smarty {
 				}
 			}
 			if ( $_SHOP->shopconfig_maxres > 1 ) {
-				if ( isset($_SESSION['_SHOP_USER']) and $user = $_SESSION['_SHOP_USER'] and 
-             $user['user_status'] ==2 ) {
-					$query = "SELECT * FROM User WHERE user_id=" . ShopDB::quote( $user['user_id'] ) .
-						" AND user_status='2'";
-					if ( !$res = ShopDB::query($query) ) {
-						echo "#ERR-NOUSR";
-						return false;
-					} else {
-						$user_query = shopDB::fetch_assoc( $res );
-						require_once ( 'classes/MyCart_Smarty.php' );
-						$cart = MyCart_Smarty::overview_f();
-						$res_total = $user_query['user_current_tickets'] + $cart['valid'];
+				if ( isset($_SESSION['_SHOP_USER']) and $user = User::load_user($_SESSION['_SHOP_USER'])) {
+					require_once ( 'classes/MyCart_Smarty.php' );
+					$cart = MyCart_Smarty::overview_f();
+					$res_total = $user['user_current_tickets'] + $cart['valid'];
 
-						if ( $res_total > $_SHOP->shopconfig_maxres ) {
-							$enabled['can_reserve'] = false;
-							$enabled['maxres'] = $_SHOP->shopconfig_maxres;
-							$enabled['currentres'] = $res_total;
-						} else {
-							$enabled['can_reserve'] = true;
-						}
+					if ( $res_total > $_SHOP->shopconfig_maxres ) {
+						$enabled['can_reserve'] = false;
+						$enabled['maxres'] = $_SHOP->shopconfig_maxres;
+						$enabled['currentres'] = $res_total;
+					} else {
+						$enabled['can_reserve'] = true;
 					}
 				}
 			}
@@ -119,131 +94,31 @@ class Update_Smarty {
 	function countdown( $params, &$smarty ) {
 		global $_SHOP;
 
-		if ( $params['reserved'] ) {
-			$order_id = $this->secure_url_param( $params['order_id'] );
-			$query = "SELECT * FROM `Order` WHERE order_id=" . ShopDB::quote( $order_id ) .
-				" AND order_status NOT IN ('cancel','trash') LIMIT 1";
-			if ( $res = ShopDB::query($query) ) {
-				$result = ShopDB::fetch_assoc( $res );
-				$time = Time::StringToTime( $result['order_date_expire'] );
-				$array = Time::countdown( $time );
-			}
-		} else {
-			$order_id = $this->secure_url_param( $params['order_id'] );
-			$query = "SELECT * FROM `Order` WHERE order_id=" . ShopDB::quote( $order_id ) .
-				"	AND order_status NOT IN ('cancel','trash') LIMIT 1";
-			if ( $res = ShopDB::query($query) ) {
-				$result = shopDB::fetch_assoc( $res );
-				$query = "SELECT * FROM `Handling` WHERE handling_id=" . ShopDB::quote( $result['order_handling_id'] ) .
-					" AND handling_delunpaid='Yes' LIMIT 1 ";
-				if ( $res = ShopDB::query($query) ) {
-					$result2 = shopDB::fetch_assoc( $res );
-					$time = Time::StringToTime( $result['order_date_expire'] );
-					$array = Time::countdown( $time );
-				}
-			}
-		}
-		if ( $array ) {
-			$smarty->assign( "order_remain", $array );
-		}
-	}
-
-
-	// Will delete resevered orders out of time
-	function check_reserved() {
-		global $_SHOP;
-
-		$where = " order_status NOT IN ('trash','ord','cancel')
-		AND order_payment_status !='payed' 
-		AND order_shipment_status !='send' 
-		AND order_date_expire <= NOW() ";
-		if ( $_SHOP->shopconfig_check_pos == 'No' ) {
-			$where .= " AND order_place !='pos' ";
-		}
-		$query = "SELECT order_id FROM `Order` WHERE $where";
-
-		if ( $res = ShopDB::query($query) ) {
-			while ( $row = shopDB::fetch_array($res) ) {
-				//echo "BANG!<br> ";
-				if ( !Order::Check_payment($row['order_id']) and 
-           ($_SHOP->shopconfig_restime >=	10) ) {
-					Order::order_delete( $row['order_id'] );
-				}
-			}
+		$order_id = $this->secure_url_param( $params['order_id'] );
+		$query = "SELECT order_date_expire
+              FROM `Order`
+              WHERE order_id=" . ShopDB::quote( $order_id ) ."
+              AND order_status NOT IN ('cancel','trash') LIMIT 1";
+		if ( $result = ShopDB::query_one_row($query) ) {
+			$time  = Time::StringToTime( $result['order_date_expire'] );
+			$smarty->assign( "order_remain", Time::countdown( $time ));
 		}
 	}
 
 	/**
 	 * Deletes Unpaid Orders
-	 * 
-	 * 'Delete' meaning that the order is canceled and the tickets 
+	 *
+	 * 'Delete' meaning that the order is canceled and the tickets
 	 * are retuned back into curculation.
-	 * 
-	 * Will only delete if the global 'Delete Unpaid Order' = Yes 
+	 *
+	 * Will only delete if the global 'Delete Unpaid Order' = Yes
 	 * and if each handling 'Delete Unpaid Orders' = Yes
-	 * 
+	 *
 	 * Will never delete orders from the POS (Box Office)
-	 * 
+	 *
+	 * Will delete resevered orders out of time
+	 *
 	 */
-	function delete_unpaid() {
-		global $_SHOP;
-
-		if ( $_SHOP->shopconfig_delunpaid == "Yes" ) {
-
-			$query = "SELECT * FROM `Handling` 
-	  			WHERE handling_delunpaid='Yes'
-				AND handling_expires_min > 10 ";
-	  if($res=ShopDB::query($query)){
-				//Cycles through Handling's
-				while ( $row = ShopDB::fetch_array($res) ) {
-
-					$query2 = "SELECT * FROM `Order`
-						WHERE order_date_expire <= NOW() 
-				  		AND order_status NOT IN ('trash','res','cancel')   
-				  		AND order_payment_status != 'payed' 
-				  		AND order_shipment_status != 'send' 
-				  		AND order_place != 'pos' 
-				  		AND order_handling_id = " . ShopDB::quote( $row['handling_id'] );
-
-			if($resultOrder=ShopDB::query($query2)){
-						//Cycles through orders to see if they should be canceled!
-						while ( $roword = shopDB::fetch_array($resultOrder) ) {
-							Order::order_delete( $roword['order_id'] );
-						}
-					} else {
-						$error['unpaidord'] = "Could not load unpaid orders for handling id: {$row['handling_id']} !";
-					}
-				}
-			} else {
-				$error['Unpaid'] = "Could not load unpaid handlings";
-				return;
-			}
-		} else {
-			return;
-		}
-	}
-
-  
-	// Will check last time the update script was run and return the time in mins
-	function lastrun() {
-  global $_SHOP;
-		$time = Time::StringToTime( $_SHOP->shopconfig_lastrun );
-		$remain = Time::countdown( $time, $_SHOP->shopconfig_lastrun_int );
-		$return = $remain['justmins'];
-
-		return $return;
-	}
-
-	function saveupdate( $config_id = '1' ) {
-		global $_SHOP;
-
-		$query = "UPDATE `ShopConfig` SET shopconfig_lastrun=NOW() LIMIT 1";
-		if ( !$data = ShopDB::query($query) ) {
-			$error['save'] = "Save Error, Could not save lastrun";
-			return;
-		}
-		return true;
-	}
 
 	function secure_url_param( $num = false, $nonum = false ) {
   global $_SHOP;

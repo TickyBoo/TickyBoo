@@ -40,7 +40,7 @@
     discounts=$smarty.post.discount }
   {include file="cart_view.tpl"}
 {elseif $smarty.get.action eq 'activate'}
-  {include file="activate.tpl"}
+  {include file="user_activate.tpl"}
 {elseif $smarty.request.action eq 'resend_activation'}
   {include file="resend_activation.tpl"}
 {elseif $smarty.get.action eq "remove"}
@@ -87,7 +87,7 @@
   {if not $user->logged}
       {include file="user_register.tpl"}
   {else}
-     {include file="activate.tpl"}
+     {include file="user_activate.tpl"}
   {/if}  
 
 {elseif $smarty.request.personal_page}

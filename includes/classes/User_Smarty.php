@@ -84,6 +84,9 @@ class User_Smarty {
     $this->_clean();
   }
 
+  function asarray(){
+    return (array)$this;
+  }
 
  /* User data gets subbmitted to here */ 
   function register ($params, &$smarty){
@@ -98,10 +101,14 @@ class User_Smarty {
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
 //  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
 //      echo "<script>window.location.href='{$url}';</script>";
+      $_SESSION['_NEW_MEMBER']= $ismember;
       $this->load_f($res);
-      $this->new_member = $ismember;
+//      $this->new_member = $ismember;
       return $res;
     }  
+    $this->new_member = false;
+    $_SESSION['_NEW_MEMBER']= $ismember;
+
     return false;
 //    echo "error";
   }
@@ -156,6 +163,8 @@ class User_Smarty {
         $this->$k=$v; /// What does this do? Sets User_Smary->$k as $v ?
       }
     }
+    $this->new_member = is($_SESSION['_NEW_MEMBER'],false);
+
   }
 
   function _clean (){

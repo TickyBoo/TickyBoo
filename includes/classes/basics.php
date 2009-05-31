@@ -49,6 +49,8 @@ define('YEAR', 365 * DAY);
 define('FT_DEBUG', 2);
 define('FT_ERROR', 1);
 
+require_once("classes/Time.php");
+
 
 /**
  * print out type and content of the given variable if DEBUG-define (in config/core.php) > 0
@@ -322,7 +324,6 @@ function md5pass($user,$pass) {
 
 function check_event($event_date){
   global $_SHOP;
-  require_once("classes/Time.php");
 	if($_SHOP->shopconfig_posttocollect>=10){
 	  $time=Time::StringToTime($event_date);
 		$remain=Time::countdown($time);
@@ -336,6 +337,62 @@ function check_event($event_date){
 		}
 	}
 }
+
+function check_system() {
+	global $_SHOP;
+  if ($_SHOP->shopconfig_lastrun_int = 0) {
+    return;
+	}elseif ( Time::StringToTime($_SHOP->shopconfig_lastrun) > time() ) {
+    return;
+  }
+	//Checks to see if res time is enabled anything more than 9 will delete
+	if ( $_SHOP->shopconfig_restime >= 1 ) {
+		$query = "SELECT order_id FROM `Order`
+              WHERE order_status NOT IN ('trash','ord','cancel')
+          		AND order_payment_status !='payed'
+          		AND order_shipment_status !='send'
+          		AND order_date_expire <= NOW()";
+		if ( $_SHOP->shopconfig_check_pos == 'No' ) {
+			$where .= " AND order_place != 'pos' ";
+		}
+		if ( $res = ShopDB::query($query) ) {
+			while ( $row = shopDB::fetch_array($res) ) {
+				if ( !Order::Check_payment($row['order_id']) and
+           ($_SHOP->shopconfig_restime >=	10) ) {
+					Order::order_delete( $row['order_id'] );
+				}
+			}
+		}
+	}
+
+	if ( $_SHOP->shopconfig_delunpaid == "Yes" ) {
+		$query = "SELECT order_id
+              FROM `Handling` left join `Order` on order_handling_id = handling_id
+  			      WHERE handling_delunpaid='Yes'
+              AND order_date_expire <= NOW()
+  			  		AND order_status NOT IN ('trash','res','cancel')
+  			  		AND order_payment_status != 'payed'
+  			  		AND order_shipment_status != 'send'
+  			  		AND order_place != 'pos'";
+//				        AND handling_expires_min > 10
+
+    if($resultOrder=ShopDB::query($query)){
+			//Cycles through orders to see if they should be canceled!
+			while ( $roword = shopDB::fetch_array($resultOrder) ) {
+				Order::order_delete( $roword['order_id'] );
+			}
+		}
+	}
+
+	$query = "UPDATE `ShopConfig` SET shopconfig_lastrun=(NOW()+INTERVAL {$_SHOP->shopconfig_lastrun_int} MINUTE) LIMIT 1";
+	if ( !$data = ShopDB::query($query) ) {
+		die( "Save Error, Could not save lastrun");
+		return;
+	}
+	return true;
+
+}
+
 function formatDate($edate){
    global $_SHOP;
    ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);

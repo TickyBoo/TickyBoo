@@ -27,11 +27,17 @@
  * clear to you.
  *}
   {if $user->mode() eq 0 && !$user->active}
-    {include file="activate.tpl"}
+    {include file="user_activate.tpl"}
   {else}
     {include file="header.tpl" name=!shopping_cart! header=!Handling_cont_mess!}
-    {if  $user->mode() <= 2 && $user->new_member}
-      {include file="just_registred.tpl"}
+    {if  $user->mode() lte 2 && $user->new_member}
+      <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+        <tr><td class='TblLower'>
+          <span class='title'>{!act_name!}<br><br> </span>
+          {include file="just_registred.tpl"}
+
+        </td></tr>
+      </table>
     {/if}
 
 		{if $order_error}

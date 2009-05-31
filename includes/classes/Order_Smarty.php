@@ -60,7 +60,7 @@ class Order_Smarty {
     global $_SHOP;
 
     if(!$user_id){
-      $user_id=$_SESSION['_SHOP_USER']['user_id'];
+      $user_id=$_SESSION['_SHOP_USER'];//['user_id'];
     }
 
     $cart=$_SESSION['_SMART_cart'];

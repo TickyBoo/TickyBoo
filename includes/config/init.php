@@ -80,7 +80,8 @@ define ('AUTH_REALM','Fusion Ticket Login');
   session_name($_SHOP->session_name);
   session_start();
 
-
+// check the order system for outdated orders and reservations
+  check_system();
 //  if (isset($_REQUEST['action'])) {$action=$_REQUEST['action'];} else { $action=false;}
 
 //authentifying (if needed)

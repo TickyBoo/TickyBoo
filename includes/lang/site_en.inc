@@ -462,7 +462,7 @@ define("open","Doors open");
 define("open_with_acrobat","Open Orders in Acrobat");
 define("opera","Opera");
 define("options","Options");
-define("option_update_title","Edit Shop Stats");
+define("option_update_title","Config Shop Auto-updates");
 define("orclick","Or Click below to:");
 define("Orderdate","Date Ordered");
 define("ordered","Ordered");
@@ -772,9 +772,9 @@ define("shipment","Shipment");
 define("shipment_price","Charges");
 define("shopcart","Shopping Cart");
 define("shopconfig_lastrun","Last Time Run");
-define("shopconfig_lastrun_int","The time between each order check");
+define("shopconfig_lastrun_int","Order check interval");
 define("shopconfig_posttocollect","How long before it changes to alt payment");
-define("shopconfig_restime","Reservation time in minutes. (set 1 for off)");
+define("shopconfig_restime","Reservation time. (<10 = off)");
 define("shopconfig_restime_remind","When reminder email is sent");
 define("shop","Order tickets");
 define("shopping_cart","Your shopping cart");
@@ -1024,7 +1024,12 @@ define('organizer_user_title','All event organizers');
 define('act_enter_code','You can speedup your activation by fill the activation code that is send to you by email in the inputbox below. Or click on the link in the email.');
 define('act_enter_title','Fill you activation code here');
 define('act_code','Activation code:');
-
+define('nav_first','first');
+define('nav_prev',' < ');
+define('nav_next',' > ');
+define('nav_last','last');
+define('shopconfig_check_pos',"Don't check POS orders");
+define('shopconfig_maxres','Max tickets allowed');
 
 
 ?>

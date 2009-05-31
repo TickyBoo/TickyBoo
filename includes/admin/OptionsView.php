@@ -37,7 +37,7 @@ class OptionsView extends AdminView{
 	global $_SHOP;
 		if($_POST['action']=='update'){
 			if(!$this->options_check($_POST,$err)){
-				$this->option_form($_POST,$err,option_update_title,"update");
+				$this->option_form($_POST,$err);
 			}else{
 
 				$query="UPDATE `ShopConfig` SET 
@@ -70,41 +70,35 @@ class OptionsView extends AdminView{
 			return;
 		}
 }
-function option_form (&$data, &$err,$title,$mode){
+function option_form (&$data, &$err){
 	global $_SHOP;
-	
+	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');
+
 	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-	echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>"; 
+	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_update_title')."</td></tr>";
 	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 //  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
 	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 	
 	$this->print_input('shopconfig_lastrun_int',$data, $err,5,3);
 	$this->print_input('shopconfig_restime',$data, $err,25,100);
-	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
-	$this->print_input('shopconfig_maxres',$data, $err,5,3);
+//	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
 	//this will tell the auto scripts to check POS orders or not.
-	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');
-	
+
   $this->print_select_assoc('shopconfig_check_pos',$data,$err,$yesno);
   $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
 
-	$this->print_input('shopconfig_posttocollect',$data, $err,25,100);
-  $this->print_select_assoc('shopconfig_user_activate',$data,$err,
-     array('0'=>con('act_restrict_all'),
-           '1'=>con('act_restrict_later'),
-           '2'=>con('act_restrict_w_guest'),
-           '3'=>con('act_restrict_quest_only')));
-
  	echo "</table>\n<br>";
 	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-	echo "<tr><td class='admin_list_title' colspan='2'>".con('mail_options_title')."</td></tr>";
-    $this->print_select_assoc('shopconfig_user_axxctivate',$data,$err,
+	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_others_title')."</td></tr>";
+    $this->print_select_assoc('shopconfig_user_activate',$data,$err,
      array('0'=>con('act_restrict_all'),
            '1'=>con('act_restrict_later'),
            '2'=>con('act_restrict_w_guest'),
            '3'=>con('act_restrict_quest_only')));
 
+ 	$this->print_input('shopconfig_maxres',$data, $err,5,3);
+	$this->print_input('shopconfig_posttocollect',$data, $err,25,100);
 
  	echo "</table>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -121,41 +115,15 @@ function option_form (&$data, &$err,$title,$mode){
 function options_check (&$data, &$err){
 	global $_SHOP;
 	
-	if(empty($data['shopconfig_lastrun_int'])){$err['shopconfig_lastrun_int']=mandatory;}
-	if(empty($data['shopconfig_restime'])){$err['shopconfig_restime']=mandatory;}
-	if(empty($data['shopconfig_restime_remind'])){$err['shopconfig_restime_remind']=mandatory;}
-	if(empty($data['shopconfig_posttocollect'])){$err['shopconfig_posttocollect']=mandatory;}
-	if(empty($data['shopconfig_maxres'])){$err['shopconfig_maxres']=mandatory;}
-	
-	if($err){
-		return empty($err);
-	}
-	
-	if(!is_numeric($data['shopconfig_lastrun_int'])){
-		$err['shopconfig_lastrun_int']=not_number;
-	}elseif($data['shopconfig_lastrun_int']<'0'){
-		$err['shopconfig_lastrun_int']=too_low;
-	}
-	if(!is_numeric($data['shopconfig_maxres'])){
-		$err['shopconfig_maxres']=not_number;
-	}elseif($data['shopconfig_maxres']<'0'){
-		$err['shopconfig_maxres']=too_low;
-	}
-	if(!is_numeric($data['shopconfig_restime'])){
-		$err['shopconfig_restime']=not_number;
-	}elseif($data['shopconfig_restime']<'0'){
-		$err['shopconfig_restime']=too_low;
-	}
-	if(!is_numeric($data['shopconfig_restime_remind'])){
-		$err['shopconfig_restime_remind']=not_number;
-	}elseif($data['shopconfig_restime_remind']<'0'){
-		$err['shopconfig_restime_remind']=too_low;
-	}
-	if(!is_numeric($data['shopconfig_posttocollect'])){
-		$err['shopconfig_posttocollect']=not_number;
-	}elseif($data['shopconfig_posttocollect']<'0'){
-		$err['shopconfig_posttocollect']=too_low;
-
+	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime',
+                'shopconfig_restime_remind', 'shopconfig_posttocollect') as $check) {
+    if(empty($data[$check])){
+       $err[$check]=mandatory;
+    }elseif(!is_numeric($data[$check])){
+  		$err[$check]=not_number;
+  	}elseif($data[$check]<'0'){
+  		$err[$check]=too_low;
+    }
 	}
 	
 	return empty($err);

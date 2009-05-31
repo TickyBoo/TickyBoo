@@ -162,7 +162,7 @@ die();
       $smarty->assign('user_errors', $errors);
       $smarty->assign('user_data',   $_POST);
     } else {
-      $smarty->assign('user_data',   $_SESSION['_SHOP_USER']);
+      $smarty->assign('user_data',   $user->asarray());
     }
     return "user_update";
   }

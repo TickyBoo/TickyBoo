@@ -954,32 +954,6 @@ class Order {
   	Order::purgeReemited($order_handling_id);
   }
 
-  function delete_expired($handling_id, $expires_min){
-  	global $_SHOP;
-
-  	$ttl=(int)$expires_min;
-  	if($ttl<=20){return;}
-
-  	ShopDB::begin();
-
-    $query="SELECT order_id FROM `Order` WHERE
-  	order_handling_id='$handling_id' and
-  	(now() - interval $ttl minute) > order_date and
-  	order_shipment_status='none' and
-  	order_status='ord' and
-  	order_payment_status='none' and
-  	order_payment_id is NULL";
-
-  //echo $query;
-    if($res=ShopDB::query($query)){
-  	  while($data=shopDB::fetch_array($res)){
-  			$order_id=$data['order_id'];
-  			echo "<br>$order_id";
-  			Order::order_delete($order_id, 0);
-  		}
-  	}
-  }
-
   function EncodeSecureCode($order= null, $item='sor=') {
 
     if ($order == null) $order = $this;

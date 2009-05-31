@@ -66,7 +66,7 @@ class EPH_cc extends payment{
 	
   function on_confirm(&$order) {
     if (!isset($_POST['cc_name'])) {
-      $user = $_SESSION['_SHOP_USER'];  //'user'
+      $user = User::load_user($_SESSION['_SHOP_USER']);  //'user'
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;
