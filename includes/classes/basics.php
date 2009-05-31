@@ -49,7 +49,6 @@ define('YEAR', 365 * DAY);
 define('FT_DEBUG', 2);
 define('FT_ERROR', 1);
 
-require_once("classes/Time.php");
 
 
 /**
@@ -323,6 +322,8 @@ function md5pass($user,$pass) {
 }
 
 function check_event($event_date){
+  require_once("classes/Time.php");
+
   global $_SHOP;
 	if($_SHOP->shopconfig_posttocollect>=10){
 	  $time=Time::StringToTime($event_date);
@@ -340,6 +341,8 @@ function check_event($event_date){
 
 function check_system() {
 	global $_SHOP;
+  require_once("classes/Time.php");
+
   if ($_SHOP->shopconfig_lastrun_int = 0) {
     return;
 	}elseif ( Time::StringToTime($_SHOP->shopconfig_lastrun) > time() ) {
