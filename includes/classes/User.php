@@ -46,7 +46,7 @@ class User{
   var $is_member = false;
 
   function load_user ($user_id){
-    $query="select user.*, auth.active
+    $query="select User.*, auth.active
             from User left join auth on auth.user_id=User.user_id
             where User.user_id='$user_id'";
     if(!$user=ShopDB::query_one_row($query)){
