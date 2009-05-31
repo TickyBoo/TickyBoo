@@ -115,13 +115,26 @@ function print_select_tpl ($name,$type,&$data,&$err){
 			}
 			echo "</select><span class='err'>{$err["handling_shipment"]}</span></td></tr>\n";
 		}
+		if(strpos($data['handling_sale_mode'],'sp')!==false){
+			$chk_sp='checked';
+		}
+
+		if(strpos($data['handling_sale_mode'],'www')!==false){
+			$chk_www='checked';
+		}
+
+		echo "<tr><td class='admin_name'>".con(handling_sale_mode)."</td>
+			<td class='admin_value'>
+        <input type='checkbox' name='sale_mode[www]' value='www' $chk_www>
+			         ".con(www)."&nbsp;
+        <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp>
+			         ".con(sp)."&nbsp;
+			</td></tr>";
+
+
 		//This is for the alt payments if nothing is slected alt wont be used when close to event.
-		$sel[$data["handling_alt"]]=" selected ";
-		echo "<tr><td class='admin_name'  width='40%'>Alt Handling Method</td>
-		<td class='admin_value'><select name='handling_alt'>";
-		echo "<option value='1' ".$sel[1].">No Alt</option>\n";
-		echo $h->get_handlings($data["handling_alt"]);
-		echo "</select><span class='err'>{$err["handling_alt"]}</span></td></tr>\n";
+    $this->print_select_assoc('handling_alt',$data,$err,
+           $h->get_handlings(con('handling_no_alt')));
 
 		//This to ask if the handling is alturnative only this could be an auto proccess but then you would only be
 		//able to use the handling when close to the event.
@@ -133,12 +146,12 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		echo "</select><span class='err'>{$err["handling_delunpaid"]}</span></td></tr>\n";
 
 
-		$sel[$data["handling_delunpaid"]]=" selected ";
-		echo "<tr><td class='admin_name'  width='40%'>Delete Unpaid Payments</td>
+//		$sel[$data["handling_delunpaid"]]=" selected ";
+/*		echo "<tr><td class='admin_name'  width='40%'>".con('Handling_Delete_Unpaid')."</td>
 		<td class='admin_value'><select name='handling_delunpaid'>";
 		echo "<option value='No' ".$sel['No'].">No</option>\n";
 		echo "<option value='Yes' ".$sel['Yes'].">Yes</option>\n";
-		echo "</select><span class='err'>{$err["handling_delunpaid"]}</span></td></tr>\n";
+		echo "</select><span class='err'>{$err["handling_delunpaid"]}</span></td></tr>\n";*/
 
 		$this->print_input('handling_expires_min',$data,$err,10);
 		$this->print_input('handling_fee_fix',$data,$err,5,10);
@@ -150,25 +163,8 @@ function print_select_tpl ($name,$type,&$data,&$err){
 	#    <td class='admin_value'>".$data['handling_sale_mode']."</td></tr>";
 	#  }else{
 		//if 'sp' is present set the tick box ticked same fore www.
-		if(strpos($data['handling_sale_mode'],'sp')!==false){
-			$chk_sp='checked';
-		}
-
-		if(strpos($data['handling_sale_mode'],'www')!==false){
-			$chk_www='checked';
-		}
-
-		echo "<tr><td class='admin_name'>".con(handling_sale_mode)."</td>
-			<td class='admin_value'>
-        <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp>
-			".con(sp)."&nbsp;
-			<input type='checkbox' name='sale_mode[www]' value='www' $chk_www>
-			".con(www)."</td></tr>";
 
 	#  }
-		$this->print_select_tpl('handling_pdf_template','pdf2',$data,$err);
-		$this->print_select_tpl('handling_pdf_ticket_template','pdf2',$data,$err);
-		$this->print_paper_format('pdf_paper',$data,$err);
 
 		$temps=explode(",",$data['handling_email_template']);
 		foreach($temps as $temp){
@@ -180,6 +176,9 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		$this->print_select_tpl('handling_email_template_send','email',$data,$err);
 		$this->print_select_tpl('handling_email_template_payed','email',$data,$err);
 
+		$this->print_select_tpl('handling_pdf_template','pdf2',$data,$err);
+		$this->print_select_tpl('handling_pdf_ticket_template','pdf2',$data,$err);
+//		$this->print_paper_format('pdf_paper',$data,$err);
 
 		if($data['handling_id']){
 			$this->print_large_area('handling_text_payment',$data,$err,3,92,'');

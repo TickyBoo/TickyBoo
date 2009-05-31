@@ -1069,13 +1069,9 @@ class Order {
     $hand=Handling::load($order['order_handling_id']);
   	$order['user_country_name']= gui_smarty::getCountry($order['user_country']);
 
-    if($hand->pdf_paper_size){
-    	$paper_size=$hand->pdf_paper_size;
-    	$paper_orientation=$hand->pdf_paper_orientation;
-    }else{
-    	$paper_size=$_SHOP->pdf_paper_size;
-    	$paper_orientation=$_SHOP->pdf_paper_orientation;
-    }
+   	$paper_size=$_SHOP->pdf_paper_size;
+   	$paper_orientation=$_SHOP->pdf_paper_orientation;
+
     $te  = new TemplateEngine();
     $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 

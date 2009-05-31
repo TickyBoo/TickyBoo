@@ -526,7 +526,7 @@ class Handling {
     return $types;
   }
 
-  function get_handlings ($selectid=0, $include =''){
+  function get_handlings ($include =''){
 		$sqli="SELECT handling_id, handling_payment, handling_shipment FROM `Handling` WHERE handling_id!='1'";
 		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}	
 		$options= array();
@@ -535,8 +535,7 @@ class Handling {
 		
 		while ($row=shopDB::fetch_array($result)) { 
 			$id=$row["handling_id"];
-			$selected = ($id==$selectid) ? ' selected="selected"' : '';  
-			$payment=$row["handling_payment"];
+			$payment= $row["handling_payment"];
 			$shipping=$row["handling_shipment"];
 			$options["{$id}"] = $id." - ".con($payment)." - ".con($shipping);
 		}

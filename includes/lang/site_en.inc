@@ -1030,8 +1030,10 @@ define('nav_next',' > ');
 define('nav_last','last');
 define('shopconfig_check_pos',"Don't check POS orders");
 define('shopconfig_maxres','Max tickets allowed');
-res_delay
+define('res_delay','Ticket timeout');
+define('cart_delay','mycart timeout');
+define('Handling_Delete_Unpaid','Delete Unpaid Payments');
 
-
-
+define('handling_no_alt','No Alt');
+define('handling_alt','Alt Handling Method');
 ?>
