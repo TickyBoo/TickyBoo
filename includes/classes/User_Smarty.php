@@ -39,9 +39,7 @@ class User_Smarty {
   function User_Smarty (&$smarty)
   {
     if(isset($_SESSION['_SHOP_USER'])){
-      $user=$_SESSION['_SHOP_USER'];
-      $this->_fill($user);
-      $this->logged=true;
+      $this->load_f($_SESSION['_SHOP_USER']);
     }
     $smarty->register_object("user",$this);
     $smarty->assign_by_ref("user",$this);
@@ -58,7 +56,7 @@ class User_Smarty {
   function load_f($user_id){
     $user = User::load_user($user_id);
     $this->_fill($user);
-    $this->logged=true;
+    $this->logged=($user)?true:false;
   }
 
   function login ($params,&$smarty){
@@ -148,7 +146,7 @@ class User_Smarty {
 	}
 	
 	function resend_activation_f($email){
-    User::resend_activation($email);
+    return User::resend_activation($email);
 	}
   
   function _fill ($user){ ///????
@@ -170,12 +168,12 @@ class User_Smarty {
 
   function Activate(){
     global $smarty;
-    if (!isset($request['uar'])) {
+    if (!isset($_REQUEST['uar'])) {
       return false;
     }
-    if (!User::Activate($request['uar'], $errors)) {
+    if (!User::Activate($_REQUEST['uar'], $errors)) {
       $smarty->assign('errors',$errors);
-      return true ;
+      return false ;
     }
     return true;
   }
