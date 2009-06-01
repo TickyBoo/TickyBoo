@@ -39,7 +39,6 @@
   			<td class='TblLower' > {!confirmemail!}&nbsp;* </td>
   			<td class='TblHigher'>
 		  		<input autocomplete='off' type='text' name='user_email2' size='30'  maxlength='50' value='{$user_data.user_email2|clean}'/>
-			  	<span class='error'>{$user_errors.user_email}</span>
 		  	</td>
 		</tr>
       <tr>

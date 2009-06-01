@@ -143,9 +143,9 @@ class User{
     User::validate_user($status, $data, $err, $mandatory, $secure, $short);
 
     if ($status == 2) {
-      $query="select count(*) as count from auth where username="._esc($member['user_email']);
+      $query="SELECT count(*) as count from auth where username="._esc($data['user_email']);
       if($row = ShopDB::query_one_row($query) and $row['count']>0){
-        $_USER_ERROR['user_email']=con('alreadyexist');
+        $err['user_email']=con('alreadyexist');
       }
     }
 
