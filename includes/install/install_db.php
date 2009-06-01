@@ -2,13 +2,14 @@
 $tbls = array();
 
 $tbls['Admin']['fields'] = array(
-  'admin_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
   'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
 $tbls['Admin']['key'] = array(
-  "admin_login" => "KEY `admin_login` (`admin_login`)");
+  "PRIMARY KEY (`admin_id`)",
+  "KEY `admin_login` (`admin_login`)");
 $tbls['Admin']['engine'] = 'MyISAM';
 $tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
 
@@ -19,6 +20,7 @@ $tbls['Control']['fields'] = array(
   'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
 //$tbls['Control']['key'] = array(
 // "color_id" => "PRIMARY KEY id (color_id)");
+$tbls['Control']['key'] = array();
 $tbls['Control']['engine'] = 'MyISAM';
 $tbls['Control']['remove'] = array ('control_organizer_id');
 
@@ -28,22 +30,22 @@ $tbls['SPoint']['fields'] = array(
   'password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'pos'");
 $tbls['SPoint']['key'] = array(
-  "user_id" => "PRIMARY KEY id (user_id)");
+  "UNIQUE KEY `user_id` (`user_id`)");
 $tbls['SPoint']['engine'] = 'MyISAM';
 $tbls['SPoint']['remove'] = array ();
 
 
 $tbls['auth']['fields'] = array(
-//  'auth_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'auth_id' => " int(11) NOT NULL AUTO_INCREMENT",
   'user_id' => " int(11) NOT NULL DEFAULT '0'",
   'username' => " varchar(50) NOT NULL DEFAULT ''",
   'password' => " varchar(45) NOT NULL DEFAULT ''",
   'active' => " varchar(38) DEFAULT 'not null'",
   'user_group' => " int(11) NOT NULL DEFAULT '0'");
 $tbls['auth']['key'] = array(
-//  "auth_id" => "PRIMARY KEY id (auth_id)",
-  "username" => "UNIQUE KEY id (username)",
-  "password" => "KEY (`password`)");
+  "PRIMARY KEY (`auth_id`)",
+  "UNIQUE KEY `username` (`username`)",
+  "KEY `password` (`password`)");
 $tbls['auth']['engine'] = 'MyISAM';
 $tbls['auth']['remove'] = array ('owner_id','userlevel');
 
@@ -72,7 +74,7 @@ $tbls['User']['fields'] = array(
   'user_current_tickets' => " int(6) NOT NULL DEFAULT '0'",
   'user_total_tickets' => " int(11) NOT NULL DEFAULT '0'");
 $tbls['User']['key'] = array(
-  "user_id" => "primary key id (user_id)");
+  "PRIMARY KEY (`user_id`)");
 $tbls['User']['engine'] = 'InnoDB';
 $tbls['User']['remove'] = array ('user_organizer_ids') ;
 //$tbls['User']['AUTO_INCREMENT'] = 48;
@@ -95,8 +97,8 @@ $tbls['Category']['fields'] = array(
   'category_color' => " int(11) NOT NULL DEFAULT '0'",
   'category_data' => " tinytext");
 $tbls['Category']['key'] = array(
-  "category_id" => "PRIMARY KEY id (category_id)",
-  "category_event_id" => "KEY `category_event_id` (`category_event_id`)");
+  "PRIMARY KEY (`category_id`)",
+  "KEY `category_event_id` (`category_event_id`)");
 $tbls['Category']['engine'] = 'MyISAM';
 $tbls['Category']['remove'] = array ('category_organizer_id');
 //$tbls['Category']['AUTO_INCREMENT'] = 87;
@@ -106,7 +108,7 @@ $tbls['Category_stat']['fields'] = array(
   'cs_total' => " int(11) NOT NULL DEFAULT '0'",
   'cs_free' => " int(11) NOT NULL DEFAULT '0'");
 $tbls['Category_stat']['key'] = array(
-  "cs_category_id" => "PRIMARY KEY id (cs_category_id)");
+  "PRIMARY KEY (`cs_category_id`)");
 $tbls['Category_stat']['engine'] = 'InnoDB';
 $tbls['Category_stat']['remove'] = array ('cs_organizer_id');
 
@@ -115,7 +117,7 @@ $tbls['CC_Info']['fields'] = array(
   'cc_info_data' => "  mediumtext NOT NULL",
   'cc_info_key' => "  mediumtext NOT NULL");
 $tbls['CC_Info']['key'] = array(
-  "cc_info_order_id" => "PRIMARY KEY id (cc_info_order_id)");
+  "PRIMARY KEY (`cc_info_order_id`)");
 $tbls['CC_Info']['engine'] = 'MyISAM';
 $tbls['CC_Info']['remove'] = array ('cc_info_organizer_id');
 //$tbls['CC_Info']['AUTO_INCREMENT'] = 1;
@@ -124,7 +126,7 @@ $tbls['Color']['fields'] = array(
   'color_id' => " int(11) NOT NULL AUTO_INCREMENT",
   'color_code' => " varchar(7) NOT NULL DEFAULT ''");
 $tbls['Color']['key'] = array(
-  "color_id" => "PRIMARY KEY id (color_id)");
+  "PRIMARY KEY (`color_id`)");
 $tbls['Color']['engine'] = 'MyISAM';
 $tbls['Color']['remove'] = array ();
 //$tbls['Color']['AUTO_INCREMENT'] = 11;
@@ -136,7 +138,7 @@ $tbls['Discount']['fields'] = array(
   'discount_type' => " varchar(7) NOT NULL DEFAULT ''",
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'");
 $tbls['Discount']['key'] = array(
-  "discount_id" => "PRIMARY KEY id (discount_id)");
+  "PRIMARY KEY (`discount_id`)");
 $tbls['Discount']['engine'] = 'MyISAM';
 $tbls['Discount']['remove'] = array ();
 //$tbls['Discount']['AUTO_INCREMENT'] = 4;
@@ -164,8 +166,8 @@ $tbls['Event']['fields'] = array(
   'event_main_id' => " int(11) DEFAULT NULL",
   'event_type' => " varchar(25) DEFAULT NULL");
 $tbls['Event']['key'] = array(
-  "event_id" => "PRIMARY KEY id (event_id)",
-  "event_date" => "KEY `event_date` (`event_date`)");
+  "PRIMARY KEY (`event_id`)",
+  "KEY `event_date` (`event_date`)");
 $tbls['Event']['engine'] = 'MyISAM';
 $tbls['Event']['remove'] = array ('event_organizer_id');
 //$tbls['Event']['AUTO_INCREMENT'] = 4;
@@ -180,7 +182,7 @@ $tbls['Event_group']['fields'] = array(
   'event_group_end_date' => " date DEFAULT NULL",
   'event_group_type' => " varchar(25) DEFAULT NULL");
 $tbls['Event_group']['key'] = array(
-  "event_group_id" => "PRIMARY KEY id (event_group_id)");
+  "PRIMARY KEY (`event_group_id`)");
 $tbls['Event_group']['engine'] = 'MyISAM';
 $tbls['Event_group']['remove'] = array ('event_group_organizer_id');
 //$tbls['Event_group']['AUTO_INCREMENT'] = 3;
@@ -190,7 +192,7 @@ $tbls['Event_stat']['fields'] = array(
   'es_total' => " int(11) NOT NULL DEFAULT '0'",
   'es_free' => " int(11) NOT NULL DEFAULT '0'");
 $tbls['Event_stat']['key'] = array(
-  "es_event_id" => "PRIMARY KEY id (es_event_id)");
+  "PRIMARY KEY (`es_event_id`)");
 $tbls['Event_stat']['remove'] = array ('es_organizer_id');
 
 //$tbls['Event_stat']['engine'] = 'InnoDB';
@@ -215,7 +217,7 @@ $tbls['Handling']['fields'] = array(
   'handling_alt' => " int(11) DEFAULT NULL",
   'handling_alt_only' => " enum('Yes','No') NOT NULL DEFAULT 'No'");
 $tbls['Handling']['key'] = array(
-  "handling_id" => "PRIMARY KEY id (handling_id)");
+  "PRIMARY KEY (`handling_id`)");
 $tbls['Handling']['engine'] = 'InnoDB';
 $tbls['Handling']['remove'] = array ('handling_organizer_id','handling_delunpaid');
 //$tbls['Handling']['AUTO_INCREMENT'] = 33;
@@ -241,9 +243,9 @@ $tbls['Order']['fields'] = array(
   'order_responce_date' => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'order_note' => "text");
 $tbls['Order']['key'] = array(
-  "order_id" => "PRIMARY KEY id (order_id)",
-  "order_payments" => "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
-  "order_status" => "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)");
+  "PRIMARY KEY (`order_id`)",
+  "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
+  "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)");
 $tbls['Order']['engine'] = 'InnoDB';
 $tbls['Order']['remove'] = array ('order_organizer_id')   ;
 
@@ -285,7 +287,7 @@ $tbls['Ort']['fields'] = array(
   'ort_pm' => " text",
   'ort_fax' => " varchar(50) DEFAULT NULL");
 $tbls['Ort']['key'] = array(
-  "ort_id" => "primary key id (ort_id)");
+  "PRIMARY KEY (`ort_id`)");
 $tbls['Ort']['engine'] = 'MyISAM';
 $tbls['Ort']['remove'] = array ('ort_organizer_id')   ;
 //$tbls['Ort']['AUTO_INCREMENT'] = 1;
@@ -297,7 +299,7 @@ $tbls['PlaceMap2']['fields'] = array(
   'pm_name' => " varchar(30) NOT NULL DEFAULT ''",
   'pm_image' => " varchar(100) DEFAULT NULL");
 $tbls['PlaceMap2']['key'] = array(
-  "pm_id" => "primary key id (pm_id)");
+  "PRIMARY KEY (`pm_id`)");
 $tbls['PlaceMap2']['engine'] = 'MyISAM';
 $tbls['PlaceMap2']['remove'] = array ('pm_organizer_id')   ;
 //$tbls['PlaceMap2']['AUTO_INCREMENT'] = 36;
@@ -317,7 +319,7 @@ $tbls['PlaceMapPart']['fields'] = array(
   'pmp_data_orig' => " text",
   'pmp_expires' => " int(11) DEFAULT NULL");
 $tbls['PlaceMapPart']['key'] = array(
-  "pmp_id" => "primary key id (pmp_id)");
+  "PRIMARY KEY (`pmp_id`)");
 $tbls['PlaceMapPart']['engine'] = 'MyISAM';
 $tbls['PlaceMapPart']['remove'] = array ('pmp_organizer_id')   ;
 //$tbls['PlaceMapPart']['AUTO_INCREMENT'] = 34;
@@ -330,9 +332,9 @@ $tbls['PlaceMapZone']['fields'] = array(
   'pmz_short_name' => " varchar(10) DEFAULT NULL",
   'pmz_color' => " varchar(10) DEFAULT NULL");
 $tbls['PlaceMapZone']['key'] = array(
-  "pmz_id" => "primary key id (pmz_id)",
-  "pm_id" => "KEY `pm_id` (`pmz_pm_id`)" ,
-  "pmz_ident" => "KEY `pmz_ident` (`pmz_ident`)");
+  "PRIMARY KEY (`pmz_id`)",
+  "KEY `pm_id` (`pmz_pm_id`)" ,
+  "KEY `pmz_ident` (`pmz_ident`)");
 $tbls['PlaceMapZone']['engine'] = 'MyISAM';
 $tbls['PlaceMapZone']['remove'] = array ('pmz_organizer_id')   ;
 //$tbls['PlaceMapZone']['AUTO_INCREMENT'] = 51;
@@ -355,8 +357,8 @@ $tbls['Seat']['fields'] = array(
   'seat_status' => " varchar(5) NOT NULL DEFAULT 'free'",
   'seat_sales_id' => " int(11) DEFAULT NULL");
 $tbls['Seat']['key'] = array(
-  "seat_id" => "primary key id (seat_id)",
-  "seat_event_id" => "KEY `seat_event_id` (`seat_event_id`,`seat_category_id`,`seat_order_id`,`seat_ts`,`seat_status`)");
+  "PRIMARY KEY (`seat_id`)",
+  "KEY `seat_event_id` (`seat_event_id`,`seat_category_id`,`seat_order_id`,`seat_ts`,`seat_status`)");
 $tbls['Seat']['engine'] = 'MyISAM';
 $tbls['Seat']['remove'] = array ('seat_organizer_id')   ;
 
@@ -386,8 +388,8 @@ $tbls['Template']['fields'] = array(
   'template_status' => " varchar(5) NOT NULL DEFAULT 'new'",
   'template_code' => " text");
 $tbls['Template']['key'] = array(
-  "template_id" => "primary key id (template_id)",
-  "template_name" => "KEY `template_name` (`template_name`)");
+  "PRIMARY KEY (`template_id`)",
+  "KEY `template_name` (`template_name`)");
 $tbls['Template']['engine'] = 'MyISAM';
 $tbls['Template']['remove'] = array ('template_organizer_id')   ;
 //$tbls['Template']['AUTO_INCREMENT'] = 21;
@@ -402,8 +404,8 @@ $tbls['Payment_log']['fields'] = array(
   'payment_log_action' => " varchar(255) NOT NULL DEFAULT ''",
   'payment_log_blog' => " text NOT NULL");
 $tbls['Payment_log']['key'] = array(
-  "Payment_log_id" => "primary key payment_log_id (payment_log_id)",
-  "Payment_log_order_id" => "KEY `payment_log_order_id` (`payment_log_order_id`)");
+  "PRIMARY KEY (`payment_log_id`)",
+  "KEY `payment_log_order_id` (`payment_log_order_id`)");
 $tbls['Payment_log']['engine'] = 'MyISAM';
 $tbls['Payment_log']['remove'] = array ()   ;
 
@@ -412,7 +414,7 @@ $tbls['Sessions']['fields'] = array(
   'Sessions_access' => " int(10) unsigned DEFAULT NULL",
   'Sessions_data' => " text");
 $tbls['Sessions']['key'] = array(
-  "Sessions_id" => "PRIMARY KEY id (Sessions_id)");
+  "PRIMARY KEY (`Sessions_id`)");
 $tbls['Sessions']['remove'] = array ()   ;
 
 ?>

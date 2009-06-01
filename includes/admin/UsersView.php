@@ -1,6 +1,5 @@
 <?PHP
-/* %%%copyright%%%     */
-$licention = <<<EOQ
+/* %%%copyright%%%
   FusionTicket - ticket reservation system
     Copyright (C) 2007-2009 Christopher Jenkins. All rights reserved.
 
@@ -24,7 +23,7 @@ $licention = <<<EOQ
 
   Contact info@fusionticket.com if any conditions of this licencing isn't
   clear to you.
-EOQ;
+**/
 
 require_once("admin/AdminView.php");
 
