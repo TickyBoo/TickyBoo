@@ -175,7 +175,7 @@ class User_Smarty {
   }
   
 
-  function Activate(){
+  function activate(){
     global $smarty;
     if (!isset($_REQUEST['uar'])) {
       return false;

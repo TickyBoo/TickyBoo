@@ -301,25 +301,29 @@ class User{
 	function resend_activation($email, &$errors){
 		global $_SHOP;
 
-    $query="SELECT user_id, active, user.* from auth left join User as auth.user_id=User.User_id where auth.username="._esc($email);
-    if (!$row=ShopDB::query_one_row($query)) {
-  		$errors = con("log_err_wrong_usr");
-  	} elseif ($row['active']==null) {
-  		$errors = con("log_err_isactive");
+	    $query="SELECT auth.active, User.* 
+			FROM auth LEFT JOIN User ON auth.user_id=User.user_id 
+			WHERE auth.username="._esc($email);
+			echo $email;
+	    if (!$row=ShopDB::query_one_row($query)) {
+	  		$errors = con("log_err_wrong_usr");
+	  	} elseif ($row['active']==null) {
+	  		$errors = con("log_err_isactive");
 	 	} else {
-  		$active = md5(uniqid(rand(), true));
-  		$query="UPDATE `auth` SET active='$active' WHERE user_id=".$row['user_id']." LIMIT 1";
-      unset($row['active']);
-
-  		if(ShopDB::query($query) and shopDB::affected_rows()==1){
-        User::SendActivatieCode($row, $active, $error);
-  		}
-  	}
+	  		$active = md5(uniqid(rand(), true));
+	  		$query="UPDATE `auth` SET active='$active' WHERE user_id=".$row['user_id']." LIMIT 1";
+	      	unset($row['active']);
+	
+	  		if(ShopDB::query($query) and shopDB::affected_rows()==1){
+	        	User::SendActivatieCode($row, $active, $errors);
+	  		}
+	  	}
 	}
 
   private function SendActivatieCode($row, $active, &$errors){
   	require_once('classes/TemplateEngine.php');
-    global $_USER_ERROR;
+  	require_once('classes/htmlMimeMail.php');
+    global $_USER_ERROR, $_SHOP;
     // new part
     $email = $data['user_email'] ;
     if (!$tpl = TemplateEngine::getTemplate('Signup_email')) {
@@ -327,7 +331,7 @@ class User{
     }
     $email=&new htmlMimeMail();
     $activation = base64_encode("$user_id|".date('c')."|$active");
-    $row['link']=$_SHOP->root."activate.php?uar=$active";
+    $row['link']=$_SHOP->root."activation.php?uar=$active";
 
     $tpl->build($email,$row);
     if($email->send($tpl->to)){
