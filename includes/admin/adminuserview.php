@@ -46,21 +46,19 @@ global $_SHOP;
 
   $this->print_input('admin_login',$data,$err,30,100);
   if($add=='update'){
+     echo "<input type='hidden' name='admin_id' value='{$data['admin_id']}'/>\n";
+     echo "<input type='hidden' name='action' value='update'/>\n";
      echo "<tr> <td class='admin_name'>".con('old_password')."</td>
-           <td><input type='password' name='old_password' size='10'  maxlength='10'>
+           <td class='admin_value'><input type='password' name='old_password' size='10'  maxlength='10'>
 	         <span class='err'>{$err['old_password']}</span></td></tr>";
-   }
-   echo "<tr> <td class='admin_name'>".con('password')."</td>
-         <td class='admin_value'><input type='password' name='password1' size='10'  maxlength='10'><span class='err'>{$err['password']}</span></td></tr>
-         <tr> <td class='admin_name'>".con('password2')."</td>
-         <td class='admin_value'><input type='password' name='password2' size='10'  maxlength='10'></td></tr>";
-
-  if($data['admin_id']){
-    echo "<input type='hidden' name='admin_id' value='{$data['admin_id']}'/>\n";
-    echo "<input type='hidden' name='action' value='update'/>\n";
-  }else{
+   } else {
     echo "<input type='hidden' name='action' value='insert'/>\n";
-  }
+   }
+     echo "<tr> <td class='admin_name'>".con('password')."</td>
+          <td class='admin_value'><input type='password' name='password1' size='10'  maxlength='10'><span class='err'>{$err['password']}</span></td></tr>
+          <tr> <td class='admin_name'>".con('password2')."</td>
+          <td class='admin_value'><input type='password' name='password2' size='10'  maxlength='10'></td></tr>";
+
   
   echo "<tr><td align='center' class='admin_value' colspan='2'>
         <input type='submit' name='submit' value='".con('save')."'>
@@ -118,8 +116,8 @@ function draw ($admintype) {
       $this->admin_form($_POST, $err, con($admintype.'_user_update_title') ,'update');
     }else{
       $query="UPDATE Admin set
-           addmin_login="._ESC(md5($_POST['addmin_login']))."
-           addmin_password="._ESC(md5($_POST['password1']))."
+           admin_login="._ESC($_POST['admin_login']).",
+           admin_password="._ESC(md5($_POST['password1']))."
            where admin_id="._esc($_POST["admin_id"]);
 
       if(!ShopDB::query($query)){
@@ -151,16 +149,17 @@ function draw ($admintype) {
 }
 
 function admin_check (&$data, &$err){
-  
+  $nickname=$data['admin_login'];
+  print_r($data);
   if(empty($data['admin_login'])){
     $err['admin_login']=mandatory;
     
-  } elseif($nickname=$data['admin_login'] and $data["action"]=='insert'){
+  } elseif($data["action"]=='insert'){
     $query="select Count(*) as count from Admin where admin_login="._esc($nickname);
     if(!$res=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return 0;
-    }
+    }                                      echo 'inserting';
     if($res["count"]>0){$err['admin_login']=con('already_exist');}
   }
   if($data["action"]=='update'){
@@ -168,6 +167,7 @@ function admin_check (&$data, &$err){
        $query="select admin_password from Admin where admin_id="._esc($data["admin_id"]);
        if(!$row=ShopDB::query_one_row($query)){
           user_error(shopDB::error());
+          $err["old_password"]=login_invalid;
           return 0;
         }
        if(md5($pass)!=$row["admin_password"]){

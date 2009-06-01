@@ -493,6 +493,8 @@ private static function TableCreateData( $tablename )
                 }
               }
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
+              If ($sql) {       }
+
           } else {
               $update = true;
               $sql = '';               Print_r( $fields);

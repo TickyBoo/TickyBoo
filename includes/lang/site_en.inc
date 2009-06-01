@@ -1045,4 +1045,6 @@ define('Handling_Delete_Unpaid','Delete Unpaid Payments');
 
 define('handling_no_alt','No Alt');
 define('handling_alt','Alt Handling Method');
+
+define('admin_login','Username');
 ?>

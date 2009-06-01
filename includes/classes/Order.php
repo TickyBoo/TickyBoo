@@ -858,8 +858,8 @@ class Order {
       }
     }
 
-    if($field=='order_payment_status' and  $this->order_payment_id){ //$new_status=='payed' and
-      $suppl = ", order_payment_id='{$this->order_payment_id}'";
+    if($field=='order_payment_status' and  $new_status=='payed' ){ //and
+      $suppl = ", order_date_expire=NULL";
     }
 
     $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE Order.order_id='{$this->order_id}'";
@@ -1116,7 +1116,7 @@ class Order {
   			$first_page=FALSE;
 
   			//print the ticket
-  			$tpl->write($pdf,array_merge($seat,$order), true);
+  			$tpl->write($pdf,array_merge($seat,$order), false);
   		}
     }
     if(!$first_page){

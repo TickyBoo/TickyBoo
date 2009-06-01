@@ -372,12 +372,12 @@ function check_system() {
 		$query = "SELECT order_id
               FROM `Handling` left join `Order` on order_handling_id = handling_id
   			      WHERE handling_expires_min > 10
+              AND order_date_expire IS NOT NULL
               AND order_date_expire <= NOW()
   			  		AND order_status NOT IN ('trash','res','cancel')
   			  		AND order_payment_status != 'payed'
   			  		AND order_shipment_status != 'send'
   			  		AND order_place != 'pos'";
-//				        AND
 
     if($resultOrder=ShopDB::query($query)){
 			//Cycles through orders to see if they should be canceled!

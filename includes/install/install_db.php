@@ -2,7 +2,7 @@
 $tbls = array();
 
 $tbls['Admin']['fields'] = array(
-  'admin_id' => " int(11) NOT NULL DEFAULT '0'",
+  'admin_id' => " int(11) NOT NULL AUTO_INCREMENT",
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
@@ -210,14 +210,14 @@ $tbls['Handling']['fields'] = array(
   'handling_extra' => " text",
   'handling_text_shipment' => " mediumtext",
   'handling_text_payment' => " mediumtext",
-  'handling_delunpaid' => " enum('Yes','No') NOT NULL DEFAULT 'No'",
+//  'handling_delunpaid' => " enum('Yes','No') NOT NULL DEFAULT 'No'",
   'handling_expires_min' => " int(11) DEFAULT NULL",
   'handling_alt' => " int(11) DEFAULT NULL",
   'handling_alt_only' => " enum('Yes','No') NOT NULL DEFAULT 'No'");
 $tbls['Handling']['key'] = array(
   "handling_id" => "PRIMARY KEY id (handling_id)");
 $tbls['Handling']['engine'] = 'InnoDB';
-$tbls['Handling']['remove'] = array ('handling_organizer_id');
+$tbls['Handling']['remove'] = array ('handling_organizer_id','handling_delunpaid');
 //$tbls['Handling']['AUTO_INCREMENT'] = 33;
 
 $tbls['Order']['fields'] = array(
@@ -236,7 +236,7 @@ $tbls['Order']['fields'] = array(
   'order_fee' => " decimal(10,2) DEFAULT NULL",
   'order_place' => " varchar(11) NOT NULL DEFAULT 'www'",
   'order_owner_id' => " int(11) DEFAULT NULL",
-  'order_date_expire' => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+  'order_date_expire' => " datetime DEFAULT NULL",
   'order_responce' => "varchar(50) NOT NULL DEFAULT ''",
   'order_responce_date' => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'order_note' => "text");
