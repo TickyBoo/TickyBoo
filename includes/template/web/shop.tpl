@@ -39,6 +39,7 @@
     category_id=$smarty.post.category_id item_id=$smarty.post.item_id
     discounts=$smarty.post.discount }
   {include file="cart_view.tpl"}
+  
 {elseif $smarty.request.action eq 'activate'}
   {include file="user_activate.tpl"}
   
@@ -85,10 +86,12 @@
     {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
     {assign var='user_data' value=$smarty.post}
   {/if}
-  {if not $user->logged || $user_errors}
+  {if $login_error.code eq 'notactive'}
+  		{include file="user_activate.tpl"}
+  {elseif not $user->logged || $user_errors}
       {include file="user_register.tpl"}
   {else}
-     {include file="user_activate.tpl"}
+     
   {/if}  
 
 {elseif $smarty.request.personal_page}

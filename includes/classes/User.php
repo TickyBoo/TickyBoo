@@ -78,6 +78,7 @@ class User{
   	if($res['active']) {
   		$err['msg'] =con('log_err_not_act');
   		$err['info'] =con('log_err_not_act_info');
+  		$err['code'] = "notactive";
   		return FALSE;
   	}
     unset($res['password']);
@@ -272,27 +273,26 @@ class User{
 
   function Activate($userdata, &$errors){
     if (!is_base64_encoded($userdata)) {
-      $errors =  con('act_uselink');
+    	$errors =  con('act_uselink');
     } else {
-      $userdata2 = base64_decode($userdata);
+      	$userdata2 = base64_decode($userdata);
 
-      list($x,$z,$y) = explode('|', $userdata2, 3);
-
-      if (!isset($x) or !isset($y)) {
-        $errors =  con('act_uselink');
-      } else {
-        $x = (int)    $x;
-        $y = (string) $y;
+      	list($x,$z,$y) = explode('|', $userdata2, 3);
+      	if (!isset($x) or !isset($y)) {
+        	$errors =  con('act_uselink');
+      	} else {
+        	$x = (int)    $x;
+        	$y = (string) $y;
 
         if ( ($x> 0) && (strlen($y) == 32)) {
-          $query = "UPDATE auth SET active=NULL WHERE (user_id="._esc($x)." AND active="._esc($y).") LIMIT 1";
+          $query = "UPDATE auth SET active=NULL WHERE user_id="._esc($x)." AND active="._esc($y)." LIMIT 1";
           if ($result = ShopDB::query($query) and shopDB::affected_rows() == 1) {
             return true;
           } else {
         		$errors = con('act_error') ;
           }
         } else {
-          $errors = con('act_uselink') ;
+          	$errors = con('act_uselink') ;
         }
       }
     }
@@ -304,18 +304,18 @@ class User{
 	    $query="SELECT auth.active, User.* 
 			FROM auth LEFT JOIN User ON auth.user_id=User.user_id 
 			WHERE auth.username="._esc($email);
-			echo $email;
 	    if (!$row=ShopDB::query_one_row($query)) {
 	  		$errors = con("log_err_wrong_usr");
 	  	} elseif ($row['active']==null) {
 	  		$errors = con("log_err_isactive");
 	 	} else {
 	  		$active = md5(uniqid(rand(), true));
-	  		$query="UPDATE `auth` SET active='$active' WHERE user_id=".$row['user_id']." LIMIT 1";
+	  		$query="UPDATE `auth` SET active='$active' WHERE username="._esc($row['user_email'])." LIMIT 1";
 	      	unset($row['active']);
 	
-	  		if(ShopDB::query($query) and shopDB::affected_rows()==1){
+	  		if(ShopDB::query($query) and ShopDB::affected_rows()==1){
 	        	User::SendActivatieCode($row, $active, $errors);
+	        	return true;
 	  		}
 	  	}
 	}
@@ -330,7 +330,7 @@ class User{
       return false;
     }
     $email=&new htmlMimeMail();
-    $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
+    $activation = urlencode(base64_encode("{$row['user_id']}|".date('c')."|$active"));
     $row['link']=$_SHOP->root."activation.php?uar=$activation";
     $row['activate_code'] = $activation;
     $tpl->build($email,$row);

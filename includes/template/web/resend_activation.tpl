@@ -27,7 +27,7 @@
  * clear to you.
  *}
 
-{include file="header.tpl" name=!bcm_mbr!}
+{include file="header.tpl" name=!resend_activation!}
 {if $smarty.post.email}
   {if $user->resend_activation_f($smarty.post.email) }
     <div class='success'>
@@ -45,7 +45,8 @@
         {!act_notarr!}
       </td></tr>
       <tr><td  colspan='2'>
-        {!act_note!}<br><br>
+        {!act_note!}<br />
+		<br />
       </td></tr>
       <tr><td>{!email!}</td>
       <td><input type='text' name='email' size='36'> &nbsp; <input type='submit' name='submit' value="{!act_send!}"></td></tr>

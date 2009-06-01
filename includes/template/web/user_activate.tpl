@@ -50,5 +50,5 @@
       </table>
    </form>
 {else}
-    The activation is done;
+    {!success_activate!}
 {/if}

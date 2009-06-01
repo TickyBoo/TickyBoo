@@ -106,7 +106,6 @@
   }
 
   function setQtyShown(){
-
         if(cat_select_e=getElement('cat_select')){
            if(qty_e=getElement('qqq')){
              if(unnum_cats[cat_select_e.selectedIndex]=='none'){
@@ -138,19 +137,20 @@
               <map name="ort_map">
                 {category event_id=$shop_event.event_id stats="on"}
                   {if $shop_category.cs_free gt 0}
-                    <area href="index.php?category_id={$shop_category.category_id}&event_id={$smarty.get.event_id}" {$shop_category.category_data}>
+                    <area href="index.php?category_id={$shop_category.category_id}&event_id={$smarty.get.event_id}" {$shop_category.category_data} />
                   {/if}
                 {/category}
               </map>
             </td>
           {else}
             <td width='50%' align='right'>
-              <select name='category_id' onchange='setQtyShown()' id='cat_select' class="select">
+              <select name='category_id' onchange='setQtyShown()' id='cat_select' style="float:right;" class="select">
                  {$opt_array}
               </select>
             </td>
             <td  align='left'>
-              <div id='qqq'  align='left' style='font-size:9px'>x <input type='text' name='qty' size=4 maxlength=2>
+              <div id='qqq'  align='left' style='font-size:9px; float:left;'>x 
+			  	<input style="float:none;" type='text' name='qty' size='4' maxlength='2' />
                 {if $shop_event.event_order_limit>0}
                    ({!order_limit!} {$shop_event.event_order_limit})
                 {/if}

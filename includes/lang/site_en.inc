@@ -10,7 +10,7 @@ define("act_is_sent","Your activation email has been sent to your e-mail");
 define("act_mess_line","Please check you email to activate your account.<br><br>");
 define("act_name","Activate account");
 define("act_notarr","Activation email still not arrived?");
-define("act_note","Put your e-mail address in. Click on &apos;Send&apos; and a new activation
+define("act_note","Enter your e-mail address. Click on &apos;Send&apos; and a new activation
         email will be sent to your e-mail address.");
 define("act_norecived","If you haven&apos;t recived an activation email within a few hours, please follow  the following <strong>link</strong>");
 
@@ -1030,8 +1030,8 @@ define('act_restrict_w_guest'   , 'New members and guests');
 define('act_restrict_quest_only', 'Only guest users');
 define('admin_user_title','All system administrators');
 define('organizer_user_title','All event organizers');
-define('act_enter_code','You can speedup your activation by fill the activation code that is send to you by email in the inputbox below. Or click on the link in the email.');
-define('act_enter_title','Fill you activation code here');
+define('act_enter_code','You can complete your activation by filling the box below with the activation code that is send to you by email. Or click on the link in the email.');
+define('act_enter_title','Place your activation code here:');
 define('act_code','Activation code:');
 define('nav_first','first');
 define('nav_prev',' < ');
@@ -1046,5 +1046,8 @@ define('Handling_Delete_Unpaid','Delete Unpaid Payments');
 define('handling_no_alt','No Alt');
 define('handling_alt','Alt Handling Method');
 
-define('admin_login','Username');
+define('act_sent','The activation email has been sent. Please check your in box for a link.');
+define('act_err', 'The activation email could not be sent, please check you have the correct email address.');
+define('resend_activation','Resend Activation Email');
+define('success_activate','You have successfully activated your account.<br /> You may now login.');
 ?>
