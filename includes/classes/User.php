@@ -318,10 +318,11 @@ class User{
 	}
 
   private function SendActivatieCode($row, $active, &$errors){
+  	require_once('classes/TemplateEngine.php');
     global $_USER_ERROR;
     // new part
     $email = $data['user_email'] ;
-    If (!$tpl = TemplateEngine::getTemplate('Signup_email')) {
+    if (!$tpl = TemplateEngine::getTemplate('Signup_email')) {
       return false;
     }
     $email=&new htmlMimeMail();
@@ -372,7 +373,9 @@ class User{
 
   function forgot_password($email){
     global $_SHOP;
-
+	require_once('classes/TemplateEngine.php');
+	require_once('classes/htmlMimeMail.php');
+	
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
       echo 'username not found';

@@ -149,12 +149,12 @@ class User_Smarty {
     return User::forgot_password($email);
   }
   
-  function resend_activation($params,&$smarty){
-  	$this->resend_activation_f($params['email']);
+  	function resend_activation($params,&$smarty){
+  		$this->resend_activation_f($params['email']);
 	}
 	
 	function resend_activation_f($email){
-    return User::resend_activation($email);
+    	return User::resend_activation($email,$err);
 	}
   
   function _fill ($user){ ///????
