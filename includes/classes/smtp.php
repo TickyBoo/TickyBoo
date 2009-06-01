@@ -127,10 +127,8 @@ class smtp
 
             // Do we auth or not? Note the distinction between the auth variable and auth() function
             if ($this->auth AND !$this->authenticated) {
-                if(!$this->auth()){
-                    echo 'auth err';
+                if(!$this->auth())
                     return false;
-                }
             }
 
             $this->mail($this->from);
@@ -144,7 +142,6 @@ class smtp
             }
 
             if (!$this->data()) {
-                echo 'data err';
                 return false;
             }
 

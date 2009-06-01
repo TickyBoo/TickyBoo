@@ -209,7 +209,7 @@ class User{
         		} elseif ($user['password']!==md5($data['old_password']) ) {
       	  		$err['old_password']=con("incorrect_password");
             } elseif ($user ['username']<> $data['user_email'] and !isset($err['user_email'])) {
-        			$query="select count(*) as count from auth where username="._esc($member['user_email']);
+        			$query="select count(*) as count from auth where username="._esc($data['user_email']);
 	            if ($row=ShopDB::query_one_row($query) and $row['count']>0){
 						     $err['user_email']=con('alreadyexist') ;
         			}
@@ -389,10 +389,9 @@ class User{
 
     if(shopDB::query($query) and shopDB::affected_rows()==1){
 
-      $engine= new TemplateEngine();
       $email = new htmlMimeMail();
 
-      $tpl=$engine->getTemplate('forgot_passwd');
+      $tpl=TemplateEngine::getTemplate('forgot_passwd');
 //      $row = $this->values;
       $row['new_password']=$pwd;
       $tpl->build($email, $row);

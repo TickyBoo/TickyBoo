@@ -148,7 +148,7 @@
   $_SHOP->event_group_type_enum = array('','festival','tournee','theatre');
   
   // 'mail', 'sendmail', 'smtp'
-  $_SHOP->mail_mode = 'mail'; 
+  $_SHOP->mail_mode      = 'mail';
   $_SHOP->mail_smtp_host = null;
   $_SHOP->mail_smtp_port = null;
   $_SHOP->mail_smtp_auth = null;

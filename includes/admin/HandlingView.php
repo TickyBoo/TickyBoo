@@ -115,13 +115,9 @@ function print_select_tpl ($name,$type,&$data,&$err){
 			}
 			echo "</select><span class='err'>{$err["handling_shipment"]}</span></td></tr>\n";
 		}
-		if(strpos($data['handling_sale_mode'],'sp')!==false){
-			$chk_sp='checked';
-		}
+		if( $data['sale_mode']['sp']){$chk_sp='checked';}
 
-		if(strpos($data['handling_sale_mode'],'www')!==false){
-			$chk_www='checked';
-		}
+		if($data['sale_mode']['www']){$chk_www='checked';}
 
 		echo "<tr><td class='admin_name'>".con(handling_sale_mode)."</td>
 			<td class='admin_value'>
@@ -324,7 +320,7 @@ function extra_form($hand, &$data, &$err){
     ;
     $gui   = new Gui_smarty($smarty);
     $gui->guidata = $data;
-    $gui->errors  = $errors;
+    $gui->errors  = $err;
     $gui->gui_name  = 'admin_name';
 	  $gui->gui_value = 'admin_value';
     $smarty->my_template_source = $extras;

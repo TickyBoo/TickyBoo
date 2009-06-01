@@ -121,8 +121,8 @@ class Handling {
 				if(in_array($key, $pm->extras))
 					$this->extra[$key] = $val;
     	}
-    	if (isset($data['sale_mode']))
-      		$this->sale_mode = $data['sale_mode'];
+ //   	if (isset($data['sale_mode']))
+   		$this->sale_mode = $data['sale_mode'];
 	   //print_r($this);
     	return ;
   	}

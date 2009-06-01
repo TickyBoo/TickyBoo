@@ -274,13 +274,14 @@ class Gui_smarty {
     $nokey =  is($params['nokey'], false);
     $nolabel = is($params['nolabel'], false);
     $mult = ($mult)?'multiple':'';
+    $value = is($params['value'], $this->guidata[$name]);
 
     If (!is_array($opt)) {
       $opt  = explode('|',$opt);
     }
 //    print_r($opt);
     // $val=array('both','rows','none');
-    $sel[$this->guidata[$name]] = " selected ";
+    $sel[$value] = " selected ";
 
     $return = "<select name='$name' $mult>\n";
 

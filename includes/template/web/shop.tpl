@@ -84,7 +84,7 @@
     {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
     {assign var='user_data' value=$smarty.post}
   {/if}
-  {if not $user->logged}
+  {if not $user->logged || $user_errors}
       {include file="user_register.tpl"}
   {else}
      {include file="user_activate.tpl"}

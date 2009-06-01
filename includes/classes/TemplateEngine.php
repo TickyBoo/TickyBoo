@@ -107,7 +107,7 @@
     }
 
 		//truying to load just compile template
-    if($tpl=$this->try_load($name, $t_class_name, $code)){
+    if($tpl=TemplateEngine::try_load($name, $t_class_name, $code)){
 
       //compilation ok: saving the code in db
       $code_q=shopDB::escape_string($code);

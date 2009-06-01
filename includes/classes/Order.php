@@ -241,17 +241,19 @@ class Order {
     $this->order_total_price=$total;
     $this->order_fee=$fee;
     
-    $order_date_expire = 60;
-    if(!$this->order_handling->handling_expires_min){
-    	$this->order_handling->handling_expires_min = 20;
-    }
+    $order_date_expire = 'null';
+//    if(!$this->order_handling->handling_expires_min){
+//    	$this->order_handling->handling_expires_min = 20;
+//    }
     
   	if($this->order_handling->handling_id=='1'){
   		$order_status="res";
-  		$order_date_expire = $_SHOP->shopconfig_restime;
+  		$order_date_expire = "(NOW()+INTERVAL ".$_SHOP->shopconfig_restime." MINUTE)";
   	}else{
   		$order_status="ord";
-  		$order_date_expire = $this->order_handling->handling_expires_min;
+  		If ($this->order_handling->handling_expires_min>10) {
+  		  $order_date_expire = "(NOW()+INTERVAL ".$this->order_handling->handling_expires_min." MINUTE)";
+      }
   	}
 	
     $this->order_date =date('d-m-Y');
@@ -277,8 +279,7 @@ class Order {
       	ShopDB::quote($order_status).",".
       	ShopDB::quote($fee).",".
 	    ShopDB::quote($this->order_place).", 
-	    (NOW()+INTERVAL ".$order_date_expire." MINUTE)
-		);";
+	    $order_date_expire);";
 		
     if(ShopDB::query($query)){
       $order_id=ShopDB::insert_id();

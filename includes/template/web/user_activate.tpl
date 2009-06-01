@@ -55,5 +55,3 @@
 {else}
 
 {/if}
-
-{include file=footer.tpl'}
