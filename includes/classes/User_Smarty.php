@@ -55,7 +55,6 @@ class User_Smarty {
 
   function load_f($user_id){
     $user = User::load_user($user_id);
-    $_SESSION['_SHOP_USER_DETAILS'] = $user;
     $this->_fill($user);
     $this->logged=($user)?true:false;
   }

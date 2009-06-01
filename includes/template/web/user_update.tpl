@@ -37,7 +37,7 @@
 	   	{/if}
     	{assign var='user_data' value=$smarty.post}
   	{else}
-    	{assign var='user_data' value=$smarty.session._SHOP_USER_DETAILS}
+    	{assign var='user_data' value=$user->asarray()}
   	{/if}
 
 <html>
