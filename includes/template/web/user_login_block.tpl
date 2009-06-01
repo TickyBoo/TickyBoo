@@ -53,12 +53,12 @@
   	</tr>
   {if $login_error}
 	<tr>
-    <td colspan="2" class='TblHigher'>
-         <div class='error'> {$login_error.msg}</div>
-    </td>
+    	<td class='TblHigher'>
+        	<div class='error'> {$login_error.msg}</div>
+    	</td>
 	</tr>
   {/if}
-    <form method='post' action='index.php' style='margin-top:0px;'>
+    <form method='post' action='index.php' style='margin-top:0px;' id="user-login">
     <input type="hidden" name="action" value="login">
     <input type="hidden" name="type" value="block">
     {ShowFormToken name='login'}
@@ -71,16 +71,17 @@
   	</tr>
   	<tr>
   		<td class="login_content" style='padding-left:25px;'>
-        <input type='input' name='username' size=20 style='font-size:10px;' >
-      </td>
+        	<input type='input' name='username' size='20' style='font-size:10px;' >
+      	</td>
   	</tr>
   	<tr>
   		<td  class="login_content">{!password!}</td>
   	</tr>
   	<tr>
-  		<td class="login_content" style='padding-left:25px;'>
-        <input type='password' name='password' size=20 style='font-size:10px;'>&nbsp;<input type='submit' value='{!login_button!}' style='font-size:10px;'/>
-      </td>
+		<td class="login_content" style='padding-left:25px;'>
+        	<input type='password' name='password' size='20' style='font-size:10px;' /><br />
+			<input type='submit' value='{!login_button!}' style='font-size:10px;'/>
+      	</td>
   	</tr>
   	<tr>
   		<td class="login_content">

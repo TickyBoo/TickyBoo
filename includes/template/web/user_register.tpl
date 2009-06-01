@@ -53,17 +53,17 @@
         <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
       </tr>
       <tr>
-        <td class='TblLower' valign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
+        <td class='TblLower' valign='top' width='30%'>{!user_nospam!}&nbsp;*</td>
         <td class='TblHigher' valign='top'>
           <table cellpadding="0" cellspacing="0" width='400'>
             <tr>
-              <td >
+              <td valign="top" >
                 <input type='text' name='user_nospam' size='10' maxlength="10" value='' />
 				<br/>
-                <sup> {!nospam_info!} </sup><br /><span class='error'>{$user_errors.user_nospam}</span>
+                <p style="float:left;"> {!nospam_info!} </p><br /><span class='error'>{$user_errors.user_nospam}</span>
               </td>
               <td align='center'>
-                <img src="nospam.php?name=user_nospam" alt='' border='1' />
+                <img src="nospam.php?name=user_nospam" alt='Please enable images' border='1' />
               </td>
             </tr>
           </table>
@@ -75,7 +75,7 @@
       <tr>
         <td>
           <input type='checkbox' class='checkbox' name='check_condition' value='check' />
-          <a href='agb.php' target='agb' style='text-decoration:underline'> {eval var=!agrement!}</a><div class='error'>{$user_errors.check_condition}</div>
+          <a href='agb.php' target='agb' style='text-decoration:underline; float:left;' id="condition_link"> {eval var=!agrement!}</a><div class='error'>{$user_errors.check_condition}</div>
         </td>
       </tr>
 {*      <tr>
@@ -84,8 +84,9 @@
         </td>
       </tr> *}
 
-    </table><br>
-    <input type='submit' name='submit_register' value='{!signup!}'>
+    </table>
+	<br />
+    <input type='submit' name='submit_register' value='{!signup!}' />
   </center>
 </form>
     <br><br>&nbsp;

@@ -39,13 +39,21 @@
 		<!-- Must be included in all templates -->
 		
 		<link rel="icon" href="favicon.ico" type="image/x-icon" />
-		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 		
 		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.maskedinput-1.2.2.js"></script>
+		
+		<script type="text/javascript">
+			var lang = new Object();
+			lang.required = '{!required!}'; lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
+			lang.fax_long = '{!fax_long!}'; lang.fax_short = '{!fax_short!}';
+			lang.email_valid = '{!email_valid!}'; lang.email_match = '{!email_match!}';
+			lang.pass_short = '{!pass_too_short!}'; lang.pass_match = '{!pass_match!}';
+			lang.not_number = '{!not_number!}';
+		</script>
 		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
 		
 		<script type="text/javascript" src="scripts/countdownpro.js" defer="defer"></script>
@@ -70,13 +78,13 @@
 		<div id="navbar">
     		<ul>
      			<li>
- 					<a href='index.php'>{#home#}</a>
+ 					<a href='index.php'>{!home!}</a>
 				</li>
 				<li>
-					<a href='calendar.php'>{#calendar#}</a>
+					<a href='calendar.php'>{!calendar!}</a>
 				</li>
 				<li>
-					<a href='programm.php'>{#program#}</a>
+					<a href='programm.php'>{!program!}</a>
 				</li>
 			</ul>
 			<br />
