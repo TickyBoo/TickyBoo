@@ -122,7 +122,7 @@ class EventPropsView extends EventViewCommon {
 
 		$query = "select *
                   from Event left join Ort on event_ort_id=ort_id
-                  where event_main_id=" . _esc( event_main_id ) . "
+                  where event_main_id="._esc($event_main_id)."
                   and event_rep='sub'
                   and event_status!='trash'
                   order by event_date ";
