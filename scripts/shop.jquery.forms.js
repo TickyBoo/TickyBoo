@@ -68,11 +68,11 @@ $(window).load(function(){
 	});
 	$("#user-login").validate({
 		rules: {
-			password : { required : true, minlength : 6 },
+			password : { required : true},
 			username : { required : true, email :true }
 		},
 		messages : {
-			password : { required : " ", minlength : " " },
+			password : { required : " " },
 			username : { required : " ", email : " " }	
 		},
 		errorClass: "form-error"

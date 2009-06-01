@@ -65,6 +65,9 @@
   <td class='TblHigher'><input type='text' name='user_fax' size='30'  maxlength='50' value='{$user_data.user_fax|clean}'><span class='error'>{$user_errors.user_fax}</span></td>
 </tr>
 <tr>
-  <td class='TblLower' > {!email!}&nbsp;* </td>
-  <td class='TblHigher'><input type='text' name='user_email' size='30'  maxlength='50' value='{$user_data.user_email|clean}' id="email" /><span class='error'>{$user_errors.user_email}</span></td>
+	<td class='TblLower' > {!email!}&nbsp;* </td>
+  	<td class='TblHigher'>
+	  	<input {if $user_data.user_id}readonly="readonly"{/if} type='text' name='user_email' size='30'  maxlength='50' value='{$user_data.user_email|clean}' id="email" />
+	  	<span class='error'>{$user_errors.user_email}</span>
+ 	</td>
 </tr>

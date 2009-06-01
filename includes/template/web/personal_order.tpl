@@ -26,115 +26,119 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
-
+<!--personal-order.tpl -->
 <table width="100%" cellpadding="3" class="main">
 	<tr>
-    <td colspan="5" class="title"><h3>{!orders!}</h3></td>
-  </tr>
+    	<td colspan="5" class="title"><h3>{!orders!}</h3></td>
+  	</tr>
     {* if $user->logged}
     {order->vieworder user_id=$user->user_id }
     {/if *}
-    {order->order_list user_id=$user->user_id order_id=$smarty.get.id limit='1'}
-      <tr>
-      	<td>
-	      <table  cellspacing='1' cellpadding='4' border='0'>
-	      	<tr>
-			  <td class='title'>{!order_id!} {$shop_order.order_id}</td>
-			</tr>
-			<tr>
-			  <td class='user_info'>
-	    		{!number_tickets!}
-	  		  </td>
-			  <td class='subtitle'>{$shop_order.order_tickets_nr}</td>
-			</tr>
-	  		<tr>
-			  <td class='user_info'>{!userid!}</td>
-			  <td class='subtitle'>{$shop_order.order_user_id}</td>
-			</tr>
-			<tr>
-			  <td class='user_info'>{!total_price!}</td>
-			  <td class='subtitle'>{$shop_order.order_total_price|string_format:"%1.2f"} {$organizer_currency}</td>
-			</tr>
-			<tr>
-			  <td class='user_info'>{!order_date!}</td>
-			  <td class='subtitle'>{$shop_order.order_date}</td>
-			</tr>
-			<tr>
-			  <td class='user_info'>{!status!}</td>
-			  <td class='subtitle'>
-			  {if $shop_order.order_status eq "res"}
-			    <font color='orange'>{!reserved!}</font><br>
-			  {elseif $shop_order.order_status eq "ord"}
-			    <font color="blue">{!ordered!}</font>
-			  {elseif $shop_order.order_status eq "cancel"}
-			    <font color="#cccccc">{!cancelled!}</font>
-			  {elseif $shop_order.order_status eq "reemit"}
-			    <font color="#ffffcc">{!reemitted!}</font>
-			    <a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
-			    {$shop_order.order_reemited_id}</a>
-			  {/if}
-			  </td>
-			</tr>
-			{if $shop_order.order_status eq "res"}
+	{order->order_list user_id=$user->user_id order_id=$smarty.get.id limit='1'}
+	<tr>
+		<td>
+	    	<table  cellspacing='1' cellpadding='4' border='0'>
+	      		<tr>
+			  		<td class='title'>{!order_id!} {$shop_order.order_id}</td>
+				</tr>
+				<tr>
+			  		<td class='user_info'>
+	    				{!number_tickets!}
+	  		  		</td>
+			  		<td class='subtitle'>{$shop_order.order_tickets_nr}</td>
+				</tr>
+	  			<tr>
+			  		<td class='user_info'>{!userid!}</td>
+			  		<td class='subtitle'>{$shop_order.order_user_id}</td>
+				</tr>
+				<tr>
+			  		<td class='user_info'>{!total_price!}</td>
+			  		<td class='subtitle'>{$shop_order.order_total_price|string_format:"%1.2f"} {$organizer_currency}</td>
+				</tr>
+				<tr>
+			  		<td class='user_info'>{!order_date!}</td>
+			  		<td class='subtitle'>{$shop_order.order_date}</td>
+				</tr>
+				<tr>
+			  		<td class='user_info'>{!status!}</td>
+			  		<td class='subtitle'>
+			  		{if $shop_order.order_status eq "res"}
+	    				<font style="color:orange">{!reserved!}</font><br>
+			  		{elseif $shop_order.order_status eq "ord"}
+			    		<font style="color:blue">{!ordered!}</font>
+			  		{elseif $shop_order.order_status eq "cancel"}
+			    		<font style="color:#cccccc">{!cancelled!}</font>
+			  		{elseif $shop_order.order_status eq "reemit"}
+			    		<font style="color:#ffffcc">{!reemitted!}</font>
+	    				<a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
+			    		{$shop_order.order_reemited_id}</a>
+			  		{/if}
+			  		</td>
+				</tr>
+				{if $shop_order.order_status eq "res"}
 			
-			<tr>
-			  <td colspan="2">
-			  {update->countdown order_id=$shop_order.order_id reserved=true}
-          {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
-				  <br>
-				  {!autocancel!}
-			  {/update->countdown}
-			  </td>
-			</tr>
-			<form name='f' action='index.php' method='post'>
-       <input type='hidden' name='personal_page' value='orders'>
-       {ShowFormToken name='reorder'}
-			{order->tickets order_id=$shop_order.order_id min_date='on' }
-			<input type='hidden' name='min_date' value='{$shop_ticket_min_date}'>
-			{/order->tickets}
-			<input type='hidden' name='action' value='reorder'>
-			<input type="hidden" name="user_id" value="{$shop_order.order_user_id}" >
-			<input type="hidden" name="order_id" value="{$shop_order.order_id}" >
-			<tr>
-			  <td colspan="2" align="left">
-			  {!ordertickits!}<br>
-			  <font color="red">{!reserv_cancel!}</font><br>
-			  	<center>
-				  <input type='submit' name='submit' value='Order'>
-				</center>
-			  </td>
-			</tr>
+				<tr>
+			  		<td colspan="2">
+			  		{update->countdown order_id=$shop_order.order_id reserved=true}
+          				{!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+				  		<br />
+				  		{!autocancel!}
+			  		{/update->countdown}
+			  		</td>
+				</tr>
+				<form name='f' action='index.php' method='post'>
+       				<input type='hidden' name='personal_page' value='orders' />
+       				{ShowFormToken name='reorder'}
+					{order->tickets order_id=$shop_order.order_id min_date='on' }
+					<input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
+					{/order->tickets}
+					<input type='hidden' name='action' value='reorder'>
+					<input type="hidden" name="user_id" value="{$shop_order.order_user_id}" >
+					<input type="hidden" name="order_id" value="{$shop_order.order_id}" >
+				<tr>
+			  		<td colspan="2" align="left">
+			  			{!ordertickits!}<br />
+			  			<font color="red">{!reserv_cancel!}</font><br />
+			  			<center>
+				  			<input type='submit' name='submit' value='Order' />
+						</center>
+	  				</td>
+				</tr>
 			</form>
 			{/if}
+			
 			<tr>
-			  <td class="user_info">{!Payment!} {!status!}</td>
-			  <td class="subtitle">
-			  {if $shop_order.order_payment_status eq "none"}
-			    <font color="#FF0000">{!notpaid!}</font>
-			  {elseif $shop_order.order_payment_status eq "payed"}
-			  	<font color="green">{!paid!}</font>
-			  {/if}
-			  </td>
+  				<td class="user_info">{!Payment!} {!status!}</td>
+			  	<td class="subtitle">
+			  	{if $shop_order.order_payment_status eq "none"}
+			    	<font style="color:#FF0000">{!notpaid!}</font>
+			  	{elseif $shop_order.order_payment_status eq "payed"}
+			  		<font style="color:#00DD00">{!paid!}</font>
+			  	{/if}
+			  	</td>
 			</tr>
-			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") and $shop_order.order_payment_status eq "none" }
+			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") 
+				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
 			<tr>
-			  <td colspan="2">
-			  <font color="Black" size="12px"><b>
-			  {update->countdown order_id=$shop_order.order_id}
-          {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
-				{/update->countdown}
-				{!autocancel!}{!payhere!}</b></font>
-			  	<br>
-			  	{order->tickets order_id=$shop_order.order_id min_date='on' }
-					<input type='hidden' name='min_date' value='{$shop_ticket_min_date}'>
-				{/order->tickets}
-				{handling handling_id=$shop_order.order_handling_id}
-				  {if $shop_order.order_payment_status eq 'none'}
-				  	{if $shop_handling.handling_html_template}
-				  		{eval var=$shop_handling.handling_html_template}
+				<td colspan="2">
+			  		<font color="Black" size="12px"><b>
+			  			{update->countdown order_id=$shop_order.order_id}
+          					{!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+						{/update->countdown}
+						{!autocancel!}
+						{!payhere!}
+					</b></font>
+			  		<br />
+			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+						<input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
+					{/order->tickets}
+					{handling handling_id=$shop_order.order_handling_id}
+				  	{if $shop_order.order_payment_status eq 'none'}
+				  		{if $shop_handling.handling_html_template}
+				  			{eval var=$shop_handling.handling_html_template}
+				  		{/if}
 				  	{/if}
-				  {/if}
-				{/handling}
+					{/handling}
 
 			  </td>
 			</tr>

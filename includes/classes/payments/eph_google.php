@@ -328,11 +328,20 @@ class EPH_google extends Payment{
 			default:
 			  $Gresponse->SendBadRequestStatus("Invalid or not supported Message");
 			  break;
-		}
-		
-		
+		}	
 	}
 	
+	function on_return(&$order, $result){
+		
+		return array('approved'=>true,
+                   'transaction_id'=>$order->order_payment_id ,
+                   'response'=> 'Google Payment Registered. You will be emailed when your order status changes.<br>'
+				   				.'Or you may refresh this page to check order status.<br />'
+				   				.'Order Status: '.$order->order_status.'<br />'
+				   				.'Payment Status: '.$order->order_payment_status.'<br />'
+				   				.'Shipping Status: '.$order->order_shipment_status
+ 								);
+	}
 	
 	public function getOrder(){
 		

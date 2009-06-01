@@ -94,8 +94,8 @@
 	{if $user->logged}
     	{include file="header.tpl"}
   		{if $smarty.request.personal_page eq 'details'}
-  			
-  			{assign var='user_data' value=$smarty.session._SHOP_USER}
+  		
+  			{assign var='user_data' value=$smarty.session._SHOP_USER_DETAILS}
    			{if $smarty.post}
         		{assign var='user_data' value=$smarty.post}
         	{/if}
