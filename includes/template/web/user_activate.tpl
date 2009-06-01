@@ -27,12 +27,9 @@
  * clear to you.
  *}
 {include file='header.tpl' name=!act_name! }
-{if !$smarty.request.uar || !$user->activate()}
+{if !$user->activate()}
    {include file="just_registred.tpl"}
    <br>
-   {if $smarty.request.sendnew eq 1}
-     {user->resend_activation email=$user->email}
-   {/if}
    <table border="0" cellpadding="5" cellspacing="5" width="600" class="login_table"  >
       <tr>
         <td colspan=2  class="TblLower">
@@ -49,9 +46,9 @@
           <td>{!act_code!}</td>
           <td><input type='text' name='uar' value='{$smarty.request.uar}' size='40'> &nbsp; <input type='submit' name='submit' value="{!act_send!}"></td>
         </tr>
-        <tr><td colspan='2'><a href='{!PHP_SELF!}?sendnew=1'>{!act_notarr!}</a></td></tr>
+        <tr><td colspan='2'><a href='index.php?action=resend_activation'>{!act_notarr!}</a></td></tr>
       </table>
    </form>
 {else}
-
+    The activation is done;
 {/if}

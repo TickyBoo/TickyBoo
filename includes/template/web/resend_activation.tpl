@@ -38,7 +38,7 @@
   {/if}
 {else}  
   <form action='index.php' method='post'>
-    {ShowFormToken name='resend_activation'}
+    {ShowFormToken name='ResendActivation'}
     <input type='hidden' name='action' value='resend_activation'>
     <table width='80%' align='center'>
       <tr><td class='title' colspan='2' align='center'>
@@ -52,4 +52,3 @@
     </table>
   </form>
 {/if}
-{include file="footer.tpl"}

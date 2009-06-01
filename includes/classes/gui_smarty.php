@@ -90,7 +90,7 @@ class Gui_smarty {
 
 
   function showFormToken ($params, &$smarty) {
-    $name = is($params['name'],'FormToken');
+    $name = str_replace('_','', is($params['name'],'FormToken'));
     if (!isset($_SESSION['tokens'][$name])) {
       $_SESSION['tokens'][$name]['n'] = md5(mt_rand());
     }

@@ -330,9 +330,9 @@ class User{
       return false;
     }
     $email=&new htmlMimeMail();
-    $activation = base64_encode("$user_id|".date('c')."|$active");
-    $row['link']=$_SHOP->root."activation.php?uar=$active";
-
+    $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
+    $row['link']=$_SHOP->root."activation.php?uar=$activation";
+    $row['activate_code'] = $activation;
     $tpl->build($email,$row);
     if($email->send($tpl->to)){
     	return true;

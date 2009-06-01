@@ -527,8 +527,8 @@ class Order {
     }else{
       //echo "<div class=success>".order_canceled."</div>";
 
-      if($this->order_handling=Handling::load($order['order_handling_id'])){
-  			$this->order_handling->on_order_delete($order_id);
+      if($order_handling=Handling::load($order['order_handling_id'])){
+  			$order_handling->on_order_delete($order_id);
   		}
 
   		return TRUE;

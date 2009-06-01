@@ -1,4 +1,5 @@
 <?php 
-$fond='resend_activation';
+$fond='shop';
+$_REQUEST['action'] = 'activate';
 require_once('includes/web/template.php');
 ?>

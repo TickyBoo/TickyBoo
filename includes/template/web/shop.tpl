@@ -39,7 +39,7 @@
     category_id=$smarty.post.category_id item_id=$smarty.post.item_id
     discounts=$smarty.post.discount }
   {include file="cart_view.tpl"}
-{elseif $smarty.get.action eq 'activate'}
+{elseif $smarty.request.action eq 'activate'}
   {include file="user_activate.tpl"}
   
 {elseif $smarty.request.action eq 'resend_activation'}
@@ -77,14 +77,6 @@
 
 {elseif $smarty.request.action eq 'login' and $smarty.request.type != 'block'}
 	{include file="user_login.tpl"}
-
-{elseif $smarty.request.sendnew eq 1}
-	
-	{if $user->logged}
-		{assign var='user_data' value=$user->asarray()}
-		{user->resend_activation email=$user_data.user_email}
-		{include file="user_activate.tpl"}
-	{/if}
 
 {elseif $smarty.request.register_user}
   {if $smarty.request.action eq 'login'}
