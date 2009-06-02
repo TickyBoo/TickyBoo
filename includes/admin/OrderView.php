@@ -158,7 +158,7 @@ function order_details ($order_id){
 
  }
 
- function link ($action,$order_id,$img,$confirm=FALSE,$con_msg='',$param=null){
+ function link ($action, $order_id, $img, $confirm=FALSE, $con_msg='',$param=null, $target=''){
    if($confirm){
      $param['action1']=$action;
      $param['order_id1']=$order_id;
@@ -171,7 +171,7 @@ function order_details ($order_id){
      return "<a href='javascript:if(confirm(\"".con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}'>".
           "<img border='0' src='images/$img'></a>";
    }
-   return "<a href='".$_SERVER['PHP_SELF']."?action=$action&order_id=$order_id'>".
+   return "<a $target href='".$_SERVER['PHP_SELF']."?action=$action&order_id=$order_id'>".
           "<img border='0' src='images/$img'></a>";
  }
 
@@ -228,7 +228,7 @@ function order_details ($order_id){
        return $com;
      }
 
-     $com["print"]=$this->link("print",$order["order_id"],"printer.gif");
+     $com["print"]=$this->link("print",$order["order_id"],"printer.gif",false,'',null, 'target="pdfdoc"');
 
      if(!$list){
        $com["ord"]=$this->link("set_status_ord",$order["order_id"],"ord.png",TRUE,change_status_to_ord,$_GET);

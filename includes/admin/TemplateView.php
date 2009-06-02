@@ -81,7 +81,7 @@ class TemplateView extends AdminView{
 
     $this->print_field('template_id', $data);
     $this->print_input('template_name', $data, $err, 30, 100);
-    $this->print_select ("template_type", $data, $err, array("email", "pdf", "pdf2"));
+    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
     
     echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
     <textarea rows='40' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
@@ -157,7 +157,9 @@ class TemplateView extends AdminView{
       echo "<td class='admin_list_item' width='75%'>{$row['template_name']}</td>\n";
       echo "<td class='admin_list_item nowarp=nowarp'>
             <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
-      echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
+      if ($row['template_type'] !=='pdf') {
+        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
+      }
       echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
       echo "</tr>";
       $alt = ($alt + 1) % 2;

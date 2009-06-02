@@ -161,5 +161,6 @@
   require_once(INC.'config'.DS."init_config.php");
   
   $_SHOP->files_url=$_SHOP->root."files/";
+  $_SHOP->images_url=$_SHOP->root."images/";
 
 ?>

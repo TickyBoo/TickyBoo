@@ -56,6 +56,33 @@ class PDF2TCompiler {
     $this->template_dir=$_SHOP->tpl_dir;
   }
 
+  function build ($pdf, $data, $testme=false){
+    global $_SHOP;
+    require_once("smarty/Smarty.class.php");
+    require_once("classes/gui_smarty.php");
+
+    $smarty = new Smarty;
+    $gui    = new gui_smarty($smarty);
+
+    $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+    $smarty->cache_dir    = $_SHOP->tmp_dir;
+    $smarty->compile_dir  = $_SHOP->tmp_dir;
+    $smarty->compile_id   = "HTML2PDF";
+    $smarty->assign("_SHOP_lang", $_SHOP->lang);
+    $smarty->assign((array)$_SHOP->organizer_data);
+    $smarty->assign($data);
+    $smarty->assign("OrderData",$data);
+    $smarty->assign("_SHOP_files",  $_SHOP->files_url);
+    $smarty->assign("_SHOP_images", $_SHOP->images_url);
+
+
+    $smarty->my_template_source = $this->sourcetext;
+    $htmlresult = $smarty->fetch("text:".'.$out_class_name.');
+    $pdf->WriteHTML($htmlresult, $testme);
+    unset($smarty);
+    unset($gui);
+  }
+
   function compile ($input, $out_class_name){
 
 $ret=
@@ -64,42 +91,12 @@ $ret=
 
 produced '.date("l dS of F Y h:i:s A").' 
 
-
 */
-require_once("smarty/Smarty.class.php");
-require_once("classes/gui_smarty.php");
+require_once("classes/PDF2TCompiler.php");
 
-
-class '.$out_class_name.' {
-
-  var $object_id;
-  var $engine;
-
+class '.$out_class_name.' extends PDF2TCompiler {
   function write($pdf, $data, $testme=false){
-    global $_SHOP;
-
-    $input = '."'".
-    htmlentities  ($input, ENT_QUOTES, 'UTF-8')."'".';
-
-    $smarty = new Smarty;
-    $gui    = new gui_smarty($smarty);
-    
-    $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
-    $smarty->cache_dir    = $_SHOP->tmp_dir;
-    $smarty->compile_dir  = $_SHOP->tmp_dir;
-    $smarty->compile_id   = "HTML2PDF";
-   // print_r($_SHOP);
-    $smarty->assign("_SHOP_lang", $_SHOP->lang);
-  //  $smarty->assign("organizer", $_SHOP->organizer_data);
-    $smarty->assign((array)$_SHOP->organizer_data);
-    $smarty->assign($data);
-    $smarty->assign("OrderData",$data);
-
-    $smarty->my_template_source = html_entity_decode ($input, ENT_QUOTES, "UTF-8");
-    $htmlresult = $smarty->fetch("text:".'.$out_class_name.');
-    $pdf->WriteHTML($htmlresult, $testme);
-    unset($smarty);
-    unset($gui);
+    $this->build($pdf, $data, $testme);
   }
 }
 ';

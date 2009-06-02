@@ -48,12 +48,13 @@
 	//internal function: loads, initializes the template object, and updates cache
   function &try_load ($name, $t_class_name, $code){
     global $_SHOP;
-//    var_dump($code);
-    eval($code);
+    //print_r($code['template_code']);
+    eval($code['template_code']);
     if(class_exists($t_class_name)){
       $tpl=&new $t_class_name;
+      $tpl->sourcetext= $code[template_text];
+//      $tpl->engine=&$this;
       $_SHOP->templates[$name]=&$tpl;
-      $tpl->engine=&$this; 
       return $tpl;
     }
   }  
@@ -75,16 +76,14 @@
       return FALSE;
     }
     
-    $t_class_name="TT_{$data['template_name']}";
+    $t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
     
     //trying to load already compiled template
     if($data['template_status']=='comp'){
-      if($tpl= TemplateEngine::try_load($name, $t_class_name, $data['template_code'])) {
+      if($tpl= TemplateEngine::try_load($name, $t_class_name, $data)) {
         return $tpl;
       }
     }
-
-
     //need to compile: loading compiler
     if($data['template_type']=='email'){
       require_once("classes/EmailTCompiler.php");
@@ -105,13 +104,12 @@
       ShopDB::query($query);
       return FALSE;
     }
-
+    $data['template_code'] = $code;
 		//truying to load just compile template
-	if($tpl=TemplateEngine::try_load($name, $t_class_name, $code)){
+	  if($tpl=TemplateEngine::try_load($name, $t_class_name, $data)){
 
       //compilation ok: saving the code in db
-      $code_q=shopDB::escape_string($code);
-      $query="UPDATE Template SET template_status='comp', template_code='$code_q' WHERE template_id='{$data['template_id']}'";
+      $query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
 
       if(!ShopDB::query($query)){
 				return FALSE;

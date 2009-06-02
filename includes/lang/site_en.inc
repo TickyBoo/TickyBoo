@@ -830,10 +830,10 @@ define("template_ts","Timestamp");
 define("template_type","Type");
 define("template_type_email","email");
 define("template_type_pdf","PDF");
+define("template_type_pdf2","HTML2PDF");
 define("template_update_title","Edit template");
 define("theater","Theater");
-define("The email contains no images or files.<br>
-","");
+define("NoImages","The email contains no images or files.");
 define("tickets","Tickets");
 define("tickets_nr","Quantity");
 define("tickets_printing","Tickets will be printed, wait please");
