@@ -51,7 +51,7 @@ class ShopDB {
               } else
                 $port = 3306;
              if ($_SHOP->link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name, $port)){
-                ShopDB::checkdatabase(false, false);
+                ShopDB::checkdatabase(true, false);
                 return true;
              } else {
                 die ("Could not connect: " . mysqli_connect_errno());
@@ -417,9 +417,9 @@ private static function TableCreateData( $tablename )
     if ($result) {
       $tables = $result['Create Table'];
     }
-    $keys = array ();
     unset($result);
     if ($tables) {
+      $keys = array ( 'keys'=>array(),'fields'=>array());
       // Convert end of line chars to one that we want (note that MySQL doesn't return query it will accept in all cases)
       if (strpos($tables, "(\r\n ")) {
           $tables = str_replace("\r\n", "\n", $tables);
@@ -437,8 +437,8 @@ private static function TableCreateData( $tablename )
       for ($i = 1; $i < $sql_count; $i++) {
          $sql_line = trim($sql_lines[$i]);
          if (substr($sql_line,-1) ==',') $sql_line = substr($sql_line,0,-1);
-         if (preg_match('/^[\s]*(CONSTRAINT|FOREIGN|PRIMARY|UNIQUE)*[\s]+(KEY)+/', $sql_lines[$i])) {
-            $keys['keys'][] = $sql_line;
+         if (preg_match('/^[\s]*(CONSTRAINT|FOREIGN|PRIMARY|UNIQUE)*[\s]*(KEY)+/', ' '.$sql_line)) {
+            $keys['keys'][] = str_replace('  ',' ',$sql_line);
          } else if (preg_match('/(ENGINE)+/', $sql_line)) {
          } else {
            $x = strpos( $sql_line,' ');
@@ -461,8 +461,10 @@ private static function TableCreateData( $tablename )
           If ($tblFields = self::TableCreateData($tablename)) {
               $sql = "";
               $oldkey = '';
+              $primary ='';
               $txt = '';
               foreach ($fields['fields'] as $key => $info) {
+                if (stripos($info,'AUTO_INCREMENT') !== false) $primary = $key;
                 if (!array_key_exists($key, $tblFields['fields'])) {
                     echo "Add $tablename.$key $info\n";
                     $update = true;
@@ -492,12 +494,47 @@ private static function TableCreateData( $tablename )
                     echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".\n";
                 }
               }
+              If ((isset($fields['key'])) and (count($fields['key']) > 0)) {
+                 foreach ($fields['key'] as $info){
+                   if (substr($info,0,1)!=='P')
+                   {
+                      $sql .= ', ADD ' . $info."\n";
+                      if (!in_array($info, $tblFields['keys'])) $update = true;
+                   } elseif (!in_array($info, $tblFields['keys'])) {
+                      $sql .= ', ADD ' . $info."\n";
+                      $update = true;
+                    } elseif ( stripos($info,"`$primary`")===false ) {
+                      $sql .= ', ADD ' . $info."\n";
+                   }
+                 }
+              }
+              If (count($fields['key']) <>  count($tblFields['keys'])) $update = true;
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
-              If ($sql) {       }
+              If ($update) {
+                $sql1 ='';
+                echo  $tablename,': db-', print_r($tblFields['keys'], true),' inst-',print_r($fields['key'], true);
+                If ((isset($tblFields['keys'])) and (count($tblFields['keys']) > 0)) {
+
+                  foreach ($tblFields['keys'] as  $info) {
+                    if (substr($info,0,1)!=='P') {
+                      $sql1 .= ', DROP '.str_replace('UNIQUE','', substr(trim($info),0,strpos($info,'(')-1))."\n";
+                    } elseif ( stripos($info,"`$primary`")===false ) {
+                        $sql1 .= ', DROP PRIMARY KEY'."\n";
+                    }
+                  }
+                }
+                If (!empty($sql1)){
+                  echo $sql1 = "ALTER TABLE `$tablename` " . substr($sql1, 2);
+                  $result = self::query($sql1);
+                  if (!$result) {
+                    echo '<B>' .self::error ().".</b>\n\n";
+                  }
+                }
+              }
 
           } else {
               $update = true;
-              $sql = '';               Print_r( $fields);
+              $sql = '';
               foreach ($fields['fields'] as $key => $info) {
                  $sql .= ", `" . $key . "` " . $info."\n";
               }
@@ -507,7 +544,7 @@ private static function TableCreateData( $tablename )
               if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
           }
           If ($update) {
-             //echo ($sql)."\n";//nl3br(
+             echo ($sql)."\n";//nl3br(
 //             self::dblogging("[SQLupdate:] ".$sql."\n");
              if ($logall)  $error .= $sql."\n";
              If (!$viewonly) {

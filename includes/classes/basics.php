@@ -342,6 +342,7 @@ function check_event($event_date){
 function check_system() {
 	global $_SHOP;
   require_once("classes/Time.php");
+  require_once("classes/Order.php");
 
   if ($_SHOP->shopconfig_lastrun_int = 0) {
     return;

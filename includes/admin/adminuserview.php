@@ -137,7 +137,7 @@ function draw ($admintype) {
     }
     $this->admin_form($row,$err,con($admintype.'_user_update_title'),'update');
   }elseif($_GET['action']=='remove' and $_GET['admin_id']){
-    $query="DELETE FROM Control WHERE admin_id="._esc($_GET['admin_id']);
+    $query="DELETE FROM Admin WHERE admin_id="._esc($_GET['admin_id']);
     if(!ShopDB::query($query)){
       user_error(shopDB::error());
       return 0;
@@ -150,7 +150,6 @@ function draw ($admintype) {
 
 function admin_check (&$data, &$err){
   $nickname=$data['admin_login'];
-  print_r($data);
   if(empty($data['admin_login'])){
     $err['admin_login']=mandatory;
     
@@ -159,7 +158,7 @@ function admin_check (&$data, &$err){
     if(!$res=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return 0;
-    }                                      echo 'inserting';
+    }
     if($res["count"]>0){$err['admin_login']=con('already_exist');}
   }
   if($data["action"]=='update'){

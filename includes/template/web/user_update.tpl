@@ -71,7 +71,7 @@
 		
     	{if $user->is_member}
 		<tr>
-      		<td class='TblLower'>Current password </td>
+      		<td class='TblLower'>{!old_password!} </td>
       		<td class='TblHigher'>
  				<input autocomplete='off'  type='password' name='old_password' size='15'  maxlength='10' />
             	<div class='error'>{$user_errors.old_password}</div>

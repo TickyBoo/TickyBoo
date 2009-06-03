@@ -55,10 +55,11 @@ class IndexView extends AdminView {
            $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
            $this->print_field('InfoPhpVersion',  phpversion ());
            $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
+           $this->print_field('InfoAdminCount',  $this->Admins_Count ());
            $this->print_field('InfoUserCount',   $this->Users_Count ());
-           $this->print_field('InfoGroupCount',  $this->Groups_Count ());
-           $this->print_field('InfoVenueCount',  $this->Docs_Count ());
-           $this->print_field('InfoEventCount',  $this->Files_Count ());
+//           $this->print_field('InfoGroupCount',  $this->Groups_Count ());
+//           $this->print_field('InfoVenueCount',  $this->Venues_Count ());
+           $this->print_field('InfoEventCount',  $this->Events_Count ());
 		       echo "</table>\n";
            break;
        
@@ -125,19 +126,71 @@ class IndexView extends AdminView {
 }
 
   function Users_Count () {
-    return '';
+ 	  $sql = "SELECT count(user_status) as count,user_status, IF(active IS NOT NULL,'yes','no') as active
+  	       	FROM User left join auth on auth.user_id=User.user_id
+            group by user_status, IF(active IS NOT NULL,'yes','no')";
+ 		if(!$res=ShopDB::query($sql)){
+			return FALSE;
+		}
+
+		while($data=shopDB::fetch_array($res)){
+      $part[$data[1]][$data[2]]=$data[0];
+		}
+
+
+    return vsprintf(con('index_user_count'),array($part[1]['no'],$part[3]['no'],$part[2]['yes'],$part[2]['no'],$part[2]['yes']+$part[2]['no']));
   }
   
   function Groups_Count (){
-    return '';
+    return 'not impented yet';
   }
 
-  function Docs_Count () {
-    return '';
+  function Venues_Count () {
+ 	  $sql = "SELECT count(*)
+  	       	FROM Ort";
+ 		if(!$result=ShopDB::query_one_row($sql)){
+			return FALSE;
+		}
+    return vsprintf(con('index_ort_count'),$result);
+
   }
 
-  function Files_Count (){
-    return '';
+  function Events_Count (){
+    $part = array('pub'=>0, 'unpub'=>0, 'nosal'=>0,'trash'=>0,'total'=>0);
+ 	  $sql = "SELECT count(event_status) as count, event_status
+  	       	FROM Event
+            group by event_status";
+ 		if(!$res=ShopDB::query($sql)){
+			return FALSE;
+		}
+
+		while($data=shopDB::fetch_array($res)){
+      $part['total'] += $data[0];
+      $part[$data[1]]=$data[0];
+		}
+
+    return vsprintf(con('index_events_count'),$part);
+  }
+
+  function admins_Count (){
+    $part = array('admin'=>0, 'organizer'=>0, 'control'=>0,'total'=>0);
+ 	  $sql = "SELECT count(admin_status) as count, admin_status
+  	       	FROM Admin
+  	       	group by admin_status
+  	       	union
+  	       	SELECT count(admin_status) as count, admin_status
+  	       	FROM Control
+            group by admin_status";
+ 		if(!$res=ShopDB::query($sql)){
+			return FALSE;
+		}
+
+		while($data=shopDB::fetch_array($res)){
+      $part['total'] += $data[0];
+      $part[$data[1]]=$data[0];
+		}
+
+    return vsprintf(con('index_admins_count'),$part);
   }
 
 }

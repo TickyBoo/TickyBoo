@@ -987,6 +987,7 @@ define('InfoUserCount',    "User count:");
 define('InfoGroupCount',   "Group count:");
 define('InfoVenueCount',   "Venue count:");
 define('InfoEventCount',   "Event count:");
+define('InfoAdminCount',   "Admin count:");
 define("system_summary","System Summary");
 define("unused_guests","Unused guests");
 
@@ -1050,4 +1051,9 @@ define('act_sent','The activation email has been sent. Please check your in box 
 define('act_err', 'The activation email could not be sent, please check you have the correct email address.');
 define('resend_activation','Resend Activation Email');
 define('success_activate','You have successfully activated your account.<br /> You may now login.');
+define('index_user_count','<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d/%d/%d');
+define('index_ort_count','%d');
+define('index_events_count','<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d');
+define('index_admins_count','<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Controlers:</b> %d, <b>Total:</b> %d');
+define('admin_user_update_title','All Administrators');
 ?>
