@@ -36,7 +36,6 @@
 
 
 require_once("admin/AdminView.php");
-//require_once("functions/datetime_func.php");
 
 class SearchView extends AdminView{
 

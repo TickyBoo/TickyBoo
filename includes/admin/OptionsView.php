@@ -52,24 +52,17 @@ class OptionsView extends AdminView{
 	      		limit 1";
 				
 				if(!ShopDB::query($query)){
-					return 0;
+          echo "<div class='error'>".con('update_error')."</div>";
 				}
-				$query="SELECT * FROM `ShopConfig` limit 1";
-					if(!$row=ShopDB::query_one_row($query)){
-				return 0;
-				}
-				$this->option_form($row,$err,option_update_title,"update");
-				return;
 			}
-		}else{
-			$query="SELECT * FROM `ShopConfig` limit 1";
-			if(!$row=ShopDB::query_one_row($query)){
-				return 0;
-			}
-			$this->option_form($row,$err,option_update_title,"update");
-			return;
 		}
-}
+		$query="SELECT * FROM `ShopConfig` limit 1";
+		if(!$row=ShopDB::query_one_row($query)){
+			return 0;
+		}
+		$this->option_form($row,$err,option_update_title,"update");
+		return;
+  }
 function option_form (&$data, &$err){
 	global $_SHOP;
 	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');

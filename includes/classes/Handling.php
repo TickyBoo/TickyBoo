@@ -233,7 +233,7 @@ class Handling {
     global $_SHOP;
     if (!$id) $id = $this->handling_id;
 		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quote($id);
-		if($res=ShopDB::query_one_row($query) and $res['count']==0){
+		if($res=ShopDB::query_one_row($query, false) and $res['count']==0){
 			$query="DELETE FROM Handling WHERE handling_id=".ShopDB::quote($this->handling_id)." limit 1";
 			ShopDB::query($query);
 		}else{

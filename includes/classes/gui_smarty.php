@@ -560,7 +560,7 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
       $set = array();
       if (!empty($ids) and $ids[0] != "") {
           foreach($ids as $id) {
-              $query = "select $column_name from $table_name where $key_name='$id'";
+              $query = "select $column_name as id from $table_name where $key_name='$id'";
               if (!$row = ShopDB::query_one_row($query)) {
                   // user_error(shopDB::error());
                   return 0;

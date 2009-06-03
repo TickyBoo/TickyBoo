@@ -136,7 +136,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 
 		if($cfr){
 		  $query='SELECT FOUND_ROWS();';
-      if($row=ShopDB::query_one_row($query)){
+      if($row=ShopDB::query_one_row($query, false)){
 			  $tot_count=$row[0];
 			}
 		}else{

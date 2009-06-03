@@ -50,12 +50,12 @@ class StatisticView extends AdminView{
   function plotEventStats ($start_date, $end_date, $month, $year)
   {
     global $_SHOP;
-    $query = "select MAX(es_total) from Event_stat";
+    $query = "select MAX(es_total) as count from Event_stat";
     if (!$res = ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return;
     }
-    $max_places = $res[0];
+    $max_places = $res['count'];
     if (!($max_places > 0)){
       return;
     }
@@ -105,12 +105,12 @@ class StatisticView extends AdminView{
       $evfree = $events[$i]["es_free"];
       $evsaled = ($evtot - $evfree);
       If ($events[$i]["event_status"] == 'pub' or $evsaled) {
-        $query = "select MAX(cs_total) from Category_stat ";
+        $query = "select MAX(cs_total)count from Category_stat ";
         if (!$res = ShopDB::query_one_row($query)){
           user_error(shopDB::error());
           return;
         }
-        $max_places = $res[0];
+        $max_places = $res['count'];
         $weight = 200 / $max_places;
 
         $query = "select * from Category_stat,Category where
@@ -254,7 +254,7 @@ class StatisticView extends AdminView{
 
       $query = "select event_date from Event where event_date>='$date' order by event_date,event_time limit 1";
       require_once('classes/ShopDB.php');
-      if ($row = ShopDB::query_one_row($query) and !empty($row[0])){
+      if ($row = ShopDB::query_one_row($query, false) and !empty($row[0])){
         list($year, $month) = split('-', $row[0]);
         $start_date = "$year-$month-1";
         $end_date = "$year-$month-31";
@@ -277,12 +277,19 @@ class StatisticView extends AdminView{
       $mydate = "&month={$_GET["month"]}&year={$_GET["year"]}";
 
     }
-    if ($_GET["action"] == 'grafik'){
+
+    if(isset($_REQUEST['tab'])) {
+      $_SESSION['_STATS_tab'] = (int)$_REQUEST['tab'];
+    }
+
+
+    $menu = array(con('show_text_stats')=>"?tab=0", con('show_grafik_stats')=>'?tab=1');
+    echo $this->PrintTabMenu($menu, (int)$_SESSION['_STATS_tab'], "left");
+
+    if ((int)$_SESSION['_STATS_tab'] == 1){
       $this->plotEventStats($start_date, $end_date, $month, $year);
-      echo "\n<center><button type='button' onclick='location.href=\"?action=text{$mydate}\"'>".show_text_stats."</button>";
     }else{
       $this->eventStats($start_date, $end_date, $month, $year);
-      echo "\n<br><center><button type='button' onclick='location.href=\"?action=grafik{$mydate}\"'>".show_grafik_stats."</button>";
     }
   }
 }

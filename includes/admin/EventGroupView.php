@@ -140,10 +140,8 @@ function photo_post ($data, $event_group_id){
 
 
   function get_event_group_types (){
-    $query="SHOW  COLUMNS  FROM Event_group LIKE  'event_group_type'";
-    if(!$res=ShopDB::query_one_row($query)){return;}
-    $types=explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$res[1]));
-    return $types;
+    global $_SHOP;
+    return $_SHOP->event_group_type_enum;
   }
 
   function select_types ($name,&$data,&$err){

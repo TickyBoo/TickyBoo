@@ -195,7 +195,7 @@ class AdminView extends AUIComponent {
         $set = array();
         if (!empty($ids) and $ids[0] != "") {
             foreach($ids as $id) {
-                $query = "select $column_name from $table_name where $key_name="._esc($id);
+                $query = "select $column_name as id from $table_name where $key_name="._esc($id);
                 if (!$row = ShopDB::query_one_row($query)) {
                     // user_error(shopDB::error());
                     return 0;
@@ -494,6 +494,38 @@ class AdminView extends AUIComponent {
     $val=strtoupper($val);
     return $_COUNTRY_LIST[$val];
   }
+  
+  // make tab menus using html tables
+  // vedanta_dot_barooah_at_gmail_dot_com
+
+  function PrintTabMenu($linkArray, $activeTab=0, $menuAlign="center") {
+    Global $_SHOP;
+  	$tabCount=0;
+  	$str= "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>\n";
+  	$str.= "<tr>\n";
+  	if($menuAlign=="right"){
+      $str.= "<td width=\"100%\" align=\"left\">&nbsp;</td>\n";
+    }
+  	foreach ($linkArray as $k => $v){
+      if($tabCount==$activeTab){$menuStyle="UITabMenuNavOn";}else{$menuStyle="UITabMenuNavOff";}
+      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."images/left_arc.gif\"></td>\n";
+      $str.= "<td nowrap=\"nowrap\" height=\"16\" align=\"center\" valign=\"middle\" class=\"$menuStyle\">\n";
+      if($tabCount!=$activeTab) $str.= "<a class=\"UITabMenuTab\" href=\"$v\">";
+      $str.= $k;
+      if($tabCount!=$activeTab) $str.= "</a>";
+      $str.= "</td>\n";
+      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."images/right_arc.gif\"></td>\n";
+      $str.= "<td width=\"1pt\">&nbsp;</td>\n";
+      $tabCount++;
+    }
+  	if($menuAlign=="left"){
+      $str.= "<td width=\"100%\" align=\"right\">&nbsp;</td>";
+    }
+  	$str.= "</tr>\n";
+  	$str.= "</table>\n";
+	  return $str;
+  }
+
 }
 
 ?>

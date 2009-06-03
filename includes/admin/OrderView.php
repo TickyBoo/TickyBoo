@@ -349,7 +349,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 
 
   if(!$res=ShopDB::query($query)){return;}
-  if(!$count=ShopDB::query_one_row('SELECT FOUND_ROWS()')){return;}
+  if(!$count=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
   if(!$hand=Handling::load($order_handling_id)){return;}
 
   $tr['ord']=order_type_ordered;

@@ -163,7 +163,7 @@ class Event {
 
     if($this->event_rep=='main'){
       $query="select count(*) from Event where event_status!='trash' and event_main_id={$this->event_id}";
-      if(!$count=ShopDB::query_one_row($query) or $count[0]>0){
+      if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
         echo '<div class=error>'.delete_subs_first.'<div>';
         return FALSE;
       }
@@ -180,7 +180,7 @@ class Event {
     if($this->event_status!='trash'){
 			//check if there are non-free seats
 			$query="select count(*) from Seat where seat_event_id={$this->event_id} and seat_status!='free' FOR UPDATE";
-			if(!$count=ShopDB::query_one_row($query) or $count[0]>0){
+			if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
 				ShopDB::rollback();
 				echo '<div class=error>'.seats_not_free.'<div>';
 				return FALSE;

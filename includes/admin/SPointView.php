@@ -299,7 +299,7 @@ class SPointView extends AdminView {
 
 		if ( $nickname = $data['user_nickname'] and $data["action"] == 'insert' ) {
 			$query = "select Count(*) as count from SPoint where login='$nickname'";
-			if ( !$res = ShopDB::query_one_row($query) ) {
+			if ( !$res = ShopDB::query_one_row($query, false) ) {
 				user_error( shopDB::error() );
 				return 0;
 			}

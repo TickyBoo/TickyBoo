@@ -190,9 +190,9 @@ class ShopDB {
         return $_SHOP->link->insert_id;
     }
 
-    function query_one_row ($query)
-    {
-        if ($result = self::query($query) and $row = $result->fetch_array(MYSQLI_ASSOC)) {
+    function query_one_row ($query, $assoc = true){
+       $assoc = ($assoc)? MYSQLI_ASSOC:MYSQLI_NUM;
+        if ($result = self::query($query) and $row = $result->fetch_array($assoc)) {
             return $row;
         }
     }

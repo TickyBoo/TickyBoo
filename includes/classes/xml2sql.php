@@ -192,7 +192,7 @@ class _xmltmp{
 		$query='select count(*) from `'.$this->table.
 		'` where `'.$this->pk.'`='.ShopDB::quote($this->query[$this->pk]);
 		
-		if($res = ShopDB::query_one_row($query)){
+		if($res = ShopDB::query_one_row($query, false)){
 		  $count=$res[0];
 		}
 		

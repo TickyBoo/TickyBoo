@@ -154,7 +154,7 @@ function admin_check (&$data, &$err){
     $err['admin_login']=mandatory;
     
   } elseif($data["action"]=='insert'){
-    $query="select Count(*) as count from Admin where admin_login="._esc($nickname);
+    $query="select Count(*)as count as count from Admin where admin_login="._esc($nickname);
     if(!$res=ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return 0;

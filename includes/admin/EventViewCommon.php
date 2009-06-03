@@ -176,14 +176,9 @@ class EventViewCommon extends AdminView {
         return $this->file_post($data, $event_id, 'Event', 'event', '_ort_image');
     }
 
-    function get_event_types ()
-    {
-        $query = "SHOW  COLUMNS  FROM Event LIKE  'event_type'";
-        if (!$res = ShopDB::query_one_row($query)) {
-            return;
-        }
-        $types = explode("','", preg_replace("/(enum|set)\('(.+?)'\)/", "\\2", $res[1]));
-        return $types;
+    function get_event_types () {
+       global $_SHOP;
+       return $_SHOP->event_type_enum;
     }
 
     function select_types ($name, &$data, &$err) {
@@ -198,6 +193,7 @@ class EventViewCommon extends AdminView {
         }
         echo "</select><span class='err'>{$err[$name]}</span></td></tr>\n";
     }
+    
     function print_type ($name, &$data)
     {
         echo "<tr><td class='admin_name' width='40%'>" . con($name) . "</td>

@@ -286,7 +286,7 @@ class PlaceMapCategoryView extends AdminView {
                 return false;
             }
 
-            $value = $res[0];
+            $value = $res['color_code'];
             $st = "style=background-color:$value;";
         } else {
             $field = no_color;

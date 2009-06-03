@@ -196,13 +196,13 @@ class DiscountView extends AdminView {
         } else
         if ($_GET['action'] == 'remove_disc' and $_GET['discount_id'] > 0) {
             $discount_id = (int)$_GET['discount_id'];
-            $query = "SELECT count(*) as count from Seat where seat_discount_id="._esc($discount_id);
+            $query = "SELECT count(*) count as count from Seat where seat_discount_id="._esc($discount_id);
             if (!$count = ShopDB::query_one_row($query)) {
                 return;
             }
 
-            if ($count[0] != 0) {
-                echo "<div class=error>" . in_use . "</div>";
+            if ($count['count'] != 0) {
+                echo "<div class=error>" . con('in_use') . "</div>";
                 return;
             }
 
