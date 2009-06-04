@@ -121,7 +121,7 @@ class StatisticView extends AdminView{
 
   function plotBar ($tot, $free){
     $saled = ($tot - $free);
-    $percent = 100 * $saled / $tot;
+    $percent = ($tot)?(100 * $saled / $tot):0;
     $percent = round($percent, 0);
     echo "<table border='0' cellspacing='0' width='100%'><tr>";//$width
     if ($percent > 0){
@@ -173,7 +173,7 @@ class StatisticView extends AdminView{
       $evfree = $events[$i]["es_free"];
       $evsaled = ($evtot - $evfree);
       If ($events[$i]["event_status"] == 'pub' or $evsaled) {
-        $evpercent = 100 * $evsaled / $evtot;
+        $evpercent = ($evtot)?(100 * $evsaled / $evtot):0;
         $evpercent = round($evpercent, 2);
 
         echo "<tr class='stats_event_item'><td colspan='5'><img src='{$this->img_pub[$events[$i]['event_status']]}'>&nbsp;" . $events[$i]["event_name"] . " " .
@@ -191,7 +191,7 @@ class StatisticView extends AdminView{
           $tot = $cat["cs_total"];
           $free = $cat["cs_free"];
           $saled = ($tot - $free);
-          $percent = 100 * $saled / $tot;
+          $percent = ($tot)?(100 * $saled / $tot):0;
           $percent = round($percent, 2);
           // $gain=$cat["category_price"]*$saled;
           if ($sum[$cat["category_id"]]){
