@@ -516,6 +516,7 @@ define("order_total_price","Total Price");
 define("order_type_canceled","Cancelled");
 define("order_type_email","E-Mail");
 define("order_type_ordered","Ordered");
+define("order_type_pending","Pending");
 define("order_type_payed","Payed");
 define("order_type_post","Post");
 define("order_type_reemited","Reemitted");

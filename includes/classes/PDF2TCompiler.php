@@ -67,7 +67,7 @@ class PDF2TCompiler {
     $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
     $smarty->cache_dir    = $_SHOP->tmp_dir;
     $smarty->compile_dir  = $_SHOP->tmp_dir;
-    $smarty->compile_id   = "HTML2PDF";
+    $smarty->compile_id   = "HTML2PDF_".$_SHOP->lang;
     $smarty->assign("_SHOP_lang", $_SHOP->lang);
     $smarty->assign((array)$_SHOP->organizer_data);
     $smarty->assign($data);

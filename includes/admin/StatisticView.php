@@ -47,8 +47,7 @@ class StatisticView extends AdminView{
         $this->img_pub['nosal'] = 'images/grey.png';
     }
 
-  function plotEventStats ($start_date, $end_date, $month, $year)
-  {
+  function plotEventStats ($start_date, $end_date, $month, $year) {
     global $_SHOP;
     $query = "select MAX(es_total) as count from Event_stat";
     if (!$res = ShopDB::query_one_row($query)){
@@ -59,109 +58,85 @@ class StatisticView extends AdminView{
     if (!($max_places > 0)){
       return;
     }
-    $query = "select Event_stat.*, event_id, event_name, event_date, event_time, event_status from Event_stat, Event
-              where  es_event_id=event_id
-               and event_status!='unpub'
+
+    $query = "select Event_stat.*, event_id, event_name, event_date, event_time, event_status
+              from Event left join Event_stat on es_event_id=event_id
+              where event_status != 'unpub'
   	           and event_date >="._esc($start_date)."
-        	     and event_date<="._esc($end_date)."
+        	     and event_date <="._esc($end_date)."
         	     and event_rep LIKE '%sub%'
         	    order by event_date,event_time";
-
-    $weight = 200 / $max_places;
-    if (!$res = ShopDB::query($query)){
+    if (!$evres = ShopDB::query($query)){
       user_error(shopDB::error());
       return;
     }
-    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='10'>\n";
-    echo "<tr><td class='admin_list_title' colspan='2' align='center'>
-          <a class='link' href='{$_SERVER["PHP_SELF"]}?action=grafik&month=" . ($month > 1?$month - 1:12) . "&year=" . ($month > 1?$year:$year - 1) . "'><<<<< </a>
-	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" .
-    event_stats_title . " " .
-    strftime ("%B %Y", mktime (0, 0, 0, $month, 1, $year)) .
-    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	  <a class='link' href='{$_SERVER["PHP_SELF"]}?action=grafik&month=" . ($month < 12?$month + 1:1) . "&year=" . ($month < 12?$year:$year + 1) . "'>>>>>></a>
-	  </td></tr>\n";
-    $alt = 0;
-    $i = 0;
-    while ($event = shopDB::fetch_assoc($res)){
-      $events[$i] = $event;
-      $i++;
-      $tot = $event["es_total"];
-      $free = $event["es_free"];
-      $evsaled = ($tot - $free);
-      If ($event["event_status"] == 'pub' or $evsaled) {
-        echo "<tr class='admin_list_row_$alt'><td class='admin_list_item' width='200'>" .
-        $event["event_name"] . "<br> " . formatAdminDate($event["event_date"]) . " " .
-        formatTime($event["event_time"]) . "</td><td class='admin_list_item'>";
-        $this->plotBar($tot, $free, $weight);
-        echo "</td></tr>";
-        $alt = ($alt + 1) % 2;
-      }
-    }
-    echo "</table>";
-    echo "<br>";
-    for($i = 0;$i < sizeof($events);$i++){
-      $evtot = $events[$i]["es_total"];
-      $evfree = $events[$i]["es_free"];
-      $evsaled = ($evtot - $evfree);
-      If ($events[$i]["event_status"] == 'pub' or $evsaled) {
-        $query = "select MAX(cs_total)count from Category_stat ";
-        if (!$res = ShopDB::query_one_row($query)){
-          user_error(shopDB::error());
-          return;
-        }
-        $max_places = $res['count'];
-        $weight = 200 / $max_places;
 
-        $query = "select * from Category_stat,Category where
-                category_event_id='" . $events[$i]["event_id"] . "'
-  	      and cs_category_id=category_id";
+    echo "<table class='admin_list' border=0 width='$this->width' cellspacing='0' cellpadding='5'>\n";
+    echo "<tr>
+            <td class='admin_list_title' colspan=4 align='center'>
+               <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . ($month > 1?$month - 1:12) . "&year=" . ($month > 1?$year:$year - 1) . "'><<<<<</a>
+               ". con('event_stats_title') ." " . strftime ("%B %Y", mktime (0, 0, 0, $month, 1, $year)) . "
+	             <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . ($month < 12?$month + 1:1) . "&year=" . ($month < 12?$year:$year + 1) . "'>>>>>></a>
+            </td></tr>\n";
+    while ($event = shopDB::fetch_assoc($evres)){
+      $evtot   = $event["es_total"];
+      $evfree  = $event["es_free"];
+      $evsaled = ($evtot - $evfree);
+      If ($event["event_status"] == 'pub' or $evsaled) {
+        echo "<tr class='stats_event_item'>
+                <td class='admin_list_item' colspan=4 ><img src='{$this->img_pub[$event['event_status']]}'>&nbsp;" .
+                    $event["event_name"] . " - " . formatAdminDate($event["event_date"]) . " " . formatTime($event["event_time"]) . "
+                </td>
+              </TR><tr>";
+        $query = "select *
+                  from Category left join Category_stat on cs_category_id=category_id
+                  where category_event_id=" . _esc($event["event_id"]);
+
         if (!$res = ShopDB::query($query)){
           user_error(shopDB::error());
           return;
         }
-        echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='10'>\n";
-        echo "<tr><td class='admin_list_title' colspan='2' align='center' >" .
-        $events[$i]["event_name"] . " " . formatAdminDate($events[$i]["event_date"]) . " " . formatTime($events[$i]["event_time"]) . "</td></tr>\n";
         $alt = 0;
         while ($cat = shopDB::fetch_assoc($res)){
-          echo "<tr class='admin_list_row_$alt'><td class='admin_list_item'  width='200'><img src='{$this->img_pub[$cat['category_status']]}'>&nbsp;" .
-          $cat["category_name"] . "</td><td class='admin_list_item' align='left'>";
+          echo "<tr class='admin_list_row_$alt'>
+                  <td class='stats_event_item' witdh='40' align='right'>&nbsp;</td>
+                  <td class='admin_list_item' width='150'>
+                     " . $cat["category_name"] . "
+                  </td>
+                  <td class='admin_list_item' align='left' width='250'>";
           $tot = $cat["cs_total"];
           $free = $cat["cs_free"];
-          $this->plotBar($tot, $free, $weight);
-          echo "</td></tr>";
+          $this->plotBar($tot, $free);
+          echo "</tr>";
           $alt = ($alt + 1) % 2;
         }
-        echo "</table>";
-        echo "<br>";
+        echo "<tr class='stats_event_item'>
+               <td class='admin_list_item' colspan=2  width='150'>&nbsp;</td>
+               <td class='admin_list_item' width='250'>";
+        $this->plotBar($evtot, $evfree);
+        echo "</tr><tr><td colapsn='4'></td>";
       }
     }
   }
 
-  function plotBar ($tot, $free, $weight)
-  {
+  function plotBar ($tot, $free){
     $saled = ($tot - $free);
-    $width = ceil($tot * $weight) + 150;
-    $wsaled = ceil($saled * $weight);
-    $wfree = ceil($free * $weight);
     $percent = 100 * $saled / $tot;
-    $percent = round($percent, 2);
+    $percent = round($percent, 0);
     echo "<table border='0' cellspacing='0' width='100%'><tr>";//$width
-    if ($wsaled > 0){
-      echo "<td bgcolor='#ff0000'><img src='images/dot.gif' width='$wsaled' height='16'></td>";
+    if ($percent > 0){
+      echo "<td bgcolor='#ff0000' width='{$percent}%'><img src='images/dot.gif' width='0' height='13'></td>";
     }
-    if ($wfree > 0){
-      echo "<td bgcolor='#00ff00'><img src='images/dot.gif' width='$wfree' height='16'></td>";
+    if ($percent < 100){
+      echo "<td bgcolor='#00aa00'><img src='images/dot.gif' width='0' height='13'></td>";
     }
-    echo "<td nowrap='nowrap' align='right'>$percent% ($saled/$tot)</td></tr></table>";
+    echo "</tr></table><td nowrap='nowrap' align='right'>$percent% ($saled/$tot)</td>";
   }
 
-  function eventStats ($start_date, $end_date, $month, $year)
-  {
+  function eventStats ($start_date, $end_date, $month, $year){
     global $_SHOP;
     $curr = $_SHOP->currency;
-    $query = "select seat_category_id,SUM(seat_price) as total_sum from Seat group by
+    $query = "select seat_category_id, SUM(seat_price) as total_sum from Seat group by
             seat_category_id";
     if (!$res = ShopDB::query($query)){
       user_error(shopDB::error());
@@ -170,20 +145,19 @@ class StatisticView extends AdminView{
       $sum[$sums["seat_category_id"]] = $sums["total_sum"];
     }
 
-    $query = "select Event_stat.*,event_id,event_name,event_date,event_time, event_status from Event_stat,Event
-             where  es_event_id=event_id and event_status!='unpub'
-	     and event_date >='$start_date'
-	     and event_date<='$end_date'
-	     and event_rep LIKE '%sub%'
-	    order by event_date,event_time";
+    $query = "select Event_stat.*,event_id,event_name,event_date,event_time, event_status
+             from Event left join Event_stat on es_event_id=event_id
+             where event_status != 'unpub'
+      	     and event_date >= '$start_date'
+      	     and event_date <= '$end_date'
+      	     and event_rep LIKE '%sub%'
+             order by event_date, event_time";
     if (!$res = ShopDB::query($query)){
       user_error(shopDB::error());
       return;
     }
-    $i = 0;
     while ($event = shopDB::fetch_assoc($res)){
-      $events[$i] = $event;
-      $i++;
+      $events[] = $event;
     }
 
     echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='5'>\n";
@@ -202,16 +176,17 @@ class StatisticView extends AdminView{
         $evpercent = 100 * $evsaled / $evtot;
         $evpercent = round($evpercent, 2);
 
-        echo "<tr class='stats_event_item'><td colspan='5'>" . $events[$i]["event_name"] . " " .
+        echo "<tr class='stats_event_item'><td colspan='5'><img src='{$this->img_pub[$events[$i]['event_status']]}'>&nbsp;" . $events[$i]["event_name"] . " " .
         formatAdminDate($events[$i]["event_date"]) . " " . formatTime($events[$i]["event_time"]) . "</td></tr>";
 
-        $query = "select * from Category_stat,Category where
-                category_event_id='" . $events[$i]["event_id"] . "'
-  	      and cs_category_id=category_id";
+        $query = "select *
+                  from Category left join Category_stat on cs_category_id=category_id
+                  where category_event_id=" . _esc($events[$i]["event_id"]);
         if (!$res = ShopDB::query($query)){
           user_error(shopDB::error());
           return;
         }
+        $alt = 0;
         while ($cat = shopDB::fetch_assoc($res)){
           $tot = $cat["cs_total"];
           $free = $cat["cs_free"];
@@ -226,19 +201,22 @@ class StatisticView extends AdminView{
           }
           $sum_gain += $gain;
           echo "
-                <tr><td class='stats_event_item' align='right'>&nbsp;</td>
-                    <td class='stats_cat_item' witdh='20'><img src='{$this->img_pub[$cat['category_status']]}'>&nbsp;" .$cat["category_name"] . "</td>
-                    <td align='right' class='stats_cat_item' align='50%'>$percent%</td>
-  	                <td align='right' class='stats_cat_item'>$saled/$tot</td>
-                    <td class='stats_cat_item' align='right'> " . sprintf("%1.2f", $gain) . " $curr</td>
+                <tr  class='admin_list_row_$alt'>
+                    <td class='stats_event_item' witdh='20' align='right'>&nbsp;</td>
+                    <td >" .$cat["category_name"] . "</td>
+                    <td align='right' >$percent%</td>
+  	                <td align='right' >$saled/$tot</td>
+                    <td align='right'> " . sprintf("%1.2f", $gain) . " $curr</td>
                 </tr>";
+          $alt = ($alt + 1) % 2;
         }
-        echo "<tr class='stats_event_item'><td colspan='2'>&nbsp;&nbsp;</td>";
-        echo "<td align='right' >$evpercent%</td><td align='right' >$evsaled/$evtot</td>
-        <td align='right'>  " . sprintf("%1.2f", $sum_gain) . " $curr</td>";
-        echo "</tr><tr><td colapsn='5'>&nbsp;&nbsp;</td>";
-
-        echo "</tr>";
+        echo "
+              <tr class='stats_event_item'>
+                <td colspan='2'>&nbsp;&nbsp;</td>
+                <td align='right' >$evpercent%</td><td align='right' >$evsaled/$evtot</td>
+                <td align='right'>  " . sprintf("%1.2f", $sum_gain) . " $curr</td>
+              </tr>";
+        echo "<tr><td colapsn='5'></td></tr>";
         $sum_gain = 0;
       }
     }
@@ -283,7 +261,8 @@ class StatisticView extends AdminView{
     }
 
 
-    $menu = array(con('show_text_stats')=>"?tab=0", con('show_grafik_stats')=>'?tab=1');
+    $menu = array(con('show_text_stats')=>"?tab=0&month={$month }&year={$year}",
+                  con('show_grafik_stats')=>"?tab=1&month={$month }&year={$year}");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_STATS_tab'], "left");
 
     if ((int)$_SESSION['_STATS_tab'] == 1){

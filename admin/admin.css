@@ -180,6 +180,8 @@ font-weight:bold;
 
 .admin_order_ord{background-color:#99ccff;}
 
+.admin_order_pending{background-color:#77aaee;}
+
 .admin_order_payed{background-color:#99ffcc;}
 
 .admin_order_send{background-color:#ffcccc;}

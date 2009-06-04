@@ -150,9 +150,9 @@ class OrtView extends AdminView {
 //            echo "<td class='admin_list_item'>{$row['ort_id']}</td>\n";
             echo "<td class='admin_list_item' width='50%'>{$row['ort_name']}</td>\n";
             echo "<td class='admin_list_item'>{$row['ort_city']}</td>\n";
-//            echo "<td class='admin_list_item' width='10'><a class='link' href='view_ort.php?action=view&ort_id={$row['ort_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a></td>\n";
-            echo "<td class='admin_list_item'width='35'><a class='link' href='view_ort.php?action=edit&ort_id={$row['ort_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>";
-            echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"view_ort.php?action=remove&ort_id={$row['ort_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
+//            echo "<td class='admin_list_item' width='10'><a class='link' href='{$_SERVER['PHP_SELF']}?action=view&ort_id={$row['ort_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a></td>\n";
+            echo "<td class='admin_list_item'width='35'><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>";
+            echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&ort_id={$row['ort_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
             echo "</tr>";
             $alt = ($alt + 1) % 2;
         }

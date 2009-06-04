@@ -312,7 +312,7 @@ function extra_form($hand, &$data, &$err){
 
     $smarty = new Smarty;
     $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
-    $smarty->compile_id   = 'AdminHandling' ;
+    $smarty->compile_id   = 'AdminHandling_'.$_SHOP->lang;
     $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
     $smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
     $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;

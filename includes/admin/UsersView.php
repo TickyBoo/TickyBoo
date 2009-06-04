@@ -34,7 +34,9 @@ class UsersView extends AdminView {
       $_SESSION['_ADMIN_tab'] = (int)$_REQUEST['tab'];
     }
 
-    $menu = array("Admins"=>"?tab=0", "Organizers"=>'?tab=1', "Sale points"=>"?tab=2", "Controlers"=>"?tab=3");
+    $menu = array("Admins"=>"?tab=0", "Organizers"=>'?tab=1',
+                  "Sale points"=>"?tab=2", "Controlers"=>"?tab=3",
+                  con('ort_admin')=>"?tab=4");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_ADMIN_tab'], "left");
 
     switch ((int)$_SESSION['_ADMIN_tab'])
@@ -60,6 +62,12 @@ class UsersView extends AdminView {
        case 3:
            require_once ('ControlView.php');
            $viewer = new controlView($this->width);
+           $viewer->draw();
+           break;
+
+       case 4:
+           require_once ('OrtView.php');
+           $viewer = new OrtView($this->width);
            $viewer->draw();
            break;
 

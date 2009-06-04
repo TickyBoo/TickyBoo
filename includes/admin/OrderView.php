@@ -262,21 +262,22 @@ function order_details ($order_id){
 
 function order_list (){
   global $_SHOP;
-  $query='SELECT order_handling_id, order_shipment_status, order_payment_status, order_status, count( * ) as count, Handling.* '.
-         'FROM `Order` , Handling FORCE INDEX (PRIMARY) '.
-	 "WHERE order_handling_id=handling_id ".
-	 "and Order.order_status!='trash' ".
-   'GROUP BY order_handling_id, order_status, order_shipment_status, order_payment_status '.
-	 'ORDER BY order_handling_id, order_status, order_shipment_status, order_payment_status ';
+  $query="SELECT order_handling_id, order_shipment_status, order_payment_status, order_status, count( * ) as count,
+                 handling_id, handling_shipment, handling_payment, handling_sale_mode
+          FROM `Order` left join Handling on order_handling_id=handling_id
+          WHERE Order.order_status!='trash'
+          GROUP BY order_handling_id, order_status, order_shipment_status, order_payment_status
+          ORDER BY order_handling_id, order_status, order_shipment_status, order_payment_status ";
 
   if(!$res=ShopDB::query($query)){return;}
 
-  $tr['ord']=order_type_ordered;
-  $tr['send']=order_type_sended;
-  $tr['cancel']=order_type_canceled;
-  $tr['reemit']=order_type_reemited;
-  $tr['payed']=order_type_payed;
-  $tr['res']=order_type_reserved;
+  $tr['ord']     = con('order_type_ordered');
+  $tr['send']    = con('order_type_sended');
+  $tr['cancel']  = con('order_type_canceled');
+  $tr['reemit']  = con('order_type_reemited');
+  $tr['pending'] = con('order_type_pending');
+  $tr['payed']   = con('order_type_payed');
+  $tr['res']     = con('order_type_reserved');
 
 	$this->list_head(order_list_title,1);
 	echo '</table></br>';
@@ -289,10 +290,10 @@ function order_list (){
       $sum=0;
       echo "<table class='admin_list' width='$this->width' cellspacing='1'
       cellpadding='4' border='0'>\n";
-      echo "<tr><td class='admin_list_title' colspan='4' align='center'>
+      echo "<tr><td class='admin_list_title' colspan='4'>
       <a href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand' class=link>".
-      con($obj->handling_shipment)." / ".
-      con($obj->handling_payment)."  <a href='view_handling.php?action=view&handling_id={$obj->handling_id}' class=link> (#{$obj->handling_id} {$obj->handling_sale_mode})</a></td></tr>\n";
+      con($obj->handling_payment)." / ".con($obj->handling_shipment)
+      ." <a href='view_handling.php?action=view&handling_id={$obj->handling_id}' class=link> (#{$obj->handling_id} {$obj->handling_sale_mode})</a></td></tr>\n";
 
 		}
 		$alt=$this->_order_status_color((array)$obj);
@@ -319,6 +320,78 @@ function order_list (){
   }
 
   if(isset($hand)){echo '<tr><td colspan=4 align=right>'.total.' : '.$sum.' </td></tr></table><br>' ;}
+}
+function order_event_list (){
+  global $_SHOP;
+  $query="SELECT distinct seat_event_id, seat_order_id, order_shipment_status, order_payment_status, order_status,
+                 event_id, event_name, event_status, event_date, event_time
+          FROM  Seat left join (Event CROSS JOIN `Order`) on (seat_order_id=order_id AND seat_event_id= event_id)
+          WHERE Order.order_status!='trash'
+          ORDER BY seat_event_id, order_status, order_shipment_status, order_payment_status ";
+
+  if(!$res=ShopDB::query($query)){return;}
+  while($obj=shopDB::fetch_assoc($res)){
+    If (!isset($orders[$obj['event_id']])) {
+      $orders[$obj['event_id']]['_name'] = $obj;
+      $orders[$obj['event_id']]['_name']['count'] = 0;
+    }
+    $orders[$obj['event_id']]['_name']['count'] += 1;
+    $key = $obj['order_status'].$obj['order_shipment_status']. $obj['order_payment_status'];
+    If (!isset($orders[$obj['event_id']]['_orders'][$key])) {
+      $orders[$obj['event_id']]['_orders'][$key] = $obj;
+      $orders[$obj['event_id']]['_orders'][$key]['count'] = 0;
+    }
+    $orders[$obj['event_id']]['_orders'][$key]['count'] += 1;
+  }
+  $tr['ord']     = con('order_type_ordered');
+  $tr['send']    = con('order_type_sended');
+  $tr['cancel']  = con('order_type_canceled');
+  $tr['reemit']  = con('order_type_reemited');
+  $tr['pending'] = con('order_type_pending');
+  $tr['payed']   = con('order_type_payed');
+  $tr['res']     = con('order_type_reserved');
+
+	$this->list_head(order_event_list_title,1);
+	echo '</table></br>';
+
+  foreach ($orders  as $obj){
+    $head = $obj['_name'];
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
+    echo "<tr>
+            <td class='admin_list_title' >
+              <a href='{$_SERVER['PHP_SELF']}?action=event_all&event_id={$head['event_id']}' class=link>
+                {$head['event_name']}. </a>
+              <a href='view_event.php?action=view&event_id={$head['event_id']}' class=link> (#{$head['event_id']})</a>
+            </td>
+            <td align=right>".con('total')." : {$head['count']}</td>
+          </tr>" ;
+
+    foreach ($obj['_orders'] as $obj2) {
+  		$alt=$this->_order_status_color($obj2);
+
+      $link = "<a class=link href='{$_SERVER['PHP_SELF']}?action=event_all&event_id={$head['event_id']}".
+                                                                         "&order_status={$obj2['order_status']}".
+                                                                         "&order_shipment_status={$obj2['order_shipment_status']}".
+                                                                         "&order_payment_status={$obj2['order_payment_status']}'>";
+
+/*  		if($obj->order_status=='cancel'){
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&event_id=$hand'>".purge."</a>)";
+  		}elseif($obj->order_status=='reemit'){
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".purge."</a>)";
+  		}else{
+  			$purge='';
+  		} */
+
+  		echo "<tr class='admin_order_$alt'>
+            <td class=admin_list_item align=left width='80%'>$link{$tr[$obj2['order_status']]}
+            {$tr[$obj2['order_payment_status']]}
+            {$tr[$obj2['order_shipment_status']]}</a> </td>
+            <td class=admin_list_item align=right >
+  	  {$obj2['count']}</td></tr>\n";
+      $alt=($alt+1)%2;
+    }
+   echo "</table><br>";
+  }
 }
 
 function order_sub_list ($order_handling_id,$order_status,$order_shipment_status,$order_payment_status,$page){
@@ -352,11 +425,13 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
   if(!$count=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
   if(!$hand=Handling::load($order_handling_id)){return;}
 
-  $tr['ord']=order_type_ordered;
-  $tr['send']=order_type_sended;
-  $tr['cancel']=order_type_canceled;
-  $tr['reemit']=order_type_reemited;
-  $tr['payed']=order_type_payed;
+  $tr['ord']     = con('order_type_ordered');
+  $tr['send']    = con('order_type_sended');
+  $tr['cancel']  = con('order_type_canceled');
+  $tr['reemit']  = con('order_type_reemited');
+  $tr['pending'] = con('order_type_pending');
+  $tr['payed']   = con('order_type_payed');
+  $tr['res']     = con('order_type_reserved');
   $tr['none']='-';
 
   echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
@@ -365,8 +440,6 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
                    con($hand->handling_payment).
 		   " ({$tr[$order_shipment_status]}/{$tr[$order_payment_status]})
   </td></tr>\n";
-
-
 
   while($row=shopDB::fetch_array($res)){
 		$alt=$this->_order_status_color($row);
@@ -387,6 +460,75 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 
 }
 
+function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$order_payment_status,$page){
+  global $_SHOP;
+  require_once('classes/Event.php');
+
+  $tr['ord']     = con('order_type_ordered');
+  $tr['send']    = con('order_type_sended');
+  $tr['cancel']  = con('order_type_canceled');
+  $tr['reemit']  = con('order_type_reemited');
+  $tr['pending'] = con('order_type_pending');
+  $tr['payed']   = con('order_type_payed');
+  $tr['res']     = con('order_type_reserved');
+
+
+  $where= "event_id='$event_id'";
+  $info = '';
+  if($order_status){
+    $where.=" and order_status='$order_status'";
+    $info .= $tr[$order_status];
+    
+  }
+
+  if($order_shipment_status){
+    $where.=" and order_shipment_status='$order_shipment_status'";
+    $info .= $tr[$order_shipment_status];
+  }
+
+  if($order_payment_status){
+     $where.=" and order_payment_status='$order_payment_status'";
+    $info .= $tr[$order_payment_status];
+   }
+
+   $limit=$this->get_limit($page);
+
+  $query="SELECT SQL_CALC_FOUND_ROWS distinct seat_order_id, `Order`.*
+          FROM  Seat left join (Event CROSS JOIN `Order`) on (seat_order_id=order_id AND seat_event_id= event_id)
+          WHERE $where
+          ORDER BY order_date DESC
+          LIMIT {$limit['start']},{$limit['end']}";
+
+
+  if(!$res=ShopDB::query($query)){return;}
+  if(!$count=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
+  $event = Event::load($event_id);
+  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
+  echo "<tr>
+          <td class='admin_list_title' colspan='5' align='center'>
+            <a href='view_event.php?action=view&event_id={$event->event_id}' class=link>#{$event->event_id}</a>
+            {$event->event_name} {$event->event_date} {$hand->event_time} ({$info})
+          </td>
+        </tr>\n";
+  while($row=shopDB::fetch_array($res)){
+		$alt=$this->_order_status_color($row);
+
+    echo "<tr class='admin_order_$alt'><td class='admin_list_item'>".$row["order_id"]."</td>
+    <td class='admin_list_item'>".$row["order_total_price"]."</td>
+    <td class='admin_list_item'>".$row["order_date"]."</td>";
+
+    $com=$this->order_commands($row,TRUE);
+    echo "<td class='admin_list_item'>".$com["details"]." ".$com["print"]."</td>
+          <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reemit"]." ".$com["delete"]."</td>";
+    echo "</tr>";
+  }
+
+  echo "</table>";
+  echo "<br>".
+       $this->get_nav ($page,$count[0],"action=event_all&event_id=$event_id&order_status=$order_status&order_shipment_status=$order_shipment_status&order_payment_status=$order_payment_status");
+
+}
+
 function _order_status_color($row){
     $alt='';
     if($row['order_status']=='ord' and ($row['order_payment_status']!='none' or $row['order_shipment_status']!='none')){
@@ -404,6 +546,12 @@ function _order_status_color($row){
 
 function draw (){
   global $_SHOP;
+    if(isset($_REQUEST['tab'])) {
+      $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
+    }
+
+    $menu = array("Handlings"=>"?tab=0", "Events"=>'?tab=1');
+    echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
 
   if(preg_match('/^set_status_/',$_GET['action1']) and $_GET['order_id1']>0){
     if(!$order=Order::load($_GET['order_id1'])){return;}
@@ -442,23 +590,30 @@ function draw (){
     Order::order_delete($_GET["order_id"], 0);
     $this->order_details($_GET["order_id"]);
 
-  } else
-  if($_GET['action']=='list_all'){
+  } elseif($_GET['action']=='list_all'){
     $this->order_sub_list($_GET["order_handling_id"],
                           $_GET["order_status"],
                           $_GET["order_shipment_status"],
                           $_GET["order_payment_status"],
 			                    $_GET["page"]);
 
-//    $this->order_byshipment($_GET["order_type"],$_GET["page"]);
+  } elseif($_GET['action']=='event_all'){
+    $this->order_event_sub_list($_GET["event_id"],
+                                $_GET["order_status"],
+                                $_GET["order_shipment_status"],
+                                $_GET["order_payment_status"],
+      			                    $_GET["page"]);
+
 	} else if($_GET['action']=='purge_deleted'){
 		Order::purgeDeleted((int)$_GET['order_handling_id']);
     $this->order_list();
 	} else if($_GET['action']=='purge_reemited'){
 		Order::purgeReemited((int)$_GET['order_handling_id']);
     $this->order_list();
-  } else{
-    $this->order_list();
+  } elseif($_SESSION['_overview_tab']==1) {
+     $this->order_event_list();
+  } else {
+     $this->order_list();
   }
 }
 

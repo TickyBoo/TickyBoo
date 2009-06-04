@@ -143,7 +143,6 @@ class AdminPage extends AUIComponent {
 		</script>
   </head>
   <body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 >";
-        if (isset($this->errmsg)) echo "<div class=''error'>$this->errmsg</div>";
         echo "<center><table border='0' width='" . $this->width . "'  cellspacing='0' cellpadding='0' bgcolor='#ffffff' >
              <tr>
                <td  colspan='2' style='padding-left:20px;padding-bottom:5px;'>
@@ -161,8 +160,8 @@ class AdminPage extends AUIComponent {
             echo"<option value='$lang' {$sel[$lang]}>$name</option>";
         }
         echo "</select>";
-
         echo"</td></tr></table><br>";
+        if (isset($this->errmsg)) echo "<div class='error'>$this->errmsg</div><br>";
     }
 
     function drawFoot()
