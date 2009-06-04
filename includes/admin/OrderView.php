@@ -646,11 +646,12 @@ function print_order_status ($order){
     <tr><td align='center' class='menu_admin_title'>".legende."</td></tr>
     <tr><td class='admin_order_res' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".reserved."</td></tr>
     <tr><td class='admin_order_ord' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".ordered."</td></tr>
-    <tr><td class='admin_order_send' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".sended."</td></tr>
+    <tr><td class='admin_order_pending' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".pending."</td></tr>
     <tr><td class='admin_order_payed' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".payed."</td></tr>
+    <tr><td class='admin_order_send' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".sended."</td></tr>
+    <tr><td class='admin_order_payedsend' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".payed_and_send."</td></tr>
     <tr><td class='admin_order_cancel' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".canceled."</td></tr>
     <tr><td class='admin_order_reemit' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".reemited."</td></tr>
-    <tr><td class='admin_order_payedsend' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".payed_and_send."</td></tr>
     </table><br>";
 
     if($_GET["action"]=='list_all' or $_GET["action"]=='list_type' or $_GET["action"]=='details'){
