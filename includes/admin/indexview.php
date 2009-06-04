@@ -22,8 +22,7 @@ $licention = <<<EOQ
   The "GNU General Public License" (GPL) is available at
   http://www.gnu.org/copyleft/gpl.html.
 
-  Contact info@fusionticket.com if any conditions of this licencing isn't
-  clear to you.
+  Contact info@fusionticket.com if any conditions of this licencing isn't clear to you.
 EOQ;
 
 require_once("admin/AdminView.php");

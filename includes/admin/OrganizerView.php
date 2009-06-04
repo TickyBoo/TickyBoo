@@ -61,14 +61,6 @@ class OrganizerView extends AdminView{
 
     $this->print_file('organizer_logo',$data,$err);
 
-  /*  echo "<tr> <td class='admin_name'>".old_password."</td>
-           <td class='admin_value'><input type='password' name='old_password' size='10'  maxlength='10'>
-  	 <span class='err'>{$err['old_password']}</span></td></tr>
-           <tr> <td class='admin_name'>".new_password."</td>
-           <td class='admin_value'><input type='password' name='new_password1' size='10'  maxlength='10'><span class='err'>{$err['new_password']}</span></td> </tr>
-  	 <tr> <td class='admin_name'>".new_password."</td>
-           <td class='admin_value'><input type='password' name='new_password2' size='10'  maxlength='10'></td></tr>";
-  */
     echo "<tr><td align='center' class='admin_value' colspan='2'>
            <input type='submit' name='save' value='".save."'> &nbsp;";
 
@@ -107,16 +99,14 @@ class OrganizerView extends AdminView{
         }
 
         if(!$this->logo_post($_POST, 0)){
-          echo "<div class=error>".img_loading_problem."<div>";
+          $err['organizer_logo'] = con('img_loading_problem');
         }
 
-       unset($_SESSION['_SHOP_ORGANIZER_DATA']);
-       redirect('admin/view_organizer.php', true);
-       return;
       }
     }
     $query="SELECT * FROM Organizer limit 1";
     $row=ShopDB::query_one_row($query);
+    $_SESSION['_SHOP_ORGANIZER_DATA'] = $row;
     $this->organizer_form($row,$err,organizer_update_title,"update");
   }
 

@@ -351,7 +351,15 @@ class AdminView extends AUIComponent {
             <td class='admin_value'>";
 
             if ($type == 'img') {
-                echo "<img width=300 src='$src'> ";
+                 list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$data[$name]);
+
+                 if (($width>$height) and ($width > 300)) {
+                   $attr = "width='300'";
+                 } elseif ($height > 250) {
+                   $attr = "height='250'";
+                 }
+
+                echo "<img $attr src='$src'>";
             } else {
                 echo "<a href='$src'>{$data[$name]}</a>";
             }
@@ -393,10 +401,14 @@ class AdminView extends AUIComponent {
         global $_SHOP;
 
         $img_field = $name . $suffix;
-        $id_field = $name . '_id';
-
+        if ($id) {
+          $id_field = "WHERE {$name}_id="._esc($id);
+        } else {
+          $id_field = 'Limit 1';
+        }
+          
         if ($data['remove_' . $name . $suffix]==1) {
-            $query = "UPDATE $table SET $img_field='' WHERE $id_field='$id'";
+            $query = "UPDATE $table SET $img_field='' $id_field ";
 //            unlink( $_SHOP->files_dir . "/" .$data['remove_' . $name . $suffix]);
             
         } else
@@ -417,7 +429,7 @@ class AdminView extends AUIComponent {
             }
 
             chmod($_SHOP->files_dir . "/" . $doc_name, $_SHOP->file_mode);
-            $query = "UPDATE $table SET $img_field='$doc_name' WHERE $id_field='$id'";
+            $query = "UPDATE $table SET $img_field='$doc_name' $id_field";
         }
 
         if (!$query or ShopDB::query($query)) {
