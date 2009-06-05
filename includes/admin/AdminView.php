@@ -519,12 +519,14 @@ class AdminView extends AUIComponent {
       $str.= "<td width=\"100%\" align=\"left\">&nbsp;</td>\n";
     }
   	foreach ($linkArray as $k => $v){
-      if($tabCount==$activeTab){$menuStyle="UITabMenuNavOn";}else{$menuStyle="UITabMenuNavOff";}
+      $menuStyle=($tabCount==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
       $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."images/left_arc.gif\"></td>\n";
       $str.= "<td nowrap=\"nowrap\" height=\"16\" align=\"center\" valign=\"middle\" class=\"$menuStyle\">\n";
-      if($tabCount!=$activeTab) $str.= "<a class=\"UITabMenuTab\" href=\"$v\">";
+//      if($tabCount!=$activeTab)
+        $str.= "<a class='$menuStyle' href='$v'>";
       $str.= $k;
-      if($tabCount!=$activeTab) $str.= "</a>";
+//      if($tabCount!=$activeTab)
+        $str.= "</a>";
       $str.= "</td>\n";
       $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."images/right_arc.gif\"></td>\n";
       $str.= "<td width=\"1pt\">&nbsp;</td>\n";
@@ -538,6 +540,41 @@ class AdminView extends AUIComponent {
 	  return $str;
   }
 
+ function get_nav ($page,$count,$condition){
+   if(!isset($page)){ $page=1; }
+
+   echo "<table border='0' width='$this->width'><tr><td align='center'>";
+
+   if($page>1){
+     echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".con('nav_first')."</a>";
+     $prev=$page-1;
+     echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page={$prev}'>".con('nav_prev')."</a>";
+   } else {
+     echo con('nav_first');
+     echo con('nav_prev');
+   }
+
+   $num_pages=ceil($count/$this->page_length);
+   echo "&nbsp;[";
+   for ($i=floor(($page-1)/10)*10+1;$i<=min(ceil($page/10)*10,$num_pages);$i++){
+     if($i==$page){
+       echo "&nbsp;<b>$i</b>";
+     }else{
+       echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$i'>$i</a>";
+     }
+   }
+   echo "&nbsp;]&nbsp;";
+   if($page<$num_pages){
+       $next=$page+1;
+       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".con('nav_next')."</a>";
+       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>". con('nav_last')."</a>";
+   }  else {
+     echo con('nav_next')."\n";
+     echo con('nav_last')."\n";
+   }
+
+   echo "</td></tr></table>";
+ }
 }
 
 ?>

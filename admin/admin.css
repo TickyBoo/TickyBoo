@@ -214,7 +214,7 @@ font-weight:bold;
 
 .mysql_error{font-weight:bold;}
 
-.UITabMenuNavOff{
+td.UITabMenuNavOff{
 background:#dddddd;
 color:#000000;
 font-family:Verdana, Arial, Helvetica, sans-serif;
@@ -224,33 +224,48 @@ text-align: center;
 border-bottom:1px solid #ffffff;
 text-decoration:none;
 }
-.UITabMenuNavOn{
-background: #C0C0C0;
+td.UITabMenuNavOn{
+  background: #C0C0C0;
 	color:#ffffff;
-        text-decoration:none;
+  text-decoration:none;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	font-size:x-small;
 	FONT-VARIANT: small-caps;
 	text-align: center;
-        border-bottom:1px solid #C0C0C0;
+  border-bottom:1px solid #C0C0C0;
 	}
 
 
-A.UITabMenuTab{
+A.UITabMenuNavOff{
 text-decoration:none;
 font-weight: bold;
 }
-A.UITabMenuTab:link{
+
+A.UITabMenuNavOff:link{
   color: #444444;
    }
-A.UITabMenuTab:visited {
+A.UITabMenuNavOff:visited {
   color: #444444;
    }
-A.UITabMenuTab:hover {
+A.UITabMenuNavOff:hover {
   color: #000000;
   text-decoration: underlay;
   }
 
+A.UITabMenuNavOn{
+text-decoration:none;
+font-weight: none;
+}
+
+A.UITabMenuNavOn:link{
+  color: #ffffff;
+   }
+A.UITabMenuNavOn:visited {
+  color: #ffffff;
+   }
+A.UITabMenuNavOn:hover {
+  text-decoration: underlay;
+  }
 
 .UITabMenuChildMenu{
 	background:#000066;

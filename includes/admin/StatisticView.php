@@ -78,11 +78,14 @@ class StatisticView extends AdminView{
                ". con('event_stats_title') ." " . strftime ("%B %Y", mktime (0, 0, 0, $month, 1, $year)) . "
 	             <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . ($month < 12?$month + 1:1) . "&year=" . ($month < 12?$year:$year + 1) . "'>>>>>></a>
             </td></tr>\n";
+ 	  echo "</table><br>\n";
+
     while ($event = shopDB::fetch_assoc($evres)){
       $evtot   = $event["es_total"];
       $evfree  = $event["es_free"];
       $evsaled = ($evtot - $evfree);
       If ($event["event_status"] == 'pub' or $evsaled) {
+        echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='5'>\n";
         echo "<tr class='stats_event_item'>
                 <td class='admin_list_item' colspan=4 ><img src='{$this->img_pub[$event['event_status']]}'>&nbsp;" .
                     $event["event_name"] . " - " . formatAdminDate($event["event_date"]) . " " . formatTime($event["event_time"]) . "
@@ -99,8 +102,8 @@ class StatisticView extends AdminView{
         $alt = 0;
         while ($cat = shopDB::fetch_assoc($res)){
           echo "<tr class='admin_list_row_$alt'>
-                  <td class='stats_event_item' witdh='40' align='right'>&nbsp;</td>
-                  <td class='admin_list_item' width='150'>
+                  <td class='stats_event_item' width='20' align='right'>&nbsp;</td>
+                  <td class='admin_list_item' width='180'>
                      " . $cat["category_name"] . "
                   </td>
                   <td class='admin_list_item' align='left' width='250'>";
@@ -111,10 +114,11 @@ class StatisticView extends AdminView{
           $alt = ($alt + 1) % 2;
         }
         echo "<tr class='stats_event_item'>
-               <td class='admin_list_item' colspan=2  width='150'>&nbsp;</td>
+               <td class='admin_list_item' colspan=2  width='200'>&nbsp;</td>
                <td class='admin_list_item' width='250'>";
         $this->plotBar($evtot, $evfree);
-        echo "</tr><tr><td colapsn='4'></td>";
+        echo "</tr>";
+    	  echo "</table><br>\n";
       }
     }
   }
@@ -125,10 +129,10 @@ class StatisticView extends AdminView{
     $percent = round($percent, 0);
     echo "<table border='0' cellspacing='0' width='100%'><tr>";//$width
     if ($percent > 0){
-      echo "<td bgcolor='#ff0000' width='{$percent}%'><img src='images/dot.gif' width='0' height='13'></td>";
+      echo "<td bgcolor='#ff0000' width='{$percent}%'><img src='images/dot.gif' width='0' height='12'></td>";
     }
     if ($percent < 100){
-      echo "<td bgcolor='#00aa00'><img src='images/dot.gif' width='0' height='13'></td>";
+      echo "<td bgcolor='#00aa00'><img src='images/dot.gif' width='0' height='12'></td>";
     }
     echo "</tr></table><td nowrap='nowrap' align='right'>$percent% ($saled/$tot)</td>";
   }
@@ -168,6 +172,7 @@ class StatisticView extends AdminView{
     strftime ("%B %Y", mktime (0, 0, 0, $month, 1, $year)) .
     "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	  <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . (($month < 12)?($month + 1):1) . "&year=" . ($month < 12?$year:$year + 1) . "'>>>>>></a></td></tr>\n";
+	  echo "</table><br>\n";
     for($i = 0;$i < sizeof($events);$i++){
       $evtot = $events[$i]["es_total"];
       $evfree = $events[$i]["es_free"];
@@ -176,6 +181,7 @@ class StatisticView extends AdminView{
         $evpercent = ($evtot)?(100 * $evsaled / $evtot):0;
         $evpercent = round($evpercent, 2);
 
+        echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='5'>\n";
         echo "<tr class='stats_event_item'><td colspan='5'><img src='{$this->img_pub[$events[$i]['event_status']]}'>&nbsp;" . $events[$i]["event_name"] . " " .
         formatAdminDate($events[$i]["event_date"]) . " " . formatTime($events[$i]["event_time"]) . "</td></tr>";
 
@@ -202,25 +208,28 @@ class StatisticView extends AdminView{
           $sum_gain += $gain;
           echo "
                 <tr  class='admin_list_row_$alt'>
-                    <td class='stats_event_item' witdh='20' align='right'>&nbsp;</td>
-                    <td >" .$cat["category_name"] . "</td>
-                    <td align='right' >$percent%</td>
-  	                <td align='right' >$saled/$tot</td>
+                    <td class='stats_event_item' width='20'>&nbsp;</td>
+                    <td width='180'>" .$cat["category_name"] . "</td>
+                    <td width='125' align='right' >$percent%</td>
+  	                <td width='125' align='right' >$saled/$tot</td>
                     <td align='right'> " . sprintf("%1.2f", $gain) . " $curr</td>
                 </tr>";
           $alt = ($alt + 1) % 2;
         }
         echo "
               <tr class='stats_event_item'>
-                <td colspan='2'>&nbsp;&nbsp;</td>
-                <td align='right' >$evpercent%</td><td align='right' >$evsaled/$evtot</td>
+                <td width='200' colspan='2'>&nbsp;&nbsp;</td>
+                <td width='125' align='right' >$evpercent%</td>
+                <td width='125' align='right' >$evsaled/$evtot</td>
                 <td align='right'>  " . sprintf("%1.2f", $sum_gain) . " $curr</td>
               </tr>";
-        echo "<tr><td colapsn='5'></td></tr>";
+   //     echo "<tr><td colapsn='5'></td></tr>";
+    	  echo "</table><br>\n";
+
         $sum_gain = 0;
       }
     }
-    echo "</table>";
+    //echo "</table>";
   }
 
   function draw ()

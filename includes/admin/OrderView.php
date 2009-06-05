@@ -183,35 +183,6 @@ function order_details ($order_id){
 
  }
 
- function get_nav ($page,$count,$condition){
-   if(!isset($page)){ $page=1; }
-
-   echo "<table border='0' width='$this->width'><tr><td align='center'>";
-   echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".firstpage."</a>";
-
-   if($page>1){
-     $prev=$page-1;
-     echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$prev'>".previouspage."</a>";
-   }
-   $num_pages=ceil($count/$this->page_length);
-   echo "&nbsp;[";
-   for ($i=floor(($page-1)/10)*10+1;$i<=min(ceil($page/10)*10,$num_pages);$i++){
-     if($i==$page){
-       echo "&nbsp;<b>$i</b>";
-     }else{
-       echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$i'>$i</a>";
-     }
-   }
-   echo "&nbsp;]&nbsp;";
-   $next=$page+1;
-     if($next*$this->page_length<$count){
-       echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".nextpage."</a>";
-     }
-   echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>".lastpage."</a>";
-
-   echo "</td></tr></table>";
- }
-
  function ticket_commands ($order_id,$ticket_id){
    $params=$_GET;
    $params['seat_id']=$ticket_id;
@@ -262,7 +233,7 @@ function order_details ($order_id){
 
 function order_list (){
   global $_SHOP;
-  $query="SELECT order_handling_id, order_shipment_status, order_payment_status, order_status, count( * ) as count,
+  $query="SELECT order_handling_id id, order_shipment_status, order_payment_status, order_status, count( * ) as count,
                  handling_id, handling_shipment, handling_payment, handling_sale_mode
           FROM `Order` left join Handling on order_handling_id=handling_id
           WHERE Order.order_status!='trash'
@@ -270,6 +241,14 @@ function order_list (){
           ORDER BY order_handling_id, order_status, order_shipment_status, order_payment_status ";
 
   if(!$res=ShopDB::query($query)){return;}
+  while($obj=shopDB::fetch_assoc($res)){
+    If (!isset($orders[$obj['id']])) {
+      $orders[$obj['id']]['_name'] = $obj;
+    } else
+      $orders[$obj['id']]['_name']['count'] += $obj['count'];
+    $key = $obj['order_status'].$obj['order_shipment_status']. $obj['order_payment_status'];
+    $orders[$obj['id']]['_orders'][$key] = $obj;
+  }
 
   $tr['ord']     = con('order_type_ordered');
   $tr['send']    = con('order_type_sended');
@@ -282,44 +261,47 @@ function order_list (){
 	$this->list_head(order_list_title,1);
 	echo '</table></br>';
 
-  while($obj=shopDB::fetch_object($res)){
-    if($hand!=$obj->handling_id){
-      if(isset($hand)){echo '<tr><td colspan=4 align=right>'.total.' : '.$sum.' </td></tr></table><br>' ;}
+  foreach ($orders as $obj2){
+    $hand = $obj2['_name']['id'];
+    $obj = $obj2['_name'];
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
+    echo "<tr class='stats_event_item' >
+           <td>
+            <a href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand' class='UITabMenuNavOff'>
+              ".con($obj['handling_payment'])." / ".con($obj['handling_shipment'])."
+            </a> (<a href='view_handling.php?action=view&handling_id={$hand}' class='UITabMenuNavOff'>
+               #{$obj['handling_id']} {$obj['handling_sale_mode']}
+            </a>)
+           </td>\n";
+    echo " <td align=right>".con('total').' : '.$obj['count'].' </td></tr>' ;
 
-      $hand=$obj->handling_id;
-      $sum=0;
-      echo "<table class='admin_list' width='$this->width' cellspacing='1'
-      cellpadding='4' border='0'>\n";
-      echo "<tr><td class='admin_list_title' colspan='4'>
-      <a href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand' class=link>".
-      con($obj->handling_payment)." / ".con($obj->handling_shipment)
-      ." <a href='view_handling.php?action=view&handling_id={$obj->handling_id}' class=link> (#{$obj->handling_id} {$obj->handling_sale_mode})</a></td></tr>\n";
+    foreach ($obj2['_orders'] as $obj){
+  		$alt=$this->_order_status_color($obj);
 
-		}
-		$alt=$this->_order_status_color((array)$obj);
+      $link = "<a class=link href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand".
+                                                                        "&order_status={$obj['order_status']}".
+                                                                        "&order_shipment_status={$obj['order_shipment_status']}".
+                                                                        "&order_payment_status={$obj['order_payment_status']}'>";
+  		if($obj['order_status']=='cancel'){
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&order_handling_id=$hand'>".purge."</a>)";
+  		}elseif($obj['order_status']=='reemit'){
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".purge."</a>)";
+  		}else{
+  			$purge='';
+  		}
 
-    $link = "<a class=link href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand&order_status={$obj->order_status}&order_shipment_status={$obj->order_shipment_status}&order_payment_status={$obj->order_payment_status}'>";
-
-		if($obj->order_status=='cancel'){
-		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&order_handling_id=$hand'>".purge."</a>)";
-		}elseif($obj->order_status=='reemit'){
-		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".purge."</a>)";
-		}else{
-			$purge='';
-		}
-
-		echo "<tr class='admin_order_$alt'>
-          <td class=admin_list_item align=left width='80%'>$link{$tr[$obj->order_status]}
-          {$tr[$obj->order_payment_status]}
-          {$tr[$obj->order_shipment_status]}</a> $purge </td>
-          <td class=admin_list_item align=right >
-	  {$obj->count}</td></tr>\n";
-
-    $sum+=$obj->count;
-    $alt=($alt+1)%2;
+  		echo "<tr class='admin_order_$alt'>
+              <td class=admin_list_item align=left width='80%'>$link{$tr[$obj['order_status']]}
+              {$tr[$obj['order_payment_status']]}
+              {$tr[$obj['order_shipment_status']]}</a> $purge </td>
+              <td class=admin_list_item align=right >
+  	            {$obj['count']}
+              </td>
+            </tr>\n";
+      $alt=($alt+1)%2;
+    }
+    echo "</table><br>" ;
   }
-
-  if(isset($hand)){echo '<tr><td colspan=4 align=right>'.total.' : '.$sum.' </td></tr></table><br>' ;}
 }
 function order_event_list (){
   global $_SHOP;
@@ -357,11 +339,11 @@ function order_event_list (){
   foreach ($orders  as $obj){
     $head = $obj['_name'];
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
-    echo "<tr>
-            <td class='admin_list_title' >
-              <a href='{$_SERVER['PHP_SELF']}?action=event_all&event_id={$head['event_id']}' class=link>
+    echo "<tr class='stats_event_item'>
+            <td >
+              <a href='{$_SERVER['PHP_SELF']}?action=event_all&event_id={$head['event_id']}' class='UITabMenuNavOff'>
                 {$head['event_name']}. </a>
-              <a href='view_event.php?action=view&event_id={$head['event_id']}' class=link> (#{$head['event_id']})</a>
+              (<a href='view_event.php?action=view&event_id={$head['event_id']}' class='UITabMenuNavOff'>#{$head['event_id']}</a>)
             </td>
             <td align=right>".con('total')." : {$head['count']}</td>
           </tr>" ;

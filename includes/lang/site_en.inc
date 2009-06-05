@@ -475,7 +475,7 @@ define("ordernumber","Order Number");
 define("order","Order");
 define("orders","Orders");
 define("ordertickets","To Order Tickets Click below:");
-define("order_admin","Orders / Tickets");
+define("order_admin","Order overview");
 define("order_allready_cancelled","Order Allready cancelled");
 define("order_canceled","Order cancelled");
 define("order_cannot_change_to_payed","Can not change status to &apos;Payed&apos;");
@@ -1057,4 +1057,6 @@ define('index_ort_count','%d');
 define('index_events_count','<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d');
 define('index_admins_count','<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Controlers:</b> %d, <b>Total:</b> %d');
 define('admin_user_update_title','All Administrators');
+define('option_others_title','Other options');
+define('order_event_list_title','Order overview per event');
 ?>
