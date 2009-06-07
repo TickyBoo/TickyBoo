@@ -1009,7 +1009,7 @@ class Order {
     $orderqry = '
         SELECT * FROM `Order` left join User     on (order_user_id= user_id)
                               left join Handling on (order_handling_id = handling_id)
-        where order_id = '.ShopDB::quote($order_id);
+        where order_id = '._esc($order_id);
 
     $seatqry = '
         SELECT * FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id
@@ -1017,16 +1017,17 @@ class Order {
                            left join Ort      on ort_id = event_ort_id
                            left join Category on category_id = seat_category_id
                            left join PlaceMapZone on seat_zone_id = pmz_id
-        WHERE seat_order_id = '.ShopDB::quote($order_id);
+                           left join PlaceMapPart on seat_pmp_id = pmp_id
+        WHERE seat_order_id = '._esc($order_id);
 
 
     if(!$order=ShopDB::query_one_row($orderqry)){
-      echo 'error';
+      echo 'error: cant load orderdata';
       return FALSE;
     }
 
     if(!$res=ShopDB::query($seatqry)){
-      echo 'error 1';
+      echo 'error: cant load ticket data';
       return FALSE;
     }
 
@@ -1095,10 +1096,10 @@ class Order {
     foreach($seats as $seat) {
   		if($hand->handling_pdf_ticket_template){
         $tpl_id=$hand->handling_pdf_ticket_template;
-  		}else if($data['category_template']){
-        $tpl_id=$data['category_template'];
-      }else if($data['event_template']){
-        $tpl_id=$data['event_template'];
+  		}else if($seat['category_template']){
+        $tpl_id=$seat['category_template'];
+      }else if($seat['event_template']){
+        $tpl_id=$seat['event_template'];
       }else{
   		  $tpl_id=false;
   		}
@@ -1106,7 +1107,7 @@ class Order {
       if($tpl_id and ($subj & 1)){
   			//load the template
   			if(!$tpl =& $te->getTemplate($tpl_id)){
-  				user_error(no_template.": name: {$tpl_id} cat: {$data['category_id']}, event: {$data['event_id']}");
+  				user_error(no_template.": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
   				return FALSE;
   			}
 
