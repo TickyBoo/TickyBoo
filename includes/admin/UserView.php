@@ -39,8 +39,9 @@ require_once("classes/User.php");
 require_once("admin/AdminView.php");
 
 class UserView extends AdminView{
-  function UserView ($id)
+  function UserView ($width, $id)
   {
+    $this->width   = $width;
     $this->user_id = $id;
   }
 
@@ -49,7 +50,7 @@ class UserView extends AdminView{
     $user["user_country_name"] = $this->getCountry($user["user_country"]);
     $status = $this->print_status($user["user_status"]);
     $user["user_status"] = $status;
-    echo "<table class='admin_form' width='500' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_form' width='{$this->width}' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>{$user["user_lastname"]}
     {$user["user_firstname"]}</td></tr>";
 
@@ -80,7 +81,7 @@ class UserView extends AdminView{
       user_error(shopDB::error());
       return;
     }
-    echo "<br><table class='admin_list' cellspacing='0' cellpadding='5' width='500'>
+    echo "<br><table class='admin_list' cellspacing='0' cellpadding='5' width='{$this->width}'>
    <tr><td class='admin_list_title' colspan='7'>" . orders . "</td></tr>";
     while ($order = shopDB::fetch_assoc($res)){
       echo "<tr><td class='order_item'>" . $order["order_id"] . "</td>
@@ -88,7 +89,7 @@ class UserView extends AdminView{
       " - $currency " . $order["order_total_price"] . " - " . date . "  " . $order["order_date"] .
       " - " . $order["order_shipment_mode"] . " - " .
       $this->print_order_status($order["order_status"]) . "
-	       <a href='view_order.php?action=details&order_id=" . $order["order_id"] . "'>
+	       <a href='{$_SERVER['PHP_SELF']}?action=order_detail&order_id=" . $order["order_id"] . "'>
 	       <img src='images/view.png' border='0'></a></td><tr>";
       $query = "select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,Event,Category where seat_order_id='" . $order["order_id"] . "'
                AND seat_event_id=event_id AND seat_category_id= category_id";

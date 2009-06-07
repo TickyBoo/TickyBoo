@@ -1091,8 +1091,11 @@ class Order {
   			echo "<div class=err>".no_template." : $bill_template </div>";
   			return FALSE;
   		}
-  	}
+//        echo $bill_template,":";
+//        Print_r($tpl);
 
+  	}
+//    PRINT_r($seats);
     foreach($seats as $seat) {
   		if($hand->handling_pdf_ticket_template){
         $tpl_id=$hand->handling_pdf_ticket_template;
@@ -1110,17 +1113,16 @@ class Order {
   				user_error(no_template.": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
   				return FALSE;
   			}
-
-  //	if(!$first_page){
-  //		$pdf->setNewPage();
-  //	}
+//        echo $tpl_id,":";
+//        Print_r($tpl);
   			$first_page=FALSE;
 
   			//print the ticket
   			$tpl->write($pdf,array_merge($seat,$order), false);
   		}
     }
-    if(!$first_page){
+    
+    if(true and !$first_page){
   //        $pdf->output($order_file_name, 'P');
 
       //composing filename without extension

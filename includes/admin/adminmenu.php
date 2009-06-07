@@ -45,21 +45,18 @@ class MenuAdmin extends AUIComponent {
         <table width='".$this->width."' class='menu_admin' cellspacing='1' >
         <tr><td  class='menu_admin_title'>" . con('administration') . "</td></tr>
 
-        <tr><td  class='menu_admin_item'><a href='index.php' class='menu_admin_link'>" . con('index_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_users.php' class='menu_admin_link'>" . con('users_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_stats.php' class='menu_admin_link'>" . con('stats') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_order.php' class='menu_admin_link'>" . con('order_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='index.php'       class='menu_admin_link'>" . con('index_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_users.php'  class='menu_admin_link'>" . con('users_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_stats.php'  class='menu_admin_link'>" . con('stats') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_order.php'  class='menu_admin_link'>" . con('order_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_search.php' class='menu_admin_link'>" . con('search_order') . "</a></td></tr>
         <tr><td></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_event_group.php' class='menu_admin_link'>" . con('event_group_admin') . "</a></td></tr>
-		    <tr><td  class='menu_admin_item'><a href='view_event.php' class='menu_admin_link'>" . con('event_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_search.php' class='menu_admin_link'>" . con('search_order') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_impexp.php' class='menu_admin_link'>" . con('imp_export_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_template.php' class='menu_admin_link'>" . con('template_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_handling.php' class='menu_admin_link'>" . con('payment_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_garbage.php' class='menu_admin_link'>" . con('garbage') . "</a></td></tr>";
-//        <tr><td  class='menu_admin_item'><a href='view_file.php' class='menu_admin_link'>".file_admin."</a></td></tr>
-//    		<tr><td  class='menu_admin_item'><a href='view_options.php' class='menu_admin_link'>" . order_options . "</a></td></tr>
-//		    <tr><td  class='menu_admin_item'><a href='view_organizer.php' class='menu_admin_link'>" . organizer_admin . "</a></td></tr>
+		    <tr><td  class='menu_admin_item'><a href='view_event.php'       class='menu_admin_link'>" . con('event_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_impexp.php'      class='menu_admin_link'>" . con('imp_export_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_template.php'    class='menu_admin_link'>" . con('template_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_handling.php'    class='menu_admin_link'>" . con('payment_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_garbage.php'     class='menu_admin_link'>" . con('garbage') . "</a></td></tr>";
         /*
        if($_SHOP->is_admin){
          echo "<tr><td  class='menu_admin_item'><a href='$_SHOP->php_myadmin' class='menu_admin_link'>PHP MyAdmin</a></td></tr>";

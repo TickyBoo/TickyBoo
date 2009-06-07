@@ -37,17 +37,19 @@ class OptionsView extends AdminView{
 	global $_SHOP;
 		if($_POST['action']=='update'){
 			if(!$this->options_check($_POST,$err)){
-				$this->option_form($_POST,$err);
+				$this->option_form($_POST,$err);  print_r($err    ) ;
+				exit;
 			}else{
 
 				$query="UPDATE `ShopConfig` SET 
 	      		shopconfig_lastrun_int="._ESC($_POST['shopconfig_lastrun_int']).",
-	      		shopconfig_restime_remind="._ESC($_POST['shopconfig_restime_remind']).",
 	      		shopconfig_restime="._ESC($_POST['shopconfig_restime']).",
 	      		shopconfig_check_pos="._ESC($_POST['shopconfig_check_pos']).",
 	      		shopconfig_delunpaid="._ESC($_POST['shopconfig_delunpaid']).",
 	      		shopconfig_posttocollect="._ESC($_POST['shopconfig_posttocollect']).",
 	      		shopconfig_user_activate="._ESC((int)$_POST['shopconfig_user_activate']).",
+	      		res_delay="._ESC((int)$_POST['res_delay']).",
+	      		cart_delay="._ESC((int)$_POST['cart_delay']).",
 	      		shopconfig_maxres="._ESC($_POST['shopconfig_maxres'])."
 	      		limit 1";
 				
@@ -55,12 +57,13 @@ class OptionsView extends AdminView{
           echo "<div class='error'>".con('update_error')."</div>";
 				}
 			}
+
 		}
 		$query="SELECT * FROM `ShopConfig` limit 1";
 		if(!$row=ShopDB::query_one_row($query)){
 			return 0;
 		}
-		$this->option_form($row,$err,option_update_title,"update");
+		$this->option_form($row,$err,con('option_update_title'),"update");
 		return;
   }
 function option_form (&$data, &$err){
@@ -73,8 +76,8 @@ function option_form (&$data, &$err){
 //  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
 	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 	
-	$this->print_input('shopconfig_lastrun_int',$data, $err,5,3);
-	$this->print_input('shopconfig_restime',$data, $err,25,100);
+	$this->print_input('shopconfig_lastrun_int',$data, $err,5,10);
+	$this->print_input('shopconfig_restime',$data, $err,5,10);
 //	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
 	//this will tell the auto scripts to check POS orders or not.
 
@@ -90,10 +93,10 @@ function option_form (&$data, &$err){
            '2'=>con('act_restrict_w_guest'),
            '3'=>con('act_restrict_quest_only')));
 
- 	$this->print_input('shopconfig_maxres',$data, $err,5,3);
-	$this->print_input('shopconfig_posttocollect',$data, $err,25,3);
-	$this->print_input('res_delay' ,$data, $err, 5, 3);
-  $this->print_input('cart_delay',$data, $err, 5, 3);
+ 	$this->print_input('shopconfig_maxres',$data, $err,5,10);
+	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
+	$this->print_input('res_delay' ,$data, $err, 5, 10);
+  $this->print_input('cart_delay',$data, $err, 5, 10);
 
  	echo "</table>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -110,8 +113,8 @@ function option_form (&$data, &$err){
 function options_check (&$data, &$err){
 	global $_SHOP;
 	
-	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime',
-                'shopconfig_restime_remind', 'shopconfig_posttocollect') as $check) {
+	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime', //'shopconfig_restime_remind',
+                'shopconfig_posttocollect') as $check) {
     if(empty($data[$check])){
        $err[$check]=mandatory;
     }elseif(!is_numeric($data[$check])){

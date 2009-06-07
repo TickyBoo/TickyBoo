@@ -1,0 +1,27 @@
+<html>
+  <head>
+  <style>
+      .clsHorizLR { writing-mode:lr-tb }
+      .clsHorizRL { writing-mode:rl-tb }
+      .clsVertTB  { writing-mode:tb-rl }
+      .clsVertBT  { writing-mode:bt-rl }
+  </style>
+  </head>
+  <body>
+    <h1>writing-mode Attribute</h1>
+
+    <p>This example shows how to use the <b>writing-mode</b> attribute to display horizontal text (<span>lr-tb</span>)
+    within vertical text (<span>tb-rl</span>).</p>
+    <p>The following <b>div</b> element has a <b>writing-mode</b> of tb-rl and contains text and <b>span</b> child elements.
+    The text flow alternates between vertical and horizontal. Note the effect of the <b>BR</b> element after the second
+    set of vertical text.</p>
+
+    <div style="writing-mode:tb-rl">First Set of Vertical Text<span class="clsHorizLR">First Set of Horizontal Text</span>
+    Second Set of Vertical Text plus a line break<BR><span style="writing-mode:lr-tb">Second Set of Horizontal Text</span>
+    Third Set of Vertical Text<span class="clsHorizLR">Third Set of Horizontal Text</span>
+    </div><p>This example shows how to use the new <b>writing-mode</b> attribute to display horizontal text (<span>rl-tb</span>).<div class="clsHorizRL">Fourth Set of Horizontal Text</div><p>This example makes use of the new<b>writing-mode</b> attribute to display vertical text (<span>bt-rl</span>).<div class="clsVertBT">Fourth Set of
+    Vertical Text</div>
+
+    </div>
+  </body>
+</html>

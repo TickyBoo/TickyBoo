@@ -36,24 +36,8 @@
 
 
 class PDF2TCompiler {
-  var $res_stat ="";
-  var $res_dyna ="";
-  var $mode=0; //1 static 2 dynamic 0 none 3 ezText 
-  var $stack=array(); // local stack
-  var $vars=array();
-  var $args='data';
-  var $errors;
-  
+
   function PDF2TCompiler ($font_dir=''){
-    global $_SHOP;
-    if($font_dir){
-      $this->font_dir=$font_dir;
-    }else{
-      $this->font_dir=$_SHOP->font_dir;
-    }
-    //$this->template_dir=$_SHOP->template_dir;
-    
-    $this->template_dir=$_SHOP->tpl_dir;
   }
 
   function build ($pdf, $data, $testme=false){
@@ -77,7 +61,7 @@ class PDF2TCompiler {
 
 
     $smarty->my_template_source = $this->sourcetext;
-    $htmlresult = $smarty->fetch("text:".'.$out_class_name.');
+    $htmlresult = $smarty->fetch("text:".get_class($this));
     $pdf->WriteHTML($htmlresult, $testme);
     unset($smarty);
     unset($gui);

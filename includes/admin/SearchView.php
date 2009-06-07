@@ -41,12 +41,12 @@ class SearchView extends AdminView{
 
 
 
-function search_form (&$data){
+function search_form_patron (&$data){
   global $_SHOP;
 
-  echo "<form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_user")."</td></tr>"; 
+  echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_user")."</td></tr>";
   $this->print_input('user_lastname',$data, $err,25,100);
   $this->print_input('user_firstname',$data, $err,25,100);
   $this->print_input('user_zip',$data, $err,25,100);
@@ -64,10 +64,12 @@ function search_form (&$data){
   <input type='submit' name='submit' value='".search."'>
   <input type='reset' name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n";
-  
-  echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
+}
+function search_form_seats (&$data){
+  global $_SHOP;
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_place")."</td></tr>"; 
+  echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_place")."</td></tr>";
   $query="select event_id,event_name,event_date,event_time from Event where event_rep LIKE '%sub%'
           and event_pm_id IS NOT NULL order by event_date,event_time";
   if(!$res=ShopDB::query($query)){
@@ -89,32 +91,35 @@ function search_form (&$data){
  
   echo "<tr><td align='center' class='admin_value' colspan='2'>
         <input type='hidden' name='action' value='search_place'/>\n
-
-  <input type='submit' name='submit' value='".search."'>
-  <input type='reset' name='reset' value='".res."'></td></tr>";
+        <input type='submit' name='submit' value='".search."'>
+        <input type='reset'  name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n";
-  
-  echo "<br><form method='GET' action='view_order.php'>\n";
+}
+
+function search_form_order (&$data){
+  global $_SHOP;
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_order")."</td></tr>"; 
+  echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_order")."</td></tr>";
   $this->print_input('order_id',$data, $err,11,11);
   echo "<tr><td align='center' class='admin_value' colspan='2'>
-  <input type='hidden' name='action' value='details'/>\n
+  <input type='hidden' name='action' value='order_detail'/>\n
   <input type='submit' name='submit' value='".search."'>
   <input type='reset' name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n";
+}
 
-  echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
+function search_form_barcode (&$data){
+  global $_SHOP;
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_codebar")."</td></tr>"; 
+  echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
+  echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_codebar")."</td></tr>";
   $this->print_input('codebar',$data, $err,25,21);
   echo "<tr><td align='center' class='admin_value' colspan='2'>
   <input type='hidden' name='action' value='search_codebar'/>\n
   <input type='submit' name='submit' value='".search."'>
   <input type='reset' name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n";
-  
-  
 }
 
 function result_list (&$data,$query_type){
@@ -176,14 +181,11 @@ function execute_place ($query){
           <td class='admin_list_item'>".$row["category_name"]."</td>
           <td class='admin_list_item'>".$place."</td>
           <td class='admin_list_item'>".$row["seat_price"]."</td>
-	  
-	  <td class='admin_list_item'>
-          <a class='link' href='view_user.php?user_id=".
-          $row["user_id"]."'>".$row["user_lastname"]." ".
-          $row["user_firstname"]."</a></td>
-	  <td class='admin_list_item'>
-          <a class='link' href='view_order.php?action=details&order_id=".
-          $row["order_id"]."'>".$row["order_id"]."</a></td>
+	        <td class='admin_list_item'>
+            <a class='link' href='{$_SERVER['PHP_SELF']}?action=user_detail&user_id=".$row["user_id"]."'>".
+               $row["user_lastname"]." ".$row["user_firstname"]."</a></td>
+          <td class='admin_list_item'>
+            <a class='link' href='{$_SERVER['PHP_SELF']}?action=order_detail&order_id=".$row["order_id"]."'>".$row["order_id"]."</a></td>
           <td class='admin_list_item'>".$this->print_order_status($row["order_status"])."</td>
 
 	  </tr>" ;
@@ -209,16 +211,18 @@ function execute_query ($query){
     $flag=1;
     echo "<tr class='admin_list_row_$alt'>
           <td class='admin_list_item'>".$row["user_id"]."</td>
-	  <td class='admin_list_item'>
-          <a class='link' href='view_user.php?user_id=".
-          $row["user_id"]."'>".$row["user_lastname"]." ".
-          $row["user_firstname"]."</a></td><td class='admin_list_item'>".$row["user_city"]."</td>
-	  <td class='admin_list_item'>".$this->print_status($row["user_status"])."</td></tr>" ;
+	        <td class='admin_list_item'>
+            <a class='link' href='{$_SERVER['PHP_SELF']}?action=user_detail&user_id=".$row["user_id"]."'>".
+               $row["user_lastname"]." ".$row["user_firstname"]."
+            </a>
+          </td>
+          <td class='admin_list_item'>".$row["user_city"]."</td>
+	        <td class='admin_list_item'>".$this->print_status($row["user_status"])."</td></tr>" ;
     $alt=($alt+1)%2;
   }
   
   if(!$flag){
-    echo "<tr><td class='admin_list_item' align='center'  style='font-size:30px;color:red;'>".no_result."</td></tr>";
+    echo "<tr><td class='admin_list_item' align='center' style='font-size:30px;color:red;'>".no_result."</td></tr>";
   }
   echo "</table>";
 }
@@ -300,8 +304,8 @@ function print_order_status ($order_status){
 
 function result_codebar (){
   global $_SHOP;
-  if(isset($_GET['codebar'])){
-    $code=sscanf($_GET['codebar'],"%08d%s");
+  if(isset($_POST['codebar'])){
+    $code=sscanf($_POST['codebar'],"%08d%s");
 
     $seat_id=$code[0];
     $ticket_code=$code[1];
@@ -309,17 +313,16 @@ function result_codebar (){
     $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,
                           Category LEFT JOIN Color ON category_color=color_id,
 	                        PlaceMapZone, Event, User,`Order`,	Organizer
-            where 
-	    seat_id='$seat_id' AND
-            seat_category_id=category_id AND
-	    seat_zone_id=pmz_id AND
-	    seat_event_id=event_id AND
-	    seat_user_id=user_id AND
-            seat_order_id=order_id
-	    AND seat_code='$ticket_code'";
+            where seat_id='$seat_id'
+            AND   seat_category_id=category_id
+	          AND   seat_zone_id=pmz_id
+            AND   seat_event_id=event_id
+            AND   seat_user_id=user_id
+            AND   seat_order_id=order_id
+	          AND   seat_code='$ticket_code'";
 	
-	echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' >";
-	echo "<tr><td colspan='2' class='admin_list_title'>".search_result."</td></tr>";   
+  	echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' >";
+  	echo "<tr><td colspan='2' class='admin_list_title'>".search_result."</td></tr>";
 
       if(!$ticket=ShopDB::query_one_row($query)){
         echo "<tr><td colspan='2' class='err'>".ticket_not_found."</td></tr></table>";
@@ -343,12 +346,12 @@ function result_codebar (){
     $this->print_field("seat_id",$ticket);
     echo "<tr><td class='admin_name' width='40%'>".con('order_id')."</td>
     <td class='admin_value'>
-    <a class='link' href='view_order.php?order_id={$ticket["order_id"]}&action=details'>
+    <a class='link' href='{$_SERVER['PHP_SELF']}?order_id={$ticket["order_id"]}&action=order_detail'>
     {$ticket["order_id"]}</a>
     </td></tr>\n";
     echo "<tr><td class='admin_name' width='40%'>".con('user')."</td>
     <td class='admin_value'>
-    <a class='link' href='view_user.php?user_id={$ticket["user_id"]}'>
+    <a class='link' href='{$_SERVER['PHP_SELF']}?action=user_detail&user_id={$ticket["user_id"]}'>
     {$ticket["user_firstname"]} {$ticket["user_lastname"]}</a>
     </td></tr>\n";
     
@@ -392,24 +395,59 @@ function result_codebar (){
   }
 }
 function draw () { 
-if($_GET['action']=='search'){
-  if(!$query_type=$this->search_check($_GET)){
-    $this->search_form($_GET);
-  }else{
-    $this->result_list($_GET,$query_type);
-  }
-}else if($_GET['action']=='search_place'){
-  if(!$query_type=$this->search_place_check($_GET)){
-    $this->search_form($_GET);
-  }else{
-    $this->result_place($_GET,$query_type);
+  if(isset($_REQUEST['tab'])) {
+    $_SESSION['_SEARCH_tab'] = (int)$_REQUEST['tab'];
   }
 
-}elseif($_GET['action']=='search_codebar'){
-  $this->result_codebar();
-}else{
-  $this->search_form($_GET);
-}
+  $menu = array("Patron"=>"?tab=0", "Seat"=>'?tab=1',
+                "Order"=>"?tab=2", "Barcode"=>"?tab=3");
+  echo $this->PrintTabMenu($menu, (int)$_SESSION['_SEARCH_tab'], "left");
+
+  if ($_REQUEST['action']=='order_detail'){
+    require_once("admin/OrderView.php");
+    $view = new OrderView($this->width);
+    $view->order_details($_REQUEST['order_id']);
+  }elseif ($_REQUEST['action']=='user_detail'){
+    require_once("admin/UserView.php");
+    $view = new UserView($this->width, $_REQUEST['user_id']);
+    $view->draw();
+    
+  }elseif($_POST['action']=='search'){
+    if(!$query_type=$this->search_check($_POST)){
+      $this->search_form_patron($_POST);
+    }else{
+      $this->result_list($_POST,$query_type);
+    }
+  }elseif($_POST['action']=='search_place'){
+    if(!$query_type=$this->search_place_check($_POST)){
+      $this->search_form_seats($_POST);
+    }else{
+      $this->result_place($_POST,$query_type);
+    }
+
+  }elseif($_POST['action']=='search_codebar'){
+    $this->result_codebar();
+  }else{
+    switch ((int)$_SESSION['_SEARCH_tab'])
+       {
+       case 0:
+           $this->search_form_patron($_POST);
+           break;
+
+       case 1:
+           $this->search_form_seats($_POST);
+           break;
+
+       case 2:
+           $this->search_form_order($_POST);
+           break;
+
+       case 3:
+           $this->search_form_barcode($_POST);
+           break;
+
+       }
+  }
 }
 
 }

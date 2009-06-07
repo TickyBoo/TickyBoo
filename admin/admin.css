@@ -58,7 +58,8 @@ font-weight:bold;
 
 
 
-.menu_admin{border-right:#cccccc 1px solid; border-bottom:#cccccc 1px solid;border-top:#cccccc 1px solid;}
+.menu_admin{border: #cccccc 1px solid;}
+.menu_admin_x{border-right:#cccccc 1px solid; border-bottom:#cccccc 1px solid;border-top:#cccccc 1px solid;}
 
 .menu_admin_title{color:#555555; background-color:#ffffff;font-weight:bold;
 
