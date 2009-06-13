@@ -6,7 +6,7 @@
  * Distribué sous la licence GPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.21 - 05/05/2009
+ * @version		3.22 - 08/06/2009
  */
  
 if (!defined('__CLASS_PARSINGHTML__'))
@@ -143,7 +143,7 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			}
 
 			// pour chaque action identifiée, il faut nettoyer le début et la fin des textes
-			// en fonction des balises qui l'antourent.
+			// en fonction des balises qui l'entourent.
 			$nb = count($todos);
 			for($k=0; $k<$nb; $k++)
 			{

@@ -29,7 +29,7 @@
  */
 
 
-	define("INSTALL_VERSION","1.3.5 BETA4");
+	define("INSTALL_VERSION","1.3.5 BETA5");
 
 	define("INST_DEFAULT",0);
 	define("INST_LICENSE",1);
@@ -83,7 +83,7 @@ session_start();
    echo "<img src='{$root}/images/fusion.png' border='0'><br><br />
          <table width='600' cellpadding='5' cellspacing='0' border=1 style='border:1px solid #000000'>
            <tr>
-             <td width='150' valign='top' bgcolor='#FFFFFF' valign='top' style='border-right:1px solid #c0c0c0'>&nbsp;";
+             <td width='150' bgcolor='#FFFFFF' valign='top' style='border-right:1px solid #c0c0c0'>&nbsp;";
   echo "<img src='{$root}/inst/install.jpg' width='130' border='0'>";
   echo "</td><td  valign='top' height=100% bgcolor='#f5F5f5'>";
 
@@ -220,6 +220,7 @@ function file_to_db($filename)
         $cwd = getcwd();
         $install_dir = substr($cwd, 0, - 5);
       }
+      $_SHOP->install_dir =$install_dir;
       if (!file_exists("$install_dir/includes/config/init_config.php")) {
         if (!is_writable("$install_dir/includes/config")) {
           array_push($Install_Errors,"$install_dir/includes/config should be writable by the webserver user.");
@@ -434,9 +435,9 @@ function file_to_db($filename)
   			echo "<tr>\n<td colspan=\"2\"><b>Admin login and password</b></td>\n</tr>\n";
   			echo "<tr>\n<td colspan=\"2\">Please choose the username and the password for the Fusion Ticket super user.<br>Choose it even if you update, this will be your new login / password.<br><br></td>\n</tr>\n";
   			echo "<tr>\n<td>Admin login:</td>\n";
-  			echo "<td><input type=\"text\" name=\"admin_login\" value=\"\" /></td>\n</tr>\n";//
+  			echo "<td><input type=\"text\" name=\"admin_login\" value=\"".$_SESSION['admin_login']."\" /></td>\n</tr>\n";
   			echo "<tr>\n<td>Admin password:</td>\n";
-  			echo "<td><input type=\"text\" name=\"admin_password\" value=\"\" /> (at least 6 letters)</td>\n</tr>\n"; //".$_SESSION['admin_password']."
+  			echo "<td><input type=\"text\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>\n</tr>\n";
   			echo "</table>\n";
   			Install_Form_Buttons ();
   			Install_Form_Close ();
@@ -453,7 +454,7 @@ function file_to_db($filename)
 
 			echo "<table>\n";
 			echo "<tr>\n<td colspan=\"2\"><b>Install Type</b></td>\n</tr>\n";
-			echo "<tr>\n<td colspan=\"2\">The installation process can optionel leave your existing database in-tact in the event you are performing an upgrade. If you wish to leave our existing database unchanged select the \"UPGRADE\" option below, otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br /><br /></td>\n</tr>\n";
+			echo "<tr>\n<td colspan=\"2\">The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade. If you wish to leave your existing database unchanged select the \"UPGRADE\" option below, otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br /><br /></td>\n</tr>\n";
 			echo "<tr>\n<td colspan=\"2\">\n";
 			echo "<input type=\"radio\" name=\"radio\" value=\"NORMAL\" {$chk['NORMAL']}/> ";
 			echo "FULL INSTALL<br />\n";
@@ -469,6 +470,7 @@ function file_to_db($filename)
 		case INST_INSTALL:
 			$install_mode=$_REQUEST['radio'];
       /* Save Config file first */
+      $_SHOP->install_dir = $_SESSION['install_dir'];
 
       function callback($matches)
       {
@@ -529,9 +531,10 @@ function file_to_db($filename)
 
       if(!$Install_Errors and $Install_Type == 'NORMAL')
          {
-         $Table_Names = $DB->TableList('');
-         for ($i=0;$i<count($Table_Names);$i++)
-						{ShopDB::query("drop table ".$Table_Names[$i]." ",$link);}
+         $Table_Names = ShopDB::TableList('');
+         for ($i=0;$i<count($Table_Names);$i++){
+           ShopDB::query("drop table ".$Table_Names[$i]);
+           }
          }
 
       if (!$Install_Errors)
@@ -540,7 +543,7 @@ function file_to_db($filename)
         require_once("../includes/install/install_db.php");
         if ($errors = ShopDB::DatabaseUpgrade($tbls))
           {
-          $Install_Errors = array_combine ($Install_Errors, $errors);
+          $Install_Errors[] = $errors;
           }
         }
 
@@ -600,7 +603,7 @@ function file_to_db($filename)
                     <li><a href='$root/pos/index.php' target='_blank'>Go to Demo Sale Point</a><br>
                     <li><a href='$root/control/index.php' target='_blank'>Go to Demo Ticket Control Point</a><br>
                     <br>
-                    Please, say us if you run Fusion Ticket on your site by sending us an email to <i>admin at fusionticket dot co dot uk</i>!";
+                    Please tell us if you run Fusion Ticket on your site by sending us an email to <i>admin at fusionticket dot co dot uk</i>!";
 
 		        Install_Form_Buttons ();
 		        Install_Form_Close ();

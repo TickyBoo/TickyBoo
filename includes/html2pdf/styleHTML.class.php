@@ -6,7 +6,7 @@
  * Distribué sous la licence GPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.21 - 05/05/2009
+ * @version		3.22 - 08/06/2009
  */
  
 if (!defined('__CLASS_STYLEHTML__'))
@@ -21,6 +21,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		var $table		= array();		// tableau d'empilement pour historisation des niveaux
 		var $pdf		= null;			// référence au PDF parent
 		var $htmlColor	= array();		// liste des couleurs HTML
+		var $onlyLeft	= false;		// indique si on est dans un sous HTML et qu'on bloque à gauche
 
 		/**
 		 * Constructeur
@@ -876,6 +877,8 @@ if (!defined('__CLASS_STYLEHTML__'))
 				}				
 			}
 
+			if ($this->onlyLeft) $this->value['text-align'] = 'left';
+			
 			// correction de la largeur pour correspondre au modèle de boite quick
 			if ($correct_width)
 			{

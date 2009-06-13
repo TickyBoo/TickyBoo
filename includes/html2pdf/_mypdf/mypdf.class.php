@@ -6,7 +6,7 @@
  * Distribué sous la licence GPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.21 - 05/05/2009
+ * @version		3.22 - 08/06/2009
  */
 
 if (!defined('__CLASS_MYPDF__'))
