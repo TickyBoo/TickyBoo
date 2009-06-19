@@ -53,6 +53,7 @@ var bindLinks = function(){
         	data: {ajax:'yes'},
         	cache:false,
         	success: function(html){
+        		clearInterval(refreshTimer);
         		$("#right").html(html);
         	}
     	});
@@ -63,7 +64,7 @@ var bindLinks = function(){
  
  var loadOrder = function(){
  	
- 	ajaxManager.add({
+ 	ajaxQManager.add({
 		type: "POST",
     	url: "index.php",
     	data: {ajax:'yes',page:"cart_content"},
@@ -72,19 +73,60 @@ var bindLinks = function(){
     		$("#cart-table tbody:first").html(html);
     	}
 	});
-	$("#event-input").autocomplete('index.php?ajax=yes&page=events', {
-		width: 300,
-		multiple: true,
+	
+	$("#event-input").autocomplete('index.php?ajax=yes&page=get_events', {
+		width: 400,
+		multiple: false,
 		matchContains: true,
+		minChars:0,
+		mustMatch:true,
 		formatItem: formatItem,
 		formatResult: formatResult
 	});
- 	
- }
+	
+	$("#event-input").result(function(event, data, formatted) {
+		if (data){
+			$("#event-id").val(data[0]);
+		}else{
+			$("#event-id").val('0');
+		}
+		if(data[0] > 0){
+			ajaxQManager.add({
+				type: "POST",
+		    	url: "index.php",
+		    	data: {ajax:'yes',page:"get_catagories",event_id:data[0]},
+		    	cache:false,
+		    	success: function(html){
+		    		$("#cat-select").fadeOut("fast").html(html).fadeIn("fast");
+		    	}
+			});
+		}else{
+			$("#cat-select").html("<option value='0'>No Event Selected</option>");
+		}
+	});
+	
+	refreshTimer = setInterval(function(){refreshOrder();}, 10000);
+}
+
+//The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
+var refreshOrder = function(){
+	ajaxQManager.add({
+		type: "POST",
+    	url: "index.php",
+    	data: {ajax:'yes',page:"cart_content"},
+    	cache:false,
+    	success: function(html){
+    		$("#cart-table tbody:first").fadeOut("fast").html(html).fadeIn("fast");
+    	}
+	});
+}
  
 function formatItem(row) {
-	return row[0] + " (<strong>id: " + row[1] + "</strong>)";
+	return row[1];
 }
 function formatResult(row) {
-	return row[0].replace(/(<.+?>)/gi, '');
+	return row[1].replace(/(<.+?>)/gi, '');
 }
+
+//Creates a auto refreshing function.
+var refreshTimer = setInterval(function(){refreshOrder();}, 10000);
