@@ -3,7 +3,7 @@
 *}
 
 
-{if $smarty.get.ajax neq 'yes' and $smarty.post.ajax neq 'yes'}
+{if $smarty.request.ajax neq 'yes'}
 	{include file="header.tpl"}
 {/if}
 
@@ -169,9 +169,9 @@
 {elseif $smarty.get.action eq 'order'}
 	{include file="order.tpl"}	
 	
-{elseif $smarty.get.process or $smarty.post.process}
-	{if $smarty.get.process eq "paid" or $smarty.post.process eq "paid"}
-		{if $smarty.get.order_id or $smarty.post.order_id}		  
+{elseif $smarty.request.process}
+	{if $smarty.request.process eq "paid"}
+		{if $smarty.request.order_id}		  
   		  	{if $smarty.post.action eq "update_note"}
 				{order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
 				<div class='success'>
@@ -193,8 +193,8 @@
 		{else}
 		  {include file="process_list.tpl"}
 		{/if}
-	{elseif $smarty.get.process eq "processed" or $smarty.post.process eq "processed"}
-		{if $smarty.get.order_id or $smarty.post.order_id}
+	{elseif $smarty.request.process eq "processed"}
+		{if $smarty.request.order_id}
 			{if $smarty.get.action eq 'send'}
 				{$order->set_status_f($smarty.get.order_id,'ord')}
   				{$order->set_send_f($smarty.get.order_id) }
@@ -214,8 +214,8 @@
   		{else}
 		  {include file="process_listpros.tpl"}
 		{/if}
-	{elseif $smarty.get.process eq "sent" or $smarty.post.process eq "sent"}
-		{if $smarty.get.order_id or $smarty.post.order_id}
+	{elseif $smarty.request.process eq "sent"}
+		{if $smarty.request.order_id}
 			{if $smarty.post.action eq "update_note"}
 				{order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
 				<div class='success'>
@@ -231,6 +231,14 @@
 	{else}
 		{include file="currenttickets.tpl"}
 	{/if}
+{* New Order Ajax Calls *}
+
+{elseif $smarty.request.ajax eq 'yes'}
+	{if $smarty.request.page}
+		{assign var='page' value=$smarty.request.page}
+		{include file="$page.tpl"}
+	{/if}
+
 {else}
 
   {include file="index.tpl"}

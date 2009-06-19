@@ -39,11 +39,13 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/pos.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../css/jquery.autocomplete.css" media="screen" />
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.1.custom.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.ajaxmanager.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.autocomplete.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.checkboxselect.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
