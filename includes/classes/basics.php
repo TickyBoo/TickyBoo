@@ -353,7 +353,7 @@ function check_system() {
 	if ( $_SHOP->shopconfig_restime >= 1 ) {
 		$query = "SELECT order_id FROM `Order`
               WHERE order_status NOT IN ('trash','ord','cancel')
-          		AND order_payment_status !='payed'
+          		AND order_payment_status NOT IN ('payed','pending')
           		AND order_shipment_status !='send'
           		AND order_date_expire <= NOW()";
 		if ( $_SHOP->shopconfig_check_pos == 'No' ) {
@@ -376,7 +376,7 @@ function check_system() {
               AND order_date_expire IS NOT NULL
               AND order_date_expire <= NOW()
   			  		AND order_status NOT IN ('trash','res','cancel')
-  			  		AND order_payment_status != 'payed'
+  			  		AND order_payment_status NOT IN ('payed','pending')
   			  		AND order_shipment_status != 'send'
   			  		AND order_place != 'pos'";
 
