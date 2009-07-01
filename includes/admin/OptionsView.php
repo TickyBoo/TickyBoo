@@ -74,7 +74,7 @@ function option_form (&$data, &$err){
 	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_update_title')."</td></tr>";
 	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 //  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
-	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
+//	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 	
 	$this->print_input('shopconfig_lastrun_int',$data, $err,5,10);
 	$this->print_input('shopconfig_restime',$data, $err,5,10);

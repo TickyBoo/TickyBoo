@@ -363,7 +363,7 @@ $tbls['Seat']['engine'] = 'MyISAM';
 $tbls['Seat']['remove'] = array ('seat_organizer_id')   ;
 
 $tbls['ShopConfig']['fields'] = array(
-  'shopconfig_lastrun' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+  'shopconfig_lastrun' => " int(11) NOT NULL DEFAULT '0'",
   'shopconfig_lastrun_int' => " int(11) NOT NULL DEFAULT '10'",
   'shopconfig_restime' => " int(11) NOT NULL DEFAULT '0'",
   'shopconfig_restime_remind' => " int(11) NOT NULL DEFAULT '0'",

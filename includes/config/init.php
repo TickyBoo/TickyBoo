@@ -57,7 +57,7 @@ define ('AUTH_REALM','Fusion Ticket Login');
     define('PHP_SELF',$_SERVER['PHP_SELF']);
 
 
-  $query="SELECT *, NOW() as current_db_time FROM ShopConfig LIMIT 1";
+  $query="SELECT *, UNIX_TIMESTAMP() as current_db_time FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){
       $_SHOP->system_status_off=TRUE;
@@ -74,7 +74,7 @@ define ('AUTH_REALM','Fusion Ticket Login');
       $_SHOP->$key = $value;
     }
   }
-  print_r($res);
+//  print_r($res);
 //starting a new session
 //  require_once("classes/sessions.php");
   session_name($_SHOP->session_name);
