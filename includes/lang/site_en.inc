@@ -1059,4 +1059,8 @@ define('index_admins_count','<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Contro
 define('admin_user_update_title','All Administrators');
 define('option_others_title','Other options');
 define('order_event_list_title','Order overview per event');
+
+define('AutoCancel_order','Auto Cancel: Failed to order.');
+define('AutoCancel_paying','Auto Cancel: Failed to pay for order.');
+
 ?>
