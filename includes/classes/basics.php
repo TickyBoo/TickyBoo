@@ -343,12 +343,19 @@ function check_system() {
 	global $_SHOP;
   require_once("classes/Time.php");
   require_once("classes/Order.php");
-
-  if ($_SHOP->shopconfig_lastrun_int = 0) {
-    return;
-	}elseif ( Time::StringToTime($_SHOP->shopconfig_lastrun) > time() ) {
-    return;
-  }
+  	$query = "SELECT * 
+			FROM ShopConfig
+			WHERE NOW() >= shopconfig_lastrun
+			LIMIT 1";
+	$resRun = ShopDB::query($query);
+	
+  	if ($_SHOP->shopconfig_lastrun_int == 0) {
+    	return;
+	}elseif ( ShopDB::num_rows($resRun) == 0 ) {
+    	return;
+  	}
+  	
+  	print_r('run');
 	//Checks to see if res time is enabled anything more than 9 will delete
 	if ( $_SHOP->shopconfig_restime >= 1 ) {
 		$query = "SELECT order_id FROM `Order`
@@ -363,7 +370,7 @@ function check_system() {
 			while ( $row = shopDB::fetch_array($res) ) {
 				if ( !Order::Check_payment($row['order_id']) and
            ($_SHOP->shopconfig_restime >=	10) ) {
-					Order::order_delete( $row['order_id'] );
+					Order::order_delete( $row['order_id'], 'Auto Cancel: Failed to order.' );
 				}
 			}
 		}
@@ -383,7 +390,7 @@ function check_system() {
     if($resultOrder=ShopDB::query($query)){
 			//Cycles through orders to see if they should be canceled!
 			while ( $roword = shopDB::fetch_array($resultOrder) ) {
-				Order::order_delete( $roword['order_id'] );
+				Order::order_delete( $roword['order_id'], 'Auto Cancel: Failed to pay for order.' );
 			}
 		}
 	}
