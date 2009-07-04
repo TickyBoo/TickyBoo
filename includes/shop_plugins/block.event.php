@@ -125,9 +125,19 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
       $limit='limit 0,'.$params['length'];
     }
   
-		if($limit){
-		  $cfr='SQL_CALC_FOUND_ROWS';
+	if($limit){
+		$cfr='SQL_CALC_FOUND_ROWS';
+	}
+	
+	if($params['search']){
+		$where .= "AND (event_name LIKE '%"._esc($params['search'],false)."%' 
+			OR event_text LIKE '%"._esc($params['search'],false)."%'
+			OR event_date LIKE '%"._esc($params['search'],false)."%' ";
+		if($params['ort']){
+			$where .= "OR ort_name LIKE '%"._esc($params['search'],false)."%' ";
 		}
+		$where .= ")";
+	}
 		
     $query="select $cfr * from $from $where $order_by $limit";
     $res=ShopDB::query($query);

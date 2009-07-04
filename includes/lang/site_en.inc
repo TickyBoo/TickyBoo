@@ -1062,5 +1062,4 @@ define('order_event_list_title','Order overview per event');
 
 define('AutoCancel_order','Auto Cancel: Failed to order.');
 define('AutoCancel_paying','Auto Cancel: Failed to pay for order.');
-
 ?>

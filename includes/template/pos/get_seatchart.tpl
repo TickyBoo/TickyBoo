@@ -34,27 +34,15 @@
 <table class='pm_box'>
 	<tr>
 		<td>
-			{if $smarty.get.category_id}
-      			{assign var=category_id value=$smarty.get.category_id}
-    		{elseif $smarty.post.category}
-      			{assign var=category_id value=$smarty.post.category}
+			{if $smarty.request.category_id}
+      			{assign var=category_id value=$smarty.request.category_id}
     		{/if}
     		{if $category_id}
    				{category category_id=$category_id event='on' placemap='on'}
 					<table width='100%' cellpadding='2' cellspacing='0' class='pm_info'>
           				<tr>
-							<td class='title' align='center'>
-								<a href="index.php?category_id={$smarty.get.category_id}"><h1>{$shop_category.event_name}</h1></a>
-							</td>
-						</tr>
-						<tr>
-							<td class='title' align='center'>
-            					{$shop_category.event_date|date_format:"%e %b %Y"} - {$shop_category.event_time|date_format:" %Hh%M"}
-          					</td>
-					  	</tr>
-          				<tr>
 						  	<td class='title' align='center'>
-            					{$shop_category.ort_name} - {$shop_category.category_name} ({$shop_category.category_price})
+            					{$shop_category.ort_name} - {$shop_category.category_name} ({$organizer_currency}{$shop_category.category_price})
           					</td>
 					  	</tr>
           				{if $shop_category.category_numbering neq 'none'}
@@ -85,7 +73,6 @@
             			{else}
               				{placemap category=$shop_category}
             			{/if}
-            			<input type='submit' name='submit' value='{!pos_holdtickets!}' />
           				<input type='hidden' name='category' value='{$shop_category.category_id}' />
           				<input type='hidden' name='event' value='{$shop_category.category_event_id}' />
           				<input type='hidden' name='action' value='addtocart' />

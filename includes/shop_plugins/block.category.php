@@ -44,7 +44,7 @@ function smarty_block_category ($params, $content, &$smarty,&$repeat) {
     }else{
       $from = 'from Category';
     }
-    $where = 'where 1';
+    $where = 'where 1=1';
 
     if($params['category_id']){
       $where .= " and category_id="._esc($params['category_id']);

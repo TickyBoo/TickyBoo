@@ -44,18 +44,18 @@ function smarty_function_placemap($params, &$smarty)
             $ml = $i % $shift;
             $mr = $shift - $ml - 1;
             if ($ml > 1) {
-                $tml = "<td colspan='$ml' class='pm_none'><img src='images/dot.gif' width=5 height=10></td>\n";
+                $tml = "<td colspan='$ml' class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
             } else
                 if ($ml == 1) {
-                    $tml = "<td class='pm_none'><img src='images/dot.gif' width=5 height=10></td>\n";
+                    $tml = "<td class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
                 } else {
                     $tml = "";
                 }
                 if ($mr > 1) {
-                    $tmr = "<td colspan='$mr' class='pm_none'><img src='images/dot.gif' width=5 height=10></td>\n";
+                    $tmr = "<td colspan='$mr' class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
                 } else
                     if ($mr == 1) {
-                        $tmr = "<td class='pm_none'><img src='images/dot.gif' width=5 height=10></td>\n";
+                        $tmr = "<td class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
                     } else {
                         $tmr = "";
                     }
@@ -69,8 +69,8 @@ function smarty_function_placemap($params, &$smarty)
     {
         global $_SHOP;
 
-        $l_row = ' '.con('placemap_Row').' ';
-        $l_seat = ' '.con('placemap_Seat').' ';
+        $l_row = ' '.con('place_row').' ';
+        $l_seat = ' '.con('place_seat').' ';
 
         $cat_ident = $category['category_ident'];
         $cat_num = 0;
