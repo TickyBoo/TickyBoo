@@ -20,16 +20,14 @@ var ajaxManager = $.manageAjax.create('ajaxMan',{
 	queue:true,
 	abortOld:true,
 	maxRequests: 4,
-	cacheResponse: false,
+	cacheResponse: false
 });
-
 var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 	queue:true,
 	abortOld:true,
 	maxRequests: 10,
-	cacheResponse: false,
+	cacheResponse: false
 });
-
 var bindForms = function(){
 	$("form").submit(function(){
 		$(this).ajaxSubmit({
@@ -48,6 +46,7 @@ var bindLinks = function(){
     	var url = $(this).attr('href');
    		ajaxManager.clear();
    		ajaxManager.add({
+		//$.ajax({
 			type: "GET",
         	url: url,
         	data: {ajax:'yes'},
@@ -65,6 +64,7 @@ var bindLinks = function(){
  var loadOrder = function(){
  	
  	ajaxQManager.add({
+	//$.ajax({
 		type: "POST",
     	url: "index.php",
     	data: {ajax:'yes',page:"cart_content"},
@@ -95,6 +95,7 @@ var bindLinks = function(){
 		}
 		if(data[0] > 0){
 			ajaxQManager.add({
+			//$.ajax({
 				type: "POST",
 		    	url: "index.php",
 		    	data: {ajax:'yes',page:"get_catagories",event_id:data[0]},
@@ -112,6 +113,7 @@ var bindLinks = function(){
 	$("#cat-select").change(function(){
 		if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
 			ajaxQManager.add({
+			//$.ajax({
 				type:"POST",
 				url: "index.php",
 				data: {ajax:'yes',page:"get_catagories",event_id:$("#event-id").val(), category_id:$("#cat-select").val()},
@@ -148,6 +150,7 @@ var bindLinks = function(){
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
 	ajaxQManager.add({
+	//$.ajax({
 		type: "POST",
     	url: "index.php",
     	data: {ajax:'yes',page:"cart_content"},

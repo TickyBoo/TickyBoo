@@ -65,7 +65,6 @@
 						</tr>
           				{/if}
         			</table>
-        			<form name='f' action='index.php' method='post'>
        					{if $shop_category.category_numbering eq 'none'}
               				<br /><br />
               				<span class='title'> {!number_seats!} : </span>
@@ -73,10 +72,6 @@
             			{else}
               				{placemap category=$shop_category}
             			{/if}
-          				<input type='hidden' name='category' value='{$shop_category.category_id}' />
-          				<input type='hidden' name='event' value='{$shop_category.category_event_id}' />
-          				<input type='hidden' name='action' value='addtocart' />
-        			</form>
   				{/category}
    			{/if}
    		</td>
