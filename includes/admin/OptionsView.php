@@ -88,7 +88,8 @@ function option_form (&$data, &$err){
 	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_others_title')."</td></tr>";
     $this->print_select_assoc('shopconfig_user_activate',$data,$err,
-     array('0'=>con('act_restrict_all'),
+     array('-1'=>con('act_restrict_cart'),
+           '0'=>con('act_restrict_all'),
            '1'=>con('act_restrict_later'),
            '2'=>con('act_restrict_w_guest'),
            '3'=>con('act_restrict_quest_only')));

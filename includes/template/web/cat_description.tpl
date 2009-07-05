@@ -119,8 +119,15 @@
    -->
   </script>
   {/literal}
-
-  {if $shop_event.event_date ge $smarty.now|date_format:"%Y-%m-%d"}
+  {if $user->mode() eq '-1' and !$user->logged}
+    	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+      	<tr>
+    			<td class='TblLower'>
+          			{!Please_login!}
+          </td>
+			</tr>
+		</table> <br/>   <br/>
+  {elseif $shop_event.event_date ge $smarty.now|date_format:"%Y-%m-%d"}
     <form name='catselect' method='post' action='index.php'>
       {ShowFormToken}
       <table  class='table_midtone'>
@@ -150,7 +157,7 @@
             </td>
             <td  align='left'>
               <div id='qqq'  align='left' style='font-size:9px; float:left;'>x 
-			  	<input style="float:none;" type='text' name='qty' size='4' maxlength='2' />
+			  	      <input style="float:none;" type='text' name='qty' size='4' maxlength='2' />
                 {if $shop_event.event_order_limit>0}
                    ({!order_limit!} {$shop_event.event_order_limit})
                 {/if}
@@ -164,8 +171,17 @@
         </tr>
       </table>
     </form><br>
+    <script><!--
+    setQtyShown();
+    --></script>
+  {else}
+    	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+      	<tr>
+    			<td class='TblLower'>
+          			{!old_event!}
+          </td>
+			</tr>
+		</table> <br/> <br/>
+
   {/if}
 {/if}
-<script><!--
-setQtyShown();
---></script>

@@ -643,7 +643,7 @@ define("place_status_not_updated","Error: seat status not updated");
 define("place_without_nr","Seat without number");
 define("pleaselogin","Please login or register.<br /> To signup please follow the
         link: <a href='index.php?register_user=on'>Register</a>");
-define("Please_login","Please login or register to reserve seats.");
+define("Please_login","<center><b>Please login or register to reserve seats.</b></center>");
 define("pmp_height","Part height");
 define("pmp_id","Part ID");
 define("pmp_name","Part Name");
@@ -1063,8 +1063,7 @@ define('order_event_list_title','Order overview per event');
 define('AutoCancel_order','Auto Cancel: Failed to order.');
 define('AutoCancel_paying','Auto Cancel: Failed to pay for order.');
 
-//Added 07/07/2009
+define('old_event','<center><B>This event is expired and can&apos;t be ordered anymore.</b></center>');
 define('clear_selection','Clear Selection');
 define('show_seats','Seating Chart')
-
 ?>
