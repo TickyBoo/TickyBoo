@@ -16,7 +16,7 @@
 	    {assign var=js_array value="$js_array unnum_cats[unnum_cats.length]='`$shop_category.category_numbering`';"}
 	    {capture assign=opt}
 	      <option value='{$shop_category.category_id}'>
-	          {$shop_category.category_name} - {$organizer_currency}{$shop_category.category_price}
+	          {$shop_category.category_name} -  {valuta var='10.10'}{$shop_category.category_price}
 	      </option>
 	    {/capture}  
 	    {assign var=opt_array value="$opt_array $opt"}

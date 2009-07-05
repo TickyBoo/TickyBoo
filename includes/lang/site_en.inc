@@ -1062,4 +1062,9 @@ define('order_event_list_title','Order overview per event');
 
 define('AutoCancel_order','Auto Cancel: Failed to order.');
 define('AutoCancel_paying','Auto Cancel: Failed to pay for order.');
+
+//Added 07/07/2009
+define('clear_selection','Clear Selection');
+define('show_seats','Seating Chart')
+
 ?>

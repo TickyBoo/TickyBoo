@@ -44,6 +44,9 @@ var bindLinks = function(){
 	//$("a:not([href^='http'])").click(function () { //does not work after rebind in ie8.
 	$("a").click(function () {
     	var url = $(this).attr('href');
+    	if($(this).hasClass("ui-dialog-titlebar-close")){
+    		return false;
+    	}
    		ajaxManager.clear();
    		ajaxManager.add({
 		//$.ajax({
@@ -106,7 +109,7 @@ var bindLinks = function(){
 		    	}
 			});
 		}else{
-			$("#cat-select").html("<option value='0'>No Event Selected</option>");
+			$("#cat-select").html("<option value='0'></option>");
 		}
 	});
 	
@@ -122,10 +125,12 @@ var bindLinks = function(){
 					html = $.trim(html);
 					if(html.length > 100){
 						$("#qty-td").html("");
-						$("#seat-chart").html(html).show('blind','normal');
+						$("#seat-chart").html(html);
+						bindSeatChart();
 					}else{
-						$("#seat-chart").hide('blind','normal').html("");
+						$("#seat-chart").html("");
 						$("#qty-td").html(html);
+						unBindSeatChart();
 					}
 				}
 			});	
@@ -140,11 +145,24 @@ var bindLinks = function(){
 	$('#clear-button').click(function(){
 		$('#event-input').val('');
 		$('#event-id').val('0');
-		$("#cat-select").html("<option value='0'>No Event Selected</option>");
+		$("#cat-select").html("<option value='0'></option>");
 		$("#qty-td").html("");
-		$("#seat-chart").hide('blind','normal').html("");
-		$("#continue-div").hide('blind','normal');
+		$("#seat-chart").html("");
+		unBindSeatChart();
 	});
+	
+	$("#seat-chart").dialog({
+		bgiframe: false,
+		autoOpen: false,
+		height: 'auto',
+		width: 600,
+		modal: true,
+		buttons: {'Close': function() {
+			$(this).dialog('close');
+			}
+		}
+	});
+
 }
 
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
@@ -166,6 +184,17 @@ function formatItem(row) {
 }
 function formatResult(row) {
 	return row[1].replace(/(<.+?>)/gi, '');
+}
+
+var bindSeatChart = function(){
+	$("#show-seats").show();
+	$("#show-seats").click(function(){
+		$("#seat-chart").dialog('open');
+	});
+}
+var unBindSeatChart = function(){
+	$("#show-seats").hide();
+	$("#show-seats").unbind( "click" );
 }
 
 //Creates a auto refreshing function.
