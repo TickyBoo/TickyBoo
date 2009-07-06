@@ -86,13 +86,14 @@ class MyCart_Smarty {
 	* @param seats : int[] (array) or int : required
 	* @param mode : where the order is being made options('mode_web'|'mode_kasse')
 	* @param reserved : set to true if you want to reserve only.
+	* @param discount_id
 	* @return boolean : will return true if that many seats are avalible.
 	*/
-	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false){
+	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false, $discount_id=0){
 	    if(!$mode){
 	    	$mode='mode_web';
 		}
-	    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved);
+	    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id);
 	    if($res){
 	    	return $res;
 	    }else{
@@ -257,7 +258,7 @@ class MyCart_Smarty {
 
   }
 
-  function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved){
+  function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved,$discount_id = 0){
 
     require_once ("classes/Seat.php");
     require_once ("classes/Event.php");

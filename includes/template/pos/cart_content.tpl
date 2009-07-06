@@ -88,7 +88,13 @@
     			<img src='images/clock.gif' valign="middle" align="middle"> {$seat_item->ttl()} min.
     		{/if}
     		<br />
-			<a class='shop_link' href='index.php?action=remove&event_id={$event_item->event_id}&cat_id={$category_item->cat_id}&item={$seat_item_id}'>{!remove!}</a>
+    		<form class="remove-tickets" action="index.php" method="POST">
+    			<input type="hidden" value="remove" name="action" />
+   		 		<input type="hidden" value="{$event_item->event_id}" name="event_id" />
+    		 	<input type="hidden" value="{$category_item->cat_id}" name="category_id" />
+    		 	<input type="hidden" value="{$seat_item_id}" name="item" />
+    		 	<input type="submit" value="{!remove!}" name="{!remove!}" />
+			</form>
     	</td>
 	</tr>
 	{/cart->items}

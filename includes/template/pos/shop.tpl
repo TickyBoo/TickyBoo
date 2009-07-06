@@ -102,13 +102,13 @@
  
  
 {* Trys to add the order to the cart from the seating chart. *}
-{elseif $smarty.post.action eq 'addtocart'}
+{*elseif $smarty.post.action eq 'addtocart'}
 	{assign var='last_item' value=$cart->add_item_f($smarty.post.event, $smarty.post.category, $smarty.post.place, 'mode_kasse')}
   	{if $last_item}
 		{include file="discount.tpl" event_id=$smarty.post.event category_id=$smarty.post.category}
   	{else}
     	{include file="category.tpl"}
-   	{/if}
+   	{/if*}
    
 {elseif $smarty.post.action eq 'reorder'}
   {include file="view_reorder.tpl"}
@@ -124,10 +124,6 @@
 
 {elseif $smarty.post.action eq "adddiscount"}
 {cart->set_discounts event_id=$smarty.post.event_id category_id=$smarty.post.category_id item_id=$smarty.post.item_id discounts=$smarty.post.discount }
-  {include file="cart_view.tpl"}
-
-{elseif $smarty.get.action eq "remove"}
-  {$cart->remove_item_f($smarty.get.event_id,$smarty.get.cat_id,$smarty.get.item)}
   {include file="cart_view.tpl"}
 
 {elseif $smarty.get.action eq "view_cart"}
@@ -236,11 +232,22 @@
 {* New Order Ajax Calls *}
 
 {elseif $smarty.request.ajax eq 'yes'}
+	{if $smarty.request.action eq 'addtocart'}
+		{assign var='result' value=$cart->add_item_f($smarty.request.event_id, $smarty.request.category_id, $smarty.request.place, 'mode_kasse',$smarty.request.discount_id)}
+		{$result}
+	  	{*if $last_item}
+			{include file="discount.tpl" event_id=$smarty.post.event category_id=$smarty.post.category}
+	  	{else}
+	    	{include file="category.tpl"}
+	   	{/if*}
+   	{elseif $smarty.request.action eq "remove"}
+  		{$cart->remove_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.item)}
+  		{*include file="cart_view.tpl"*}
+   	{/if}
 	{if $smarty.request.page}
 		{assign var='page' value=$smarty.request.page}
 		{include file="$page.tpl"}
 	{/if}
-
 {else}
 
   {include file="index.tpl"}

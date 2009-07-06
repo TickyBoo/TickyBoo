@@ -1,10 +1,3 @@
-var ajaxQManager = $.manageAjax.create('ajaxQMan',{
-	queue:true,
-	abortOld:true,
-	maxRequests: 10,
-	cacheResponse: false
-});
-
 var loadOrder = function(){
  	
  	ajaxQManager.add({
@@ -70,11 +63,13 @@ var loadOrder = function(){
 						$("#seat-chart").html(html);
 						bindSeatChart();
 					}else{
+						unBindSeatChart();
 						$("#seat-chart").html("");
 						$("#qty-name").show();
 						$("#qty-td").html(html);
-						unBindSeatChart();
+						
 					}
+					$("#continue").attr("type","submit");
 				}
 			});
 			ajaxQManager.add({
@@ -91,7 +86,7 @@ var loadOrder = function(){
 		}	
 	});
 	
-	refreshTimer = setInterval(function(){refreshOrder();}, 10000);
+	refreshTimer = setInterval(function(){refreshOrder();}, 30000);
 	
 	
 	//Make sure all add ticket fields are added to this so when clearing selection 
@@ -104,6 +99,7 @@ var loadOrder = function(){
 		$("#discount-name").hide();
 		$("#qty-td").html("");
 		$("#seat-chart").html("");
+		$("#continue").attr("type","button");
 		unBindSeatChart();
 		
 	});
@@ -119,6 +115,17 @@ var loadOrder = function(){
 			}
 		}
 	});
+	
+	$("#order-form").submit(function(){
+		$(this).ajaxSubmit({
+			data:{ajax:"yes",action:"addtocart"},
+			success: function(html){
+				console.log(html);
+				refreshOrder();
+			}
+		});
+		return false;
+	});
 }
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
@@ -129,7 +136,7 @@ var refreshOrder = function(){
     	data: {ajax:'yes',page:"cart_content"},
     	cache:false,
     	success: function(html){
-    		$("#cart-table tbody:first").fadeOut("fast").html(html).fadeIn("fast");
+    		$("#cart-table tbody:first").html(html);
     	}
 	});
 }
@@ -147,9 +154,10 @@ var bindSeatChart = function(){
 	});
 }
 var unBindSeatChart = function(){
+	//$("#seat-chart").dialog('destroy');
 	$("#show-seats").hide();
 	$("#show-seats").unbind( "click" );
 }
 
 //Creates a auto refreshing function.
-var refreshTimer = setInterval(function(){refreshOrder();}, 10000);
+var refreshTimer = setInterval(function(){refreshOrder();}, 30000);
