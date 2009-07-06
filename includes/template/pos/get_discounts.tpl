@@ -5,3 +5,6 @@
 	<option id="0">{!no_discounts!}</option>
 {/if}
 {/discount}
+{if $shop_discount}
+	<option id="0" selected="selected">{!none!}</option>
+{/if}
