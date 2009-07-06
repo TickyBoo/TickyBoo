@@ -39,10 +39,17 @@ function smarty_block_discount ($params, $content, &$smarty, &$repeat)
 {
     if ($repeat) {
         $from = 'from Discount';
-        $where = "where 1";
+        $where = "where 1=1";
 
         if ($params['order']) {
             $order_by = "order by {$params['order']}";
+        }
+        
+        if($params['category_id']){
+        	$from .=",Event,Category ";
+        	$where .= " AND discount_event_id=event_id ";
+        	$where .= " AND event_id=category_event_id ";
+        	$where .= " AND category_id="._esc($params['category_id']);
         }
 
         if ($params['event_id']) {
@@ -104,7 +111,11 @@ function smarty_block_discount ($params, $content, &$smarty, &$repeat)
         $repeat = !empty($discount);
 
         if ($discount) {
-             If ($params['cat_price']) {
+      		if($params['category_id']){
+      			$params['cat_price'] = $discount['category_price'];
+      		}
+      			
+             if ($params['cat_price']) {
                   if($discount['discount_type']=='fixe'){
                     $discount['discount_price'] = $params['cat_price']-$discount['discount_value'];
                   }else if($discount['discount_type']=='percent'){

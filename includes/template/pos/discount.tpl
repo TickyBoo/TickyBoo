@@ -44,7 +44,7 @@
 								{!normal!}
 						</label>
 					</td>
-    
+					
 					{section name='d' loop=$shop_discounts}
       				<td class='discount_value'>
 		  				<label>
