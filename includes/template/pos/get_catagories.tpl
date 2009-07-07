@@ -1,9 +1,7 @@
 {if $smarty.request.category_id}
 	{category event_id=$smarty.request.event_id category_id=$smarty.request.category_id stats="on"}
 		{if $shop_category.cs_free > 0 }
-			{if $shop_category.category_numbering eq 'none'}
-				<input type='text' name='place' size='4' maxlength='2' />
-			{else}
+			{if $shop_category.category_numbering neq 'none'}
 				{include file="get_seatchart.tpl"}
 			{/if}
 		{/if}

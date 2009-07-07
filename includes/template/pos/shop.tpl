@@ -161,7 +161,7 @@
 {elseif $smarty.get.action eq 'calendar'}
 	{include file="calendar.tpl"}
 	
-{elseif $smarty.get.action eq 'order'}
+{elseif $smarty.request.action eq 'order'}
 	{include file="order.tpl"}	
 	
 {elseif $smarty.request.process}
@@ -231,7 +231,7 @@
 {elseif $smarty.request.ajax eq 'yes'}
 	{if $smarty.request.action eq 'addtocart'}
 		{assign var='result' value=$cart->add_item_f($smarty.request.event_id, $smarty.request.category_id, $smarty.request.place, 'mode_kasse',$smarty.request.discount_id)}
-		{$result}
+		{print_r var=$result}
 	  	{*if $last_item}
 			{include file="discount.tpl" event_id=$smarty.post.event category_id=$smarty.post.category}
 	  	{else}

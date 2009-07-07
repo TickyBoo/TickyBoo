@@ -12,7 +12,7 @@
 		<tbody>
 			<tr>
 				<td width="30%" class='admin_list_row_1'>{!event!}:</td>
-				<td class='admin_list_row_0' >
+				<td width="70%" class='admin_list_row_0' >
 					<input type="text" id="event-input" size="40" style="width:250px;" />
            <button type="button" id="clear-button">{!clear_selection!}</button>
 					<input type="hidden" id="event-id" name="event_id" />
@@ -35,9 +35,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td id="qty-name" class='admin_list_row_1'>{!tickets_nr!}:</td>
-				<td id="qty-td" class='admin_list_row_0' >
-					<button type="button" style="display:none;" id="show-seats" name='submit' value='show seating'>{!show_seats!} </button>
+				<td id="qty-name" style="display:none;" class='admin_list_row_1'>{!tickets_nr!}:</td>
+				<td class='admin_list_row_0' class="seat-selection" >
+					<div id="show-seats" style="display:none;">
+						<button type="button" name='submit' value='show seating'>{!show_seats!} </button>
+					</div>
+					<div id="seat-qty" style="display:none;"><input type='text' name='place' size='4' maxlength='2' /></div>
 				</td>
 			</tr>
 			<tr>

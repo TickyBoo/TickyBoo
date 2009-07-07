@@ -58,7 +58,7 @@ var loadOrder = function(){
 				success:function(html){
 					html = $.trim(html);
 					if(html.length > 100){
-						$("#qty-td").html("");
+						$("#seat-qty").hide();
 						$("#qty-name").hide();
 						$("#seat-chart").html(html);
 						bindSeatChart();
@@ -66,7 +66,7 @@ var loadOrder = function(){
 						unBindSeatChart();
 						$("#seat-chart").html("");
 						$("#qty-name").show();
-						$("#qty-td").html(html);
+						$("#seat-qty").show();
 						
 					}
 					$("#continue").attr("type","submit");
@@ -78,8 +78,11 @@ var loadOrder = function(){
 				data: {ajax:'yes',page:"get_discounts", category_id:$("#cat-select").val()},
 				cache:false,
 				success:function(html){
-					$("#discount-name").show();
-					$("#discount-select").html(html).show();
+					html = $.trim(html);
+					if(html.length > 20){
+						$("#discount-name").show();
+						$("#discount-select").html(html).show();
+					}
 				}
 			});
 			
@@ -97,7 +100,6 @@ var loadOrder = function(){
 		$("#cat-select").html("<option value='0'></option>");
 		$("#discount-select").hide().html("<option value='0'></option>");
 		$("#discount-name").hide();
-		$("#qty-td").html("");
 		$("#seat-chart").html("");
 		$("#continue").attr("type","button");
 		unBindSeatChart();
@@ -122,6 +124,7 @@ var loadOrder = function(){
 			success: function(html){
 				console.log(html);
 				refreshOrder();
+				refreshSeatChart();
 			}
 		});
 		return false;
@@ -141,23 +144,45 @@ var refreshOrder = function(){
 	});
 }
 
-function formatItem(row) {
-	return row[1];
+var refreshSeatChart = function(){
+	if($("#seat-chart").html().length < 200){
+		return false;
+	}
+	if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
+		ajaxQManager.add({
+		//$.ajax({
+			type:"POST",
+			url: "index.php",
+			data: {ajax:'yes',page:"get_catagories",event_id:$("#event-id").val(), category_id:$("#cat-select").val()},
+			cache:false,
+			success:function(html){
+				html = $.trim(html);
+				if(html.length > 100){
+					$("#seat-chart").html(html);
+				}
+			}
+		});
+	}
 }
-function formatResult(row) {
-	return row[1].replace(/(<.+?>)/gi, '');
-}
+
 var bindSeatChart = function(){
 	$("#show-seats").show();
-	$("#show-seats").click(function(){
+	$("#show-seats button").click(function(){
 		$("#seat-chart").dialog('open');
 	});
 }
 var unBindSeatChart = function(){
 	//$("#seat-chart").dialog('destroy');
 	$("#show-seats").hide();
-	$("#show-seats").unbind( "click" );
+	$("#show-seats button").unbind( "click" );
 }
 
 //Creates a auto refreshing function.
 var refreshTimer = setInterval(function(){refreshOrder();}, 30000);
+
+function formatItem(row) {
+	return row[1];
+}
+function formatResult(row) {
+	return row[1].replace(/(<.+?>)/gi, '');
+}

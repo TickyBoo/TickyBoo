@@ -272,6 +272,13 @@ class MyCart_Smarty {
     if(!$category_numbering = PlaceMapCategory::getCategoryNumbering($category_id)){
       return FALSE;
     }
+	//Load Discount if not 0.
+	if($discount_id > 0){
+		$discount = Discount::load($discount_id);
+		if(!$discount){
+			return false;
+		}
+	}
 
     //checks the seating numbering.
     if($category_numbering=='none'){

@@ -10,7 +10,8 @@
 	});
 	
 	$().ajaxStop(function(evt, request, settings){  
-		$(".loading").fadeOut("fast");  
+		$(".loading").fadeOut("fast");
+		//console.log("stop");
 		bindForms();
 		bindLinks();
 	});
