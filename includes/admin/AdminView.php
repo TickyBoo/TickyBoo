@@ -214,8 +214,8 @@ class AdminView extends AUIComponent {
         echo "</td></tr>\n";
     }
 
-    function print_time ($name, &$data, &$err, $suffix = '')
-    {
+    function print_time ($name, &$data, &$err, $suffix = '') {
+        global $_SHOP;
         if (isset($data[$name])) {
             $src = $data[$name];
             list($h, $m, $s) = explode(":", $src);
@@ -240,8 +240,8 @@ class AdminView extends AUIComponent {
              </td></tr>\n";
     }
 
-    function print_date ($name, &$data, &$err, $suffix = '')
-    {
+    function print_date ($name, &$data, &$err, $suffix = '') {
+      global $_SHOP;
         if (isset($data[$name])) {
             $src = $data[$name];
             list($y, $m, $d) = explode("-", $src);
