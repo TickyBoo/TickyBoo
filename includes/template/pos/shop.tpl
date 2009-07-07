@@ -7,10 +7,7 @@
 	{include file="header.tpl"}
 {/if}
 
-{if $smarty.get.action eq 'home'}
-	{include file='index.tpl'}
-	
-{elseif $smarty.get.action eq save_prefs}
+{if $smarty.get.action eq save_prefs}
    {pos->set_prefs prefs=$smarty.get.user_prefs}
    {include file='view_options.tpl'}
 
@@ -249,8 +246,7 @@
 		{include file="$page.tpl"}
 	{/if}
 {else}
-
-  {include file="index.tpl"}
+  {include file="order.tpl"}
 {/if}
 
 {if $smarty.get.ajax neq 'yes' and $smarty.post.ajax neq 'yes'}

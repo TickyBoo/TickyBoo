@@ -52,8 +52,7 @@
 
 			<div id="footer">
 				Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office
-				{if $organizer->organizer_logo} <div align="center"><img src='../files/{$organizer->organizer_logo}'/> </div>{/if}
-				<a href="http://fusionticket.org" ><img src="images/atom.png" width="38" height="39" style="float:right;" /></a>
+			{*	<a href="http://fusionticket.org" ><img src="images/atom.png" width="38" height="39" style="float:right;" /></a> *}
 				<!--
 				<a href='http://jquery.com/' title='jQuery JavaScript Library'><img src='http://jquery.com/files/buttons/propal2.png' alt='jQuery JavaScript Library' title='jQuery JavaScript Library' style='border:none; float:left; display:block;'/></a>
 				-->

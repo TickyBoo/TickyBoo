@@ -62,16 +62,16 @@
 	<body>
 		<div id="wrap">
 			<div id="header">
+				{if $organizer->organizer_logo} <div align="left"><img src='../files/{$organizer->organizer_logo}'/> </div>{/if}
 				<img style="" src="images/fusion.png" border="0"/>
 				<div class="loading">
 					<img src="images/LoadingImageSmall.gif" width="48" height="47" alt="Loading data, please wait" />
 				</div>
 				<h2>Fusion Ticket - Box Office <span style="color:red; font-size:14px;"><i>[AJAX Beta]</i></span></h2>
 				<ul>
-					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_homepage!}</a></li>
-					<li><a href="index.php?action=order" accesskey="b" tabindex="11">{!pos_booktickets!}</a></li>
+{*					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_homepage!}</a></li> *}
+					<li><a href="index.php" accesskey="b" tabindex="11">{!pos_booktickets!}</a></li>
 					<li><a href="index.php?process=on" accesskey="t" tabindex="12">{!pos_currenttickets!}</a></li>
-				</ul>
+				</ul><br>
 			</div>
-
 			<div id="right">
