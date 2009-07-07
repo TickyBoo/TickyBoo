@@ -162,5 +162,6 @@
   
   $_SHOP->files_url=$_SHOP->root."files/";
   $_SHOP->images_url=$_SHOP->root."images/";
-
+  $_SHOP->input_time_type = 24; //12; //
+  $_SHOP->input_date_type = 'dmy'; // 'mdy'
 ?>

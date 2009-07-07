@@ -103,6 +103,8 @@ function smarty_block_discount ($params, $content, &$smarty, &$repeat)
 
             $smarty->assign("shop_discounts", $discounts);
             $smarty->assign("shop_discounts_count", $c);
+       			$smarty->assign("shop_discounts_times", $_REQUEST['qty']);
+
         }
 
         $repeat = false;

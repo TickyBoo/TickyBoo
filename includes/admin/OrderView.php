@@ -83,12 +83,22 @@ function order_details ($order_id){
   $this->print_field('order_shipment_status',$order);
   $this->print_field('order_payment_status',$order);
   $this->print_field_o('order_payment_id',$order);
-
-
   $this->print_field('order_fee',$order);
-
   $this->print_field('order_status',$order);
   echo "</table><br>\n";
+/*
+  echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>";
+  echo "<input type='hidden' name='oid' value='".$order_id."'>";
+  echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='0'>\n";
+  echo "<tr><td align='center' width='90%'>";
+  echo "<table width='100%' cellspacing='0' cellpadding='0' class='admin_form'>\n";
+  $this->print_input('confirmation_number',$order, $err,25,100,' ');
+  echo "</table>";
+  echo "</td>";
+  echo "<td align='center' width='10%'><table width='100%' cellspacing='0' cellpadding='0' class='admin_form'>";
+  echo "<tr><td><input type='submit' name='submit' value='".submit."'></td></tr></table></td></tr>";
+  echo "</table></form>";
+*/
 
 	$query="select * from Seat LEFT JOIN Discount ON Seat.seat_discount_id=Discount.discount_id
 			LEFT JOIN Event ON Seat.seat_event_id=Event.event_id

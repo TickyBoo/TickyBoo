@@ -227,8 +227,16 @@ class AdminView extends AUIComponent {
         echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
              <td class='admin_value'>
              <input type='text' name='$name-h' value='$h' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-m'])\"> :
-             <input type='text' name='$name-m' value='$m' size='2' maxlength='2'>
-             <span class='err'>{$err[$name]}</span>
+             <input type='text' name='$name-m' value='$m' size='2' maxlength='2'>";
+             if ($_SHOP->input_time_type == 12) {
+               $time_fs = array("AM","PM");
+               echo "<select name='$name-f'>";
+        	     foreach ($time_fs as $time_f) {
+             	    echo "<option ".(($data["$name-f"] == $time_f) ? "selected" :'') ."  value={$time_f}>". $time_f ."</option>";
+               }
+               echo "</select>";
+             }
+        echo "<span class='err'>{$err[$name]}</span>
              </td></tr>\n";
     }
 
@@ -244,10 +252,15 @@ class AdminView extends AUIComponent {
         }
         $nm = $name . "-m";
         echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
-              <td class='admin_value'>
-              <input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > -
-              <input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> -
-              <input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)
+              <td class='admin_value'>";
+        IF ($_SHOP->input_date_type == 'dmy') {
+          echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+        }
+        echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
+        IF ($_SHOP->input_date_type == 'mdy') {
+          echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+        }
+        echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)
               <span class='err'>{$err[$name]}</span>
               </td></tr>\n";
     }

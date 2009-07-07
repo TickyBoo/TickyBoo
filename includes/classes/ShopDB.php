@@ -291,6 +291,38 @@ class ShopDB {
       }
     }
 
+  	//function to find the number of fields in a recordSet
+  	function num_fields($result) {
+  		return $result->field_count;
+  	}
+
+  	//function to find the field flags in a recordSet
+  	function field_flags($result,$i) {
+  		$fld_array = $result->fetch_field_direct($i);
+  		if($fld_array->flags & 2)
+  			return "primary_key";
+  		else
+  			return "";
+  	}
+
+  	//function to find the field name from recordSet
+  	function field_name($result,$i) {
+  		$fld_array = $result->fetch_field_direct($i);
+  		return $fld_array->orgname;
+  	}
+
+  	//function to find the alias field name from recordSet
+  	function alias_field_name($result,$i) {
+  		$fld_array = $result->fetch_field_direct($i);
+  		return $fld_array->name;
+  	}
+
+  	//function to find the table of a field name from recordSet
+  	function field_table($result,$i) {
+  		$fld_array = $result->fetch_field_direct($i);
+  		return $fld_array->orgtable;
+  	}
+
     /*
     *
     * Checks if a given table exists in the active database . Returns true if the table exists, false otherwise .

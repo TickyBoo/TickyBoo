@@ -52,15 +52,15 @@
 {elseif $smarty.request.action eq "view_cart"}
   {include file="cart_view.tpl"}
   
-{elseif $smarty.request.category_id}
-  {if $smarty.post.qty}
+{elseif $smarty.request.category_id}                                         zxbfxbfx
+  {if $smarty.request.qty}
     {assign var='last_item' value=$cart->add_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.qty)}
-    {if $last_item}
+    {if $last_item}  
       {include file="discount.tpl"}
-    {else}
+    {else}                  
       {include file="event.tpl" event_id=$smarty.request.event_id}
     {/if}
-  {else} 
+  {else}                            
     {include file="category.tpl"}
   {/if}
 

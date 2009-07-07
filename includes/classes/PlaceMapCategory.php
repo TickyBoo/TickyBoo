@@ -295,7 +295,7 @@ class PlaceMapCategory{
 			}
 
 
-			if(shopDB::affected_rows($_SHOP->link)!=$limit){
+			if(shopDB::affected_rows()!=$limit){
 				ShopDB::rollback();
 				echo 12;return FALSE;;
 			}
@@ -326,7 +326,7 @@ class PlaceMapCategory{
 			echo 15;return FALSE;;
 		}
 
-		if(shopDB::affected_rows($_SHOP->link)!=1){
+		if(shopDB::affected_rows()!=1){
 			ShopDB::rollback();
 			echo 16;return FALSE;;
 		}

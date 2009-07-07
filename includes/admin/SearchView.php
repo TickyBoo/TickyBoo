@@ -305,21 +305,19 @@ function print_order_status ($order_status){
 function result_codebar (){
   global $_SHOP;
   if(isset($_POST['codebar'])){
-    $code=sscanf($_POST['codebar'],"%08d%s");
+    list($seat_id,$ticket_code)=sscanf($_GET['codebar'],"%08d%s");
 
-    $seat_id=$code[0];
-    $ticket_code=$code[1];
+    $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id
+                                    LEFT JOIN Category on seat_category_id=category_id
+                                    LEFT JOIN Color ON category_color=color_id
+                                    LEFT JOIN PlaceMapZone on  seat_zone_id=pmz_id
+                               	    LEFT JOIN Event on  seat_event_id=event_id
+                              	    LEFT JOIN User on seat_user_id=user_id
+                              	    LEFT JOIN `Order` on seat_order_id=order_id
+       where seat_id='$seat_id'
+	     AND seat_code='$ticket_code'
+	     AND seat_organizer_id='{$_SHOP->organizer_id}'";
 
-    $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,
-                          Category LEFT JOIN Color ON category_color=color_id,
-	                        PlaceMapZone, Event, User,`Order`,	Organizer
-            where seat_id='$seat_id'
-            AND   seat_category_id=category_id
-	          AND   seat_zone_id=pmz_id
-            AND   seat_event_id=event_id
-            AND   seat_user_id=user_id
-            AND   seat_order_id=order_id
-	          AND   seat_code='$ticket_code'";
 	
   	echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' >";
   	echo "<tr><td colspan='2' class='admin_list_title'>".search_result."</td></tr>";

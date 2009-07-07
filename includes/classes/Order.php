@@ -411,7 +411,7 @@ class Order {
             where order_id='$order_id'
   	  LIMIT 1";
 
-    if(!ShopDB::query($query) or shopDB::affected_rows($_SHOP->link)!=1){
+    if(!ShopDB::query($query) or shopDB::affected_rows() !=1){
       echo "<div class=error>".cannot_delete_ticket."(3)</div>";
       ShopDB::rollback('order_delete_ticket');
       return FALSE;

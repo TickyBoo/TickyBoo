@@ -66,7 +66,7 @@ class Event_stat{
   	global $_SHOP;
     $query="UPDATE Event_stat SET es_free=es_free-$count 
             WHERE es_event_id='$es_event_id' LIMIT 1";
-    if(!ShopDB::query($query) or shopDB::affected_rows($_SHOP->link)!=1){
+    if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
       return FALSE;
     }else{
       return TRUE;

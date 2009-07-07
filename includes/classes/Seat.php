@@ -244,7 +244,7 @@ class Seat {
         ShopDB::rollback();
         return FALSE;
       }else{
-        if(shopDB::affected_rows($_SHOP->link)!=1){//echo b;
+        if(shopDB::affected_rows()!=1){//echo b;
            ShopDB::rollback();
            return FALSE;
         }
@@ -327,7 +327,7 @@ class Seat {
         return FALSE;          
 
       }else{
-        if(shopDB::affected_rows($_SHOP->link)!=1){
+        if(shopDB::affected_rows()!=1){
           ShopDB::rollback();
           return FALSE;
         }
