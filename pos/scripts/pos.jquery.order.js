@@ -79,9 +79,12 @@ var loadOrder = function(){
 				cache:false,
 				success:function(html){
 					html = $.trim(html);
-					if(html.length > 20){
+					if(html.length > 20){						
 						$("#discount-name").show();
 						$("#discount-select").html(html).show();
+					}else{
+						$("#discount-name").hide();
+						$("#discount-select").hide().html("<option value='0'></option>");
 					}
 				}
 			});
@@ -100,6 +103,8 @@ var loadOrder = function(){
 		$("#cat-select").html("<option value='0'></option>");
 		$("#discount-select").hide().html("<option value='0'></option>");
 		$("#discount-name").hide();
+		$("#qty-name").hide();
+		$("#seat-qty").hide();
 		$("#seat-chart").html("");
 		$("#continue").attr("type","button");
 		unBindSeatChart();

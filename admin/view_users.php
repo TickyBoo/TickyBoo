@@ -29,7 +29,7 @@
  */
 
 require_once("../includes/config/init_admin.php");
-require_once ("admin/usersview.php");
+require_once ("admin/UsersView.php");
 
 
 //print cart update
