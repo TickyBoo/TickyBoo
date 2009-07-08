@@ -48,11 +48,11 @@
 		
 		<script type="text/javascript">
 			var lang = new Object();
-			lang.required = '{!required!}'; lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
-			lang.fax_long = '{!fax_long!}'; lang.fax_short = '{!fax_short!}';
-			lang.email_valid = '{!email_valid!}'; lang.email_match = '{!email_match!}';
+			lang.required = '{!mandatory!}';        lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
+			lang.fax_long = '{!fax_long!}';         lang.fax_short = '{!fax_short!}';
+			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
 			lang.pass_short = '{!pass_too_short!}'; lang.pass_match = '{!pass_match!}';
-			lang.not_number = '{!not_number!}';
+			lang.not_number = '{!not_number!}';     lang.condition ='{!check_condition!}';
 		</script>
 		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
 		

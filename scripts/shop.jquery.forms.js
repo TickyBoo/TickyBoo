@@ -20,7 +20,7 @@ $(window).load(function(){
 			user_city : { required : lang.required	},
 			user_phone : { minlength : lang.phone_short, maxlength : lang.phone_long },
 			user_fax : { minlength : lang.fax_short, maxlength : lang.fax_long },
-			user_email : { required : lang.required, email : "Please enter a valid email address" },
+			user_email : { required : lang.required, email : lang.email_valid },
 			old_password : { required : lang.required,	minlength : lang.pass_short },
 		},
 		errorClass: "form-error",
@@ -55,7 +55,7 @@ $(window).load(function(){
 			password1 : { required : lang.required,	minlength : lang.pass_short },
 			password2 : { required : lang.required,	minlength : lang.pass_short, equalTo: lang.pass_match },
 			user_nospam :	{ required : lang.required },
-			check_condition	:	{ required : "Please accept the terms"}
+			check_condition	:	{ required : lang.condition}
 		},
 		errorClass: "form-error",
 		success: "form-valid",

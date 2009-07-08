@@ -89,7 +89,7 @@
   {if $login_error.code eq 'notactive'}
   		{include file="user_activate.tpl"}
   {elseif not $user->logged || $user_errors}
-      {include file="user_register.tpl"}
+      {include file="user_register.tpl" ManualRegister=true}
   {else}
      
   {/if}  

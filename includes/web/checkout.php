@@ -67,7 +67,7 @@ if (isset($_REQUEST['sor'])) {
   	if (!$user->logged and
 		$action !== 'register' and
       	$action !== 'login' ) {
-    	$smarty->display('checkout_user.tpl');
+    	$smarty->display('user_register.tpl');
 	//  session_write_close();
     	exit();
 	}
@@ -140,7 +140,7 @@ die();
     if (!$user->logged) {
   	  If (! $user->login_f($_POST['username'], $_POST['password'], $errors)) {
   	    $smarty->assign('login_error',$errors);
-  	    return "checkout_user";
+  	    return "user_register";
       }
     }
     return "checkout_preview";
@@ -175,7 +175,7 @@ die();
       $smarty->assign('user_data',   $_POST);
       $smarty->assign('reg_type',    $type);
       $smarty->assign('user_errors', $errors);
-      return "checkout_user";
+      return "user_register";
     } else
       $smarty->assign('newuser_id', $user_id);
       return "checkout_preview";

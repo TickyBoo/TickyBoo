@@ -28,7 +28,7 @@
  *}
 {include file='header.tpl' name=!act_name! }
 {if !$user->activate()}
-   {include file="just_registred.tpl"}
+   {include file="user_registred.tpl"}
    <br>
    <table border="0" cellpadding="5" cellspacing="5" width="600" class="login_table"  >
       <tr>

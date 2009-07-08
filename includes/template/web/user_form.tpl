@@ -70,4 +70,13 @@
 	  	<input {if $user_data.user_id}readonly="readonly"{/if} type='text' name='user_email' size='30'  maxlength='50' value='{$user_data.user_email|clean}' id="email" />
 	  	<span class='error'>{$user_errors.user_email}</span>
  	</td>
+ 	
 </tr>
+{if !$user_data.user_id}
+ 	<tr>
+		<td class='TblLower' > {!confirmemail!}&nbsp;* </td>
+		<td class='TblHigher'>
+  		<input autocomplete='off' type='text' name='user_email2' size='30'  maxlength='50' value='{$user_data.user_email2|clean}'/>
+  	</td>
+	</tr>
+{/if}

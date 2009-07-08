@@ -114,7 +114,6 @@ define("charges","Charges");
 define("check","Check");
 define("checked","Checked");
 define("checkout","Check Out");
-define("check_cond","I have read and agree to the General Terms of Sale.");
 define("check_success","Ticket check OK");
 define("choice","Choose");
 define("choice_cat","Select a category");
@@ -407,7 +406,7 @@ define("log_err_wrong_usr_info","<p>Please try again, remembering that the usern
         or password please click <a href='forgot_password.php'>here</a></p>");
 define("longdate_format","%Y-%m-%d %H:%M:%S");
 //M
-define("mandatory","This field is mandatory");
+define("mandatory","Field Required");
 define("map","Chart");
 define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send
         me information about future events and other pepper related matters, and that they
@@ -446,7 +445,7 @@ define("nosale_success","Success");
 define("note_mbr","Check your email");
 define("notpaid","Not Paid");
 define("notsent","Not Sent");
-define("not_number","Please enter a vaild number.");
+define("not_number","Enter a number without -().");
 define("not_to_be2"," ");
 define("not_to_be","If you are not");
 define("not_valid_email","E-mail is invalid");
@@ -745,7 +744,7 @@ define("res","Reset");
 define("restart_success","Restart success");
 define("Resume_min","min.");
 define("res_paypal","Reserve&amp;Paypal");
-define("required","Field Required");
+define("required","== pleas use !manadatory!");
 define("rock","Rock");
 define("row","Row");
 //S
@@ -1001,7 +1000,7 @@ define('Reservated', 'Reservated');
 // defines added at: 2009-05-22T13:34:27+02:00
 define('imp_export_admin', "Import /Export");
 define('guest_info', "Fill your details here, so that the ticket can be send to you. <br> Already a regular customer? Fill at the right side, your email address and password.");
-define('mand_all', "All inputfields are mandatory.");
+define('mand_all', "All inputfields are required.");
 define('password1', "Choice password");
 define('eventlist_info', 'Please select an upcomming event from below.');
 define('shop_info2', "For this event are no tickets for sale.");
@@ -1065,5 +1064,8 @@ define('AutoCancel_paying','Auto Cancel: Failed to pay for order.');
 
 define('old_event','<center><B>This event is expired and can&apos;t be ordered anymore.</b></center>');
 define('clear_selection','Clear Selection');
-define('show_seats','Seating Chart')
+define('show_seats','Seating Chart');
+
+define('check_condition', "Please accept the terms");
+
 ?>
