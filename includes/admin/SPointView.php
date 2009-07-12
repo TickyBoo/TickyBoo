@@ -107,7 +107,7 @@ class SPointView extends AdminView {
 	 <span class='err'>{$err['old_password']}</span></td></tr>
          <tr> <td class='admin_name'>" . new_password . "</td>
          <td class='admin_value'><input type='password' name='new_password1' size='10'  maxlength='10'><span class='err'>{$err['new_password']}</span></td> </tr>
-	 <tr> <td class='admin_name'>" . new_password . "</td>
+	 <tr> <td class='admin_name'>" . password2 . "</td>
          <td class='admin_value'><input type='password' name='new_password2' size='10'  maxlength='10'></td></tr>";
 		}
 		if ( $data['user_id'] ) {

@@ -46,7 +46,6 @@
 			<tr>
 				<td colspan="2" class='admin_list_row_0' align='right'>
 					<button type="button" id="continue" name='submit' value='submit'>{!add!} {!tickets!}</button>
-
 				</td>
 			</tr>
 		</tbody>

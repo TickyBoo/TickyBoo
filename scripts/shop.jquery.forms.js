@@ -79,5 +79,5 @@ $(window).load(function(){
 		
 	});
 	//$(":input[name='user_phone']").mask("00000000000000");
-	$(":input[type='submit']").addClass("submit");
+	//$(":input[type='submit']").addClass("submit");
 });

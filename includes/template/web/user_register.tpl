@@ -33,7 +33,7 @@
   <form action='index.php' method='post'  id="user-register">
 {else}
   {include file="header.tpl" name=!pers_info! header=!user_notice!}
-  <form action='checkout.php' method='post' id="user-register" >
+  <form action='checkout.php' method='post' >
 {/if}
   {if $user_errors}
      <br/>

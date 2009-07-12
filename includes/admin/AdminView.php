@@ -115,11 +115,11 @@ class AdminView extends AUIComponent {
                 if (empty($data[$name . '_size'])) {
                     $sel_opt[1] = 'checked="checked"';
                 } else if (!is_array($data[$name . '_size'])) {
-                    $sel_opt[2] = 'checked="checked';
+                    $sel_opt[2] = 'checked="checked"';
                     $sel_size[$data[$name . '_size']] = 'selected';
                     $sel_ort[$data[$name . '_orientation']] = 'selected';
                 } else {
-                    $sel_opt[3] = 'checked="checked';
+                    $sel_opt[3] = 'checked="checked"';
                     $nsc = $data[$name . '_size'];
                 }
 
