@@ -75,7 +75,6 @@ class Order_Smarty {
     $order = new Order($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
     $cart->iterate('_collect', $order);
     
-
     //begin the transaction
     if(!ShopDB::begin()){
       $this->error =con('reservate_failed');

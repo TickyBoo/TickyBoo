@@ -1,7 +1,5 @@
 <?php
 
-global $_SHOP, $action;
-
 require_once("includes/config/init_common.php");
 /*
 //Check page is secure
@@ -24,6 +22,10 @@ require_once('classes/Update_Smarty.php');
 require_once('classes/gui_smarty.php');
 
 require_once("config/init_shop.php");
+
+global $_SHOP, $action;
+
+if (!$action) {$action = 'index';}
 
 $smarty = new Smarty;
 $_SHOP->smarty = $smarty;
@@ -50,36 +52,32 @@ $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
 
 $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
-
 if (isset($_REQUEST['sor'])) {
 	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"sor")))) {
 		$smarty->display($fond . '.tpl');
 	}
-	//  session_write_close();
-  	exit();
+ 	exit();
 }elseif(isset($_REQUEST['cbr'])){
 	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"cbr")))) {
 		$smarty->display($fond . '.tpl');
 	}
-	//  session_write_close();
-  	exit();
+ 	exit();
 } elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
   	if (!$user->logged and
-		$action !== 'register' and
-      	$action !== 'login' ) {
+		     $action !== 'register' and
+      	 $action !== 'login' ) {
     	$smarty->display('user_register.tpl');
-	//  session_write_close();
     	exit();
-	}
+	  }
   	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
     	$smarty->display($fond . '.tpl');
   	}
-//  session_write_close();
   	exit();
 }
 
 if ($action == 'useredit') {
 	echo "<script>window.close();</script>";
+	echo 'closeme';
 } else {
 	redirect("index.php?action=cart_view",403);
 }
@@ -148,7 +146,6 @@ die();
 
   Function usereditAction ($smarty){
     global $user;
-
     $smarty->assign('usekasse',true);
     if (isset($_POST['submit_update'])) {
       if ($user->update_f($_POST, $errors)) {
@@ -202,15 +199,13 @@ die();
 
 	function confirmaction($smarty) {
     	global $order, $cart;
-	    
     	if (!isset($_SESSION['_SHOP_order'])) {
-      		$myorder = $order->make_f($_POST['handling_id'],"www");
+      	$myorder = $order->make_f($_POST['handling_id'],"www");
     	} else {
-			$myorder = $_SESSION['_SHOP_order'];
-		}
+			  $myorder = $_SESSION['_SHOP_order'];
+		  }
 		
     	if (!$myorder) {
-    		
       		$smarty->assign('order_error', $order->error);
       		return "checkout_preview";
     	} else {
