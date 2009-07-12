@@ -59,7 +59,6 @@
 	</tr>
   {/if}
     <form method='post' action='index.php' style='margin-top:0px;' id="user-login">
-    <input type="hidden" name="register_user" value="on">
     <input type="hidden" name="action" value="login">
     <input type="hidden" name="type" value="block">
     {ShowFormToken name='login'}
@@ -86,7 +85,7 @@
   	</tr>
   	<tr>
   		<td class="login_content">
-  			<li><a  href='index.php?register_user=on'>{!register!}</a></li>
+  			<li><a  href='index.php?action=register'>{!register!}</a></li>
   		</td>
   	</tr>
   	<tr>

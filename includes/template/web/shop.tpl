@@ -26,20 +26,22 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}{strip}{* include file="header.tpl" *}
-{if $smarty.request.action eq "addtocart"}
-  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id, $smarty.post.category_id, $smarty.post.place, 'mode_web')}
-  {if $last_item}
-    {include file="discount.tpl"}
+{if $smarty.request.action eq 'login' and $smarty.request.type != 'block'}
+	{include file="user_login.tpl"}
+
+{elseif $smarty.request.action eq 'register'}
+   {if $smarty.request.submit_info}
+    {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
+    {assign var='user_data' value=$smarty.post}
+    {if $user_errors}
+      {include file="user_register.tpl" ManualRegister=true}
+    {else}
+      {include file="user_activate.tpl"}
+    {/if}
   {else}
-    {include file="category.tpl"}
+    {include file="user_register.tpl" ManualRegister=true}
   {/if}
 
-{elseif $smarty.request.action eq "adddiscount"}
-  {cart->set_discounts event_id=$smarty.post.event_id 
-    category_id=$smarty.post.category_id item_id=$smarty.post.item_id
-    discounts=$smarty.post.discount }
-  {include file="cart_view.tpl"}
-  
 {elseif $smarty.request.action eq 'activate'}
   {include file="user_activate.tpl"}
   
@@ -49,10 +51,24 @@
   {$cart->remove_item_f($smarty.get.event_id,$smarty.get.cat_id,$smarty.get.item)}
   {include file="cart_view.tpl"}
 
+{elseif $smarty.request.action eq "addtocart"}
+  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id, $smarty.post.category_id, $smarty.post.place, 'mode_web')}
+  {if $last_item}
+    {include file="discount.tpl"}
+  {else}
+    {include file="category.tpl"}
+  {/if}
+
+{elseif $smarty.request.action eq "adddiscount"}
+  {cart->set_discounts event_id=$smarty.post.event_id
+    category_id=$smarty.post.category_id item_id=$smarty.post.item_id
+    discounts=$smarty.post.discount }
+  {include file="cart_view.tpl"}
+
 {elseif $smarty.request.action eq "view_cart"}
   {include file="cart_view.tpl"}
   
-{elseif $smarty.request.category_id}                                         zxbfxbfx
+{elseif $smarty.request.category_id}
   {if $smarty.request.qty}
     {assign var='last_item' value=$cart->add_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.qty)}
     {if $last_item}  
@@ -75,24 +91,6 @@
 
 {elseif $smarty.request.event_type}
   {include file="event_type.tpl"}
-
-{elseif $smarty.request.action eq 'login' and $smarty.request.type != 'block'}
-	{include file="user_login.tpl"}
-
-{elseif $smarty.request.register_user}
-  {if $smarty.request.action eq 'login'}
-    {user->login username=$smarty.post.username password=$smarty.post.password}
-  {elseif $smarty.request.action eq 'register'}
-    {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
-    {assign var='user_data' value=$smarty.post}
-  {/if}
-  {if $login_error.code eq 'notactive'}
-  		{include file="user_activate.tpl"}
-  {elseif not $user->logged || $user_errors}
-      {include file="user_register.tpl" ManualRegister=true}
-  {else}
-     
-  {/if}  
 
 {elseif $smarty.request.personal_page}
 	{if $user->logged}

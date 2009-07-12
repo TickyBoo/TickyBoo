@@ -182,6 +182,8 @@ class User{
         if(!ShopDB::query($query)){
         	return FALSE;
         }
+        $data['user_id'] = $user_id;
+
         if (!User::SendActivatieCode($data, $active, $myerror)) {
            $err = $myerror;
         }
@@ -272,12 +274,15 @@ class User{
   	}
 
   function Activate($userdata, &$errors){
+    echo $userdata, "<br>\n";
     if (!is_base64_encoded($userdata)) {
     	$errors =  con('act_uselink');
     } else {
       	$userdata2 = base64_decode($userdata);
+        echo $userdata2, "<br>\n";
 
       	list($x,$z,$y) = explode('|', $userdata2, 3);
+      	echo $x ,' - ',$y , "<br>\n";
       	if (!isset($x) or !isset($y)) {
         	$errors =  con('act_uselink');
       	} else {
@@ -296,6 +301,7 @@ class User{
         }
       }
     }
+    return false;
   }
 
 	function resend_activation($email, &$errors){
