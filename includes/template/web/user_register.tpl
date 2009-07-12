@@ -183,7 +183,7 @@
   }
   {/literal}
 
-  {if $user->mode() <= '1'}
+  {if $user->mode() <= '1' or $ManualRegister}
        ShowPasswords(true);
   {elseif $user->mode() eq '2'}
     ShowPasswords(getElement('type').checked);
