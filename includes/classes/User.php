@@ -275,6 +275,9 @@ class User{
 
   function Activate($userdata, &$errors){
     //echo $userdata, "<br>\n";
+    if (strpos($userdata,'%')!==false) {
+      $userdata = urldecode($userdata);
+    }
     if (!is_base64_encoded($userdata)) {
     	$errors =  con('act_uselink');
     } else {
@@ -338,8 +341,8 @@ class User{
       return false;
     }
     $email=&new htmlMimeMail();
-    $activation = urlencode(base64_encode("{$row['user_id']}|".date('c')."|$active"));
-    $row['link']=$_SHOP->root."activation.php?uar=$activation";
+    $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
+    $row['link']=$_SHOP->root."activation.php?uar=".urlencode($activation);
     $row['activate_code'] = $activation;
     $tpl->build($email,$row);
     if($email->send($tpl->to)){
