@@ -38,6 +38,7 @@
       </tr>
       <form action='{!PHP_SELF!}' method='post'>
         {ShowFormToken name='TryActivateUser'}
+        <input type='hidden' name='action' value='activate'>
         <tr><td  colspan='2'>{!act_enter_code!}<br><br></td></tr>
         {if $errors}
           <tr><td colspan='2' class='error'>{$errors}<br><br></td></tr>

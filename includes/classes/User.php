@@ -274,15 +274,15 @@ class User{
   	}
 
   function Activate($userdata, &$errors){
-    echo $userdata, "<br>\n";
+    //echo $userdata, "<br>\n";
     if (!is_base64_encoded($userdata)) {
     	$errors =  con('act_uselink');
     } else {
       	$userdata2 = base64_decode($userdata);
-        echo $userdata2, "<br>\n";
+        //echo $userdata2, "<br>\n";
 
       	list($x,$z,$y) = explode('|', $userdata2, 3);
-      	echo $x ,' - ',$y , "<br>\n";
+      	//echo $x ,' - ',$y , "<br>\n";
       	if (!isset($x) or !isset($y)) {
         	$errors =  con('act_uselink');
       	} else {
@@ -291,13 +291,13 @@ class User{
 
         if ( ($x> 0) && (strlen($y) == 32)) {
           $query = "UPDATE auth SET active=NULL WHERE user_id="._esc($x)." AND active="._esc($y)." LIMIT 1";
-          if ($result = ShopDB::query($query) and shopDB::affected_rows() == 1) {
+          if (ShopDB::query($query) and shopDB::affected_rows() == 1) {
             return true;
           } else {
         		$errors = con('act_error') ;
           }
         } else {
-          	$errors = con('act_uselink') ;
+          $errors = con('act_uselink') ;
         }
       }
     }
@@ -322,7 +322,9 @@ class User{
 	  		if(ShopDB::query($query) and ShopDB::affected_rows()==1){
 	        	User::SendActivatieCode($row, $active, $errors);
 	        	return true;
-	  		}
+	  		} else {
+	  		    $errors = con("log_err_wrong_usr");
+        }
 	  	}
 	}
 
