@@ -274,7 +274,7 @@ die();
       return;
     }
 
-    Order::print_order($myorder->order_id, '', 'stream');
+    Order::print_order($myorder->order_id, '', 'stream', false, 2 );
     return;
   }
 
