@@ -955,7 +955,7 @@ class Order {
   	Order::purgeReemited($order_handling_id);
   }
 
-  function EncodeSecureCode($order= null, $item='sor=') {
+  function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
 
     if ($order == null) $order = $this;
     if ($order == null) return '';
@@ -964,17 +964,17 @@ class Order {
            $order->order_handling_id .':'. $order->order_total_price;
     $code = base64_encode(base_convert(time(),10,36).':'. base_convert($order->order_id,10,36).':'. md5($md5, true));
 
-//    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.md5($md5));
+    //    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.md5($md5));
     return $item. urlencode ($code); //
   }
 
-  function DecodeSecureCode(&$order, $code ='') {
-    If (empty($code) and isset($_REQUEST['sor'])) $code =$_REQUEST['sor'];
+  function DecodeSecureCode(&$order, $codestr ='', $loging=false) {
+    If (empty($codestr) and isset($_REQUEST['sor'])) $codestr =$_REQUEST['sor'];
    //
-    If (!empty($code)) {
+    If (!empty($codestr)) {
       //$code = urldecode( $code) ;
      // print_r( $code );
-      $text = base64_decode($code);
+      $text = base64_decode($codestr);
       $code = explode(':',$text);
     //  print_r( $text );
       $code[0] = base_convert($code[0],36,10);
@@ -989,8 +989,11 @@ class Order {
       $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
                   $order->order_handling_id .':'. $order->order_total_price;
 
-//      ShopDB::dblogging('decode:'.$text.'|'.$md5.'|'.$code[2].'='.md5($md5, true));
-    //  print_r( $order );
+      if ($loging) {
+        ShopDB::dblogging('decode:'.$text.'|'.$code[2].'='.md5($md5, true));}
+        ShopDB::dblogging('Code:  '.print_r( $code, true));
+        ShopDB::dblogging('order: '.print_r( $order, true));
+      }
 //      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;
       if ($code[2] <> md5($md5, true)) return -4;

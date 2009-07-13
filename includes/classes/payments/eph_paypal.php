@@ -152,7 +152,7 @@ class EPH_paypal extends payment{
         $order->set_payment_status('payed');
     }
   //  ShopDB::dblogging($debug);
-    $handle=fopen(INC."tmp".DS."paypal.log","a");
+    $handle=fopen($_SHOP->tmp_dir."paypal.log","a");
     fwrite($handle,$debug);
     fclose($handle);
     return $return;

@@ -325,7 +325,7 @@ die();
 	function  notifyaction($smarty, $type="sor") {
 		if($type == "sor"){
 			$myorder = is($_SESSION['_SHOP_order'], null);
-			$test = Order::DecodeSecureCode($myorder, getsecurecode($type));
+			$test = Order::DecodeSecureCode($myorder, getsecurecode($type), true);
 			if($test < 1) {
 		   		header('HTTP/1.1 502 Action not allowed', true, 502);
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
@@ -336,7 +336,7 @@ die();
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
 			require_once('classes/Handling.php');
-			$hand = Handling::decodeEPHCallback(getsecurecode($type));
+			$hand = Handling::decodeEPHCallback(getsecurecode($type), true);
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);
 				ShopDB::dblogging("notify error : ($hand)\n". print_r($hand, true));
