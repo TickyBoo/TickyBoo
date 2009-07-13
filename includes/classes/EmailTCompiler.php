@@ -323,7 +323,7 @@ class EmailTCompiler {
 
 
        $res.=$pre.'$mail->addAttachment( new Attachment( Order::print_order('.$r_data.",'".
-             $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf'))".$post;
+             $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf'), new Base64Encoding())".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $res.=$pre."require_once('classes/Order.php')".$post;
@@ -345,7 +345,7 @@ class EmailTCompiler {
 
 
 
-	  $res.=$pre.'  $mail->addAttachment(new Attachment( '.$r_data.", ".$attach['name'].", ".$attach['type']."))$post";
+	  $res.=$pre.'  $mail->addAttachment(new Attachment( '.$r_data.", ".$attach['name'].", ".$attach['type']."),new Base64Encoding())$post";
 	  $res.=$pre."}\n";
 	}
 
