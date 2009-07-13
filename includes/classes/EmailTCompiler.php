@@ -22,16 +22,16 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
+ * For pricing of this licence please contact us via e-mail to
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
- 
+
  */
 
 
@@ -39,16 +39,16 @@ class EmailTCompiler {
 
   var $res=array(); //result of execution, indexed by language
 
-  var $mode=0; //0 normal 1 text 
+  var $mode=0; //0 normal 1 text
   var $stop_tag; //that stops the mode nr 1
 
   var $stack=array(); // local stack for various purposes
   var $vars=array(); //variables are collected for informative purposes
   var $args='data'; //name of the parameter array where variables are stored
-  
+
   var $deflang=0;
   var $errors=array();
-  
+
   function EmailTCompiler (){
   }
 
@@ -56,7 +56,7 @@ class EmailTCompiler {
     if(!$lang){
       $lang=0; //insure that this is '0' and not other 'null' values
     }
-  
+
     $this->res[$lang][$key]=$val;
   }
 
@@ -64,7 +64,7 @@ class EmailTCompiler {
     if(!$lang){
       $lang=0; //insure that this is '0' and not other 'null' values
     }
-  
+
     $this->res[$lang][$key][]=$val;
   }
 
@@ -113,70 +113,70 @@ class EmailTCompiler {
   }
   //echo $name."<br>";
   switch(strtolower($name)){
-    
+
     case "template" :
       if(isset($a["DEFLANG"])){
         $this->deflang=$a["DEFLANG"];
       }
-    
+
     break;
-    
+
     case "text" :
       array_push($this->stack,$this->mode);
       array_push($this->stack,$a["LANG"]);
       $this->end_tag="TEXT";
-      $this->mode=1; 
-      break;   
+      $this->mode=1;
+      break;
 
     case "html":
       array_push($this->stack,$this->mode);
       array_push($this->stack,$a["LANG"]);
       $this->end_tag="HTML";
-      $this->mode=1; 
+      $this->mode=1;
       break;
-      
+
     case "from" :
       $this->emit('from',$this->a2ps($a['EMAIL']),$a['LANG']);
-      break;                            
+      break;
 
     case "to" :
       $this->emit('to',$this->a2ps($a['EMAIL']),$a['LANG']);
-      break;                            
+      break;
 
     case "cc" :
       $this->add('cc',$this->a2ps($a['EMAIL']),$a['LANG']);
-      break;                            
+      break;
 
 		case "bcc" :
       $this->add('bcc',$this->a2ps($a['EMAIL']),$a['LANG']);
-      break;                            
+      break;
 
 		case "header" :
       $this->add('header',array(
 					'name'=>$this->a2ps($a['NAME']),
 					'value'=>$this->a2ps($a['VALUE']),
 				),$a['LANG']);
-      break;                            
+      break;
 
 		case "return" :
       $this->emit('return',$this->a2ps($a['EMAIL']),$a['LANG']);
-      break;                            
-			
+      break;
+
 		case "text_charset" :
       $this->emit('text_charset',$this->a2ps($a['VALUE']),$a['LANG']);
-      break;                            
+      break;
 
 		case "html_charset" :
       $this->emit('html_charset',$this->a2ps($a['VALUE']),$a['LANG']);
-      break;                            
+      break;
 
 		case "head_charset" :
       $this->emit('head_charset',$this->a2ps($a['VALUE']),$a['LANG']);
-      break;                            
-			
+      break;
+
 		case "subject" :
       $this->emit('subject',$this->a2ps($a['VALUE']),$a['LANG']);
-      break;                            
+      break;
 
     case "attachment":
       $this->add('attachment',array(
@@ -186,7 +186,7 @@ class EmailTCompiler {
         'data'=>$this->a2ps($a['DATA'])
       ),$a['LANG']);
       break;
-    
+
     case "order_pdf" :
       $this->add('order_pdf',array(
         'name'=>$this->a2ps($a['NAME']),
@@ -196,7 +196,7 @@ class EmailTCompiler {
 				'mode'=>$this->a2p($a['MODE'])
       ),$a['LANG']);
       break;
-  }   
+  }
 
   }
 
@@ -214,20 +214,20 @@ class EmailTCompiler {
 
       $this->emit('text',$this->a2ps($this->text),$lang);
 
-      $this->text='';				       
+      $this->text='';
       break;
-  
+
     case "html":
       $lang=array_pop($this->stack);
       $this->mode=array_pop($this->stack);
 
       $this->emit('html',$this->a2ps($this->text),$lang);
 
-      $this->text='';				       
+      $this->text='';
       break;
 
     case "template":
-      
+
       $code='  function build(&$mail,&$data,$lang="'.$this->deflang.'"){'."\n";
 
       foreach($this->res as $lang=>$data){
@@ -251,7 +251,7 @@ class EmailTCompiler {
     $pre='      ';
     $post=";\n";
     if(isset($data['from'])){
-      $res.=$pre.'$mail->setFrom('. $data['from'] .')'.$post; 
+      $res.=$pre.'$mail->setFrom('. $data['from'] .')'.$post;
     } else if ($lang===0){
       $res.=$pre.'$mail->setFrom("'. $_SHOP->organizer_data->organizer_name.' <'.$_SHOP->organizer_data->organizer_email.'>" )'.$post;
     }
@@ -275,44 +275,44 @@ class EmailTCompiler {
     }
 
     if(isset($data['return'])){
-      $res.=$pre.'$mail->setReturnPath('. $data['return'] .')'.$post; 
-    }		
-		
+      $res.=$pre.'$mail->setReturnPath('. $data['return'] .')'.$post;
+    }
+
     if(isset($data['text_charset'])){
-      $res.=$pre.'$mail->setTextCharset('. $data['text_charset'] .')'.$post; 
+      $res.=$pre.'$mail->setTextCharset('. $data['text_charset'] .')'.$post;
     }else{
-      $res.=$pre.'$mail->setTextCharset("UTF-8")'.$post; 		
-		}		
+      $res.=$pre.'$mail->setTextCharset("UTF-8")'.$post;
+		}
 
     if(isset($data['html_charset'])){
-      $res.=$pre.'$mail->setHtmlCharset('. $data['html_charset'] .')'.$post; 
+      $res.=$pre.'$mail->setHtmlCharset('. $data['html_charset'] .')'.$post;
     }else{
-      $res.=$pre.'$mail->setHtmlCharset("UTF-8")'.$post; 		
-		}		
+      $res.=$pre.'$mail->setHtmlCharset("UTF-8")'.$post;
+		}
 
     if(isset($data['head_charset'])){
-      $res.=$pre.'$mail->setHeadCharset('. $data['head_charset'] .')'.$post; 
+      $res.=$pre.'$mail->setHeadCharset('. $data['head_charset'] .')'.$post;
     }else{
-      $res.=$pre.'$mail->setHeadCharset("UTF-8")'.$post; 		
-		}		
-		
+      $res.=$pre.'$mail->setHeadCharset("UTF-8")'.$post;
+		}
+
     if(isset($data['header'])){
 			foreach($data['header'] as $header){
-				$res.=$pre.'$mail->setHeader('. $header['name'] .','.$header['value'].')'.$post; 
+				$res.=$pre.'$mail->setHeader('. $header['name'] .','.$header['value'].')'.$post;
 			}
-		}		
-		
+		}
+
     if(isset($data['html'])){
       $res.=$pre.'$mail->setHtml('.$data['html'].")".$post;
     }
     if(isset($data['text'])){
       $res.=$pre.'$mail->setText('.$data['text'].")".$post;
     }
-    
+
     if(isset($data['order_pdf'])){
       foreach($data['order_pdf'] as $order_pdf){
         $r_data=$order_pdf['order_id'];
-				
+
 				if(strcasecmp($order_pdf['mode'],'tickets')=='0'){
 					$mode=1;
 				}elseif(strcasecmp($order_pdf['mode'],'summary')==0){
@@ -321,42 +321,45 @@ class EmailTCompiler {
 					$mode=3;
 				}
 
-				
-       $res.=$pre.'$mail->addAttachment( Order::print_order('.$r_data.",'".
-             $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf')".$post;
+
+       $res.=$pre.'$mail->addAttachment( new Attachment( Order::print_order('.$r_data.",'".
+             $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf'))".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $res.=$pre."require_once('classes/Order.php')".$post;
-          $res.=$pre.'$order=Order::load('.$r_data.')'.$post;         
-          $res.=$pre.'$order->set_shipment_status(\'send\')'.$post;         
+          $res.=$pre.'$order=Order::load('.$r_data.')'.$post;
+          $res.=$pre.'$order->set_shipment_status(\'send\')'.$post;
 	      }
       }
     }
-    
+
     if(isset($data['attachment'])){
       foreach($data['attachment'] as $attach){
         $file=$attach['file'];
 	$data1=$attach['data'];
-        
+
 	$r_data='$'.$this->args.'['.$data1.']';
 
         if(isset($data1)){
 	  $res.=$pre.'if(isset('.$r_data.")){\n";
-	  $res.=$pre.'  $mail->addAttachment('.$r_data.", ".$attach['name'].", ".$attach['type'].")$post";
+
+
+
+	  $res.=$pre.'  $mail->addAttachment(new Attachment( '.$r_data.", ".$attach['name'].", ".$attach['type']."))$post";
 	  $res.=$pre."}\n";
-	} 	
+	}
 
         if(isset($data1) and isset($file)){
 	  $res.=$pre."else{\n";
-	}   
-	
+	}
+
 	if(isset($file)){
-	  $res.=$pre.'$mail->addAttachment($mail->getFile('.$attach['file'].'), '.$attach['name'].", ".$attach['type'].")$post";
+	  $res.=$pre.'$mail->addAttachment(new FileAttachment('.$attach['file'].', '.$attach['type']."))$post";
 	}
 
         if(isset($data1) and isset($file)){
 	  $res.=$pre."}\n";
-	}   
+	}
 
       }
     }
@@ -380,7 +383,7 @@ class EmailTCompiler {
             if (trustedFile($parser_file[$parser])) {
                 eval($data);
             } else {
-                printf("Untrusted PHP code: <i>%s</i>", 
+                printf("Untrusted PHP code: <i>%s</i>",
                         htmlspecialchars($data));
             }
             break;
@@ -391,18 +394,18 @@ class EmailTCompiler {
   function defaultHandler($parser, $data) {
   /*
     if (substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";") {
-        printf('<font color="#aa00aa">%s</font>', 
+        printf('<font color="#aa00aa">%s</font>',
                 htmlspecialchars($data));
     } else {
-        printf('<font size="-1">%s</font>', 
+        printf('<font size="-1">%s</font>',
                 htmlspecialchars($data));
     }
-  */   
+  */
   }
 
   function externalEntityRefHandler($parser, $openEntityNames, $base, $systemId,
                                   $publicId) {
-  /* 
+  /*
     if ($systemId) {
         if (!list($parser, $fp) = new_xml_parser($systemId)) {
             printf("Could not open entity %s at %s\n", $openEntityNames,
@@ -426,7 +429,7 @@ class EmailTCompiler {
   }
 
   function new_xml_parser () {
- 
+
     $xml_parser = xml_parser_create();
     xml_set_object($xml_parser, $this);
     xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 1);
@@ -435,7 +438,7 @@ class EmailTCompiler {
     //xml_set_processing_instruction_handler($xml_parser, "PIHandler");
     //xml_set_default_handler($xml_parser, "defaultHandler");
     //xml_set_external_entity_ref_handler($xml_parser, "externalEntityRefHandler");
-    
+
     return $xml_parser;
   }
 
@@ -455,30 +458,30 @@ class EmailTCompiler {
       } else {
         $row++;
       }
-        
+
     }
     return "$res)";
   }
 
   function compile ($input, $out_class_name){
-    $this->res=array(); 
+    $this->res=array();
 
-    $this->mode=0; 
-    $this->stop_tag; 
+    $this->mode=0;
+    $this->stop_tag;
 
-    $this->stack=array(); 
-    $this->vars=array(); 
-    $this->args='data'; 
+    $this->stack=array();
+    $this->vars=array();
+    $this->args='data';
 
     $this->deflang=0;
-    $this->errors=array();  
-  
+    $this->errors=array();
+
     $this->xml_parser=$this->new_xml_parser();
 
     if (!xml_parse($this->xml_parser, $input, TRUE)) {
       $this->error(xml_error_string(xml_get_error_code($this->xml_parser)));
     }
-  
+
     xml_parser_free($this->xml_parser);
     if (!$this->errors) {
     $xyz =
