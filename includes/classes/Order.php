@@ -990,7 +990,7 @@ class Order {
                   $order->order_handling_id .':'. $order->order_total_price;
 
       if ($loging) {
-        ShopDB::dblogging('decode:'.$text.'|'.$code[2].'='.md5($md5, true));}
+        ShopDB::dblogging('decode:'.$text.'|'.$code[2].'='.md5($md5, true));
         ShopDB::dblogging('Code:  '.print_r( $code, true));
         ShopDB::dblogging('order: '.print_r( $order, true));
       }
