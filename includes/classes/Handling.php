@@ -117,9 +117,8 @@ class Handling {
       		$this->$k=$v;
     	}
     	if ( $pm = $this->pment()) {
-			foreach($data as $key => $val)
-				if(in_array($key, $pm->extras))
-					$this->extra[$key] = $val;
+			foreach($pm->extras as $key)
+				$this->extra[$key] = is($data[$key], null);
     	}
  //   	if (isset($data['sale_mode']))
    		$this->sale_mode = $data['sale_mode'];

@@ -179,8 +179,8 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		if($data['handling_id']){
 			$this->print_large_area('handling_text_payment',$data,$err,3,92,'');
 			$this->print_large_area('handling_text_shipment',$data,$err,3,92,'');
-			$this->print_large_area('handling_html_template',$data,$err,20,95,'',"class='codepress html'");
-		  	$this->extra_form($h, $data, $err);
+			$this->print_large_area('handling_html_template',$data,$err,10,95,'',"class='codepress html'");
+		  $this->extra_form($h, $data, $err);
 		}
 
 		if($data['handling_id']){
