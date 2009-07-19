@@ -96,11 +96,11 @@ class EPH_paypal extends payment{
       $order->set_payment_status('pending');
       return array('approved'=>$result,
                    'transaction_id'=>$_REQUEST['txn_id'],
-                   'response'=> '');
+                   'response'=> print_r($_REQUEST,true));
     } else {
       return array('approved'=>$result,
                    'transaction_id'=>false,
-                   'response'=> '');
+                   'response'=> print_r($_REQUEST,true));
     }
   }
   
@@ -140,7 +140,7 @@ class EPH_paypal extends payment{
         $debug.="NOT OK\n";
     } elseif(($_POST["receiver_email"]!=$receiver_email) or ($_POST["business"]!=$receiver_email)) {
         $debug.="wrong receiver_email\n";
-    } elseif($_POST["mc_gross"]<$order_total) {
+    } elseif($_POST["mc_gross"]+is($_POST["mc_gross"],0)<$order_total) {
         $debug.="Invalid payment\n";
     } elseif($_POST["payment_status"]!="Completed") {
         $debug.=$_POST["payment_status"]."\n";
