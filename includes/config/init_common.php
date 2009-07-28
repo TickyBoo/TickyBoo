@@ -40,7 +40,7 @@
     }
 
   if (!defined('CURRENT_VERSION')) {
-    define('CURRENT_VERSION','Unknow');
+    define('CURRENT_VERSION','Unknown');
   }
   
 

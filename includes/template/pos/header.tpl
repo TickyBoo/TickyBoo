@@ -50,10 +50,20 @@
 		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
-		<script type="text/javascript" src="scripts/pos.jquery.order.js"></script>		
+		<script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
 		{literal}
 			<script type="text/javascript">
 				$(document).ready(function(){
+					$.ajax({
+						type:	"POST",
+						url:	"ajax.php",
+						dataType:"json",
+						data:{"test":true},
+						success:function(data, status){
+							console.log("Status: "+status);
+							console.log(data.status);
+						}	
+					});
 	 			});
 			</script>
 		{/literal}

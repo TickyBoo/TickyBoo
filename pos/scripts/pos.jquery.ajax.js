@@ -20,7 +20,7 @@
 var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 	queue:true,
 	abortOld:true,
-	maxRequests: 10,
+	maxRequests: 1,
 	cacheResponse: false
 });
 
