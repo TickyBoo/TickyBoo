@@ -417,4 +417,11 @@ $tbls['Sessions']['key'] = array(
   "PRIMARY KEY (`Sessions_id`)");
 $tbls['Sessions']['remove'] = array ()   ;
 
+$tbls['Repeating_events']['fields'] = array(
+  'repeating_events_common_id' => " int(11) NOT NULL DEFAULT '0'",
+  'repeating_events_event_id'  => " int(11) NOT NULL DEFAULT '0'");
+$tbls['Repeating_events']['key'] = array(
+  "PRIMARY KEY (`repeating_events_common_id`,`repeating_events_event_id`)");
+$tbls['Repeating_events']['remove'] = array ()   ;
+
 ?>

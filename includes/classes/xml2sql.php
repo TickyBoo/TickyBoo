@@ -136,6 +136,104 @@ class xml2sql {
   	xml_parser_free($xml_parser);
   	return TRUE;
   }
+  
+  function sql2xml_new($query,$table,$out=SQL2XML_OUT_RETURN,$pk=''){
+    Global $_SHOP;
+  	if(empty($query)){user_error('cannot export "'.$table.'": empty query');return;}
+
+  	if($res=ShopDB::query($query)){
+
+  	  $nf=shopDB::num_fields($res);
+  	  if(shopDB::num_rows($res)==0 || shopDB::num_rows($res)=='')
+  	  {
+  	  user_error('Cannot export. No results found!');
+  	  return;
+  	  }
+
+  		$pc=-1;
+  		for($i=0;$i<$nf;$i++){
+  			if(!$pk){
+  				if(strpos(shopDB::field_flags($res,$i),'primary_key')!==false){
+  					$pc=$i;
+  				}
+  			}
+  			$names[$i]	= shopDB::alias_field_name($res,$i);
+
+  			$tables[$i]	= (strcasecmp($table,shopDB::field_table($res,$i))==0);
+
+  			if($names[$i]==$pk){
+  			  $pc=$i;
+  			}
+  		}
+  		//if($pc<0){user_error('cannot export "'.$table.'": no primary key defined');return;}
+
+  		while($row=shopDB::fetch_row($res)){
+  		  $ret='<'.$table.'>'."\n";
+  			foreach($row as $i=>$val){
+
+  			 if($names[$i]=='eventid1'){
+  			  $myevents = htmlspecialchars($val,ENT_NOQUOTES);
+  			  }
+  			  if($tables[$i] && $i!=$pc){
+
+
+  			  	  if($names[$i]=='date'){
+
+  					$curval = htmlspecialchars($val,ENT_NOQUOTES);
+  					$date = explode("-",$curval);
+  					$val = $date[2]."-".$date[1]."-".$date[0];
+  					$timestamp = strtotime($curval);
+  					$date = date('F d, Y',$timestamp);
+  			  	  }
+  				  if($names[$i]=='time'){
+
+  					$curvalt = htmlspecialchars($val,ENT_NOQUOTES);
+  					//$time = explode(":",$curvalt);
+  					//$val = $time[2]."-".$time[1]."-".$date[0];
+  					$timestamp1 = strtotime($curvalt);
+  					$val = date('g:i A',$timestamp1);
+  			  	  }
+
+  				  $ret.='  <'.$names[$i].($pc==$i?' pk="1"':'').'>'.((($names[$i]=='description') && $val!='') ? '<![CDATA[' : '').(($names[$i]=='description' && $val!='') ? "<font size='18'>".$date."</font>" : '').
+  					(($names[$i]=='link') ? '<![CDATA[<font size="18"><a href="'.$_SHOP->root.'index.php?event_id='.$myevents.'">BUY TICKETS NOW</a></font>]]>' : htmlspecialchars($val,ENT_NOQUOTES)).((($names[$i]=='description') && $val!='') ? ']]>' : '').'</'.$names[$i].'>'."\n";
+  				}
+
+  				/*if(($names[$i]=='description' || $names[$i]=='link'))
+  				{
+  				$ret.=' <'.$names[$i].'><![CDATA['.htmlspecialchars($val,ENT_NOQUOTES).']]></'.$names[$i].'>'."\n";
+  				}*/
+
+  			}
+  			$ret.='</'.$table.'>'."\n";
+
+  			if($out==SQL2XML_OUT_RETURN){$total.=$ret;}
+  			else{echo $ret;}
+  		}
+  	}
+  }
+  function sql2xml_all_new($what,$out=SQL2XML_OUT_RETURN){
+  	$ret.='<?xml version="1.0" encoding="ISO-8859-1" ?>'."\n";
+  	$ret.='<events>'."\n";
+
+  	if($out==SQL2XML_OUT_ECHO){
+  		echo $ret;
+  	}
+
+    foreach($what as $w){
+  		$query	= $w['query'];
+  		$table	= $w['table'];
+  		$pk		= $w['pk'];
+
+  		$ret	.= xml2sql::sql2xml_new($query,$table,$out,$pk);
+  	}
+
+  	if($out==SQL2XML_OUT_ECHO){
+      echo '</events>';
+  	}else{
+  	  $ret.='</events>';
+  		return $ret;
+  	}
+  }
 }
 
 class _xmltmp{

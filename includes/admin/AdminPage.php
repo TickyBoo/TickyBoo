@@ -102,7 +102,7 @@ class AdminPage extends AUIComponent {
             $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
         }
         if (isset($_SHOP->system_status_off) and $_SHOP->system_status_off) {
-            $this->errmsg = "<div class=error>SYSTEM IS HALTED</div>";
+            $this->errmsg = "<div class=error>".con('system_halted')."</div>";
         }
          //+'&href={$_SERVER["REQUEST_URI"]}'
         echo "<head>
@@ -180,8 +180,11 @@ class AdminPage extends AUIComponent {
 
     function drawOrganizer ()
     {
-        global $_SHOP;
-        echo "<font color='#555555'><b>" . con('welcome') . " " . $_SHOP->organizer_data->organizer_name . "</b></font>";
+        global $_SHOP;                                                         //   print_r($_SHOP);
+        echo "<font color='#555555'><b>" . con('welcome') . " " .
+          ((is_object($_SHOP->organizer_data))?
+            $_SHOP->organizer_data->organizer_name:
+            $_SHOP->organizer_data['organizer_name']) . "</b></font>";
     }
 }
 ?>

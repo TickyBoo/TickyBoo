@@ -87,6 +87,9 @@ define ('AUTH_REALM','Fusion Ticket Login');
   } elseif(!isset($action)){
     $action=false;
   }
+  $_REQUEST['action'] = $action;
+  $_GET['action']     = $action;
+  $_POST['action']    = $action;
 
 //authentifying (if needed)
   $accepted = true;

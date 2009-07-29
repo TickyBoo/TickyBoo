@@ -41,12 +41,12 @@
 		<table width="100%">
 		<tr>
 		<!-- To comply with our GPL please keep the following link in the footer of your site -->
+  		<td width='27'>
+	  		<img src="images/atom.png" height='20' width='23' />
+		  </td>
 		  <td  class="copy" valign="top">
         Copyright 2009<br />
 		    Powered By <a href="http://www.fusionticket.org"> Fusion Ticket</a> - Free Open Source Online Box Office
-		  </td>
-  		<td align="right" style="position : relative; z-index : 3; top: 0px;">
-	  		<img src="images/atom.png" />
 		  </td>
 		</tr>
 		</table>

@@ -192,7 +192,7 @@ _input.checkbox_dark{margin:0px;border:0px;padding:0px;background-color:#333333;
 
 /* Form Validation */
 
-#field, label, select { float: left; font-family: Arial, Helvetica, sans-serif; }
+#field, label, select { margin-left: .5em; float: left; margin-bottom: .5em; font-family: Arial, Helvetica, sans-serif; }
 input { margin-left: .5em; float: left; margin-bottom: .5em;  }
 input.form-error { border: 1px solid red; width: auto; }
 label.form-error {

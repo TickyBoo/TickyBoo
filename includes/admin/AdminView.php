@@ -41,6 +41,7 @@ class AdminView extends AUIComponent {
     var $page_width = 800;
     var $title = "Administration";
     var $ShowMenu = true;
+    var $page_length = 15;
 
     function AdminView ($width=0)
     {
@@ -218,11 +219,15 @@ class AdminView extends AUIComponent {
         global $_SHOP;
         if (isset($data[$name])) {
             $src = $data[$name];
+            $data["$name-f"] = 'AM';
             list($h, $m, $s) = explode(":", $src);
+            if (($_SHOP->input_time_type == 12) and ($h > 12)) {
+              $h -=12;
+              $data["$name-f"] = 'PM';
+		    }
         } else {
             $h = $data["$name-h"];
             $m = $data["$name-m"];
-            $s = $data["$name-s"];
         }
         echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
              <td class='admin_value'>
@@ -239,6 +244,24 @@ class AdminView extends AUIComponent {
         echo "<span class='err'>{$err[$name]}</span>
              </td></tr>\n";
     }
+    function Set_time($name, & $data, & $err) {
+      global $_SHOP;
+  		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
+           (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
+  			$h = $data[$name.'-h'];
+  			$m = $data[$name.'-m'];
+  			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
+  				$err[$name] = invalid;
+  			} elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
+  			  $err[$name] = invalid;
+  			} else {
+          if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
+            $h = $h + 12;
+          }
+  			  $data[$name] = "$h:$m";
+  			}
+  		}
+    }
 
     function print_date ($name, &$data, &$err, $suffix = '') {
       global $_SHOP;
@@ -253,20 +276,42 @@ class AdminView extends AUIComponent {
         $nm = $name . "-m";
         echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
               <td class='admin_value'>";
-        IF ($_SHOP->input_date_type == 'dmy') {
+        if ($_SHOP->input_date_type == 'iso') {
+          echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
+          echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
           echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+        } else { 
+          if ($_SHOP->input_date_type == 'dmy') {
+            echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+          }
+          echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
+          IF ($_SHOP->input_date_type == 'mdy') {
+            echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+          }
+          echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
         }
-        echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
-        IF ($_SHOP->input_date_type == 'mdy') {
-          echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
-        }
-        echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)
-              <span class='err'>{$err[$name]}</span>
+        echo "<span class='err'>{$err[$name]}</span>
               </td></tr>\n";
     }
 
-    function print_url ($name, &$data, $prefix = '')
-    {
+    function set_date($name,&$data, &$err) {
+  		if ( (isset($data["$name-y"]) and strlen($data["$name-y"]) > 0) or
+           (isset($data["$name-m"]) and strlen($data["$name-m"]) > 0) or
+           (isset($data["$name-d"]) and strlen($data["$name-d"]) > 0) ) {
+  			$y = $data["$name-y"];
+  			$m = $data["$name-m"];
+  			$d = $data["$name-d"];
+
+  			if ( !checkdate($m, $d, $y) ) {
+  				$err[$name] = invalid;
+  			} else {
+  				$data[$name] = "$y-$m-$d";
+  			}
+  		}
+
+    }
+    
+    function print_url ($name, &$data, $prefix = ''){
         echo "<tr><td class='admin_name' width='40%'>$prefix" . con($name) . "</td>
     <td class='admin_value'>
     <a href='{$data[$name]}' target='blank'>{$data[$name]}</a>
@@ -526,6 +571,7 @@ class AdminView extends AUIComponent {
   function PrintTabMenu($linkArray, $activeTab=0, $menuAlign="center") {
     Global $_SHOP;
   	$tabCount=0;
+
   	$str= "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>\n";
   	$str.= "<tr>\n";
   	if($menuAlign=="right"){
@@ -553,34 +599,36 @@ class AdminView extends AUIComponent {
 	  return $str;
   }
 
- function get_nav ($page,$count,$condition){
+ function get_nav ($page,$count,$condition=''){
    if(!isset($page)){ $page=1; }
-
+   if (!empty( $condition)) {
+     $condition .= '&';
+     }
    echo "<table border='0' width='$this->width'><tr><td align='center'>";
 
    if($page>1){
-     echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".con('nav_first')."</a>";
+     echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=1'>".con('nav_first')."</a>";
      $prev=$page-1;
-     echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page={$prev}'>".con('nav_prev')."</a>";
+     echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page={$prev}'>".con('nav_prev')."</a>";
    } else {
      echo con('nav_first');
      echo con('nav_prev');
    }
 
    $num_pages=ceil($count/$this->page_length);
-   echo "&nbsp;[";
+   echo "";
    for ($i=floor(($page-1)/10)*10+1;$i<=min(ceil($page/10)*10,$num_pages);$i++){
      if($i==$page){
-       echo "&nbsp;<b>$i</b>";
+       echo "&nbsp;<b>[$i]</b>";
      }else{
-       echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$i'>$i</a>";
+       echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$i'>$i</a>";
      }
    }
-   echo "&nbsp;]&nbsp;";
+   echo "&nbsp;";
    if($page<$num_pages){
        $next=$page+1;
-       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".con('nav_next')."</a>";
-       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>". con('nav_last')."</a>";
+       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."{$condition}page=$next'>".con('nav_next')."</a>";
+       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."{$condition}page=$num_pages'>". con('nav_last')."</a>";
    }  else {
      echo con('nav_next')."\n";
      echo con('nav_last')."\n";

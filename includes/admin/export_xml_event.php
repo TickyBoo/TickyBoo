@@ -134,7 +134,7 @@ class export_xml_event extends AdminView {
 			}
 			$this->write_header($filename);
 			
-			xml2xml::sql2xml_all($what,SQL2XML_OUT_ECHO);
+			xml2sql::sql2xml_all($what,SQL2XML_OUT_ECHO);
 			
 			return TRUE;
     }  

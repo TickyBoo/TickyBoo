@@ -5,7 +5,6 @@ define("cart_cont_mess","Please check your order. You have 15 minutes before you
         and click &apos;Order More Tickets&apos;.");
 
 deFine("actions","Actions");
-define("act_err","User not found or allready activated.");
 define("act_is_sent","Your activation email has been sent to your e-mail");
 define("act_mess_line","Please check you email to activate your account.<br><br>");
 define("act_name","Activate account");
@@ -541,7 +540,7 @@ define("organizer_phone","Phone");
 define("organizer_place","Town");
 define("organizer_plz","Zip"); //changed lou5
 define("organizer_title","All Organizers");
-define("organizer_update_title","Edit organizer");
+define("organizer_update_title","Edit owner information");
 define("ort","Venue");
 define("ort_address1","Address 1");
 define("ort_address","Address");
@@ -938,6 +937,10 @@ define('category_new_size','New size');
 define('act_oke',     '<h3>Your account is now active. You may now log in.</h3>');
 define('act_error',   'Your account could not be activated. Please re-check the link or contact the system administrator.');
 define('act_uselink', 'Please use the link that has been sent to your email address.');
+define('act_sent','The activation email has been sent. Please check your in box for a link.');
+define('log_err_mailnotsend', 'The activation email could not be sent, please check you have the correct email address.');
+define("act_err", "User not found or allready activated.");
+
 
 define('pos_calender_info','To Book/Reserve Tickets, select an event from the list below.');
 define('pos_cart_info','Check the tickets below: to add more click "Order More Tickets"<br>'.
@@ -1047,8 +1050,6 @@ define('Handling_Delete_Unpaid','Delete Unpaid Payments');
 define('handling_no_alt','No Alt');
 define('handling_alt','Alt Handling Method');
 
-define('act_sent','The activation email has been sent. Please check your in box for a link.');
-define('act_err', 'The activation email could not be sent, please check you have the correct email address.');
 define('resend_activation','Resend Activation Email');
 define('success_activate','You have successfully activated your account.<br /> You may now login.');
 define('index_user_count','<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d/%d/%d');
@@ -1067,5 +1068,7 @@ define('clear_selection','Clear Selection');
 define('show_seats','Seating Chart');
 
 define('check_condition', "Please accept the terms");
+define('system_halted','SYSTEM IS HALTED');
 
+define('Status_is_pub','This event is published');
 ?>

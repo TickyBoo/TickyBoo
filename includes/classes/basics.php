@@ -362,7 +362,7 @@ function check_system() {
           		AND order_shipment_status !='send'
           		AND order_date_expire <= NOW()";
 		if ( $_SHOP->shopconfig_check_pos == 'No' ) {
-			$where .= " AND order_place != 'pos' ";
+			$query .= " AND order_place != 'pos' ";
 		}
 		if ( $res = ShopDB::query($query) ) {
 			while ( $row = shopDB::fetch_array($res) ) {

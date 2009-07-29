@@ -200,6 +200,7 @@ class ShopDB {
     {
         return is_null($s) ? 'NULL' : "'" . self::escape_string($s) . "'";
     }
+
 		function quoteParam($var) { return self::quote($_REQUEST[$var]); }
 
     function lock ($name, $time = 30)
@@ -540,7 +541,8 @@ private static function TableCreateData( $tablename )
                    }
                  }
               }
-              If (count($fields['key']) <>  count($tblFields['keys'])) $update = true;
+              If (isset($fields['key']) and isset($tblFields['key']) and
+                  count($fields['key']) <> count($tblFields['keys'])) $update = true;
               $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
               If ($update) {
                 $sql1 ='';

@@ -29,10 +29,10 @@
  */
 
 require_once("../includes/config/init_admin.php");
-require_once ("admin/UsersView.php");
+require_once ("admin/UserTabsView.php");
 
 
 //print cart update
-$body=new UsersView();
+$body=new UserTabsView();
 $body->drawall();
 ?>
