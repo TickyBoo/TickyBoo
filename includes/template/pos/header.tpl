@@ -54,6 +54,7 @@
 		{literal}
 			<script type="text/javascript">
 				$(document).ready(function(){
+					/*
 					$.ajax({
 						type:	"POST",
 						url:	"ajax.php",
@@ -63,7 +64,7 @@
 							console.log("Status: "+status);
 							console.log(data.status);
 						}	
-					});
+					});*/
 	 			});
 			</script>
 		{/literal}

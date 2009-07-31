@@ -1,4 +1,6 @@
 var loadOrder = function(){
+	
+	var catData = new Object();
  	
  	ajaxQManager.add({
 	//$.ajax({
@@ -24,6 +26,8 @@ var loadOrder = function(){
 		selectFirst:false
 	});
 	
+	
+	
 	$("#event-input").result(function(event, data, formatted) {
 		if (data){
 			$("#event-id").val(data[0]);
@@ -32,15 +36,20 @@ var loadOrder = function(){
 		}
 		if(data[0] > 0){
 			ajaxQManager.add({
-			//$.ajax({
-				type: "POST",
-		    	url: "index.php",
-		    	data: {ajax:'yes',page:"get_catagories",event_id:data[0]},
-		    	cache:false,
-		    	success: function(html){
-		    		$("#cat-select").fadeOut("fast").html(html).fadeIn("fast").change();
-		    		
-		    	}
+				type:		"POST",
+				url:		"ajax.php",
+				dataType:	"json",
+				data:		{"pos":true,"action":"categories","category_id":data[0]},
+				success:function(data, status){
+					catData = data; //set cat var
+					
+					//Fill Categories
+					$("#cat-select").hide().html("");
+					$.each(data.categories,function(){
+						$("#cat-select").append(this.html);
+					});
+					$("#cat-select").show().change();
+				}	
 			});
 		}else{
 			$("#cat-select").html("<option value='0'></option>");
@@ -49,6 +58,21 @@ var loadOrder = function(){
 	
 	$("#cat-select").change(function(){
 		if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
+			
+			//Check catData for discounts...
+			if(catData.enable_discounts){
+				$("#discount-select").html("");
+				$.each(catData.discounts,function(){
+					$("#discount-select").append(this.html);
+				});
+				$("#discount-name").show();
+				$("#discount-select").show();
+			}else{
+				$("#discount-name").hide();
+				$("#discount-select").hide().html("<option value='0'></option>");
+			}
+			
+			
 			ajaxQManager.add({
 			//$.ajax({
 				type:"POST",
@@ -72,23 +96,6 @@ var loadOrder = function(){
 					$("#continue").attr("type","submit");
 				}
 			});
-			ajaxQManager.add({
-				type:"POST",
-				url: "index.php",
-				data: {ajax:'yes',page:"get_discounts", category_id:$("#cat-select").val()},
-				cache:false,
-				success:function(html){
-					html = $.trim(html);
-					if(html.length > 20){						
-						$("#discount-name").show();
-						$("#discount-select").html(html).show();
-					}else{
-						$("#discount-name").hide();
-						$("#discount-select").hide().html("<option value='0'></option>");
-					}
-				}
-			});
-			
 		}	
 	});
 	
