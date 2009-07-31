@@ -47,12 +47,11 @@ class MenuAdmin extends AUIComponent {
 
         <tr><td  class='menu_admin_item'><a href='index.php'       class='menu_admin_link'>" . con('index_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_users.php'  class='menu_admin_link'>" . con('users_admin') . "</a></td></tr>
+ 		    <tr><td  class='menu_admin_item'><a href='view_event.php'  class='menu_admin_link'>" . con('event_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_stats.php'  class='menu_admin_link'>" . con('stats') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_order.php'  class='menu_admin_link'>" . con('order_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_search.php' class='menu_admin_link'>" . con('search_order') . "</a></td></tr>
         <tr><td></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_event_group.php' class='menu_admin_link'>" . con('event_group_admin') . "</a></td></tr>
-		    <tr><td  class='menu_admin_item'><a href='view_event.php'       class='menu_admin_link'>" . con('event_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_impexp.php'      class='menu_admin_link'>" . con('imp_export_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_template.php'    class='menu_admin_link'>" . con('template_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_handling.php'    class='menu_admin_link'>" . con('payment_admin') . "</a></td></tr>

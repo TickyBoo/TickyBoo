@@ -431,6 +431,28 @@ function formatTime($time){
   }
 }
 
+function stringDatediff($datefrom, $dateto) {
+   $datefrom 	= strtotime($datefrom, 0);
+   $dateto 		= strtotime($dateto, 0);
+
+   $difference = $dateto - $datefrom; // Difference in seconds
+   return $difference;
+}
+
+function subtractDaysFromDate($date,$no_days) {
+	$time1  = strtotime($date);
+	$res = strtotime((date('Y-m-d', $time1)." -$no_days"."days"));
+
+	return date('Y-m-d', $res);
+}
+
+function addDaysToDate($date,$no_days) {
+	$time1  = strtotime($date);
+	$res = strtotime((date('Y-m-d', $time1)." +$no_days"."days"));
+
+	return date('Y-m-d', $res);
+}
+
 function get_loc($lang){
   switch($lang){
     case "de":

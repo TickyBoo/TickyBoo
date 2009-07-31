@@ -1071,4 +1071,5 @@ define('check_condition', "Please accept the terms");
 define('system_halted','SYSTEM IS HALTED');
 
 define('Status_is_pub','This event is published');
+define('recure_days_selection','Days to exclude');
 ?>

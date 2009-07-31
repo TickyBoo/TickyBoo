@@ -138,8 +138,8 @@ class EventViewCommon extends AdminView {
         }
 
         echo "<tr><td class='admin_name' rowspan='2'>" . con($name) . "<div class='err'>{$err[$name]}</div></td>
-              <td class='admin_value'><label><input type='checkbox' name='{$name}[1]' value='CC' $chk_cc>" . con(payment_cc) . "</label></td>
-              </tr><tr><td class='admin_value'><label><input type='checkbox' name='{$name}[2]' value='POST' $chk_post>" . con(payment_post) . "</label></td></tr>\n";
+              <td class='admin_value'><label><input type='checkbox' name='{$name}[1]' value='CC' $chk_cc>" . con('payment_cc') . "</label></td>
+              </tr><tr><td class='admin_value'><label><input type='checkbox' name='{$name}[2]' value='POST' $chk_post>" . con('payment_post') . "</label></td></tr>\n";
     }
 
     function print_select_ort ($name, &$data, &$err)
@@ -200,6 +200,183 @@ class EventViewCommon extends AdminView {
               <td class='admin_value'>" . con($data[$name]) . "
               </td></tr>\n";
     }
+    //mychanges
+
+    function print_subtitle($name)
+    {
+    	echo "<tr>
+    			<td colspan=2>$name</td>
+    		  </tr>";
+    }
+    function print_select_recurtype($name,$data)
+    {
+    	$type_list = array("nothing","daily");
+
+    	echo "<tr><td class='admin_name' width='40%'>".con($name)."</td>
+    			<td  class='admin_value' ><select id='event_recur_type' name={$name} onchange='changeRecurType(this.value)'>\n";
+    	foreach ($type_list as $item) {
+    		echo "<option ".(($data["$name"] == $item) ? "selected" : '')." value={$item}>".con("recure_$item")."</option>\n";
+    	}
+    	echo "</select></td></tr>\n";
+    	echo "<tr>
+              <td colspan='2' style='padding:0px;margin:0px;'>
+                 <table id='recur_table' border=0 width='100%'>\n";
+    }
+
+    function print_select_recurdays($dsp_name,$name)
+    {
+    	echo "<tr><td class='admin_name' width='40%'>$dsp_name</td>
+    			<td  class='admin_value'><div  style='float:left;' id='$name'> <select name='$name'>\n";
+    	for($i=1;$i<8;$i++) {
+    		echo "<option>".$i."</option>\n";
+    	}
+    	echo "</select></div><div style='float:left;padding-left:2px;' id='$name-suffix'> days</div></td></tr>\n";
+    }
+
+    function print_recur_enddate($dsp_name,$name) {
+    	echo "<tr><td  class='admin_value' colspan='2' style='padding:0px;margin:0px;'>\n";
+    	echo "<table id='recur_table' border=1 width='100%'><tr><td class='admin_name' width='40%'>$dsp_name</td>
+			<td  class='admin_value' ><input type='text' name='$name'>";
+    	echo "</td></tr>\n";
+
+    }
+
+    function print_days_selection(&$data,&$err) {
+    	echo "
+          <tr>
+    			  <td class='admin_name' width='40%'>".con('recure_days_selection')."</td>
+    		    <td class='admin_value'>
+    		    	<table id='day_options'>
+    		    		<tr>
+    		    			<td class='admin_name'>
+  			    				<input type='checkbox' name='opt_sunday' value='0'>Sunday
+	  		    			</td>
+		  	    			<td class='admin_name'>
+			      				<input type='checkbox' name='opt_monday' value='1'>Monday
+			      			</td>
+			      			<td class='admin_name'>
+			    	  			<input type='checkbox' name='opt_tuesday' value='2'>Tuesday
+			    		  	</td>
+			    		  </tr>
+			    		  <tr>
+  			    			<td class='admin_name'>
+  			    				<input type='checkbox' name='opt_wednesday' value='3'>Wednesday
+  			    			</td>
+  			    			<td class='admin_name'>
+  			    				<input type='checkbox' name='opt_thursday' value='4'>Thursday
+  			    			</td>
+  			    			<td class='admin_name'>
+  			    				<input type='checkbox' name='opt_friday' value='5'>Friday
+  			    			</td>
+  			    	  </tr>
+			    		  <tr>
+			    		  	<td class='admin_name'>
+			    		  		<input type='checkbox' name='opt_saturday' value='6'>Saturday
+			    		  	</td>
+		    		  	</tr>
+			      	</table>
+     		    	<span class='err'>{$err['opt_days']}</span>
+     		  	</td>
+			   </tr>\n";
+   }
+    function Print_Recure_end(){
+			   echo "
+           </table>
+			   </td>
+	    </tr>\n";
+    }
+    
+    function printRecurChangeScript() {
+    	echo "<script type='text/javascript'>
+    			changeRecurType();
+    			function changeRecurType() {
+    				type = document.getElementById('event_recur_type').value;
+    				if(type == 'daily') {
+   				    document.getElementById('recur_table').style.display='';
+    				} else {
+    					document.getElementById('recur_table').style.display='none';
+    				}
+    			}
+    		  </script>
+    		";
+    }
+    function printFindSubEventsScript(){
+		echo "<script type='text/javascript'>
+				document.getElementsByClassName = function(clsName){
+				    var retVal = new Array();
+				    var elements = document.getElementsByTagName('*');
+				    for(var i = 0;i < elements.length;i++){
+				        if(elements[i].className.indexOf(' ') >= 0){
+				            var classes = elements[i].className.split(' ');
+				            for(var j = 0;j < classes.length;j++){
+				                if(classes[j] == clsName)
+				                    retVal.push(elements[i]);
+				            }
+				        }
+				        else if(elements[i].className == clsName)
+				            retVal.push(elements[i]);
+				    }
+				    return retVal;
+				}
+    			function checkAllSubEvents(mainEventId) {
+					var varNum = document.getElementsByClassName(mainEventId);
+					if(varNum){
+						for(var i = 0;i < varNum.length;i++){
+							if(document.getElementById(mainEventId).checked==true)
+								varNum[i].checked = 'checked';
+							else
+								varNum[i].checked = '';
+						}
+					}
+    			}
+    		  </script>";
+    }
+
+   function print_hidden ($name, $value='', $size = 30, $max = 100, $suffix = '')
+    {
+        echo "<tr>
+              <td>
+              	<input type='hidden' id='$name' name='$name' value='" . $value . "' size='$size' maxlength='$max'>
+              </td></tr>\n";
+    }
+
+    function print_subtitle_with_button($name,$data)
+    {
+    	echo "<tr>
+    			<td>$name</td><td align='right'>
+	              <span >
+	              	<input type='hidden' id='hdnDivNo' name='hdnDivNo' value='{$data}' size='5' maxlength='100'>
+	              	<a class='link' href='javascript: addMoreDiscount();'>Add more discounts....</a>
+	              </span>
+    			</td>
+    		  </tr>";
+    }
+
+    function print_select_num ($name, &$data, &$err, $opt, $num='')
+    {
+        if(isset($data[$name][$num]))
+        	$sel[$data[$name][$num]['type']] = " selected ";
+
+        echo "<tr><td class='admin_name'  width='40%'>" . $this->con($name) . "</td>
+              <td class='admin_value'>
+               <select name='".$name."[".$num."][type]'>\n";
+
+        foreach($opt as $v) {
+            echo "<option value='$v'{$sel[$v]}>" . $this->con($name . "_" . $v) . "</option>\n";
+        }
+
+        echo "</select><span class='err'>{$err[$name]}</span>
+              </td></tr>\n";
+    }
+   function print_input_num ($name, &$data, &$err, $size = 30, $max = 100, $num='', $suffix = '')
+    {
+    	echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) ."</td>
+              <td class='admin_value'><input type='text' name='".$name."[".$num."][value]' value='"; if(isset($data[$name][$num])) echo htmlspecialchars($data[$name][$num]['value'], ENT_QUOTES); echo "' size='$size' maxlength='$max'>
+              <span class='err'>{$err[$name]}</span>
+              </td></tr>\n";
+			  
+    }
+
 }
 
 ?>

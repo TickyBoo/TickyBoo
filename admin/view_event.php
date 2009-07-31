@@ -28,10 +28,11 @@
  * clear to you.
  */
 
+error_reporting(E_ALL ^ E_NOTICE);
 
 require_once("../includes/config/init_admin.php");
-require_once ("admin/EventPropsView.php");
+require_once ("admin/EventTabsView.php");
 //print cart update
-$body=new EventPropsView();
+$body=new EventTabsView();
 $body->drawall();
 ?>
