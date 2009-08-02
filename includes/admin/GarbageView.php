@@ -41,7 +41,7 @@ class GarbageView extends AdminView{
 
 	function garbage_list (){
 			
-		$this->list_head(garbage,2);
+		$this->list_head(con('garbage'),2);
 		$stats=Trash::stats();
 		
 		echo "<tr class='admin_list_row_0'>
@@ -62,7 +62,48 @@ class GarbageView extends AdminView{
 
 		echo "</table></form>";
 	
-		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?empty=true'>".empty_trash."</a></center>";
+		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?empty=true'>".con('empty_trash')."</a></center><br>";
+
+    GLOBAL $data, $keys;
+
+		include "classes/OrphanCheck.php";
+
+    $space = (count($keys)*60 < $this->width -200)?1:0;
+
+
+		$this->list_head(con('Record_Orphan_Test'),count($keys)+2+$space);
+    print " <tr class='admin_list_header'>
+              <th width=130 align='left'>
+                Tablename
+              </th>
+              <th width=50 align='right'>
+                ID
+              </th>";
+      foreach ($keys as $key) {
+        print "<th width=60 align='center'> {$key}&nbsp;</th>";
+      }
+      if ($space) {
+        print "<th align='center'>&nbsp;</th>";
+      }
+
+      print "</tr>";
+      $alt =0;
+      foreach ($data as $row) {
+      
+        print "<tr class='admin_list_row_$alt'>
+          <td class='admin_list_item'>{$row['_table']}</td>
+          <td class='admin_list_item' align='right'>{$row['_id']}</td>\n";
+        foreach ($keys as $key) {
+          print "<td align='center'>{$row[$key]}&nbsp;</td>\n";
+        }
+        if ($space) {
+          print "<th align='center'>&nbsp;</th>";
+        }
+        print "</tr>";
+        $alt = ($alt + 1) % 2;
+      }
+      print "</table>";
+
 	
 	}
 

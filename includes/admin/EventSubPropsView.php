@@ -46,9 +46,18 @@ function subevent_form (&$data, &$err, $title){
 
   echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 
-  $this->form_head($title."<br>({$main->event_id}) {$main->event_name} - {$main->ort_name}");
+  $this->form_head($title.": ({$main->event_id}) {$main->event_name} - {$main->ort_name}");
 
   $this->print_date('event_date',$data,$err);
+
+  if($_REQUEST['action'] == "add_sub" || $_REQUEST['action'] == "insert_sub") {
+    $this->print_select_recurtype("event_recur_type",$data);
+    $this->print_date('event_recur_end', $data, $err);
+  	$this->print_days_selection($data,$err);
+  	$this->Print_Recure_end();
+  	$this->printRecurChangeScript();
+  }
+
   If (!$data['event_id']){
      $this->print_select_pm('event_pm_ort_id', $data, $err);
   } else {
@@ -56,16 +65,17 @@ function subevent_form (&$data, &$err, $title){
   }
   $this->print_time('event_time',$data,$err);
   $this->print_time('event_open',$data,$err);
+  $this->print_time('event_end',$data,$err);
 
   If ($data['event_id']){
       $check=$this->_check('event_name',$main,$data);
       $this->print_input('event_name',$data,$err,30,100,$check);
 
       $check=$this->_check('event_short_text',$main,$data);
-      $this->print_area('event_short_text',$data,$err,3,40,$check);
+      $this->print_area('event_short_text',$data,$err,3,55,$check);
 
       $check=$this->_check('event_text',$main,$data);
-      $this->print_area('event_text',$data,$err,6,40,$check);
+      $this->print_large_area('event_text',$data,$err,6,95,$check);
 
       $check=$this->_check('event_url',$main,$data);
       $this->print_input('event_url',$data,$err,30,100,$check);
@@ -87,6 +97,7 @@ function subevent_form (&$data, &$err, $title){
       echo "<input type='hidden' name='action' value='insert_sub'/>\n";
    }
 
+   //recurrence
   $this->form_foot();
 
   echo "<input type='hidden' name='event_main_id' value='{$data['event_main_id']}'/>\n";
@@ -102,7 +113,10 @@ function draw (){
   global $_SHOP;
   if($_POST['action']=='insert_sub'){
     if($this->event_check($_POST, $err)){
+      if($_POST['event_recur_type'] == "nothing")
       $this->insert_event($_POST);
+      else
+      	$this->insert_recur_event($_POST);
       $main = Event::load($_POST['event_id'],FALSE);
       $main = (array)$main;
     } else {$main = $_POST;}
@@ -135,66 +149,43 @@ function draw (){
 ########################################################
 
 
-function event_check (&$data, &$err){
-  global $_SHOP;
+  function event_check (&$data, &$err){
+    global $_SHOP;
 
 
-  if(!$main=Event::load($data['event_main_id'],FALSE)){return FALSE;}
+    if(!$main=Event::load($data['event_main_id'],FALSE)){return FALSE;}
 
+		$this->Set_Time('event_time',$data,$err);
+		$this->Set_Time('event_open',$data,$err);
+		$this->Set_Time('event_end' ,$data,$err);
+    $this->Set_Date('event_date',$data,$err);
 
-  if((isset($data['event_time-h']) and strlen($data['event_time-h'])>0) or
-     (isset($data['event_time-m']) and strlen($data['event_time-m'])>0))
-  {
-    $h=$data['event_time-h'];
-    $m=$data['event_time-m'];
-    if(!is_numeric($h) or $h<0 or $h>23){$err['event_time']=invalid;}
-    else if(!is_numeric($m) or $h<0 or $m>59){$err['event_time']=invalid;}
-    else{$data['event_time']="$h:$m";}
-  }
-  if(!$main->event_time and  !$data['event_time']){$err['event_time']=mandatory;}
+    if(!$main->event_time and  !$data['event_time']){$err['event_time']=con('mandatory');}
+    if(!$main->event_date and  !$data['event_date']){$err['event_date']=con('mandatory');}
 
-  if($data['action']=='insert_sub'){
-    if($data['event_pm_ort_id']=='copy_main_pm' and $main->event_pm_id){
-      $data['event_pm_id']=$main->event_pm_id;
-      $data['event_ort_id']=$main->event_ort_id;
-    }elseif($data['event_pm_ort_id']){
-      list($event_pm_id,$event_ort_id)=explode(',',$data ['event_pm_ort_id']);
-      $data['event_pm_id']=$event_pm_id;
-      $data['event_ort_id']=$event_ort_id;
-    }else{
-      $err['event_pm_ort_id']=mandatory;
+    if($data['action']=='insert_sub'){
+      if($data['event_pm_ort_id']=='copy_main_pm' and $main->event_pm_id){
+        $data['event_pm_id']    =$main->event_pm_id;
+        $data['event_ort_id']   =$main->event_ort_id;
+      }elseif($data['event_pm_ort_id']){
+        list($event_pm_id,$event_ort_id)=explode(',',$data ['event_pm_ort_id']);
+        $data['event_pm_id']=$event_pm_id;
+        $data['event_ort_id']=$event_ort_id;
+      }else{
+        $err['event_pm_ort_id']=con('mandatory');
+      }
     }
+
+
+    //checking the event recurrence date
+    if(isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
+      $this->Set_Date('event_recur_end',$data,$err);
+     	if(stringDatediff($data['event_date'],$data['event_recur_end']) < 0) {
+       	$err['event_recur_end'] = con('invalid');
+      }
+    }
+    return empty($err);
   }
-
-  if((isset($data['event_open-h']) and strlen($data['event_open-h'])>0) or
-    (isset($data['event_open-m']) and strlen($data['event_open-m'])>0))
-  {
-    $h=$data['event_open-h'];
-    $m=$data['event_open-m'];
-    if(!is_numeric($h) or $h<0 or $h>23){$err['event_open']=invalid;}
-    else if(!is_numeric($m) or $h<0 or $m>59){$err['event_open']=invalid;}
-    else{$data['event_open']="$h:$m";}
-  }
-  //if(!$main->event_open and  !$data['event_open']){$err['event_open']=mandatory;}
-
-  if((isset($data['event_date-y']) and strlen($data['event_date-y'])>0) or
-     (isset($data['event_date-m']) and strlen($data['event_date-m'])>0) or
-     (isset($data['event_date-d']) and strlen($data['event_date-d'])>0))
-  {
-    $y=$data['event_date-y'];
-    $m=$data['event_date-m'];
-    $d=$data['event_date-d'];
-
-    if(!checkdate($m,$d,$y)){$err['event_date']=invalid;}
-    else{$data['event_date']="$y-$m-$d";}
-  }else{
-    $err['event_date']=mandatory;
-  }
-  if(!$main->event_date and  !$data['event_date']){$err['event_date']=mandatory;}
-
-//print_r($err);
-  return empty($err);
-}
 
 ########################################################
 
@@ -206,28 +197,40 @@ function event_check (&$data, &$err){
     $event=Event::new_from_main($data['event_main_id'], FALSE);
     if(empty($event)){return;}
 
-    $event->event_date=$data['event_date'];
     if($data['event_time']){$event->event_time=$data['event_time'];}
     if($data['event_open']){$event->event_open=$data['event_open'];}
+    if($data['event_end']) {$event->event_open=$data['event_end'];}
+    
+    $event->event_date=$data['event_date'];
     $event->event_pm_id=$data['event_pm_id'];
     $event->event_ort_id=$data['event_ort_id'];
 
     if(!$event_id=$event->save()){
-      echo "<div class=error>".event_not_inserted."<div>";
+      echo "<div class=error>".con('event_not_inserted')."</div>";
       return;}
 
     if(!$this->photo_post($_POST,$event_id)){
-      echo "<div class=error>".img_loading_problem."<div>";
+      echo "<div class=error>".con('img_loading_problem')."</div>";
     }
 
     if(!$this->photo_post_ort($_POST,$event_id)){
-      echo "<div class=error>".img_loading_problem."<div>";
+      echo "<div class=error>".con('img_loading_problem')."</div>";
     }
 
     if(!$this->mp3_post($_POST,$event_id)){
-      echo "<div class=error>".mp3_loading_problem."<div>";
+      echo "<div class=error>".con('mp3_loading_problem')."</div>";
     }
   }
+
+########################################################
+  function save_recur_event (&$data, $isnew ) {
+	  $event_dates = $this->getEventRecurDates($data);
+		foreach ($event_dates as $event_date) {
+      $data['event_date'] = $event_date;
+      $this->insert_event( $data, $isnew ) ;
+		}
+  }
+
 
   function update_event (&$data){
     global $_SHOP;
@@ -244,6 +247,7 @@ function event_check (&$data, &$err){
     $this->_set('event_name',$data,$event,$main);
     $this->_set('event_url',$data,$event,$main);
     $this->_set('event_open',$data,$event,$main);
+    $this->_set('event_end',$data,$event,$main);
     $this->_set('event_order_limit',$data,$event,$main);
     $this->_set('event_template',$data,$event,$main);
     $this->_set('event_time',$data,$event,$main);
@@ -252,19 +256,20 @@ function event_check (&$data, &$err){
     $this->_set('event_mp3',$data,$event,$main);
 
     if(!$event->save()){
-      echo "<div class=error>". event_not_updated. shopDB::error() ."<div>";
-      return FALSE;}
+      echo "<div class=error>". con('event_not_updated'). shopDB::error() ."</div>";
+      return FALSE;
+    }
 
     if(!$this->photo_post($data,$data['event_id'])){
-      echo "<div class=error>".img_loading_problem."<div>";
+      echo "<div class=error>".con('img_loading_problem')."</div>";
     }
 
     if(!$this->photo_post_ort($data,$data['event_id'])){
-      echo "<div class=error>".img_loading_problem."<div>";
+      echo "<div class=error>".con('img_loading_problem')."</div>";
     }
 
     if(!$this->mp3_post($data,$data['event_id'])){
-      echo "<div class=error>".mp3_loading_problem."<div>";
+      echo "<div class=error>".con('mp3_loading_problem')."</div>";
     }
   }
 

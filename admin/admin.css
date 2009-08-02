@@ -1,39 +1,21 @@
 *{font-size:12px;font-family:Verdana,Arial, Helvetica, san-serif; }
 
-
-
 INPUT,SELECT,TEXTAREA{
-
 COLOR : #666666;
-
 BORDER: #aaaaaa 2px solid;
-
 BACKGROUND-COLOR:#ededed;
-
 }
 
-
-
-
-
 .aui_bico{}
-
 .aui_bico_menu {padding-right:10px;}
-
 .aui_bico_body{}
 
-
-
 /* admin interface */
-
-.admin_name{background-color:#ededed;
-
-color:#999999;
-
-font-size: 12px;
-
-font-weight:bold;
-
+.admin_name{
+  background-color:#ededed;
+  color:#999999;
+  font-size: 12px;
+  font-weight:bold;
 }
 
 .admin_value{background-color:#fafafa}
@@ -42,6 +24,10 @@ font-weight:bold;
 
 .admin_list{border: #cccccc 1px solid;}
 
+.admin_list_header{
+  background-color:#888888;
+  border-style: #cccccc 1px solid;
+}
 .admin_list_row_0{background-color:#ededed}
 
 .admin_list_row_1{background-color:#cdcdcd}

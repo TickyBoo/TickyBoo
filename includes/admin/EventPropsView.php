@@ -52,7 +52,13 @@ class EventPropsView extends EventViewCommon {
 		global $_SHOP;
 
 		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
-		$this->form_head(con('event_add_title'));
+		if ( !$data['event_id'] ) {
+  		$this->form_head(con('event_add_title'));
+		} else {
+  		$this->form_head(con('event_edit_title'));
+    }
+
+
 		$this->print_field_o('event_id', $data);
 		$this->print_input('event_name', $data, $err, 30, 100 );
 		if ( !$data['event_id'] ) {
@@ -68,11 +74,20 @@ class EventPropsView extends EventViewCommon {
 			echo "<input type='hidden' name='event_id' value='{$data['event_id']}'/>\n";
 			echo "<input type='hidden' name='action' value='update'/>\n";
 		}
-		$this->print_area( 'event_short_text', $data, $err, 3 );
-		$this->print_area( 'event_text', $data, $err );
+		$this->print_area( 'event_short_text', $data, $err, 3,55 );
+		$this->print_large_area( 'event_text', $data, $err,6,95 );
 		$this->print_input( 'event_url', $data, $err, 30, 100 );
 
 		$this->print_date( 'event_date', $data, $err );
+    if($_REQUEST['action'] == "add" || $_REQUEST['action'] == "insert") {
+   		$this->print_select_recurtype("event_recur_type",$data);
+  		$this->print_date('event_recur_end', $data, $err);
+  		$this->print_days_selection($data,$err);
+  		$this->Print_Recure_end();
+
+  		$this->printRecurChangeScript();
+    }
+
 		$this->print_time( 'event_time', $data, $err );
 		$this->print_time( 'event_open', $data, $err );
 		$this->print_time( 'event_end', $data, $err );
@@ -86,15 +101,6 @@ class EventPropsView extends EventViewCommon {
 		// $this->print_file('event_ort_image',$data,$err,'img');
 		$this->print_file( 'event_mp3', $data, $err, 'mp3' );
         //recurrence
-    if($_REQUEST['action'] == "add" || $_REQUEST['action'] == "insert") {
-   		$this->print_select_recurtype("event_recur_type",$data);
-  		$this->print_date('event_recur_end', $data, $err);
-  		
-  		$this->print_days_selection($data,$err);
-  		$this->Print_Recure_end();
-
-  		$this->printRecurChangeScript();
-    }
 
 
 		$this->form_foot();
@@ -148,9 +154,9 @@ class EventPropsView extends EventViewCommon {
 		while ( $row = shopDB::fetch_assoc($res) ) {
 			$edate = formatAdminDate( $row["event_date"], false );
 			$etime = formatTime( $row["event_time"] );
+//                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
 
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt'
-                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
                                   onmouseover=\"rowOver('ROW_{$row['event_id']}','admin_list_hover');\"
                                   onmouseout=\"rowOver('ROW_{$row['event_id']}','admin_list_row_$alt');\">
                 <td class='admin_list_item' width='20' bgcolor='white' >&nbsp;</td>
@@ -239,12 +245,39 @@ class EventPropsView extends EventViewCommon {
         if (nameObj != null) nameObj.style.background=nColor;
       }
 		</script>\n";
-    $where = "and (".((!$history)?"event_status='pub' or ":"(event_status!='pub' or event_rep='main' ) and (" );
-    $where .= "(event_rep!='main' and  event_date ".(($history)?'<':'>=')." NOW()) or ";
-//    if (!$history) {
-      $where .= "(event_rep='main' and  (select ".(($history)?'min':'max')."(event_date) from Event main where main.event_main_id = Event.event_id) ".(($history)?'<':'>=')." NOW())";
-//    }
-    $where .= ')'.((!$history)?"":")" )    ;
+		
+/*
+select SQL_CALC_FOUND_ROWS *
+              from Event LEFT JOIN Ort ON event_ort_id=ort_id
+              WHERE event_rep!='sub'
+              and event_status!='trash'
+              and ((event_rep!='main' and  (event_status='pub' or  event_date >= NOW()))
+                   or (event_rep='main' and  (select count(*)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id
+                                               and  (event_status='pub' or  event_date >= NOW() ))) > 0)
+              order by event_date
+              limit 0,15
+              
+ select SQL_CALC_FOUND_ROWS *
+              from Event LEFT JOIN Ort ON event_ort_id=ort_id
+              WHERE event_rep!='sub'
+              and event_status!='trash'
+              and ((event_rep!='main' and  (event_status='pub' or  event_date >= NOW() )
+                   or (event_rep='main' and  (select count(*)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id
+                                               and  (event_status='pub' or  event_date >= NOW() ))) > 0)
+              order by event_date
+              limit 0,15
+*/
+    $wherex = (!$history)?"event_status='pub' or ":"";
+    $where  = "and ((event_rep!='main' and  ($wherex event_date ".(($history)?'<':'>=')." NOW() )) \n";
+    $where .= "     or (event_rep='main' and  (select COALESCE(count(*),0)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id
+                                               and event_status!='trash'
+                                               and  ($wherex event_date ".(($history)?'<':'>=')." NOW() ))) > 0)";
     $_REQUEST['page'] = is($_REQUEST['page'],1);
   //  $this->page_length = 2;
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
@@ -269,7 +302,7 @@ class EventPropsView extends EventViewCommon {
     echo "<table class='admin_list' border='0' width='$this->width' cellspacing='2' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='8' align='center'>" . con('event_title') . "</td></tr>\n";
     if (!$history) {
-       echo "<tr><td class='admin_list_title' colspan='8' align='left'><input type='checkbox'  onclick=\"checkall();\">Check/Uncheck All</td></tr>\n";
+       echo "<tr><td class='admin_list_title' colspan='8' align='left'><input type='checkbox'  onclick=\"checkall();\">&nbsp;Check/Uncheck All</td></tr>\n";
     }
 		$img_pub = $this->fill_images();
 
@@ -282,9 +315,9 @@ class EventPropsView extends EventViewCommon {
 //      echo "<tr class='admin_list_row_$alt'><td colspan='8' ><pre>";
 //      print_r($row);
 //			echo "</td></tr>\n\n";
+//                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
 
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt'
-                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
                                   onmouseover=\"rowOver('ROW_{$row['event_id']}','admin_list_hover');\"
                                   onmouseout=\"rowOver('ROW_{$row['event_id']}','admin_list_row_$alt');\">";
       echo "<td colspan=2 class='admin_list_item' width=150>";
@@ -370,7 +403,6 @@ class EventPropsView extends EventViewCommon {
 	// #######################################################
 	function draw($history = false) {
 		global $_SHOP;
-
 		if ( preg_match('/_disc$/', $_REQUEST['action']) or preg_match('/_pmp$/', $_REQUEST['action']) or
 			preg_match('/_pmz$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action']) or
 			preg_match('/_pm$/', $_REQUEST['action']) ) {
@@ -387,9 +419,11 @@ class EventPropsView extends EventViewCommon {
 			}
 		} elseif($_POST['action'] == 'remove_events') {
 		  if(count($_REQUEST['cbxEvents']) > 0)
-			foreach($_REQUEST['cbxEvents'] as $eventId){
-                $event = Event::load($eventId, false);
+			  foreach($_REQUEST['cbxEvents'] as $eventId){
+          $event = Event::load($eventId, false);
+          if ($event->event_status !=='pub') {
                 $event->delete();
+          }
 			}
 			$this->event_list($history);
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
@@ -450,17 +484,17 @@ class EventPropsView extends EventViewCommon {
 
 		if ( $data['event_rep'] == 'unique' ) {
 			if ( !isset($data['event_date']) and !isset($err['event_date']) ) {
-				$err['event_date'] = mandatory;
+				$err['event_date'] = con('mandatory');
 			}
 			if ( !isset($data['event_time']) and !isset($err['event_time']) ) {
-				$err['event_time'] = mandatory;
+				$err['event_time'] = con('mandatory');
 			}
 			// if(!isset($data['event_open'])){$err['event_open']=mandatory;}
 		}
 
 		if ( !$data['event_id'] ) {
 			if ( $data['event_rep'] == 'unique' and $data['event_pm_ort_id'] == 'no_pm' ) {
-				$err['event_pm_ort_id'] = mandatory;
+				$err['event_pm_ort_id'] = con('mandatory');
 			}
 			if ( $data['event_pm_ort_id'] != 'no_pm' ) {
 				list( $event_pm_id, $event_ort_id ) = explode( ',', $data['event_pm_ort_id'] );
@@ -487,8 +521,9 @@ class EventPropsView extends EventViewCommon {
 		if ( $isnew ) {
 			$event = new Event;
 		} else {
-			if ( $event = Event::load($data['event_id'], false) ) {
+			if ( !$event = Event::load($data['event_id'], false) ) {
 				echo "<div class=error>" . con('invalid_event') . "</div>";
+				return;
 			}
 		}
 
@@ -514,85 +549,15 @@ class EventPropsView extends EventViewCommon {
 
   // #######################################################
   function save_recur_event (&$data, $isnew ) {
-    global $_SHOP;
-		$maxId = 1;
 	  $event_dates = $this->getEventRecurDates($data);
-    print_r($event_dates);
 		foreach ($event_dates as $event_date) {
-			$rec_data = array();
       $data['event_date'] = $event_date;
       $this->save_event( $data, $isnew ) ;
 		}
   }
 
-  function getEventRecurDates($data) {
 
-  	$rep_days 		= array();
-  	$event_dates	= array();
-  	$exclusion_days = array();
-  	$start_date 	= $data['event_date'];
-		$no_days 		  = $data['event_recur_days'];
-		$flag 			  = 0;
-		$days 			  = array(0,1,2,3,4,5,6);
-
-		if(isset($data['opt_sunday']))
-			$exclusion_days[] = $data['opt_sunday'];
-		if(isset($data['opt_monday']))
-			$exclusion_days[] = $data['opt_monday'];
-		if(isset($data['opt_tuesday']))
-			$exclusion_days[] = $data['opt_tuesday'];
-		if(isset($data['opt_wednesday']))
-			$exclusion_days[] = $data['opt_wednesday'];
-		if(isset($data['opt_thursday']))
-			$exclusion_days[] = $data['opt_thursday'];
-		if(isset($data['opt_friday']))
-			$exclusion_days[] = $data['opt_friday'];
-		if(isset($data['opt_saturday']))
-			$exclusion_days[] = $data['opt_saturday'];
-
-		$rep_days = array_diff($days,$exclusion_days);
-
-		$end_date= $data['event_recur_end'];
-
-		$dt_split = explode("-",$start_date);
-
-		$cur_day_of_the_week = date("w",mktime(0,0,0,$dt_split[1],$dt_split[2],$dt_split[0]));
-
-		$act_start_date = subtractDaysFromDate($start_date,$cur_day_of_the_week);
-
-		$week_count = ceil((stringDatediff($act_start_date,$end_date) / 7) / 86400 );
-
-		//for first week
-		foreach ($rep_days as $rep_day) {
-			if( $rep_day >= $cur_day_of_the_week ) {
-				$event_date = addDaysToDate($act_start_date,$rep_day);
-				if(stringDatediff($event_date,$end_date) < 0 ) {
-					$flag = 1;
-					break;
-				} else
-					$event_dates[] = $event_date;
-			}
-		}
-
-		if(!$flag) {
-			$week_count = (empty($event_dates)) ? $week_count : $week_count - 1;
-			for ($count = 0;$count < $week_count;$count++) {
-
-				//remaining
-				$act_start_date = addDaysToDate($act_start_date,7);
-				foreach ($rep_days as $rep_day) {
-					$event_date = addDaysToDate($act_start_date,$rep_day);
-					if(stringDatediff($event_date,$end_date) < 0 )
-						break ;
-		  	  else
-						$event_dates[] = $event_date;
-				}
-			}
-		}
-		return $event_dates;
-  }
-
-  function state_event_view (&$data, $stats, $pmps, $show_cat= true ) {
+  function event_view (&$data, $stats=0, $pmps=0 ) {
       $data["event_date"] = formatAdminDate($data["event_date"]);
       $data["event_time"] = formatTime($data["event_time"]);
       $data["event_open"] = formatTime($data["event_open"]);
@@ -601,10 +566,7 @@ class EventPropsView extends EventViewCommon {
       $agenda = (!$data['event_pm_id'])?' - ' . con('agenda_only'):'';
 
       echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-      echo "<tr><td colspan='2' class='admin_list_title'>" . $data["event_name"] . "{$agenda} </td></tr>";
-
-      $this->print_field('event_id', $data);
-      $this->print_field('event_name', $data);
+      echo "<tr><td colspan='2' class='admin_list_title'>" .$data['event_id']." - ". $data["event_name"] . "{$agenda} </td></tr>";
       $this->print_field('ort_name', $data);
       $this->print_field('event_short_text', $data);
       $this->print_field('event_text', $data);
@@ -626,42 +588,35 @@ class EventPropsView extends EventViewCommon {
       if ($data['event_pm_id'] and ($data['event_rep'] == 'sub' or $data['event_rep'] == 'main,sub')) {
           require_once('classes/PlaceMapCategory.php');
           if ($cats = PlaceMapCategory::loadAll_event($data['event_id'])) {
-              foreach($cats as $category) {
-                  $category_d = (array)$category;
-                  if (!($err= $this->state_test($category_d, $event_d, $stats, $pmps)) or $show_cat) {
-                     $this->state_cat_view($category_d);
-                  }
-                  $errs = ($err or $errs);
+            foreach($cats as $category) {
+              $cat_d = (array)$category;
+              $err = $this->state_test($cat_d, $event_d, $stats, $pmps);
+              echo "<tr><td class='admin_list_title' colspan='2'>{$cat_d['category_name']}</td></tr>";
+              $this->print_field('category_price', $cat_d);
+              $this->print_field('category_numbering', $cat_d);
+              $this->print_field('category_size', $cat_d);
+
+              if ($cat_d['category_numbering'] != 'none') {
+                  $this->print_field('category_pm_id', $cat_d);
+                  $this->print_field('category_pmp_id', $cat_d);
               }
+              $this->print_field('category_template', $cat_d);
+              $errs = ($err or $errs);
+            }
           } else {
               $errs = true;
               echo "<tr class='error'><td align='center'>" . con('category') . ' ' . con('undefined') . '<br></td></tr>';
           }
       }
       echo "</table><br>\n";
+   		echo "<input type='hidden' name='cbxEvents[]'  value='{$data['event_id']}'>";
+
       return $errs;
-  }
-
-  function state_cat_view (&$data) {
-      echo "<tr><td class='admin_list_title' colspan='2'>{$data['category_name']}</td></tr>";
-
-      $this->print_field('category_id', $data);
-      $this->print_field('category_name', $data);
-      $this->print_field('category_price', $data);
-      $this->print_field('category_numbering', $data);
-      $this->print_field('category_size', $data);
-
-      if ($data['category_numbering'] != 'none') {
-          $this->print_field('category_pm_id', $data);
-          $this->print_field('category_pmp_id', $data);
-      }
-
-      $this->print_field('category_template', $data);
-
   }
 
   function state_test(&$data, $event, $stats, $pmps) {
     if (empty($stats)) return false;
+
 
     if (!$data['category_template'] and !$event['event_template']) {
         $data['category_template'] = '<div class=warning>' . con('undefined') . '</div>';
@@ -713,53 +668,74 @@ class EventPropsView extends EventViewCommon {
 
   function state_change_event ($state, $event) {
 
-    if ($state == 1) {
-       if ($this->event_status = 'unpub') {
-         $oke = $event->publish($stats, $pmps);}
-       $result = 'pub_';
-       $oldstate = 'unpub';
-    } elseif($state == 2) {
-       $oke = $event->stop_sales();
-       $result = 'stop_';
-       $oldstate = 'pub';
-    } elseif($state == 3) {
-       $oke = $event->restart_sales();
-       $result = 'restart_';
-       $oldstate = 'nosal';
-    }
     if ($event->event_rep == 'sub'){
        $date = formatAdminDate($sub->event_date);
     } else {
        $date = $event->event_name;
     }
-    
+
+    if ($state == 1 and $event->event_status == 'unpub') {
+         $oke = $event->publish($stats, $pmps);
+         $result = 'pub_';
+         $oldstate = 'unpub';
+    } elseif ($state == 1 and $event->event_status == 'nosal') {
+         $oke = $event->restart_sales();
+         $result = 'restart_';
+         $oldstate = 'nosal';
+    } elseif($state == 2 and $event->event_status == 'pub') {
+       $oke = $event->stop_sales();
+       $result = 'stop_';
+       $oldstate = 'pub';
+    } else
+      return '';
+
     if ($oke){
-      echo "<div class='success'> <b>'$date'</b> " . con($result.'success') . "</div>\n";
+      $log = "<div class='success'> <b>'$date'</b> " . con($result.'success') . "</div>\n";
       if ($event->event_rep == 'main' and $_POST['also_sub_'.$event->event_id] and $subs = Event::load_all_sub($event->event_id)) {
         foreach($subs as $sub) {
           if ($sub->event_status == $oldstate) {
-            $this->state_change_event($state, $sub);
+            $log .= $this->state_change_event($state, $sub);
           }
         }
       }
     } else {
-      echo "<div class='err'> <b>'$date'</b> " . con($result.'failure') . "</div>\n";
+      $log = "<div class='err'> <b>'$date'</b> " . con($result.'failure') . "</div>\n";
     }
+    return $log;
   }
 
   function state_change ($state)    {
       global $_SHOP;
-      echo "<pre>";
-      print_r($_REQUEST);
-      echo "</pre>";
-
-      if (($state==2 or $_POST['confirm'] == con('confirm_yes')) and count($_POST['cbxEvents']) > 0) {
-      	foreach($_POST['cbxEvents'] as $eventID) {
+      $varNum = 0;
+      $log    = '';
+      if (count($_REQUEST['cbxEvents']) > 0) {
+      	foreach($_REQUEST['cbxEvents'] as $eventID) {
           if ($event = Event::load($eventID, false)) {
-             $this->state_change_event($state, $event);
+            if ($state == 1 and $event->event_status == 'unpub' and $_POST['confirm'] !== con('confirm_yes') ) {
+              echo $event->event_status;
+              unset($stats);
+              unset($pmps);
+              $event->publish($stats, $pmps, true);
+             	$event_d = (array)$event;
+             	if($varNum==0) $this->state_confirm_button($state, false);
+             	$errs = $this->event_view($event_d, $stats, $pmps, false) or $errs;
+             	$varNum++;
+            } else {
+              $log .= $this->state_change_event ($state, $event);
+            }
           }
         }
-        $this->delayedLocation('view_event.php');
+        echo $log;
+        
+        if($varNum!==0) {
+          if ($errs) {
+            echo "<br><div class=error align=center>" . con('correct_errors_first') . "<br></div>";
+          } else {
+            $this->state_confirm_button($state);
+          }
+        } else {
+          $this->delayedLocation('view_event.php');
+        }
 	      return true;
 
       } elseif (count($_POST['cbxEvents']) > 0) {
@@ -782,14 +758,8 @@ class EventPropsView extends EventViewCommon {
             	$event_d = (array)$event;
             	if($varNum==0) $this->state_confirm_button($state, false);
             	$errs = $this->state_event_view($event_d, $stats, $pmps, false) or $errs;
-            	$varNum++;
             }
 		     }
-         if ($errs) {
-            echo "<br><div class=error align=center>" . con('correct_errors_first') . "<br></div>";
-          } elseif($varNum!==0)  {
-              $this->state_confirm_button($state);
-          }
 
 		      return $varNum!==0;
 

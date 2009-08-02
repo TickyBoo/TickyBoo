@@ -4,12 +4,15 @@ $orphancheck = array();
 $orphancheck[]="
 select 'Category', category_id, 'event_id' l1 , category_event_id, event_id,
                                 'pm_id'    l2 , category_pm_id, pm_id,
-                                'pmp_id'   l3 , category_pmp_id, pmp_id
+                                'pmp_id'   l3 , category_pmp_id, pmp_id,
+                                'stat_id'  i4 , category_id, cs_category_id
 from Category left join event on category_event_id = event_id
               left join PlaceMap2 on category_pm_id = pm_id
               left join PlaceMapPart on category_pmp_id = pmp_id
+              left join Category_stat on category_id = cs_category_id
 where  (category_event_id <> 0 and event_id is null)
 or     (pm_id is null)
+or     (cs_category_id is null)
 or     (category_pmp_id <> 0 and pmp_id is null)
 ";
 /**/
@@ -29,13 +32,16 @@ $orphancheck[]="
 select 'Event', e.event_id,  'ort_id' l1 , e.event_ort_id, ort_id,
                              'pm_id' l2 , e.event_pm_id, pm_id,
                              'group_id' l3 , e.event_group_id,  eg.event_group_id group_id,
+                             'stat_id' l5 , e.event_id,  es.es_event_id,
                              'main_id' l4 , e.event_main_id , me.event_id  main_id
 from Event e left join Ort on event_ort_id = ort_id
              left join PlaceMap2 on event_pm_id = pm_id
              left join Event_group eg on e.event_group_id = eg.event_group_id
              left join Event me on e.event_main_id = me.event_id
+             left join Event_stat es on e.event_id = es.es_event_id
 where  (ort_id is null)
 or     (pm_id is null)
+or     (es.es_event_id is null and e.event_state !='main')
 or     (e.event_group_id<>0 and eg.event_group_id is null)
 or     (e.event_main_id is not null and me.event_id is null)
 ";
@@ -116,8 +122,8 @@ or     (seat_pmp_id is not null and seat_pmp_id <> 0 and pmp_id is null)
 or     (seat_discount_id is not null and seat_discount_id <> 0 and discount_id is null)
 ";
 /**/
-require_once("includes/config/init_common.php");
-include "ShopDB.php";
+//require_once("includes/config/init_common.php");
+//include "ShopDB.php";
 $data = array();
 $keys = array();
 foreach( $orphancheck as $query) {
@@ -127,40 +133,16 @@ foreach( $orphancheck as $query) {
       $r = array ('_table' => $row[0], '_id' => $row[1]);
 
     for( $x=2;$x< count($row); $x+=3) {
-      $r[$row[$x]]= ((!empty($row[$x+1]) and $row[$x+2]!==$row[$x+1])?$row[$x+1]:'');//.' - '.var_export ($row[$x+2],true);
-      if (!in_array($row[$x],$keys)){
-         $keys[] = $row[$x];
+      $z = ((!empty($row[$x+1]) and $row[$x+2]!==$row[$x+1])?$row[$x+1]:'');//.' - '.var_export ($row[$x+2],true);
+      if ($z) {
+        if (!in_array($row[$x],$keys)){
+           $keys[] = $row[$x];
+        }
+        $r[$row[$x]] = $z;
       }
     }
     $data[] = $r;
   }
 }
-//print ( '<pre>' )  ;
-
-//print_r($data);
-//print ( '</pre>' )  ;
-print "<table border =1>
-        <tr>
-          <th colspan='".(count($keys)+2)."'> Table record Orphan test </th>
-        </tr>
-        <tr>
-          <th width=130 align='left'>
-            Tablename
-          </th>
-          <th width=70 align='right'>
-            ID
-          </th>";
-  foreach ($keys as $key) {
-    print "<th width=70 align='center'> {$key}&nbsp;</th>";
-  }
-  print "</tr>";
-  foreach ($data as $row) {
-    print "<tr> <td>{$row['_table']}</td><td align='right'>{$row['_id']}</td>";
-    foreach ($keys as $key) {
-      print "<td align='center'>{$row[$key]}&nbsp;</td>";
-    }
-    print "</tr>";
-  }
-  print "</table>";
 
 ?>

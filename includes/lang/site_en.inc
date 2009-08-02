@@ -202,6 +202,7 @@ define("et_pr","Pop/Rock");
 define("et_theater","Theater");
 define("event","Event");
 define("event_add_title","Add a new event");
+define("event_edit_title","Edit event");
 define("event_admin","Events");
 define("event_cats","Categories:");
 define("event_date","Date");
@@ -646,7 +647,8 @@ define("pmp_height","Part height");
 define("pmp_id","Part ID");
 define("pmp_name","Part Name");
 define("pmp_scene","Scene location");
-define("pmp_scene_est","East");
+define("pmp_scene_none","None");
+define("pmp_scene_east","East");
 define("pmp_scene_north","North");
 define("pmp_scene_south","South");
 define("pmp_scene_west","West");
@@ -1072,4 +1074,7 @@ define('system_halted','SYSTEM IS HALTED');
 
 define('Status_is_pub','This event is published');
 define('recure_days_selection','Days to exclude');
+define('dts_day_arr','Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday');
+define('dts_month_arr','January|February|March|April|May|June|July|August|September|October|November|December');
+
 ?>

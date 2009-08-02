@@ -106,10 +106,11 @@ class Event {
            $this->_set('event_date').
            $this->_set('event_time').
            $this->_set('event_open').
+           $this->_set('event_end').
            $this->_set('event_order_limit').
            $this->_set('event_payment').
-           $this->_set('event_template').
-           $this->_set('event_type').
+           $this->_set('event_template',null,true).
+           $this->_set('event_type',null,true).
            $this->_set('event_group_id').
            $this->_set('event_mp3').
            $this->_set('event_rep');
@@ -157,73 +158,63 @@ class Event {
     global $_SHOP;
 
     if($this->event_status=='pub' ){
-        echo '<div class=error>'.Status_is_pub.'<div>';
-        return FALSE;}
+        echo '<div class=error>'.Status_is_pub.'</div>';
+        return FALSE;
+    }
 
 
     if($this->event_rep=='main'){
       $query="select count(*) from Event where event_status!='trash' and event_main_id={$this->event_id}";
       if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
-        echo '<div class=error>'.delete_subs_first.'<div>';
+        echo '<div class=error>'.delete_subs_first.'</div>';
         return FALSE;
       }
     }else if($this->event_status=='nosal' and $this->event_pm_id){
-            echo '<div class=error>'.To_Trash.'<div>';
+      echo '<div class=error>'.To_Trash.'</div>';
 			return $this->toTrash();
 		}
-
-
-    if(!ShopDB::begin()){
-        echo '<div class=error>'.Cant_Start_transaction.'<div>';
-        return FALSE;}
+    if(!ShopDB::begin('Delete event: '.$this->event_id )){
+        echo '<div class=error>'.Cant_Start_transaction.'</div>';
+        return FALSE;
+    }
 
     if($this->event_status!='trash'){
 			//check if there are non-free seats
 			$query="select count(*) from Seat where seat_event_id={$this->event_id} and seat_status!='free' FOR UPDATE";
 			if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
-				ShopDB::rollback();
-				echo '<div class=error>'.seats_not_free.'<div>';
-				return FALSE;
+				return $this->_abort(con('seats_not_free'));
 			}
 		}
 
     $query="delete from Event where event_id={$this->event_id} and event_status!='pub' limit 1";
 
     if(!ShopDB::query($query) or !shopDB::affected_rows()==1){
-      ShopDB::rollback();
-      echo '<div class=error>'.event_delete_failed.'<div>';
-      return FALSE;
+      return $this->_abort(con('event_delete_failed'));
     }
 
     $query="delete from Seat where seat_event_id={$this->event_id}";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.seats_delete_failed.'<div>';
-      return FALSE;
+      return $this->_abort(con('seats_delete_failed'));
     }
 
     $query="delete from Event_stat where es_event_id={$this->event_id}";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.event_stat_delete_failed.'<div>';
-      return FALSE;
+      return $this->_abort(con('event_stat_delete_failed'));
     }
 
     require_once('classes/PlaceMap.php');
     if($this->event_pm_id and $pm=PlaceMap::load($this->event_pm_id)){
       if (!$pm->delete()){
-        return FALSE;
+        return $this->_abort(con('Cant_delete_PlaceMap'));
       }
     }
 
     $query="delete from Discount where discount_event_id={$this->event_id}";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.discount_delete_failed.'<div>';
-      return FALSE;
+      return $this->_abort(con('discount_delete_failed'));
     }
 
-    ShopDB::commit();
+    ShopDB::commit('Event deleted');
     return TRUE;
   }
 
@@ -236,7 +227,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
     require_once('classes/Category_stat.php');
     require_once('classes/Event_stat.php');
 
-    if(!$dry_run){ShopDB::begin();}
+    if(!$dry_run){ShopDB::begin('Publish Event');}
 
     if($this->event_pm_id and ($this->event_rep=='sub' or $this->event_rep=='main,sub')){
       $parts=PlaceMapPart::loadAll_full($this->event_pm_id);
@@ -251,7 +242,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 
       $cats=PlaceMapCategory::loadAll_event($this->event_id);
       if(!$cats){
-        return $this->_abort('');
+        return $this->_abort('No Categories found');
       }
 
       foreach($cats as $cat_ident=>$cat){
@@ -288,7 +279,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 
     if(!$dry_run){$this->save() or $this->_abort(publish7);}
 
-    if($dry_run or ShopDB::commit()){
+    if($dry_run or ShopDB::commit('Event publised')){
       return TRUE;
     }
 
@@ -309,8 +300,8 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
        echo "<div class=error>".oldstate_not_correct."</div>";
        return FALSE;}
 
-    if(!ShopDB::begin()){
-      echo '<div class=error>'.cant_Start_transaction.'<div>';
+    if(!ShopDB::begin('change event_state')){
+      echo '<div class=error>'.cant_Start_transaction.'</div>';
       return FALSE;
       }
 
@@ -334,7 +325,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
       return $this->_abort(error_event_save_changes);
     }
 
-    if(!ShopDB::commit()){
+    if(!ShopDB::commit('Event_state changed')){
       return $this->_abort(error_event_commit);
       }
 
@@ -357,7 +348,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
     if ($str) {
       echo "<div class=error>$str</div>";
     }
-    ShopDB::rollback();
+    ShopDB::rollback($str);
     return false; // exit;
   }
 
@@ -367,7 +358,7 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
     }
   }
 
-  function _set ($name,$value=0,$mandatory=FALSE){
+  function _set ($name,$value=null,$mandatory=FALSE){
 
     if($value){
       $val=$value;
@@ -430,29 +421,26 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 		  return FALSE;
 		}
 
-	  ShopDB::begin();
+	  ShopDB::begin('Trash Event');
 
 		$query="update Event set event_status='trash'
 						where event_id='{$this->event_id}'";
 
 		if(!ShopDB::query($query)){
-		  ShopDB::rollback();
-			return FALSE;
+			return  $this->_abort(con('cant_trash_event'));
 		}
 
 		$query="update Category set category_status='trash' where category_event_id='".$this->event_id."'";
 		if(!ShopDB::query($query)){
-		  ShopDB::rollback();
-			return FALSE;
+			return $this->_abort(con('cant_trash_catagory'));
 		}
 
 		$query="update Seat set seat_status='trash' where seat_event_id='".$this->event_id."'";
 		if(!ShopDB::query($query)){
-		  ShopDB::rollback();
-			return FALSE;
+			return $this->_abort(con('cant_trash_seats'));
 		}
 
-		ShopDB::commit();
+		ShopDB::commit('Event_trashed');
 	  return TRUE;
 	}
 

@@ -261,7 +261,7 @@ class PlaceMapView2 extends AdminView {
 						$pm = new PlaceMap( $_POST['pm_ort_id'], $_POST['pm_name'] );
 						if ( $pm_id = $pm->save() ) {
 							if ( !$this->photo_post($_POST, $pm_id) ) {
-								echo "<div class=error>" . img_loading_problem . "<div>";
+								echo "<div class=error>" . img_loading_problem . "</div>";
 							}
 
 							$this->pm_view( $pm_id );
@@ -293,7 +293,7 @@ class PlaceMapView2 extends AdminView {
 									$pm->save();
 
 									if ( !$this->photo_post($_POST, $pm->pm_id) ) {
-										echo "<div class=error>" . img_loading_problem . "<div>";
+										echo "<div class=error>" . img_loading_problem . "</div>";
 									}
 
 									if ( $pm->pm_event_id ) {

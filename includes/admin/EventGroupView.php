@@ -205,7 +205,7 @@ if($_POST['action']=='insert'){
     $event_group_id=shopDB::insert_id();
     
     if(!$this->photo_post($_POST,$event_group_id)){
-      echo "<div class=error>".img_loading_problem."<div>";
+      echo "<div class=error>".img_loading_problem."</div>";
     }
     
 
@@ -241,7 +241,7 @@ if($_POST['action']=='insert'){
     }
 
     if(!$this->photo_post($_POST,$_POST['event_group_id'])){
-      echo "<div class=error>".img_loading_problem."<div>";
+      echo "<div class=error>".img_loading_problem."</div>";
     }
 
     $this->event_group_list();

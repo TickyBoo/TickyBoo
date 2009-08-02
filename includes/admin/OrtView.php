@@ -172,7 +172,7 @@ class OrtView extends AdminView {
     function draw ()
     {
         global $_SHOP;
-        echo $_POST['action'];
+      //  echo $_POST['action'];
         
         if (preg_match('/_pm$/', $_REQUEST['action']) or preg_match('/_pmz$/', $_REQUEST['action']) or
             preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
@@ -196,7 +196,7 @@ class OrtView extends AdminView {
                     return 0;
                 }
                 if (!$this->photo_post($_POST, $ort_id)) {
-                    echo "<div class=error>" . img_loading_problem . "<div>";
+                    echo "<div class=error>" . img_loading_problem . "</div>";
                 }
 
                 $this->ort_list();
@@ -213,7 +213,7 @@ class OrtView extends AdminView {
                     return 0;
                 }
                 if (!$this->photo_post($_POST, $_POST['ort_id'])) {
-                    echo "<div class=error>" . img_loading_problem . "<div>";
+                    echo "<div class=error>" . img_loading_problem . "</div>";
                 }
 
                 $this->ort_list();

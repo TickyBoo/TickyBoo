@@ -111,51 +111,50 @@ class PlaceMap{ //ZRS
     }
     return $pms;
   }
-
+  
+  function _abort ($str=''){
+    if ($str) {
+      echo "<div class=error>$str</div>";
+    }
+    ShopDB::rollback($str);
+    return false; // exit;
+  }
+  
   function delete (){
     global $_SHOP; 
 
-    if(!ShopDB::begin()){
-        echo '<div class=error>'.Cant_Start_transaction.'<div>';
-        return FALSE;}
+    if(!ShopDB::begin('delete Placmep: '.$this->pm_id)){
+        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
+        return FALSE;
+    }
 
     $query="delete from PlaceMap2 where pm_id={$this->pm_id} limit 1";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.placemap_delete_failed.'<div>';
-      return FALSE;
+      return $this->_abort(con('placemap_delete_failed'));;
     }
 
     $query="delete from PlaceMapZone where pmz_pm_id={$this->pm_id}";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.placemapzone_stat_delete_failed.'<div>';
-      return FALSE;
+      return  $this->_abort(con('placemapzone_stat_delete_failed'));
     }
 
     $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} ";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.event_stat_delete_failed.'<div>';
-      return FALSE;
+      return $this->_abort(con('PlaceMapPart_delete_failed'));
     }
-      echo '<div class=error>'.Category_delete.'<div>';
-
-    $query="delete from Category where category_pm_id={$this->pm_id}";
+    $query="DELETE a1, a2 FROM Category AS a1 INNER JOIN Category_stat AS a2
+            WHERE a1.category_id=a2.cs_category_id
+            and category_pm_id={$this->pm_id}";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.Category_delete_failed.'<div>';
-      return FALSE;
+       return $this->_abort(con('Category_delete_failed'));
     }
 
     $query="delete from Category_stat where cs_category_id={$this->pm_id}";
     if(!ShopDB::query($query)){
-      ShopDB::rollback();
-      echo '<div class=error>'.Category_stat_delete_failed.'<div>';
-      return FALSE;
+       return $this->_abort(con('Category_stat_delete_failed'));;
     }
 
-    ShopDB::commit();
+    ShopDB::commit('PlaceMap deleted');
     return TRUE;
 
   }

@@ -76,8 +76,8 @@ class Order_Smarty {
     $cart->iterate('_collect', $order);
     
     //begin the transaction
-    if(!ShopDB::begin()){
-      $this->error =con('reservate_failed');
+    if(!ShopDB::begin('Make order')){
+      $this->error =con('cant_start transaction');
       return; 
     }
 /*
@@ -92,7 +92,7 @@ class Order_Smarty {
     //put the order into database     
     if(!$order_id=$order->save()){
       $this->error = con('save_failed');
-      ShopDB::rollback();
+      ShopDB::rollback('save_failed');
       return; 
     }
 
@@ -110,11 +110,11 @@ class Order_Smarty {
   			WHERE user_id=".ShopDB::quote($user_id);
   	if(!$res=ShopDB::query($query)){
   		$this->error =con('user_failed');
-  		ShopDB::rollback();
+  		ShopDB::rollback('user_failed');
   	}
 
     //commit the transaction
-    ShopDB::commit();
+    ShopDB::commit('Order created');
     return $order;
   }
 

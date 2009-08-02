@@ -50,22 +50,21 @@ class Seat {
      
     $time=time()+$_SHOP->res_delay;
 	
-	// if reserved is enabled it lets you book reserved seats handy for splitting big booking.
-	if($reserved==true) {
-	  $status=" and seat_status IN ('free','resp') ";
-	}else{
-	  $status=" and seat_status='free' ";
-	}
+  	// if reserved is enabled it lets you book reserved seats handy for splitting big booking.
+  	if($reserved==true) {
+  	  $status=" and seat_status IN ('free','resp') ";
+  	}else{
+  	  $status=" and seat_status='free' ";
+  	}
 
-    if(!ShopDB::begin()){
-
+    if(!ShopDB::begin('Reservate seats')){
       $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:62');
       return FALSE;
     }
 
     //numbering none: choose any $seats seats ($seats is a number)
     // Open seating....
-	if($numbering=='none'){
+	  if($numbering=='none'){
         
       Seat::expire_category($category_id);
       
@@ -77,6 +76,7 @@ class Seat {
 	      FOR UPDATE";
 
       if(!$res=ShopDB::query($query)){
+        ShopDB::rollback('cant lock seats');
         $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:80');
         return FALSE;
       }
@@ -88,56 +88,12 @@ class Seat {
       
       //is there less seats available that asked for? dono, return error
       if(count($seats_id)<$seats){
-        ShopDB::rollback();
+        ShopDB::rollback('Not engough seats to reservate');
         $_SHOP->place_error=array('errno'=>PLACE_ERR_TOOMUCH,'remains'=>count($seats_id));
         return FALSE;
       }
 
-    //numbering is rows - $seats contain row numbers
-/*    }else if($numbering=='rows'){
-
-      //count: how much seats take in each row 
-      foreach($seats as $row){
-        $rows[$row]++;
-      }
-      
-      //trying to taking actual seats
-      foreach($rows as $row_nr=>$count){
-        $query="SELECT seat_id,seat_pmp_id FROM Seat 
-                WHERE seat_event_id='$event_id'
-                and seat_category_id='$category_id'
-		and seat_row_nr='$row_nr' 
-	        and seat_status='free' LIMIT $count
-	        FOR UPDATE";
-        
-        if(!$res=ShopDB::query($query)){
-          $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL);
-          return FALSE;
-        }
-      
-        //choosing seats from corresponding rows
-	//and if a category is on many zones? hehe...
-	$row_count=0;
-        while($row=shopDB::fetch_array($res)){
-          $seats_id[]=$row['seat_id'];
-  	  $pmps_id[$row['seat_pmp_id']]=1;
-          $row_count++;
-	}
-      
-        //got ther right count for this row?
-        if($row_count!=$count){
-          ShopDB::rollback();
-          $_SHOP->place_error=array('errno'=>PLACE_ERR_TOOMUCH,'remains'=>$row_count);
-          return FALSE;
-        }
-      }
-    }
-    
-    //numbering is both: $seats is an array of seat_id
-    else if($numbering=='both')
-*/
-    }else if($numbering=='both' or $numbering=='rows' or $numbering=='seat')
-    { 
+    } elseif($numbering=='both' or $numbering=='rows' or $numbering=='seat') {
       $seats_id=$seats;
 
 // IN
@@ -145,27 +101,27 @@ class Seat {
         $query="SELECT seat_id,seat_pmp_id FROM Seat 
                 WHERE seat_event_id='$event_id'
                 and seat_category_id='$category_id'
-		and seat_id='$seat_id' $status 
-		LIMIT 1
-	        FOR UPDATE";
+		            and seat_id='$seat_id' $status
+		            LIMIT 1 FOR UPDATE";
         if(!$res=ShopDB::query($query)){
+          ShopDB::rollback('cant lock seat');
           $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:154');
           return FALSE;
         }
 	
-	if(!$row=shopDB::fetch_array($res)){
-          ShopDB::rollback();
+  	  if(!$row=shopDB::fetch_array($res)){
+          ShopDB::rollback('Cant find seat');
           $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
-	  return FALSE;
-	}else{
-  	  $pmps_id[$row['seat_pmp_id']]=1;
-	}
+      	  return FALSE;
+      	}else{
+      	  $pmps_id[$row['seat_pmp_id']]=1;
+      	}
       }
       
     //some strange thing happens
     }else{
       user_error("unknown place_numbering $numbering category $category_id");
-      ShopDB::rollback();
+      ShopDB::rollback("unknown place_numbering $numbering category $category_id");
       $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:171');
       return FALSE;
     }
@@ -182,13 +138,13 @@ class Seat {
 	      		$status";
 	      
      if(!ShopDB::query($query)){ 
-        ShopDB::rollback();
+        ShopDB::rollback('cant update seat');
         $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:189');
         return FALSE;
       }else{
         //place taken by someone in the middle
         if(shopDB::affected_rows()!=1){
-          ShopDB::rollback();
+          ShopDB::rollback('seat not changed');
           $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
           return FALSE;
         }
@@ -204,7 +160,7 @@ class Seat {
     }  
 
     //commit the reservation
-    if(!ShopDB::commit()){
+    if(!ShopDB::commit('Seats reservated')){
       $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:211');
       return FALSE;
     }
@@ -292,7 +248,7 @@ class Seat {
   function free ($sid,$event_id,$category_id,$seats){
     global $_SHOP;   
      
-    if(!ShopDB::begin()){ return FALSE;}
+    if(!ShopDB::begin('free seats')){ return FALSE;}
     
     foreach($seats as $seat_id){
 
@@ -306,7 +262,7 @@ class Seat {
 	      FOR UPDATE";
 
       if(!$row=ShopDB::query_one_row($query)){
-        ShopDB::rollback(); 
+        ShopDB::rollback('cant lock seats');
         return FALSE;          
       }else{
         $pmps_id[$row['seat_pmp_id']]=1;
@@ -323,12 +279,12 @@ class Seat {
 	      and seat_category_id='$category_id'";
 
       if(!ShopDB::query($query)){
-        ShopDB::rollback(); 
+        ShopDB::rollback('cant update seats');
         return FALSE;          
 
       }else{
         if(shopDB::affected_rows()!=1){
-          ShopDB::rollback();
+          ShopDB::rollback('seat not changed');
           return FALSE;
         }
       }
@@ -342,7 +298,7 @@ class Seat {
       }
     }
     
-    if(!ShopDB::commit()){
+    if(!ShopDB::commit('Seats freeed')){
       ShopDB::rollback();
       return FALSE;
     }
@@ -385,7 +341,7 @@ class Seat {
 
   function publish ($seat_event_id,
                     $seat_row_nr,$seat_nr,
-		    $seat_zone_id,$seat_pmp_id,$seat_category_id
+		                $seat_zone_id,$seat_pmp_id,$seat_category_id
 		    )
   {
     global $_SHOP; 
@@ -402,6 +358,14 @@ class Seat {
     if(ShopDB::query($query)){
       return ShopDB::insert_id();
     }
+  }
+
+  function _abort ($str=''){
+    if ($str) {
+      echo "<div class=error>$str</div>";
+    }
+    ShopDB::rollback($str);
+    return false; // exit;
   }
 }
 

@@ -235,50 +235,73 @@ class EventViewCommon extends AdminView {
 
     function print_recur_enddate($dsp_name,$name) {
     	echo "<tr><td  class='admin_value' colspan='2' style='padding:0px;margin:0px;'>\n";
-    	echo "<table id='recur_table' border=1 width='100%'><tr><td class='admin_name' width='40%'>$dsp_name</td>
-			<td  class='admin_value' ><input type='text' name='$name'>";
-    	echo "</td></tr>\n";
+    	echo "<table id='recur_table' border=1 width='100%'>
+              <tr>
+                <td class='admin_name' width='40%'>$dsp_name</td>
+			          <td  class='admin_value' ><input type='text' name='$name'></td>
+              </tr>\n";
 
     }
 
     function print_days_selection(&$data,&$err) {
+      GLOBAL $_SHOP;
+      $days           = array(0, 1,2,3,4,5,6);
+   	  $exclusion_days = is($data['recurse_days_selection'],array());
+    	
+      If (!isset($_SHOP->month_arr) or empty($_SHOP->days_arr)) {
+    		$_SHOP->month_arr  = explode('|',con('dts_day_arr'));
+      }
+
     	echo "
           <tr>
     			  <td class='admin_name' width='40%'>".con('recure_days_selection')."</td>
     		    <td class='admin_value'>
     		    	<table id='day_options'>
-    		    		<tr>
-    		    			<td class='admin_name'>
-  			    				<input type='checkbox' name='opt_sunday' value='0'>Sunday
-	  		    			</td>
-		  	    			<td class='admin_name'>
-			      				<input type='checkbox' name='opt_monday' value='1'>Monday
-			      			</td>
-			      			<td class='admin_name'>
-			    	  			<input type='checkbox' name='opt_tuesday' value='2'>Tuesday
-			    		  	</td>
-			    		  </tr>
-			    		  <tr>
-  			    			<td class='admin_name'>
-  			    				<input type='checkbox' name='opt_wednesday' value='3'>Wednesday
-  			    			</td>
-  			    			<td class='admin_name'>
-  			    				<input type='checkbox' name='opt_thursday' value='4'>Thursday
-  			    			</td>
-  			    			<td class='admin_name'>
-  			    				<input type='checkbox' name='opt_friday' value='5'>Friday
-  			    			</td>
-  			    	  </tr>
-			    		  <tr>
-			    		  	<td class='admin_name'>
-			    		  		<input type='checkbox' name='opt_saturday' value='6'>Saturday
-			    		  	</td>
-		    		  	</tr>
+    		    		<tr>";
+      $cnt = 0;
+      foreach( $days as $myday) {
+        $cnt++;
+        echo "		<td class='admin_name'>
+  			    				<input type='checkbox' name='recurse_days_selection[]' value='{$myday}' ".
+  			    				((in_array($myday, $exclusion_days))?'checked':'').
+                    " >&nbsp;".$_SHOP->month_arr[$myday]."&nbsp;
+	  		    			</td>\n";
+	  		if ($cnt == 4) {
+          echo "  </tr>
+			      		  <tr>\n";
+          $cnt = 0;
+        }
+      }
+      echo "	</tr>
 			      	</table>
      		    	<span class='err'>{$err['opt_days']}</span>
      		  	</td>
 			   </tr>\n";
-   }
+    }
+    
+  function getEventRecurDates($data, $invert= true) {
+  	$event_dates	= array();
+  	$rep_days     = is($data['recurse_days_selection'], array());
+  	$start_date 	= $data['event_date'];
+		$end_date     = $data['event_recur_end'];
+
+    if ($invert) {
+		  $rep_days     = array_diff(array(0,1,2,3,4,5,6), $rep_days);
+    }
+
+		$dt_split     = explode("-",$start_date);
+		$weekday      = date("w", mktime(0,0,0,$dt_split[1],$dt_split[2],$dt_split[0]));
+		$no_days      = ceil(stringDatediff($start_date, $end_date) / 86400 );
+
+    for($i = 0; $i <= $no_days; $i++) {
+      $x = ($weekday + $i) % 7;
+      if (in_array($x, $rep_days)) {
+				$event_dates[] = addDaysToDate($start_date, $i);
+      }
+    }
+		return $event_dates;
+  }
+
     function Print_Recure_end(){
 			   echo "
            </table>
@@ -300,56 +323,14 @@ class EventViewCommon extends AdminView {
     		  </script>
     		";
     }
-    function printFindSubEventsScript(){
-		echo "<script type='text/javascript'>
-				document.getElementsByClassName = function(clsName){
-				    var retVal = new Array();
-				    var elements = document.getElementsByTagName('*');
-				    for(var i = 0;i < elements.length;i++){
-				        if(elements[i].className.indexOf(' ') >= 0){
-				            var classes = elements[i].className.split(' ');
-				            for(var j = 0;j < classes.length;j++){
-				                if(classes[j] == clsName)
-				                    retVal.push(elements[i]);
-				            }
-				        }
-				        else if(elements[i].className == clsName)
-				            retVal.push(elements[i]);
-				    }
-				    return retVal;
-				}
-    			function checkAllSubEvents(mainEventId) {
-					var varNum = document.getElementsByClassName(mainEventId);
-					if(varNum){
-						for(var i = 0;i < varNum.length;i++){
-							if(document.getElementById(mainEventId).checked==true)
-								varNum[i].checked = 'checked';
-							else
-								varNum[i].checked = '';
-						}
-					}
-    			}
-    		  </script>";
-    }
 
-   function print_hidden ($name, $value='', $size = 30, $max = 100, $suffix = '')
+    function print_hidden ($name, $value='', $size = 30, $max = 100, $suffix = '')
     {
-        echo "<tr>
+      echo "<tr>
               <td>
               	<input type='hidden' id='$name' name='$name' value='" . $value . "' size='$size' maxlength='$max'>
-              </td></tr>\n";
-    }
-
-    function print_subtitle_with_button($name,$data)
-    {
-    	echo "<tr>
-    			<td>$name</td><td align='right'>
-	              <span >
-	              	<input type='hidden' id='hdnDivNo' name='hdnDivNo' value='{$data}' size='5' maxlength='100'>
-	              	<a class='link' href='javascript: addMoreDiscount();'>Add more discounts....</a>
-	              </span>
-    			</td>
-    		  </tr>";
+              </td>
+            </tr>\n";
     }
 
     function print_select_num ($name, &$data, &$err, $opt, $num='')
@@ -368,6 +349,7 @@ class EventViewCommon extends AdminView {
         echo "</select><span class='err'>{$err[$name]}</span>
               </td></tr>\n";
     }
+    
    function print_input_num ($name, &$data, &$err, $size = 30, $max = 100, $num='', $suffix = '')
     {
     	echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) ."</td>
@@ -376,7 +358,6 @@ class EventViewCommon extends AdminView {
               </td></tr>\n";
 			  
     }
-
 }
 
 ?>

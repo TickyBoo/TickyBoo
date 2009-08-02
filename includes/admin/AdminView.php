@@ -174,7 +174,7 @@ class AdminView extends AUIComponent {
                 </td></tr>\n";
     }
 
-    function print_area ($name, &$data, &$err, $rows = 6, $cols = 40, $suffix = '')
+    function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '')
     {
         echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
                 <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
@@ -432,7 +432,9 @@ class AdminView extends AUIComponent {
     function form_head ($name, $width = 0, $colspan = 2)
     {
         echo "<table class='admin_form' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr>";
+        if ($name) {
+          echo "<tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr>";
+        }
     }
 
     function form_foot($colspan = 2)

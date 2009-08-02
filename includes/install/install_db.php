@@ -156,6 +156,7 @@ $tbls['Event']['fields'] = array(
   'event_date' => " date DEFAULT NULL",
   'event_time' => " time DEFAULT NULL",
   'event_open' => " time DEFAULT NULL",
+  'event_end' => " time DEFAULT NULL",
   'event_status' => " varchar(5) NOT NULL DEFAULT ''",
   'event_order_limit' => " int(4) NOT NULL DEFAULT '0'",
   'event_payment' => " set('CC','POST') NOT NULL DEFAULT ''",
@@ -415,13 +416,5 @@ $tbls['Sessions']['fields'] = array(
   'Sessions_data' => " text");
 $tbls['Sessions']['key'] = array(
   "PRIMARY KEY (`Sessions_id`)");
-$tbls['Sessions']['remove'] = array ()   ;
-
-$tbls['Repeating_events']['fields'] = array(
-  'repeating_events_common_id' => " int(11) NOT NULL DEFAULT '0'",
-  'repeating_events_event_id'  => " int(11) NOT NULL DEFAULT '0'");
-$tbls['Repeating_events']['key'] = array(
-  "PRIMARY KEY (`repeating_events_common_id`,`repeating_events_event_id`)");
-$tbls['Repeating_events']['remove'] = array ()   ;
-
+$tbls['Sessions']['remove'] = array ();
 ?>

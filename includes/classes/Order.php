@@ -170,7 +170,15 @@ class Order {
     }
       
   }
-   
+
+  function _abort ($str=''){
+    if ($str) {
+      echo "<div class=error>$str</div>";
+    }
+    ShopDB::rollback($str);
+    return false; // exit;
+  }
+
   function _fill ($data){
     foreach($data as $k=>$v){
       If(is_string($k))
@@ -199,11 +207,11 @@ class Order {
   }
   
   function save_full (){
- 	  if(!ShopDB::begin()){return FALSE;}
+ 	  if(!ShopDB::begin('Save Order')){return FALSE;}
     
-    if(!$this->save()){ShopDB::rollback();return FALSE;}
+    if(!$this->save()){ShopDB::rollback('Error_saving_order');return FALSE;}
       
-    if(!ShopDB::commit()){ShopDB::rollback();return FALSE;}
+    if(!ShopDB::commit('Order saved')){ShopDB::rollback('Errors_commiting_order');return FALSE;}
 
     return $this->order_id;
   }
@@ -451,40 +459,31 @@ class Order {
   function order_delete ($order_id, $reason = 0){
     global $_SHOP;
 
-    if(!ShopDB::begin('order_delete')){
+    if(!ShopDB::begin('delete orders:'.$order_id)){
       echo "<div class=error>".cannot_begin_transaction."</div>";
       return FALSE;
     }
 
     $query="SELECT * FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
     if(!$res=ShopDB::query($query)){
-      echo "<div class=error>".order_not_canceled."(1)</div>";
-      ShopDB::rollback('order_delete');
-      return FALSE;
+      return $this->_abort(con('Cant_lock_seat'));
     }
 
     $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
-
     if(!$order=ShopDB::query_one_row($query)){
-      echo "<div class=error>".cannot_find_order."</div>";
-      ShopDB::rollback('order_delete');
-      return FALSE;
+      return $this->_abort(con('cannot_find_order'));
     }
     // Added v1.3.4 Checks to see if the order has allready been canceled.
     if($order['order_status']=='cancel'){
-  	echo "<div class=error>".order_allready_cancelled."@order_delete ($order_id)</div>";
-  	ShopDB::rollback('order_delete'." ($order_id)");
-  	return FALSE;
+    	return $this->_abort(con('order_allready_cancelled'));
     }
 
     //Added v1.3.4 - If deleteing a reserved ticket
     if($order['order_handling_id']==1){
-  	$query="UPDATE `User` SET user_current_tickets=user_current_tickets-".$order['order_tickets_nr']." WHERE user_id=".$order['order_user_id'];
-  	if(!ShopDB::query($query)){
-  		echo "<div class=error>".no_such_user."</div>";
-  		ShopDB::rollback('order_delete');
-  		return FALSE;
-  	}
+    	$query="UPDATE `User` SET user_current_tickets=user_current_tickets-".$order['order_tickets_nr']." WHERE user_id=".$order['order_user_id'];
+    	if(!ShopDB::query($query)){
+    		return $this->_abort(con('no_such_user'));
+    	}
     }
 
     while($row=shopDB::fetch_object($res)){
@@ -497,13 +496,8 @@ class Order {
     }
 
     if(count($places)!=0){
-      //echo "<div class=error>".order_not_canceled."(2)</div>";
-      //ShopDB::rollback();
-      //return FALSE;
     	if(!Seat::cancel($places,$user_id,TRUE)){
-      	echo "<div class=error>".order_not_canceled."(3)</div>";
-      	ShopDB::rollback('order_delete');
-      	return FALSE;
+      	return $this->_abort(con('cant_cancel_ordered_seat'));
     	}
     }
 
@@ -515,15 +509,13 @@ class Order {
             where order_id="._esc($order_id);
 
     if(!$res=ShopDB::query($query)){
-      ShopDB::rollback('order_delete');
-      echo "<div class=error>".order_not_canceled."(4)</div>";
-      return FALSE;
+      return $this->_abort(con('cant_set_order_to_cancel'));
     }
 
-    if(!ShopDB::commit('order_delete')){
+    if(!ShopDB::commit('order_deleted')){
       echo "<div class=error>".order_not_canceled."(5)</div>";
       ShopDB::rollback('order_delete');
-      return FALSE;
+      return $this->_abort(con('Cant_commit_order_deleting'));
     }else{
       //echo "<div class=success>".order_canceled."</div>";
 
@@ -586,40 +578,33 @@ class Order {
 
   function reserve_to_order($order_id,$handling_id,$no_fee=false,$no_cost=false,$place='www'){
 
-  	if(!ShopDB::begin()){
+  	if(!ShopDB::begin('reserve_to_order:'.$order_id )){
       	echo "<div class=error>".cannot_begin_transaction."</div>";
       	return FALSE;
     	}
     	//loads old order into var
     	$query="SELECT * FROM `Order` WHERE order_id='$order_id' AND order_status='res' FOR UPDATE";
     	if(!$order_old=ShopDB::query_one_row($query)){
-      	echo "<div class=error>$order_id ".order_not_found."</div>";
-      	return;
-  	}
+      	return $this->_abort(con('order_not_found'));
+  	  }
   	// If deleteing a reserved ticket
     	if($order_old['order_handling_id']==1){
   		$query="UPDATE `User` SET user_current_tickets=user_current_tickets-".$order_old['order_tickets_nr']."
   				WHERE user_id=".$order_old['order_user_id'];
   		if(!ShopDB::query($query)){
-  			echo "<div class=error>".no_such_user."</div>";
-  			ShopDB::rollback();
-  			return FALSE;
+  			return $this->_abort(con('no_such_user'));
   		}
   	}
   	//checks to see if its an remitted or canceled order!
     	if($order_old['order_status']=='cancel' or
-    		$order_old['order_status']=='reemit'){
-      	echo "<div class=error>$order_id ".order_cannot_reemit."</div>";
-      	ShopDB::rollback();
-      	return;
+   		   $order_old['order_status']=='reemit'){
+      	return $this->_abort(con('order_cannot_reorder'));
     	}
 
   	//returns cost of seats Adds up the seats with the same order id.
   	$query="SELECT SUM(seat_price) AS total FROM `Seat` WHERE seat_order_id='$order_id'";
   	if(!$res=ShopDB::query_one_row($query)){
-  		echo "<div class=error>".order_cannot_reemit."(add up seats)</div>";
-  		ShopDB::rollback();
-  		return FALSE;
+  		return $this->_abort(con('order_cannot_reorder')."(add up seats)");
   	}
   	$total=$res['total'];
 
@@ -634,19 +619,6 @@ class Order {
   		}else{
   			$total=0;}
   	}
-
-  	/*$query="update `Order`
-  	  set order_tickets_nr=(order_tickets_nr-1),
-  	  order_total_price=$total,
-  	  order_fee=$fee
-  	  where order_id='$order_id'
-  	LIMIT 1";
-
-  	if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
-  	echo "<div class=error>".cannot_delete_ticket."(3)</div>";
-  	ShopDB::rollback();
-  	return FALSE;
-  	}*/
 
   	//New Query to create new order from old order!
   	$query="INSERT INTO `Order` (
@@ -674,9 +646,7 @@ class Order {
   	)";
   	// Runs Query
   	if(!ShopDB::query($query)){
-  		echo "<div class=error>$order_id ".order_cannot_reemit."(create new order)</div>";
-  		ShopDB::rollback();
-  		return;
+  		return $this->_abort(con('order_cannot_reorder'."(create new order)"));
   	}
 
   	//Collects just inserted order_id and echo's the id
@@ -686,18 +656,14 @@ class Order {
   	//Selects Seats from old order using passed order_id from 'params'
   	$query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
   	if(!$res=ShopDB::query($query)){
-  		echo "<div class=error>$order_id ".order_cannot_reemit."(load seats)</div>";
-  		ShopDB::rollback();
-  		return;
+  		return $this->_abort(con('order_cannot_reorder')."(load seats)");
   	}
   	//Runs through each seat and gives it a new seat_code and the new order_id.
   	while($seat = shopDB::fetch_array($res)){
   		$code=Ticket::generate_code(8);
   		$query="UPDATE `Seat` set seat_order_id='$new_id',seat_code='$code' WHERE seat_id='{$seat['seat_id']}' ";
   		if(!ShopDB::query($query)){
-  	  		echo "<div class=error>$order_id ".order_cannot_reemit."(update seats)</div>";
-  	 	 	ShopDB::rollback();
-  	  	return;
+  	  	return $this->_abort(con('order_cannot_reorder')."(update seats)");
   		}
   	}
 
@@ -707,15 +673,11 @@ class Order {
           order_reason='reserve_to_order'
   			WHERE order_id='$order_id'";
   	if(!$res=ShopDB::query($query)){
-  		echo "<div class=error>$order_id ".order_cannot_reemit."(cant up old ord)</div>";
-  		ShopDB::rollback();
-  		return;
+  		return $this->_abort(order_cannot_reorder."(cant up old ord)");
   	}
   	//Commit and finish
-  	if(!ShopDB::commit()){
-  		echo "<div class=error>$order_id ".order_cannot_reemit."(commit)</div>";
-  		ShopDB::rollback();
-  		return;
+  	if(!ShopDB::commit('order reordered')){
+  		return $this->_abort(order_cannot_reorder."(commit)");
   	}
 
   	echo "<div class=success>$order_id ".old_order_canceled."(Success)</div>";
@@ -727,23 +689,20 @@ class Order {
 
   function order_reemit ($order_id){
 
-    if(!ShopDB::begin()){
+    if(!ShopDB::begin('reemit order: '.$order_id)){
       echo "<div class=error>".cannot_begin_transaction."</div>";
       return FALSE;
     }
     //loads old order into var
     $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
     if(!$order_old=ShopDB::query_one_row($query)){
-      echo "<div class=error>$order_id ".order_not_found."</div>";
-      return;
+      return $this->_abort(order_not_found);
     }
 
     //checks to see if its an remitted or canceled order!
     if($order_old['order_status']=='cancel' or
     $order_old['order_status']=='reemit'){
-      echo "<div class=error>$order_id ".order_cannot_reemit."</div>";
-      ShopDB::rollback();
-      return;
+      return $this->_abort(order_already_reemited_canceled);
     }
 
     //New Query to create new order from old order!
@@ -771,9 +730,7 @@ class Order {
 
     // Runs Query
     if(!ShopDB::query($query)){
-      echo "<div class=error>$order_id ".order_cannot_reemit."</div>";
-      ShopDB::rollback();
-      return;
+      return $this->_abort(order_cannot_creating_new_order);
     }
     //Collects just inserted order_id and echo's the id
     $new_id=shopDB::insert_id();
@@ -782,42 +739,30 @@ class Order {
     //Selects Seats from old order using passed order_id from 'params'
     $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
     if(!$res=ShopDB::query($query)){
-      echo "<div class=error>$order_id ".order_cannot_reemit."(load seats)</div>";
-      ShopDB::rollback();
-      return;
+      return $this->_abort(order_cannot_lock_seats);
     }
     //Runs through each seat and gives it a new seat_code and the new order_id.
     while($seat = shopDB::fetch_array($res)){
       $code=Ticket::generate_code(8);
       $query="UPDATE `Seat` set seat_order_id='$new_id',seat_code='$code' WHERE seat_id='{$seat['seat_id']}'";
       if(!ShopDB::query($query)){
-        echo "<div class=error>$order_id ".order_cannot_reemit."(update seats)</div>";
-        ShopDB::rollback();
-        return;
+        return $this->_abort(order_cannot_change_seat);
       }
     }
 
-  /*
-    $query="UPDATE Seat SET seat_order_id='$new_id' WHERE seat_order_id='$order_id'";
-    if(!ShopDB::query($query)){
-      user_error(shopDB::error());
-      echo "<div class=error>".seats_update_failed."</div>";
-      return;
-    }
-  */
     //Change old order, change its status and give the it the id of the new order.
     $query="UPDATE  `Order` set order_status='reemit',order_reemited_id='$new_id'
             where order_id='$order_id'";
     if(!$res=ShopDB::query($query)){
       echo "<div class=error>$order_id ".order_cannot_reemit."</div>";
       ShopDB::rollback();
-      return;
+      return $this->_abort(order_cannot_change_order);
     }
     //Commit and finish
-    if(!ShopDB::commit()){
+    if(!ShopDB::commit('order reemited')){
       echo "<div class=error>$order_id ".order_cannot_reemit."(commit)</div>";
       ShopDB::rollback();
-      return;
+      return $this->_abort(order_cannot_reemit."(commit)");
     }
 
     echo "<div class=success>$order_id ".old_order_canceled."(Success)</div>";
@@ -873,7 +818,9 @@ class Order {
 
   function toTrash(){
     global $_SHOP;
-    ShopDB::begin();
+    if (!ShopDB::begin('trash order')){
+      return $this->_abort(con('Cant_start_transaction'));
+    }
 
   	$query="SELECT order_id, order_tickets_nr, count(seat_id) as count
   	        FROM `Order`, Seat
@@ -883,8 +830,7 @@ class Order {
   					FOR UPDATE";
 
   	if(!$res=ShopDB::query($query)){
-  	  ShopDB::rollback();
-  		return FALSE;
+  		return $this->_abort(con('cant_lock_order'));;
   	}
 
   	$count=0;
@@ -893,23 +839,22 @@ class Order {
   	  if($data['order_tickets_nr']==$data['count']){
     		$count++;
 
-        $query="update `Order` set order_status='trash' where order_id='".
-  			$data['order_id']."'";
-
+        $query="update `Order` set order_status='trash' where order_id='{$data['order_id']}'";
   			if(!ShopDB::query($query)){
-  			  ShopDB::rollback();
-  				return FALSE;
+  				return $this->_abort(con('cant_change_order_to_trash'));;
   			}
   		}
   	}
 
-  	ShopDB::commit();
+  	ShopDB::commit('order trashed');
   	return $count;
   }
 
   function emptyTrash(){
     global $_SHOP;
-    ShopDB::begin();
+    if (!ShopDB::begin('empry trashed orders')){
+      return $this->_abort(con('Cant_start_transaction'));
+    }
 
   	$query="delete `Order`
   					from `Order` left join Seat on order_id=seat_order_id
@@ -917,11 +862,10 @@ class Order {
   					seat_id is NULL";
 
   	if(!ShopDB::query($query)){
-  	  ShopDB::rollback();
-  		return FALSE;
+  		return $this->_abort(con('cant_delete_trashed_orders'));
   	}
 
-  	ShopDB::commit();
+  	ShopDB::commit('trashed order emptyed');
   	return TRUE;
   }
 

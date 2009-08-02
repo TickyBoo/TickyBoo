@@ -229,7 +229,7 @@ class PlaceMapCategory{
 			return FALSE;
 		}
 
-		if(!ShopDB::begin()){
+		if(!ShopDB::begin('resize category')){
 		  echo "#ERR-TRSAXNOTSTRT(5)";
 		  return FALSE;
 		}
@@ -238,33 +238,30 @@ class PlaceMapCategory{
 		FOR UPDATE";
 
 		if(!$cs=ShopDB::query_one_row($query)){
-		  ShopDB::rollback();
+		  ShopDB::rollback('cant lock Category_stat');
 			echo "#ERR-NOCATSTAT(6)";
 			return FALSE;
 		}
+
+    if(($delta+$cs['cs_free'])<0){
+		  ShopDB::rollback('Size is to small category');
+			echo "#ERR-TOSMALL(8)";
+			return FALSE;
+		}
+		$new_cs_total=$new_category_size;
+		$new_cs_free=$delta+$cs['cs_free'];
 
 		$query="SELECT * FROM Event_stat
 		WHERE es_event_id='{$this->category_event_id}'
 		FOR UPDATE";
 
 		if(!$es=ShopDB::query_one_row($query)){
-		  ShopDB::rollback();
+		  ShopDB::rollback('cant lock event_stat');
 			echo "#ERR-NOEVNTSTAT(7)";
 			return FALSE;
 		}
-
-
-    if(($delta+$cs['cs_free'])<0){
-		  ShopDB::rollback();
-			echo "#ERR-TOSMALL(8)";
-			return FALSE;
-		}
-
-		$new_cs_total=$new_category_size;
-		$new_cs_free=$delta+$cs['cs_free'];
-
     if(($delta+$es['es_free'])<0){
-		  ShopDB::rollback();
+		  ShopDB::rollback('Size to small for event');
 			echo 9;return FALSE;;
 		}
 
@@ -276,7 +273,7 @@ class PlaceMapCategory{
 			require_once('classes/Seat.php');
 			for($i=0;$i<$delta;$i++){
 				if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id)){
-					ShopDB::rollback();
+					ShopDB::rollback('Cant publish new seats');
 					echo 10;return FALSE;;
 				}
 			}
@@ -290,13 +287,13 @@ class PlaceMapCategory{
 			LIMIT $limit";
 
 			if(!ShopDB::query($query)){
-				ShopDB::rollback();
+				ShopDB::rollback('Cant delete old seats');
 				echo 11;return FALSE;;
 			}
 
 
 			if(shopDB::affected_rows()!=$limit){
-				ShopDB::rollback();
+				ShopDB::rollback('Different No off seats removed');
 				echo 12;return FALSE;;
 			}
 		}
@@ -307,12 +304,12 @@ class PlaceMapCategory{
 		LIMIT 1";
 
 		if(!ShopDB::query($query)){
-			ShopDB::rollback();
+			ShopDB::rollback('cant update category_stat');
 			echo 13;return FALSE;;
 		}
 
 		if(shopDB::affected_rows()!=1){
-			ShopDB::rollback();
+			ShopDB::rollback('category_stat not changes');
 			echo 14;return FALSE;;
 		}
 
@@ -322,23 +319,23 @@ class PlaceMapCategory{
 		LIMIT 1";
 
 		if(!ShopDB::query($query)){
-			ShopDB::rollback();
+			ShopDB::rollback('Cant update event_stat');
 			echo 15;return FALSE;;
 		}
 
 		if(shopDB::affected_rows()!=1){
-			ShopDB::rollback();
+			ShopDB::rollback('event_stat not changes');
 			echo 16;return FALSE;;
 		}
 
 		$this->category_size=$new_category_size;
 
 		if(!$this->save()){
-			ShopDB::rollback();
+			ShopDB::rollback('cant save category');
 		  echo 17;return FALSE;;
 		}
 
-		ShopDB::commit();
+		ShopDB::commit('Category resized');
 		return TRUE;
 	}
 
