@@ -252,7 +252,7 @@ class User{
       		}
       		
       		if (!empty($data['password1'])) {
-        		$set[] = "password="._esc($data['password1']);
+        		$set[] = "password="._esc(md5($data['password1']));
       		}
       		
       		if ($set) {

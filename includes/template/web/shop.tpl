@@ -98,23 +98,20 @@
   		{if $smarty.request.personal_page eq 'details'}
   		
   			{assign var='user_data' value=$user->asarray()}
-   			{if $smarty.post}
-        		{assign var='user_data' value=$smarty.post}
-        	{/if}
-  		
 	    	{if $smarty.request.action eq 'update'}
-      			{if $smarty.post.submit_update}
-      				{user->update data=$smarty.post}
-        		{/if}
-        		
-				{if $user_errors}
-        			{include file="user_update.tpl"}
-        		{else}
-			    	{include file="personal_page.tpl"}
-        		{/if}
-      		{else}
-	    		{include file="user_update.tpl"}
+    			{if $smarty.post.submit_update}
+            {assign var='user_data' value=$smarty.post}
+    				{user->update data=$smarty.post}
       		{/if}
+      		
+			    {if $user_errors}
+      			{include file="user_update.tpl"}
+      		{else}
+		      	{include file="personal_page.tpl"}
+      		{/if}
+    		{else}
+	    		{include file="user_update.tpl"}
+     		{/if}
 		{elseif $smarty.request.personal_page eq 'orders'}
     		{if $smarty.request.action eq 'order_res'}
     	  		{order->res_to_order order_id=$smarty.post.order_id handling_id=$smarty.post.handling}

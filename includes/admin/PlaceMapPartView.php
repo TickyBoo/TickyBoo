@@ -198,30 +198,6 @@ class PlaceMapPartView extends AdminView {
                <tr><td align="center" height=3 class="admin_value" colspan="2"> </td></tr>
                <tr><td width="50%" align=left valign=top>';
 
-        $this->list_head(categories, 6, '99%');
-        $alt = 0;
-        if (!empty($pmp->categories)) {
-            foreach($pmp->categories as $ident => $category) {
-                if ($stats->categories[$ident]) {
-                    echo "<tr class='admin_list_row_$alt'>";
-                    echo "<td class='admin_list_item' width=10 bgcolor='{$category->color_code}'>&nbsp;</td>\n";
-                    echo "<td class='admin_list_item' >{$category->category_name}</td>\n";
-                    echo "<td class='admin_list_item'>{$category->category_price} {$_SHOP->currency}</td>\n";
-                    echo "<td class='admin_list_item' align='right'>{$stats->categories[$ident]}</td>\n";
-                    echo "<td class='admin_list_item'>{$category->category_numbering}</td>\n";
-                    if (!$view_only) {
-                        echo "<td class='admin_list_item' width=18 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id&category_id={$category->category_ident}'><img height=15 src='images/checkbox-checked.gif' border='0' alt='" . view . "' title='" . view . "'></a></td>\n";
-                    } else {
-                        echo "<td></td>\n";
-                    }
-                    echo'</tr>';
-                    $alt = ($alt + 1) % 2;
-                }
-            }
-        }
-        echo "</table>";
-
-        echo '</td><td align=right valign=top>';
         // zones
         $alt = 0;
         $this->list_head(pm_zones, 5, '99%');
@@ -248,12 +224,57 @@ class PlaceMapPartView extends AdminView {
             }
         }
         echo '</table>';
+
+        echo '</td><td align=right valign=top>';
+
+        $this->list_head(categories, 6, '99%');
+        $alt = 0;
+        if (!empty($pmp->categories)) {
+            foreach($pmp->categories as $ident => $category) {
+                if ($stats->categories[$ident]) {
+                    echo "<tr class='admin_list_row_$alt'>";
+                    echo "<td class='admin_list_item' width=10 bgcolor='{$category->color_code}'>&nbsp;</td>\n";
+                    echo "<td class='admin_list_item' >{$category->category_name}</td>\n";
+                    echo "<td class='admin_list_item'>{$category->category_price} {$_SHOP->currency}</td>\n";
+                    echo "<td class='admin_list_item' align='right'>{$stats->categories[$ident]}</td>\n";
+                    echo "<td class='admin_list_item'>{$category->category_numbering}</td>\n";
+                    if (!$view_only) {
+                        echo "<td class='admin_list_item' width=18 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id&category_id={$category->category_ident}'><img height=15 src='images/checkbox-checked.gif' border='0' alt='" . view . "' title='" . view . "'></a></td>\n";
+                    } else {
+                        echo "<td></td>\n";
+                    }
+                    echo'</tr>';
+                    $alt = ($alt + 1) % 2;
+                }
+            }
+        }
+        echo "</table>";
         echo '</td></tr></table>';
         
         if (!$view_only) {
             echo '<table border=0 cellpadding=0 cellspacing=0 width="100%">
               <tr><td width="50%" valign="top" align="left">';
             // define category
+            $this->form_head('', '99%');
+            echo "<tr> <td class='admin_value'>
+          <select name='zone_id'>\n";
+
+            $sel[$sel_pmz] = 'selected';
+            if ($pmp->zones) {
+                foreach($pmp->zones as $zone_id => $zone) {
+                    echo "<option value='{$zone_id}' {$sel[$zone_id]}>{$zone->pmz_name}</option>\n";
+                }
+            }
+
+            echo "</select>
+          </td>
+          <td align='right' class='admin_value'>
+
+          <input type='button' name='def_pmz_pmp' value='" . con('define') . "'  onClick='this.form.action.value=\"def_pmz_pmp\";this.form.submit();'>
+      	  </td></tr></table>";
+
+            echo '</td><td align=right valign=top > ';
+            // define zone
             $this->form_head('', '99%');
 
             echo "<tr><td class='admin_value'>
@@ -272,36 +293,16 @@ class PlaceMapPartView extends AdminView {
             <input type='button' name='def_cat_pmp' value='" . con('define') . "'  onClick='this.form.action.value=\"def_cat_pmp\";this.form.submit();'>
   	      </td></tr></table>";
 
-            echo '</td><td align=right valign=top > ';
-            // define zone
-            $this->form_head('', '99%');
-
-            echo "<tr> <td class='admin_value'>
-          <select name='zone_id'>\n";
-
-            $sel[$sel_pmz] = 'selected';
-            if ($pmp->zones) {
-                foreach($pmp->zones as $zone_id => $zone) {
-                    echo "<option value='{$zone_id}' {$sel[$zone_id]}>{$zone->pmz_name}</option>\n";
-                }
-            }
-
-            echo "</select>
-          </td>
-          <td align='right' class='admin_value'>
-
-          <input type='button' name='def_pmz_pmp' value='" . con('define') . "'  onClick='this.form.action.value=\"def_pmz_pmp\";this.form.submit();'>
-      	  </td></tr></table>";
 
             echo "</td></tr><table>
              <table border=0 cellpadding=0 cellspacing=0 width='100%'>
              <tr><td align='center' height=3 class='admin_value' colspan='2'> </td></tr>
             <tr>
-            <td  align=left width='75%' valign=top colspan=3>";
+            <td  align=left width='85%' valign=top colspan=3>";
             // define labels
             $this->form_head('', '99%');
-            echo "<tr><td class='admin_value'>".con("Lables").":
-                    <select name='zone_id'>\n";
+            echo "<tr><td class='admin_value'>".con("Label").":
+                    <select name='label_type'>\n";
             echo "  <option value='T'  {$sel['T' ]}>".label_type_text."</option>\n";
             echo "  <option value='RE' {$sel['RE']}>".label_type_row_east."</option>\n";
             echo "  <option value='RW' {$sel['RW']}>".label_type_row_west."</option>\n";
@@ -321,19 +322,21 @@ class PlaceMapPartView extends AdminView {
             echo '</td><td align=right valign=top>';
             // clear
             $this->form_head('', '99%');
-            echo "<tr><td align='center' class='admin_value'>
+            echo "<tr><td align='right' class='admin_value'>
 
           <input type='button' name='def_clear_pmp' value='" . con('clear') . "'  onClick='this.form.action.value=\"def_clear_pmp\";this.form.submit();'>
       	  </td></tr></table>";
 
-            echo "</td></tr></table>";
+            echo "</td></tr>
+                  <tr><td align='center' height=3 class='admin_value' colspan='2'> </td></tr>
+                  </table>";
 
             echo "<input type='hidden' name='action' value='coucou'>
           <input type='hidden' name='pmp_id' value='$pmp_id'>";
         }
 
 
-        echo '<br>';
+//        echo '<br>';
         // map
         if (!$view_only) {
             echo
@@ -368,13 +371,13 @@ class PlaceMapPartView extends AdminView {
                    ";
 
         switch ($pmp->pmp_scene) {
-            case 'north':$scene_n = '<img src="' . scene_h . '">';
+            case 'north':$scene_n = '<img src="' .con('scene_h') . '">';
                 break;
-            case 'south':$scene_s = '<img src="' . scene_h . '">';
+            case 'south':$scene_s = '<img src="' . con('scene_h') . '">';
                 break;
-            case 'west':$scene_w = '<img src="' . scene_v . '">';
+            case 'west':$scene_w = '<img src="' . con('scene_v') . '">';
                 break;
-            case 'east':$scene_e = '<img src="' . scene_v . '">';
+            case 'east':$scene_e = '<img src="' . con('scene_v') . '">';
                 break;
         }
 
@@ -513,7 +516,7 @@ class PlaceMapPartView extends AdminView {
         echo "</td><td valign=middle>$scene_e</td></tr>
               <tr><td align=center colspan=3>$scene_s</td></tr></table>";
 
-        echo "</td></tr></table>";
+        echo "</div></td></tr></table>";
 
         // if($pmp->event_id){
         // echo "<a class='link' href='view_event.php?action=view&event_id={$pmp->event_id}'>".event."</a>";
@@ -643,7 +646,7 @@ class PlaceMapPartView extends AdminView {
     function draw ()
     {
         global $_SHOP;
-
+    //    print_r($_REQUEST);
         if ($_GET['action'] == 'view_pmp' and $_GET['pmp_id'] > 0) {
             $this->pmp_view($_GET['pmp_id'], $err, $_GET['category_id'], $_GET['pmz_ident'], $err);
         } else
@@ -718,12 +721,10 @@ class PlaceMapPartView extends AdminView {
         } else if ($_POST['action'] == 'def_pmz_pmp' and $_POST['pmp_id'] > 0 and $_POST['zone_id'] > 0) {
             if (is_array($_POST['seat'])) {
                 $pmp = PlaceMapPart::load($_POST['pmp_id']);
-                if (!$pmp ) {
-                    return;
+                if ($pmp ) {
+                  $pmp->set_zone($_POST['zone_id'], $_POST['seat']);
+                  $pmp->save();
                 }
-
-                $pmp->set_zone($_POST['zone_id'], $_POST['seat']);
-                $pmp->save();
             }
             $this->pmp_view($_POST['pmp_id'], $err);
         } else if ($_POST['action'] == 'def_label_pmp' and $_POST['pmp_id'] > 0 and $_POST['label_type']) {

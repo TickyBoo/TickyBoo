@@ -85,14 +85,17 @@
       }
     }
     //need to compile: loading compiler
-    if($data['template_type']=='email'){
-      require_once("classes/EmailTCompiler.php");
-      $comp=new EmailTCompiler;
-    }else if($data['template_type']=='pdf2'){
-      require_once("classes/PDF2TCompiler.php");
-      $comp=new PDF2TCompiler;
-    }else{
-      user_error("unsupported template type: ".$data['template_type']);
+    switch ($data['template_type']) {
+      case 'systm':
+      case 'email':
+        require_once("classes/EmailTCompiler.php");
+        $comp=new EmailTCompiler;
+      case 'pdf2'){
+        require_once("classes/PDF2TCompiler.php");
+        $comp=new PDF2TCompiler;
+      default:
+
+        user_error("unsupported template type: ".$data['template_type']);
     }
 
 

@@ -197,7 +197,9 @@ class PlaceMapCategory{
   		}
     }
 
-    $query="delete from Category where category_id=$category_id limit 1";
+    $query="DELETE a1, a2 FROM Category AS a1 INNER JOIN Category_stat AS a2
+            WHERE a1.category_id=a2.cs_category_id
+            and category_id=$category_id limit 1";
     ShopDB::query($query);
 
 

@@ -59,29 +59,41 @@
  			<input type='hidden' name='action' value='useredit' />
 {else}
 
-<form action="index.php" method='post' id="update_user">
+  <form action="index.php" method='post' id="update_user">
    	{ShowFormToken name='UserUpdate'}
    	<input type='hidden' name='action' value='update' />
    	<input type='hidden' name='personal_page' value='details' />
 {/if}
  	<input type='hidden' name='user_id' value='{user->user_id}' />
 	<table cellpadding="3" class="main" bgcolor='white'>
-
 		{include file='user_form.tpl'}
-		
-    	{if $user->is_member}
-		<tr>
-      		<td class='TblLower'>{!old_password!} </td>
-      		<td class='TblHigher'>
- 				<input autocomplete='off'  type='password' name='old_password' size='15'  maxlength='10' />
-            	<div class='error'>{$user_errors.old_password}</div>
-         	</td>
-      	</tr>
+   	{if $user->is_member}
+      <tr>
+     		<td class='TblLower'>{!old_password!} </td>
+     		<td class='TblHigher'>
+		      <input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10' />
+          <div class='error'>{$user_errors.old_password}</div>
+       	</td>
+     	</tr>
+     	{if !$usekasse}
+        <tr id='passwords_tr1' >
+          <td class='TblLower'>{!new_password!} (opt.)</td>
+          <td class='TblHigher'>
+             <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
+             {!pwd_min!}
+             <div class='error'>{$user_errors.password}</div>
+          </td>
+        </tr>
+        <tr id='passwords_tr2'>
+          <td class='TblLower'> {!password2!}</td>
+          <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
+        </tr>
+      {/if}
 		{/if}
-  	</table>  
+  </table>
 	<br />
 	
 	<div align="center">
-    	<input type='submit' name='submit_update' value='Update' />
-  	</div>
+   	<input type='submit' name='submit_update' value='Update' />
+  </div>
 </form>
