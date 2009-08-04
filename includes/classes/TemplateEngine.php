@@ -90,7 +90,7 @@
       case 'email':
         require_once("classes/EmailTCompiler.php");
         $comp=new EmailTCompiler;
-      case 'pdf2'){
+      case 'pdf2':
         require_once("classes/PDF2TCompiler.php");
         $comp=new PDF2TCompiler;
       default:

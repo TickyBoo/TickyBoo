@@ -29,7 +29,7 @@
 {if $user->mode() eq 0 && !$user->active}
 	{include file="user_activate.tpl"}
 {else}
-	{include file="header.tpl" name=!shopping_cart! header=!Handling_cont_mess!}
+	{include file="header.tpl" name=!shopping_cart_check_out! header=!Handling_cont_mess!}
     {if  $user->mode() lte 2 && $user->new_member}
     	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
         	<tr>

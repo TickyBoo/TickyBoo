@@ -28,7 +28,18 @@
  * clear to you.
  */
  *}
-{config_load file="shop_$_SHOP_lang.conf"}
+{php}
+  function utime (){
+    $time = explode( " ", microtime());
+    $usec = (double)$time[0];
+    $sec = (double)$time[1];
+    return $sec + $usec;
+  }
+  $ustart = utime();
+
+  global $smarty;
+  $_SESSION["ustart"] = $ustart;
+{/php}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
@@ -86,18 +97,17 @@
 				<li>
 					<a href='programm.php'>{!program!}</a>
 				</li>
-			</ul>
-			<br />
-		</div>
-		
-		<div align="right" style="vertical-align: top; width:100%; " >
-			<a href="?setlang=en">[en]</a>
+			</ul>     <br>
+  		<div align="right" style="vertical-align: top; width:100%; " >
+  			<a href="?setlang=en">[en]</a>
+  		</div>
 		</div>
 		
 		<div class="maincontent">
 			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
   				<tr>
 					<td valign='top' align='left'>
+    {include file="Progressbar.tpl" name=$name}
 						<br />
   						{if $name}
     						<h1>{$name}</h1>

@@ -86,6 +86,21 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     $limit=($params['limit'])?'limit '._esc($params['limit'],false):'';
     
 
+    if($params['search']){
+      $params['search']=_ESC($params['event_search']);
+      //$where .= " AND (event_name like '{$params['event_search']}' or event_text like '{$params['event_search']}' or event_short_text like '{$params['event_search']}') ";
+      $where .= " AND
+      (event_name like '%{$params['search']}%'
+      or event_text like '%{$params['search']}%'
+      or event_short_text like '%{$params['search']}%'\n";
+      if($params['ort']){
+        $where .= "or ort_name like '%{$params['search']}%'
+                   or ort_city like '%{$params['search']}%'\n";
+      }
+      $where .= ") ";
+    }
+
+
     if($params['event_type']){
       $types=explode(",",$params['event_type']);
       $first=true;

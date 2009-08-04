@@ -74,9 +74,10 @@ class EPH_cc extends payment{
             <table class='cc_form' cellpadding='5'>
             <input type='hidden' name='action' value='submit'>
             {gui->input name='cc_name'}
+            {gui->input name='cc_address' }
+            {gui->input name='cc_zip' size=10 maxlength=10}
             {gui->input name='cc_number'}
             {gui->inputdate type='MY' name=cc_exp range=10}
-            {gui->input name='cc_code' size=5 maxlength=5}
             </table>
             <INPUT type='submit' name='submit' value='{!pay!}' >
             <input type='hidden' name='order_id' value='{$order_id}'>
@@ -117,7 +118,8 @@ class EPH_cc extends payment{
 		$cc_number = $_POST['cc_number'];
 		$cc_month  = $_POST['cc_exp_m'];
 		$cc_year   = $_POST['cc_exp_y'];
-		$cc_code   = $_POST['cc_code'];
+		$cc_street = $_POST['cc_street'];
+		$cc_zip    = $_POST['cc_zip'];
 
 //store
 
@@ -128,7 +130,8 @@ class EPH_cc extends payment{
           			$cc_number.'","'.
           			$cc_month.'","'.
           			$cc_year.'","'.
-          			$cc_code.'"';
+			          $cc_street.'","'.
+		           	$cc_zip.'"';
 
 
 

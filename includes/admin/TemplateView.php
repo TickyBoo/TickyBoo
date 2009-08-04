@@ -70,8 +70,7 @@ class TemplateView extends AdminView{
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . admin_list . "</a></center>";
   }
 
-  function template_form (&$data, &$err, $title)
-  {
+  function template_form (&$data, &$err, $title, $type) {
     global $_SHOP;
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -79,9 +78,14 @@ class TemplateView extends AdminView{
 
     $data['template_text'] = htmlspecialchars($data['template_text'], ENT_QUOTES);
 
-    $this->print_field('template_id', $data);
-    $this->print_input('template_name', $data, $err, 30, 100);
-    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
+    $this->print_field_o('template_id', $data);
+    $this->print_field('template_type', $type );
+    If ($type == 'systm') {
+      $this->print_field('template_name', $data);
+    } else {
+      $this->print_input('template_name', $data, $err, 30, 100);
+    }
+//    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
     
     echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
     <textarea rows='40' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
@@ -110,6 +114,10 @@ class TemplateView extends AdminView{
     if (empty($data['template_name'])){
       $err['template_name'] = con('mandatory');
     }
+  		if(!eregi("^[_0-9a-zA-Z-]+$", $data['template_name'])){
+      	$err['template_name']=con('invalid');
+  		}
+
     if (empty($data['template_type'])){
       $err['template_type'] = con('mandatory');
     } elseif ($data['template_type']=='pdf') {
@@ -133,17 +141,19 @@ class TemplateView extends AdminView{
     }
   }
 
-  function template_list ()
+  function template_list ($type)
   {
     global $_SHOP;
-    $query = "SELECT * FROM Template order by template_type, template_name";
+    $query = "SELECT * FROM Template
+             where template_type = '{$type}'
+             order by template_type, template_name";
     if (!$res = ShopDB::query($query)){
       return;
     }
 
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-    echo "<tr><td class='admin_list_title' colspan='6' align='center'>" . template_title . "</td></tr>\n";
+    echo "<tr><td class='admin_list_title' colspan='6' align='center'>" . con('template_title') . "</td></tr>\n";
 
     $img_pub['new'] = 'images/new.png';
     $img_pub['error'] = 'images/error.png';
@@ -151,11 +161,11 @@ class TemplateView extends AdminView{
 
     while ($row = shopDB::fetch_assoc($res)){
       echo "<tr class='admin_list_row_$alt'>";
-      echo "<td class='admin_list_item'><img src='{$img_pub[$row['template_status']]}'></td>\n";
+      echo "<td class='admin_list_item' width='20'><img src='{$img_pub[$row['template_status']]}'></td>\n";
 //      echo "<td class='admin_list_item'>{$row['template_id']}</td>\n";
-      echo "<td class='admin_list_item' width='10%'>{$row['template_type']}</td>\n";
-      echo "<td class='admin_list_item' width='75%'>{$row['template_name']}</td>\n";
-      echo "<td class='admin_list_item nowarp=nowarp'>
+      //echo "<td class='admin_list_item' width='10%'>{$row['template_type']}</td>\n";
+      echo "<td class='admin_list_item' >{$row['template_name']}</td>\n";
+      echo "<td class='admin_list_item' width='60' nowarp=nowarp'>
             <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
       if ($row['template_type'] !=='pdf') {
         echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
@@ -191,36 +201,53 @@ class TemplateView extends AdminView{
     }
   }
 
-  function draw ()
-  {
+  function draw (){
     global $_SHOP;
+    $types = array('systm','email','pdf2','pdf');
+    if(isset($_REQUEST['tab'])) {
+      $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
+    }
+    
+    $query = "SELECT count(*) FROM Template
+             where template_type = 'pdf'";
+
+    $menu = array(con("templ_System")=>"?tab=0", con("templ_email")=>'?tab=1',
+                  con("templ_pdf2")=>"?tab=2" );
+
+    if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
+      $menu[con("templ_pdf")]= "?tab=3";
+    }
+
+    echo $this->PrintTabMenu($menu, (int)$_SESSION['_TEMPLATE_tab'], "left");
+
+    $type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
 
     if ($_POST['action'] == 'insert'){
       if (!$this->template_check($_POST, $err)){
         if (get_magic_quotes_gpc ())
            $_POST['template_text'] = stripslashes (  $_POST['template_text']);
-        $this->template_form($_POST, $err, template_add_title);
+        $this->template_form($_POST, $err, template_add_title, $type);
       }else{
         $query = "INSERT Template (template_name,template_type,template_text,template_status)
-     VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($_POST['template_type']) . ",
-     "._ESC($_POST['template_text']).",'new')";
+     VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($type) . ",
+             "._ESC($_POST['template_text']).",'new')";
         if (!ShopDB::query($query)){
           return 0;
         }
 
         if ($this->compile_template($_POST['template_name'])){
-          $this->template_list();
+          $this->template_list($type);
         }else{
-          $this->template_form($_POST, $err, template_add_title);
+          $this->template_form($_POST, $err, template_add_title, $type);
         }
       }
     }elseif ($_POST['action'] == 'update'){
       if (!$this->template_check($_POST, $err)){
-        $this->template_form($_POST, $err, template_update_title);
+        $this->template_form($_POST, $err, template_update_title, $type);
       }else{
         $query = "UPDATE Template SET
     template_name=" . _ESC($_POST['template_name']) . ",
-    template_type=" . _ESC($_POST['template_type']) . ",
+    template_type=" . _ESC($type) . ",
     template_text=" . _ESC($_POST['template_text']) . ",
     template_status='new'
     WHERE template_id="._esc((int)$_POST['template_id']);
@@ -235,17 +262,17 @@ class TemplateView extends AdminView{
           if (get_magic_quotes_gpc ())
              $_POST['template_text'] = stripslashes (  $_POST['template_text']);
              
-          $this->template_form($_POST, $err, template_update_title);
+          $this->template_form($_POST, $err, template_update_title, $type);
         }
       }
     }elseif ($_GET['action'] == 'add'){
-      $this->template_form($row, $err, template_add_title);
+      $this->template_form($row, $err, template_add_title, $type);
     }elseif ($_GET['action'] == 'edit'){
       $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
-     $this->template_form($row, $err, template_update_title);
+     $this->template_form($row, $err, template_update_title, $type);
     }elseif ($_GET['action'] == 'view'){
       $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
       if (!$row = ShopDB::query_one_row($query)){
@@ -257,12 +284,12 @@ class TemplateView extends AdminView{
       if (!ShopDB::query($query)){
         return 0;
       }
-      $this->template_list();
+      $this->template_list($type);
     }elseif ($_GET['action'] == 'compile_all'){
       $this->compile_all();
-      $this->template_list();
+      $this->template_list($type);
     }else{
-      $this->template_list();
+      $this->template_list($type);
     }
   }
 }

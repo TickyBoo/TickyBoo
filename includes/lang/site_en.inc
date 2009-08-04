@@ -769,7 +769,7 @@ define("seat_numbering","Seat numbering");
 define("seat_row_nr","Row number");
 define("select","Select");
 define("select_category","Select a category");
-define("select_seat","1.Select your seat(s) please");
+define("select_seat","Select your seat(s) please");
 define("sended","Sent");
 define("send","Sent");
 define("send_orders_printer","Send Orders to printer");
@@ -788,6 +788,7 @@ define("shopconfig_restime","Reservation time. (<10 = off)");
 define("shopconfig_restime_remind","When reminder email is sent");
 define("shop","Order tickets");
 define("shopping_cart","Your shopping cart");
+define("shopping_cart_check_out","Select Payment method");
 define("shopping_cart_pos","Shopping cart");
 define("shop_condition","Conditions: Information collected by the Organizers will
         be stored to handle post and payment. "); //changed lou5 (replaced Valborg Foundation)
@@ -1020,6 +1021,7 @@ define('pwd_second_missing', "Second Password missing.");
 define('pwd_to_short', "Password too short.");
 define('pwd_not_thesame', "The passwords you entered do not match.");
 define('invalid_zip', "Postcode you entered is invalid");
+
 ?><?php
 // defines added at: 2009-05-22T14:19:24+02:00
 define('www', 'webshop');
@@ -1076,5 +1078,10 @@ define('Status_is_pub','This event is published');
 define('recure_days_selection','Days to exclude');
 define('dts_day_arr','Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday');
 define('dts_month_arr','January|February|March|April|May|June|July|August|September|October|November|December');
+
+define("templ_System","System emails");
+define("templ_email",'emails');
+define("templ_pdf2","html2pdf's" );
+define("templ_pdf","Old pdf's" );
 
 ?>

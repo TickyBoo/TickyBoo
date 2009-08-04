@@ -50,12 +50,11 @@ class MenuAdmin extends AUIComponent {
  		    <tr><td  class='menu_admin_item'><a href='view_event.php'  class='menu_admin_link'>" . con('event_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_stats.php'  class='menu_admin_link'>" . con('stats') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_order.php'  class='menu_admin_link'>" . con('order_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_template.php'    class='menu_admin_link'>" . con('template_admin') . "</a></td></tr>
+        <tr><td  class='menu_admin_item'><a href='view_handling.php'    class='menu_admin_link'>" . con('payment_admin') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_search.php' class='menu_admin_link'>" . con('search_order') . "</a></td></tr>
         <tr><td  class='menu_admin_item'><a href='view_impexp.php'      class='menu_admin_link'>" . con('imp_export_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_garbage.php'     class='menu_admin_link'>" . con('garbage') . "</a></td></tr>
-        <tr><td></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_template.php'    class='menu_admin_link'>" . con('template_admin') . "</a></td></tr>
-        <tr><td  class='menu_admin_item'><a href='view_handling.php'    class='menu_admin_link'>" . con('payment_admin') . "</a></td></tr>";
+        <tr><td  class='menu_admin_item'><a href='view_garbage.php'     class='menu_admin_link'>" . con('garbage') . "</a></td></tr>";
         /*
        if($_SHOP->is_admin){
          echo "<tr><td  class='menu_admin_item'><a href='$_SHOP->php_myadmin' class='menu_admin_link'>PHP MyAdmin</a></td></tr>";

@@ -32,7 +32,7 @@
 {category category_id=$category_id event='on' placemap='on'}
 
   {if $shop_category.category_numbering neq 'none'}
-    {include file="header.tpl" name=!elect_seats! }
+    {include file="header.tpl" name=!select_seat! }
     <form name='f' action='index.php' method='post'>
       {ShowFormToken name='categorys'}
       <input type='hidden' name='category_id' value='{$shop_category.category_id}'>

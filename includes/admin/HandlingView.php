@@ -205,7 +205,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		global $_SHOP;
 		$pay=Handling::get_payment ();
 		$send=Handling::get_shipment();
-		$alt=0;
+		$alt=1;
 		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 		echo "<tr><td class='admin_list_title' colspan='8' align='center'>".handling_title."</td></tr>\n";
 		if($hands=Handling::load_all()){
@@ -216,9 +216,9 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
 				echo "<tr class='admin_list_row_$alt'>";
 				if($hand->handling_id==1){
-				 	echo  "<td  class='admin_list_item'>".reserved."</td>";
-				 	echo "<td class='admin_list_item'>".reserved."</td>\n";
-				 	echo "<td class='admin_list_item' colspan=3>&nbsp;</td>";
+//				 	echo  "<td  class='admin_list_item'>".reserved."</td>";
+//				 	echo "<td class='admin_list_item'>".reserved."</td>\n";
+//				 	echo "<td class='admin_list_item' colspan=3>&nbsp;</td>";
 				}else{
 					echo  "<td  class='admin_list_item'>".con($hand->handling_payment)."</td>";
 					echo "<td class='admin_list_item'>".con($hand->handling_shipment)."</td>\n";
