@@ -861,6 +861,18 @@ class Rmail
 
         return implode(CRLF, $headers) . CRLF . CRLF . $this->output;
     }
+    
+  function asarray() {
+  
+    return array(
+      'text' => $this->text,
+      'html'=> $this->html,
+      'build_params'=> $this->build_params,
+      'attachments'=> $this->attachments,
+      'headers'=> $this->headers,
+      'return_path'=> $this->return_path);
+
+  }
 } // End of class.
 
 

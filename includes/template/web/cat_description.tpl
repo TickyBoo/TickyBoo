@@ -29,46 +29,30 @@
 
 {if $shop_event.event_pm_id}
   <br>
-  <table class='table_midtone'>
+  <table border=1 class='table_midtone'>
     <tr>
-      <td colspan='5' class="title2">
+      <td colspan='3' class="title2">
         {!cat_description!}
       </td>
     </tr>
-
     {category event_id=$shop_event.event_id stats="on"}
-      {counter assign="cat_num" name='cat_num' print=false}
-      {if ($cat_num-1) is div by 4}
-        <tr>
-          <td class='small_title'>
-            {!cat_ticketsection!}
-          </td>
-          {capture assign=prices_row}
-            <tr>
-              <td class='small_title'>
-                 {!cat_ticketprice!}
-              </td>
-          {/capture}
-      {/if}
-
-      <td class='small_title'>{$shop_category.category_name}</td>
-      {capture assign=price}
-        <td>
+      <tr class="{cycle name='events' values="TblHigher,TblLower"}">
+        <td><b>{$shop_category.category_name}</b></td>
+        <td align='right'>
+          {valuta value=$shop_category.category_price|string_format:"%.2f"}
+        </td>
+        <td align='center' width='25%'>
           {if $shop_category.cs_free>0}
-            {valuta value=$shop_category.category_price|string_format:"%.2f"}
+            {if $shop_category.cs_free/$shop_category.cs_total ge 0.2}
+              <font>{!tickets_available!} {$shop_category.cs_free}</font>
+            {else}
+              <font color='Yellow'>{!tickets_available!} {$shop_category.cs_free}</font>
+            {/if}
           {else}
-            {!category_sold!}
+            <span class='error'>{!category_sold!}</span>
           {/if}
         </td>
-      {/capture}
-      {assign var=prices_row value="$prices_row $price"}
-
-      {if $cat_num is div by 4}
-        </tr>
-          {$prices_row}
-        </tr>
-      {/if}
-
+      </tr>
       {if $shop_category.cs_free>0}
         {assign var=js_array value="$js_array unnum_cats[unnum_cats.length]='`$shop_category.category_numbering`';"}
         {capture assign=opt}
@@ -79,15 +63,19 @@
         {assign var=opt_array value="$opt_array $opt"}
       {/if}
     {/category}
-
-    {if $cat_num is not div by 4}
-      </tr>
-        {$prices_row}
-      </tr>
-    {/if}
     <tr>
-      <td colspan='5' align='left' class='note'>
-        <br>
+      <td colspan='3'>
+        {discount event_id=$shop_event.event_id cat_price=$shop_category.category_price}
+          &nbsp;
+          <span class='note'>
+            {!Discount_for!} {$shop_discount.discount_name}
+             : {$shop_discount.discount_value}{if $shop_discount.discount_type eq "percent"}%{/if})
+          </span>
+        {/discount}
+      </td>
+    </tr>
+     <tr>
+      <td colspan='3' align='left' class='note'>
         {!prices_in!} {$organizer_currency}
       </td>
     </tr>
@@ -157,7 +145,17 @@
             </td>
             <td  align='left'>
               <div id='qqq'  align='left' style='font-size:9px; float:left;'>x 
-			  	      <input style="float:none;" type='text' name='qty' size='4' maxlength='2' />
+{*			  	      <input style="float:none;" type='text' name='qty' size='4' maxlength='2' />*}
+                  {assign var=limit value=14}
+                  {if $shop_event.event_order_limit>0}
+                     {assign var=limit value=$shop_event.event_order_limit}
+                  {/if}
+
+                  <select style="float:none;"  name='qty' >
+                    {section name="myLoop" start=0 loop=$limit+1}
+                      <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
+                    {/section}
+                  </select>
                 {if $shop_event.event_order_limit>0}
                    ({!order_limit!} {$shop_event.event_order_limit})
                 {/if}

@@ -39,23 +39,23 @@ class Order_Smarty {
   var $error;
   
   function Order_Smarty (&$smarty){
-   global $_SHOP;
-   $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
-   $smarty->assign_by_ref("order",$this);
+    global $_SHOP;
+    $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
+    $smarty->assign_by_ref("order",$this);
    
-   if(isset($_SESSION['_SHOP_USER_AUTH']['user_id'])) {
-     $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];
-   }
- }
+    if(isset($_SESSION['_SHOP_USER_AUTH']['user_id'])) {
+      $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];
+    }
+  }
 	
   function vieworder($params) {
-	$user_id=$params['user_id'];
-	require_once("classes/userorder.php");
-	_vieworder($user_id);
-	return;
-}
+	  $user_id=$params['user_id'];
+	  require_once("classes/userorder.php");
+	  _vieworder($user_id);
+	  return;
+  }
 
-   function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
+  function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
   
     global $_SHOP;
 

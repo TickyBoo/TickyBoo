@@ -220,7 +220,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 //				 	echo "<td class='admin_list_item'>".reserved."</td>\n";
 //				 	echo "<td class='admin_list_item' colspan=3>&nbsp;</td>";
 				}else{
-					echo  "<td  class='admin_list_item'>".con($hand->handling_payment)."</td>";
+					echo "<td class='admin_list_item'>".con($hand->handling_payment)."</td>";
 					echo "<td class='admin_list_item'>".con($hand->handling_shipment)."</td>\n";
   				echo "<td class='admin_list_item' align='right'>";
     				$perc=$hand->handling_fee_percent;

@@ -60,7 +60,7 @@
   }  
 
 	//returns the template object or false
-  function &getTemplate($name){
+  function &getTemplate($name, $recompile=false){
     global $_SHOP;
 
     //check if the template is in cache
@@ -79,20 +79,24 @@
     $t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
     
     //trying to load already compiled template
-    if($data['template_status']=='comp'){
+    if(!$recompile and $data['template_status']=='comp'){
       if($tpl= TemplateEngine::try_load($name, $t_class_name, $data)) {
         return $tpl;
       }
     }
+//    echo "'{$data['template_type']}'";
+    
     //need to compile: loading compiler
     switch ($data['template_type']) {
       case 'systm':
       case 'email':
         require_once("classes/EmailTCompiler.php");
         $comp=new EmailTCompiler;
+        break;
       case 'pdf2':
         require_once("classes/PDF2TCompiler.php");
         $comp=new PDF2TCompiler;
+        break;
       default:
 
         user_error("unsupported template type: ".$data['template_type']);

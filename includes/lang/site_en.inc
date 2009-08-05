@@ -838,6 +838,7 @@ define("theater","Theater");
 define("NoImages","The email contains no images or files.");
 define("tickets","Tickets");
 define("tickets_nr","Quantity");
+define("tickets_available","Available:");
 define("tickets_printing","Tickets will be printed, wait please");
 define("tickets_update_done","Tickets updated");
 define("tickets_update_failed","Tickets update failed");

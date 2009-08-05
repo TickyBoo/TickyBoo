@@ -318,14 +318,14 @@ class AdminView extends AUIComponent {
     </td></tr>\n";
     }
 
-    function print_select ($name, &$data, &$err, $opt)
+    function print_select ($name, &$data, &$err, $opt, $actions='')
     {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
 
         echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
               <td class='admin_value'>
-               <select name='$name'>\n";
+               <select name='$name' $actions>\n";
 
         foreach($opt as $v) {
             echo "<option value='$v'{$sel[$v]}>" . con($name . "_" . $v) . "</option>\n";

@@ -38,40 +38,179 @@ require_once("admin/AdminView.php");
 
 
 class TemplateView extends AdminView{
-  function template_view (&$data)
-  {
-    $template_id = $data["template_id"];
-    if ($data["template_status"] == 'new'){
-      $title = "NEW";
-      $alt = "NEW";
-      $src = "images/new.jpg";
-    }else if ($data["event_status"] == 'error'){
-      $title = "ERROR";
-      $alt = "ERROR";
-      $src = "images/error.jpg";
-    }else if ($data["event_status"] == 'comp'){
-      $title = "COMPILED";
-      $alt = "COMPILED";
-      $src = "images/comp.jpg";
+  function show_pdf() {
+    if ($_GET['action'] == 'view' and $_SESSION['_TEMPLATE_tab']=='2'){
+      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
+      if ($row = ShopDB::query_one_row($query)){
+        $this->template_view($row, $row['template_type']);
+        return 1;
+      }
+    }
+    return 0;
+  }
+  
+  
+  function template_view ($data, $type) {
+    global $_SHOP;
+    $name = $data['template_name'];
+    switch ($data['template_type']) {
+      case 'systm':
+        $query="select User.*, auth.active
+                from User left join auth on auth.user_id=User.user_id
+                limit 0,1";
+        $row=ShopDB::query_one_row($query);
+      	$row['is_member'] = ($row['user_status']==2);
+        $row['active']    = (empty($row['active']));
+        $row['link']          = '{HTML-ActivationCode}';
+        $row['activate_code'] = '{ActivationCode}';
+        $row['new_password']  = '{NewPassword}' ;
+
+      case 'email':
+      	require_once('classes/htmlMimeMail.php');
+        If (!isset($row)) {
+          $query = "SELECT * FROM `Order` left join User on order_user_id=user_id
+                    limit 0,1";
+
+          $row=ShopDB::query_one_row($query);
+          $row['order_link']='OrderLink';
+        }
+        require_once("classes/TemplateEngine.php");
+        if (!$tpl = TemplateEngine::getTemplate($name)) {
+          return false;
+        }
+        $email=&new htmlMimeMail();
+        $lang = is($_GET['lang'], $_SHOP->lang);
+        $tpl->build($email, $row, $lang);
+        $email = $email->asarray() ;
+        echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
+        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+        $this->print_select ("lang", $_GET, $err, $tpl->langs, "onchange='javascript: document.frmEvents.submit();'");
+        $this->print_field('email_from',htmlspecialchars($email['headers']['From']));
+        $this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
+        $this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
+        $this->print_field_o('email_bcc',htmlspecialchars($email['headers']['Bcc']));
+        $this->print_field_o('email_return',htmlspecialchars($email['return_path']));
+        $this->print_field('email_subject',htmlspecialchars($email['headers']['Subject']));
+        echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+              nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
+
+
+        echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+              nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
+
+        echo "</table>\n";
+        echo "<input type='hidden' name='action' id='action' value='view'>
+              <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
+              </form>";
+
+        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+        break;
+      case 'pdf2':
+        require_once("classes/TemplateEngine.php");
+        require_once("html2pdf/html2pdf.class.php");
+
+        $orderqry = '
+            SELECT * FROM `Order` left join User     on (order_user_id= user_id)
+                                  left join Handling on (order_handling_id = handling_id)
+            limit 0,1';
+
+        if(!$order=ShopDB::query_one_row($orderqry)){
+          echo 'error: cant load orderdata';
+          return FALSE;
+        }
+
+        $seatqry = "
+            SELECT * FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id
+                               left join Event    on event_id = seat_event_id
+                               left join Ort      on ort_id = event_ort_id
+                               left join Category on category_id = seat_category_id
+                               left join PlaceMapZone on seat_zone_id = pmz_id
+                               left join PlaceMapPart on seat_pmp_id = pmp_id
+            WHERE seat_order_id = {$order['order_id']} limit 0,1";
+
+        if(!$res=ShopDB::query($seatqry)){
+          echo 'error: cant load ticket data';
+          return FALSE;
+        }
+
+        while($data=shopDB::fetch_assoc($res)){
+      		if($data['category_numbering']=='none'){
+      			$data['seat_nr']='0';
+      			$data['seat_row_nr']='0';
+      		}else if($data['category_numbering']=='rows'){
+      			$data['seat_nr']='0';
+      		}else if($data['category_numbering']=='seat'){
+      			$data['seat_row_nr']='0';
+      		}
+      		//compute  barcode
+      		$data['barcode_text']= sprintf("%08d%s", $data['seat_id'], $data['seat_code']);
+          //save the data for the bill
+          $key = "({$data['category_id']},{$data['discount_id']})";
+
+          if(!isset($order['bill'][$key])){
+            $order['bill'][$key]=array(
+              'event_name'=>$data['event_name'],
+              'event_date'=>$data['event_date'],
+              'ort_name'=>$data['ort_name'],
+              'ort_city'=>$data['ort_city'],
+      				'qty'=>1,
+      				'category_name'=>$data['category_name'],
+      				'seat_price'=>$data['seat_price'],
+      				'discount_name'=>$data['discount_name']
+            );
+          }else{
+            $order['bill'][$key]['qty']++;
+          }
+          $seat = $data;
+        }
+        //calculating the sub-total
+        foreach(array_keys($order['bill']) as $key){
+          $order['bill'][$key]['total']= $order['bill'][$key]['seat_price'] * $order['bill'][$key]['qty'];
+        }
+        $order['order_subtotal'] = $order['order_total_price'] - $order['order_fee'];
+
+
+       	$paper_size=$_SHOP->pdf_paper_size;
+       	$paper_orientation=$_SHOP->pdf_paper_orientation;
+        $_SHOP->lang = is($_SHOP->lang,'en');
+        $te  = new TemplateEngine();
+        $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+
+    		if($tpl =& $te->getTemplate($name)){
+     			$tpl->write($pdf,array_merge($seat,$order), false); //
+    		}else{
+    			echo "<div class=err>".no_template." : $name</div>";
+    			return FALSE;
+    		}
+        $order_file_name = "pdf_".$data['template_name'].'.pdf';
+        $pdf->output($order_file_name, 'I');
+        break;
+
+      default:
+        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+
+        $this->print_field('template_ts', $data);
+        $this->print_field('template_status', $data);
+
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed; padding:10px;'>" .
+              nl2br(htmlspecialchars($data["template_text"])) . "</td></tr>";
+
+        echo "</table>\n";
+        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
     }
 
-    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-    echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
-
-    $this->print_field('template_id', $data);
-    $this->print_field('template_name', $data);
-    $this->print_field('template_type', $data);
-    $this->print_field('template_ts', $data);
-    $this->print_field('template_status', $data);
-
-    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;background-color:#ededed;padding:10px;'>" . nl2br(htmlspecialchars($data["template_text"])) . "</td></tr>";
-
-    echo "</table>\n";
-    echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . admin_list . "</a></center>";
   }
 
   function template_form (&$data, &$err, $title, $type) {
     global $_SHOP;
+        echo "<pre>";
+        print_r($err);
+        echo "</pre>";
+
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
@@ -82,13 +221,14 @@ class TemplateView extends AdminView{
     $this->print_field('template_type', $type );
     If ($type == 'systm') {
       $this->print_field('template_name', $data);
+      echo "<input type='hidden' name='template_name' value='{$data['template_name']}'/>\n";
     } else {
       $this->print_input('template_name', $data, $err, 30, 100);
     }
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
     
     echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
-    <textarea rows='40' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
+    <textarea rows='20' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
 
     </td></tr>";
 
@@ -100,8 +240,8 @@ class TemplateView extends AdminView{
     }
 
     echo "<tr><td align='center' class='admin_value' colspan='2'>
-    <input type='submit' name='submit' value='" . save . "'>
-    <input type='reset' name='reset' value='" . res . "'></td></tr>";
+    <input type='submit' name='submit' value='" . con('save') . "'>
+    <input type='reset' name='reset' value='" . con('res') . "'></td></tr>";
     echo "</table></form>\n";
 
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . admin_list . "</a></center>";
@@ -118,11 +258,6 @@ class TemplateView extends AdminView{
       	$err['template_name']=con('invalid');
   		}
 
-    if (empty($data['template_type'])){
-      $err['template_type'] = con('mandatory');
-    } elseif ($data['template_type']=='pdf') {
-      $err['template_type'] = con('Type_Not_supported');
-    }
     if (empty($data['template_text'])){
       $err['template_text'] = con('mandatory');
     }
@@ -165,8 +300,9 @@ class TemplateView extends AdminView{
 //      echo "<td class='admin_list_item'>{$row['template_id']}</td>\n";
       //echo "<td class='admin_list_item' width='10%'>{$row['template_type']}</td>\n";
       echo "<td class='admin_list_item' >{$row['template_name']}</td>\n";
+      $target = ($type=='pdf2')?'target="_blank"':'';
       echo "<td class='admin_list_item' width='60' nowarp=nowarp'>
-            <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
+            <a class='link' {$target}  href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
       if ($row['template_type'] !=='pdf') {
         echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
       }
@@ -185,7 +321,7 @@ class TemplateView extends AdminView{
     global $_SHOP;
     require_once("classes/TemplateEngine.php");
     $te = new TemplateEngine;
-    if (!$te->getTemplate($name)){
+    if (!$te->getTemplate($name, true)){
       echo "<div class=err>'$name': ";
       if ($te->errors){
         foreach($te->errors as $error){
@@ -257,7 +393,7 @@ class TemplateView extends AdminView{
         }
 
         if ($this->compile_template($_POST['template_name'])){
-          $this->template_list();
+          $this->template_list($type);
         }else{
           if (get_magic_quotes_gpc ())
              $_POST['template_text'] = stripslashes (  $_POST['template_text']);
@@ -278,7 +414,7 @@ class TemplateView extends AdminView{
       if (!$row = ShopDB::query_one_row($query)){
         return 0;
       }
-      $this->template_view($row);
+      $this->template_view($row, $type);
     }elseif ($_GET['action'] == 'remove' and $_GET['template_id'] > 0){
       $query = "DELETE FROM Template WHERE template_id="._esc($_GET['template_id']);
       if (!ShopDB::query($query)){

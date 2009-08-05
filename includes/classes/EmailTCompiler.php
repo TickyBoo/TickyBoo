@@ -232,11 +232,12 @@ class EmailTCompiler {
 
       foreach($this->res as $lang=>$data){
         if($lang){
-	  $code.='    '.$els.'if($lang=="'.$lang."\"){\n";
-	  $code.=$this->_gen_lang($lang,$data);
-	  $code.="    }\n";
-	  $els="else ";
-	}
+          $this->langs[] = "'{$lang}'";
+      	  $code.='    '.$els.'if($lang=="'.$lang."\"){\n";
+      	  $code.=$this->_gen_lang($lang,$data);
+      	  $code.="    }\n";
+      	  $els="else ";
+      	}
       }
       $code.=$this->_gen_lang(0,$this->res[0]);
       $code.="  }\n";
@@ -483,18 +484,21 @@ class EmailTCompiler {
     }
 
     xml_parser_free($this->xml_parser);
+
     if (!$this->errors) {
     $xyz =
 '/*this is a generated code. do not edit!
-produced '.date("l dS of F Y h:i:s A").'
+produced '.date("C").'
 */
 
 class '.$out_class_name.' {
   var $object_id;
   var $engine;
-
+  var $langs = array('.implode(",",$this->langs).');
+  
   function '.$out_class_name.'(){}
-'.$this->build.'
+
+  '.$this->build.'
 }
 ';
 //    echo nl2br($xyz);

@@ -258,7 +258,7 @@ class Handling {
       $tpl=&$te->getTemplate($template_name);
   
       $email = new htmlMimeMail();
-      $order_d=(array)$order;
+      $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
       $tpl->build($email,$order_d,$_SHOP->lang);

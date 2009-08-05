@@ -34,5 +34,7 @@ require_once ("admin/TemplateView.php");
 
 //print cart update
 $body=new TemplateView();
-$body->drawall();
+if (!$body->show_pdf()) {
+  $body->drawall();
+}
 ?>
