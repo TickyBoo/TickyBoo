@@ -1,5 +1,8 @@
 <?php
 
+//Load File
+require_once("shop_plugins/function.placemap.php");
+
 class PosAjax { 
 
 	private $request = array();
@@ -14,14 +17,36 @@ class PosAjax {
 		$this->json = array();
 	}
 	
-	//Will grab cats and discounts at the same time, less chances of errors
+	/**
+	 * PosAjax::getCategories()
+	 *
+	 * @param categories_only (true|false) will only return the categories if set true else grabs discounts too. 
+	 * 
+	 * Will return:
+	 *  - categories 
+	 * 		|- id (number)
+	 * 			|- html (category option)
+	 * 			|- numbering (true|false)
+	 * 			|- placemap (placemap html)
+	 * 			 - price (number)
+	 * 		|- id.. (number)
+	 * |- enable_discounts (true|false)
+	 * |- discounts
+	 * 		|- id (number)
+	 * 			|- html (discount option)
+	 * 			|- type (fixed|percent)
+	 * 			 - price (number)
+	 * 		|- id.. (number)
+	 * 
+	 * @return boolean as to whether the JSON should be compiled or not.
+	 */
 	private function getCategories(){
-		if(!isset($this->request['category_id'])){
+		if(!isset($this->request['event_id'])){
 			return false;
 		}else{
-			$cat_id = &$this->request['category_id'];
+			$eventId = &$this->request['event_id'];
 		}
-		if(!is_numeric($cat_id)){
+		if(!is_numeric($eventId)){
 	 		return false;
 		}
 			
@@ -30,7 +55,7 @@ class PosAjax {
 			Category_stat cs
 			WHERE 1=1
 			AND c.category_id = cs.cs_category_id
-			AND c.category_event_id = "._esc($cat_id);
+			AND c.category_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
 		
 		//Load html and javascript in the json var.
@@ -43,17 +68,23 @@ class PosAjax {
 			$placemap = ""; //leave placemap empty shouldnt be filled unless told to colect it.
 			if(strtolower($cat['category_numbering']) != 'none'){
 				$numbering = true; // If there should be a placemap set to true otherwise leave as false to show qty box.
-				$placemap = "load me!"; //needs loading method
+				
+				//Load Place Map
+				$placemap = $this->loadPlaceMap($cat);
 			}
-			$this->json['categories'][] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price']); 
+			$this->json['categories'][$cat['category_id']] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price']); 
 		}
 		//Finish loading categories and there details lets grab the discounts to...
+		//If we only need the categories updating then just stop here.
+		if($this->request['categories_only']){
+			return true;
+		}
 		
 		//Select Events Discounts
 		$sql = "SELECT *
 			FROM Discount d
 			WHERE 1=1
-			AND d.discount_event_id = "._esc($cat_id);
+			AND d.discount_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
 		
 		//We count the number of rows to see if we should bother running through discounts.
@@ -82,6 +113,51 @@ class PosAjax {
 			$this->json['enable_discounts'] = false; //disable discounts.
 		}
 		return true;
+	}
+	
+	private function getPlaceMap(){
+		if(!isset($this->request['category_id'])){
+			return false;
+		}else{
+			$catId = &$this->request['category_id'];
+		}
+		if(!is_numeric($catId)){
+	 		return false;
+		}
+			
+		$sql = "SELECT *
+			FROM Category c,
+			Category_stat cs
+			WHERE 1=1
+			AND c.category_id = cs.cs_category_id
+			AND c.category_id = "._esc($catId);
+		$result = ShopDB::query_one_row($sql);
+		
+		if(strtolower($cat['category_numbering']) != 'none'){
+			$placemap = $this->loadPlaceMap($result);
+			$this->json['placemap'] = $placemap;
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	/**
+	 * PosAjax::loadPlaceMap()
+	 * 
+	 * @param mixed $category
+	 * @return placemap html
+	 */
+	private function loadPlaceMap($category){
+		
+		//define vars...
+		$params = array();
+		$smarty = "";
+		
+		$params['category'] = $category; //add category details
+		
+		return smarty_function_placemap($params, $smarty); //return the placemap		
 	}
 	
 	

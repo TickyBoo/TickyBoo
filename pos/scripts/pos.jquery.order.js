@@ -1,6 +1,6 @@
+var catData = new Object();
+
 var loadOrder = function(){
-	
-	var catData = new Object();
  	
  	ajaxQManager.add({
 	//$.ajax({
@@ -39,7 +39,7 @@ var loadOrder = function(){
 				type:		"POST",
 				url:		"ajax.php",
 				dataType:	"json",
-				data:		{"pos":true,"action":"categories","category_id":data[0]},
+				data:		{"pos":true,"action":"categories","event_id":data[0]},
 				success:function(data, status){
 					catData = data; //set cat var
 					
@@ -59,6 +59,8 @@ var loadOrder = function(){
 	$("#cat-select").change(function(){
 		if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
 			
+			var catId = $("#cat-select").val();
+			
 			//Check catData for discounts...
 			if(catData.enable_discounts){
 				$("#discount-select").html("");
@@ -71,31 +73,8 @@ var loadOrder = function(){
 				$("#discount-name").hide();
 				$("#discount-select").hide().html("<option value='0'></option>");
 			}
-			
-			
-			ajaxQManager.add({
-			//$.ajax({
-				type:"POST",
-				url: "index.php",
-				data: {ajax:'yes',page:"get_catagories",event_id:$("#event-id").val(), category_id:$("#cat-select").val()},
-				cache:false,
-				success:function(html){
-					html = $.trim(html);
-					if(html.length > 100){
-						$("#seat-qty").hide();
-						$("#qty-name").hide();
-						$("#seat-chart").html(html);
-						bindSeatChart();
-					}else{
-						unBindSeatChart();
-						$("#seat-chart").html("");
-						$("#qty-name").show();
-						$("#seat-qty").show();
-						
-					}
-					$("#continue").attr("type","submit");
-				}
-			});
+			updateSeatChart();
+			$("#continue").attr("type","submit");
 		}	
 	});
 	
@@ -156,27 +135,44 @@ var refreshOrder = function(){
 	});
 }
 
-var refreshSeatChart = function(){
-	if($("#seat-chart").html().length < 200){
-		return false;
-	}
-	if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
+/* refreshSeatChart
+ * //Todo: Need to grab all the categories placemaps again after add
+ * 		as the reserved seats appear on all the placemaps
+ */
+var refreshCategories = function(){
+	if($("#event-id").val() > 0 ){
+		var eventId = $("#event-id").val();
+		
 		ajaxQManager.add({
-		//$.ajax({
-			type:"POST",
-			url: "index.php",
-			data: {ajax:'yes',page:"get_catagories",event_id:$("#event-id").val(), category_id:$("#cat-select").val()},
-			cache:false,
-			success:function(html){
-				html = $.trim(html);
-				if(html.length > 100){
-					$("#seat-chart").html(html);
-				}
-			}
-		});
+				type:		"POST",
+				url:		"ajax.php",
+				dataType:	"json",
+				data:		{"pos":true,"action":"categories","categories_only":true,"event_id":eventId},
+				success:function(data, status){
+					if(data.status){
+						catData.categories = data.categories; //set cat var
+						updateSeatChart();
+					}
+				}	
+			});
 	}
 }
 
+var updateSeatChart = function(){
+	var catId = $("#cat-select").val();
+	unBindSeatChart();
+	if(catData.categories[catId].numbering){
+		$("#seat-qty").hide();
+		$("#qty-name").hide();
+		$("#seat-chart").html(catData.categories[catId].placemap);
+		bindSeatChart();
+	}else{
+		unBindSeatChart();
+		$("#seat-chart").html("");
+		$("#qty-name").show();
+		$("#seat-qty").show();
+	}
+}
 var bindSeatChart = function(){
 	$("#show-seats").show();
 	$("#show-seats button").click(function(){

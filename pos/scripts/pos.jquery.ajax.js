@@ -33,7 +33,7 @@ var bindForms = function(){
 		$(form).ajaxSubmit({
 			data:{ajax:"yes"},
 			success: function(html){
-				if($(form).hasClass("remove-tickets")){refreshOrder();return false;}
+				if($(form).hasClass("remove-tickets")){refreshOrder();refreshSeatChart();return false;}
 				$("#right").html(html);
 			}
 		});
