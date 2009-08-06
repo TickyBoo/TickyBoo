@@ -139,9 +139,7 @@ class PosAjax {
 			return true;
 		}
 		return false;
-	}
-	
-	
+	}	
 	
 	/**
 	 * PosAjax::loadPlaceMap()

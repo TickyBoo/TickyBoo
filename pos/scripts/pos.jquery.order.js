@@ -113,9 +113,9 @@ var loadOrder = function(){
 		$(this).ajaxSubmit({
 			data:{ajax:"yes",action:"addtocart"},
 			success: function(html){
-				console.log(html);
-				refreshOrder();
-				refreshSeatChart();
+				//console.log(html);
+				refreshOrder(); //Refresh Cart
+				refreshCategories(); //Update ticket info (Free tickets etc)
 			}
 		});
 		return false;
@@ -135,26 +135,23 @@ var refreshOrder = function(){
 	});
 }
 
-/* refreshSeatChart
- * //Todo: Need to grab all the categories placemaps again after add
- * 		as the reserved seats appear on all the placemaps
- */
+//refreshSeatChart
 var refreshCategories = function(){
 	if($("#event-id").val() > 0 ){
 		var eventId = $("#event-id").val();
 		
 		ajaxQManager.add({
-				type:		"POST",
-				url:		"ajax.php",
-				dataType:	"json",
-				data:		{"pos":true,"action":"categories","categories_only":true,"event_id":eventId},
-				success:function(data, status){
-					if(data.status){
-						catData.categories = data.categories; //set cat var
-						updateSeatChart();
-					}
-				}	
-			});
+			type:		"POST",
+			url:		"ajax.php",
+			dataType:	"json",
+			data:		{"pos":true,"action":"categories","categories_only":true,"event_id":eventId},
+			success:function(data, status){
+				if(data.status){
+					catData.categories = data.categories; //set cat var
+					updateSeatChart();
+				}
+			}	
+		});
 	}
 }
 
