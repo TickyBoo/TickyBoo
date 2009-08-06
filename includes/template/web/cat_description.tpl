@@ -29,7 +29,7 @@
 
 {if $shop_event.event_pm_id}
   <br>
-  <table border=1 class='table_midtone'>
+  <table border=0 class='table_midtone'>
     <tr>
       <td colspan='3' class="title2">
         {!cat_description!}
@@ -41,7 +41,7 @@
         <td align='right'>
           {valuta value=$shop_category.category_price|string_format:"%.2f"}
         </td>
-        <td align='center' width='25%'>
+        <td align='left' width='25%'>
           {if $shop_category.cs_free>0}
             {if $shop_category.cs_free/$shop_category.cs_total ge 0.2}
               <font>{!tickets_available!} {$shop_category.cs_free}</font>
@@ -138,7 +138,7 @@
               </map>
             </td>
           {else}
-            <td width='50%' align='right'>
+            <td width='50%' align='left'>
               <select name='category_id' onchange='setQtyShown()' id='cat_select' style="float:right;" class="select">
                  {$opt_array}
               </select>
@@ -146,16 +146,16 @@
             <td  align='left'>
               <div id='qqq'  align='left' style='font-size:9px; float:left;'>x 
 {*			  	      <input style="float:none;" type='text' name='qty' size='4' maxlength='2' />*}
-                  {assign var=limit value=14}
-                  {if $shop_event.event_order_limit>0}
-                     {assign var=limit value=$shop_event.event_order_limit}
-                  {/if}
+                {assign var=limit value=14}
+                {if $shop_event.event_order_limit>0}
+                   {assign var=limit value=$shop_event.event_order_limit}
+                {/if}
 
-                  <select style="float:none;"  name='qty' >
-                    {section name="myLoop" start=0 loop=$limit+1}
-                      <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
-                    {/section}
-                  </select>
+                <select style="float:none;"  name='qty' >
+                  {section name="myLoop" start=0 loop=$limit+1}
+                    <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
+                  {/section}
+                </select>
                 {if $shop_event.event_order_limit>0}
                    ({!order_limit!} {$shop_event.event_order_limit})
                 {/if}
