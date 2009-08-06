@@ -65,7 +65,7 @@ var loadOrder = function(){
 				$("#discount-select").hide().html("<option value='0'></option>");
 			}
 			updateSeatChart();
-			$("#continue").attr("type","submit");
+			//$("#continue").attr("type","submit");
 		}	
 	});
 	
@@ -83,7 +83,7 @@ var loadOrder = function(){
 		$("#qty-name").hide();
 		$("#seat-qty").hide();
 		$("#seat-chart").html("");
-		$("#continue").attr("type","button");
+		//$("#continue").attr("type","button");
 		unBindSeatChart();
 		
 	});

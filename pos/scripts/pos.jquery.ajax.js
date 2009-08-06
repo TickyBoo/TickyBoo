@@ -7,7 +7,8 @@
 	
 	$().ajaxSend(function(evt, request, settings){
 		$(".loading").show();
-		$("#order-div").block({message:"Loading"});	
+		$("#order-div").block({message:"Loading"});
+		//$.blockUI(); 
 	});
 	
 	$().ajaxStop(function(evt, request, settings){  
@@ -15,6 +16,7 @@
 		//console.log("stop");
 		bindForms();
 		bindLinks();
+		//$.unblockUI();
 		$("#order-div").unblock();	
 	});
  });
@@ -37,6 +39,7 @@ var bindForms = function(){
 			success: function(html){
 				if($(form).hasClass("remove-tickets")){refreshOrder(); refreshCategories(); return false;}
 				$("#right").html(html);
+				return false;
 			}
 		});
 		return false;

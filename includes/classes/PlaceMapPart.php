@@ -52,6 +52,7 @@ define('PM_STATUS', 5);
 define('PM_STATUS_FREE', 0);
 define('PM_STATUS_OCC', 1);
 define('PM_STATUS_RESP', 2);
+define('PM_STATUS_HOLD', 3);
 
 class PlaceMapPart { // ZRS
     var $pmp_id;
