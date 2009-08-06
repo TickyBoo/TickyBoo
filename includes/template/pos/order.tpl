@@ -6,7 +6,7 @@
 {/literal}
 </script>
 <form id="order-form" name='addtickets' action='index.php' method='post'>
-<div style="width:100%;">
+<div id="order-div" style="width:100%;">
 	<h2>{!pos_booktickets!}</h2>
 	<table width="100%" cellpadding='1' cellspacing='1' bgcolor='white' >
 		<tbody>

@@ -6,7 +6,8 @@
 	
 	
 	$().ajaxSend(function(evt, request, settings){
-		$(".loading").show();	
+		$(".loading").show();
+		$("#order-div").block({message:"Loading"});	
 	});
 	
 	$().ajaxStop(function(evt, request, settings){  
@@ -14,6 +15,7 @@
 		//console.log("stop");
 		bindForms();
 		bindLinks();
+		$("#order-div").unblock();	
 	});
  });
  

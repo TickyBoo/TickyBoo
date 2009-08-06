@@ -2,16 +2,7 @@ var catData = new Object();
 
 var loadOrder = function(){
  	
- 	ajaxQManager.add({
-	//$.ajax({
-		type: "POST",
-    	url: "index.php",
-    	data: {ajax:'yes',page:"cart_content"},
-    	cache:false,
-    	success: function(html){
-    		$("#cart-table tbody:first").html(html);
-    	}
-	});
+ 	refreshOrder();
 	
 	$("#event-input").autocomplete('index.php?ajax=yes&page=get_events', {
 		autoFill:true,
