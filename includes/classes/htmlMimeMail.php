@@ -1,16 +1,37 @@
 <?php
-    /**
-    * o------------------------------------------------------------------------------o
-    * | This package is licensed under the Phpguru license. A quick summary is       |
-    * | that for commercial use, there is a small one-time licensing fee to pay. For |
-    * | registered charities and educational institutes there is a reduced license   |
-    * | fee available. You can read more  at:                                        |
-    * |                                                                              |
-    * |                  http://www.phpguru.org/static/license.html                  |
-    * o------------------------------------------------------------------------------o
-    *
-    * © Copyright 2008,2009 Richard Heyes
-    */
+/**
+%%%copyright%%%
+ *
+ * FusionTicket - ticket reservation system
+ *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *
+ * Original Design:
+ *	phpMyTicket - ticket reservation system
+ * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *
+ * This file is part of FusionTicket.
+ *
+ * This file may be distributed and/or modified under the terms of the
+ * "GNU General Public License" version 3 as published by the Free
+ * Software Foundation and appearing in the file LICENSE included in
+ * the packaging of this file.
+ *
+ * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
+ * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ *
+ * Any links or references to Fusion Ticket must be left in under our licensing agreement.
+ *
+ * By USING this file you are agreeing to the above terms of use. REMOVING this licence does NOT
+ * remove your obligation to the terms of use.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/copyleft/gpl.html.
+ *
+ * Contact help@fusionticket.com if any conditions of this licencing isn't
+ * clear to you.
+ */
+
 
 require_once(dirname(__FILE__) . '/RMail.php');
 

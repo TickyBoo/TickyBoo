@@ -1,39 +1,36 @@
 <?PHP
-/*
+/**
 %%%copyright%%%
- * phpMyTicket - ticket reservation system
- * Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
  *
- * This file is part of phpMyTicket.
+ * FusionTicket - ticket reservation system
+ *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *
+ * Original Design:
+ *	phpMyTicket - ticket reservation system
+ * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *
+ * This file is part of FusionTicket.
  *
  * This file may be distributed and/or modified under the terms of the
- * "GNU General Public License" version 2 as published by the Free
+ * "GNU General Public License" version 3 as published by the Free
  * Software Foundation and appearing in the file LICENSE included in
  * the packaging of this file.
- *
- * Licencees holding a valid "phpmyticket professional licence" version 1
- * may use this file in accordance with the "phpmyticket professional licence"
- * version 1 Agreement provided with the Software.
  *
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
  * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  *
- * The "phpmyticket professional licence" version 1 is available at
- * http://www.phpmyticket.com/ and in the file
- * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
- * info@phpmyticket.com.
- * Further contact information is available at http://www.phpmyticket.com/
+ * Any links or references to Fusion Ticket must be left in under our licensing agreement.
+ *
+ * By USING this file you are agreeing to the above terms of use. REMOVING this licence does NOT
+ * remove your obligation to the terms of use.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
- 
  */
-
 
 class PDF2TCompiler {
 

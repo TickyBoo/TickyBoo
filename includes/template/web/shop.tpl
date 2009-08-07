@@ -1,14 +1,13 @@
-{*
- * %%%copyright%%%
+{*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- * Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
+ *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
  * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
  *
- * This file is part of fusionTicket.
+ * This file is part of FusionTicket.
  *
  * This file may be distributed and/or modified under the terms of the
  * "GNU General Public License" version 3 as published by the Free
@@ -19,11 +18,15 @@
  * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  *
+ * Any links or references to Fusion Ticket must be left in under our licensing agreement.
+ *
+ * By USING this file you are agreeing to the above terms of use. REMOVING this licence does NOT
+ * remove your obligation to the terms of use.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@noctem.co.uk if any conditions of this licencing isn't
+ * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}{strip}{* include file="header.tpl" *}
 {if $smarty.request.action eq 'login' and $smarty.request.type != 'block'}

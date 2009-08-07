@@ -1,6 +1,4 @@
-<?php
-/**
-%%%copyright%%%
+ *                            %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
  *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
@@ -30,6 +28,3 @@
  *
  * Contact help@fusionticket.com if any conditions of this licencing isn't 
  * clear to you.
- */
-
-?>
