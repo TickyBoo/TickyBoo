@@ -243,7 +243,7 @@ class EPH_google extends Payment{
 					}
 					case 'CANCELLED': {
 						if($this->pm_on_user_cancel_cancel_order){
-							Order::order_delete($order->order_id,"Canceled By Google Checkout (User Canceled).");
+							Order::order_delete($order->order_id,'user_cancelled_by_google_checkout'); //"Canceled By Google Checkout (User Canceled)."
 							$Grequest->SendBuyerMessage($google_order_id,
 						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled. 
 						   		Your order has been canceled, please login into Google Checkout for more info.", true);
@@ -257,7 +257,7 @@ class EPH_google extends Payment{
 					}
 					case 'CANCELLED_BY_GOOGLE': {
 						if($this->pm_on_google_cancel_cancel_order){
-							Order::order_delete($order->order_id,"Canceled By Google Checkout (Possible Fraud).");
+							Order::order_delete($order->order_id,"Fraud_canceled_by_google_checkout"); //"Canceled By Google Checkout (Possible Fraud)."
 							$Grequest->SendBuyerMessage($google_order_id,
 						   		"Sorry, your order for ".$_SHOP->organizer_data->organizer_name." has been canceled by Google. 
 						   		Your order has been canceled, please login into Google Checkout more info.", true);
@@ -319,7 +319,7 @@ class EPH_google extends Payment{
 				$order = Order::loadFromPaymentId("google:".$google_order_id,$this->handling_id);
 				
 				if($this->pm_on_refund_cancel_order){
-					Order::order_delete($order->order_id,"Refunded By Google Checkout.");
+					Order::order_delete($order->order_id,"refunded_by_google_checkout"); //"Refunded By Google Checkout."
 				}
 				$Grequest->SendBuyerMessage($google_order_id,
 					"Your order for ".$_SHOP->organizer_data->organizer_name." has been refunded.", true);

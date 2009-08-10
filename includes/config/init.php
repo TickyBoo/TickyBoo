@@ -230,8 +230,10 @@ define ('AUTH_REALM','Fusion Ticket Login');
   setlocale(LC_TIME,$locale.'_'.strtoupper($locale));
   If (file_exists(INC."lang".DS."site_". $_SHOP->lang.".inc")){
     include_once(INC."lang".DS."site_". $_SHOP->lang.".inc");
+    $_SHOP->langfile = INC."lang".DS."site_". $_SHOP->lang.".inc";
   }else {
     include_once(INC."lang".DS."site_en.inc");
+    $_SHOP->langfile = INC."lang".DS."site_en.inc";
   }
 
 //loading organizer attributes

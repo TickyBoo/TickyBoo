@@ -28,12 +28,9 @@
  * clear to you.
  */
  *}
+<h2 style='float: left;'>{!pos_currenttickets!}</h2>
+<div id="order-div" style="width:100%;">
 <table>
-  <tr>
-  	<td colspan='2'>
-   	  <h2>{!pos_currenttickets!}</h2>
-  	</td>
-  </tr>
   <tr>
   	<td>
       {!pos_listpaidunprocessed!}
@@ -59,3 +56,4 @@
 	</td>
   </tr>
 </table>
+</div>

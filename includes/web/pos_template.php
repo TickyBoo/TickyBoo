@@ -39,8 +39,8 @@ require_once ( 'classes/MyCart_Smarty.php' );
 require_once ( 'classes/POS_Smarty.php' );
 require_once ( 'classes/User_Smarty.php' );
 require_once ( 'classes/Order_Smarty.php' );
-require_once('classes/gui_smarty.php');
-require_once('classes/Update_Smarty.php');
+require_once ( 'classes/gui_smarty.php');
+require_once ( 'classes/Update_Smarty.php');
 require_once ( "config/init_spoint.php" );
 
 global $_SHOP;

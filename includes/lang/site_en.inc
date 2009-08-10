@@ -1110,12 +1110,49 @@ define('system_halted','SYSTEM IS HALTED');
 
 define('Status_is_pub','This event is published');
 define('recure_days_selection','Days to exclude');
-define('dts_day_arr','Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday');
-define('dts_month_arr','January|February|March|April|May|June|July|August|September|October|November|December');
 
 define("templ_System","System emails");
 define("templ_email",'emails');
 define("templ_pdf2","html2pdf's" );
 define("templ_pdf","Old pdf's" );
 
+define('deleted_all_tickets','deleted_all_tickets');
+define('order_responce','Cancel responce');
+define('order_responce_date','Responce date');
+?>
+<?php
+define('timestamp','timestamp');
+?>
+<?php
+define('add_tickets','Add Ticket');
+?>
+<?php
+define('Groups','Groups');
+?>
+<?php
+define('delete','delete');
+?>
+<?php
+define('event_status','event_status');
+?>
+<?php
+define('both','both');
+?>
+<?php
+define('rows','rows');
+?>
+<?php
+define('Discount_for','Discount_for');
+?>
+<?php
+define('ID','ID');
+?>
+<?php
+define('pos_timestamp','pos_timestamp');
+?>
+<?php
+define('address2','address2');
+?>
+<?php
+define('new_partron','New');
 ?>

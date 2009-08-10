@@ -110,7 +110,7 @@ class Order {
 
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
     //echo "$event_id,$category_id,$place_id,{$this->order_user_id},{$this->order_session_id},$price,$discount";
-    array_push($this->places,new Ticket($event_id,$category_id,$place_id,$this->order_user_id,$this->order_session_id,$price,$discount));
+    array_push($this->places, new Ticket($event_id, $category_id, $place_id, $this->order_user_id, $this->order_session_id, $price, $discount));
   }
   
   function size (){

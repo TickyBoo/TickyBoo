@@ -7,20 +7,20 @@
 	{include file="header.tpl"}
 {/if}
 
-{if $smarty.get.action eq save_prefs}
+{if $smarty.get.action eq 'save_prefs'}
    {pos->set_prefs prefs=$smarty.get.user_prefs}
    {include file='view_options.tpl'}
 
-{elseif $smarty.get.action eq view_options}
+{elseif $smarty.get.action eq 'view_options'}
    {include file='view_options.tpl'}
 
-{elseif $smarty.get.action eq view_order}
+{elseif $smarty.get.action eq 'view_order'}
    {include file='view_order.tpl'}
 
-{elseif $smarty.get.action eq view_orders}
+{elseif $smarty.get.action eq 'view_orders'}
    {include file='view_orders.tpl'}
 
-{elseif $smarty.post.action eq submit_info}
+{elseif $smarty.post.action eq 'submit_info'}
 	{if not $smarty.post.exst_user }   {*or not $smarty.post.exst_user = 1 {*} 
   		{user->load user_id=$smarty.post.exst_user}
   	{else}
@@ -232,15 +232,15 @@
 	{if $smarty.request.action eq 'addtocart'}
 		{assign var='result' value=$cart->add_item_f($smarty.request.event_id, $smarty.request.category_id, $smarty.request.place, 'mode_kasse',$smarty.request.discount_id)}
 		{print_r var=$result}
-	  	{*if $last_item}
+	 	{*if $last_item}
 			{include file="discount.tpl" event_id=$smarty.post.event category_id=$smarty.post.category}
-	  	{else}
-	    	{include file="category.tpl"}
-	   	{/if*}
-   	{elseif $smarty.request.action eq "remove"}
-  		{$cart->remove_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.item)}
-  		{*include file="cart_view.tpl"*}
-   	{/if}
+  	{else}
+    	{include file="category.tpl"}
+   	{/if*}
+ 	{elseif $smarty.request.action eq "remove"}
+		{$cart->remove_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.item)}
+		{*include file="cart_view.tpl"*}
+ 	{/if}
 	{if $smarty.request.page}
 		{assign var='page' value=$smarty.request.page}
 		{include file="$page.tpl"}

@@ -2,12 +2,12 @@
 	
 	$(document).checkboxAreaSelect();
 	bindForms();
-	bindLinks();
+//	bindLinks();
 	
 	
 	$().ajaxSend(function(evt, request, settings){
 		$(".loading").show();
-		$("#order-div").block({message:"Loading"});
+//		$("#order-div").block({message:"Loading"});
 		//$.blockUI(); 
 	});
 	
@@ -17,7 +17,7 @@
 		bindForms();
 		bindLinks();
 		//$.unblockUI();
-		$("#order-div").unblock();	
+//		$("#order-div").unblock();
 	});
  });
  

@@ -42,7 +42,7 @@ class PosAjax {
 	private $actionName = "";
 	private $json;
 
-	function __construct($request,$action){
+	function __construct($request, $action){
 		$this->request = $request;
 		$this->actionName = $action;
 		$this->action = "get".ucfirst(strtolower($action));
@@ -127,7 +127,7 @@ class PosAjax {
 			$this->json['enable_discounts'] = true; //enable discounts.
 			$this->json['discounts'] = array(); //assign a blank array.
 			//Add the  "None Discount"
-			$this->json['discounts'][] = array('html'=>"<option id='0' selected='selected'> None </option>",'type'=>'fixed','price'=>0);
+			$this->json['discounts'][] = array('html'=>"<option id='0' selected='selected'> ".con('normal')." </option>",'type'=>'fixed','price'=>0);
 			while($disc = ShopDB::fetch_array($query)){
 				//Check to see if percent or fixed
 				$price = $disc['discount_price'];

@@ -6,37 +6,43 @@
 {/literal}
 </script>
 <form id="order-form" name='addtickets' action='index.php' method='post'>
-<div id="order-div" style="width:100%;">
-	<h2>{!pos_booktickets!}</h2>
+<div id="order-div" style="width:100%;">  
+   <br>
+
 	<table width="100%" cellpadding='1' cellspacing='1' bgcolor='white' >
+    <tr>
+      <td colspan="2" class="title">
+          {!pos_booktickets!}
+      </td>
+    </tr>
 		<tbody>
 			<tr>
-				<td width="30%" class='admin_list_row_1'>{!event!}:</td>
-				<td width="70%" class='admin_list_row_0' >
+				<td width="120" class='user_item'>{!event!}:</td>
+				<td class='user_value' >
 					<input type="text" id="event-input" size="40" style="width:250px;" />
-           <button type="button" id="clear-button">{!clear_selection!}</button>
+
 					<input type="hidden" id="event-id" name="event_id" />
 				</td>
 			</tr>
 			<tr>
-				<td class='admin_list_row_1'>{!select_category!}:</td>
-				<td  class='admin_list_row_0'>
+				<td class='user_item'>{!select_category!}:</td>
+				<td class='user_value'>
 					<select name='category_id' id='cat-select' style="width:250px;">
 						<option value='0'></option>
 					</select>
 				</td>
 			</tr>
 			<tr id='discount-name' style="display:none;">
-				<td class='admin_list_row_1' >{!discounts!}:</td>
-				<td  class='admin_list_row_0'>
+				<td class='user_item' >{!discounts!}:</td>
+				<td class='user_value'>
 					<select name='discount_id' id='discount-select' style="display:none; width:250px;">
 						<option value='0'></option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<td id="qty-name" style="display:none;" class='admin_list_row_1'>{!tickets_nr!}:</td>
-				<td class='admin_list_row_0' class="seat-selection" >
+				<td id="qty-name" style="display:none;" class='user_item'>{!tickets_nr!}:</td>
+				<td class='user_value' class="seat-selection" >
 					<div id="show-seats" style="display:none;">
 						<button type="button" name='submit' value='show seating'>{!show_seats!} </button>
 					</div>
@@ -44,33 +50,72 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" class='admin_list_row_0' align='right'>
-					<button type="submit" id="continue" name='submit' value='submit'>{!add!} {!tickets!}</button>
+				<td colspan="2" class='' align='right'>
+				  <button type="button" id="clear-button">{!clear_selection!}</button>&nbsp;
+					<button type="submit" id="continue" name='submit' value='submit'>{!add_tickets!}</button>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+  <br>
+{*  <div style='border:1px solid #840; width:100%'> *}
+  	<table id="cart-table" width="100%" >
+  		<thead>
+  			<tr class='festival'>
+  				<th class='festival' width='102'>{!expires_in!}</th>
+          <th class='festival'>{!event!}</th>
+  				<th class='festival' width='235'>{!tickets!}</th>
+  				<th class='festival' width='102'>{!total!}</th>
 
-	<table id="cart-table" width="100%">
-		<thead>
-			<tr>
-				<td>{!event!}</td>
-				<td>{!tickets!}</td>
-				<td>{!total!}</td>
-				<td>{!expires_in!}</td>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
-</div>
+  			</tr>
+  		</thead>
+{*  	</table>
+    <div style='overflow-y: scroll; height: 95px;  width:100%'>
+
+  	<table id="cart-table" width="100%" >  *}
+  		<tbody>
+  		</tbody>
+  	</table>
+{*  </div>
+</div> *}
 <div id="continue-div" style="width:100%; overflow:auto;">
 </div>
 <div id="seat-chart"></div>
-<div style="float:left; overflow:auto; width:50%;">
-	Personal details
-</div>
-<div style="float:left; overflow:auto; width:50%;">
-	Payment Method
-</div>
+<br>
+{*<table width='100%'>
+  <tr>
+     <td valign='top'  width='50%'>
+       {include file='user.tpl'}
+     </td>
+     <td valign='top' align='right'>
+       <table id='handling-table' width='90%' cellpadding="5" bgcolor='white'>
+         <thead>
+        	<tr>
+        	  <td colspan='3' class='title' align='left'>{!handlings!}</td>
+        	</tr>
+         </thead>
+        	<tbody>
+             {include file='checkout_preview.tpl'}
+        	</tbody>
+        </table>
+     </td>
+  </tr>
+</table>
+<br >    *}
+<table width='100%'>
+  <tr>
+    <td  class='title' align='left'>
+      {!ordertickets!}
+    </td>
+  </tr>
+
+</table>
+	    <input type='submit' name='submit' value='{!order_it!}'>
+  		{* update->view event_date=$min_date user=user->user_id *}
+  		{if $update_view.can_reserve }
+          &nbsp;
+    			<input type='submit' name='submit_reserve' value='{!reserve!}'>
+  		{/if}
+ <br>   <br>
+ 
 </form>

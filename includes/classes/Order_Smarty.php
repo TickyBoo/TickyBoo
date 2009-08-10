@@ -83,15 +83,7 @@ class Order_Smarty {
       $this->error =con('cant_start transaction');
       return; 
     }
-/*
-    //move places from reserved to ordered state
-    if(!command($order,session_id(),$user_id)){
-      _order_error(reservate_failed,$smarty);
-      ShopDB::rollback();
-      return;
-    } 
-*/
-      
+
     //put the order into database     
     if(!$order_id=$order->save()){
       $this->error = con('save_failed');
@@ -143,12 +135,12 @@ class Order_Smarty {
     
     
   function cancel ($params,&$smarty){
-    $this->cancel_f($params['order_id']); 
+    $this->cancel_f($params['order_id'],$params['reason']);
   }
   
-  function cancel_f ($order_id){
+  function cancel_f ($order_id, $reason = null ){
     global $_SHOP;
-    return Order::order_delete($order_id,0,$this->user_auth_id);
+    return Order::order_delete($order_id, is($reason,'order_canceled_by_user'),$this->user_auth_id);
   }
   
   function delete_ticket ($params, &$smarty){

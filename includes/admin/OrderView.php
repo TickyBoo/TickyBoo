@@ -39,10 +39,6 @@ require_once("classes/Order.php");
 class OrderView extends AdminView{
   var $page_length=15;
 
-
-
-
-
 function order_prepare_delete ($order_id){
   echo "<center><form action='".$_SERVER["PHP_SELF"]."?action=cancel&order_id=$order_id' method='post'>
         <input type='submit' name='cancel' value='".cancel."'></form></center><br>";
@@ -64,7 +60,7 @@ function order_details ($order_id){
 
   $status=$this->print_order_status($order);
   $order["order_status"]=$status;
-
+  $order['order_responce_date'] =($order['order_responce_date']== '0000-00-00 00:00:00')?'':$order['order_responce_date'];
 
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   echo "<tr><td class='admin_list_title'>".order_nr."  ".$order_id."</td>
@@ -73,6 +69,7 @@ function order_details ($order_id){
   </td></tr></table></td></tr>";
 
   $this->print_field('order_tickets_nr',$order);
+  $this->print_field('order_fee',$order);
   $this->print_field('order_total_price',$order);
   $this->print_field('order_date',$order);
 
@@ -82,8 +79,10 @@ function order_details ($order_id){
   $this->print_field('order_shipment_status',$order);
   $this->print_field('order_payment_status',$order);
   $this->print_field_o('order_payment_id',$order);
-  $this->print_field('order_fee',$order);
   $this->print_field('order_status',$order);
+  $this->print_field_o('order_responce',con($order['order_responce']));
+  $this->print_field_o('order_responce_date',$order);
+  $this->print_field_o('order_note',clean($order['order_note']));
   echo "</table><br>\n";
 /*
   echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>";
@@ -112,6 +111,7 @@ function order_details ($order_id){
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   echo "<tr><td class='admin_list_title' colspan='8'>".tickets."</td></tr>";
   $alt=0;
+
   while($ticket=shopDB::fetch_assoc($res)){
     if((!$ticket["category_numbering"]) or $ticket["category_numbering"]=='both'){
       $place=$ticket["seat_row_nr"]."-".$ticket["seat_nr"];
@@ -578,7 +578,7 @@ function draw (){
     $this->order_prepare_delete($_GET["order_id"]);
   }else
   if($_GET['action']=='cancel'){
-    Order::order_delete($_GET["order_id"], 0);
+    Order::order_delete($_GET["order_id"], 'order_deleted_manual');
     $this->order_details($_GET["order_id"]);
 
   } elseif($_GET['action']=='list_all'){

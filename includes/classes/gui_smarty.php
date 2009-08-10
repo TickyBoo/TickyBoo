@@ -49,8 +49,17 @@ class Gui_smarty {
 	var $_ShowLabel = True;
 	var $gui_name   = 'gui_name';
 	var $gui_value  = 'gui_value';
-	var $errors     = array();
+	var $gui_name_width  = '30%';
+  var $errors     = array();
   public $guidata = array();
+  private $valutas = array( 'EUR' => '&euro;',
+                            'AUD' => '&#36;',
+                            'CAD' => '&#36;',
+                            'USD' => '&#36;',
+                            'SGD' => '&#36;',
+                            'NZD' => '&#36;',
+                            'GBP' => '&pound;',
+                            'JPY' => '&yen;');
 
   function __construct  (&$smarty){
 
@@ -86,7 +95,7 @@ class Gui_smarty {
   }
 
   function print_r ($params,&$smarty) {
-    return nl2br(print_r($params['var'],true));
+    return '<pre>'.print_r($params['var'],true).'</pre>';
   }
   
   function fillarr ($params,&$smarty)
@@ -160,7 +169,15 @@ class Gui_smarty {
     If( isset($params['errors'])) {
       $this->errors = $params['errors'];
     }
-
+    If( isset($params['nameclass'])) {
+      $this->gui_name = $params['nameclass'];
+    }
+    If( isset($params['valueclass'])) {
+      $this->gui_value = $params['valueclass'];
+    }
+    If( isset($params['namewidth'])) {
+      $this->gui_name_width = $params['namewidth'] ;
+    }
   }
   function StartForm ($params, &$smarty) //($name, $width = 0, $colspan = 2)
   {
@@ -216,7 +233,7 @@ class Gui_smarty {
 
   private function showlabel($name, $value, $nolabel=false) {
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr><td class='{$this->gui_name}' width='30%'>" . con($name) . "</td>".
+      $return = "<tr><td class='{$this->gui_name}' width='{$this->gui_name_width}'>" . con($name) . "</td>".
                 "    <td class='{$this->gui_value}'>{$value}";
       if (isset($this->errors[$name])) {
         $return .= "<span class='error'>{$this->errors[$name]}</span>";

@@ -250,8 +250,8 @@ die();
 
         		$smarty->assign('pm_return',$confirmtext);
         		if(!$confirmtext['approved']) {
-           			$myorder->order_delete($myorder->order_id );
-				}
+           			$myorder->order_delete($myorder->order_id,'payment_not_approved' );
+            }
        			unset( $_SESSION['_SHOP_order']);
         		return "checkout_result";
       		} else {
@@ -288,7 +288,7 @@ die();
     } else  {
       $smarty->assign('pm_return',$pm_return);
       if(!$pm_return['approved'])
-         $myorder->order_delete($myorder->order_id );
+           			$myorder->order_delete($myorder->order_id,'payment_not_approved' );
       unset( $_SESSION['_SHOP_order']);
       return "checkout_result";
     }
@@ -327,7 +327,7 @@ die();
     $pm_return = $hand->on_return($myorder, true);
     $smarty->assign('pm_return',$pm_return);
     If (!$pm_return['approved']) {
-       $myorder->order_delete($myorder->order_id );
+       $myorder->order_delete($myorder->order_id,'payment_not_approved' );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
        
     }
@@ -346,7 +346,7 @@ die();
     }
     setordervalues($myorder, $smarty);
     $hand=$myorder->order_handling;
-    $myorder->order_delete($myorder->order_id );
+    $myorder->order_delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
     $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
     $smarty->assign('pm_return',$pm_return);

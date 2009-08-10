@@ -31,70 +31,104 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}<form action='index.php' method=post>
-<div class='user_inscription'>
-<table width='380' border='0' cellspacing='1' cellpadding='5' align='center' >
-<tr> 
-<td colspan="2" class="title">    
-    {!pers_info!}
-</td>
-</tr>
-<tr> 
-<td class='user_item'>     
-    {!lastname!}
-</td>
-  <td><input type='text' name='user_lastname' size='30' maxlength='50' value='{$user_data.user_lastname}'><span class='error'>{$user_errors.user_lastname}</span></td>
-</tr>
-<tr> 
-  <td class='user_item'>     
-    {!firstname!}
-</td>
-  <td><input type='text' name='user_firstname' size='30'  maxlength='50' value='{$user_data.user_firstname}'><span class='error'>{$user_errors.user_firstname}</span></td>
-</tr>
-<tr> 
-  <td class='user_item'>    
-    {!address!}
-</td>
-  <td><input type='text' name='user_addresse' size='30'  maxlength='75' value='{$user_data.user_addresse}'><span class='error'>{$user_errors.user_addresse}</span></td>
-</tr>
-<tr> 
-  <td class='user_item'> 
-    {!address1!}
-</td>
-  <td><input type='text' name='user_addresse1' size='30'  maxlength='75' value='{$user_data.user_addresse1}'><span class='error'>{$user_errors.user_addresse1}</span></td>
-</tr>
-<tr> 
-  <td class='user_item'>    
-    {!zip!}
-</td>
-  <td><input type='text' name='user_zip' size='8'  maxlength='20' value='{$user_data.user_zip}'><span class='error'>{$user_errors.user_zip}</span></td>
-</tr>
-<tr> 
-  <td class='user_item'>     
-    {!city!}
-</td>
-  <td><input type='text' name='user_city' size='30'  maxlength='50' value='{$user_data.user_city}'><span class='error'>{$user_errors.user_city}</span></td>
-</tr>
-<tr>
-<td class='user_item'>    
-    {!country!}
-</td>
-<td>
-{country assign=clist}
-<select name='user_country'>
-{foreach key=code item=name from=$clist}
-<option value='{$code}'>{$name}</option>
-{/foreach}
-</select><span class='error'>{$user_errors.user_country}</span>
-   </td></tr>	
-<tr>
-<td class='user_item'>    
-   {!without_fee!}</td>
-<td  class='user_value'>
-<input type='checkbox' class='checkbox' name='no_fee' value='1'>
-</td>
-</tr>
- <tr> 
-  <td colspan='2' align='center'><input type='submit' name='submit_info' value='{!continue!}'></td>
-</tr>
-</table>
+ *}
+<script type="text/javascript">
+{literal}
+	$(document).ready(function(){
+  	$('#search_user').hide();
+   	$('#user_info_search').change(function(){
+    	$('#search_user').show();
+    	$('#user_data').show();
+      $('#event_user_id').val(-1);
+    });
+   	$('#user_info_none').change(function(){
+    	$('#search_user').hide();
+    	$('#user_data').hide();
+      $('#event_user_id').val(0);
+    });
+   	$('#user_info_new').change(function(){
+    	$('#search_user').hide();
+    	$('#user_data').show();
+      $('#event_user_id').val(-2);
+    });
+  	$("#search-dialog").dialog({
+		bgiframe: false,
+		autoOpen: false,
+		height: 'auto',
+		width: 'auto',
+		modal: true,
+		buttons: {'Close': function() {
+			$(this).dialog('close');
+			}
+		}
+	});
+  $('#search_user').click(function() {
+			$('#search-dialog').dialog('open');
+		})
+	});
+	
+{/literal}
+</script>
+
+
+  <table width='99%' border='0' cellspacing='1' cellpadding='5' align='left' >
+    <tr>
+      <td colspan="2" class="title">
+          {!pers_info!}
+      </td>
+    </tr>
+    <tr>
+      <td class='user_item' colspan='2'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' >
+          <tr>
+            <td class='user_item'  > &nbsp;
+         		  <input checked="checked" type='radio' id='user_info_none' class='checkbox_dark' name='user_info' value='0'>
+       		  	<label for='user_info_none'> {!none!} </label>
+           </td>
+            <td  class='user_item' >
+         		  <input type='radio' id='user_info_search' class='checkbox_dark' name='user_info' value='1'>
+       		  	<label for='user_info_search'> {!search!} </label>
+           </td>
+            <td class='user_item'  >
+         		  <input type='radio' id='user_info_new' class='checkbox_dark' name='user_info' value='2'>
+       		  	<label for='user_info_new'> {!new_partron!} </label>
+      	     </td>
+            <td class='user_item'  align  ='right' width='100'>
+      		    <button type="button" id="search_user" name='action' value='search_user'>{!search!}</button>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tbody id='user_data' name='user_data' style="display:none;">
+      {gui->setdata data=$user_data errors=$user_errors nameclass='user_item' valueclass='user_value' namewidth='120'}
+      {gui->input name='user_firstname' mandatory=true size='30' maxlength='50'}
+      {gui->input name='user_lastname' mandatory=true size='30' maxlength='50'}
+      {gui->input name='user_address' mandatory=true size='30' maxlength='75'}
+      {gui->input name='user_address1' size='30' maxlength='75'}
+      {gui->input name='user_zip' mandatory=true size='8' maxlength='20'}
+      {gui->input name='user_city' mandatory=true size='30' maxlength='50'}
+      {gui->selectstate name='user_state'}
+      {gui->selectcountry name='user_country' mandatory=true}
+      {gui->input name='user_phone' size='15' maxlength='50'}
+      {gui->input name='user_fax' size='15' maxlength='50'}
+      {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
+    </tbody>
+    <tr>
+      <td class='user_item' height='16' width='120'>
+         {!without_fee!}
+      </td>
+      <td  class='user_value'>
+        <input type='checkbox' class='checkbox' name='no_fee' value='1'>
+      </td>
+    </tr>
+    <tr>
+      <td colspan='2' align='right'>
+        <input type='hidden' name='event_user_id' value='0'>
+ 	     </td>
+    </tr>
+  </table>
+ <div id="search-dialog" title="Personal Search dialog">
+  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+
+</div>

@@ -236,9 +236,15 @@ function is(&$arg, $default = null)
 }
 
 function con($name) {
+   global $_SHOP;
    if (defined($name)) {
       return constant($name);
    } else {
+      if (is_writable($_SHOP->langfile)){
+
+        $addcon = "<?php\ndefine('$name','$name');\n?>\n";
+        file_put_contents($_SHOP->langfile, $addcon,FILE_APPEND);
+      }
       return $name;
    }
 }
@@ -373,7 +379,7 @@ function check_system() {
 			while ( $row = shopDB::fetch_array($res) ) {
 				if ( !Order::Check_payment($row['order_id']) and
            ($_SHOP->shopconfig_restime >=	10) ) {
-					Order::order_delete( $row['order_id'], con('AutoCancel_order'));
+					Order::order_delete( $row['order_id'], 'AutoCancel_order');
 				}
 			}
 		}
@@ -393,7 +399,7 @@ function check_system() {
     if($resultOrder=ShopDB::query($query)){
 			//Cycles through orders to see if they should be canceled!
 			while ( $roword = shopDB::fetch_array($resultOrder) ) {
-				Order::order_delete( $roword['order_id'], con('AutoCancel_paying') );
+				Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
 			}
 		}
 	}

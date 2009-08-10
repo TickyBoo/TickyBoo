@@ -81,7 +81,7 @@ var loadOrder = function(){
 		$("#discount-select").hide().html("<option value='0'></option>");
 		$("#discount-name").hide();
 		$("#qty-name").hide();
-		$("#seat-qty").hide();
+		$("#seat-qty").hide().html("");
 		$("#seat-chart").html("");
 		//$("#continue").attr("type","button");
 		unBindSeatChart();
@@ -122,9 +122,32 @@ var refreshOrder = function(){
     	cache:false,
     	success: function(html){
     		$("#cart-table tbody:first").html(html);
+//    		refreshHandling();   //Update handing info
+    	}
+	});
+
+
+}
+/*
+//The refresh handlingpage, the ajax manager SHOULD ALLWAYS be used where possible.
+var refreshHandling = function(){
+
+  var handlingId = $("#handling:checked").val(); //"").val();;
+	ajaxQManager.add({
+		type: "POST",
+    	url: "index.php",
+    	data: {ajax:'yes',page:"checkout_preview", handling_id: handlingId},
+    	cache:false,
+    	success: function(html){
+    		$("#handling-table tbody:first").html(html);
+    		$(":input[@name='handling']").change(function(){
+          $(":input[@name='handling']").unbind( "change");
+          refreshHandling();   //Update handing info
+        });
     	}
 	});
 }
+*/
 
 //refreshSeatChart
 var refreshCategories = function(){
@@ -151,7 +174,7 @@ var updateSeatChart = function(){
 	unBindSeatChart();
 	if(catData.categories[catId].numbering){
 		$("#seat-qty").hide();
-		$("#qty-name").hide();
+		$("#qty-name").show();
 		$("#seat-chart").html(catData.categories[catId].placemap);
 		bindSeatChart();
 	}else{
