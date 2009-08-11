@@ -113,7 +113,7 @@ var loadOrder = function(){
 		$("#cat-select").html("<option value='0'></option>");
 		$("#discount-select").hide().html("<option value='0'></option>");
 		$("#discount-name").hide();
-		$("#seat-qty").hide().html("");
+		$("#seat-qty").hide();
 		$("#seat-chart").html("");
 		$("#date-from").val('');
 		$("#date-to").val('');
