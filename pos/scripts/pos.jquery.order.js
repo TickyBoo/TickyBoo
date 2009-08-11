@@ -119,7 +119,7 @@ var loadOrder = function(){
 		$("#date-to").val('');
 		//$("#continue").attr("type","button");
 		unBindSeatChart();
-		$('#event-id').change();
+		updateEvents();
 		
 	});
 	
