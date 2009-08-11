@@ -48,10 +48,11 @@
 		<script type="text/javascript" src="../scripts/jquery/jquery.autocomplete.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.checkboxselect.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.json-1.3.min.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
-		{literal}
+    {literal}
 			<script type="text/javascript">
 				$(document).ready(function(){
 					/*
@@ -82,7 +83,6 @@
 			</div>
 			<div id="navbar">
 				<ul>
-{*					<li><a href="index.php?action=home" accesskey="h" tabindex="10">{!pos_homepage!}</a></li> *}
 					<li><a href="index.php?action=order" accesskey="b" tabindex="11">{!pos_booktickets!}</a></li>
 					<li><a href="index.php?process=on" accesskey="t" tabindex="12">{!pos_currenttickets!}</a></li>
 				</ul>

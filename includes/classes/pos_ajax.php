@@ -217,7 +217,34 @@ class PosAjax {
 		}
 		return false;
 	}	
-	
+
+	private function getUserSearch(){
+		$sql = "SELECT user_id, user_lastname, user_firstname,
+                   user_zip, user_city, user_email, user_owner_id
+            FROM `User`
+            WHERE 1";
+		$query = ShopDB::query($sql);
+		$numRows = ShopDB::num_rows($query);
+
+		if($numRows > 0){
+      $alt = 0;
+   		//Break down cats and array up with additional details.
+  		while($user = ShopDB::fetch_assoc($query)){
+        $html = "<tr class='admin_list_row_$alt'>
+                   <td width='152'>{$user['user_lastname']}, {$user['user_firstname']}</td>
+                   <td width='102'>{$user['user_zip']}</td>
+                   <td width='235'>{$user['user_city']}</td>
+                   <td width='184'>{$user['user_email']}</td>
+                 </tr>";
+
+    		$this->json['users'][] = array('user_id'=>$user['user_id'], 'html'=> $html);
+    		$alt = ( $alt + 1 ) % 2;
+  		}
+ 			return true;
+    }
+		return false;
+	}
+
 	/**
 	 * PosAjax::loadPlaceMap()
 	 * 

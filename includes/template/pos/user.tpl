@@ -57,21 +57,60 @@
 		height: 'auto',
 		width: 'auto',
 		modal: true,
-		buttons: {'Close': function() {
-			$(this).dialog('close');
-			}
+		resizable  : false,
+		buttons: {
+      'Cancel': function() {
+			   $(this).dialog('close');
+			 },
+      'Ok': function() {
+			   $(this).dialog('close');
+			 }
 		}
 	});
   $('#search_user').click(function() {
-			$('#search-dialog').dialog('open');
+      var FormValues = {};
+      $("#user_data :input").each(function() {
+         if ($(this).val()) {
+           FormValues[$(this).attr("name")] = $(this).val();
+         }
+      });
+      if ( array_length(FormValues) >2) {
+        var str = $.toJSON(FormValues)
+  			ajaxQManager.add({
+  				type:		"POST",
+  				url:		"ajax.php",
+  				dataType:	"json",
+  				data:		{"pos":true,"action":"UserSearch",'values':str},
+  				success:function(data, status){
+
+  	        $("#user-table tbody:first").hide().html("");
+  					$.each(data.users,function(){
+  						$("#user-table tbody:first").append(this.html);
+  					});
+  					$("#user-table tbody:first").show().change();
+  			    $('#search-dialog').dialog('open');
+  				}
+  			});
+      } else {
+        confirm('You need to enter atliest 3 personal address field before you can search.');
+      }
+
 		})
 	});
-	
+function array_length(arr) {
+    var length = 0;
+    for(val in arr) {
+        length++;
+    }
+    return length;
+}
 {/literal}
 </script>
 
 
   <table width='99%' border='0' cellspacing='1' cellpadding='5' align='left' >
+    <thead>
+    
     <tr>
       <td colspan="2" class="title">
           {!pers_info!}
@@ -100,19 +139,21 @@
         </table>
       </td>
     </tr>
+    </thead>
     <tbody id='user_data' name='user_data' style="display:none;">
-      {gui->setdata data=$user_data errors=$user_errors nameclass='user_item' valueclass='user_value' namewidth='120'}
-      {gui->input name='user_firstname' mandatory=true size='30' maxlength='50'}
-      {gui->input name='user_lastname' mandatory=true size='30' maxlength='50'}
-      {gui->input name='user_address' mandatory=true size='30' maxlength='75'}
-      {gui->input name='user_address1' size='30' maxlength='75'}
-      {gui->input name='user_zip' mandatory=true size='8' maxlength='20'}
-      {gui->input name='user_city' mandatory=true size='30' maxlength='50'}
-      {gui->selectstate name='user_state'}
-      {gui->selectcountry name='user_country' mandatory=true}
-      {gui->input name='user_phone' size='15' maxlength='50'}
-      {gui->input name='user_fax' size='15' maxlength='50'}
-      {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
+        {gui->setdata data=$user_data errors=$user_errors nameclass='user_item' valueclass='user_value' namewidth='120'}
+        {gui->input name='user_firstname' mandatory=true size='30' maxlength='50'}
+        {gui->input name='user_lastname' mandatory=true size='30' maxlength='50'}
+        {gui->input name='user_address' mandatory=true size='30' maxlength='75'}
+        {gui->input name='user_address1' size='30' maxlength='75'}
+        {gui->input name='user_zip' mandatory=true size='8' maxlength='20'}
+        {gui->input name='user_city' mandatory=true size='30' maxlength='50'}
+        {gui->selectstate name='user_state'}
+        {gui->selectcountry name='user_country' mandatory=true}
+        {gui->input name='user_phone' size='15' maxlength='50'}
+        {gui->input name='user_fax' size='15' maxlength='50'}
+        {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
+
     </tbody>
     <tr>
       <td class='user_item' height='16' width='120'>
@@ -129,6 +170,25 @@
     </tr>
   </table>
  <div id="search-dialog" title="Personal Search dialog">
-  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+  <div style='border:1px solid #840; width:100%'>
+  	<table id="user-table-header" width="100%" >
+  		<thead>
+  			<tr class='festival'>
+  				<th class='festival' width='152'>{!user_name!}</th>
+          <th class='festival' width='102'>{!user_zip!}</th>
+  				<th class='festival' width='235'>{!user_city!}</th>
+  				<th class='festival' width='202'>{!user_email!}</th>
+
+  			</tr>
+  		</thead>
+  	</table>
+    <div style='overflow-y: scroll; height: 295px;  width:100%'>
+
+  	<table id="user-table" width="100%" >
+  		<tbody>
+  		</tbody>
+  	</table>
+  </div>
+</div>
 
 </div>

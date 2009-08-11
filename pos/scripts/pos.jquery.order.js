@@ -146,11 +146,11 @@ var refreshOrder = function(){
     	cache:false,
     	success: function(html){
     		$("#cart-table tbody:first").html(html);
-//    		refreshHandling();   //Update handing info
+    		refreshHandling();   //Update handing info
     	}
 	});
 }
-/*
+
 //The refresh handlingpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshHandling = function(){
 
@@ -169,7 +169,7 @@ var refreshHandling = function(){
     	}
 	});
 }
-*/
+
 
 //refreshSeatChart
 var refreshCategories = function(){

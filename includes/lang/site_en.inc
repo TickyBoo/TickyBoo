@@ -1156,3 +1156,6 @@ define('address2','address2');
 <?php
 define('new_partron','New');
 ?>
+<?php
+define('user_name','user_name');
+?>
