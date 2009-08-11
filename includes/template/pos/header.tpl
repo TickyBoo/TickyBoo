@@ -47,7 +47,6 @@
 		<script type="text/javascript" src="../scripts/jquery/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.autocomplete.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.checkboxselect.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery.blockUI.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>

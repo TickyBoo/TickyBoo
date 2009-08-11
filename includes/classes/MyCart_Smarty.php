@@ -95,8 +95,10 @@ class MyCart_Smarty {
 		}
 	    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id);
 	    if($res){
+	    	echo "true";
 	    	return $res;
 	    }else{
+	    	echo "false";
 	    	return FALSE;
 	    }
 	}

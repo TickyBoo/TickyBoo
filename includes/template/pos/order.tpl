@@ -7,7 +7,7 @@
 </script>
 <form id="order-form" name='addtickets' action='index.php' method='post'>
 <div id="order-div" style="width:100%;">  
-   <br>
+   <br />
 
 	<table width="100%" cellpadding='1' cellspacing='1' bgcolor='white' >
     <tr>
@@ -19,9 +19,10 @@
 			<tr>
 				<td width="120" class='user_item'>{!event!}:</td>
 				<td class='user_value' >
-					<input type="text" id="event-input" size="40" style="width:250px;" />
-
-					<input type="hidden" id="event-id" name="event_id" />
+					Date From (yyyy-mm-dd) : <input type="text" id="event-from" size="10" />
+					Date To (yyyy-mm-dd) : <input type="text" id="event-to" size="10" /><br />
+					<select id="event-id" name="event_id" size="1">
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -50,72 +51,69 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" class='' align='right'>
-				  <button type="button" id="clear-button">{!clear_selection!}</button>&nbsp;
+				<td align="left"></td>
+				<td class='' align='right'>
+				  	<button type="button" id="clear-button">{!clear_selection!}</button>&nbsp;
 					<button type="submit" id="continue" name='submit' value='submit'>{!add_tickets!}</button>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-  <br>
-{*  <div style='border:1px solid #840; width:100%'> *}
-  	<table id="cart-table" width="100%" >
-  		<thead>
-  			<tr class='festival'>
-  				<th class='festival' width='102'>{!expires_in!}</th>
-          <th class='festival'>{!event!}</th>
-  				<th class='festival' width='235'>{!tickets!}</th>
-  				<th class='festival' width='102'>{!total!}</th>
-
-  			</tr>
-  		</thead>
-{*  	</table>
-    <div style='overflow-y: scroll; height: 95px;  width:100%'>
-
-  	<table id="cart-table" width="100%" >  *}
-  		<tbody>
-  		</tbody>
-  	</table>
-{*  </div>
-</div> *}
-<div id="continue-div" style="width:100%; overflow:auto;">
-</div>
+  	<br />
+	<div style='border:1px solid #840; width:100%'>
+	  	<table width="100%" >
+	  		<thead>
+				<tr class='festival'>
+					<th class='festival' width='102'>{!expires_in!}</th>
+	    			<th class='festival'>{!event!}</th>
+	  				<th class='festival' width='235'>{!tickets!}</th>
+	  				<th class='festival' width='102'>{!total!}</th>
+	  			</tr>
+			</thead>
+		</table>
+	    <div style='overflow-y: scroll; height: 95px;  width:100%'>
+	  		<table id="cart-table" width="100%" > 
+	  			<tbody>
+	  			</tbody>
+	  		</table>
+	  	</div>
+	</div> 
+<div id="continue-div" style="width:100%; overflow:auto;"></div>
 <div id="seat-chart"></div>
-<br>
-{*<table width='100%'>
-  <tr>
-     <td valign='top'  width='50%'>
-       {include file='user.tpl'}
-     </td>
-     <td valign='top' align='right'>
-       <table id='handling-table' width='90%' cellpadding="5" bgcolor='white'>
-         <thead>
-        	<tr>
-        	  <td colspan='3' class='title' align='left'>{!handlings!}</td>
-        	</tr>
-         </thead>
-        	<tbody>
-             {include file='checkout_preview.tpl'}
-        	</tbody>
-        </table>
-     </td>
-  </tr>
-</table>
-<br >    *}
+<br />
 <table width='100%'>
-  <tr>
-    <td  class='title' align='left'>
-      {!ordertickets!}
-    </td>
-  </tr>
-
+	<tr>
+    	<td valign='top'  width='50%'>
+       		{include file='user.tpl'}
+     	</td>
+     	<td valign='top' align='right'>
+		   	<table id='handling-table' width='90%' cellpadding="5" bgcolor='white'>
+				<thead>
+					<tr>
+		    	  		<td colspan='3' class='title' align='left'>{!handlings!}</td>
+		    		</tr>
+		     	</thead>
+		    	<tbody>
+					{include file='checkout_preview.tpl'}
+		    	</tbody>
+		    </table>
+   		</td>
+	</tr>
 </table>
-	    <input type='submit' name='submit' value='{!order_it!}'>
-  		{* update->view event_date=$min_date user=user->user_id *}
-  		{if $update_view.can_reserve }
-          &nbsp;
-    			<input type='submit' name='submit_reserve' value='{!reserve!}'>
-  		{/if}
- <br>   <br>
+<br />
+<table width='100%'>
+	<tr>
+    	<td  class='title' align='left'>
+      		{!ordertickets!}
+    	</td>
+  	</tr>
+</table>
+<button type='submit' name='submit' value='{!order_it!}'>{!order_it!}</button>
+{* update->view event_date=$min_date user=user->user_id *}
+{if $update_view.can_reserve }
+         &nbsp;
+	<button type='submit' name='submit_reserve' value='{!reserve!}'>{!reserve!}</button>
+{/if}
+<br/><br/>
  
 </form>

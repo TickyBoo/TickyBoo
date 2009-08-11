@@ -2,7 +2,7 @@
 	
 	$(document).checkboxAreaSelect();
 	bindForms();
-//	bindLinks();
+	bindLinks();
 	
 	
 	$().ajaxSend(function(evt, request, settings){
@@ -50,7 +50,7 @@ var bindLinks = function(){
 	//$("a:not([href^='http'])").click(function () { //does not work after rebind in ie8.
 	$("a").click(function () {
     	var url = $(this).attr('href');
-    	if($(this).hasClass("ui-dialog-titlebar-close")){
+    	if($(this).hasClass("ui-dialog-titlebar-close") || $(this).hasClass('.ui-state-hover')){
     		return false;
     	}
     	$("#seat-chart").each(function(){

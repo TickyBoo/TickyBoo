@@ -49,6 +49,51 @@ class PosAjax {
 		$this->json = array();
 	}
 	
+	
+	private function getEvents(){
+		//Check for date filters
+		if($this->request['datefrom']){
+			$fromDate = $this->request['datefrom'];
+		}else{
+			$fromDate = date('Y-m-d');
+		}
+		if($this->request['dateto']){
+			$toDate = $this->request['dateto'];
+		}else{
+			$toDate = 'event_date';
+		}
+		
+		$sql = "SELECT * 
+				FROM Event,
+				Ort,
+				Event_stat
+				WHERE 1=1
+				AND ort_id = event_ort_id
+				AND event_id = es_event_id
+				AND event_date >= "._esc($fromDate)." 
+				AND event_date <= "._esc($toDate)."
+				and event_rep LIKE '%sub%'
+				AND event_status = 'pub'
+				ORDER BY event_date,event_time
+				LIMIT 0,50";
+		if(!$query = ShopDB::query($sql)){
+			return false;
+		}
+		
+		//Load html and javascript in the json var.
+		$this->json['events'] = array(); //assign a blank array.
+		
+		//Break down cats and array up with additional details.
+		while($evt = ShopDB::fetch_assoc($query)){
+			$date = date_parse($evt['event_date']);
+			$eventText = $evt['event_name'].' - '.$evt['ort_name'].' - '.$date['day'].'/'.$date['month'].'/'.$date['year'];
+			$option = "<option value='".$evt['event_id']."'>".$eventText."</option>";
+			
+			$this->json['events'][$evt['event_id']] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
+		}
+		return true;
+	}
+	
 	/**
 	 * PosAjax::getCategories()
 	 *

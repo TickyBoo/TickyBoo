@@ -31,8 +31,8 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}{assign var="cart_empty" value=$cart->is_empty_f()}
-
+ *} {assign var="cart_empty" value=$cart->is_empty_f()}
+ 
     {cart->items}
 
     <tr class="{cycle name='events' values='admin_list_row_0,admin_list_row_1'}">

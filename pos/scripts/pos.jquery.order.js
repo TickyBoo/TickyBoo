@@ -1,9 +1,33 @@
 var catData = new Object();
 
 var loadOrder = function(){
- 	
- 	refreshOrder();
 	
+ 	refreshOrder();
+ 	updateEvents();
+ 	
+ 	$('#event-from').datepicker({
+		minDate:0, changeMonth: true,
+		changeYear: true, dateFormat:'yy-mm-dd',
+		showButtonPanel: true,
+		onSelect: function(dateText, inst) {
+			$('#event-from').change();
+		}
+ 	});
+ 	$('#event-to').datepicker({
+		minDate:0, changeMonth: true,
+		changeYear: true, dateFormat:'yy-mm-dd',
+		showButtonPanel: true,
+		onSelect: function(dateText, inst) {
+			$('#event-to').change();
+		}
+ 	});
+ 	$('#event-from').change(function(){
+ 		updateEvents();
+ 	});
+ 	$('#event-to').change(function(){
+ 		updateEvents();
+ 	});
+	/*
 	$("#event-input").autocomplete('index.php?ajax=yes&page=get_events', {
 		autoFill:true,
 		cacheLength:1,
@@ -16,21 +40,20 @@ var loadOrder = function(){
 		formatResult: formatResult,
 		selectFirst:false
 	});
+	*/
 	
 	
-	
-	$("#event-input").result(function(event, data, formatted) {
-		if (data){
-			$("#event-id").val(data[0]);
-		}else{
-			$("#event-id").val('0');
+	$("#event-id").change(function() {
+		var eventId = $(this).val();
+		if(eventId <= 0){
+			return false;
 		}
-		if(data[0] > 0){
+		if(eventId > 0){
 			ajaxQManager.add({
 				type:		"POST",
 				url:		"ajax.php",
 				dataType:	"json",
-				data:		{"pos":true,"action":"categories","event_id":data[0]},
+				data:		{"pos":true,"action":"categories","event_id":eventId},
 				success:function(data, status){
 					catData = data; //set cat var
 					
@@ -75,14 +98,15 @@ var loadOrder = function(){
 	//Make sure all add ticket fields are added to this so when clearing selection 
 	// All fields are reset.
 	$('#clear-button').click(function(){
-		$('#event-input').val('');
-		$('#event-id').val('0');
 		$("#cat-select").html("<option value='0'></option>");
 		$("#discount-select").hide().html("<option value='0'></option>");
 		$("#discount-name").hide();
 		$("#qty-name").hide();
 		$("#seat-qty").hide().html("");
 		$("#seat-chart").html("");
+		$("#date-from").val('');
+		$("#date-to").val('');
+		$('#event-id').change();
 		//$("#continue").attr("type","button");
 		unBindSeatChart();
 		
@@ -125,8 +149,6 @@ var refreshOrder = function(){
 //    		refreshHandling();   //Update handing info
     	}
 	});
-
-
 }
 /*
 //The refresh handlingpage, the ajax manager SHOULD ALLWAYS be used where possible.
@@ -183,6 +205,29 @@ var updateSeatChart = function(){
 		$("#qty-name").show();
 		$("#seat-qty").show();
 	}
+}
+// Update events function will take the dates and compile onto the event var
+var updateEvents = function(){
+	dateFrom = $('#event-from').val();
+	dateTo = $('#event-to').val();
+	
+	ajaxQManager.add({
+		type:		"POST",
+		url:		"ajax.php",
+		dataType:	"json",
+		data:		{pos:true,action:"events",datefrom:dateFrom,dateto:dateTo},
+		success:function(data, status){
+			if(data.status){
+				eventData = data//set event data
+				//Fill Categories
+				$("#event-id").hide().html("");
+				$.each(eventData.events,function(){
+					$("#event-id").append(this.html);
+				});
+				$("#event-id").show().change();
+			}
+		}	
+	});
 }
 var bindSeatChart = function(){
 	$("#show-seats").show();
