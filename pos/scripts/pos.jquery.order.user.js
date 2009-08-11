@@ -40,7 +40,7 @@ var loadUser = function(){
 	
 	$('#user_info_new').change(function(){
     	$('#search_user').hide();
-    	$('#user_data').show();   alert($('#user_id').val());
+    	$('#user_data').show();
       	if (($('#user_id').val() <=0) || confirm('Are you sure you want to create a new user?')) {
         	$("#user_data :input").each(function() {
            		$(this).val('');
