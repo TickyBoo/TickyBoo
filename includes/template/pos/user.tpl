@@ -86,7 +86,7 @@ $(document).ready(function(){
         {gui->input name='user_phone' size='15' maxlength='50'}
         {gui->input name='user_fax' size='15' maxlength='50'}
         {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
-        <input type='hidden' name='user_id' value='-1'>
+        <input type='hidden' id='user_id' name='user_id' value='-1'>
     </tbody>
     <tr>
       <td class='user_item' height='16' width='120'>
