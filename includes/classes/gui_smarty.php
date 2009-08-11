@@ -259,7 +259,7 @@ class Gui_smarty {
   {
     $name = is($params['name'] );
     $value  = is($params['value'],$this->guidata[$name]);
-    return "<input type='hidden' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) ."'>\n";
+    return "<input type='hidden' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) ."'>\n";
   }
 
   function input ($params, &$smarty) //$name, &$data, $size = 30, $max = 100)
@@ -270,7 +270,7 @@ class Gui_smarty {
     $max  = is($params['maxlength'] ,100);
     $value  = is($params['value'],$this->guidata[$name]);
 
-    return $this->showlabel($name, "<input type='$text' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) .
+    return $this->showlabel($name, "<input type='$text' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) .
            "' size='$size' maxlength='$max'>");
   }
 
@@ -280,7 +280,7 @@ class Gui_smarty {
     if ($this->guidata[$name]) {
       $chk = 'checked';
     }
-    return $this->showlabel($name, "<input type='checkbox' name='$name' value='1' $chk>");
+    return $this->showlabel($name, "<input type='checkbox' id='$name' name='$name' value='1' $chk>");
   }
 
   function area ($params, &$smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
@@ -288,7 +288,7 @@ class Gui_smarty {
     $name = is($params['name']   );
     $rows = is($params['rows'], 6);
     $cols = is($params['cols'],40);
-    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
+    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
   }
 
   function inputtime ($params, &$smarty) //($name, &$data, &$err,  = '')
@@ -332,7 +332,7 @@ class Gui_smarty {
     // $val=array('both','rows','none');
     $sel[$value] = " selected ";
 
-    $return = "<select name='$name' $mult>\n";
+    $return = "<select id='$name' name='$name' $mult>\n";
 
     foreach($opt as $v => $n) {
         if (is_array($n)) {

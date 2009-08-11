@@ -34,8 +34,30 @@
  *}
 <script type="text/javascript">
 {literal}
+
 	$(document).ready(function(){
   	$('#search_user').hide();
+  	$('#users-table').jqGrid({
+      url:'ajax.php',
+      datatype: 'json',
+      mtype: 'POST',
+      
+      postData: {"pos":true,"action":"UserSearch",'values':''},
+      {/literal}
+      colNames:['{!user_id!}','{!user_name!}','{!user_zip!}','{!user_city!}','{!user_email!}'],
+      {literal}
+      colModel :[
+        {name:'user_id',    index:'User_id',    width:52},
+        {name:'user_name',  index:'user_name',  width:152},
+        {name:'user_zip',   index:'user_zip',   width:102},
+        {name:'user_city',  index:'user_city',  width:235},
+        {name:'user_email', index:'user_email', width:202} ],
+      altRows: true,
+      height: 250,
+      hiddengrid : true,
+      footerrow : true,
+      viewrecords: true
+    });
    	$('#user_info_search').change(function(){
     	$('#search_user').show();
     	$('#user_data').show();
@@ -63,12 +85,25 @@
 			   $(this).dialog('close');
 			 },
       'Ok': function() {
-			   $(this).dialog('close');
-			 }
+         var selrow = $('#users-table').getGridParam("selrow");
+   			 ajaxQManager.add({
+  			 	 type:		"POST",
+  				 url:		"ajax.php",
+  				 dataType:	"json",
+  				 data:		{"pos":true,"action":"UserData",'user_id':selrow},
+  				 success:function(data, status){
+              $.each(data.user, function(i,item){
+                 $("#"+i).val(item);
+
+              });
+              $("#search-dialog").dialog('close');
+           }
+			  });
+		  }
 		}
 	});
   $('#search_user').click(function() {
-      var FormValues = {};
+     var FormValues = {};
       $("#user_data :input").each(function() {
          if ($(this).val()) {
            FormValues[$(this).attr("name")] = $(this).val();
@@ -76,23 +111,11 @@
       });
       if ( array_length(FormValues) >2) {
         var str = $.toJSON(FormValues)
-  			ajaxQManager.add({
-  				type:		"POST",
-  				url:		"ajax.php",
-  				dataType:	"json",
-  				data:		{"pos":true,"action":"UserSearch",'values':str},
-  				success:function(data, status){
-
-  	        $("#user-table tbody:first").hide().html("");
-  					$.each(data.users,function(){
-  						$("#user-table tbody:first").append(this.html);
-  					});
-  					$("#user-table tbody:first").show().change();
-  			    $('#search-dialog').dialog('open');
-  				}
-  			});
+        $('#users-table').postData ={"pos":true,"action":"UserSearch",'values':str};
+        $('#users-table').jqGrid('populate');
+        $("#search-dialog").dialog('open');
       } else {
-        confirm('You need to enter atliest 3 personal address field before you can search.');
+         alert('You need to enter atliest 3 personal address field before you can search.');
       }
 
 		})
@@ -169,26 +192,7 @@ function array_length(arr) {
  	     </td>
     </tr>
   </table>
- <div id="search-dialog" title="Personal Search dialog">
-  <div style='border:1px solid #840; width:100%'>
-  	<table id="user-table-header" width="100%" >
-  		<thead>
-  			<tr class='festival'>
-  				<th class='festival' width='152'>{!user_name!}</th>
-          <th class='festival' width='102'>{!user_zip!}</th>
-  				<th class='festival' width='235'>{!user_city!}</th>
-  				<th class='festival' width='202'>{!user_email!}</th>
-
-  			</tr>
-  		</thead>
-  	</table>
-    <div style='overflow-y: scroll; height: 295px;  width:100%'>
-
-  	<table id="user-table" width="100%" >
-  		<tbody>
-  		</tbody>
-  	</table>
+  <div id="search-dialog" title="Personal Search dialog">
+   	<table id="users-table" class="scroll" cellpadding="0" cellspacing="0"></table>
+   	
   </div>
-</div>
-
-</div>

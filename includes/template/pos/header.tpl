@@ -35,11 +35,14 @@
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>FusionTicket: Box Office / Sale Point </title>
+
 		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/pos.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="../css/jquery.autocomplete.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
+		
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.ajaxmanager.js"></script>
@@ -49,6 +52,9 @@
 		<script type="text/javascript" src="../scripts/jquery/jquery.checkboxselect.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.json-1.3.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/i18n/grid.locale-en.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery.jqGrid.min.js"></script>
+
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
