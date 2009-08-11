@@ -193,15 +193,15 @@ class PosAjax {
 			$this->json['enable_discounts'] = true; //enable discounts.
 			$this->json['discounts'] = array(); //assign a blank array.
 			//Add the  "None Discount"
-			$this->json['discounts'][] = array('html'=>"<option id='0' selected='selected'> ".con('normal')." </option>",'type'=>'fixed','price'=>0);
+			$this->json['discounts'][] = array('html'=>"<option value='0' selected='selected'> ".con('normal')." </option>",'type'=>'fixed','price'=>0);
 			while($disc = ShopDB::fetch_array($query)){
 				//Check to see if percent or fixed
 				$price = $disc['discount_price'];
 				if(strtolower($disc['discount_type']) == 'percent' ){
-					$option = "<option id='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."%</option>";
+					$option = "<option value='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."%</option>";
 					$type = "percent";
 				}else{
-					$option = "<option id='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."</option>";
+					$option = "<option value='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."</option>";
 					$type = "fixed";
 				}
 				//Load up each row

@@ -57,6 +57,9 @@ var loadOrder = function(){
 	$("#event-id").change(function() {
 		var eventId = $(this).val();
 		if(eventId <= 0){
+			$("#cat-select").html("<option value='0'></option>");
+			$("#discount-name").hide();
+			$("#discount-select").hide().html("<option value='0'></option>");
 			return false;
 		}
 		if(eventId > 0){
@@ -74,10 +77,24 @@ var loadOrder = function(){
 						$("#cat-select").append(this.html);
 					});
 					$("#cat-select").show().change();
+					//Check catData for discounts...
+					if(catData.enable_discounts){
+						$("#discount-select").html("");
+						$.each(catData.discounts,function(){
+							$("#discount-select").append(this.html);
+						});
+						$("#discount-name").show();
+						$("#discount-select").show();
+					}else{
+						$("#discount-name").hide();
+						$("#discount-select").hide().html("<option value='0'></option>");
+					}
 				}	
 			});
 		}else{
 			$("#cat-select").html("<option value='0'></option>");
+			$("#discount-name").hide();
+			$("#discount-select").hide().html("<option value='0'></option>");
 		}
 	});
 	
@@ -85,19 +102,6 @@ var loadOrder = function(){
 		if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
 			
 			var catId = $("#cat-select").val();
-			
-			//Check catData for discounts...
-			if(catData.enable_discounts){
-				$("#discount-select").html("");
-				$.each(catData.discounts,function(){
-					$("#discount-select").append(this.html);
-				});
-				$("#discount-name").show();
-				$("#discount-select").show();
-			}else{
-				$("#discount-name").hide();
-				$("#discount-select").hide().html("<option value='0'></option>");
-			}
 			updateSeatChart();
 			//$("#continue").attr("type","submit");
 		}	
