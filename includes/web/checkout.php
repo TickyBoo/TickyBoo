@@ -32,57 +32,16 @@
  * clear to you.
  */
 
-require_once("includes/config/init_common.php");
-/*
-//Check page is secure
-if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-  $url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
-  echo "<script>window.location.href='$url';</script>"; exit;
-  //header("Location: https://"$_SHOP->root_secured.$_SERVER['SCRIPT_NAME']);exit;}
-}
-//remove the www. to stop certificate errors.
-if(("https://".$_SERVER['SERVER_NAME']."/") != ($_SHOP->root_secured)) {
-  $url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
-  echo "<script>window.location.href='$url';</script>"; exit;
-}
-*/
-require_once('smarty/Smarty.class.php');
-require_once('classes/MyCart_Smarty.php');
-require_once('classes/User_Smarty.php');
-require_once('classes/Order_Smarty.php');
-require_once('classes/Update_Smarty.php');
-require_once('classes/gui_smarty.php');
+$fond = null;
 
-require_once("config/init_shop.php");
+if($_REQUEST['pos']) {
+  require_once ( 'pos_template.php');
+} else {
+  require_once ( 'template.php');
+}
 
-global $_SHOP, $action;
 
 if (!$action) {$action = 'index';}
-
-$smarty = new Smarty;
-$_SHOP->smarty = $smarty;
-
-$gui    = new Gui_smarty($smarty);
-$cart   = new MyCart_Smarty($smarty);
-$user   = new User_Smarty($smarty);
-$order  = new Order_Smarty($smarty);
-$update = new Update_Smarty($smarty);
-
-$smarty->assign('_SHOP_root', $_SHOP->root);
-$smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
-$smarty->assign('_SHOP_lang', $_SHOP->lang);
-$smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
-
-$smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
-$smarty->assign('organizer', $_SHOP->organizer_data);
-
-$smarty->template_dir = array($_SHOP->tpl_dir.'web'.DS.'custum'.DS, $_SHOP->tpl_dir.'web'.DS);
-$smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
-$smarty->compile_id   = 'webshop_'.$_SHOP->lang;
-$smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
-$smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
-
-$smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
 
 if (isset($_REQUEST['sor'])) {
 	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"sor")))) {
@@ -95,7 +54,8 @@ if (isset($_REQUEST['sor'])) {
 	}
  	exit();
 } elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
-  	if (!$user->logged and
+  	if ( !$_REQUEST['pos'] and
+         !$user->logged and
 		     $action !== 'register' and
       	 $action !== 'login' ) {
     	$smarty->display('user_register.tpl');
@@ -198,8 +158,8 @@ die();
 
   Function registerAction ($smarty){
     global $user;
-    is($_POST['ismember'],false);
-    $user_id = $user->register_f($_POST['ismember'], $_POST, $errors, 0, 'user_nospam');
+    $type = is($_POST['ismember'],false);
+    $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
     If (!$user_id ) {
       $smarty->assign('user_data',   $_POST);
       $smarty->assign('reg_type',    $type);
@@ -207,7 +167,7 @@ die();
       return "user_register";
     } else
       $smarty->assign('newuser_id', $user_id);
-      return "checkout_preview";
+    return "checkout_preview";
   }
 
 
@@ -228,42 +188,64 @@ die();
       return "checkout_result";
     }
   }
+  
+  function PosConfimAction($smarty) {
+    global $user;
+    if ($_POST['user_id']==-2) {
+        return "order";
+    } elseif ($_POST['user_id']==-1) {
+       $user_id = $_SESSION['_SHOP_POS_USER']['user_id'];
+       $user->load_f($user_id);
+    } elseif ($_POST['user_id']==0) {
+      $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
+      If (!$user_id ) {
+        $smarty->assign('user_data',   $_POST);
+        $smarty->assign('user_errors', $errors);
+        return "order";
+      } else {
+        $smarty->assign('newuser_id', $user_id);
+      }
+    } else {
+       $user_id = $_POST['user_id'];
+    }
+    return $this->confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
+  }
+  
+	function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
+  	global $order, $cart;
+  	if (!isset($_SESSION['_SHOP_order'])) {
+    	$myorder = $order->make_f($_POST['handling_id'], $origin,$user_id, $no_fee);
+  	} else {
+		  $myorder = $_SESSION['_SHOP_order'];
+	  }
+	
+  	if (!$myorder) {
+    		$smarty->assign('order_error', $order->error);
+    		return "checkout_preview";
+  	} else {
+    		setordervalues($myorder, $smarty); //assign order vars
+    		$cart->destroy_f(); // destroy cart
+    		$hand = $myorder->order_handling; // get the payment handling object
+    		$confirmtext = $hand->on_confirm($myorder); // get the payment button/method... 
 
-	function confirmaction($smarty) {
-    	global $order, $cart;
-    	if (!isset($_SESSION['_SHOP_order'])) {
-      	$myorder = $order->make_f($_POST['handling_id'],"www");
-    	} else {
-			  $myorder = $_SESSION['_SHOP_order'];
-		  }
-		
-    	if (!$myorder) {
-      		$smarty->assign('order_error', $order->error);
-      		return "checkout_preview";
-    	} else {
-      		setordervalues($myorder, $smarty); //assign order vars
-      		$cart->destroy_f(); // destroy cart
-      		$hand = $myorder->order_handling; // get the payment handling object
-      		$confirmtext = $hand->on_confirm($myorder); // get the payment button/method... 
+    		if (is_array($confirmtext)) {
 
-      		if (is_array($confirmtext)) {
-
-        		$smarty->assign('pm_return',$confirmtext);
-        		if(!$confirmtext['approved']) {
-           			$myorder->order_delete($myorder->order_id,'payment_not_approved' );
-            }
-       			unset( $_SESSION['_SHOP_order']);
-        		return "checkout_result";
-      		} else {
-      			if ($hand->is_eph()) {
-        			$_SESSION['_SHOP_order'] = $myorder;
-      			}
-      			$order->obj = $myorder;
-        		$smarty->assign('confirmtext', $confirmtext);
-      			return "checkout_confirm";
-    		}
+      		$smarty->assign('pm_return',$confirmtext);
+      		if(!$confirmtext['approved']) {
+         			$myorder->order_delete($myorder->order_id,'payment_not_approved' );
+          }
+     			unset( $_SESSION['_SHOP_order']);
+      		return "checkout_result";
+    		} else {
+    			if ($hand->is_eph()) {
+      			$_SESSION['_SHOP_order'] = $myorder;
+    			}
+    			$order->obj = $myorder;
+      		$smarty->assign('confirmtext', $confirmtext);
+    			return "checkout_confirm";
   		}
-  	}
+		}
+	}
 
   function  submitaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
