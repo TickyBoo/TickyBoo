@@ -42,7 +42,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td id="qty-name" style="display:none;" class='user_item'>{!tickets_nr!}:</td>
+				<td id="qty-name" style="" class='user_item'>{!tickets_nr!}:</td>
 				<td class='user_value' class="seat-selection" >
 					<div id="show-seats" style="display:none;">
 						<button type="button" name='submit' value='show seating'>{!show_seats!} </button>

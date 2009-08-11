@@ -1,4 +1,6 @@
 var catData = new Object();
+var refreshTimer;
+var eventData = new Object();
 
 var loadOrder = function(){
 	
@@ -92,7 +94,8 @@ var loadOrder = function(){
 		}	
 	});
 	
-//	refreshTimer = setInterval(function(){refreshOrder();}, 30000);
+	//Creates a auto refreshing function.
+	refreshTimer = setInterval(function(){refreshOrder();}, 30000);
 	
 	
 	//Make sure all add ticket fields are added to this so when clearing selection 
@@ -101,14 +104,13 @@ var loadOrder = function(){
 		$("#cat-select").html("<option value='0'></option>");
 		$("#discount-select").hide().html("<option value='0'></option>");
 		$("#discount-name").hide();
-		$("#qty-name").hide();
 		$("#seat-qty").hide().html("");
 		$("#seat-chart").html("");
 		$("#date-from").val('');
 		$("#date-to").val('');
-		$('#event-id').change();
 		//$("#continue").attr("type","button");
 		unBindSeatChart();
+		$('#event-id').change();
 		
 	});
 	
@@ -195,20 +197,18 @@ var updateSeatChart = function(){
 	unBindSeatChart();
 	if(catData.categories[catId].numbering){
 		$("#seat-qty").hide();
-		$("#qty-name").show();
 		$("#seat-chart").html(catData.categories[catId].placemap);
 		bindSeatChart();
 	}else{
 		unBindSeatChart();
 		$("#seat-chart").html("");
-		$("#qty-name").show();
 		$("#seat-qty").show();
 	}
 }
 // Update events function will take the dates and compile onto the event var
 var updateEvents = function(){
-	dateFrom = $('#event-from').val();
-	dateTo = $('#event-to').val();
+	var dateFrom = $('#event-from').val();
+	var dateTo = $('#event-to').val();
 	
 	ajaxQManager.add({
 		type:		"POST",
@@ -239,9 +239,6 @@ var unBindSeatChart = function(){
 	$("#show-seats").hide();
 	$("#show-seats button").unbind( "click" );
 }
-
-//Creates a auto refreshing function.
-var refreshTimer = setInterval(function(){refreshOrder();}, 30000);
 
 function formatItem(row) {
 	return row[1];

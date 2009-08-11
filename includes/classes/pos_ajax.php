@@ -50,6 +50,27 @@ class PosAjax {
 	}
 	
 	
+	/**
+	 * PosAjax::getEvents()
+	 * 
+	 * @param datefrom ('yyyy-mm-dd') optional
+	 * @param dateto ('yyyy-mm-dd') optional
+	 * @param return_dates_only (true|false) If set to true, event_dates will only be returned.
+	 * 
+	 * Will Return:
+	 * 	- events 
+	 * 		| - id (event_id)
+	 *			| - html (option html)
+	 * 		  	  - free_seats (tot free seats)
+	 * 		| - id ....
+	 * 	- event_dates
+	 * 		| - date ('yyyy-mm-dd')
+	 * 		| - date ('yyyy-mm-dd')
+	 * 		  - date ...
+	 *
+	 * 
+	 * @return boolean : if function returned anything sensisble.
+	 */
 	private function getEvents(){
 		//Check for date filters
 		if($this->request['datefrom']){
