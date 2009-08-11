@@ -565,6 +565,7 @@ class Rmail
     */
     private function addAttachmentParts(&$message)
     {
+    //    print_r($this->attachments );
         foreach ($this->attachments as $value) {
             $params['content_type'] = $value->contentType;
             $params['encoding']     = $value->encoding->getType();

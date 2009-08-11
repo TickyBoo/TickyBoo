@@ -270,7 +270,9 @@ class TemplateView extends AdminView{
     if (!$res = ShopDB::query($query)){
       return;
     } while ($row = shopDB::fetch_assoc($res)){
-      $this->compile_template($row['template_name']);
+      if($row['template_type']<>'PDF'){
+        $this->compile_template($row['template_name']);
+      }
     }
   }
 

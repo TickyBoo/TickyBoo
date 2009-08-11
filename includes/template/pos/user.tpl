@@ -41,8 +41,7 @@
       url:'ajax.php',
       datatype: 'json',
       mtype: 'POST',
-      
-      postData: {"pos":true,"action":"UserSearch",'values':''},
+      postData: {"pos":true,"action":"UserSearch"},
       {/literal}
       colNames:['{!user_id!}','{!user_name!}','{!user_zip!}','{!user_city!}','{!user_email!}'],
       {literal}
@@ -58,20 +57,36 @@
       footerrow : true,
       viewrecords: true
     });
-   	$('#user_info_search').change(function(){
-    	$('#search_user').show();
-    	$('#user_data').show();
-      $('#event_user_id').val(-1);
-    });
    	$('#user_info_none').change(function(){
+      $("#user_data :input").each(function() {
+         $(this).val('');
+      });
     	$('#search_user').hide();
     	$('#user_data').hide();
-      $('#event_user_id').val(0);
+      $('#user_id').val(-1);
     });
+
+   	$('#user_info_search').change(function(){
+
+    	$('#search_user').show();
+    	$('#user_data').show();
+    	if ($('#user_id').val() <=0) {
+        $('#user_id').val(-2);
+      }
+    });
+
    	$('#user_info_new').change(function(){
     	$('#search_user').hide();
     	$('#user_data').show();
-      $('#event_user_id').val(-2);
+      if (($('#user_id').val() <=0) || confirm('Are you sure you want to create a new user?')) {
+        $("#user_data :input").each(function() {
+           $(this).val('');
+        });
+        $('#user_id').val(0);
+      } else {
+        $('#user_info_search').change();
+        $('#user_info_search').click();
+      }
     });
   	$("#search-dialog").dialog({
 		bgiframe: false,
@@ -103,19 +118,22 @@
 		}
 	});
   $('#search_user').click(function() {
-     var FormValues = {};
+      $('#users-table').clearGridData();
+      var data = $('#users-table').getGridParam('postData'), i=0;
       $("#user_data :input").each(function() {
-         if ($(this).val()) {
-           FormValues[$(this).attr("name")] = $(this).val();
+        if ($(this).attr("name") != 'user_id') {
+           data[$(this).attr("name")] = $(this).val();
+           if ($(this).val().length >1 ) {
+             i++;
+           }
          }
       });
-      if ( array_length(FormValues) >2) {
-        var str = $.toJSON(FormValues)
-        $('#users-table').postData ={"pos":true,"action":"UserSearch",'values':str};
-        $('#users-table').jqGrid('populate');
+      if ( i >2) {
+        $('#users-table').setGridParam('postData', data);
+        $('#users-table').trigger("reloadGrid");
         $("#search-dialog").dialog('open');
       } else {
-         alert('You need to enter atliest 3 personal address field before you can search.');
+         alert('You need to fill atliest 3 personal address fields,\n with minimal 2 characters, before you can search.');
       }
 
 		})
@@ -147,14 +165,14 @@ function array_length(arr) {
          		  <input checked="checked" type='radio' id='user_info_none' class='checkbox_dark' name='user_info' value='0'>
        		  	<label for='user_info_none'> {!none!} </label>
            </td>
-            <td  class='user_item' >
-         		  <input type='radio' id='user_info_search' class='checkbox_dark' name='user_info' value='1'>
-       		  	<label for='user_info_search'> {!search!} </label>
-           </td>
             <td class='user_item'  >
          		  <input type='radio' id='user_info_new' class='checkbox_dark' name='user_info' value='2'>
        		  	<label for='user_info_new'> {!new_partron!} </label>
       	     </td>
+            <td  class='user_item' >
+         		  <input type='radio' id='user_info_search' class='checkbox_dark' name='user_info' value='1'>
+       		  	<label for='user_info_search'> {!exst_user!} </label>
+           </td>
             <td class='user_item'  align  ='right' width='100'>
       		    <button type="button" id="search_user" name='action' value='search_user'>{!search!}</button>
             </td>
@@ -176,7 +194,7 @@ function array_length(arr) {
         {gui->input name='user_phone' size='15' maxlength='50'}
         {gui->input name='user_fax' size='15' maxlength='50'}
         {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
-
+        <input type='hidden' name='user_id' value='-1'>
     </tbody>
     <tr>
       <td class='user_item' height='16' width='120'>
@@ -185,11 +203,6 @@ function array_length(arr) {
       <td  class='user_value'>
         <input type='checkbox' class='checkbox' name='no_fee' value='1'>
       </td>
-    </tr>
-    <tr>
-      <td colspan='2' align='right'>
-        <input type='hidden' name='event_user_id' value='0'>
- 	     </td>
     </tr>
   </table>
   <div id="search-dialog" title="Personal Search dialog">

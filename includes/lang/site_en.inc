@@ -1159,3 +1159,102 @@ define('new_partron','New');
 <?php
 define('user_name','user_name');
 ?>
+<?php
+define('exst_user','exst_user');
+?>
+<?php
+define('ideal','ideal');
+?>
+<?php
+define('Sale mode','Sale mode');
+?>
+<?php
+define('webshop','webshop');
+?>
+<?php
+define('Point of sale','Point of sale');
+?>
+<?php
+define('No Alt','No Alt');
+?>
+<?php
+define('2 - Cash - Point of sale','2 - Cash - Point of sale');
+?>
+<?php
+define('3 - At the entrance - At the entrance','3 - At the entrance - At the entrance');
+?>
+<?php
+define('4 - Transfer - E-mail Address','4 - Transfer - E-mail Address');
+?>
+<?php
+define('5 - PayPal - Post','5 - PayPal - Post');
+?>
+<?php
+define('39 - PayPal - Post','39 - PayPal - Post');
+?>
+<?php
+define('41 - Credit Card - E-mail Address','41 - Credit Card - E-mail Address');
+?>
+<?php
+define('42 - ideal - Post','42 - ideal - Post');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>
+<?php
+define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
+?>
+<?php
+define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+?>

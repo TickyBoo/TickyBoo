@@ -324,7 +324,6 @@ class EmailTCompiler {
              $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf', new Base64Encoding()))".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
-          $res.=$pre."require_once('classes/Order.php')".$post;
           $res.=$pre.'$order=Order::load('.$r_data.')'.$post;
           $res.=$pre.'$order->set_shipment_status(\'send\')'.$post;
 	      }

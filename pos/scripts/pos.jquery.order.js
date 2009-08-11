@@ -92,7 +92,7 @@ var loadOrder = function(){
 		}	
 	});
 	
-	refreshTimer = setInterval(function(){refreshOrder();}, 30000);
+//	refreshTimer = setInterval(function(){refreshOrder();}, 30000);
 	
 	
 	//Make sure all add ticket fields are added to this so when clearing selection 
