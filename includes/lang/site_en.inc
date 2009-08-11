@@ -1178,83 +1178,17 @@ define('Point of sale','Point of sale');
 define('No Alt','No Alt');
 ?>
 <?php
-define('2 - Cash - Point of sale','2 - Cash - Point of sale');
+define('event_recur_type','event_recur_type');
 ?>
 <?php
-define('3 - At the entrance - At the entrance','3 - At the entrance - At the entrance');
+define('recure_nothing','recure_nothing');
 ?>
 <?php
-define('4 - Transfer - E-mail Address','4 - Transfer - E-mail Address');
+define('recure_daily','recure_daily');
 ?>
 <?php
-define('5 - PayPal - Post','5 - PayPal - Post');
+define('event_recur_end','event_recur_end');
 ?>
 <?php
-define('39 - PayPal - Post','39 - PayPal - Post');
-?>
-<?php
-define('41 - Credit Card - E-mail Address','41 - Credit Card - E-mail Address');
-?>
-<?php
-define('42 - ideal - Post','42 - ideal - Post');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
-?>
-<?php
-define('Change status to &apos;Sent&apos;?','Change status to &apos;Sent&apos;?');
-?>
-<?php
-define('Change status to &apos;Paid&apos;?','Change status to &apos;Paid&apos;?');
+define('event_end','event_end');
 ?>

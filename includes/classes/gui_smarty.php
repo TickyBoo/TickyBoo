@@ -536,7 +536,7 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
              }
          if ($offpages+1 == $i)
              {
-             $output .= "<b>$i</b>&nbsp;";
+             $output .= "<b>[$i]</b>&nbsp;";
              }
          else
              {

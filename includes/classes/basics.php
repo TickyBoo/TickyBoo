@@ -240,11 +240,11 @@ function con($name) {
    if (defined($name)) {
       return constant($name);
    } else {
-      if (is_writable($_SHOP->langfile)){
+/*      if (is_writable($_SHOP->langfile)){
 
         $addcon = "<?php\ndefine('$name','$name');\n?>\n";
         file_put_contents($_SHOP->langfile, $addcon,FILE_APPEND);
-      }
+      } */
       return $name;
    }
 }
