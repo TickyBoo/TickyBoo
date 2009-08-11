@@ -46,6 +46,7 @@
 				<td class='user_value' class="seat-selection" >
 					<div id="show-seats" style="display:none;">
 						<button type="button" name='submit' value='show seating'>{!show_seats!} </button>
+						Seat Count: <input type="text" size="2" />
 					</div>
 					<div id="seat-qty" style="display:none;"><input type='text' name='place' size='4' maxlength='2' /></div>
 				</td>

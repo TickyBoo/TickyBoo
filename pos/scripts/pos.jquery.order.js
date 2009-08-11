@@ -43,8 +43,17 @@ var loadOrder = function(){
 		selectFirst:false
 	});
 	*/
-	
-	
+	$("#seat-chart").dialog({
+		bgiframe: false,
+		autoOpen: false,
+		height: 'auto',
+		width: 'auto',
+		modal: true,
+		buttons: {'Close': function() {
+			$(this).dialog('close');
+			}
+		}
+	});
 	$("#event-id").change(function() {
 		var eventId = $(this).val();
 		if(eventId <= 0){
@@ -95,7 +104,7 @@ var loadOrder = function(){
 	});
 	
 	//Creates a auto refreshing function.
-	refreshTimer = setInterval(function(){refreshOrder();}, 30000);
+	refreshTimer = setInterval(function(){refreshOrder();}, 120000);
 	
 	
 	//Make sure all add ticket fields are added to this so when clearing selection 
@@ -112,18 +121,6 @@ var loadOrder = function(){
 		unBindSeatChart();
 		$('#event-id').change();
 		
-	});
-	
-	$("#seat-chart").dialog({
-		bgiframe: false,
-		autoOpen: false,
-		height: 'auto',
-		width: 'auto',
-		modal: true,
-		buttons: {'Close': function() {
-			$(this).dialog('close');
-			}
-		}
 	});
 	
 	$("#order-form").submit(function(){
@@ -197,6 +194,7 @@ var updateSeatChart = function(){
 	unBindSeatChart();
 	if(catData.categories[catId].numbering){
 		$("#seat-qty").hide();
+		$("#seat-qty input").val('');
 		$("#seat-chart").html(catData.categories[catId].placemap);
 		bindSeatChart();
 	}else{
@@ -228,10 +226,22 @@ var updateEvents = function(){
 		}	
 	});
 }
+var seatCount = 0;
 var bindSeatChart = function(){
 	$("#show-seats").show();
 	$("#show-seats button").click(function(){
 		$("#seat-chart").dialog('open');
+	});
+	$("#seat-chart > input").click(function(){
+		console.log("click!!");
+		if($(this).attr('checked') == "checked"){
+			seatCount++;
+		}else{
+			if(seatCount>0){
+				seatCount--;
+			}
+		}
+		$("#show-seats input").val(seatCount);
 	});
 }
 var unBindSeatChart = function(){
