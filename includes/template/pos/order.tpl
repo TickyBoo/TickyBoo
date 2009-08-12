@@ -94,6 +94,7 @@
     	</td>
   	</tr>
 </table>
+</div>
 </form>
 
 <form method='POST' id='checkout' action='checkout.php'>
