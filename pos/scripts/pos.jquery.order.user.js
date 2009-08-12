@@ -1,12 +1,12 @@
-var loadUser = function(){
+var loadUser = function(mycolNames){
 	$('#search_user').hide();
 
-	$('#users-table').jqGrid({
+	$('#users_table').jqGrid({
 		url:'ajax.php',
 		datatype: 'json',
 		mtype: 'POST',
 		postData: {"pos":true,"action":"UserSearch"},
-		colNames:['{!user_id!}','{!user_name!}','{!user_zip!}','{!user_city!}','{!user_email!}'],
+		colNames: mycolNames,
 		colModel :[
 			{name:'user_id',    index:'User_id',    width:52},
 			{name:'user_name',  index:'user_name',  width:152},
@@ -16,8 +16,8 @@ var loadUser = function(){
 		altRows: true,
 		height: 250,
 		hiddengrid : true,
-		footerrow : true,
-		viewrecords: true
+		footerrow : false,
+		viewrecords: false
     });
 	
 	$('#user_info_none').change(function(){
@@ -64,7 +64,7 @@ var loadUser = function(){
 				$(this).dialog('close');
 			 },
       		'Ok': function() {
-         		var selrow = $('#users-table').getGridParam("selrow");
+         		var selrow = $('#users_table').getGridParam("selrow");
    			 	ajaxQManager.add({
 					type:		"POST",
 					url:		"ajax.php",
@@ -81,21 +81,22 @@ var loadUser = function(){
 		}
 	});
   	$('#search_user').click(function() {
-    	$('#users-table').clearGridData();
-      	var data = $('#users-table').getGridParam('postData'), i=0;
-      	$("#user_data :input").each(function() {
-        	if ($(this).attr("name") != 'user_id') {
-           		data[$(this).attr("name")] = $(this).val();
-           		if ($(this).val().length >1 ) {
-           			i++;
-           		}
-       		}
+    	var i=3;
+    	var data = $('#users_table').getGridParam('postData');
+    	$('#users_table').clearGridData();
+    	$("#user_data :input").each(function() {
+      	if ($(this).attr("name") != 'user_id') {
+ //       		data[$(this).attr("name")] = $(this).val();
+         		if ($(this).val().length >1 ) {
+         			i++;
+         		}
+     	  	}
       	});
-      	if ( i >2) {
-	        $('#users-table').setGridParam('postData', data);
-	        $('#users-table').trigger("reloadGrid");
-	        $("#search-dialog").dialog('open');
-      	} else {
+    	if ( i >2) {
+//        $('#users_table').setGridParam('postData', data);
+        $('#users_table').trigger("reloadGrid");
+        $("#search-dialog").dialog('open');
+    	} else {
 			alert('You need to fill atliest 3 personal address fields,\n with minimal 2 characters, before you can search.');
       	}
 	});

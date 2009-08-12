@@ -35,8 +35,10 @@
 <script type="text/javascript">
 {literal}
 $(document).ready(function(){
-	loadUser();	
-});
+ 	{/literal}
+  	loadUser(['{!user_id!}','{!user_name!}','{!user_zip!}','{!user_city!}','{!user_email!}']);
+	{literal}
+ });
 {/literal}
 </script>
 
@@ -98,6 +100,6 @@ $(document).ready(function(){
     </tr>
   </table>
   <div id="search-dialog" title="Personal Search dialog">
-   	<table id="users-table" class="scroll" cellpadding="0" cellspacing="0"></table>
+   	<table id="users_table" class="scroll" cellpadding="0" cellspacing="0"></table>
    	
   </div>

@@ -212,7 +212,100 @@ class PosAjax {
 		}
 		return true;
 	}
-	
+
+
+
+  function _pre_items (&$event_item,&$cat_item,&$place_item,&$data){
+    $data[]=array($event_item,$cat_item,$place_item);
+  }
+
+
+	private function getCartInfo(){
+	global $cart_s;
+    $cart=$_SESSION['_SMART_cart'];
+    if(!$cart or $cart->is_empty()){
+      $repeat=FALSE;
+      return;
+    }else{
+      $cart_s->load_info();
+    }
+
+    $cart_list  =array();
+    $cart_index =0;
+    $cart->iterate(array(&$this,'_pre_items'),$cart_list);
+
+    foreach ($cart_list as $cart_row) {
+      $event_item    = $cart_row[0];
+      $category_item = $cart_row[1];
+      $seat_item     = $cart_row[2];
+      $seat_item_id  = $seat_item->id;
+      $seats_id      = $seat_item->places_id;
+      $seats_nr      = $seat_item->places_nr;
+
+      if($category_item->cat_numbering=='rows'){
+        $rcount=array();
+        foreach($seat_item->places_nr as $places_nr){
+          $rcount[$places_nr[0]]++;
+        }
+        $result["seat_item_rows_count"] = $rcount;
+      }
+
+    		{if $seat_item->is_expired()}
+        		$col = "<font color='red'>".con('expired').'</font><br />';
+    		{else}
+    			  $col = "<img src='images/clock.gif' valign='middle' align='middle'>".$seat_item->ttl()." min.<br />";
+    		{/if}
+        $col .= "
+    		<form class='remove-tickets' action='index.php' method='POST'>
+    			<input type='hidden' value='remove' name='action' />
+   		 		<input type='hidden' value='{$event_item->event_id}' name='event_id' />
+    		 	<input type='hidden' value='{$category_item->cat_id}' name='category_id' />
+    		 	<input type='hidden' value='{$seat_item_id}' name='item' />
+    		 	<input type='submit' value='".con('remove')."' name='remove' />
+        </form>";
+    $row[] = $col;
+    $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name} <br>
+         	{$event_item->event_date} -	{$event_item->event_time}";
+    $row[] = "     	{$category_item->cat_name}
+
+  	</td>
+		<td class='view_cart_td' width='235'  valign='top'>
+  		<table border='0'>
+  			{section name="seats" loop=$seats_id}
+  			<tr>
+				<td class='view_cart_td'  >
+					{if !$category_item->cat_numbering or $category_item->cat_numbering eq 'both'}
+      					{$seats_nr[seats][0]} - {$seats_nr[seats][1]}
+  					{elseif $category_item->cat_numbering eq 'rows'}
+      					{!row!} {$seats_nr[seats][0]}
+  					{/if}
+  				</td>
+				<td class='view_cart_td'  >
+  					{assign var='disc' value=$seat_item->discounts[seats]}
+  					{if $disc}
+      					{$disc->discount_name}
+  					{else}
+      					{!normal!}
+  					{/if}
+  				</td>
+				<td class='view_cart_td'  >
+  					{if $disc}
+   						{valuta value=$disc->apply_to($category_item->cat_price)|string_format:"%.2f"}
+  					{else}
+   						{valuta value=$category_item->cat_price|string_format:"%.2f"}
+  					{/if}
+  				</td>
+			</tr>
+  			{/section}
+  		</table>
+  	</td>
+	  <td class='view_cart_td'  valign='top'  width='86' align='right'>
+  		{valuta value=$seat_item->total_price($category_item->cat_price)|string_format:"%.2f"}
+  	</td>
+	</tr>
+	{/cart->items}
+
+	}
 	private function getPlaceMap(){
 		if(!isset($this->request['category_id'])){
 			return false;

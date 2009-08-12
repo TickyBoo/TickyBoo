@@ -54,7 +54,7 @@
 			<tr>
 				<td align="left"></td>
 				<td class='' align='right'>
-				  	<button type="button" id="clear-button">{!clear_selection!}</button>&nbsp;
+				 	<button type="button" id="clear-button">{!clear_selection!}</button>&nbsp;
 					<button type="submit" id="continue" name='submit' value='submit'>{!add_tickets!}</button>
 				</td>
 			</tr>
@@ -80,27 +80,27 @@
 	  	</div>
 	</div> 
 <div id="continue-div" style="width:100%; overflow:auto;"></div>
-<div id="seat-chart"></div>
+<div id="seat-chart" title='{!select_seat!}'></div>
 <br />
-<table width='100%'>
-	<tr>
+  <table width='100%'>
+  	<tr>
     	<td valign='top'  width='50%'>
        		{include file='user.tpl'}
      	</td>
      	<td valign='top' align='right'>
 		   	<table id='handling-table' width='90%' cellpadding="5" bgcolor='white'>
-				<thead>
-					<tr>
-		    	  		<td colspan='3' class='title' align='left'>{!handlings!}</td>
+  				<thead>
+  					<tr>
+  	  		    <td colspan='3' class='title' align='left'>{!handlings!}</td>
 		    		</tr>
 		     	</thead>
 		    	<tbody>
-					{include file='checkout_preview.tpl'}
+  					{include file='checkout_preview.tpl'}
 		    	</tbody>
 		    </table>
    		</td>
-	</tr>
-</table>
+  	</tr>
+  </table>
 <br />
 <table width='100%'>
 	<tr>
@@ -109,12 +109,15 @@
     	</td>
   	</tr>
 </table>
-<button type='submit' name='submit' value='{!order_it!}'>{!order_it!}</button>
-{* update->view event_date=$min_date user=user->user_id *}
-{if $update_view.can_reserve }
-         &nbsp;
-	<button type='submit' name='submit_reserve' value='{!reserve!}'>{!reserve!}</button>
-{/if}
-<br/><br/>
- 
 </form>
+
+<form method='POST' id='checkout' action='checkout.php'>
+<button type='submit' name='submit' value='xyz'>{!order_it!}</button>
+{* update->view event_date=$min_date user=user->user_id *}
+{* if $update_view.can_reserve *}
+         &nbsp;
+	<button type='submit' name='submit_reserve' value='byta'>{!reserve!}</button>
+{* /if *}
+
+</form>
+
