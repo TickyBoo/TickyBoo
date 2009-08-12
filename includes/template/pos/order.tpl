@@ -60,25 +60,10 @@
 			</tr>
 		</tbody>
 	</table>
-  	<br />
-	<div style='border:1px solid #840; width:100%'>
-	  	<table width="100%" >
-	  		<thead>
-				<tr class='festival'>
-					<th class='festival' width='102'>{!expires_in!}</th>
-	    			<th class='festival'>{!event!}</th>
-	  				<th class='festival' width='235'>{!tickets!}</th>
-	  				<th class='festival' width='102'>{!total!}</th>
-	  			</tr>
-			</thead>
-		</table>
-	    <div style='overflow-y: scroll; height: 95px;  width:100%'>
-	  		<table id="cart-table" width="100%" > 
-	  			<tbody>
-	  			</tbody>
-	  		</table>
-	  	</div>
-	</div> 
+ 	<br />
+
+  <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
+  
 <div id="continue-div" style="width:100%; overflow:auto;"></div>
 <div id="seat-chart" title='{!select_seat!}'></div>
 <br />

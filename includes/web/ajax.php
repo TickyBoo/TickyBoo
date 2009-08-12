@@ -43,7 +43,16 @@
  * JSON is 'Object Notifaction'
  * 
  */
- 
+
+$fond = 0;
+
+if($_REQUEST['pos']) {
+  require_once ( 'pos_template.php');
+} else {
+  require_once ( 'template.php');
+}
+
+
 if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
 	require_once ( "../includes/config/init_common.php" );
 	

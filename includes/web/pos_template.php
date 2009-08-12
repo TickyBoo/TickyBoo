@@ -61,7 +61,7 @@ $smarty = new Smarty;
 $_SHOP->smarty = $smarty;
 
 $gui    = new Gui_smarty($smarty);
-$cart   = new MyCart_Smarty( $smarty );
+$cart = new MyCart_Smarty( $smarty );
 $user   = new User_Smarty( $smarty );
 $order  = new Order_Smarty( $smarty );
 $update = new Update_Smarty($smarty);

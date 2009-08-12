@@ -3,7 +3,31 @@ var refreshTimer;
 var eventData = new Object();
 
 var loadOrder = function(){
-	
+
+	$('#cart_table').jqGrid({
+		url:'ajax.php',
+		datatype: 'json',
+		mtype: 'POST',
+		postData: {"pos":true,"action":"CartInfo"},
+		colNames: ['expire_in','Event','Count','Tickets','Price','Total'],
+		colModel :[
+			{name:'expire_in',    index:'expire_in',    width:102, sortable:false },
+			{name:'Event',    index:'Event',    width:245, sortable:false },
+			{name:'Count',  index:'Count',  width:52, align:'right', sortable:false},
+			{name:'Tickets',   index:'Tickets',   width:205, sortable:false},
+			{name:'user_city',  index:'user_city',  width:55, align:'right', sortable:false},
+			{name:'user_email', index:'user_email', width:102, align:'right', sortable:false }],
+		altRows: true,
+		height: 150,
+		hiddengrid : true,
+		footerrow : false,
+		viewrecords: true,
+		gridComplete:  function(){
+      $('#cart_table td').addClass('payment_form');
+//      $('#cart_table td').attr( 'valign', 'top');
+    }
+    });
+    
  	refreshOrder();
  	updateEvents();
  	
@@ -141,17 +165,10 @@ var loadOrder = function(){
 }
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
-	ajaxQManager.add({
-  		type: "POST",
-    	url: "index.php",
-    	data: {ajax:'yes',page:"cart_content"},
-    	cache:false,
-    	success: function(html){
-    		$("#cart-table tbody:first").html(html);
+  $('#cart_table').trigger("reloadGrid");
 //    		refreshHandling();   //Update handing info
-    	}
-	});
 }
+
 /*
 //The refresh handlingpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshHandling = function(){
