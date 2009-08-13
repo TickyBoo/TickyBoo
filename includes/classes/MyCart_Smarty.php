@@ -330,7 +330,10 @@ class MyCart_Smarty {
 
       // add place in cart.
       $res=$cart->add_place($event_id, $category_id, $places_id);
-
+      If ($discount_id >0) {
+        $discounts = array_fill(0,count($places_id),$discount);
+        echo ($res->set_discounts(0,0,0,$discounts));
+      }
       $cart->load_info();
 
       $_SESSION['_SMART_cart']=$cart;

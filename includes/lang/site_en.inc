@@ -1142,7 +1142,7 @@ define('both','both');
 define('rows','rows');
 ?>
 <?php
-define('Discount_for','Discount_for');
+define('Discount_for','With Discount:');
 ?>
 <?php
 define('ID','ID');

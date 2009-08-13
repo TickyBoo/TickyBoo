@@ -1,3 +1,4 @@
+{include file="header.tpl"}
 <script type="text/javascript">
 {literal}
 	$(document).ready(function(){
@@ -106,4 +107,6 @@
 {* /if *}
 
 </form>
+<br> <br>
 
+{include file="footer.tpl"}

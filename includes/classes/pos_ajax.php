@@ -275,8 +275,7 @@ class PosAjax {
       $seat_item_id  = $seat_item->id;
       $seats_ids     = $seat_item->places_id;
       $seats_nr      = $seat_item->places_nr;
-  		$disc          = $seat_item->discounts[reset($seats_ids)];
-
+      $disc          = ($seat_item->discounts)?$seat_item->discounts[0]: 0;
       $seatinfo = '';
 
       if($category_item->cat_numbering=='rows'){
@@ -297,9 +296,18 @@ class PosAjax {
       if ($seat_item->is_expired()) {
           $col = "<font color='red'>".con('expired').'</font>';
     	} else {
-    	    $col = "<img src='images/clock.gif' valign='middle' align='middle'>".$seat_item->ttl()." min.";
+    	    $col = "<img src='images/clock.gif' valign='middle' align='middle'> ".$seat_item->ttl()." min.";
       }
-    $row = array($col);
+      $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST'>".
+           "<input type='hidden' value='remove' name='action' />".
+   		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
+    		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
+    		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
+    		 	 "<span onclick='form.remove{$seat_item_id}.submbit()' class='ui-icon ui-icon-circle-close' title='".con('remove')."'></span>". $col.
+			     "</form> ";
+//  			 "<input type='hidden' value='remove" name="action" />
+
+      $row = array($col);
       $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}\n{$event_item->event_date} - {$event_item->event_time}";
       $row[] = count($seats_ids);
       $col = "{$category_item->cat_name}";
@@ -307,7 +315,7 @@ class PosAjax {
         $col = "<acronym title='{$seatinfo}'>$col</acronym>";
       }
   		if ($disc) {
-   	    $col .= '<br> <i>'.$disc->discount_name.'</i>';
+   	    $col .= "\n<i>".con('Discount_for')." ".$disc->discount_name.'</i>';
       }
       $row[] = $col;
   		if ($disc) {
