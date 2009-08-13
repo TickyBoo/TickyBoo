@@ -296,15 +296,15 @@ class PosAjax {
       if ($seat_item->is_expired()) {
           $col = "<font color='red'>".con('expired').'</font>';
     	} else {
-    	    $col = "<img src='images/clock.gif' valign='middle' align='middle'> ".$seat_item->ttl()." min.";
+    	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
       }
       $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST'>".
            "<input type='hidden' value='remove' name='action' />".
    		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
     		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
     		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
-    		 	 "<span onclick='form.remove{$seat_item_id}.submbit()' class='ui-icon ui-icon-circle-close' title='".con('remove')."'></span>". $col.
-			     "</form> ";
+           "<input type='submit' class='ui-icon ui-icon-circle-close' style='display: inline; cursor: pointer; border: 0px' title='".con('remove')."' class='' value='"."' /> ".$col.
+			     "</form>";
 //  			 "<input type='hidden' value='remove" name="action" />
 
       $row = array($col);
