@@ -8,19 +8,20 @@ var loadUser = function(mycolNames){
 		postData: {"pos":true,"action":"UserSearch"},
 		colNames: mycolNames,
 		colModel :[
-			{name:'user_id',    index:'User_id',    width:52},
-			{name:'user_name',  index:'user_name',  width:152},
-			{name:'user_zip',   index:'user_zip',   width:102},
-			{name:'user_city',  index:'user_city',  width:235},
-			{name:'user_email', index:'user_email', width:202} ],
+			{name:'user_id',    index:'User_id',    width:52 , sortable:false, hidden: true},
+			{name:'user_name',  index:'user_name',  width:152, sortable:false, resizable: false},
+			{name:'user_zip',   index:'user_zip',   width:102, sortable:false, resizable: false},
+			{name:'user_city',  index:'user_city',  width:235, sortable:false, resizable: false},
+			{name:'user_email', index:'user_email', width:202, sortable:false, resizable: false} ],
 		altRows: true,
-		height: 250,
+		height: 200,
+
 		hiddengrid : true,
 		footerrow : false,
 		viewrecords: false
     });
 	
-	$('#user_info_none').change(function(){
+	$('#user_info_none').click(function(){
     	$("#user_data :input").each(function() {
         	$(this).val('');
       	});
@@ -29,7 +30,7 @@ var loadUser = function(mycolNames){
       $('#user_id').val(-1);
     });
 	
-	$('#user_info_search').change(function(){
+	$('#user_info_search').click(function(){
     	$('#search_user').show();
     	$('#user_data').show();
     	
@@ -38,7 +39,7 @@ var loadUser = function(mycolNames){
      	}
     });
 	
-	$('#user_info_new').change(function(){
+	$('#user_info_new').click(function(){
     	$('#search_user').hide();
     	$('#user_data').show();
       	if (($('#user_id').val() <=0) || confirm('Are you sure you want to create a new user?')) {
@@ -56,49 +57,54 @@ var loadUser = function(mycolNames){
 		bgiframe: false,
 		autoOpen: false,
 		height: 'auto',
-		width: 'auto',
+		width: '775',
 		modal: true,
 		resizable  : false,
 		buttons: {
     		'Cancel': function() {
 				$(this).dialog('close');
 			 },
-      		'Ok': function() {
-         		var selrow = $('#users_table').getGridParam("selrow");
-   			 	ajaxQManager.add({
-					type:		"POST",
-					url:		"ajax.php",
-					dataType:	"json",
-					data:		{"pos":true,"action":"UserData",'user_id':selrow},
-					success:function(data, status){
-              			$.each(data.user, function(i,item){
-                 			$("#"+i).val(item);
-              			});
- 						$("#search-dialog").dialog('close');
-           			}
-			  	});
+  		  'Ok': function() {
+         	var selrow = $('#users_table').getGridParam("selrow");
+         	if (selrow != null) {
+     			 	ajaxQManager.add({
+  					type:		"POST",
+  					url:		"ajax.php",
+  					dataType:	"json",
+  					data:		{"pos":true,"action":"UserData",'user_id':selrow},
+  					success:function(data, status){
+                			$.each(data.user, function(i,item){
+                   			$("#"+i).val(item);
+                			});
+   						$("#search-dialog").dialog('close');
+             			}
+  			  	});
+          } else {
+            alert('You need to select a user first.');
+          }
 		  	}
 		}
 	});
-  	$('#search_user').click(function() {
-    	var i=3;
+
+  $('#search_user').click(function() {
+    	var i=0;
     	var data = $('#users_table').getGridParam('postData');
     	$('#users_table').clearGridData();
     	$("#user_data :input").each(function() {
       	if ($(this).attr("name") != 'user_id') {
- //       		data[$(this).attr("name")] = $(this).val();
+        		data[$(this).attr("name")] = $(this).val();
          		if ($(this).val().length >1 ) {
          			i++;
          		}
      	  	}
       	});
     	if ( i >2) {
-//        $('#users_table').setGridParam('postData', data);
+        $('#users_table').setGridParam('postData', data);
         $('#users_table').trigger("reloadGrid");
         $("#search-dialog").dialog('open');
     	} else {
-			alert('You need to fill atliest 3 personal address fields,\n with minimal 2 characters, before you can search.');
-      	}
+	  		alert('You need to fill atliest 3 personal address fields,\n with minimal 2 characters, before you can search.');
+     	}
 	});
 }
 

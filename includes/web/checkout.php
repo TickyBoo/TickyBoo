@@ -208,7 +208,8 @@ die();
     } else {
        $user_id = $_POST['user_id'];
     }
-    return $this->confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
+    $return = $this->confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
+    return ($return == 'checkout_preview')?'order':$return;
   }
   
 	function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
@@ -292,7 +293,7 @@ die();
     return;
   }
 
-  function  acceptaction($smarty) {
+  function acceptaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],nil);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
     if($test < 1) {

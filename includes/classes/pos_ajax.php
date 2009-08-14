@@ -225,8 +225,8 @@ class PosAjax {
     $data[]=array($event_item,$cat_item,$place_item);
   }
 
-	/**
-	 * PosAjax::getCategories()
+	/*
+	 * PosAjax::getCartInfo()
 	 *
 	 * @param categories_only (true|false) will only return the categories if set true else grabs discounts too.
 	 *
@@ -298,24 +298,26 @@ class PosAjax {
     	} else {
     	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
       }
-      $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST'>".
+      $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST' style='padding:0; margin: 0;>".
            "<input type='hidden' value='remove' name='action' />".
    		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
     		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
     		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
-           "<input type='submit' class='ui-icon ui-icon-circle-close' style='display: inline; cursor: pointer; border: 0px' title='".con('remove')."' class='' value='"."' /> ".$col.
+           "<button type='submit' class='ui-widget-content jqgrow' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px'> ".
+             "<img src='images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
+           $col.
 			     "</form>";
 //  			 "<input type='hidden' value='remove" name="action" />
 
       $row = array($col);
-      $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}\n{$event_item->event_date} - {$event_item->event_time}";
+      $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}<br>{$event_item->event_date} - {$event_item->event_time}";
       $row[] = count($seats_ids);
       $col = "{$category_item->cat_name}";
       if ($seatinfo) {
         $col = "<acronym title='{$seatinfo}'>$col</acronym>";
       }
   		if ($disc) {
-   	    $col .= "\n<i>".con('Discount_for')." ".$disc->discount_name.'</i>';
+   	    $col .= "<br><i>".con('Discount_for')." ".$disc->discount_name.'</i>';
       }
       $row[] = $col;
   		if ($disc) {

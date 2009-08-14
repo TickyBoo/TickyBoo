@@ -25,7 +25,7 @@
  * clear to you.
  */
  *}
-<form name='f' action='index.php' method='post'>
+<form name='f' action='view.php' method='post'>
 <table width='700' align="center">
   <tr>
   	<td class='title' colspan='5' align='center'>
@@ -96,7 +96,7 @@
 		    <font color='#cccccc'>{!cancelled!}</font>
 		  {elseif $shop_order.order_status eq "reemit"}
 		    <font color='#ffffcc'>{!reemitted!}</font>
-		    (<a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
+		    (<a href='view.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
 		    {$shop_order.order_reemited_id}</a>)
 		  {/if}
 		  </td>
@@ -248,7 +248,7 @@
   </tr>
   	<tr>
 	  	<td>Notes about order and tickets:<br />
-			<form name='f' action='index.php' method='post'>
+			<form name='f' action='view.php' method='post'>
 	  			<input type="hidden" name="process" value="sent" />
 	  			<input type="hidden" name="action" value="update_note" />
 	  			<input type="hidden" name="order_id" value="{$shop_order.order_id}" />

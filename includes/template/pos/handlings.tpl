@@ -41,7 +41,7 @@
           {else}
              {assign var=checked value=""}
           {/if}
-    		  <input {$checked} type='radio' id='handling' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}'>
+    		  <input {$checked} type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}'>
   		  </td>
   		  <td class='payment_form'>
   		  	<label for='{$shop_handling.handling_id}_check'>
@@ -49,7 +49,7 @@
     		  	{!shipment!}: {eval var=$shop_handling.handling_text_shipment}
   		  	</label>
   		  </td>
-  		  <td  class='view_cart_td'  valign='top'  align='right' width='100'>
+  		  <td  class='view_cart_td'  valign='top'  align='right' width='100' id='price_{$shop_handling.handling_id}'>
      			{assign var=fee value="`$total_price*$shop_handling.handling_fee_percent/100.00`"}
      			{assign var=fee value="`$fee+$shop_handling.handling_fee_fix`"}
      			{if $fee neq 0.00}
@@ -65,7 +65,7 @@
      	<td class='view_cart_total' colspan='2'>
       	{!total_price!}
     	</td>
-    	<td class='view_cart_total' align='right'>
+    	<td class='view_cart_total' align='right' id='total_price'>
         {valuta value=$total_price|string_format:"%.2f"}
     	</td>
    	</tr>

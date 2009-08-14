@@ -180,6 +180,6 @@
   </td>
 </tr>
 <tr>
-	<td colspan="2" width='33%' align="left" bgcolor="lightgrey" ><a href="index.php?process=on">Back to {!pos_currenttickets!}</a></td>
+	<td colspan="2" width='33%' align="left" bgcolor="lightgrey" ><a href="view.php?process=on">Back to {!pos_currenttickets!}</a></td>
 </tr>
 </table>

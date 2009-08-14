@@ -11,15 +11,16 @@ var loadOrder = function(){
 		postData: {"pos":true,"action":"CartInfo"},
 		colNames: ['expire_in','Event','Count','Tickets','Price','Total'],
 		colModel :[
-			{name:'expire_in',    index:'expire_in',    width:102, sortable:false },
-			{name:'Event',    index:'Event',    width:245, sortable:false },
-			{name:'Count',  index:'Count',  width:52, align:'right', sortable:false},
-			{name:'Tickets',   index:'Tickets',   width:205, sortable:false},
-			{name:'user_city',  index:'user_city',  width:55, align:'right', sortable:false},
-			{name:'user_email', index:'user_email', width:102, align:'right', sortable:false }],
+			{name:'expire_in',  index:'expire_in',  width:102, sortable:false },
+			{name:'Event',      index:'Event',      width:245, sortable:false, resizable: false },
+			{name:'Count',      index:'Count',      width:52,  sortable:false, resizable: false, align:'right' },
+			{name:'Tickets',    index:'Tickets',    width:205, sortable:false, resizable: false                },
+			{name:'user_city',  index:'user_city',  width:55,  sortable:false, resizable: false, align:'right',formatter:'currency' },
+			{name:'user_email', index:'user_email', width:102, sortable:false, resizable: false, align:'right',formatter:'currency' }],
 		altRows: true,
 		height: 150,
 		hiddengrid : true,
+		hoverrows : false,
 		footerrow : false,
 		viewrecords: true,
 		gridComplete:  function(){
@@ -83,7 +84,7 @@ var loadOrder = function(){
 		if(eventId <= 0){
 			$("#cat-select").html("<option value='0'></option>");
 			$("#discount-name").hide();
-			$("#discount-select").hide().html("<option value='0'></option>");
+			$("#discount-select").html("<option value='0'></option>");//hide().
 			return false;
 		}
 		if(eventId > 0){
@@ -111,14 +112,14 @@ var loadOrder = function(){
 						$("#discount-select").show();
 					}else{
 						$("#discount-name").hide();
-						$("#discount-select").hide().html("<option value='0'></option>");
+						$("#discount-select").html("<option value='0'></option>"); //hide().
 					}
 				}	
 			});
 		}else{
 			$("#cat-select").html("<option value='0'></option>");
 			$("#discount-name").hide();
-			$("#discount-select").hide().html("<option value='0'></option>");
+			$("#discount-select").html("<option value='0'></option>");//hide().
 		}
 	});
 	
@@ -139,7 +140,7 @@ var loadOrder = function(){
 	// All fields are reset.
 	$('#clear-button').click(function(){
 		$("#cat-select").html("<option value='0'></option>");
-		$("#discount-select").hide().html("<option value='0'></option>");
+		$("#discount-select").html("<option value='0'></option>");//hide().
 		$("#discount-name").hide();
 		$("#seat-qty").hide();
 		$("#seat-chart").html("");

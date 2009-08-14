@@ -34,10 +34,10 @@
 					</select>
 				</td>
 			</tr>
-			<tr id='discount-name' style="display:none;">
+			<tr id='discount-name' {* style="display:none;" *}>
 				<td class='user_item' >{!discounts!}:</td>
 				<td class='user_value'>
-					<select name='discount_id' id='discount-select' style="display:none; width:250px;">
+					<select name='discount_id' id='discount-select' style="width:250px;"> {*display:none;      *}
 						<option value='0'></option>
 					</select>
 				</td>
@@ -63,7 +63,7 @@
 	</table>
  	<br />
 
-  <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
+  <table id="cart_table" class="scroll" cellpadding="2" cellspacing="2"></table>
   
 <div id="continue-div" style="width:100%; overflow:auto;"></div>
 <div id="seat-chart" title='{!select_seat!}'></div>
@@ -80,8 +80,8 @@
   	  		    <td colspan='3' class='title' align='left'>{!handlings!}</td>
 		    		</tr>
 		     	</thead>
-		    	<tbody>
-  					{include file='checkout_preview.tpl'}
+		    	<tbody id='handling-block'>
+  					{include file='handlings.tpl'}
 		    	</tbody>
 		    </table>
    		</td>

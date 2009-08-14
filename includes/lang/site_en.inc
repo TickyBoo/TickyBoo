@@ -1160,7 +1160,7 @@ define('new_partron','New');
 define('user_name','user_name');
 ?>
 <?php
-define('exst_user','exst_user');
+define('exst_user','Existing');
 ?>
 <?php
 define('ideal','ideal');
