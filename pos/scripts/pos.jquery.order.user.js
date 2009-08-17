@@ -2,7 +2,7 @@ var loadUser = function(mycolNames){
 	$('#search_user').hide();
 
 	$('#users_table').jqGrid({
-		url:'ajax.php',
+		url:'ajax.php?x=users',
 		datatype: 'json',
 		mtype: 'POST',
 		postData: {"pos":true,"action":"UserSearch"},
@@ -69,7 +69,7 @@ var loadUser = function(mycolNames){
          	if (selrow != null) {
      			 	ajaxQManager.add({
   					type:		"POST",
-  					url:		"ajax.php",
+  					url:		"ajax.php?x=getuser",
   					dataType:	"json",
   					data:		{"pos":true,"action":"UserData",'user_id':selrow},
   					success:function(data, status){
@@ -89,6 +89,7 @@ var loadUser = function(mycolNames){
   $('#search_user').click(function() {
     	var i=0;
     	var data = $('#users_table').getGridParam('postData');
+    	alert('test');
     	$('#users_table').clearGridData();
     	$("#user_data :input").each(function() {
       	if ($(this).attr("name") != 'user_id') {

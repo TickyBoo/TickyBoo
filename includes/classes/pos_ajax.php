@@ -230,22 +230,6 @@ class PosAjax {
 	 *
 	 * @param categories_only (true|false) will only return the categories if set true else grabs discounts too.
 	 *
-	 * Will return:
-	 *  - categories
-	 * 		|- id (number)
-	 * 			|- html (category option)
-	 * 			|- numbering (true|false)
-	 * 			|- placemap (placemap html)
-	 * 			 - price (number)
-	 * 		|- id.. (number)
-	 * |- enable_discounts (true|false)
-	 * |- discounts
-	 * 		|- id (number)
-	 * 			|- html (discount option)
-	 * 			|- type (fixed|percent)
-	 * 			 - price (number)
-	 * 		|- id.. (number)
-	 *
 	 * @return boolean as to whether the JSON should be compiled or not.
 	 */
 
@@ -257,17 +241,15 @@ class PosAjax {
     $this->json['records'] = 0;
     $this->json['userdata'] = array();
     $mycart=$_SESSION['_SMART_cart'];
-    if(!$mycart or $cart->is_empty_f()){
-      return true;
-    }else{
+    $cart_list  =array();
+    if($mycart and !$cart->is_empty_f()){
       $mycart->load_info();
+      $mycart->iterate(array(&$this,'_pre_items'),$cart_list);
     }
 
 
-    $cart_list  =array();
-    $mycart->iterate(array(&$this,'_pre_items'),$cart_list);
-
-
+    $counter  = 0;
+    $subprice = 0.0;
     foreach ($cart_list as $cart_row) {
       $event_item    = $cart_row[0];
       $category_item = $cart_row[1];
@@ -298,13 +280,15 @@ class PosAjax {
     	} else {
     	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
       }
-      $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST' style='padding:0; margin: 0;>".
+      $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST'
+       style='padding:0; margin: 0;'>".
            "<input type='hidden' value='remove' name='action' />".
    		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
     		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
     		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
-           "<button type='submit' class='ui-widget-content jqgrow' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px'> ".
-             "<img src='images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
+           "<button type='submit' class='ui-widget-content jqgrow'
+                    style='display: inline; cursor: pointer; padding:0; margin: 0; border: 0px'> ".
+           "<img src='images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
            $col.
 			     "</form>";
 //  			 "<input type='hidden' value='remove" name="action" />
@@ -321,14 +305,38 @@ class PosAjax {
       }
       $row[] = $col;
   		if ($disc) {
-     	 	$row[] = $disc->apply_to($category_item->cat_price);
+     	 	$row[] = valuta($disc->apply_to($category_item->cat_price));
   		} else {
-     		$row[] = $category_item->cat_price;
+     		$row[] = valuta($category_item->cat_price);
   		}
-  		$row[] = $seat_item->total_price($category_item->cat_price);
+  		$subprice += $seat_item->total_price($category_item->cat_price);
+  		$row[] = valuta($seat_item->total_price($category_item->cat_price));
 
   		$this->json['rows'][] = array('id'=> "{$event_item->event_id}|{$category_item->cat_id}|{$seat_item_id}", 'cell'=> $row);
+  		$counter++ ;
 		}
+    $sql = 'SELECT `handling_id`, `handling_fee_fix`, `handling_fee_percent`
+            FROM `Handling`
+            WHERE handling_sale_mode LIKE "%sp%"';
+
+ 		if(check_event($cart->min_date_f())){
+			$sql .= " and handling_alt <= 3";
+		} else {
+   		$sql .= " and handling_alt_only='No'";
+		}
+
+    $res=ShopDB::query($sql);
+    $totalprice = $subprice;
+    $handlings = array();
+    while ($pay=shopDB::fetch_array($res)){
+      $fee = ($subprice*is($pay['handling_fee_percent'],0.0)/100.00) + is($pay['handling_fee_fix'],0.0);
+      $totalprice += ((!$counter)?0:$fee);
+ 			$fee = ($fee == 0.00)? '': '+ '.valuta($fee);
+      $handlings[] = array('index'=>"#price_{$pay['handling_id']}", 'value'=>$fee);
+    }
+    $this->json['userdata']['handlings'] = $handlings;
+    $this->json['userdata']['total'] = valuta($totalprice);
+    
 		return true;
 	}
 	

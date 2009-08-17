@@ -50,31 +50,41 @@
   		  	</label>
   		  </td>
   		  <td  class='view_cart_td'  valign='top'  align='right' width='100' id='price_{$shop_handling.handling_id}'>
-     			{assign var=fee value="`$total_price*$shop_handling.handling_fee_percent/100.00`"}
+{*     			{assign var=fee value="`$total_price*$shop_handling.handling_fee_percent/100.00`"}
      			{assign var=fee value="`$fee+$shop_handling.handling_fee_fix`"}
      			{if $fee neq 0.00}
            + {gui->valuta value=$fee|string_format:"%.2f"}
           {/if}
       	  {if $smarty.post.handling_id eq $shop_handling.handling_id}
        			{assign var=total_price value="`$total_price+$fee`"}
-          {/if}
+          {/if} *}
   		  </td>
   		</tr>
     {/handling}
+    <tr>
+      <td class='user_item' height='16' colspan='2'>
+         {!without_fee!}
+      </td>
+      <td  class='user_value'>
+        <input type='checkbox' class='checkbox' name='no_fee' value='1'>
+      </td>
+    </tr>
+
+  	{if !$update_view.currentres}
+      {assign var=errstyle value='style="display:none;"'}
+  	{/if}
+		<tr class="err" {$errstyle} >
+			<td colspan="3">
+ 			  {*$update_view.maxres*}
+ 			  {!limit!} <br>
+			</td>
+		</tr>
   	<tr>
      	<td class='view_cart_total' colspan='2'>
       	{!total_price!}
     	</td>
     	<td class='view_cart_total' align='right' id='total_price'>
-        {valuta value=$total_price|string_format:"%.2f"}
+      {*  {valuta value=$total_price|string_format:"%.2f"} *}
     	</td>
    	</tr>
 
-  	{if $update_view.currentres}
-  		<tr class="{cycle values='TblHigher,TblLower'}">
-  			<td colspan="3">
-   			  {*$update_view.maxres*}
-   			  {!limit!}
-  			</td>
-  		</tr>
-  	{/if}

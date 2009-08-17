@@ -11,11 +11,11 @@
    <br />
 
 	<table width="100%" cellpadding='1' cellspacing='1' bgcolor='white' >
-    <tr>
+{*    <tr>
       <td colspan="2" class="title">
           {!pos_booktickets!}
       </td>
-    </tr>
+    </tr> *}
 		<tbody>
 			<tr>
 				<td width="120" class='user_item'>{!event!}:</td>
@@ -63,50 +63,60 @@
 	</table>
  	<br />
 
-  <table id="cart_table" class="scroll" cellpadding="2" cellspacing="2"></table>
-  
+
 <div id="continue-div" style="width:100%; overflow:auto;"></div>
 <div id="seat-chart" title='{!select_seat!}'></div>
+</form>
+
+<table id="cart_table" class="scroll" cellpadding="2" cellspacing="2"></table>
+
 <br />
   <table width='100%'>
   	<tr>
     	<td valign='top'  width='50%'>
-       		{include file='user.tpl'}
+          <form>
+         		{include file='user.tpl'}
+          </form>
      	</td>
      	<td valign='top' align='right'>
-		   	<table id='handling-table' width='90%' cellpadding="5" bgcolor='white'>
-  				<thead>
-  					<tr>
-  	  		    <td colspan='3' class='title' align='left'>{!handlings!}</td>
-		    		</tr>
-		     	</thead>
-		    	<tbody id='handling-block'>
-  					{include file='handlings.tpl'}
-		    	</tbody>
-		    </table>
+        <form>
+  		   	<table id='handling-table' width='99%' cellspacing='2' cellpadding='2'  bgcolor='white'>
+    				<thead>
+    					<tr>
+    	  		    <td colspan='3' class='title' align='left'>{!handlings!}</td>
+  		    		</tr>
+  		     	</thead>
+  		    	<tbody id='handling-block'>
+    					{include file='handlings.tpl'}
+  		    	</tbody>
+  		    </table>
+        </form>
+
    		</td>
   	</tr>
   </table>
 <br />
 <table width='100%'>
 	<tr>
-    	<td  class='title' align='left'>
+    	<td class='title' align='left'>
       		{!ordertickets!}
     	</td>
   	</tr>
 </table>
 </div>
-</form>
 
 <form method='POST' id='checkout' action='checkout.php'>
-<button type='submit' name='submit' value='xyz'>{!order_it!}</button>
+  <button type='submit' name='submit_order' value='xyz'>{!order_it!}</button>
 {* update->view event_date=$min_date user=user->user_id *}
 {* if $update_view.can_reserve *}
          &nbsp;
 	<button type='submit' name='submit_reserve' value='byta'>{!reserve!}</button>
 {* /if *}
 
+  &nbsp;
+  <input type='submit' name='submit_cancel' value='{!cancel_order!}' onclick='return confirmSubmit()'>
 </form>
+
 <br> <br>
 
 {include file="footer.tpl"}

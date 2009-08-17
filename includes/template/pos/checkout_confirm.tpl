@@ -26,8 +26,6 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
-{include file="header.tpl" name=!order_reg! header=!tnx_order_mess!}
-
   <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
     {eval var=$shop_handling.handling_text_payment assign=test}
     {gui->view name=payment value=$test}
@@ -39,6 +37,5 @@
  </table><br>
    <a href='?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>printinvoice</a>
  <br>  <br>
- 
+
  {eval var=$confirmtext}
- {include file="footer.tpl"}

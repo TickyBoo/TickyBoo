@@ -164,6 +164,15 @@
   
   $_SHOP->mail_sendmail  = null;
 
+  $_SHOP->valutas  = array( 'EUR' => '&euro;',
+                            'AUD' => '&#36;',
+                            'CAD' => '&#36;',
+                            'USD' => '&#36;',
+                            'SGD' => '&#36;',
+                            'NZD' => '&#36;',
+                            'GBP' => '&pound;',
+                            'JPY' => '&yen;');
+
   require_once(INC.'config'.DS."init_config.php");
   
   $_SHOP->files_url=$_SHOP->root."files/";

@@ -52,14 +52,6 @@ class Gui_smarty {
 	var $gui_name_width  = '30%';
   var $errors     = array();
   public $guidata = array();
-  private $valutas = array( 'EUR' => '&euro;',
-                            'AUD' => '&#36;',
-                            'CAD' => '&#36;',
-                            'USD' => '&#36;',
-                            'SGD' => '&#36;',
-                            'NZD' => '&#36;',
-                            'GBP' => '&pound;',
-                            'JPY' => '&yen;');
 
   function __construct  (&$smarty){
 
@@ -586,15 +578,7 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
   {
     global $_SHOP;
 
-    if (isset($params['code'])) {
-      $valuta = $params['code'];
-    }
-    else {
-      $valuta = $_SHOP->organizer_data->organizer_currency;
-    }
-
-    $valuta = (isset($this->valutas[$valuta]))?$this->valutas[$valuta]:$valuta;
-    $valuta = (!empty($params['value']))?$valuta.' '.$params['value']:$params['value'].' '.$valuta;
+    $valuta = valuta($params['value'], $params['code']);
 
     if(!empty($params['assign'])){
       $smarty->assign($params['assign'],$valuta);
@@ -686,6 +670,13 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
 
 function smarty_modifier_clean($string, $type='ALL') {
   return clean($string, $type);
+}
+
+function valuta($value='', $code=null) {
+  global $_SHOP;
+  if (is_numeric($value)) { $value = number_format($value,2);}
+  $code = is($code,$_SHOP->organizer_data->organizer_currency);
+  return (isset($_SHOP->valutas[$code]))?$_SHOP->valutas[$code].' '.$value :$value.' '.$code;
 }
 
 ?>

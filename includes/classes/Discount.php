@@ -65,11 +65,28 @@ class Discount {
       $row['discount_event_id']
     );
   }
+
+  function load_all (){
+    $query="SELECT * FROM Discount";
+    if($res=ShopDB::query($query)){
+      $discounts = array();
+      while($event_d=shopDB::fetch_array($res)){
+        $discounts[]=new Discount (
+          $row['discount_id'],
+          $row['discount_type'],
+          $row['discount_value'],
+          $row['discount_name'],
+          $row['discount_event_id']
+        );
+      }
+      return $events;
+    }
+  }
   
   function apply_to ($price){
     if($this->discount_type=='fixe'){
       return $price-$this->discount_value;
-    }else if($this->discount_type=='percent'){
+    }elseif($this->discount_type=='percent'){
       return $price*(1.0-$this->discount_value/100.0);
     }else{
       user_error("unknown discount type ".$disc['discount_type']);
@@ -80,7 +97,7 @@ class Discount {
   function total_value ($price,$qty=1){
     if($this->discount_type=='fixe'){
       return $qty*$this->discount_value;
-    }else if($this->discount_type=='percent'){
+    }elseif($this->discount_type=='percent'){
       return $qty*$price*$this->discount_value/100.0;
     }else{
       user_error("unknown discount type ".$disc['discount_type']);

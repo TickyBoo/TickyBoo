@@ -32,6 +32,7 @@
  * clear to you.
  
  *}
+ {*
 <script type="text/javascript">
 {literal}
 $(document).ready(function(){
@@ -41,11 +42,10 @@ $(document).ready(function(){
  });
 {/literal}
 </script>
+*}
 
-
-  <table width='99%' border='0' cellspacing='1' cellpadding='5' align='left' >
+  <table width='99%' border='0' align='left' cellspacing='2' cellpadding='2'>
     <thead>
-    
     <tr>
       <td colspan="2" class="title">
           {!pers_info!}
@@ -90,14 +90,6 @@ $(document).ready(function(){
         {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
         <input type='hidden' id='user_id' name='user_id' value='-1'>
     </tbody>
-    <tr>
-      <td class='user_item' height='16' width='120'>
-         {!without_fee!}
-      </td>
-      <td  class='user_value'>
-        <input type='checkbox' class='checkbox' name='no_fee' value='1'>
-      </td>
-    </tr>
   </table>
   <div id="search-dialog" title="Personal Search dialog">
    	<table id="users_table" class="scroll" cellpadding="0" cellspacing="0"></table>

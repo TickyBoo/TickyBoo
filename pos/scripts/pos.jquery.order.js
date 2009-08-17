@@ -3,33 +3,50 @@ var refreshTimer;
 var eventData = new Object();
 
 var loadOrder = function(){
-
+	$("#seat-chart").dialog({
+		bgiframe: false,
+		autoOpen: false,
+		height: 'auto',
+		width: 'auto',
+		modal: true,
+		buttons: {'Close': function() {
+			$(this).dialog('close');
+			}
+		}
+	});
+    console.log('loadOrder');
+/*
 	$('#cart_table').jqGrid({
-		url:'ajax.php',
+		url:'ajax.php?x=cart',
 		datatype: 'json',
 		mtype: 'POST',
 		postData: {"pos":true,"action":"CartInfo"},
 		colNames: ['expire_in','Event','Count','Tickets','Price','Total'],
 		colModel :[
-			{name:'expire_in',  index:'expire_in',  width:102, sortable:false },
+			{name:'expire_in',  index:'expire_in',  width:100, sortable:false },
 			{name:'Event',      index:'Event',      width:245, sortable:false, resizable: false },
-			{name:'Count',      index:'Count',      width:52,  sortable:false, resizable: false, align:'right' },
-			{name:'Tickets',    index:'Tickets',    width:205, sortable:false, resizable: false                },
-			{name:'user_city',  index:'user_city',  width:55,  sortable:false, resizable: false, align:'right',formatter:'currency' },
-			{name:'user_email', index:'user_email', width:102, sortable:false, resizable: false, align:'right',formatter:'currency' }],
+			{name:'Count',      index:'Count',      width:55,  sortable:false, resizable: false, align:'right' },
+			{name:'Tickets',    index:'Tickets',    width:200, sortable:false, resizable: false                },
+			{name:'user_city',  index:'user_city',  width:55,  sortable:false, resizable: false, align:'right' },
+			{name:'user_email', index:'user_email', width:100, sortable:false, resizable: false, align:'right' }],
 		altRows: true,
-		height: 150,
+		height: 116,
+		width: 755,
 		hiddengrid : true,
 		hoverrows : false,
 		footerrow : false,
-		viewrecords: true,
 		gridComplete:  function(){
       $('#cart_table td').addClass('payment_form');
-//      $('#cart_table td').attr( 'valign', 'top');
+      var data = $('#cart_table').getGridParam("userData");
+			$.each(data.handlings,function(index, domElement){
+		   	$(this.index).html(this.value);
+      });
+      $('#total_price').html(data.total);
+
     }
     });
-    
- 	refreshOrder();
+*/
+// 	refreshOrder();
  	updateEvents();
  	
  	$('#event-from').datepicker({
@@ -54,43 +71,13 @@ var loadOrder = function(){
  	$('#event-to').change(function(){
  		updateEvents();
  	});
-	/*
-	$("#event-input").autocomplete('index.php?ajax=yes&page=get_events', {
-		autoFill:true,
-		cacheLength:1,
-		width: 400,
-		multiple: false,
-		matchContains: true,
-		minChars:0,
-		mustMatch:false,
-		formatItem: formatItem,
-		formatResult: formatResult,
-		selectFirst:false
-	});
-	*/
-	$("#seat-chart").dialog({
-		bgiframe: false,
-		autoOpen: false,
-		height: 'auto',
-		width: 'auto',
-		modal: true,
-		buttons: {'Close': function() {
-			$(this).dialog('close');
-			}
-		}
-	});
+
 	$("#event-id").change(function() {
 		var eventId = $(this).val();
-		if(eventId <= 0){
-			$("#cat-select").html("<option value='0'></option>");
-			$("#discount-name").hide();
-			$("#discount-select").html("<option value='0'></option>");//hide().
-			return false;
-		}
 		if(eventId > 0){
 			ajaxQManager.add({
 				type:		"POST",
-				url:		"ajax.php",
+				url:		"ajax.php?x=cat",
 				dataType:	"json",
 				data:		{"pos":true,"action":"categories","event_id":eventId},
 				success:function(data, status){
@@ -128,8 +115,7 @@ var loadOrder = function(){
 			
 			var catId = $("#cat-select").val();
 			updateSeatChart();
-			//$("#continue").attr("type","submit");
-		}	
+		}
 	});
 	
 	//Creates a auto refreshing function.
@@ -164,32 +150,11 @@ var loadOrder = function(){
 		return false;
 	});
 }
+
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
   $('#cart_table').trigger("reloadGrid");
-//    		refreshHandling();   //Update handing info
 }
-
-/*
-//The refresh handlingpage, the ajax manager SHOULD ALLWAYS be used where possible.
-var refreshHandling = function(){
-
-  var handlingId = $("#handling:checked").val(); //"").val();;
-	ajaxQManager.add({
-		type: "POST",
-    	url: "index.php",
-    	data: {ajax:'yes',page:"checkout_preview", handling_id: handlingId},
-    	cache:false,
-    	success: function(html){
-    		$("#handling-table tbody:first").html(html);
-    		$(":input[@name='handling']").change(function(){
-          $(":input[@name='handling']").unbind( "change");
-          refreshHandling();   //Update handing info
-        });
-    	}
-	});
-}
-*/
 
 //refreshSeatChart
 var refreshCategories = function(){
@@ -198,7 +163,7 @@ var refreshCategories = function(){
 		
 		ajaxQManager.add({
 			type:		"POST",
-			url:		"ajax.php",
+			url:		"ajax.php?x=cat2",
 			dataType:	"json",
 			data:		{"pos":true,"action":"categories","categories_only":true,"event_id":eventId},
 			success:function(data, status){
@@ -232,7 +197,7 @@ var updateEvents = function(){
 	
 	ajaxQManager.add({
 		type:		"POST",
-		url:		"ajax.php",
+		url:		"ajax.php?x=event",
 		dataType:	"json",
 		data:		{pos:true,action:"events",datefrom:dateFrom,dateto:dateTo},
 		success:function(data, status){
@@ -250,8 +215,10 @@ var updateEvents = function(){
 }
 var seatCount = 0;
 var bindSeatChart = function(){
+  console.log('bindSeatChart');
 	$("#show-seats").show();
 	$("#show-seats button").click(function(){
+	  console.log('#show-seats button');
 		$("#seat-chart").dialog('open');
 	});
 	$("#seat-chart > input").click(function(){
