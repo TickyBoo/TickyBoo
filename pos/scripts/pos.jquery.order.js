@@ -14,8 +14,17 @@ var loadOrder = function(){
 			}
 		}
 	});
-    console.log('loadOrder');
-/*
+
+	$("#order_action").dialog({
+		bgiframe: false,
+		autoOpen: false,
+		height: 'auto',
+		width: 'auto',
+		modal: true,
+		buttons: {}
+
+	});
+
 	$('#cart_table').jqGrid({
 		url:'ajax.php?x=cart',
 		datatype: 'json',
@@ -24,10 +33,10 @@ var loadOrder = function(){
 		colNames: ['expire_in','Event','Count','Tickets','Price','Total'],
 		colModel :[
 			{name:'expire_in',  index:'expire_in',  width:100, sortable:false },
-			{name:'Event',      index:'Event',      width:245, sortable:false, resizable: false },
+			{name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
 			{name:'Count',      index:'Count',      width:55,  sortable:false, resizable: false, align:'right' },
-			{name:'Tickets',    index:'Tickets',    width:200, sortable:false, resizable: false                },
-			{name:'user_city',  index:'user_city',  width:55,  sortable:false, resizable: false, align:'right' },
+			{name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
+			{name:'user_city',  index:'user_city',  width:70,  sortable:false, resizable: false, align:'right' },
 			{name:'user_email', index:'user_email', width:100, sortable:false, resizable: false, align:'right' }],
 		altRows: true,
 		height: 116,
@@ -45,7 +54,6 @@ var loadOrder = function(){
 
     }
     });
-*/
 // 	refreshOrder();
  	updateEvents();
  	
@@ -121,7 +129,13 @@ var loadOrder = function(){
 	//Creates a auto refreshing function.
 	refreshTimer = setInterval(function(){refreshOrder();}, 120000);
 	
-	
+	$("input:radio[name='handling_id']").click(function(){
+    refreshOrder();
+  });
+	$('#no_fee').click(function(){
+	  refreshOrder();
+  });
+
 	//Make sure all add ticket fields are added to this so when clearing selection 
 	// All fields are reset.
 	$('#clear-button').click(function(){
@@ -142,17 +156,46 @@ var loadOrder = function(){
 		$(this).ajaxSubmit({
 			data:{ajax:"yes",action:"addtocart"},
 			success: function(html){
-				//console.log(html);
 				refreshOrder(); //Refresh Cart
 				refreshCategories(); //Update ticket info (Free tickets etc)
 			}
 		});
 		return false;
 	});
+
+	$("#checkout").click(function(){
+   	var userdata = {pos:"yes",action:"PosConfirm"};
+    userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
+    userdata['no_fee']      = $("input:checkbox[name='no_fee']:checked").val();
+   	$("#user_data :input").each(function() {
+   		userdata[$(this).attr("name")] = $(this).val();
+   	});
+		$(this).ajaxSubmit({
+			data:userdata,
+			success: function(html){
+        if(html.substring(0,2) == '~~') {
+          $("#error-text").html(html.substring(2));
+          $("#error-message").show();
+          setInterval(function(){$("#error-message").hide();}, 40000);
+        } else {
+          $("#order_action").html(html);
+    	    $("#order_action").dialog('open');
+        }
+			}
+		});
+		return false;
+	});
+
 }
 
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
+ 	var data = $('#cart_table').getGridParam('postData');
+  data['handling_id'] = $("input:radio[name='handling_id']:checked").val();
+  data['no_fee']      = $("input:checkbox[name='no_fee']:checked").val();
+
+  $('#cart_table').setGridParam('postData', data);
+
   $('#cart_table').trigger("reloadGrid");
 }
 
@@ -215,14 +258,11 @@ var updateEvents = function(){
 }
 var seatCount = 0;
 var bindSeatChart = function(){
-  console.log('bindSeatChart');
 	$("#show-seats").show();
 	$("#show-seats button").click(function(){
-	  console.log('#show-seats button');
 		$("#seat-chart").dialog('open');
 	});
 	$("#seat-chart > input").click(function(){
-		console.log("click!!");
 		if($(this).attr('checked') == "checked"){
 			seatCount++;
 		}else{

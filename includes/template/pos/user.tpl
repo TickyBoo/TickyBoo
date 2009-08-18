@@ -32,7 +32,7 @@
  * clear to you.
  
  *}
- {*
+
 <script type="text/javascript">
 {literal}
 $(document).ready(function(){
@@ -42,9 +42,9 @@ $(document).ready(function(){
  });
 {/literal}
 </script>
-*}
 
-  <table width='99%' border='0' align='left' cellspacing='2' cellpadding='2'>
+
+  <table width='99%' border='0' bgcolor='white' align='left' cellspacing='2' cellpadding='2'>
     <thead>
     <tr>
       <td colspan="2" class="title">

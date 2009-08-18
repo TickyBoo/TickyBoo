@@ -70,9 +70,12 @@ if (isset($_REQUEST['sor'])) {
 if ($action == 'useredit') {
 	echo "<script>window.close();</script>";
 	echo 'closeme';
-} else {
+} elseif(!$_REQUEST['pos']) {
 	redirect("index.php?action=cart_view",403);
+} else {
+   echo '~~'.con('noting_checkout');
 }
+
 die();
 
 	function getsecurecode($type='sor') {
@@ -189,33 +192,47 @@ die();
     }
   }
   
-  function PosConfimAction($smarty) {
-    global $user;
-    if ($_POST['user_id']==-2) {
-        return "order";
+  function PosConfirmAction($smarty) {
+  	global $order, $cart, $user;
+    if ((int)$_POST['handling_id']==0) {
+        echo "~~".con('No_handling_selected').print_r($_POST,true);
+        return "";
+    } elseif ($_POST['user_id']==-2) {
+        echo "~~".con('No_useraddress_selected');
+        return "";
     } elseif ($_POST['user_id']==-1) {
        $user_id = $_SESSION['_SHOP_POS_USER']['user_id'];
        $user->load_f($user_id);
     } elseif ($_POST['user_id']==0) {
       $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
       If (!$user_id ) {
-        $smarty->assign('user_data',   $_POST);
-        $smarty->assign('user_errors', $errors);
-        return "order";
+        echo "~~";
+        foreach($errors as $key=> $err) {
+          echo con($key).': '.$err."<br />\n";
+        }
+        return "";
       } else {
         $smarty->assign('newuser_id', $user_id);
       }
     } else {
        $user_id = $_POST['user_id'];
     }
-    $return = $this->confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
-    return ($return == 'checkout_preview')?'order':$return;
+    ob_start();
+    $return = confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
+    $result = ob_get_contents();
+    ob_end_clean();
+    if ($return == 'checkout_preview' ) {
+      echo '~~'.$order->error.'<br />'.$result;
+      return '';
+    }else {
+      return $return;
+    }
   }
   
 	function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
   	global $order, $cart;
   	if (!isset($_SESSION['_SHOP_order'])) {
-    	$myorder = $order->make_f($_POST['handling_id'], $origin,$user_id, $no_fee);
+    	$myorder = $order->make_f($_POST['handling_id'], $origin, $user_id, $no_fee);
   	} else {
 		  $myorder = $_SESSION['_SHOP_order'];
 	  }

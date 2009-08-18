@@ -467,7 +467,7 @@ function _collect(&$event_item,&$cat_item,&$place_item,&$order){
       }
       $i++;
     }
-
+    $place_item->ordered =  true;
 
     if(!isset($order->place_items)){
       $order->place_items=array();

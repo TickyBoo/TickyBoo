@@ -6,11 +6,11 @@
 	});
 {/literal}
 </script>
-<form id="order-form" name='addtickets' action='index.php' method='post'>
-<div id="order-div" style="width:100%;">  
+<div id="order-div" style="width:100%;">
    <br />
+<form id="order-form" name='addtickets' action='index.php' method='post'>
 
-	<table width="100%" cellpadding='1' cellspacing='1' bgcolor='white' >
+	<table width="100%" cellpadding='2' cellspacing='2' bgcolor='white' >
 {*    <tr>
       <td colspan="2" class="title">
           {!pos_booktickets!}
@@ -61,6 +61,7 @@
 			</tr>
 		</tbody>
 	</table>
+
  	<br />
 
 
@@ -71,6 +72,11 @@
 <table id="cart_table" class="scroll" cellpadding="2" cellspacing="2"></table>
 
 <br />
+  <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
+     <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		  	<strong>Alert: </strong><span id='error-text'>Sample ui-state-error style.</span>
+     </p>
+  </div>
   <table width='100%'>
   	<tr>
     	<td valign='top'  width='50%'>
@@ -102,20 +108,23 @@
       		{!ordertickets!}
     	</td>
   	</tr>
+  	
 </table>
-</div>
-
 <form method='POST' id='checkout' action='checkout.php'>
-  <button type='submit' name='submit_order' value='xyz'>{!order_it!}</button>
+  <button type='button' name='submit_order' value='order'>{!order_it!}</button>
 {* update->view event_date=$min_date user=user->user_id *}
-{* if $update_view.can_reserve *}
+{* if $update_view.can_reserve
          &nbsp;
-	<button type='submit' name='submit_reserve' value='byta'>{!reserve!}</button>
-{* /if *}
+	<button type='submit' name='submit_reserve' value='reserved'>{!reserve!}</button>
+ /if
 
   &nbsp;
-  <input type='submit' name='submit_cancel' value='{!cancel_order!}' onclick='return confirmSubmit()'>
+  <button type='submit' name='submit_cancel' value='cancel' onclick='return confirmSubmit()'>{!cancel!}</button>    *}
+  <div id="order_action" title='{!Order_page!}'></div>
 </form>
+</div>
+
+
 
 <br> <br>
 

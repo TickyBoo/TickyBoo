@@ -89,7 +89,6 @@ var loadUser = function(mycolNames){
   $('#search_user').click(function() {
     	var i=0;
     	var data = $('#users_table').getGridParam('postData');
-    	alert('test');
     	$('#users_table').clearGridData();
     	$("#user_data :input").each(function() {
       	if ($(this).attr("name") != 'user_id') {

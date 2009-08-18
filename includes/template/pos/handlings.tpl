@@ -41,7 +41,8 @@
           {else}
              {assign var=checked value=""}
           {/if}
-    		  <input {$checked} type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}'>
+
+    		  <input {$checked} type='radio' id='handling_id' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}'>
   		  </td>
   		  <td class='payment_form'>
   		  	<label for='{$shop_handling.handling_id}_check'>
@@ -50,14 +51,7 @@
   		  	</label>
   		  </td>
   		  <td  class='view_cart_td'  valign='top'  align='right' width='100' id='price_{$shop_handling.handling_id}'>
-{*     			{assign var=fee value="`$total_price*$shop_handling.handling_fee_percent/100.00`"}
-     			{assign var=fee value="`$fee+$shop_handling.handling_fee_fix`"}
-     			{if $fee neq 0.00}
-           + {gui->valuta value=$fee|string_format:"%.2f"}
-          {/if}
-      	  {if $smarty.post.handling_id eq $shop_handling.handling_id}
-       			{assign var=total_price value="`$total_price+$fee`"}
-          {/if} *}
+          &nbsp;
   		  </td>
   		</tr>
     {/handling}
@@ -66,7 +60,7 @@
          {!without_fee!}
       </td>
       <td  class='user_value'>
-        <input type='checkbox' class='checkbox' name='no_fee' value='1'>
+        <input type='checkbox' class='checkbox' name='no_fee' id='no_fee' value='1'>
       </td>
     </tr>
 

@@ -1191,4 +1191,8 @@ define('event_recur_end','event_recur_end');
 ?>
 <?php
 define('event_end','event_end');
+define('No_useraddress_selected','No useraddress selected.');
+define('No_handling_selected','No handling method selected.');
+define('noting_checkout','There is noting to checkout!!!');
+
 ?>

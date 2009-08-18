@@ -523,15 +523,19 @@ class PlaceItem {
     if($this->not_load){
       $this->places_nr=array();
       foreach($this->places_id as $place_id){
-       $qry="select * from Seat where seat_id='$place_id' and seat_category_id='{$this->category_id}' and seat_event_id='{$this->event_id}'";
+       $qry="select seat_row_nr, seat_nr
+             from Seat
+             where seat_id='$place_id'
+             and seat_category_id='{$this->category_id}'
+             and seat_event_id='{$this->event_id}'";
 //echo $qry;
         if($result=ShopDB::query($qry) and $obj=shopDB::fetch_object($result)){
           array_push($this->places_nr,array($obj->seat_row_nr,$obj->seat_nr));
         }else{
 //echo shopDB::error(); 
-	  $this->invalid=TRUE;
-	  return FALSE;
-	}
+      	  $this->invalid=TRUE;
+      	  return FALSE;
+      	}
       }
       $this->not_load=0;	
     }

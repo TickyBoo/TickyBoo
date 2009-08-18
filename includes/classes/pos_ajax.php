@@ -236,6 +236,7 @@ class PosAjax {
 	private function getCartInfo(){
 	global $cart;
 
+    $this->json['post'] = print_r($_POST,true);
     $this->json['page'] = 1;
     $this->json['total'] = 1;
     $this->json['records'] = 0;
@@ -274,25 +275,26 @@ class PosAjax {
         }
       }
       $seatinfo = substr($seatinfo,2);
-
-      if ($seat_item->is_expired()) {
-          $col = "<font color='red'>".con('expired').'</font>';
-    	} else {
-    	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
+      if ($seat_item->ordered) {
+            $col = "<font color='red'>".con('Ordered').'</font>';
+      } else {
+        if ($seat_item->is_expired()) {
+            $col = "<font color='red'>".con('expired').'</font>';
+      	} else {
+      	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
+        }
+        $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST' style='padding:0; margin: 0;'>".
+             "<input type='hidden' value='remove' name='action' />".
+     		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
+      		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
+      		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
+             "<button type='submit' class='ui-widget-content jqgrow'
+                      style='display: inline; cursor: pointer; padding:0; margin: 0; border: 0px'> ".
+             "<img src='images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
+             $col.
+  			     "</form>";
+  //  			 "<input type='hidden' value='remove" name="action" />
       }
-      $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST'
-       style='padding:0; margin: 0;'>".
-           "<input type='hidden' value='remove' name='action' />".
-   		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
-    		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
-    		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
-           "<button type='submit' class='ui-widget-content jqgrow'
-                    style='display: inline; cursor: pointer; padding:0; margin: 0; border: 0px'> ".
-           "<img src='images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
-           $col.
-			     "</form>";
-//  			 "<input type='hidden' value='remove" name="action" />
-
       $row = array($col);
       $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}<br>{$event_item->event_date} - {$event_item->event_time}";
       $row[] = count($seats_ids);
@@ -330,7 +332,9 @@ class PosAjax {
     $handlings = array();
     while ($pay=shopDB::fetch_array($res)){
       $fee = ($subprice*is($pay['handling_fee_percent'],0.0)/100.00) + is($pay['handling_fee_fix'],0.0);
-      $totalprice += ((!$counter)?0:$fee);
+      if (($_POST['handling_id']== $pay['handling_id'] and $counter and $_POST['no_fee']!=='1')) { // and !$counter and $_POST['no_fee']!==1
+        $totalprice += $fee;
+      }
  			$fee = ($fee == 0.00)? '': '+ '.valuta($fee);
       $handlings[] = array('index'=>"#price_{$pay['handling_id']}", 'value'=>$fee);
     }
