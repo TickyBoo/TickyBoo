@@ -76,13 +76,14 @@ class Order_Smarty {
     //compile order (order and tickets) from the shopping cart in order_func.php
 
     $order = new Order($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
-    $cart->iterate('_collect', $order);
-    
+
     //begin the transaction
     if(!ShopDB::begin('Make order')){
       $this->error =con('cant_start transaction');
       return; 
     }
+
+    $cart->iterate('_collect', $order);
 
     //put the order into database     
     if(!$order_id=$order->save()){

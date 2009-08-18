@@ -194,6 +194,8 @@ die();
   
   function PosConfirmAction($smarty) {
   	global $order, $cart, $user;
+    echo '~~'.print_r($_POST,  true);
+    return "";
     if ((int)$_POST['handling_id']==0) {
         echo "~~".con('No_handling_selected').print_r($_POST,true);
         return "";
@@ -335,6 +337,16 @@ die();
     return "checkout_result";
   }
 
+  function  PosCancelaction($smarty) {
+  	global $cart;
+
+ 		$cart->destroy_f(); // destroy cart
+    $myorder = is($_SESSION['_SHOP_order'],null);
+    if ($myorder) {
+       $myorder->order_delete($myorder->order_id,'pos_manual_canceled' );
+    }
+  }
+  
   function  cancelaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());

@@ -170,9 +170,12 @@ var loadOrder = function(){
    	$("#user_data :input").each(function() {
    		userdata[$(this).attr("name")] = $(this).val();
    	});
-		$(this).ajaxSubmit({
-			data:userdata,
-			success: function(html){
+  	ajaxQManager.add({
+  		type:		"POST",
+  		url:		"checkout.php?x=order",
+  		dataType:	"HTML",
+  		data:		userdata,
+  		success:function(html, status){
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
@@ -181,7 +184,20 @@ var loadOrder = function(){
           $("#order_action").html(html);
     	    $("#order_action").dialog('open');
         }
-			}
+  		}
+		});
+		return false;
+	});
+
+	$("#cancel").click(function(){
+  	ajaxQManager.add({
+  		type:		"POST",
+  		url:		"checkout.php?x=cancel",
+  		dataType:	"HTML",
+  		data:		{pos:"yes",action:"PosCancel"},
+  		success:function(html, status){
+        refreshOrder();
+  		}
 		});
 		return false;
 	});

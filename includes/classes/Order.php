@@ -234,16 +234,16 @@ class Order {
     }
 	
     $parzial=$this->parzial();
-	if(!$this->no_fee){
-		$fee=$this->order_handling->calculate_fee($parzial);
-	}else{
-		$fee=0;
-	}
-	if($this->no_cost) {
-		$total=0;
-	}else{
-		$total=$parzial+$fee;
-	}
+  	if(!$this->no_fee){
+  		$fee=$this->order_handling->calculate_fee($parzial);
+  	}else{
+  		$fee=0;
+  	}
+  	if($this->no_cost) {
+  		$total=0;
+  	}else{
+  		$total=$parzial+$fee;
+  	}
 
     $fee=number_format($fee, 2, '.', '');
     $total=number_format($total, 2, '.', '');
@@ -298,17 +298,17 @@ class Order {
       
       foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
-		$ticket->order_id($order_id);
-		/////////////////////////////// Tickets are saved here if handled==1 tickets are reserved instead of ordered.
-		if($this->order_handling->handling_id=='1'){
-	  		if(!$ticket->reserve()){
-			return FALSE;  
-	  		}
-		}else{
-	  		if(!$ticket->save()){
-			return FALSE;  
-	  		}
-		}
+    		$ticket->order_id($order_id);
+    		/////////////////////////////// Tickets are saved here if handled==1 tickets are reserved instead of ordered.
+    		if($this->order_handling->handling_id=='1'){
+    	  		if(!$ticket->reserve()){
+    			return FALSE;
+    	  		}
+    		}else{
+    	  		if(!$ticket->save()){
+    			return FALSE;
+    	  		}
+    		}
         $event_stat[$ticket->event_id]++;
         $category_stat[$ticket->category_id]++;
       }
@@ -323,10 +323,10 @@ class Order {
       foreach($category_stat as $cat_id=>$count){
         if(!Category_stat::dec($cat_id,$count)){return FALSE;}
       }
-	  if($this->order_handling->handling_id=='1'){
-		$this->set_status('res',TRUE);	
-	  }else{
-     	$this->set_status('ord',TRUE);
+  	  if($this->order_handling->handling_id=='1'){
+    		$this->set_status('res',TRUE);
+  	  }else{
+       	$this->set_status('ord',TRUE);
       }
       return $order_id;
     }else{

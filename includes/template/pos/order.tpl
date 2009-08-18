@@ -110,16 +110,16 @@
   	</tr>
   	
 </table>
-<form method='POST' id='checkout' action='checkout.php'>
-  <button type='button' name='submit_order' value='order'>{!order_it!}</button>
+<form >
+  <button type='button' id='checkout' name='action' value='PosCheckout'>{!order_it!}</button>
 {* update->view event_date=$min_date user=user->user_id *}
 {* if $update_view.can_reserve
          &nbsp;
-	<button type='submit' name='submit_reserve' value='reserved'>{!reserve!}</button>
+	<button type='button' id='reserved' name='action' value='PosReserved'>{!reserve!}</button>
  /if
-
+        *}
   &nbsp;
-  <button type='submit' name='submit_cancel' value='cancel' onclick='return confirmSubmit()'>{!cancel!}</button>    *}
+  <button type='button' id='cancel' name='action' value='PosCancel' onclick='return confirmSubmit()'>{!cancel!}</button>
   <div id="order_action" title='{!Order_page!}'></div>
 </form>
 </div>
