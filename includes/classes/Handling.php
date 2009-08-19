@@ -427,7 +427,11 @@ class Handling {
     	$return ='';
   		if($pm=$this->pment()){
       		$return = $pm->on_confirm($order);
-  		}
+  		} else {
+      return array('approved'=>true,
+                   'transaction_id'=>false,
+                   'response'=> $this->handling_html_template);
+    	}
     	return (is_array($return))?$return:$this->handling_html_template.'<br>'.$return;
   	}
 

@@ -1,8 +1,8 @@
  $(document).ready(function(){
 	
 	$(document).checkboxAreaSelect();
-	bindForms();
-	bindLinks();
+//	bindForms();
+//	bindLinks();
 	
 	
 	$().ajaxSend(function(evt, request, settings){
@@ -14,8 +14,8 @@
 	$().ajaxStop(function(evt, request, settings){  
 		$(".loading").fadeOut("fast");
 		//console.log("stop");
-		bindForms();
-		bindLinks();
+//		bindForms();
+//		bindLinks();
 		//$.unblockUI();
 //		$("#order-div").unblock();
 	});

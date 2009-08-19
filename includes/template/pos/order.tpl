@@ -119,10 +119,10 @@
  /if
         *}
   &nbsp;
-  <button type='button' id='cancel' name='action' value='PosCancel' onclick='return confirmSubmit()'>{!cancel!}</button>
+  <button type='button' id='cancel' name='action' value='PosCancel' >{!cancel!}</button>
 </form>
 </div>
-<div id="order_action" title='{!Order_page!}'></div>
+<div id="order_action" title='{!prder_page!}'></div>
 <br> <br>
 
 {include file="footer.tpl"}

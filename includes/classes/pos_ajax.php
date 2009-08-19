@@ -234,7 +234,7 @@ class PosAjax {
 	 */
 
 	private function getCartInfo(){
-	global $cart;
+	global $cart, $order;
 
     $this->json['post'] = print_r($_POST,true);
     $this->json['page'] = 1;
@@ -242,6 +242,7 @@ class PosAjax {
     $this->json['records'] = 0;
     $this->json['userdata'] = array();
     $mycart=$_SESSION['_SMART_cart'];
+    $this->json['userdata']['can_cancel'] = !$cart->is_empty_f() or isset($_SESSION['_SHOP_order']);
     $cart_list  =array();
     if($mycart and !$cart->is_empty_f()){
       $mycart->load_info();
@@ -339,8 +340,8 @@ class PosAjax {
       $handlings[] = array('index'=>"#price_{$pay['handling_id']}", 'value'=>$fee);
     }
     $this->json['userdata']['handlings'] = $handlings;
-    $this->json['userdata']['total'] = valuta($totalprice);
-    
+    $this->json['userdata']['total']     = valuta($totalprice);
+    $this->json['userdata']['can_order'] = $counter !== 0;
 		return true;
 	}
 	

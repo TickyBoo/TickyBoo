@@ -289,8 +289,8 @@ class Order {
       	ShopDB::quote($this->order_handling->handling_id).",".
       	ShopDB::quote($order_status).",".
       	ShopDB::quote($fee).",".
-	    ShopDB::quote($this->order_place).", 
-	    $order_date_expire);";
+	      ShopDB::quote($this->order_place).",
+	      $order_date_expire);";
 		
     if(ShopDB::query($query)){
       $order_id=ShopDB::insert_id();
@@ -301,13 +301,11 @@ class Order {
     		$ticket->order_id($order_id);
     		/////////////////////////////// Tickets are saved here if handled==1 tickets are reserved instead of ordered.
     		if($this->order_handling->handling_id=='1'){
-    	  		if(!$ticket->reserve()){
+  	  		if(!$ticket->reserve()){
+      			return FALSE;
+   	  		}
+     		}elseif(!$ticket->save()){
     			return FALSE;
-    	  		}
-    		}else{
-    	  		if(!$ticket->save()){
-    			return FALSE;
-    	  		}
     		}
         $event_stat[$ticket->event_id]++;
         $category_stat[$ticket->category_id]++;

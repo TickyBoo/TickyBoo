@@ -21,7 +21,11 @@ var loadOrder = function(){
 		height: 'auto',
 		width: 'auto',
 		modal: true,
-		buttons: {}
+		buttons: {},
+	  close: function(event, ui) {
+      refreshOrder();
+      alert('he there');
+    }
 
 	});
 
@@ -51,7 +55,16 @@ var loadOrder = function(){
 		   	$(this.index).html(this.value);
       });
       $('#total_price').html(data.total);
-
+      if (data.can_cancel) {
+        $('#cancel').show();
+      } else {
+        $('#cancel').hide();
+      }
+/*      if (data.can_order) {
+        $('#reserved').enable();
+      } else {
+        $('#reserved').disable();
+      } */
     }
     });
 // 	refreshOrder();
@@ -179,7 +192,7 @@ var loadOrder = function(){
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
-          setInterval(function(){$("#error-message").hide();}, 40000);
+          setTimeout(function(){$("#error-message").hide();}, 40000);
         } else {
           $("#order_action").html(html);
     	    $("#order_action").dialog('open');

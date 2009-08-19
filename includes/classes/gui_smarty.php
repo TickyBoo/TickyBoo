@@ -548,6 +548,11 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
     return '<center>'. $output.'</center>';
   }
 
+
+  function TabBar($params , &$smarty) {
+    require_once('admin'.DS.'AdminView.php');
+    return  AdminView::PrintTabMenu($params['linkArray'], $params['activeTab'], $params['menuAlign']);
+  }
   function captcha($params, &$smarty) //($name)
   {
     //print_r($smarty);

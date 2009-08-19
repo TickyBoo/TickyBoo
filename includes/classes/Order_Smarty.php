@@ -72,8 +72,7 @@ class Order_Smarty {
       $this->error = con('reservate_failed');
       return;
     }
-  
-    //compile order (order and tickets) from the shopping cart in order_func.php
+     //compile order (order and tickets) from the shopping cart in order_func.php
 
     $order = new Order($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
 
@@ -89,6 +88,8 @@ class Order_Smarty {
     if(!$order_id=$order->save()){
       $this->error = con('save_failed');
       ShopDB::rollback('save_failed');
+      $cart->iterate('_reset', $order);
+
       return; 
     }
 
@@ -468,12 +469,19 @@ function _collect(&$event_item,&$cat_item,&$place_item,&$order){
       }
       $i++;
     }
-    $place_item->ordered =  true;
+    $place_item->ordered =  $order;
 
     if(!isset($order->place_items)){
       $order->place_items=array();
     }
     array_push($order->place_items,array($event_item->event_id,$cat_item->id,$place_item->id));
+  }
+  return 1;
+}
+
+function _reset(&$event_item,&$cat_item,&$place_item,&$order){
+  if ($place_item->ordered ==  $order) {
+    unset($place_item->ordered);
   }
   return 1;
 }

@@ -194,8 +194,6 @@ die();
   
   function PosConfirmAction($smarty) {
   	global $order, $cart, $user;
-    echo '~~'.print_r($_POST,  true);
-    return "";
     if ((int)$_POST['handling_id']==0) {
         echo "~~".con('No_handling_selected').print_r($_POST,true);
         return "";
@@ -203,7 +201,7 @@ die();
         echo "~~".con('No_useraddress_selected');
         return "";
     } elseif ($_POST['user_id']==-1) {
-       $user_id = $_SESSION['_SHOP_POS_USER']['user_id'];
+       $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
        $user->load_f($user_id);
     } elseif ($_POST['user_id']==0) {
       $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
@@ -224,9 +222,10 @@ die();
     $result = ob_get_contents();
     ob_end_clean();
     if ($return == 'checkout_preview' ) {
-      echo '~~'.$order->error.'<br />'.$result;
+      echo '~~'.$order->error.'<br /><pre>'.$result.'</pre>';
       return '';
     }else {
+     // echo '~~'.$return.'<pre>'.$result.'</pre>';
       return $return;
     }
   }
@@ -234,11 +233,11 @@ die();
 	function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
   	global $order, $cart;
   	if (!isset($_SESSION['_SHOP_order'])) {
-    	$myorder = $order->make_f($_POST['handling_id'], $origin, $user_id, $no_fee);
+    	$myorder = $order->make_f($_POST['handling_id'], $origin, 0, $user_id, $no_fee);
   	} else {
 		  $myorder = $_SESSION['_SHOP_order'];
 	  }
-	
+	  print_r($myorder);
   	if (!$myorder) {
     		$smarty->assign('order_error', $order->error);
     		return "checkout_preview";
