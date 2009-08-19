@@ -120,12 +120,9 @@
         *}
   &nbsp;
   <button type='button' id='cancel' name='action' value='PosCancel' onclick='return confirmSubmit()'>{!cancel!}</button>
-  <div id="order_action" title='{!Order_page!}'></div>
 </form>
 </div>
-
-
-
+<div id="order_action" title='{!Order_page!}'></div>
 <br> <br>
 
 {include file="footer.tpl"}

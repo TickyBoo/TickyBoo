@@ -36,7 +36,7 @@
       {!pos_listpaidunprocessed!}
   	</td>
   	<td>
-  	  <a href="index.php?process=paid">{!pos_paidlist!}</a>
+  	  <a href="view.php?process=paid">{!pos_paidlist!}</a>
   	</td>
   </tr>
   <tr>
@@ -44,7 +44,7 @@
   	  {!pos_listpaidunsent!}
   	</td>
   	<td>
-  	  <a href="index.php?process=processed">{!pos_unsentlist!}</a>
+  	  <a href="view.php?process=processed">{!pos_unsentlist!}</a>
   	</td>
   </tr>
   <tr>
@@ -52,7 +52,7 @@
 	  {!pos_listpaidsent!}
 	</td>
 	<td>
-	  <a href="shop.php?process=sent">{!pos_sentlist!}</a>
+	  <a href="view.php?process=sent">{!pos_sentlist!}</a>
 	</td>
   </tr>
 </table>

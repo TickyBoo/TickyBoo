@@ -26,7 +26,7 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
-  <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+  <table class='table_dark' cellpadding='5' bgcolor='white' width='400'>
     {eval var=$shop_handling.handling_text_payment assign=test}
     {gui->view name=payment value=$test}
     {eval var=$shop_handling.handling_text_shipment  assign=test}

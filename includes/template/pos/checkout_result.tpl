@@ -26,13 +26,14 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
-
+<h2>
 {if $pm_return.approved}
-  {include file="header.tpl" name=!pay_accept! }
+  {!pay_accept! }
 {else}
-  {include file="header.tpl" name=!pay_refused! }
+  {!pay_refused! }
 {/if}
-<table class="table_midtone">
+</h2>
+<table class="table_midtone" width='400'>
   <tr>
     <td>
         {if !$pm_return.approved}
@@ -57,4 +58,3 @@
     </td>
   </tr>
 </table>
-{include file="footer.tpl"}

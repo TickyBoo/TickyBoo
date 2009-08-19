@@ -106,10 +106,10 @@
 	{elseif $smarty.get.process eq "reserved"}
 		{include file="process_listres.tpl"}
 	{else}
-		{include file="currenttickets.tpl"}
+		{include file="view_select.tpl"}
 	{/if}
 {else}
-  {include file="order.tpl"}
+  {include file="view_select.tpl"}
 {/if}
 
 {if $smarty.get.ajax neq 'yes' and $smarty.post.ajax neq 'yes'}

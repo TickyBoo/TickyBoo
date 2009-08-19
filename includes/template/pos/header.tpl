@@ -91,8 +91,10 @@
 			</div>
 			<div id="navbar">
 				<ul>
-					<li><a href="index.php?action=order" accesskey="b" tabindex="11">{!pos_booktickets!}</a></li>
-					<li><a href="index.php?process=on" accesskey="t" tabindex="12">{!pos_currenttickets!}</a></li>
+					<li><a href="index.php" accesskey="b" tabindex="11">{!pos_booktickets!}</a></li>
+					<li><a href="view.php" accesskey="t" tabindex="12">{!pos_currenttickets!}</a></li>
+					<li><a href='?action=logout' >{!logout!}</a></li>
+
 				</ul>
 			</div>
 			<div id="right">
