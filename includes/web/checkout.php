@@ -204,7 +204,8 @@ die();
        $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
        $user->load_f($user_id);
     } elseif ($_POST['user_id']==0) {
-      $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
+      $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
+      $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
       If (!$user_id ) {
         echo "~~";
         foreach($errors as $key=> $err) {

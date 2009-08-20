@@ -558,7 +558,7 @@ class Order {
 	public function set_payment_id($order_id, $payment_id=null){
 		$order=Order::load($order_id);
 		
-		if(!ShopDB::begin()){return FALSE;}
+		if(!ShopDB::begin('set order_payment_id')){return FALSE;}
 		
 		$query="UPDATE `Order`
 			SET order_payment_id="._esc($payment_id)."  
@@ -566,11 +566,14 @@ class Order {
             
 		
 		if(!ShopDB::query($query)){
-			ShopDB::rollback();
+			ShopDB::rollback('set order_payment_id');
 			return FALSE;
 		}
 		
-		if(!ShopDB::commit()){ShopDB::rollback();return FALSE;}
+		if(!ShopDB::commit('set order_payment_id')){
+      ShopDB::rollback('set order_payment_id');
+      return FALSE;
+    }
 		
 		return true;
 		
@@ -807,8 +810,11 @@ class Order {
     if($field=='order_payment_status' and  $new_status=='payed' ){ //and
       $suppl = ", order_date_expire=NULL";
     }
-
-    $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE Order.order_id='{$this->order_id}'";
+    if($field=='order_payment_status' and  $new_status=='pending' and  $old_status !=='none'){ //and
+      return;
+    }
+    ShopDB::dblogging(
+    $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE order_id='{$this->order_id}'");
     if($dont_do_update or (ShopDB::query($query))){// and shopDB::affected_rows()==1)){
       if(!$this->order_handling){
         $this->order_handling=Handling::load($this->order_handling_id);
@@ -918,7 +924,7 @@ class Order {
    //
     If (!empty($codestr)) {
       //$code = urldecode( $code) ;
-     // print_r( $code );
+//      print_r( $codestr );
       $text = base64_decode($codestr);
       $code = explode(':',$text);
     //  print_r( $text );
@@ -927,9 +933,9 @@ class Order {
 //      print_r( $code );
 //      print_r( $order );
 
-      if (($order==null) and isset($this)) $order = $this;
-      if ($order==null) $order = self::load($code[1], true);
-      if ($order == null) return -1;
+      if (!is_object($order) and isset($this) and ($this instanceof Order)) $order = $this;
+      if (!is_object($order)) $order = self::load($code[1], true);
+      if (!is_object($order)) return -1;
 
       $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
                   $order->order_handling_id .':'. $order->order_total_price;

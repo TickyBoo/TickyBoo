@@ -108,7 +108,7 @@ class EPH_authorize_sim extends AdminView{
 
 		if($_POST['x_response_code']==1){
 		  $order->order_payment_id=$_POST['x_trans_id'];
-	    Order::set_payment_id('auth_sim:'.$order->order_id,$_POST['x_trans_id']);
+	    Order::set_payment_id($order->order_id,'auth_sim:'.$_POST['x_trans_id']);
 
 		  $order->set_payment_status('payed');
     }else{

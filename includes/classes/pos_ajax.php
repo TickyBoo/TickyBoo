@@ -284,8 +284,7 @@ class PosAjax {
       	} else {
       	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
         }
-        $col ="<form class='remove-tickets' name='remove{$seat_item_id}' action='index.php' method='POST' style='padding:0; margin: 0;'>".
-             "<input type='hidden' value='remove' name='action' />".
+        $col ="<form id='remove' name='remove{$seat_item_id}' action='index.php' method='POST' >".
      		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
       		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
       		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".

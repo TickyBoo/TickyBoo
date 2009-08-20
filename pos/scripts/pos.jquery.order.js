@@ -60,11 +60,12 @@ var loadOrder = function(){
       } else {
         $('#cancel').hide();
       }
-/*      if (data.can_order) {
-        $('#reserved').enable();
+      if (data.can_order) {
+        $('#reserved').show();
       } else {
-        $('#reserved').disable();
-      } */
+        $('#reserved').hide();
+      }
+      BindEventRemove()
     }
     });
 // 	refreshOrder();
@@ -306,6 +307,19 @@ var unBindSeatChart = function(){
 	//$("#seat-chart").dialog('destroy');
 	$("#show-seats").hide();
 	$("#show-seats button").unbind( "click" );
+}
+
+var BindEventRemove = function(){
+	$("#remove").submit(function(){
+		$(this).ajaxSubmit({
+			data:{ajax:"yes",action:"remove"},
+			success: function(html){
+				refreshOrder(); //Refresh Cart
+				refreshCategories(); //Update ticket info (Free tickets etc)
+			}
+		});
+		return false;
+	});
 }
 
 function formatItem(row) {

@@ -99,7 +99,12 @@ class User_Smarty {
 
 /*The next bit of code creates users */
   function register_f ($ismember, &$member, &$err, $mandatory_l=0, $secure='', $short=0 ){
-    $type =($ismember)?2:3;
+    if ($_SESSION['_SHOP_AUTH_USER_DATA']['user_id']) {
+      $type =($ismember)?2:3;
+    } else {
+      $type = 4;
+    }
+
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
 //  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
 //      echo "<script>window.location.href='{$url}';</script>";
