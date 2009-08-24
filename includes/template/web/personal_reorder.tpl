@@ -31,7 +31,7 @@
  *}
 <table width="100%" cellpadding="3" class="main">
 	<tr>
-    <td colspan="5" class="title"><h3>Current / Previous Order</h3></td>
+    <td colspan="5" class="title"><h3>{!pers_orders!}</h3></td>
     </tr>
     {* if $user->logged}
       {order->vieworder user_id=$user->user_id }
@@ -80,13 +80,11 @@
 			<tr>
 			  <td colspan="2">
 			  {if $shop_order.order_status eq "res"}
-			  {update->countdown order_id=$shop_order.order_id reserved=true}
-			  	You have {$order_remain.days} Days, {$order_remain.hours} Hours, {$order_remain.mins} Mins, {$order_remain.seconds} Seconds
-				  <br>
-				  Left to buy your ticket(s)!<br>
-				  <br>
-				  After this time they are automaticaly canceled!
-			  {/update->countdown}
+			  		{update->countdown order_id=$shop_order.order_id reserved=true}
+          				{!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+				  		<br />
+				  		{!autocancel!}
+			  		{/update->countdown}
 			  {/if}
 			  </td>
 			</tr>
@@ -94,7 +92,7 @@
 			  <td class="user_info">Payment {!status!}</td>
 			  <td class="subtitle">
 			  {if $shop_order.order_payment_status eq "none"}
-			    <font color="#FF0000">Not {!paid!}</font>
+			    <font color="#FF0000">{!notpaid!}</font>
 			  {elseif $shop_order.order_payment_status eq "payed"}
 			  	<font color="green">{!paid!}</font>
 			  {/if}
@@ -103,13 +101,14 @@
 			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") or $shop_order.order_payment_status eq "payed" }
 			<tr>
 			  <td colspan="2">
-			  <font color="Black" size="12px"><b>
-			  	{update->countdown order_id=$shop_order.order_id}
-			  	You Have {$order_remain.mins} Mins and {$order_remain.seconds} Seconds to pay for your order!<br><br>
-				{/update->countdown}
-				After this time your order is automaticaly canceled!<br><br>
-			  	To Pay Now, Check Here:</b></font>
-			  	<br>
+			  		<font color="Black" size="12px"><b>
+			  			{update->countdown order_id=$shop_order.order_id}
+          					{!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+						{/update->countdown}
+						{!autocancel!}
+						{!payhere!}
+					</b></font>
+			  		<br />
 				{handling handling_id=$shop_order.order_handling_id}
 				  {if $shop_order.order_payment_status eq 'none'}
 				  	{if $shop_handling.handling_html_template}
@@ -121,10 +120,10 @@
 			</tr>
 			{/if}
 			<tr>
-			  <td class="user_info">Shipment {!status!}</td>
+			  <td class="user_info">{!shipment_status!}</td>
 			  <td class="subtitle">
 			  {if $shop_order.order_shipment_status eq "none"}
-			  	<font color="#FF0000">Not {!sent!}</font>
+			  	<font color="#FF0000">{!notsent!}</font>
 			  {elseif $shop_order.order_shipment_status eq "send"}
 			  	<font color='green'>{!sent!}</font>
 			  {/if}
@@ -213,7 +212,7 @@
 			  {if $shop_ticket.discount_name}
 			  {$shop_ticket.discount_name}
 			  {else}
-			  None
+			  {!none!}
 			  {/if}
 			  </td>
 			  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
