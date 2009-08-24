@@ -60,7 +60,7 @@
       </tr>
     </table>
     <br>
-    <button onclick="window.close();">Close</button>
+    <button onclick="window.close();">{!close!}</button>
   {else}
       <form action='forgot_password.php' method='post'>
         {ShowFormToken name='resendpassword'}
