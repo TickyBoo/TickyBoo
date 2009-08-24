@@ -100,7 +100,7 @@ personal-order.tpl -->
 					<input type="hidden" name="order_id" value="{$shop_order.order_id}" >
 				<tr>
 			  		<td colspan="2" align="left">
-			  			{!ordertickits!}<br />
+			  			{!ordertickets!}<br />
 			  			<font color="red">{!reserv_cancel!}</font><br />
 			  			<center>
 				  			<input type='submit' name='submit' value='Order' />
@@ -111,7 +111,7 @@ personal-order.tpl -->
 			{/if}
 			
 			<tr>
-  				<td class="user_info">{!Payment!} {!status!}</td>
+  				<td class="user_info">{!payment!} {!status!}</td>
 			  	<td class="subtitle">
 			  	{if $shop_order.order_payment_status eq "none"}
 			    	<font style="color:#FF0000">{!notpaid!}</font>
@@ -200,7 +200,7 @@ personal-order.tpl -->
 			  {if $shop_ticket.discount_name}
 			  {$shop_ticket.discount_name}
 			  {else}
-			  None
+			  {!none!}
 			  {/if}
 			  </td>
 			  <td class='admin_info' align='right'>{$shop_ticket.seat_price}</td>
