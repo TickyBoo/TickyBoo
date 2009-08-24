@@ -29,7 +29,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-personal-order.tpl -->
+<!--personal-order.tpl -->
 <table width="100%" cellpadding="3" class="main">
 	<tr>
     	<td colspan="5" class="title"><h3>{!orders!}</h3></td>
