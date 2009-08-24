@@ -31,12 +31,12 @@
  *}
 <table width="100%" cellpadding="3" class="main">
 	<tr>
-    <td colspan="7" class="title"><h3>Current / Previous Orders</h3></td>
+    <td colspan="7" class="title"><h3>{!pers_orders!}</h3></td>
   </tr>
   <tr>
     <td><p><strong>{!event!}</strong></p></td>
-	  <td><p><strong>{!ordernumber!}</strong></p></td>
-	  <td><p><strong>{!orderdate!}</strong></p></td>
+	  <td><p><strong>{!order_id!}</strong></p></td>
+	  <td><p><strong>{!order_date!}</strong></p></td>
 	  <td><p><strong>{!tickets!}</strong></p></td>
 	  <td><p><strong>{!total_price!}</strong></p></td>
 	  <td><p><b>{!status!}</b></p></td>
@@ -72,7 +72,7 @@
     		{if $shop_order.order_status eq "cancel"}{!pers_cancel!}
     		{elseif $shop_order.order_status eq "reemit"}{!pers_reemit!}
     		{elseif $shop_order.order_status eq "res"}{!pers_res!}
-    		{elseif $shop_order.order_shipment_status eq "send"}{!pers_sent!}
+    		{elseif $shop_order.order_shipment_status eq "send"}{!pers_send!}
     		{elseif $shop_order.order_payment_status eq "payed"}{!pers_payed!}
     		{elseif $shop_order.order_status eq "ord"}{!pers_ord!}
     		{else}{!pers_unknown!}
