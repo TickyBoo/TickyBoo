@@ -75,7 +75,7 @@
       <tr id='passwords_tr1' >
         <td class='TblLower'>{!password1!} *</td>
         <td class='TblHigher'>
-           <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
+           <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />&nbsp;
            {!pwd_min!}
            <div class='error'>{$user_errors.password}</div>
         </td>
@@ -85,13 +85,13 @@
         <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
       </tr>
       <tr>
-        <td class='TblLower' valign='top' width='30%'> {!user_nospam!}&nbsp;*</td>
+        <td class='TblLower' width='30%'>{!user_nospam!}&nbsp;*</td>
         <td class='TblHigher' valign='top'>
           <table cellpadding="0" cellspacing="0" width='400'>
             <tr>
               <td >
-                <input type='text' name='user_nospam' size='10' maxlength="10" value='' ><br>
-                <sup> {!nospam_info!} </sup><span class='error'>{$user_errors.user_nospam}</span>
+                <input type='text' name='user_nospam' size='10' maxlength="10" value='' >
+				<sup> &nbsp;{!nospam_info!} </sup><span class='error'>{$user_errors.user_nospam}</span>
               </td>
               <td align='center'>
                 <img src="nospam.php?name=user_nospam" alt='' border=1>
