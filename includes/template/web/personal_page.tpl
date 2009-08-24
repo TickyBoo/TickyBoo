@@ -46,44 +46,44 @@
 			  </td>
             </tr>
             <tr>
-              <td>{!firstname!}</td>
+              <td>{!user_firstname!}</td>
               <td>{user->user_firstname|clean}</td>
             </tr>
             <tr>
-              <td>{!lastname!}</td>
+              <td>{!user_lastname!}</td>
               <td>{user->user_lastname|clean}</td>
             </tr>
             <tr>
-              <td>{!address!} 1</td>
+              <td>{!user_address1!}</td>
               <td>{user->user_address|clean}</td>
             </tr>
             <tr>
-              <td>{!address!} 2</td>
+              <td>{!user_address2!}</td>
               <td>{user->user_address2|clean}</td>
             </tr>
             <tr>
-              <td>{!zip!}</td>
+              <td>{!user_zip!}</td>
 			        <td>{user->user_zip|clean}</td>
             </tr>
             <tr>
-              <td>{!city!}</td>
+              <td>{!user_city!}</td>
               <td>{user->user_city|clean}</td>
             </tr>
             <tr>
-              <td>{!state!}</td>
+              <td>{!user_state!}</td>
               <td>{user->user_state|clean}</td>
             </tr>
             {gui->viewcountry name='user_country' value=$user->user_country}
             <tr>
-              <td>{!phone!}</td>
+              <td>{!user_phone!}</td>
               <td>{user->user_phone|clean}</td>
             </tr>
             <tr>
-              <td>{!fax!}</td>
+              <td>{!user_fax!}</td>
               <td>{user->user_fax|clean}</td>
             </tr>
             <tr>
-              <td>{!email!}</td>
+              <td>{!user_email!}</td>
               <td>{user->user_email|clean}</td>
             </tr>
         </table>
@@ -95,8 +95,8 @@
 			</td>
 		  </tr>
           <tr>
-            <td><p><strong>{!ordernumber!}</strong></p></td>
-            <td><p><strong>{!orderdate!}</strong></p></td>
+            <td><p><strong>{!order_id!}</strong></p></td>
+            <td><p><strong>{!order_date!}</strong></p></td>
             <td><p><strong>{!tickets!}</strong></p></td>
             <td><p><strong>{!total_price!}</strong></p></td>
             <td><p><b>{!status!}</b></p></td>
@@ -125,7 +125,7 @@
 			{if $shop_order.order_status eq "cancel"}{!pers_cancel!}
 			{elseif $shop_order.order_status eq "reemit"}{!pers_reeemit!}
 			{elseif $shop_order.order_status eq "res"}{!pers_res!}
-			{elseif $shop_order.order_shipment_status eq "send"}{!pers_sent!}
+			{elseif $shop_order.order_shipment_status eq "send"}{!pers_send!}
 			{elseif $shop_order.order_payment_status eq "payed"}{!pers_payed!}
 			{elseif $shop_order.order_status eq "ord"}{!pers_ord!}
 			{else}{!pers_unknown!}
