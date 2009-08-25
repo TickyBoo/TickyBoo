@@ -230,6 +230,7 @@ class Order {
   	global $_SHOP;
 
     if($this->order_id){
+      echo "this order is already saved!!!";
       return FALSE; //already saved
     }
 	

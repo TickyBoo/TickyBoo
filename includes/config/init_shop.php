@@ -35,7 +35,4 @@
 global $_SHOP;
 require_once("init_common.php");
 $_SHOP->session_name = "ShopSession";
-
-require_once("init.php");
-
 ?>

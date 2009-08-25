@@ -24,7 +24,6 @@ var loadOrder = function(){
 		buttons: {},
 	  close: function(event, ui) {
       refreshOrder();
-      alert('he there');
     }
 
 	});
@@ -190,6 +189,7 @@ var loadOrder = function(){
   		dataType:	"HTML",
   		data:		userdata,
   		success:function(html, status){
+        alert(html);
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();

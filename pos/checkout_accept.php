@@ -1,6 +1,6 @@
 <?php 
 $action="accept";
 $_REQUEST['pos'] = true;
-require_once('../includes/web/checkout.php');
+require_once('../includes/controller/checkout.php');
 
 ?>

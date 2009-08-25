@@ -33,5 +33,5 @@
  */
 
 $fond='resend_activation';
-require_once('includes/web/template.php');
+require_once('includes/controller/template.php');
 ?>

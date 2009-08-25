@@ -35,11 +35,7 @@
  
   global $_SHOP;
 
-	define('DS', DIRECTORY_SEPARATOR);
-	define('ROOT',dirname(dirname(dirname(__FILE__))).DS);
-  define('INC',ROOT.'includes'.DS);
-	define('CLASSES',INC.'classes'.DS);
-
+  require_once('defines.php');
   if (!file_exists(INC.'config'.DS."init_config.php")){
     echo "<a href='inst/index.php'>Install me now!</a>";
     exit;
@@ -120,10 +116,6 @@
   //3.use external curl command:
   //$_SHOP->url_post_method='curl';
   //$_SHOP->url_post_curl_location='/usr/bin/curl';
-  
-  set_include_path(INC. PATH_SEPARATOR.
-                   INC.'pear'.PATH_SEPARATOR.
-                   get_include_path());
   
   include_once('classes/basics.php');
 

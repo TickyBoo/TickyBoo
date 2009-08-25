@@ -61,12 +61,8 @@
 			</tr>
 		</tbody>
 	</table>
-
- 	<br />
-
-
-<div id="continue-div" style="width:100%; overflow:auto;"></div>
-<div id="seat-chart" title='{!select_seat!}'></div>
+  <div id="continue-div" style="width:100%; overflow:auto;"></div>
+  <div id="seat-chart" title='{!select_seat!}'></div>
 </form>
 
 <table id="cart_table" class="scroll" cellpadding="2" cellspacing="2"></table>
@@ -122,7 +118,8 @@
   <button type='button' id='cancel' name='action' value='PosCancel' >{!cancel!}</button>
 </form>
 </div>
-<div id="order_action" title='{!prder_page!}'></div>
+<div id="order_action" title='{!order_page!}'></div>
 <br> <br>
-
-{include file="footer.tpl"}
+{if !$nofooter}
+  {include file="footer.tpl"}
+{/if}

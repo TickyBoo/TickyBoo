@@ -45,20 +45,35 @@ class ShopDB {
 
         if (!isset($_SHOP->link)) {
           if (isset($_SHOP->db_name)) {
-              $DB_Hostname = $_SHOP->db_host;
-        			$pos = strpos($DB_Hostname,':');
-              if ($pos!= false) {
-                 $port = substr($DB_Hostname,$pos+1);
-                 $DB_Hostname = substr($DB_Hostname,0, $pos);
-              } else
-                $port = 3306;
-             if ($_SHOP->link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name, $port)){
-                ShopDB::checkdatabase(true, false);
-                return true;
-             } else {
-                die ("Could not connect: " . mysqli_connect_errno());
-                return false;
-             }
+            $DB_Hostname = $_SHOP->db_host;
+            $pos = strpos($DB_Hostname,':');
+            if ($pos!= false) {
+              $port = substr($DB_Hostname,$pos+1);
+              $DB_Hostname = substr($DB_Hostname,0, $pos);
+            } else {
+              $port = 3306;
+            }
+            $link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name, $port);
+            /*
+             * This is the "official" OO way to do it,
+             * BUT $connect_error was broken until PHP 5.2.9 and 5.3.0.
+             */
+            if ($link->connect_error) {
+                die('Connect Error (' . $link->connect_errno . ') '
+                        . $link->connect_error);
+            }
+
+            /*
+             * Use this instead of $connect_error if you need to ensure
+             * compatibility with PHP versions prior to 5.2.9 and 5.3.0.
+             */
+            if (mysqli_connect_error()) {
+                die('Connect Error (' . mysqli_connect_errno() . ') '
+                        . mysqli_connect_error());
+            }
+            $_SHOP->link = $link;
+            ShopDB::checkdatabase(true, false);
+            return true;
           } else {
              echo 'db init - ';
              Print_r($_SHOP);

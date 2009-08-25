@@ -50,13 +50,6 @@ class Order_Smarty {
       $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];
     }
   }
-	
-  function vieworder($params) {
-	  $user_id=$params['user_id'];
-	  require_once("classes/userorder.php");
-	  _vieworder($user_id);
-	  return;
-  }
 
   function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
   
@@ -294,7 +287,6 @@ class Order_Smarty {
       }
     }
     return $content;
-    
   }
   
   function tickets ($params, $content, &$smarty,&$repeat){

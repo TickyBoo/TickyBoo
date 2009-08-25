@@ -41,6 +41,7 @@
   $_SHOP->auth_table="SPoint";
   $_SHOP->auth_login="login";
   $_SHOP->auth_password="password";
-  
-  require_once("config/init.php");
+
+  $_SHOP->root .= 'pos/';
+  $_SHOP->root_secured .= 'pos/';
 ?>

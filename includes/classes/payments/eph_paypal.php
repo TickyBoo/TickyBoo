@@ -90,15 +90,17 @@ class EPH_paypal extends payment{
 	
   function on_return(&$order, $result){
     If ($result) {
-	    Order::set_payment_id($order->order_id,'paypal:'.$_POST['txn_id']);
+      if ($_REQUEST['txn_id']) {
+	      Order::set_payment_id($order->order_id,'paypal:'.$_REQUEST['txn_id']);
+      }
       $order->set_payment_status('pending');
       return array('approved'=>true,
                    'transaction_id'=>$_REQUEST['txn_id'],
-                   'response'=> print_r($_REQUEST,true));
+                   'response'=> '');
     } else {
       return array('approved'=>false,
                    'transaction_id'=>false,
-                   'response'=> print_r($_REQUEST,true));
+                   'response'=> '');
     }
   }
   

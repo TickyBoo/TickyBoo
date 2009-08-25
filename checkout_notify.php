@@ -33,5 +33,5 @@
  */
 
 $action='notify';
-require_once('includes/web/checkout.php');
+require_once('includes/controller/checkout.php');
 ?>
