@@ -219,6 +219,7 @@ die();
        $user_id = $_POST['user_id'];
     }
     ob_start();
+    unset($_SESSION['_SHOP_order']) ;
     $return = confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
     $result = ob_get_contents();
     ob_end_clean();

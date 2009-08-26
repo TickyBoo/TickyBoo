@@ -333,7 +333,7 @@ class User{
     if (!$tpl = TemplateEngine::getTemplate('Signup_email')) {
       return false;
     }
-    $email=&new htmlMimeMail();
+    $email= new htmlMimeMail();
     $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
     $row['link']=$_SHOP->root."activation.php?uar=".urlencode($activation);
     $row['activate_code'] = $activation;

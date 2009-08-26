@@ -50,7 +50,7 @@ class Payment {
     }
   }
 
-	protected function __set($name, $value) {
+	function __set($name, $value) {
 		if ($this->handling) {
 	  		return $this->handling->$name = $value;
 		} else {

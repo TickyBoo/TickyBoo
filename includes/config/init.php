@@ -42,7 +42,12 @@ define ('AUTH_REALM','Fusion Ticket Login');
 
   global $_SHOP;
   
+ if(function_exists("date_default_timezone_set") and
+    function_exists("date_default_timezone_get")) {
+   @date_default_timezone_set(@date_default_timezone_get());
+ }
 
+  
 //check if the site is online  
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");

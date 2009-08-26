@@ -95,10 +95,10 @@ function print_select_tpl ($name,$type,&$data,&$err){
       $h = new Handling();
 			echo "<tr><td class='admin_name'  width='40%'>".con('handling_payment')."</td>
    	  <td class='admin_value'> <select name='handling_payment'>";
-			$pay=$h->get_payment();
+			$paylist=$h->get_payment();
 
   		$sel = array($data["handling_payment"]=>" selected ");
-			foreach($pay as $k=>$v){
+			foreach($paylist as $k=>$v){
 				 echo "<option value='$v' ".$sel[$v].">".con($v)."</option>\n";
 			}
 			echo "</select><span class='err'>{$err["handling_payment"]}</span></td></tr>\n";
@@ -108,9 +108,9 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
 			echo "<tr><td class='admin_name'  width='40%'>".con(handling_shipment)."</td>
 			<td class='admin_value'><select name='handling_shipment'>";
-			$send=$h->get_shipment();
+			$sendlist=$h->get_shipment();
  	  	$sel = array($data["handling_shipment"]=>" selected ");
-			foreach($send as $k=>$v){
+			foreach($sendlist as $k=>$v){
 				echo "<option value='$v' ".$sel[$v].">".con($v)."</option>\n";
 			}
 			echo "</select><span class='err'>{$err["handling_shipment"]}</span></td></tr>\n";
@@ -140,27 +140,9 @@ function print_select_tpl ($name,$type,&$data,&$err){
 		echo "<option value='No' ".$sel['No'].">No</option>\n";
 		echo "<option value='Yes' ".$sel['Yes'].">Yes</option>\n";
 		echo "</select><span class='err'>{$err["handling_delunpaid"]}</span></td></tr>\n";
-
-
-//		$sel[$data["handling_delunpaid"]]=" selected ";
-/*		echo "<tr><td class='admin_name'  width='40%'>".con('Handling_Delete_Unpaid')."</td>
-		<td class='admin_value'><select name='handling_delunpaid'>";
-		echo "<option value='No' ".$sel['No'].">No</option>\n";
-		echo "<option value='Yes' ".$sel['Yes'].">Yes</option>\n";
-		echo "</select><span class='err'>{$err["handling_delunpaid"]}</span></td></tr>\n";*/
-
 		$this->print_input('handling_expires_min',$data,$err,10);
 		$this->print_input('handling_fee_fix',$data,$err,5,10);
 		$this->print_input('handling_fee_percent',$data,$err,5,10);
-
-
-	#  if($data['handling_sale_mode']){
-	#    echo "<tr><td class='admin_name'>".con(handling_sale_mode)."</td>
-	#    <td class='admin_value'>".$data['handling_sale_mode']."</td></tr>";
-	#  }else{
-		//if 'sp' is present set the tick box ticked same fore www.
-
-	#  }
 
 		$temps=explode(",",$data['handling_email_template']);
 		foreach($temps as $temp){
@@ -194,7 +176,7 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
 		echo "<tr><td align='center' class='admin_value' colspan='2'>
 			<input type='submit' name='submit' value='".save."'>
-		<input type='reset' name='reset' value='".res."'></td></tr>";
+		  <input type='reset' name='reset' value='".res."'></td></tr>";
 
 		echo "</table></form>\n";
 
@@ -311,39 +293,27 @@ function extra_form($hand, &$data, &$err){
     require_once('classes/gui_smarty.php');
 
     $smarty = new Smarty;
-    $smarty->plugins_dir = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+//    $smarty->plugins_dir = array("plugins", INC . "shop_plugins".DS);
+    $smarty->plugins_dir  = array("plugins".DS, $_SHOP->includes_dir . "shop_plugins".DS);
+
     $smarty->compile_id   = 'AdminHandling_'.$_SHOP->lang;
     $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
-    $smarty->cache_dir    = $_SHOP->tmp_dir;// . '/web/cache/';
-    $smarty->config_dir   = $_SHOP->includes_dir . 'lang'.DS;
+    $smarty->cache_dir    = $_SHOP->tmp_dir; // . '/web/cache/';
+    $smarty->config_dir   = INC . 'lang'.DS;
     
-    ;
     $gui   = new Gui_smarty($smarty);
-    $gui->guidata = $data;
-    $gui->errors  = $err;
+    $gui->guidata   = $data;
+    $gui->errors    = $err;
     $gui->gui_name  = 'admin_name';
 	  $gui->gui_value = 'admin_value';
+
     $smarty->my_template_source = $extras;
     $smarty->display('text:'. $hand->handling_payment );
   }
 }
 
-
 function extra_init(&$hand){
-	switch ($hand->handling_shipment) {
-    case "email" : $hand->handling_text_shipment=
-		  "{fr}Par &eacute;mail{/fr}{de}Bei E-Mail{/de}{it}Per Email{/it}{en}By e-mail{/en}";
-      break;
-    case "post" : $hand->handling_text_shipment=
-      "{fr}Par la poste{/fr}{de}Mit der Post{/de}{it}Per posta{/it}{en}By post{/en}";
-      break;
-    case "entrance" : $hand->handling_text_shipment=
-      "{fr}A l'entr&eacute;e{/fr}{de}Zum Eintritt{/de}{it}A l'entrata{/it}{en}At the entrance{/en} ";
-      break;
-    case "sp" : $hand->handling_text_shipment=
-      "{fr}Point de vente{/fr}{de}Verkafstelle{/de}{it}Punto di venduta{/it}{en}Salepoint{/en} ";
-      break;
-	}
+  $hand->handling_text_shipment= con($hand->handling_shipment);
 }
 }
 ?>
