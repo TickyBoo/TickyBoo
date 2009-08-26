@@ -52,41 +52,7 @@ if($_REQUEST['pos']) {
   require_once ( 'template.php');
 }
 
-
-if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
-
-	if($_REQUEST['pos'] == true){
-		if (isset($_REQUEST['action'])) {
-			$r = $_REQUEST;
-		    $action = clean($_REQUEST['action']); //need to be cleaned so no false data can be included.
-		    require_once("classes/pos_ajax.php");
-		    $PosAjax = new PosAjax($r,$action);
-		    $result = $PosAjax->callAction();
-		}
-		if(!$result){
-		    $object = array("status" => false, "reason" => 'Missing action request');
-		    echo json_encode($object);
-		}
-	}elseif($_REQUEST['admin'] == true){
-
-	}elseif($_REQUEST['test'] == true){
-		$object = array("status"=>true,
-			"reason"=>"",
-			"request"=>"<h1>Test JSON Data</h1>"
-			);
-		echo json_encode($object);
-	}else{
-		$object = array("status"=>false,
-		"reason"=>'Incorrect Request');
-		echo json_encode($object);
-	}
-}else{
-	header("Status: 400");
-	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
-}
-
-if (!function_exists('json_encode'))
-{
+if (!function_exists('json_encode')) {
   function json_encode($a=false)
   {
     if (is_null($a)) return 'null';
@@ -130,4 +96,38 @@ if (!function_exists('json_encode'))
     }
   }
 }
+
+
+if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
+
+	if($_REQUEST['pos'] == true){
+		if (isset($_REQUEST['action'])) {
+			$r = $_REQUEST;
+		    $action = clean($_REQUEST['action']); //need to be cleaned so no false data can be included.
+		    require_once("classes/pos_ajax.php");
+		    $PosAjax = new PosAjax($r,$action);
+		    $result = $PosAjax->callAction();
+		}
+		if(!$result){
+		    $object = array("status" => false, "reason" => 'Missing action request');
+		    echo json_encode($object);
+		}
+	}elseif($_REQUEST['admin'] == true){
+
+	}elseif($_REQUEST['test'] == true){
+		$object = array("status"=>true,
+			"reason"=>"",
+			"request"=>"<h1>Test JSON Data</h1>"
+			);
+		echo json_encode($object);
+	}else{
+		$object = array("status"=>false,
+		"reason"=>'Incorrect Request');
+		echo json_encode($object);
+	}
+}else{
+	header("Status: 400");
+	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
+}
+
 ?>
