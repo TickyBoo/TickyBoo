@@ -49,7 +49,7 @@
     //print_r($code['template_code']);
     eval($code['template_code']);
     if(class_exists($t_class_name)){
-      $tpl=&new $t_class_name;
+      $tpl = new $t_class_name;
       $tpl->sourcetext= $code[template_text];
 //      $tpl->engine=&$this;
       $_SHOP->templates[$name]=&$tpl;

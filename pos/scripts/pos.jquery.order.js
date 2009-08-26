@@ -169,8 +169,15 @@ var loadOrder = function(){
 		$(this).ajaxSubmit({
 			data:{ajax:"yes",action:"addtocart"},
 			success: function(html){
-				refreshOrder(); //Refresh Cart
-				refreshCategories(); //Update ticket info (Free tickets etc)
+       // html = html.trim();
+        if(html.substring(0,2) == '~~') {
+          $("#error-text").html(html.substring(2));
+          $("#error-message").show();
+          setTimeout(function(){$("#error-message").hide();}, 40000);
+        } else {
+  				refreshOrder(); //Refresh Cart
+	  			refreshCategories(); //Update ticket info (Free tickets etc)
+        }
 			}
 		});
 		return false;
@@ -189,7 +196,6 @@ var loadOrder = function(){
   		dataType:	"HTML",
   		data:		userdata,
   		success:function(html, status){
-        alert(html);
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();

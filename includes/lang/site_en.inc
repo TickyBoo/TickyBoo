@@ -976,4 +976,7 @@ define("state","State");
 define("phone","Phone Number");
 define("fax","Fax Number");
 
+define('error_eventnotfound','Event not found');
+define('error_missingcategorytype','Missing category numbering type');
+define('error_discountnotfound','Discount not found');
 ?>

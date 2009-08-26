@@ -90,17 +90,15 @@ class MyCart_Smarty {
 	* @return boolean : will return true if that many seats are avalible.
 	*/
 	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false, $discount_id=0){
-	    if(!$mode){
-	    	$mode='mode_web';
+    if(!$mode){
+    	$mode='mode_web';
 		}
-	    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id);
-	    if($res){
-	    	echo "true";
-	    	return $res;
-	    }else{
-	    	echo "false";
-	    	return FALSE;
-	    }
+    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id);
+    if($res){
+    	return $res;
+    }else{
+    	return FALSE;
+    }
 	}
 
 
@@ -268,16 +266,19 @@ class MyCart_Smarty {
 
   	// Loads event details
     if(!$event=Event::load($event_id)){
+      $this->error = con('event_order_limit_exceeded');
       return FALSE;
     }
     // Loads cat details
     if(!$category_numbering = PlaceMapCategory::getCategoryNumbering($category_id)){
+      $this->error = con('error_missingcategorytype');
       return FALSE;
     }
 	//Load Discount if not 0.
 	if($discount_id > 0){
 		$discount = Discount::load($discount_id);
 		if(!$discount){
+      $this->error = con('error_discountnotfound');
 			return false;
 		}
 	}
@@ -285,21 +286,20 @@ class MyCart_Smarty {
     //checks the seating numbering.
     if($category_numbering=='none'){
       if(!($places>0)){
-        $this->error=places_empty;
+        $this->error=con('places_empty');
         return FALSE;
       }
       $newp = $this->places;
     }else if($category_numbering=='rows' or
              $category_numbering=='both' or
-	           $category_numbering=='seat')
-    {
+	           $category_numbering=='seat') {
       if(!is_array($places) or empty($places)){
-        $this->error=places_empty;
+        $this->error=con('places_empty');
         return FALSE;
       }
       $newp = count($places);
     }else{
-      user_error("unknown: category_numbering '{$category_numbering}' category_id '{$category_id}'");
+      $this->error="unknown: category_numbering '{$category_numbering}' category_id '{$category_id}'";
       return FALSE;
     }
 
@@ -312,11 +312,11 @@ class MyCart_Smarty {
 
         $has = $cart->total_places($this->event_id);
         if(($has+$newp)>$max){
-          $this->error = event_order_limit_exceeded;
+          $this->error = con('event_order_limit_exceeded');
       	  return FALSE;
       	}
       }else if($newp>$max){
-        $this->error = event_order_limit_exceeded;
+        $this->error = con('event_order_limit_exceeded');
         return FALSE;
       }
     }
@@ -325,14 +325,14 @@ class MyCart_Smarty {
 
 	  //if cart empty create new cart
       if(!isset($cart)){
-        $cart=new Cart();
+        $cart = new Cart();
       }
 
       // add place in cart.
       $res=$cart->add_place($event_id, $category_id, $places_id);
       If ($discount_id >0) {
         $discounts = array_fill(0,count($places_id),$discount);
-        echo ($res->set_discounts(0,0,0,$discounts));
+        $res->set_discounts(0,0,0,$discounts);
       }
       $cart->load_info();
 
@@ -344,22 +344,22 @@ class MyCart_Smarty {
       if(is_array($_SHOP->place_error)){
         switch($_SHOP->place_error['errno']){
       	  case PLACE_ERR_OCCUPIED:
-      	    $this->error=places_occupied;
+      	    $this->error=con('places_occupied');
       	    break;
       	  case PLACE_ERR_TOOMUCH:
-      	    $this->error=places_toomuch;
+      	    $this->error=con('places_toomuch');
       	    if($this->mode=='mode_kasse'){
-      	      $this->error.=places_remains.": ".$_SHOP->place_error['remains'];
+      	      $this->error.=con('places_remains').": ".$_SHOP->place_error['remains'];
       	    }
       	    break;
 
       	  case PLACE_ERR_INTERNAL:
       	  default:
-      	    $this->error=internal_error.' ['.$_SHOP->place_error['place'].'] '. $_SHOP->db_error;
+      	    $this->error=con('internal_error').' ['.$_SHOP->place_error['place'].'] '. $_SHOP->db_error;
       	    break;
       	}
       }else{
-        $this->error=internal_error.' ['.$_SHOP->place_error['errno'].']'. print_r($_SHOP->place_error, true);
+        $this->error=con('internal_error').' ['.$_SHOP->place_error['errno'].']'. print_r($_SHOP->place_error, true);
       }
 
       return FALSE;
