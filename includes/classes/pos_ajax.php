@@ -33,7 +33,7 @@
  */
 
 //Load File
-require_once("shop_plugins/function.placemap.php");
+require_once("shop_plugins".DS."function.placemap.php");
 
 class PosAjax { 
 
@@ -100,15 +100,13 @@ class PosAjax {
 		if(!$query = ShopDB::query($sql)){
 			return false;
 		}
-		
 		//Load html and javascript in the json var.
 		$this->json['events'] = array(); //assign a blank array.
-		
 		//Break down cats and array up with additional details.
 		while($evt = ShopDB::fetch_assoc($query)){
-			$date = date_parse($evt['event_date']);
-			$eventText = $evt['event_name'].' - '.$evt['ort_name'].' - '.$date['day'].'/'.$date['month'].'/'.$date['year'];
-			$option = "<option value='".$evt['event_id']."'>".$eventText."</option>";
+      $date = formatDate($evt['event_date']);
+//         $date ='';
+			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date}</option>";
 			
 			$this->json['events'][$evt['event_id']] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}

@@ -324,14 +324,6 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
   		return ($quote)?"'".$str."'":$str;
 	}
 
-/**
- * This function creates a md5 password code to allow login true WWW-Authenticate
- *
- */
-function md5pass($user,$pass) {
-	return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
-}
-
 function check_event($event_date){
   require_once("classes/Time.php");
 
@@ -413,14 +405,11 @@ function check_system() {
 
 }
 
-function formatDate($edate){
-   global $_SHOP;
-   ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
-   //$lang=$_SERVER["INTERFACE_LANG"];
-   $lang=$_SHOP->lang;
-   setlocale(LC_TIME, get_loc($lang));
-   $pdate= strftime ("%a %e %b %Y", mktime (0,0,0, $regs[2], $regs[3], $regs[1]));
-   return $pdate;
+function formatDate($edate, $format="%m %d %Y" ){
+   global $_SHOP;   //       echo  $format;
+ //  setlocale(LC_TIME, get_loc($_SHOP->lang));
+//   echo strtotime($edate);
+   return strftime ($format, strtotime($edate));
  }
 
 function formatAdminDate($edate,$year4=true){
@@ -453,7 +442,6 @@ function stringDatediff($datefrom, $dateto) {
 function subtractDaysFromDate($date,$no_days) {
 	$time1  = strtotime($date);
 	$res = strtotime((date('Y-m-d', $time1)." -$no_days"."days"));
-
 	return date('Y-m-d', $res);
 }
 
@@ -465,19 +453,26 @@ function addDaysToDate($date,$no_days) {
 }
 
 function get_loc($lang){
-  switch($lang){
-    case "de":
-      return "de_DE";
-      break;
-    case "en":
-      return "en";
-      break;
-    case "fr":
-      return "fr_FR";
-      break;
-    case "it":
-      return "it_IT";
-      break;
+  global $_SHOP;
+  if (isset($_SHOP->langs_locales[$lang])) {
+    return $_SHOP->langs_locales[$lang];
+  } else {
+    switch($lang){
+      case "de":
+        return "de_DE";
+        break;
+      case "fr":
+        return "fr_FR";
+        break;
+      case "it":
+        return "it_IT";
+        break;
+      case "nl":
+        return "nl_NL";
+        break;
+      default:
+        return "en_US";
+    }
   }
 }
 
@@ -492,15 +487,15 @@ function strip_tags_in_big_string($textstring){
 }
 
 function wp_entities($string, $encode = 1){
+  $a = (int) $encode;
+  $original = array("'"   ,"\""   ,"#"    ,"("    ,")","'"  );
+  $entities = array("&%39;","&%34;","&%35;","&#40;","&#41;","&apos;");
 
-$a = (int) $encode;
-$original = array("'"   ,"\""   ,"#"    ,"("    ,")","'"  );
-$entities = array("&%39;","&%34;","&%35;","&#40;","&#41;","&apos;");
-
-if($a == 1)
+  if($a == 1) {
     return str_replace($original, $entities, $string);
-else
+  } else {
     return str_replace($entities, $original, $string);
+  }
 }
 
 function clean($string, $type='ALL') {
@@ -514,6 +509,16 @@ function clean($string, $type='ALL') {
   }
   return $string;
 }
+
+/**
+ * This function creates a md5 password code to allow login true WWW-Authenticate
+ *
+ */
+function md5pass($user,$pass) {
+	return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
+}
+
+
 /**
  * This function creates a md5 password code to allow login true WWW-Authenticate
  *

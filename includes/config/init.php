@@ -224,15 +224,11 @@ define ('AUTH_REALM','Fusion Ticket Login');
     $_SHOP->lang=$_SHOP->langs[0];
     $_SESSION['_SHOP_LANG']=$_SHOP->lang;
   }
-	
-	if(isset($_SHOP->langs_locales[$_SHOP->lang])) {
-	  $locale=$_SHOP->langs_locales[$_SHOP->lang];
-	}else{ $locale = '';}
-	if(!$locale){
-		$locale=$_SHOP->lang;
-	}
-  setlocale(LC_TIME,$locale) or
-  setlocale(LC_TIME,$locale.'_'.strtoupper($locale));
+ $locale = get_loc($_SHOP->lang);
+
+ echo setlocale(LC_TIME,$locale,$locale.'.utf8') or
+      setlocale(LC_TIME,$locale.'_'.strtoupper($locale), $locale.'_'.strtoupper($locale).'.utf8');
+
   If (file_exists(INC."lang".DS."site_". $_SHOP->lang.".inc")){
     include_once(INC."lang".DS."site_". $_SHOP->lang.".inc");
     $_SHOP->langfile = INC."lang".DS."site_". $_SHOP->lang.".inc";

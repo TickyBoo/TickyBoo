@@ -628,8 +628,8 @@ class AdminView extends AUIComponent {
    echo "&nbsp;";
    if($page<$num_pages){
        $next=$page+1;
-       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."{$condition}page=$next'>".con('nav_next')."</a>";
-       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."{$condition}page=$num_pages'>". con('nav_last')."</a>";
+       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$next'>".con('nav_next')."</a>";
+       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$num_pages'>". con('nav_last')."</a>";
    }  else {
      echo con('nav_next')."\n";
      echo con('nav_last')."\n";
