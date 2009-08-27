@@ -66,6 +66,7 @@ define("yes"," YES");
 define("no"," No");
 define("home","Home");
 
+
 define("user_firstname","First Name");
 define("user_lastname","Last Name");
 define("user_address","Address");
@@ -83,37 +84,87 @@ define("user_email","E-Mail");
 define("user_id","ID");
 define("user_status","Status");
 
-//Warnings
-define("pass_not_egal","Passwords do not match");
-define("already_exist","This name already exists. Choose another.");
-define("in_use","This object is used and cannot be deleted");
-define("delete_item","Delete?");
-define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
-define("undefined","Undefined");
-define("mandatory"," Field Required");
-define("stop_success","Successfully Stopped");
-define("restart_success","Successfully Restarted");
-define("nosale_confirm_msg","Remove from Sale?");
-define("alreadyexist","This E-mail is already Registered in the Database!");
-define("ticket_not_found","Ticket Not Found in Database");
-define("order_not_found","Order Not Found");
-define("no_result","No Result");
-define("compilation_succeed","Success - Template Compiled");
-define('act_error',   'Your account could not be activated. 
+//Warnings and Flags
+
+define("act_err", "User Not Found or Already Activated.");
+define('act_error',   'Account could Not be Activated. 
 						Please re-check the link or contact the system administrator.');
 define('act_uselink', 'Please use the link that has been sent to your email address.');
-define('log_err_mailnotsend', 'The activation email could not be sent, please check you have the correct email address.');
-define("act_err", "User not found or already activated.");
-define('mand_all', "All input fields are required.");
-define('pwd_second_missing', "Second Password missing.");
-define('pwd_to_short', "Password too short.");
-define('pwd_not_thesame', "The passwords you entered do not match.");
-define('AutoCancel_order','Auto Cancel: Failed to order.');
-define('AutoCancel_paying','Auto Cancel: Failed to pay for order.');
-define('check_condition', "Please accept the terms");
-define('system_halted','SYSTEM IS HALTED');
-define('Status_is_pub','This event is published');
+define("already_exist","This name already exists. Choose another.");
+define("alreadyexist","This E-mail is already Registered in the Database!");
+define('AutoCancel_order','Auto Cancel: Failed to Order.');
+define('AutoCancel_paying','Auto Cancel: Failed to Pay for Order.');
+define("cannot_find_seat","Cannot Find Seat");
+define("cannot_seal","Internal Error: Cannot seal credit card info");
+define("cannot_store","Internal Error: Cannot store credit card info");
+define('check_condition', "Please Accept the Terms");
+define("compilation_succeed","Success - Template Compiled");
+define("correct_errors_first","Correct Errors First");
+define("delete_confirm_msg","Delete This Event?");
+define("delete_item","Delete?");
 define('deleted_all_tickets','Deleted All Tickets');
+define("delete_subs_first","Delete Sub-Events First!");
+define("email_valid","Please Enter a Valid Email Address");
+define("email_match","The Emails Do Not Match.");
+define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
+define("fax_short","The Fax Number is too Short");
+define("fax_long","The Fax Number is too Long");
+define("img_loading_problem","Problem Loading Image!");
+define("in_use","This Object is in use and <b>cannot</b> be Deleted");
+define("internal_error","Internal Error");
+define("invalid_date","Invalid Date");
+define("invalid_number","Invalid Credit Card Number");
+define('log_err_mailnotsend', 'The Activation Email <b>could not</b> be sent, 
+								please check you have the correct email address.');
+define("log_err_not_act","You are Not Activated.");
+define("log_err_not_act_info","<br />Please activate your account!<p>Please check your email for the activation email. Also
+        check your spam folder. Then follow the link to activate your account</p><p>If you
+        still haven't recieved anything after a hour please click <a href='resend_activation.php'
+        here</a> to resend activation email.</p>");
+define("log_err_wrong_usr","Wrong Username or Password! ");
+define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />
+								If you have forgoten your username or password please click 
+								<a href='forgot_password.php'>here</a></p>");
+define('mand_all', "All Input Fields are Required.");
+define("mandatory"," Field Required");
+define("MP3_loading_problem","Problem Loading MP3 File");
+define("nosale_confirm_msg","Remove from Sale?");
+define("new_order_created","New Order Created");
+define("not_number","Enter a Number Without -().");
+define("not_valid_email","E-mail is Invalid");
+define("no_result","No Result");
+define("old_order_canceled","Old Order Cancelled");
+define("order_allready_cancelled","Order Allready cancelled");
+define("order_canceled","Order Cancelled");
+define("order_cannot_reemit","Can Not Re-Issue");
+define("order_not_found","Order Not Found");
+define("order_not_canceled","Order Not Cancelled");
+define("pass_not_egal","Passwords Do Not Match");
+define("pass_match","Passwords Do Not Match");
+define("pass_too_short","Password too Short");
+define("phone_long","The Phone Number is too Long!");
+define("phone_short","The Phone Number is too Short");
+define("places_empty","Select a Seat, Please!");
+define("places_occupied","Sorry! The selected seats were taken by another customer.");
+define("places_remains"," Remaining seats");
+define("places_toomuch","This Number of Seats can not be Reserved");
+define('pwd_not_thesame', "The Passwords Entered Do Not Match.");
+define('pwd_second_missing', "Second Password is Missing.");
+define('pwd_to_short', "Password Too Short.");
+define("pub_confirm_msg","Publish Event?");
+define("reservate_failed","Internal Error: Impossible to Save Seats ");
+define("restart_success","Successfully Restarted");
+define("save_failed","Internal Error: Impossible to Save the Order ");
+define("send_order_email","Send Order by E-mail and Change Status to 'Sent'");
+define("split_pm","Split Seat Chart");
+define('Status_is_pub','This Event is Published');
+define("stop_success","Successfully Stopped");
+define('system_halted','<b>SYSTEM IS HALTED<b>');
+define("ticket_deleted","Ticket deleted");
+define("ticket_not_found","Ticket Not Found in Database");
+define("tickets_printing","Tickets Will be Printed. Wait Please!");
+define("too_low","Please Enter a Number Larger than 0 !");
+define("undefined","Undefined");
 
 //------------------------------------------------------
 //ADMIN
@@ -302,6 +353,10 @@ define("pm_parts","Seat Chart Parts");
 			define("pmp_scene_south","South");
 			define("pmp_scene_west","West");
 		define("pmp_shift","Shift Rows");
+			//do not edit.  Places stage image 
+				define("scene_h","images/scene_h_en.png");
+				define("scene_v","images/scene_v_en.png");
+
 
 	define("labels","Labels");  //add/fix in program
 		define("label_type_text","Text");
@@ -430,6 +485,8 @@ define("order_event_list_title","Orders by Event");
 	define("order_type_payed","Paid");
 	define("order_type_sended","Sent");
 	define("order_type_reserved","Reserved");
+	define("purge","Purge");
+
 
 	//View Order
 	define("order_nr","Order #: ");
@@ -896,6 +953,7 @@ define("agrement","I have read and agree to the General Terms of Sale.");
 define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send
         me information about future events and other {\$organizer->organizer_name} related 
         matters, and that they will not pass on my details to any 3rd party.");
+define("member_info","Please enter your email address and password");
 
 //Progressbar.tpl
 define("prg_order","Order");
@@ -908,7 +966,6 @@ define("prg_complete","Complete");
 //---------------------------------------------------------
 
 //POS
-
 define("total_price","Total Price");
 define('exst_user','Existing');
 define('new_partron','New Patron');
@@ -963,7 +1020,7 @@ define('webshop','webshop');
 define('event_end','event_end');
 define('No_useraddress_selected','No useraddress selected.');
 define('No_handling_selected','No handling method selected.');
-define('noting_checkout','There is noting to checkout!!!');
+define('noting_checkout','There is nothing to checkout!!!');
 
 // Change to user_* in pos and delete this section
 define("firstname","First Name");
@@ -979,4 +1036,43 @@ define("fax","Fax Number");
 define('error_eventnotfound','Event not found');
 define('error_missingcategorytype','Missing category numbering type');
 define('error_discountnotfound','Discount not found');
+
+//Moved from old file & used in POS - 8/26/09 Lou
+define("actions","Actions");
+define("cancel_and_delete","Status Changed to 'Cancelled' and Tickets Deleted");
+define("cancel_ticket","Cancel Ticket");
+define("categories_and_prices","Categories and prices");
+define("cat_sold_out","Category sold");
+define("charges","Charges");
+define("confirm_and_print","Confirm and Print");
+define("date_venue","Date,Venue");
+define("preferences","Preferences");
+define("processed_unsent","Paid and Processed Orders Ready to be Sent");
+define("open_with_acrobat","Open Orders in Acrobat");
+define("order_details","Order details");
+define("reemitted","Re-issued");
+define("total_without_charges","Total without charges");
+define("send_orders_printer","Send Orders to printer");
+define("sure_to_cancel","Cancel?");
+
+//------------------------------------------------------
+//Not quite sure about these.  8/26/09 Lou
+//AdminView.php - These are in the file but I can not find where they display
+define("page_format_default","Default");
+define("page_format_std","Standard");
+define("page_format_custom","Custom");
+define("page_orientation_landscape","Landscape");
+define("page_orientation_portrait","Portrait");
+
+//function.placemap.php
+define("place_row","Row");
+define("place_seat","Seat");
+
+define("payment_cc","Credit card");
+define("payment_post","Post");
+define("paypal_pay","Make payments with PayPal - it's fast, free and secure!");
+define("pm_title","All charts");
+//--------------------------------------------------
+
+
 ?>
