@@ -132,7 +132,7 @@
   }
 */
 	//accepted languages
-	$_SHOP->langs=array('nl');
+	$_SHOP->langs=array('en');
 	$_SHOP->langs_names=array('en'=>'English',
                             'de'=>'Deutsch',
                             'nl'=>'Nederlands'

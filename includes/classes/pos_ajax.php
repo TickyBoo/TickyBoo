@@ -104,7 +104,7 @@ class PosAjax {
 		$this->json['events'] = array(); //assign a blank array.
 		//Break down cats and array up with additional details.
 		while($evt = ShopDB::fetch_assoc($query)){
-      $date = formatDate($evt['event_date']);
+      $date = formatDate($evt['event_date'],con('shortdate_format'));
 //         $date ='';
 			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date}</option>";
 			
@@ -294,7 +294,8 @@ class PosAjax {
   //  			 "<input type='hidden' value='remove" name="action" />
       }
       $row = array($col);
-      $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}<br>{$event_item->event_date} - {$event_item->event_time}";
+      $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}<br>".
+               formatdate($event_item->event_date)."  ".formatdate($event_item->event_time,con('time_format'));
       $row[] = count($seats_ids);
       $col = "{$category_item->cat_name}";
       if ($seatinfo) {

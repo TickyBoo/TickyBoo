@@ -405,11 +405,13 @@ function check_system() {
 
 }
 
-function formatDate($edate, $format="%m %d %Y" ){
-   global $_SHOP;   //       echo  $format;
- //  setlocale(LC_TIME, get_loc($_SHOP->lang));
-//   echo strtotime($edate);
-   return strftime ($format, strtotime($edate));
+function formatDate($edate, $format="%m/%d/%Y" ){
+  $pdate = strftime ($format, strtotime($edate));
+  If ($pdate == false) {
+    $format = str_replace('%e','%d',$format);
+    $pdate = strftime ($format, strtotime($edate));
+  }
+  return $pdate;
  }
 
 function formatAdminDate($edate,$year4=true){
@@ -457,7 +459,7 @@ function get_loc($lang){
   if (isset($_SHOP->langs_locales[$lang])) {
     return $_SHOP->langs_locales[$lang];
   } else {
-    switch($lang){
+/*    switch($lang){
       case "de":
         return "de_DE";
         break;
@@ -470,9 +472,9 @@ function get_loc($lang){
       case "nl":
         return "nl_NL";
         break;
-      default:
-        return "en_US";
-    }
+      default: */
+        return $lang;
+//    }
   }
 }
 

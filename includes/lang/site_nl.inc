@@ -1041,4 +1041,4 @@ define('invalid_zip', "Postcode onjuist ingegeven");
 define('www', 'webshop');
 define('dts_month_arr', 'January|February|March|April|May|June|July|August|September|October|November|December');
 define('dts_day_arr', 'Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday');
-?>?>
+?>

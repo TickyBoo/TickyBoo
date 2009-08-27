@@ -2,7 +2,7 @@
 if (! defined('SIMPLE_TEST')) {
     define('SIMPLE_TEST', 'simpletest/');
 }
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 require_once(SIMPLE_TEST . 'autorun.php');
 class AllTests extends TestSuite {
     function AllTests() {

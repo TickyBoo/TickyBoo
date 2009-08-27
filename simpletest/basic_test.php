@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(__FILE__) .'\..\includes\classes\basics.php');
-require_once(dirname(__FILE__) .'\..\includes\config\init_common.php');
-require_once(dirname(__FILE__) .'\..\includes\config\init.php');
+require_once(dirname(__FILE__) .'/../includes/classes/basics.php');
+require_once(dirname(__FILE__) .'/../includes/config/init_common.php');
+require_once(dirname(__FILE__) .'/../includes/config/init.php');
 
 class TestOfBasic extends UnitTestCase {
     function TestOfBasic() {
@@ -10,13 +10,14 @@ class TestOfBasic extends UnitTestCase {
 
     function testBasicFormatDate() {
        GLOBAL $_SHOP;
-       $this->dump(localeConv());
+       $this->dump('php:'.phpversion ());
        $this->dump(get_loc($_SHOP->lang));
+       $this->dump(setlocale(LC_ALL, NULL));
 
-       $this->assertIdentical('01 01 2009', formatdate('2009-01-01',"%a %e %b %Y"));
-       $this->assertIdentical('01 01 2009', formatdate('01-01-2009',"%a %m %d %Y"));
-       $this->assertIdentical('01 01 2009', formatdate('01/01/2009'."%a %b %Y"));
-       $this->assertIdentical('01 01 2009', formatdate('01.01.2009',"%a %e %Y"));
+       $this->assertIdentical('01 01 2009', formatdate('2009-01-05',"%a %d %b %Y"));
+       $this->assertIdentical('01 01 2009', formatdate('05-01-2009',"%a %d %m %Y"));
+       $this->assertIdentical('01 01 2009', formatdate('05/01/2009',"%a %b %Y"));
+       $this->assertIdentical('01 01 2009', formatdate('05.05.2009',"%a %j %Y"));
     }
 }
 ?>
