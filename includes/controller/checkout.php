@@ -239,7 +239,6 @@ die();
   	} else {
 		  $myorder = $_SESSION['_SHOP_order'];
 	  }
-	  print_r($myorder);
   	if (!$myorder) {
     		$smarty->assign('order_error', $order->error);
     		return "checkout_preview";
