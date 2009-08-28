@@ -39,7 +39,7 @@
     <td>
         {if !$pm_return.approved}
           {!pay_reg!}!
-        {/if}
+        {/if} 
         <br>
 		    {!order_id!} <b>{$shop_order.order_id}</b><br>
 		    {if $pm_return.transaction_id}
