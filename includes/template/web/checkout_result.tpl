@@ -50,6 +50,7 @@
           <div class='error'>
   	    {else}
           <br>
+
              <a href='?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
           <br>
           <div>
