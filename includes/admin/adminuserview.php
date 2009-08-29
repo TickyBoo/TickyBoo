@@ -52,7 +52,7 @@ global $_SHOP;
    } else {
     echo "<input type='hidden' name='action' value='insert'/>\n";
    }
-     echo "<tr> <td class='admin_name'>".con('password')."</td>
+     echo "<tr> <td class='admin_name'>".con('new_password')."</td>
           <td class='admin_value'><input type='password' name='password1' size='10'  maxlength='10'><span class='err'>{$err['password']}</span></td></tr>
           <tr> <td class='admin_name'>".con('password2')."</td>
           <td class='admin_value'><input type='password' name='password2' size='10'  maxlength='10'></td></tr>";

@@ -55,13 +55,21 @@ define("nav_last","Last");
 	define("confirmpassword","Confirm Password");
 
 //Globals
-define("remove_image","Remove Image");
-define("yes"," YES");
-define("no"," No");
+define("event","Event");
 define("home","Home");
+define("logout","Log out");
+define("member","Member");
+define("no"," No");
+define("order_id","Order Number");
+define("remove_image","Remove Picture");
+define("tickets","Tickets");
+define("welcome","Welcome");
+define("yes"," YES");
+
 
 define("user_firstname","First Name");
 define("user_lastname","Last Name");
+define("user_name","Name");
 define("user_address","Address");
 define("user_address1","Address 1");
 define("user_address2","Address 2");
@@ -74,7 +82,7 @@ define("user_country_name","Country");
 define("user_phone","Phone");
 define("user_fax","Fax");
 define("user_email","E-Mail");
-define("user_id","ID");
+define("user_id","User ID");
 define("user_status","Status");
 
 //Warnings and Flags
@@ -163,7 +171,6 @@ define("undefined","Undefined!");
 //ADMIN
 
 //Administration Menu
-define("welcome","Welcome");
 define("index_admin","Home"); 
 define("administration","Administration");
 define("users_admin","System Managers"); 
@@ -175,11 +182,11 @@ define("payment_admin","Order Handlings");
 define("search_order","Search"); 
 define("imp_export_admin", "Import /Export"); 
 define("garbage","Garbage");
-define("logout","Log Out");
+
 
 //Home
 //Information
-define("index_admin_tab","Information"); //add tab
+define("index_admin_tab","Information");
 define("current_version",	"Version:");
 define("InfoWebVersion",	"Server Software");
 define("InfoPhpVersion",	"PHP Version");
@@ -196,7 +203,7 @@ define("index_events_count","<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, 
 define('index_ort_count','%d');
 
 //Owner
-define("owner_tab","Owner"); //add tab
+define("owner_tab","Owner");
 define("organizer_update_title","Modify Owner information");
 define("organizer_name","Name");
 define("organizer_address","Address");
@@ -209,11 +216,10 @@ define("organizer_fax","Fax");
 define("organizer_email","E-Mail");
 define("organizer_currency","Currency");
 define("organizer_logo","Owner's Logo");
-define("organizer_logo_new","New Logo Image"); //add
 define("organizer_remove_image","Remove Logo");
 
 //Configuration
-define("shopconfig_tab","Configuration"); //add tab
+define("shopconfig_tab","Configuration");
 define("option_update_title","Config Shop Auto-Updates");
 define("shopconfig_lastrun_int","Order check interval");
 define("shopconfig_restime","Reservation time. (<10 = off)");
@@ -238,21 +244,21 @@ define("cart_delay","Cart Timeout");
 //Globals
 	define("admin_login","Login Name");
 
-define("admin_user_tab","Admins"); //add tab
+define("admin_user_tab","Admins");
 define("admin_user_title","All System Administrators");
 define("admin_user_update_title","Modify Administrator");
 	define("admin_user_add_title","Add System Administrator");
 	define("admin_user_login","Login Name"); //change to admin_login
 
 //Organizers
-define("organizer_tab","Organizers"); //add tab
+define("organizer_tab","Organizers");
 define("organizer_user_title","All Event Organizers");
 define("organizer_user_add_title","Add an Event Organizer");
 
 define("organizer_user_update_title","Modify Event Organizer");
 
 //Sale Points
-define("spoint_tab","Sale Points"); //add tab
+define("spoint_tab","Sale Points");
 define("spoint_title","All Points of Sale");
 define("spoint_add_title","Add a Point of Sale");
 define("spoint_update_title","Modify Point of Sale");
@@ -263,7 +269,7 @@ define("spoint_update_title","Modify Point of Sale");
 		define("user_nickname","Nickname");
 
 //Ticket Takers
-define("control_tab","Ticket Takers"); //add tab
+define("control_tab","Ticket Takers");
 define("control_title","All Ticket Takers");
 	define("control_view","Ticket Taker");
 	define("control_add_title","Add Ticket Taker");
@@ -271,9 +277,12 @@ define("control_title","All Ticket Takers");
 		define("control_login","Login");
 		define("control_event_ids","Authorized Events");
 		
+//Event Section
+		
 //Venues
 //OrtView.php
-define("ort_admin","Venues"); //tab
+define("ort_admin_tab","Venues");
+define("ort_admin","Venues");
 define("ort_title","All Venues");
 	define("ort_add_title","Add Venue");
 	define("ort_update_title","Modify Venue");
@@ -290,7 +299,6 @@ define("ort_title","All Venues");
 		define("ort_url","Homepage");
 		define("ort_pm","Googlemaps link");
 		define("ort_image","Venue Logo");
-		define("ort_remove_image","Remove Venue Logo"); //add
 
 define("place_maps","Seat Charts");
 	define("edit_pm","Modify Seat Chart");
@@ -319,10 +327,8 @@ define("categories","Categories");
 		define("number_taken","Seats Sold");	 
 		define("category_data","Category Data");
 
-define("pm_zones","Zones");
+	define("pm_zones","Zones");
 	define("pm_zone","Zone");
-	define("pm_add_title","Add a Zone"); //add
-	define("pm_update_title","Modify Zone"); //add
 		define("pmz_pm_id","Seat Chart ID #");
 		define("pmz_color","Zone Color");
 		define("pmz_name","Zone Name");
@@ -334,7 +340,6 @@ define("pm_zones","Zones");
 	define("clear","Clear"); //button
 
 define("pm_parts","Seat Chart Parts");
-	define("pm_add_title","Add a Seat Chart Part");
 	define("pm_part","Seat Chart Part");
 		define("pmp_id","Seat Chart Part ID");
 		define("pmp_name","Seat Chart Part Name");
@@ -377,10 +382,8 @@ define("ort_plan_nr","Number on plan");
 
 
 
-//Event Section
-
 //Event Groups
-define("event_group_tab","Groups"); //tab
+define("event_group_tab","Groups");
 define("event_group_title","All Event Groups");
 define("event_group_add_title","Add an Event Group");
 define("event_group_update_title","Modify Event Group");
@@ -400,10 +403,10 @@ define("publish_event_group", "Publish Event Group");
 
 
 //Events
-define("event_tab","Events"); //tab
-define("history_tab","History"); //tab
+define("event_tab","Events");
+define("history_tab","History");
 define("event_title","All Events");
-define("checkbox_all","Check/Uncheck All"); //add
+define("checkbox_all","Check/Uncheck All");
 define("also_sub","Subevents also");
 define("event_add_title","Add a New Event");
 define("event_edit_title","Modify Event");
@@ -468,8 +471,8 @@ define("show_text_stats","Text");
 define("show_grafik_stats","Graph");
 
 //Order Overview
-define("handlings_admin_tab","Handlings"); //add tab
-define("event_admin_tab","Events"); //add tab
+define("orders_handlings_tab","Handlings"); //add tab
+define("orders_event_tab","Events"); //add tab
 define("order_list_title","Orders by Payment Handling");
 define("order_event_list_title","Orders by Event");
 	define("order_type_ordered","Ordered");
@@ -484,8 +487,6 @@ define("order_event_list_title","Orders by Event");
 
 	//View Order
 	define("order_nr","Order #: ");
-	define("tickets","Tickets");
-	define("user","User ");
 	define("order_tickets_nr","Number of Tickets");
 	define("tickets_nr","Quantity");
 	define("order_fee","Fee");
@@ -494,6 +495,7 @@ define("order_event_list_title","Orders by Event");
 	define("order_shipment_status","Shipment Status");
 		define("send","Sent");
 	define("order_payment_status","Payment Status");
+	define("order_payment_id","Payment ID");
 	define("order_status","Status");
 	define("processed","Processed");
 	define("order_deleted_manual","Order Manually Canceled");
@@ -533,10 +535,10 @@ define("order_event_list_title","Orders by Event");
 	define("cancel_order","Mark 'Canceled' and Delete Tickets");
 
 //Templates
-define("templ_System","System Emails");
-define("templ_email","Emails");  
-define("templ_pdf2","Html2pdf's" );
-define("templ_pdf","Old Pdf's" );
+define("templ_System","System Emails");//tab
+define("templ_email","Emails");//tab
+define("templ_pdf2","Html2pdf's" );//tab
+define("templ_pdf","Old Pdf's" );//tab
 define("template_title","All Templates");
 define("template_add_title","Add a Template");
 define("template_update_title","Modify Template");
@@ -611,29 +613,26 @@ define("payment_update_title","Modify the Payment Type");
 //define("handling_id","ID");
 
 //Search
-define("patron_tab","Patron"); //add tab
+define("patron_tab","Patron");
 define("search_title_user","Search for Patron");
 	define("sale_point","POS");
-	define("member","Member");
 	define("guest","Guest");
 	
 define("search_result","Search Result");
-define("seat_tab","Seat"); //add tab
+define("seat_tab","Seat");
 	define("search_title_place","Search Seats");
 		define("event_list","Event List");
 		define("seat_row_nr","Row Number");
 		define("seat_nr","Seat Number");
 		define("choice_please","Choose Please...");
-			define("event","Events");
 			define("category","Category");
 			define("place","Seat");
 			define("price","Price");
 			define("bs","Ord.#");
 			define("status","Status");
-define("order_tab","Order"); //add tab
+define("order_tab","Order");
 	define("search_title_order","Search Orders");
-	define("order_id","Order Number");
-define("barcode_tab","Barcode"); //add tab
+define("barcode_tab","Barcode");
 	define("search_title_codebar","Search Barcodes");
 	define("codebar","Barcode");
 
@@ -671,7 +670,7 @@ define("import_xml_submit","Import It!");
 define("import_xml","Event in XML");
 	define("import_xml_file","Import File");
 define("import_template","Templates");
-	define("template_name","Name");
+	//define("import_template_name","Name"); see templates
 define("import_langauge","Language Files");
 	define("import_csv_file","Import File Name");
 	define("langauge","New Language File Name");
@@ -730,8 +729,6 @@ define("calendar","Calendar");
 
 //cart_content.tpl
 define("cart_empty","Your cart is empty.");
-define("event","Event"); //personal_order.tpl, personl_orders.tpl
-define("tickets","Tickets"); //personal_order.tpl, personal_orders.tpl
 define("total","Total");
 define("expires_in","Expires in");
 define("total_price","Total Price"); //personal_order.tpl, personal_orders.tpl
@@ -767,13 +764,12 @@ define('Discount_for','With Discount:');
 define("prices_in","Prices in");
 define("Please_login","<center><b>Please login or register to reserve seats.</b></center>");
 define("select_category","Select a Category");
-define("order_limit","Order Limit");
+define("order_limit","Order Limit"); //category.tpl
 define('old_event','<center><B>This event is expired and can not be ordered anymore.</b></center>');
 
 //category.tpl
 define("select_seat","1. Select your seat(s) please");
 define("click_on_reserve","2.Click on 'Reserve'");
-define("order_limit","Order limit"); //cat_description.tpl
 define("number_seats","Number of seats");
 define("only_rows_numbered","Only rows numbered");
 
@@ -793,12 +789,12 @@ define("limit","Unfortunately, you have exceeded the amount of allowed reserved 
 define("orclick","Or Click below to:");
 
 //checkout_result.tpl
-define("pay_accept","Payment accepted");
-define("pay_refused","Payment not accepted");
-define("pay_reg","Payment registered");
-define("order_id","Order Number"); //personal_order.tpl, personal_orders.tpl
+define("pay_accept","Payment Method Accepted");
+define("pay_refused","Payment Method Not Accepted");
+define("pay_reg","Payment Registered");
 define("trx_id","Transation ID");
 define("orderdeleted","Order Deleted");
+define("printinvoice","Print Invoice");
 
 //discount.tpl
 define("discounts","Discounts");
@@ -843,7 +839,6 @@ define("pwd_err","User not found or other problem occured");
 define("pwd_is_sent","Your new password was sent to your e-mail");
 define("pwd_note","Enter your e-mail address here. Click on 'Send Password'
         and a new password will be emailed to you");
-define("close","Close");
 
 //help.tpl
 define("helpme","Help information");
@@ -857,12 +852,7 @@ define('eventlist_info', 'Please select an upcoming event from below.');
 define("orders","Orders");
 define("number_tickets","Number of tickets"); //personal_reorder.tpl
 define("userid","User Id");
-define("order_date","Order Date");
-define("status","Status");
-define("reserved","Reserved");
-define("ordered","Ordered");
 define("cancelled","Cancelled");
-define("reemited","Re-issued");
 define("buytimeleft","You have ~DAYS~ Days, ~HOURS~ Hours, ~MINS~ Mins, ~SECS~ Seconds left to confirm your order!");
 define("autocancel","After this time your order is automaticaly canceled!");
 define("ordertickets","To Order Tickets Click below:");
@@ -874,12 +864,8 @@ define("notsent","Not Sent");
 define("sent","Sent");
 define("go_back","Click Here to Go Back");
 define("id","ID");
-define("category","Cat.");
 define("zone","Zone");
-define("seat","Seat");
 define("discount","Discount");
-define("price","Price");
-define("none","None");
 define("paytimeleft","You Have ~MINS~ Mins and ~SECS~ Seconds to pay for your order!");
 
 //personal_orders.tpl
@@ -901,7 +887,6 @@ define("pers_mess2","To change or see your orders in more detail please click
          <a href='index.php?personal_page=orders'>Here</a><br><br>Only the last 6 orders are shown here.");
 
 //personal_reorder.tpl
-define("user","User");
 define("payment_status","Payment Status");
 define("shipment_status","Shipment Status");
 
@@ -920,13 +905,12 @@ define("confirmemail","Confirm E-mail Address");
 define("login","Login name");
 define("memberinfo","Please enter your details below. To buy tickets you are required to
         sign up, it is recommend that you sign up before you reserve tickets.");
-define("email","E-mail Address"); //personal_page.tpl, forgot_password.tpl
 define("register","Register Here");
 
 //user_login_block.tpl
-define("member","Member");
-define("welcome","Welcome");
-define("logout","Log out");
+
+
+
 
 //user_register.tpl
 define("becomemember","Become a Member");
@@ -959,11 +943,9 @@ define("prg_complete","Complete");
 //---------------------------------------------------------
 
 //POS
-define("total_price","Total Price");
 define('exst_user','Existing');
 define('new_partron','New Patron');
 define("without_fee","Without Fee");
-define("ordertickets","To Order Tickets Click below:");
 
 define("event_sold","Event sold out"); //POS/EVENT_GROUP.TPL
 define("event_start","Event start"); //POS/EVENT.TPL
@@ -1006,11 +988,9 @@ define('pos_holdtickets','Hold Tickets');
 define("order_status_changed","Order Status Changed Successfully"); //pos
 define('dts_month_arr', 'January|February|March|April|May|June|July|August|September|October|November|December');
 define('timestamp','timestamp');//pos
-define('user_name','user_name');//POS USER.TPL
 define('webshop','webshop');
 
 //Added by Niels 8-22-09
-define('event_end','event_end');
 define('No_useraddress_selected','No useraddress selected.');
 define('No_handling_selected','No handling method selected.');
 define('noting_checkout','There is nothing to checkout!!!');

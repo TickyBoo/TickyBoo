@@ -148,7 +148,7 @@ function order_details ($order_id){
    $order["user_status"]=$status;
 
    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-   echo "<tr><td class='admin_list_title' colspan='2'>".user." ".$order["user_id"]."</td></tr>";
+   echo "<tr><td class='admin_list_title' colspan='2'>".user_id." ".$order["user_id"]."</td></tr>";
 
    $this->print_field('user_lastname',$order);
    $this->print_field('user_firstname',$order);
@@ -541,7 +541,7 @@ function draw (){
       $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
     }
 
-    $menu = array("Handlings"=>"?tab=0", "Events"=>'?tab=1');
+    $menu = array( con("orders_handlings_tab")=>"?tab=0", con("orders_event_tab")=>'?tab=1');
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
 
   if(preg_match('/^set_status_/',$_GET['action1']) and $_GET['order_id1']>0){

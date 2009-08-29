@@ -66,7 +66,7 @@
         {ShowFormToken name='resendpassword'}
         <tr><td  colspan='2'>{!pwd_note!}<br><br></td></tr>
         <tr>
-          <td>{!email!}</td>
+          <td>{!user_email!}</td>
           <td><input type='text' name='email' size='30'> &nbsp; <input type='submit' name='submit' value="{!pwd_send!}"></td>
         </tr>
       </table>

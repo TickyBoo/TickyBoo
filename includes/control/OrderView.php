@@ -41,7 +41,7 @@ function order_details ($order_id){
   global $_SHOP;
   $query="select * from `Order`,User where order_id="._esc($order_id)." and order_user_id=user_id";
   if(!$order=ShopDB::query_one_row($query)){
-    echo "<div class='error'>".order_not_found." $order_id</div>";
+    echo "<div class='error'>".con('order_not_found')." $order_id</div>";
     return;
   }
   $status=$this->print_order_status($order);
@@ -49,8 +49,7 @@ function order_details ($order_id){
 
   
   echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='2'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".
-         order_nr."  ".$order_id."</td></tr>";   
+  echo "<tr><td class='admin_list_title' colspan='2'>".con('order_nr')."  ".$order_id."</td></tr>";   
    
   $this->print_field('order_tickets_nr',$order);
   $this->print_field('order_total_price',$order);
@@ -75,7 +74,7 @@ function order_details ($order_id){
      return;
   }
   echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='2'>\n";
-  echo "<tr><td class='admin_list_title' colspan='7'>".tickets."</td></tr>";   
+  echo "<tr><td class='admin_list_title' colspan='7'>".con('tickets')."</td></tr>";   
   $alt=0; 
   while($ticket=shopDB::fetch_assoc($res)){
     if((!$ticket["category_numbering"]) or $ticket["category_numbering"]=='both'){
@@ -111,7 +110,7 @@ function order_details ($order_id){
   $status=$this->print_status($order["user_status"]);
   $order["user_status"]=$status;
   echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='2' border='0'>\n";
-  echo "<tr><td class='admin_list_title' colspan='2'>".user." ".$order["user_id"]."</td></tr>";   
+  echo "<tr><td class='admin_list_title' colspan='2'>".con('user_id')." ".$order["user_id"]."</td></tr>";   
    
   $this->print_field('user_lastname',$order);
   $this->print_field('user_firstname',$order);
@@ -159,11 +158,11 @@ function get_nav ($page,$count,$condition){
   if(!isset($page)){ $page=1; }
  
   echo "<table border='0' width='500'><tr><td align='center'>";
-  echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".nav_first."</a>";
+  echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".con('nav_first')."</a>";
   
   if($page>1){
     $prev=$page-1;
-    echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$prev'>".nav_prev."</a>";
+    echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$prev'>".con('nav_prev')."</a>";
   }
   $num_pages=ceil($count/$this->page_length);
   echo "&nbsp;[";
@@ -177,9 +176,9 @@ function get_nav ($page,$count,$condition){
   echo "&nbsp;]&nbsp;";
   $next=$page+1;
     if($next*$this->page_length<$count){
-      echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".nav_next."</a>";
+      echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".con('nav_next')."</a>";
     }
-  echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>".nav_last."</a>";
+  echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>".con('nav_last')."</a>";
     
   echo "</td></tr></table>";
 }
@@ -206,11 +205,11 @@ function print_status ($user_status){
 
 function print_order_status ($order){
   switch($order['order_status']){
-    case 'ord':   return "<font color='blue'>".ordered."</font>";
-    case 'send':  return "<font color='red'>".sended."</font>";
-    case 'payed': return "<font color='green'>".payed."</font>";
-    case 'cancel':return "<font color='#787878'>".canceled."</font>";
-    case 'reemit':return "<font color='#787878'>".reemited."</font> ( 
+    case 'ord':   return "<font color='blue'>".con('ordered')."</font>";
+    case 'send':  return "<font color='red'>".con('sended')."</font>";
+    case 'payed': return "<font color='green'>".con('payed')."</font>";
+    case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
+    case 'reemit':return "<font color='#787878'>".con('reemited')."</font> ( 
     <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reemited_id']}'>
     {$order['order_reemited_id']}</a> )";
   }    
@@ -218,10 +217,10 @@ function print_order_status ($order){
 
 function print_place_status ($place_status){
   switch($place_status){
-    case 'free':  return "<font color='green'>".free."</font>";
-    case 'res':  return "<font color='orange'>".reserved."</font>";
-    case 'com': return "<font color='red'>".com."</font>";
-    case 'check':return "<font color='blue'>".checked."</font>";
+    case 'free':  return "<font color='green'>".con('free')."</font>";
+    case 'res':  return "<font color='orange'>".con('reserved')."</font>";
+    case 'com': return "<font color='red'>".con('com')."</font>";
+    case 'check':return "<font color='blue'>".con('checked')."</font>";
    }    
 }
 

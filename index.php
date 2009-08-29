@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-
+error_reporting(E_ALL);
 $fond='shop';
 require_once('includes/controller/template.php');
 ?>

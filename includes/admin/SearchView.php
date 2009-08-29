@@ -154,7 +154,7 @@ function execute_place ($query){
           <td class='admin_list_item'>".category."</td>
           <td class='admin_list_item'>".place."</td>
           <td class='admin_list_item'>".price."</td>
-	  <td class='admin_list_item'>".user."</td>
+	  <td class='admin_list_item'>".user_name."</td>
 	  <td class='admin_list_item'>".bs."</td>
           <td class='admin_list_item'>".status."</td>
 
@@ -394,8 +394,8 @@ function draw () {
     $_SESSION['_SEARCH_tab'] = (int)$_REQUEST['tab'];
   }
 
-  $menu = array("Patron"=>"?tab=0", "Seat"=>'?tab=1',
-                "Order"=>"?tab=2", "Barcode"=>"?tab=3");
+  $menu = array( con("patron_tab")=>"?tab=0", con("seat_tab")=>'?tab=1',
+                con("order_tab")=>"?tab=2", con("barcode_tab")=>"?tab=3");
   echo $this->PrintTabMenu($menu, (int)$_SESSION['_SEARCH_tab'], "left");
 
   if ($_REQUEST['action']=='order_detail'){

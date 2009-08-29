@@ -917,7 +917,7 @@ class Order {
     $code = base64_encode(base_convert(time(),10,36).':'. base_convert($order->order_id,10,36).':'. md5($md5, true));
 
     //    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.md5($md5));
-    return $item. urlencode ($code); //
+    return $item. urlencode ($code); //  }
   }
 
   function DecodeSecureCode(&$order, $codestr ='', $loging=false) {

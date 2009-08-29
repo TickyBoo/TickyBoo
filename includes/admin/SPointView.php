@@ -80,7 +80,7 @@ class SPointView extends AdminView {
 		$this->print_input( 'user_zip', $data, $err, 8, 20 );
 		$this->print_input( 'user_city', $data, $err, 30, 50 );
 		$this->print_input( 'user_state', $data, $err, 30, 50 );
-		echo "<td class='admin_name'>" . country . "</td><td class='admin_value'>";
+		echo "<td class='admin_name'>" .con('user_country'). "</td><td class='admin_value'>";
 		$this->print_countrylist( 'user_country', $data['user_country'], $err );
 		echo "</td></tr>";
 

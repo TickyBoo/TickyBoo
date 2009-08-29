@@ -39,8 +39,8 @@ class EventTabsView extends AdminView {
   function draw() {
     $_SESSION['_EVENT_tab'] = (isset($_REQUEST['tab']))? (int)$_REQUEST['tab']:((isset($_SESSION['_EVENT_tab']))?$_SESSION['_EVENT_tab']:0);
 
-    $menu = array(con('ort_admin')=>"?tab=0", con("Groups")=>'?tab=1',
-                  "Events"=>"?tab=2", "History"=>"?tab=3");
+    $menu = array(con('ort_admin_tab')=>"?tab=0", con("event_group_tab")=>'?tab=1',
+                  con("event_tab")=>"?tab=2", con("history_tab")=>"?tab=3");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_EVENT_tab'], "left");
 
     switch ((int)$_SESSION['_EVENT_tab'])

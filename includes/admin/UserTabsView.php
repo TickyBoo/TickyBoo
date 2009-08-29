@@ -41,8 +41,10 @@ class UserTabsView extends AdminView {
       $_SESSION['_ADMIN_tab'] = (int)$_REQUEST['tab'];
     }
 
-    $menu = array("Admins"=>"?tab=0", "Organizers"=>'?tab=1',
-                  "Sale points"=>"?tab=2", "Controlers"=>"?tab=3");
+    $menu = array(	con("admin_user_tab")=>"?tab=0",
+    				con("organizer_tab")=>'?tab=1',
+    				con("spoint_tab")=>"?tab=2", 
+    				con("control_tab")=>"?tab=3");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_ADMIN_tab'], "left");
 
     switch ((int)$_SESSION['_ADMIN_tab'])

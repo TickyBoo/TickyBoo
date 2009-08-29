@@ -50,7 +50,7 @@
 			  <td class='subtitle'>{$shop_order.order_tickets_nr}</td>
 			</tr>
   		<tr>
-			  <td class='user_info'>{!user!} {!id!}</td>
+			  <td class='user_info'>{!user_id!} {!id!}</td>
 			  <td class='subtitle'>{$shop_order.order_user_id}</td>
 			</tr>
 			<tr>

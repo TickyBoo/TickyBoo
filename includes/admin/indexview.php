@@ -46,7 +46,7 @@ class IndexView extends AdminView {
     }
 
 
-    $menu = array("Information"=>"?tab=0", "Owner"=>'?tab=1', "Configuration"=>"?tab=2");
+    $menu = array( con("index_admin_tab")=>"?tab=0", con("owner_tab")=>'?tab=1', con("shopconfig_tab")=>"?tab=2");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_INDEX_tab'], "left");
 
     switch ((int)$_SESSION['_INDEX_tab'])
