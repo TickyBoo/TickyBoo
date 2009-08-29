@@ -9,7 +9,7 @@
     * |                  http://www.phpguru.org/static/license.html                  |
     * o------------------------------------------------------------------------------o
     *
-    * © Copyright 2008,2009 Richard Heyes
+    * Â© Copyright 2008,2009 Richard Heyes
     */
 
 require_once(dirname(__FILE__) . '/mimePart.php');
