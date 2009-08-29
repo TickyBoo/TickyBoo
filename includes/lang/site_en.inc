@@ -1,5 +1,5 @@
 <?php
-//Order - Date/Time, Buttons/Links, Navigation, Passwords, Globals, Warnings, Admin Pages, Control Pages, Web Templates, POS
+//Order = Date/Time, Buttons/Links, Navigation, Passwords, Globals, Warnings, Admin Pages, Control Pages, Web Templates, POS
 
 //DATE / TIME FORMATS
 	// Euro Day/Date
@@ -46,12 +46,6 @@ define("nav_prev"," < ");
 define("nav_next"," > ");
 define("nav_last","Last");
 
-	// Only used in Control
-		define("firstpage","First page");
-		define("previouspage","<<< ");
-		define("nextpage"," >>>");
-		define("lastpage","Last page");
-		
 //PASSWORDS
 	define("password","Password");
 	define('password1', "Choose Password");
@@ -61,11 +55,10 @@ define("nav_last","Last");
 	define("confirmpassword","Confirm Password");
 
 //Globals
-define("remove_image","Remove picture");
+define("remove_image","Remove Image");
 define("yes"," YES");
 define("no"," No");
 define("home","Home");
-
 
 define("user_firstname","First Name");
 define("user_lastname","Last Name");
@@ -86,92 +79,93 @@ define("user_status","Status");
 
 //Warnings and Flags
 
-define("act_err", "User Not Found or Already Activated.");
-define('act_error',   'Account could Not be Activated. 
+define("act_err", "User Not Found or Already Activated!");
+define('act_error',   'Account could Not be Activated! 
 						Please re-check the link or contact the system administrator.');
 define('act_uselink', 'Please use the link that has been sent to your email address.');
-define("already_exist","This name already exists. Choose another.");
-define("alreadyexist","This E-mail is already Registered in the Database!");
-define('AutoCancel_order','Auto Cancel: Failed to Order.');
-define('AutoCancel_paying','Auto Cancel: Failed to Pay for Order.');
-define("cannot_find_seat","Cannot Find Seat");
-define("cannot_seal","Internal Error: Cannot seal credit card info");
-define("cannot_store","Internal Error: Cannot store credit card info");
-define('check_condition', "Please Accept the Terms");
-define("compilation_succeed","Success - Template Compiled");
-define("correct_errors_first","Correct Errors First");
+define("already_exist","This Name Already Exists. Choose Another!");
+define("alreadyexist","This E-mail is Already Registered in the Database!");
+define('AutoCancel_order','Auto Cancel: Failed to Order!');
+define('AutoCancel_paying','Auto Cancel: Failed to Pay for Order!');
+define("cannot_find_seat","Cannot Find Seat!");
+define("cannot_seal","Internal Error: Cannot Seal Credit Card Info!");
+define("cannot_store","Internal Error: Cannot Store Credit Card Info!");
+define('check_condition', "Please Accept the Terms!");
+define("compilation_succeed","Success - Template Compiled!");
+define("correct_errors_first","Correct Errors First!");
 define("delete_confirm_msg","Delete This Event?");
 define("delete_item","Delete?");
-define('deleted_all_tickets','Deleted All Tickets');
+define('deleted_all_tickets','Deleted All Tickets!');
 define("delete_subs_first","Delete Sub-Events First!");
-define("email_valid","Please Enter a Valid Email Address");
-define("email_match","The Emails Do Not Match.");
+define("email_valid","Please Enter a Valid Email Address!");
+define("email_match","The Emails Do Not Match!");
 define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
-define("fax_short","The Fax Number is too Short");
-define("fax_long","The Fax Number is too Long");
+define("fax_short","The Fax Number is too Short!");
+define("fax_long","The Fax Number is too Long!");
 define("img_loading_problem","Problem Loading Image!");
-define("in_use","This Object is in use and <b>cannot</b> be Deleted");
-define("internal_error","Internal Error");
-define("invalid_date","Invalid Date");
-define("invalid_number","Invalid Credit Card Number");
+define("in_use","This Object is in use and <b>cannot</b> be Deleted!");
+define("internal_error","Internal Error!");
+define("invalid_date","Invalid Date!");
+define("invalid_number","Invalid Credit Card Number!");
 define('log_err_mailnotsend', 'The Activation Email <b>could not</b> be sent, 
-								please check you have the correct email address.');
-define("log_err_not_act","You are Not Activated.");
+								please check you have entered the correct email address.');
+define("log_err_not_act","You are Not Activated!");
 define("log_err_not_act_info","<br />Please activate your account!<p>Please check your email for the activation email. Also
         check your spam folder. Then follow the link to activate your account</p><p>If you
-        still haven't recieved anything after a hour please click <a href='resend_activation.php'
+        still haven't recieved anything after an hour please click <a href='resend_activation.php'
         here</a> to resend activation email.</p>");
-define("log_err_wrong_usr","Wrong Username or Password! ");
+define("log_err_wrong_usr","Wrong Username or Password!");
 define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />
 								If you have forgoten your username or password please click 
 								<a href='forgot_password.php'>here</a></p>");
-define('mand_all', "All Input Fields are Required.");
-define("mandatory"," Field Required");
-define("MP3_loading_problem","Problem Loading MP3 File");
+define('mand_all', "All Input Fields are Required!");
+define("mandatory"," Field Required!");
+define("MP3_loading_problem","Problem Loading MP3 File!");
 define("nosale_confirm_msg","Remove from Sale?");
 define("new_order_created","New Order Created");
-define("not_number","Enter a Number Without -().");
-define("not_valid_email","E-mail is Invalid");
-define("no_result","No Result");
-define("old_order_canceled","Old Order Cancelled");
-define("order_allready_cancelled","Order Allready cancelled");
-define("order_canceled","Order Cancelled");
-define("order_cannot_reemit","Can Not Re-Issue");
-define("order_not_found","Order Not Found");
-define("order_not_canceled","Order Not Cancelled");
-define("pass_not_egal","Passwords Do Not Match");
-define("pass_match","Passwords Do Not Match");
-define("pass_too_short","Password too Short");
+define("not_number","Enter a Number Without -()!");
+define("not_valid_email","E-mail is Invalid!");
+define("no_result","No Result!");
+define("old_order_canceled","Old Order Cancelled!");
+define("order_allready_cancelled","Order Allready Cancelled!");
+define("order_canceled","Order Cancelled!");
+define("order_cannot_reemit","Can Not Re-Issue!");
+define("order_not_found","Order Not Found!");
+define("order_not_canceled","Order Not Cancelled!");
+define("pass_not_egal","Passwords Do Not Match!");
+define("pass_match","Passwords Do Not Match!");
+define("pass_too_short","Password too Short!");
 define("phone_long","The Phone Number is too Long!");
-define("phone_short","The Phone Number is too Short");
+define("phone_short","The Phone Number is too Short!");
 define("places_empty","Select a Seat, Please!");
 define("places_occupied","Sorry! The selected seats were taken by another customer.");
 define("places_remains"," Remaining seats");
-define("places_toomuch","This Number of Seats can not be Reserved");
-define('pwd_not_thesame', "The Passwords Entered Do Not Match.");
-define('pwd_second_missing', "Second Password is Missing.");
-define('pwd_to_short', "Password Too Short.");
+define("places_toomuch","This Number of Seats can not be Reserved!");
+define('pwd_not_thesame', "The Passwords Entered Do Not Match!");
+define('pwd_second_missing', "Second Password is Missing!");
+define('pwd_to_short', "Password Too Short!");
 define("pub_confirm_msg","Publish Event?");
 define("reservate_failed","Internal Error: Impossible to Save Seats ");
 define("restart_success","Successfully Restarted");
 define("save_failed","Internal Error: Impossible to Save the Order ");
 define("send_order_email","Send Order by E-mail and Change Status to 'Sent'");
 define("split_pm","Split Seat Chart");
-define('Status_is_pub','This Event is Published');
-define("stop_success","Successfully Stopped");
-define('system_halted','<b>SYSTEM IS HALTED<b>');
-define("ticket_deleted","Ticket deleted");
-define("ticket_not_found","Ticket Not Found in Database");
-define("tickets_printing","Tickets Will be Printed. Wait Please!");
+define('Status_is_pub','This Event is Published!');
+define("stop_success","Successfully Stopped!");
+define('system_halted','<b>SYSTEM IS HALTED!<b>');
+define("ticket_deleted","Ticket Deleted!");
+define("ticket_not_found","Ticket Not Found in Database!");
+define("tickets_printing","Tickets Will be Printed. Please Wait!");
 define("too_low","Please Enter a Number Larger than 0 !");
-define("undefined","Undefined");
+define("undefined","Undefined!");
 
 //------------------------------------------------------
 //ADMIN
 
 //Administration Menu
 define("welcome","Welcome");
-define("index_admin","Home"); define("administration","Administration");
+define("index_admin","Home"); 
+define("administration","Administration");
 define("users_admin","System Managers"); 
 define("event_admin","Events"); 
 define("stats","Statistics"); 
@@ -700,8 +694,6 @@ define("com","Ordered");
 define("control_events_list","Events");
 define("free","Free");
 define("not_valid_event","Event is Not Valid");
-define("order_payment_mode","Payment Mode");
-define("order_shipment_mode","Shipment Mode");
 define("place_not_commanded","Seat is Not Ordered");
 define("place_only_reserved","Seat Reserved, but Not Paid");
 define("place_status_not_updated","Error: Seat Status Not Updated");
@@ -806,6 +798,7 @@ define("pay_refused","Payment not accepted");
 define("pay_reg","Payment registered");
 define("order_id","Order Number"); //personal_order.tpl, personal_orders.tpl
 define("trx_id","Transation ID");
+define("orderdeleted","Order Deleted");
 
 //discount.tpl
 define("discounts","Discounts");

@@ -55,8 +55,12 @@ function order_details ($order_id){
   $this->print_field('order_tickets_nr',$order);
   $this->print_field('order_total_price',$order);
   $this->print_field('order_date',$order);
-  $this->print_field('order_shipment_mode',$order);	 
-  $this->print_field('order_payment_mode',$order);	 
+  
+  $order['order_shipment_status']=con($order['order_shipment_status']);
+  $order['order_payment_status']=con($order['order_payment_status']);
+
+  $this->print_field('order_shipment_status',$order);	 
+  $this->print_field('order_payment_status',$order);	 
   $this->print_field('order_fee',$order);	 
   $this->print_field('order_status',$order);
   echo "</table><br>\n";
@@ -155,11 +159,11 @@ function get_nav ($page,$count,$condition){
   if(!isset($page)){ $page=1; }
  
   echo "<table border='0' width='500'><tr><td align='center'>";
-  echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".firstpage."</a>";
+  echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=1'>".nav_first."</a>";
   
   if($page>1){
     $prev=$page-1;
-    echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$prev'>".previouspage."</a>";
+    echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$prev'>".nav_prev."</a>";
   }
   $num_pages=ceil($count/$this->page_length);
   echo "&nbsp;[";
@@ -173,9 +177,9 @@ function get_nav ($page,$count,$condition){
   echo "&nbsp;]&nbsp;";
   $next=$page+1;
     if($next*$this->page_length<$count){
-      echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".nextpage."</a>";
+      echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$next'>".nav_next."</a>";
     }
-  echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>".lastpage."</a>";
+  echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?$condition&page=$num_pages'>".nav_last."</a>";
     
   echo "</td></tr></table>";
 }
