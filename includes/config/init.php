@@ -37,8 +37,6 @@
  * there are uses registrated to the system.
  * This this will invalided all given passwords in the system.
  */
-define ('AUTH_REALM','Fusion Ticket Login');
-
 
   global $_SHOP;
   

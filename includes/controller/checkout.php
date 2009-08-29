@@ -107,6 +107,9 @@ die();
   	 * @return null loads the values to smarty vars
   	 */
   	function setordervalues($aorder, $smarty){
+      global $order;
+	    $order->obj = $aorder;
+
     	if (!is_object($aorder)) exit;
     	if (isset($aorder) and isset($aorder->places)) {
       		foreach($aorder->places as $ticket){
