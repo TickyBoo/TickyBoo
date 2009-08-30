@@ -58,7 +58,7 @@ function control_view (&$data){
   }
   echo "</td></tr>\n";
   echo "</table>";
-  echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>".admin_list."</a></center>";
+  echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>".con("admin_list")."</a></center>";
   
 }
 function control_form (&$data,&$err,$title,$add='add'){
@@ -72,18 +72,18 @@ global $_SHOP;
     $this->print_field('control_login',$data);
   }
   if($add=='add'){
-    echo "<tr> <td class='admin_name'>".password."</td>
+    echo "<tr> <td class='admin_name'>".con("password")."</td>
          <td class='admin_value'><input type='password' name='password1' size='10'  maxlength='10'><span class='err'>{$err['password']}</span></td></tr>
-         <tr> <td class='admin_name'>".password2."</td>
+         <tr> <td class='admin_name'>".con("password2")."</td>
          <td class='admin_value'><input type='password' name='password2' size='10'  maxlength='10'></td></tr>";
   }
   if($add=='update'){
-    echo "<tr> <td class='admin_name'>".old_password."</td>
+    echo "<tr> <td class='admin_name'>".con("old_password")."</td>
          <td><input type='password' name='old_password' size='10'  maxlength='10'>
 	       <span class='err'>{$err['old_password']}</span></td></tr>
-         <tr> <td class='admin_name'>".new_password."</td>
+         <tr> <td class='admin_name'>".con("new_password")."</td>
          <td class='admin_value'><input type='password' name='new_password1' size='10'  maxlength='10'><span class='err'>{$err['new_password']}</span></td> </tr>
-	       <tr> <td class='admin_name'>".password2."</td>
+	       <tr> <td class='admin_name'>".con("password2")."</td>
          <td class='admin_value'><input type='password' name='new_password2' size='10'  maxlength='10'></td></tr>";
   }
   
@@ -126,7 +126,7 @@ global $_SHOP;
   <input type='reset' name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n";
 
-  echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>".admin_list."</a></center>";
+  echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>".con("admin_list")."</a></center>";
 }
 
  function control_list (){
@@ -139,22 +139,22 @@ global $_SHOP;
   
   $alt=0;
   echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border=0>\n";
-  echo "<tr><td class='admin_list_title' colspan='2' align='center'>".control_title."</td></tr>\n";
+  echo "<tr><td class='admin_list_title' colspan='2' align='center'>".con("control_title")."</td></tr>\n";
   
   
   while($row=shopDB::fetch_assoc($res)){
     echo "<tr class='admin_list_row_$alt'>";
     echo "<td class='admin_list_item' width='550' >{$row['control_login']}</td>\n";
     echo "<td class='admin_list_item' nowrap='nowrap' align='right'  >
-          <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&control_login={$row['control_login']}'><img src='images/view.png' border='0' alt='".view."' title='".view."'></a>\n";
-    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&control_login={$row['control_login']}'><img src='images/edit.gif' border='0' alt='".edit."' title='".edit."'></a>\n";
-    echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&control_login={$row['control_login']}\";}'><img src='images/trash.png' border='0' alt='".remove."' title='".remove."'></a>\n";
+          <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&control_login={$row['control_login']}'><img src='images/view.png' border='0' alt='".con("view")."' title='".con("view")."'></a>\n";
+    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&control_login={$row['control_login']}'><img src='images/edit.gif' border='0' alt='".con("edit")."' title='".con("edit")."'></a>\n";
+    echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&control_login={$row['control_login']}\";}'><img src='images/trash.png' border='0' alt='".con("remove")."' title='".con("remove")."'></a>\n";
     echo "</td></tr>";
     $alt=($alt+1)%2;
   }
   echo "</table>\n";
   
-  echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".add."</a></center>";
+  echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".con("add")."</a></center>";
 }
 
 function post_events (&$data){

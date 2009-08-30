@@ -1,7 +1,13 @@
 <?php
-//Order = Date/Time, Buttons/Links, Navigation, Passwords, Globals, Warnings, Admin Pages, Control Pages, Web Templates, POS
+//These defines are located at the beginning of this file and are used throughout Fusion Ticket.
+//Use caution when changing and try not to be page specific with the definition.   
+	//Date & Time Formats, Buttons & Links, Navigation, Passwords, Globals, and Warnings.
 
-//DATE / TIME FORMATS
+//These defines are next and mostly page specific.
+	//Admin Pages, Control Pages, Web Templates, and POS Templates
+
+//DATE & TIME FORMATS
+//comment "//" out the format not used.
 	// Euro Day/Date
 	//	define("date_format","%A %e %B %Y");
 	// US Day/Date
@@ -16,57 +22,74 @@ define("shortdate_format","%e %b %Y");
 define("shorterdate_format","%h %e");
 define("date","Date"); 
 
-//BUTTONS / LINKS
+//BUTTONS & LINKS
+//for continuity all Buttons & Links should be defined the same if initiating the same action
 define("add","Add");
-define('add_tickets','Add Ticket');
+define("add_tickets","Add Ticket(s)");
 define("admin_list","List");
-define("browse","Browse..."); //add to programs
 define("cancel","Cancel Order?");
 define("checkout","Check Out");
-define('clear_selection','Clear Selection');
+define("clear","Clear");
+define("clear_selection","Clear Selection");
 define("close","Close");
 define("continue","Continue");
+define("define","Define");
+define("edit","Edit");
 define("delete","Delete");
 define("login_button","OK");
 define("order_it","Order");
 define("order_more_tickets","Order More Tickets");
 define("publish", "Publish" );
 define("pwd_send","Send Password");
+define("remove","Remove");
 define("res","Reset");
 define("reserve","Reserve");
 define("save","Save");
 define("search","Search");
-define('show_seats','Seating Chart');
+define("show_seats","Seating Chart");
 define("unpublish","Unpublish");
+define("view","View");
 define("view_order","View Order");
+define("icon_unpublish","Click to Unpublish");
+define("icon_unpublish_alt","Published");
+define("icon_publish","Click to Publish");
+define("icon_publish_alt","New Event");
+define("icon_nosal","Click to Re-Publish");
+define("icon_nosal_alt","Un-Published");
 
-//NAVIGATION
+
+
+
+//NAVIGATION  
+//should remain the same throughout all pages.
 define("nav_first","First");
 define("nav_prev"," < ");
 define("nav_next"," > ");
 define("nav_last","Last");
 
 //PASSWORDS
-	define("password","Password");
-	define('password1', "Choose Password");
-	define("password2","Repeat Password"); 
-	define("new_password","New Password");
-	define("old_password","Old Password");
-	define("confirmpassword","Confirm Password");
+define("password","Password");
+define("password1", "Choose Password");
+define("password2","Repeat Password"); 
+define("new_password","New Password");
+define("old_password","Old Password");
+define("confirmpassword","Confirm Password");
 
 //Globals
+//basic words used throughout the program
 define("event","Event");
 define("home","Home");
 define("logout","Log out");
 define("member","Member");
 define("no"," No");
 define("order_id","Order Number");
-define("remove_image","Remove Picture");
+define("remove_image","Remove Image");
 define("tickets","Tickets");
 define("welcome","Welcome");
 define("yes"," YES");
 
-
+//User Globals
+//basic user information not requiring page specifics.
 define("user_firstname","First Name");
 define("user_lastname","Last Name");
 define("user_name","Name");
@@ -86,24 +109,24 @@ define("user_id","User ID");
 define("user_status","Status");
 
 //Warnings and Flags
-
+//many of these are page specific but are more easily controlled in one spot.
 define("act_err", "User Not Found or Already Activated!");
-define('act_error',   'Account could Not be Activated! 
-						Please re-check the link or contact the system administrator.');
-define('act_uselink', 'Please use the link that has been sent to your email address.');
+define("act_error",   "Account could Not be Activated! 
+						Please re-check the link or contact the system administrator.");
+define("act_uselink", "Please use the link that has been sent to your email address.");
 define("already_exist","This Name Already Exists. Choose Another!");
 define("alreadyexist","This E-mail is Already Registered in the Database!");
-define('AutoCancel_order','Auto Cancel: Failed to Order!');
-define('AutoCancel_paying','Auto Cancel: Failed to Pay for Order!');
+define("AutoCancel_order","Auto Cancel: Failed to Order!");
+define("AutoCancel_paying","Auto Cancel: Failed to Pay for Order!");
 define("cannot_find_seat","Cannot Find Seat!");
 define("cannot_seal","Internal Error: Cannot Seal Credit Card Info!");
 define("cannot_store","Internal Error: Cannot Store Credit Card Info!");
-define('check_condition', "Please Accept the Terms!");
+define("check_condition","Please Accept the Terms!");
 define("compilation_succeed","Success - Template Compiled!");
 define("correct_errors_first","Correct Errors First!");
 define("delete_confirm_msg","Delete This Event?");
 define("delete_item","Delete?");
-define('deleted_all_tickets','Deleted All Tickets!');
+define("deleted_all_tickets","Deleted All Tickets!");
 define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
@@ -115,8 +138,8 @@ define("in_use","This Object is in use and <b>cannot</b> be Deleted!");
 define("internal_error","Internal Error!");
 define("invalid_date","Invalid Date!");
 define("invalid_number","Invalid Credit Card Number!");
-define('log_err_mailnotsend', 'The Activation Email <b>could not</b> be sent, 
-								please check you have entered the correct email address.');
+define("log_err_mailnotsend", "The Activation Email <b>could not</b> be sent, 
+								please check you have entered the correct email address.");
 define("log_err_not_act","You are Not Activated!");
 define("log_err_not_act_info","<br />Please activate your account!<p>Please check your email for the activation email. Also
         check your spam folder. Then follow the link to activate your account</p><p>If you
@@ -126,7 +149,7 @@ define("log_err_wrong_usr","Wrong Username or Password!");
 define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />
 								If you have forgoten your username or password please click 
 								<a href='forgot_password.php'>here</a></p>");
-define('mand_all', "All Input Fields are Required!");
+define("mand_all", "All Input Fields are Required!");
 define("mandatory"," Field Required!");
 define("MP3_loading_problem","Problem Loading MP3 File!");
 define("nosale_confirm_msg","Remove from Sale?");
@@ -149,18 +172,18 @@ define("places_empty","Select a Seat, Please!");
 define("places_occupied","Sorry! The selected seats were taken by another customer.");
 define("places_remains"," Remaining seats");
 define("places_toomuch","This Number of Seats can not be Reserved!");
-define('pwd_not_thesame', "The Passwords Entered Do Not Match!");
-define('pwd_second_missing', "Second Password is Missing!");
-define('pwd_to_short', "Password Too Short!");
+define("pwd_not_thesame", "The Passwords Entered Do Not Match!");
+define("pwd_second_missing", "Second Password is Missing!");
+define("pwd_to_short", "Password Too Short!");
 define("pub_confirm_msg","Publish Event?");
 define("reservate_failed","Internal Error: Impossible to Save Seats ");
 define("restart_success","Successfully Restarted");
 define("save_failed","Internal Error: Impossible to Save the Order ");
 define("send_order_email","Send Order by E-mail and Change Status to 'Sent'");
 define("split_pm","Split Seat Chart");
-define('Status_is_pub','This Event is Published!');
+define("Status_is_pub","This Event is Published!");
 define("stop_success","Successfully Stopped!");
-define('system_halted','<b>SYSTEM IS HALTED!<b>');
+define("system_halted","<b>SYSTEM IS HALTED!<b>");
 define("ticket_deleted","Ticket Deleted!");
 define("ticket_not_found","Ticket Not Found in Database!");
 define("tickets_printing","Tickets Will be Printed. Please Wait!");
@@ -169,8 +192,10 @@ define("undefined","Undefined!");
 
 //------------------------------------------------------
 //ADMIN
+//these defines are seperated by page and are page specific. 
+//indents indicate the define is a sub-page or a drop down list.
 
-//Administration Menu
+//Administration Menu - the menu on the left side
 define("index_admin","Home"); 
 define("administration","Administration");
 define("users_admin","System Managers"); 
@@ -183,9 +208,8 @@ define("search_order","Search");
 define("imp_export_admin", "Import /Export"); 
 define("garbage","Garbage");
 
-
 //Home
-//Information
+//System Information
 define("index_admin_tab","Information");
 define("current_version",	"Version:");
 define("InfoWebVersion",	"Server Software");
@@ -200,7 +224,7 @@ define("system_summary",	"System Summary");
 define("index_admins_count","<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Controlers:</b> %d, <b>Total:</b> %d");
 define("index_user_count","<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d/%d/%d");
 define("index_events_count","<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d");
-define('index_ort_count','%d');
+define("index_ort_count","%d");
 
 //Owner
 define("owner_tab","Owner");
@@ -241,14 +265,13 @@ define("res_delay","Ticket Timeout");
 define("cart_delay","Cart Timeout");
 
 //System Managers
-//Globals
-	define("admin_login","Login Name");
+
+define("admin_login","Login Name"); //used in admin, organizer, and spoint
 
 define("admin_user_tab","Admins");
 define("admin_user_title","All System Administrators");
 define("admin_user_update_title","Modify Administrator");
 	define("admin_user_add_title","Add System Administrator");
-	define("admin_user_login","Login Name"); //change to admin_login
 
 //Organizers
 define("organizer_tab","Organizers");
@@ -274,13 +297,12 @@ define("control_title","All Ticket Takers");
 	define("control_view","Ticket Taker");
 	define("control_add_title","Add Ticket Taker");
 	define("control_update_title","Modify Ticket Taker");
-		define("control_login","Login");
+		define("control_login","Login Name");
 		define("control_event_ids","Authorized Events");
 		
 //Event Section
 		
 //Venues
-//OrtView.php
 define("ort_admin_tab","Venues");
 define("ort_admin","Venues");
 define("ort_title","All Venues");
@@ -311,8 +333,7 @@ define("categories","Categories");
 	define("rows","Rows");
 	define("seat","Seats");
 	define("none","None");
-	define("category_add_title","Add a Category"); //add
-	define("category_update_title","Modify Category");
+	define("cat_at","@");
 		define("category_id","Category Number");
 		define("category_name","Category Name");
 		define("category_price","Category Price");
@@ -336,8 +357,6 @@ define("categories","Categories");
 		define("pmz_id","Zone Record Number");
 		define("pmz_ident","Zone Number");
 	define("place_map","Seat Chart"); //link
-	define("define","Define"); //button
-	define("clear","Clear"); //button
 
 define("pm_parts","Seat Chart Parts");
 	define("pm_part","Seat Chart Part");
@@ -356,13 +375,12 @@ define("pm_parts","Seat Chart Parts");
 				define("scene_h","images/scene_h_en.png");
 				define("scene_v","images/scene_v_en.png");
 
-
-	define("labels","Labels");  //add/fix in program
+	define("label","Label:");
 		define("label_type_text","Text");
-		define("label_type_row_east","Row nr. right");
-		define("label_type_row_west","Left row nr. ");
-		define("label_type_seat_south","Nr of seat below");
-		define("label_type_seat_north","Nr.of seat above");
+		define("label_type_row_east","Row# on Right");
+		define("label_type_row_west","Row# on Left");
+		define("label_type_seat_south","Seat# Below");
+		define("label_type_seat_north","Seat# Above");
 		define("label_type_exit","Exit");
 
 	define("seat_numbering","Seat Numbering");
@@ -380,8 +398,6 @@ define("pm_parts","Seat Chart Parts");
 define("ort","Venue");
 define("ort_plan_nr","Number on plan");
 
-
-
 //Event Groups
 define("event_group_tab","Groups");
 define("event_group_title","All Event Groups");
@@ -394,13 +410,12 @@ define("event_group_end_date","End Date");
 define("event_group_type","Group Type");
 	define("festival","Festival");
 	define("tournee","Tournament");
-	define("theatre","Theaterl");
+	define("theatre","Theater");
 define("event_group_description","Description");
-define("event_group_image","Group Picture");
+define("event_group_image","Event Group Image");
 
 define("unpublish_event_group","Unpublish Event Group" );
 define("publish_event_group", "Publish Event Group");
-
 
 //Events
 define("event_tab","Events");
@@ -451,7 +466,7 @@ define("event_edit_title","Modify Event");
 		define("pop","Pop");
 		define("rock","Rock");
 		define("theater","Theater");
-	define("event_image","Event picture");
+	define("event_image","Event Image");
 	define("event_mp3","MP3");
 
 //Discounts
@@ -471,8 +486,8 @@ define("show_text_stats","Text");
 define("show_grafik_stats","Graph");
 
 //Order Overview
-define("orders_handlings_tab","Handlings"); //add tab
-define("orders_event_tab","Events"); //add tab
+define("orders_handlings_tab","Handlings");
+define("orders_event_tab","Events");
 define("order_list_title","Orders by Payment Handling");
 define("order_event_list_title","Orders by Event");
 	define("order_type_ordered","Ordered");
@@ -483,7 +498,6 @@ define("order_event_list_title","Orders by Event");
 	define("order_type_sended","Sent");
 	define("order_type_reserved","Reserved");
 	define("purge","Purge");
-
 
 	//View Order
 	define("order_nr","Order #: ");
@@ -535,10 +549,10 @@ define("order_event_list_title","Orders by Event");
 	define("cancel_order","Mark 'Canceled' and Delete Tickets");
 
 //Templates
-define("templ_System","System Emails");//tab
-define("templ_email","Emails");//tab
-define("templ_pdf2","Html2pdf's" );//tab
-define("templ_pdf","Old Pdf's" );//tab
+define("templ_System","System Emails");
+define("templ_email","Emails");
+define("templ_pdf2","Html2pdf's" );
+define("templ_pdf","Old Pdf's" );
 define("template_title","All Templates");
 define("template_add_title","Add a Template");
 define("template_update_title","Modify Template");
@@ -568,7 +582,6 @@ define("payment_update_title","Modify the Payment Type");
 		define("email","Email");
 		define("post","Post");
 		define("google","Google");
-		
 	define("handling_shipment","Shipment");
 	define("handling_sale_mode","Selling Method");
 		define("www", "Webshop");
@@ -605,12 +618,9 @@ define("payment_update_title","Modify the Payment Type");
 	define("pm_google_merchant_key","Key"); 
 	define("pm_google_sandbox","Sandbox"); 
 	define("pm_google_callback_link","Call Back Link"); 
-		define("pm_google_callback_message","Generated On Save"); //add
 	define("pm_on_google_cancel_cancel_order","Google Cancellation"); 
 	define("pm_on_user_cancel_cancel_order","User Cancellation"); 
 	define("pm_on_refund_cancel_order","Refund"); 
-//define("Handling_Delete_Unpaid","Delete Unpaid Payments");
-//define("handling_id","ID");
 
 //Search
 define("patron_tab","Patron");
@@ -670,7 +680,7 @@ define("import_xml_submit","Import It!");
 define("import_xml","Event in XML");
 	define("import_xml_file","Import File");
 define("import_template","Templates");
-	//define("import_template_name","Name"); see templates
+//define("import_template_name","Name"); see templates
 define("import_langauge","Language Files");
 	define("import_csv_file","Import File Name");
 	define("langauge","New Language File Name");
@@ -701,24 +711,27 @@ define("ticket_already_checked","Ticket Already Checked");
 
 //----------------------------------------------
 
-//WEB TEMPLATES
+//WEB TEMPLATES (tpl)
+//these defines are seperated by tpl file.
+//if you can't find the define you are looking for check in Globals.
+//if a define is followed by //file.tpl it is also used in that file. 
 
 //user_activate.tpl - resend_activation.tpl - user_registred.tpl
 define("act_name","Activate account"); //checkout_preview
-define('act_enter_title','Place your activation code here:');
-define('act_enter_code','You can complete your activation by filling the box below with the activation code sent to you by email. Or click on the link in the email.');
-define('act_code','Activation code:');
+define("act_enter_title","Place your activation code here:");
+define("act_enter_code","You can complete your activation by filling the box below with the activation code sent to you by email. Or click on the link in the email.");
+define("act_code","Activation code:");
 define("act_send","Send");
 define("act_notarr","Activation email still not arrived?");
-define('resend_activation','Resend Activation Email');
+define("resend_activation","Resend Activation Email");
 define("act_is_sent","Your activation email has been sent to your e-mail");
-define('act_sent','The activation email has been sent. Please check your in box for a link.');
+define("act_sent","The activation email has been sent. Please check your in box for a link.");
 define("act_mess_line","Please check you email to activate your account.<br><br>");
 define("act_note","Enter your e-mail address. Click on 'Send'; and a new activation
         email will be sent to your e-mail address.");
 define("act_norecived","If you have not recived an activation email within 
 						a few hours, please click this <strong>link</strong>");
-define('success_activate','You have successfully activated your account.<br /> You may now login.');
+define("success_activate","You have successfully activated your account.<br /> You may now login.");
 
 //agb.tpl
 define("agb_name","General Terms of Sale");
@@ -728,17 +741,17 @@ define("agb_info","Put your sales conditions in 'agb.html'");
 define("calendar","Calendar");
 
 //cart_content.tpl
-define("cart_empty","Your cart is empty.");
+define("cart_empty","Your Cart is Empty.");
 define("total","Total");
 define("expires_in","Expires in");
 define("total_price","Total Price"); //personal_order.tpl, personal_orders.tpl
 
 //cart_resume.tpl
 define("shopcart","Shopping Cart");
-define("no_tick_res","You have no tickets reserved.");
-define("valid_tickets","Valid tickets:");
-define("expired_tickets","Expired tickets:");
-define("tick_exp_in","Tickets expire in");
+define("no_tick_res","You have No Tickets Reserved.");
+define("valid_tickets","Valid Tickets:");
+define("expired_tickets","Expired Tickets:");
+define("tick_exp_in","Tickets expire in ");
 define("x_tick","x Tickets");
 define("tot_tick_price","Total Ticket Price:");
 
@@ -747,7 +760,6 @@ define("row","Row"); //discount.tpl
 define("normal","Normal"); //discount.tpl
 define("expired","EXPIRED");
 define("minutes","min.");
-define("remove","Remove");
 
 //cart_view.tpl
 define("shopping_cart","Your shopping cart");
@@ -760,12 +772,12 @@ define("cart_cont_mess","Please check your order. You have 15 minutes before you
 define("cat_description","Seating Sections and Prices");
 define("tickets_available","Available:");
 define("category_sold","Category Sold");
-define('Discount_for','With Discount:');
+define("Discount_for","With Discount:");
 define("prices_in","Prices in");
 define("Please_login","<center><b>Please login or register to reserve seats.</b></center>");
 define("select_category","Select a Category");
 define("order_limit","Order Limit"); //category.tpl
-define('old_event','<center><B>This event is expired and can not be ordered anymore.</b></center>');
+define("old_event","<center><B>This event is expired and can not be ordered anymore.</b></center>");
 
 //category.tpl
 define("select_seat","1. Select your seat(s) please");
@@ -774,7 +786,7 @@ define("number_seats","Number of seats");
 define("only_rows_numbered","Only rows numbered");
 
 //checkout_confirm.tpl
-define("order_reg","Order registered");
+define("order_reg","Order Registered");
 define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your
         order follow the proccess below.<br><br>To view your order click");
         
@@ -846,7 +858,7 @@ define("helpme","Help information");
 
 //last_event_list.tpl
 define("up_events","Upcoming Events");
-define('eventlist_info', 'Please select an upcoming event from below.');
+define("eventlist_info", "Please select an upcoming event from below.");
 
 //personal_order.tpl
 define("orders","Orders");
@@ -896,7 +908,7 @@ define("div_dates","Multiple dates");
 
 //user_address/tpl
 define("your_addr","Your Address");
-define("edit","Edit");
+
 
 //user_form.tpl
 define("confirmemail","Confirm E-mail Address");
@@ -907,10 +919,7 @@ define("memberinfo","Please enter your details below. To buy tickets you are req
         sign up, it is recommend that you sign up before you reserve tickets.");
 define("register","Register Here");
 
-//user_login_block.tpl
-
-
-
+//user_login_block.tpl - no unique defines
 
 //user_register.tpl
 define("becomemember","Become a Member");
@@ -921,11 +930,11 @@ define("user_notice","To order your tickets please complete the following fields
         become a member and never fill this form again.");
 define("becomememberorguest","Register as Member or Guest");
 define("becomeguest","Register as Guest");
-define('guest_info', "Fill your details here, so that the ticket can be sent to you.
+define("guest_info", "Fill your details here, so that the ticket can be sent to you.
 					 <br> Already a regular customer? Fill at the right side, your email address and password.");
-define('pwd_min', " (min 6 letters)");
-define('user_nospam', "Security Code");
-define('nospam_info', "<------ Enter This Code ------>.");
+define("pwd_min", " (min 6 letters)");
+define("user_nospam", "Security Code");
+define("nospam_info", "<------ Enter This Code ------>.");
 define("agrement","I have read and agree to the General Terms of Sale.");
 define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send
         me information about future events and other {\$organizer->organizer_name} related 
@@ -941,59 +950,60 @@ define("prg_payment","Payment");
 define("prg_complete","Complete");
 
 //---------------------------------------------------------
-
+//Under construction
 //POS
-define('exst_user','Existing');
-define('new_partron','New Patron');
+define("exst_user","Existing");
+define("new_partron","New Patron");
 define("without_fee","Without Fee");
 
 define("event_sold","Event sold out"); //POS/EVENT_GROUP.TPL
 define("event_start","Event start"); //POS/EVENT.TPL
-define('pos_calender_info','To Book/Reserve Tickets, select an event from the list below.');
-define('pos_cart_info','Check the tickets below: to add more click "Order More Tickets"<br>'.
-       'Check the Delivery method and Payment Method.<br>'.
-       'To reserve the tickets click "Reserve Tickets Button".<br>');
-define('select_seat_info', ', the seat name will appear if you hover your mouse over it.<br>'.
-       'Free Seats are Green, Red Seats are Taken.');
-define('pos_timestampt','Time stamp');
-define('pos_deleteorder','Delete Order?');
-define('pos_reorder_info','To Order Tickets Click below:<br><font color="red">WARNING old order is CANCELED on Re-Order! </font>');
-define('pos_selectuser','Either Create a new user, or select an exsiting user if they have already purchased from us before.');
-define('pos_freetickets','Free / Complimentary Tickets');
-define('pos_exsistingusers','Exsisting Users');
-define('pos_userlist','List of Box office users:');
-define('pos_gobacktoorders','Click to go back to list of Processed Orders');
-define('pos_ticketready','The tickets have there ID and Order ID on them and are ready to to be posted?');
-define('pos_clicktosent','Click To Set to Sent!');
-define('pos_nextorder','Next Processed Order');
-define('pos_gotounprocessed','Click to go back to list of UnProcessed Orders');
-define('pos_processorder','Processed Order? The Order ID and Ticket IDs been noted?');
-define('pos_clicktoproc','Click To Finish Processing!');
-define('pos_nextunprocessed','Next Unprocessed Paid Order');
-define('pos_clicktoview','Click to View and Process');
-define('pos_listpaidunprocessed','<p>List of <u>paid</u> <b>but</b> <u>Unprocessed</u> orders</p>');
-define('pos_listpaidunsent','<p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>');
-define('pos_listpaidsent','<p>List of <u>completed/sent</u> orders</p>');
-define('pos_paidlist','Paid List');
-define('pos_unsentlist','UnSent List');
-define('pos_sentlist','Sent List');
-define('pos_sentorders','Sent Orders');
-define('pos_checkdetails' ,'Check the details, If cash or check Click "Confirm and Print"<br>If you have to pay with Credit/Debit Card click the "PayNow" button and Follow the Paypal instructions.');
-define('pos_checkdetails2','Check the details, And Procced to "Confirm" or "Cancel" the order.');
-define('pos_checkdate','First Check you have the right date, Then choose catergory of seats, this just determins the cost and area. Then click continue.');
-define('pos_homepage','Home Page');
-define('pos_currenttickets','Current Tickets');
-define('pos_booktickets','Book Tickets');
-define('pos_holdtickets','Hold Tickets');
-define("order_status_changed","Order Status Changed Successfully"); //pos
-define('dts_month_arr', 'January|February|March|April|May|June|July|August|September|October|November|December');
-define('timestamp','timestamp');//pos
-define('webshop','webshop');
+define("pos_calender_info","To Book/Reserve Tickets, select an event from the list below.");
+define("pos_cart_info","Check the tickets below: to add more click 'Order More Tickets'<br>".
+       "Check the Delivery method and Payment Method.<br>".
+       "To reserve the tickets click 'Reserve Tickets Button'.<br>");
+define("select_seat_info"," the seat name will appear if you hover your mouse over it.<br>".
+       "Free Seats are Green, Red Seats are Taken.");
+define("pos_timestampt","Time stamp");
+define("pos_deleteorder","Delete Order?");
+define("pos_reorder_info","To Order Tickets Click below:<br>".
+		"WARNING old order is CANCELED on Re-Order!");
+define("pos_selectuser","Either Create a new user, or select an exsiting user if they have already purchased from us before.");
+define("pos_freetickets","Free / Complimentary Tickets");
+define("pos_exsistingusers","Exsisting Users");
+define("pos_userlist","List of Box office users:");
+define("pos_gobacktoorders","Click to go back to list of Processed Orders");
+define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
+define("pos_clicktosent","Click To Set to Sent!");
+define("pos_nextorder","Next Processed Order");
+define("pos_gotounprocessed","Click to go back to list of UnProcessed Orders");
+define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
+define("pos_clicktoproc","Click To Finish Processing!");
+define("pos_nextunprocessed","Next Unprocessed Paid Order");
+define("pos_clicktoview","Click to View and Process");
+define("pos_listpaidunprocessed","<p>List of <u>paid</u> <b>but</b> <u>Unprocessed</u> orders</p>");
+define("pos_listpaidunsent","<p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>");
+define("pos_listpaidsent","<p>List of <u>completed/sent</u> orders</p>");
+define("pos_paidlist","Paid List");
+define("pos_unsentlist","UnSent List");
+define("pos_sentlist","Sent List");
+define("pos_sentorders","Sent Orders");
+define("pos_checkdetails","Check the details, If cash or check Click 'Confirm and Print'<br>".
+							"If you are paying with Credit/Debit Card click the 'PayNow' button and Follow the Paypal instructions.");
+define("pos_checkdetails2","Check the details, And Procced to 'Confirm' or 'Cancel' the order.");
+define("pos_checkdate","First, check you have the right date, then choose category of seats, this just determines the cost and area. Then click continue.");
+define("pos_homepage","Home Page");
+define("pos_currenttickets","Current Tickets");
+define("pos_booktickets","Book Tickets");
+define("pos_holdtickets","Hold Tickets");
+define("order_status_changed","Order Status Changed Successfully");
+define("dts_month_arr", "January|February|March|April|May|June|July|August|September|October|November|December");
+define("timestamp","timestamp");
 
 //Added by Niels 8-22-09
-define('No_useraddress_selected','No useraddress selected.');
-define('No_handling_selected','No handling method selected.');
-define('noting_checkout','There is nothing to checkout!!!');
+define("No_useraddress_selected","No useraddress selected.");
+define("No_handling_selected","No handling method selected.");
+define("noting_checkout","There is nothing to checkout!!!");
 
 // Change to user_* in pos and delete this section
 define("firstname","First Name");
@@ -1006,9 +1016,9 @@ define("state","State");
 define("phone","Phone Number");
 define("fax","Fax Number");
 
-define('error_eventnotfound','Event not found');
-define('error_missingcategorytype','Missing category numbering type');
-define('error_discountnotfound','Discount not found');
+define("error_eventnotfound","Event not found");
+define("error_missingcategorytype","Missing category numbering type");
+define("error_discountnotfound","Discount not found");
 
 //Moved from old file & used in POS - 8/26/09 Lou
 define("actions","Actions");
@@ -1030,6 +1040,7 @@ define("sure_to_cancel","Cancel?");
 
 //------------------------------------------------------
 //Not quite sure about these.  8/26/09 Lou
+
 //AdminView.php - These are in the file but I can not find where they display
 define("page_format_default","Default");
 define("page_format_std","Standard");
@@ -1041,9 +1052,14 @@ define("page_orientation_portrait","Portrait");
 define("place_row","Row");
 define("place_seat","Seat");
 
-define("payment_cc","Credit card");
+//EventViewCommon.php
+define("payment_cc","Credit Card");
 define("payment_post","Post");
+
+//eph_paypal.php
 define("paypal_pay","Make payments with PayPal - it's fast, free and secure!");
+
+//OrtView.php
 define("pm_title","All charts");
 //--------------------------------------------------
 

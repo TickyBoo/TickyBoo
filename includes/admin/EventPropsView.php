@@ -103,27 +103,26 @@ class EventPropsView extends EventViewCommon {
 		$this->form_foot();
 
 		echo "</form>\n";
-		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') .
-			"</a></center>";
+		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') ."</a></center>";
 	}
 
 	function fill_images() {
 		$img_pub['pub'] = array( 
-            "src"   => 'images/grun.png', 
-			      "title" => "Click to Unpublish.",
-            "alt"   => "Published", 
-            "link"  => "view_event.php?action=unpublish&cbxEvents[]=" );
+            "src" => 'images/grun.png',
+            'title' => con('icon_unpublish'),
+            'alt' => con('icon_unpublish_alt'),
+            'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
 
 		$img_pub['unpub'] = array( 
             "src" => 'images/rot.png', 
-            'title' => "Click to publish.", 
-            'alt' => "New event", 
+            'title' => con('icon_publish'), 
+            'alt' => con('icon_publish_alt'), 
             'link' => "view_event.php?action=publish&cbxEvents[]=" );
 
 		$img_pub['nosal'] = array( 
             "src" => 'images/grey.png', 
-            "title" => "Click to republish.", 
-            "alt" => "Unpublished", 
+            "title" => con(icon_nosal),
+            "alt" => con('icon_nosal_alt'),
             "link" => "view_event.php?action=publish&cbxEvents[]=" );
 
 		return $img_pub;
@@ -204,8 +203,7 @@ class EventPropsView extends EventViewCommon {
 					Archive . "' title='" . Archive . "'></a>\n";
 
 				echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-                        <img src='images/trash.png' border='0' alt='" . remove .
-					"' title='" . remove . "'></a>\n";
+                        <img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
 			}
 			echo "
       </td></tr>\n\n";

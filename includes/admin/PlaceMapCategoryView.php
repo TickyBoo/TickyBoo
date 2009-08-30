@@ -68,7 +68,7 @@ class PlaceMapCategoryView extends AdminView {
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-        $this->form_head(category_update_title);
+        $this->form_head(categories);
 
         $this->print_field_o('category_id', $data);
         $this->print_field_o('event_name', $data);
@@ -121,7 +121,7 @@ class PlaceMapCategoryView extends AdminView {
             echo "</form>";
         }
 
-        echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$data['pm_id']}' class=link>" . place_map . "</a></center>";
+        echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$data['pm_id']}' class=link>".con('place_map')."</a></center>";
     }
 
     function category_check ($data)
@@ -141,7 +141,7 @@ class PlaceMapCategoryView extends AdminView {
         $alt = 0;
 //        echo $live;
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='5' align='center'>" . categories . "</td></tr>\n";
+        echo "<tr><td class='admin_list_title' colspan='5' align='center'>" .con('categories'). "</td></tr>\n";
 
         $query = "select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
@@ -150,24 +150,25 @@ class PlaceMapCategoryView extends AdminView {
             echo "<tr class='admin_list_row_$alt'>";
             echo "<td class='admin_list_item' width=10 bgcolor='{$category->color_code}'>&nbsp;</td>\n";
             echo "<td class='admin_list_item' width='50%'>{$category->category_name} ({$category->category_status})</td>\n";
-            echo "<td class='admin_list_item'>{$category->category_size} &agrave; {$category->category_price} </td>\n";
+            echo "<td class='admin_list_item'>{$category->category_size} ".con('cat_at')." {$category->category_price} </td>\n";
             echo "<td class='admin_list_item' >" . con($category->category_numbering) . " </td>\n";
 
             echo "<td class='admin_list_item' width=40 align=right>";
             if ($mine) {
-                echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
+                echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
+                <img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
                 if (!$live) {
-                    echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id=$pm_id&category_id={$category->category_id}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
+                    echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id=$pm_id&category_id={$category->category_id}\";}'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\n";
                 }
             } else {
-               echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_category&pm_id=$pm_id&category_id={$category->category_id}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
+               echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_category&pm_id=$pm_id&category_id={$category->category_id}'><img src='images/view.png' border='0' alt='".con('view')."' title='".con('view')."'></a>\n";
             }
             echo'</td></tr>';
             $alt = ($alt + 1) % 2;
         }
 
         if ($mine and !$live) {
-            echo "<tr><td colspan=5 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>" . add . "</a></td></tr>";
+            echo "<tr><td colspan=5 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>".con('add')."</a></td></tr>";
         }
 
         echo '</table>';

@@ -103,10 +103,10 @@ if($event['event_rep']=='main'){
     if ($_POST['confirm'] == 'YES' and $_POST['event_id'] > 0){
       if ($event = Event::load($_POST['event_id'], false)){
         if ($event->delete()){
-          echo "<div class='success'> <b>'{$event->event_name}'</b> " . delete_success . "</div>\n";
+          echo "<div class='success'> <b>'{$event->event_name}'</b> " . con("delete_success") . "</div>\n";
           Event::emptyTrash();
         }else{
-          echo "<div class='err'> <b>'{$event->event_name}'</b> " . delete_failure . "</div>\n";
+          echo "<div class='err'> <b>'{$event->event_name}'</b> " . con("delete_failure") . "</div>\n";
         }
 
         /*if($event->event_rep=='main' and $_POST['also_sub'] and $subs=Event::load_all_sub($event->event_id)){
@@ -115,9 +115,9 @@ if($event['event_rep']=='main'){
 
           if($sub->event_status=='pub'){
 	    if($sub->stop_sales()){
-              echo "<div class='success'> <b>'$date'</b> ".stop_success."</div>\n";
+              echo "<div class='success'> <b>'$date'</b> ".con("stop_success")."</div>\n";
             } else {
-              echo "<div class='err'> <b>'$date'</b> ".stop_failure."</div>\n";
+              echo "<div class='err'> <b>'$date'</b> ".con("stop_failure")."</div>\n";
             }
 	  }
 	}

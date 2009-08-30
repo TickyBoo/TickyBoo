@@ -299,7 +299,7 @@ class PlaceMapPartView extends AdminView {
             <td  align=left width='85%' valign=top colspan=3>";
             // define labels
             $this->form_head('', '99%');
-            echo "<tr><td class='admin_value'>".con("Label").":
+            echo "<tr><td class='admin_value'>".con("label").":
                     <select name='label_type'>\n";
             echo "  <option value='T'  {$sel['T' ]}>".label_type_text."</option>\n";
             echo "  <option value='RE' {$sel['RE']}>".label_type_row_east."</option>\n";

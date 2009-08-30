@@ -82,8 +82,8 @@ global $_SHOP;
     echo "<tr class='admin_list_row_$alt'>";
     echo "<td class='admin_list_item' width='550' >{$row['admin_login']}</td>\n";
     echo "<td class='admin_list_item' nowrap='nowrap' align='right'  >\n";
-    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&admin_id={$row['admin_id']}'><img src='images/edit.gif' border='0' alt='".edit."' title='".edit."'></a>\n";
-    echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&admin_id={$row['admin_id']}\";}'><img src='images/trash.png' border='0' alt='".remove."' title='".remove."'></a>\n";
+    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&admin_id={$row['admin_id']}'><img src='images/edit.gif' border='0' alt='".con("edit")."' title='".con("edit")."'></a>\n";
+    echo "<a class='link' href='javascript:if(confirm(\"".con("delete_item")."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&admin_id={$row['admin_id']}\";}'><img src='images/trash.png' border='0' alt='".con("remove")."' title='".con("remove")."'></a>\n";
     echo "</td></tr>";
     $alt=($alt+1)%2;
   }
