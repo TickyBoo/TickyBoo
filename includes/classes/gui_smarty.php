@@ -480,8 +480,8 @@ class Gui_smarty {
                        "<input type='checkbox'  name='remove_$name' value='1'>" . con("remove_image")."<br>");
     }
   }
-function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
-  {
+  
+  function Navigation($params, &$smarty) { //($offset, $matches, $url, $stepsize=10)
     $name     = is($params['name'],'offset');
     $offset   = is($params['offset'],0);
     $matches  = is($params['count'],0);
@@ -551,8 +551,30 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
 
   function TabBar($params , &$smarty) {
     require_once('admin'.DS.'AdminView.php');
-    return  AdminView::PrintTabMenu($params['linkArray'], $params['activeTab'], $params['menuAlign']);
+
+    $TabBarid = is($params['TabBarid'],'TabBarid');
+    $menuAlign = is($params['menuAlign'],'left');
+    $menu  = is($params['menu']);
+
+    if (isset($_REQUEST['tab'])) {
+      $_SESSION[$TabBarid] = (int)$_REQUEST['tab'];
+    } elseif (!isset($_SESSION[$TabBarid])) {
+      $_SESSION[$TabBarid] = 0;
+    }
+
+    If (!is_array($menu)) {
+      $opt  = explode('|',$menu);
+      $a =0;
+      $menu = array();
+      foreach ($opt as $key) {
+        $menu[$key] = "?tab={$a}";
+        $a++;
+      }
+    }
+    $smarty->assign($TabBarid, $_SESSION[$TabBarid]);
+    return  AdminView::PrintTabMenu($menu, $_SESSION[$TabBarid], $menuAlign);
   }
+
   function captcha($params, &$smarty) //($name)
   {
     //print_r($smarty);
@@ -567,7 +589,7 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
            "     <img src='".makeURL('Captcha/'.$name)."' alt=''  border=1>\n".
            "  </td></tr>\n".
            "</table>\n");
-    }
+  }
     
   function delayedLocation($params, &$smarty) { //($url){
       $url = $this->view->_URL($params);
@@ -578,9 +600,9 @@ function Navigation($params, &$smarty) //($offset, $matches, $url, $stepsize=10)
                  }
                  window.setTimeout('runLocation()', 1500);
             // End -->\n</SCRIPT>\n";
-      }
-  function valuta ($params,&$smarty)
-  {
+  }
+
+  function valuta ($params,&$smarty){
     global $_SHOP;
 
     $valuta = valuta($params['value'], $params['code']);

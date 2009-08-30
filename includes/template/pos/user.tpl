@@ -34,13 +34,13 @@
  *}
 
 <script type="text/javascript">
-{literal}
-$(document).ready(function(){
- 	{/literal}
-  	loadUser(['{!user_id!}','{!user_name!}','{!user_zip!}','{!user_city!}','{!user_email!}']);
-	{literal}
- });
-{/literal}
+  {literal}
+    $(document).ready(function(){
+  {/literal}
+      loadUser(['{!user_id!}','{!user_name!}','{!user_zip!}','{!user_city!}','{!user_email!}']);
+  {literal}
+    });
+  {/literal}
 </script>
 
 
@@ -48,7 +48,7 @@ $(document).ready(function(){
     <thead>
     <tr>
       <td colspan="2" class="title">
-          {!pers_info!}
+        {!pers_info!}
       </td>
     </tr>
     <tr>
@@ -56,19 +56,19 @@ $(document).ready(function(){
         <table width='100%' border='0' cellspacing='0' cellpadding='0' >
           <tr>
             <td class='user_item'  > &nbsp;
-         		  <input checked="checked" type='radio' id='user_info_none' class='checkbox_dark' name='user_info' value='0'>
-       		  	<label for='user_info_none'> {!none!} </label>
-           </td>
+              <input checked="checked" type='radio' id='user_info_none' class='checkbox_dark' name='user_info' value='0'>
+              <label for='user_info_none'> {!none!} </label>
+            </td>
             <td class='user_item'  >
-         		  <input type='radio' id='user_info_new' class='checkbox_dark' name='user_info' value='2'>
-       		  	<label for='user_info_new'> {!new_partron!} </label>
-      	     </td>
+               <input type='radio' id='user_info_new' class='checkbox_dark' name='user_info' value='2'>
+               <label for='user_info_new'> {!new_partron!} </label>
+            </td>
             <td  class='user_item' >
-         		  <input type='radio' id='user_info_search' class='checkbox_dark' name='user_info' value='1'>
-       		  	<label for='user_info_search'> {!exst_user!} </label>
-           </td>
+              <input type='radio' id='user_info_search' class='checkbox_dark' name='user_info' value='1'>
+              <label for='user_info_search'> {!exst_user!} </label>
+          </td>
             <td class='user_item'  align  ='right' width='100'>
-      		    <button type="button" id="search_user" name='action' value='search_user'>{!search!}</button>
+              <button type="button" id="search_user" name='action' value='search_user'>{!search!}</button>
             </td>
           </tr>
         </table>
@@ -76,22 +76,21 @@ $(document).ready(function(){
     </tr>
     </thead>
     <tbody id='user_data' name='user_data' style="display:none;">
-        {gui->setdata data=$user_data errors=$user_errors nameclass='user_item' valueclass='user_value' namewidth='120'}
-        {gui->input name='user_firstname' mandatory=true size='30' maxlength='50'}
-        {gui->input name='user_lastname' mandatory=true size='30' maxlength='50'}
-        {gui->input name='user_address' mandatory=true size='30' maxlength='75'}
-        {gui->input name='user_address1' size='30' maxlength='75'}
-        {gui->input name='user_zip' mandatory=true size='8' maxlength='20'}
-        {gui->input name='user_city' mandatory=true size='30' maxlength='50'}
-        {gui->selectstate name='user_state'}
-        {gui->selectcountry name='user_country' mandatory=true}
-        {gui->input name='user_phone' size='15' maxlength='50'}
-        {gui->input name='user_fax' size='15' maxlength='50'}
-        {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
-        <input type='hidden' id='user_id' name='user_id' value='-1'>
+      {gui->setdata data=$user_data errors=$user_errors nameclass='user_item' valueclass='user_value' namewidth='120'}
+      {gui->input name='user_firstname' mandatory=true size='30' maxlength='50'}
+      {gui->input name='user_lastname' mandatory=true size='30' maxlength='50'}
+      {gui->input name='user_address' mandatory=true size='30' maxlength='75'}
+      {gui->input name='user_address1' size='30' maxlength='75'}
+      {gui->input name='user_zip' mandatory=true size='8' maxlength='20'}
+      {gui->input name='user_city' mandatory=true size='30' maxlength='50'}
+      {gui->selectstate name='user_state'}
+      {gui->selectcountry name='user_country' mandatory=true}
+      {gui->input name='user_phone' size='15' maxlength='50'}
+      {gui->input name='user_fax' size='15' maxlength='50'}
+      {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
+      <input type='hidden' id='user_id' name='user_id' value='-1'>
     </tbody>
   </table>
   <div id="search-dialog" title="Personal Search dialog">
-   	<table id="users_table" class="scroll" cellpadding="0" cellspacing="0"></table>
-   	
+     <table id="users_table" class="scroll" cellpadding="0" cellspacing="0"></table>
   </div>

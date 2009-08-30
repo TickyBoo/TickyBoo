@@ -30,7 +30,8 @@
  *
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
- *}  <table width='100%'  cellspacing='2' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
+ *}
+<table width='100%'  cellspacing='2' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
   <tr>
   <td class='admin_info'><img src='images/dot.gif' class='admin_order_ord' width='15' height='15' /> {!ordered!}</td>
   <td class='admin_info'><img src='images/dot.gif' class='admin_order_send' width='15' height='15' /> {!sent!}</td>

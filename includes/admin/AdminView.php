@@ -573,7 +573,7 @@ class AdminView extends AUIComponent {
     Global $_SHOP;
   	$tabCount=0;
 
-  	$str= "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>\n";
+  	$str= "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0  class=\"UITabMenuNav\">\n";
   	$str.= "<tr>\n";
   	if($menuAlign=="right"){
       $str.= "<td width=\"100%\" align=\"left\">&nbsp;</td>\n";

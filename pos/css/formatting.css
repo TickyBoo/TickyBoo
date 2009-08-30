@@ -246,3 +246,75 @@ p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;marg
 #header ul li a:hover {
 	color: #4F07E2;
 }
+
+table.UITabMenuNav{
+ border-bottom: 3px solid #FE7B09
+}
+
+td.UITabMenuNavOff{
+background:#dddddd;
+color:#000000;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:x-small;
+FONT-VARIANT: small-caps;
+text-align: center;
+border-bottom:1px solid #ffffff;
+text-decoration:none;
+}
+td.UITabMenuNavOn{
+  background: #C0C0C0;
+	color:#ffffff;
+  text-decoration:none;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:x-small;
+	FONT-VARIANT: small-caps;
+	text-align: center;
+  border-bottom:1px solid #C0C0C0;
+	}
+
+
+A.UITabMenuNavOff{
+text-decoration:none;
+font-weight: bold;
+}
+
+A.UITabMenuNavOff:link{
+  color: #444444;
+   }
+A.UITabMenuNavOff:visited {
+  color: #444444;
+   }
+A.UITabMenuNavOff:hover {
+  color: #000000;
+  text-decoration: underlay;
+  }
+
+A.UITabMenuNavOn{
+text-decoration:none;
+font-weight: none;
+}
+
+A.UITabMenuNavOn:link{
+  color: #ffffff;
+   }
+A.UITabMenuNavOn:visited {
+  color: #ffffff;
+   }
+A.UITabMenuNavOn:hover {
+  text-decoration: underlay;
+  }
+
+.UITabMenuChildMenu{
+	background:#000066;
+	color:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:x-small;
+	padding:4px;
+	}
+.UITabMenuChildMenu:hover{
+	background:#000066;
+	color:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:x-small;
+	padding:4px;
+        }
