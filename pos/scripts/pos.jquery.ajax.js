@@ -52,7 +52,7 @@ var bindLinks = function(){
     	var url = $(this).attr('href');
     	if($(this).hasClass("ui-dialog-titlebar-close") || $(this).hasClass('.ui-state-hover')){
     		return false;
-    	}
+    	}               alert('test me');
     	$("#seat-chart").each(function(){
     		$(this).remove();	
     	});

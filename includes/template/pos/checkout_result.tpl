@@ -26,8 +26,8 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}{strip}
-{if $smarty.request.ajax neq 'yes'}
-{include file='order.tpl' nofooter=true}
+{if $smarty.request.ajax}
+  {include file='order.tpl' nofooter=true}
   <div id="checkout_result" title='
 {else}
   <h2>
@@ -37,7 +37,7 @@
 {else}
   {!pay_refused! }
 {/if}
-{if $smarty.request.ajax neq 'yes'}
+{if $smarty.request.ajax}
   '>
 {else}
   </h2>
@@ -64,12 +64,16 @@
             {eval var=$pm_return.response}
           {/if}
     		  </div>
-
+          {if $pm_return.approved}
+            <br>
+              <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
+            <br>
+          {/if}
         </td>
       </tr>
     </table>
 
-{if $smarty.request.ajax neq 'yes'}
+{if $smarty.request.ajax}
   </div>
   <script type="text/javascript">
   {literal}
@@ -80,9 +84,11 @@
     		height: 'auto',
     		width: 'auto',
     		modal: true,
-    		buttons: {'Close': function() {
-	    		$(this).dialog('close');
-	  		}
+    		buttons: {
+          'Close': function() {
+	    	   	$(this).dialog('close');
+          }
+	  		},
     	  close: function(event, ui) {
           {/literal}window.location = '{$_SHOP_root}index.php';{literal}
         }
@@ -91,7 +97,6 @@
   {/literal}
   </script>
   {include file="footer.tpl"}
-{else}
 {/if}
 
 

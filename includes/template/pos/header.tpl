@@ -46,6 +46,7 @@
 		
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
+
 		<script type="text/javascript" src="../scripts/jquery/jquery.ajaxmanager.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.validate.min.js"></script>

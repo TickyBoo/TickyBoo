@@ -85,3 +85,4 @@
     {include file="process_list.tpl" status="send"}
   {/if}
 {/if}
+{include file="footer.tpl"}

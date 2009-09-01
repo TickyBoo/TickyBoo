@@ -10,9 +10,9 @@
   {$order->delete_ticket_f($smarty.get.order_id,$smarty.get.ticket_id) }
   {include file="process_select.tpl"}
 
-{elseif $smarty.post.action eq 'print_tickets'}
+{elseif $smarty.post.action eq 'print'}
   {order->set_payed order_id=$smarty.post.order_id}
-  {include file='print_order.tpl'}
+  {include file='print.tpl'}
   
 {elseif $smarty.post.action eq 'confirm'}
   {include file="process_select.tpl"}
@@ -30,8 +30,4 @@
   {/if}
 {else}
   {include file="process_select.tpl"}
-{/if}
-
-{if $smarty.get.ajax neq 'yes' and $smarty.post.ajax neq 'yes'}
-  {include file="footer.tpl"}
 {/if}

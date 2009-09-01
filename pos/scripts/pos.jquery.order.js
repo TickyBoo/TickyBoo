@@ -7,6 +7,7 @@ var loadOrder = function(){
 		bgiframe: false,
 		autoOpen: false,
 		height: 'auto',
+		maxHeight: 400,
 		width: 'auto',
 		modal: true,
 		buttons: {'Close': function() {
@@ -21,7 +22,10 @@ var loadOrder = function(){
 		height: 'auto',
 		width: 'auto',
 		modal: true,
-		buttons: {},
+		dialogClass: 'alert',
+		buttons: {'Close': function() {
+			$(this).dialog('close');
+			}},
 	  close: function(event, ui) {
       refreshOrder();
     }
@@ -39,8 +43,8 @@ var loadOrder = function(){
 			{name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
 			{name:'Count',      index:'Count',      width:55,  sortable:false, resizable: false, align:'right' },
 			{name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
-			{name:'user_city',  index:'user_city',  width:70,  sortable:false, resizable: false, align:'right' },
-			{name:'user_email', index:'user_email', width:100, sortable:false, resizable: false, align:'right' }],
+			{name:'Price',      index:'Price',      width:70,  sortable:false, resizable: false, align:'right' },
+			{name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
 		altRows: true,
 		height: 116,
 		width: 755,
@@ -60,9 +64,9 @@ var loadOrder = function(){
         $('#cancel').hide();
       }
       if (data.can_order) {
-        $('#reserved').show();
+        $('#checkout').show();
       } else {
-        $('#reserved').hide();
+        $('#checkout').hide();
       }
       BindEventRemove()
     }
@@ -162,18 +166,18 @@ var loadOrder = function(){
 		//$("#continue").attr("type","button");
 		unBindSeatChart();
 		updateEvents();
-		
+		return false;
 	});
 	
 	$("#order-form").submit(function(){
+	  $("#error-message").hide();
 		$(this).ajaxSubmit({
 			data:{ajax:"yes",action:"addtocart"},
 			success: function(html){
-       // html = html.trim();
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
-          setTimeout(function(){$("#error-message").hide();}, 40000);
+          setTimeout(function(){$("#error-message").hide();}, 4000);
         } else {
   				refreshOrder(); //Refresh Cart
 	  			refreshCategories(); //Update ticket info (Free tickets etc)
@@ -190,6 +194,7 @@ var loadOrder = function(){
    	$("#user_data :input").each(function() {
    		userdata[$(this).attr("name")] = $(this).val();
    	});
+	  $("#error-message").hide();
   	ajaxQManager.add({
   		type:		"POST",
   		url:		"checkout.php?x=order",
@@ -210,6 +215,7 @@ var loadOrder = function(){
 	});
 
 	$("#cancel").click(function(){
+	  $("#error-message").hide();
   	ajaxQManager.add({
   		type:		"POST",
   		url:		"checkout.php?x=cancel",

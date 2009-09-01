@@ -31,7 +31,24 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  
- *}{if $pos->user_prefs eq "pdf"}
+ *}{strip}
+{if !$doit}
+  {include file="header.tpl"}
+  <iframe height='0' width='0' src='print.php?doit=true&order_id={$smarty.post.order_id}'></iframe>
+  <center>
+    <div class='printer'>
+      <img src='images/printing.gif' /><br/>
+      {!tickets_printing!}
+    </div><br>
+    <a href='print.php?doit=true&order_id={$smarty.post.order_id}'  class='shop_link' target='printer'>
+      {!print_order!}
+    </a>
+  </center>
+  {include file="footer.tpl"}
+
+{/strip}
+
+ {if $pos->user_prefs eq "pdf"}
 {if $smarty.get.mode eq "doit"}
 {order->order_print print_prefs=$pos->user_prefs order_id=$smarty.get.order_id}
 {else}
