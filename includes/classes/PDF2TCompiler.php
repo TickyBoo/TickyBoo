@@ -53,7 +53,7 @@ class PDF2TCompiler {
     $smarty->assign((array)$_SHOP->organizer_data);
     $smarty->assign($data);
     $smarty->assign("OrderData",$data);
-    $smarty->assign("_SHOP_files",  $_SHOP->files_url);
+    $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
     $smarty->assign("_SHOP_images", $_SHOP->images_url);
 
 

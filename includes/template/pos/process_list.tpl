@@ -119,7 +119,7 @@
                   <img src='images/view.png' border='0'>
                 </a>
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
-                  <a href='print.php?mode=doit&order_id={$shop_order.order_id}'>
+                  <a href='print.php?order_id={$shop_order.order_id}'>
                     <img border='0' src='images/printer.gif'>
                   </a> 
                   <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>

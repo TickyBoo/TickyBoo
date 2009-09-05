@@ -70,7 +70,7 @@
   <br />
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-          <strong>Alert: </strong><span id='error-text'>Sample ui-state-error style.</span>
+          <strong>Alert: </strong><span id='error-text'></span>
        </p>
     </div>
     <table width='100%'>

@@ -1052,7 +1052,7 @@ function Output($name='', $dest='')
 			if(headers_sent())
 				$this->Error('Some data has already been output, can\'t send PDF file');
 			header('Content-Length: '.strlen($this->buffer));
-			header('Content-Disposition: attachment; filename="'.$name.".pdt".'"');
+			header('Content-Disposition: attachment; filename="'.$name.'.pdt"');//".pdt".
 			header('Cache-Control: private, max-age=0, must-revalidate');
 			header('Pragma: public');
 			ini_set('zlib.output_compression','0');
@@ -1060,7 +1060,7 @@ function Output($name='', $dest='')
 			break;
 		case 'F':
 			//Save to local file
-			$f=fopen($name,'wb');
+			$f=fopen($name.'.pdf','wb');
 			if(!$f)
 				$this->Error('Unable to create output file: '.$name);
 			fwrite($f,$this->buffer,strlen($this->buffer));

@@ -382,7 +382,7 @@ class PosAjax {
     if (!$where) $where = '1=1';
      $this->json['POST'] = $where;
 
-		$sql = "SELECT user_id, user_lastname +', '+user_firstname AS user_data,
+		$sql = "SELECT user_id, CONCAT_WS(', ',user_lastname, user_firstname) AS user_data,
                    user_zip, user_city, user_email
             FROM `User`
             WHERE {$where}";// and user_owner_id =". $_SESSION['_SHOP_AUTH_USER_DATA'][;

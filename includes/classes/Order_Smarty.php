@@ -147,6 +147,7 @@ class Order_Smarty {
     return Order::order_delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
   }
 
+
   function order_list ($params, $content, &$smarty,&$repeat){
     
     if ($repeat) {
@@ -410,7 +411,7 @@ class Order_Smarty {
     return Order::set_payed($order_id, 0, $this->user_auth_id);
   }
   
-  function order_print ($params,&$smarty){
+  function order_print ($params, &$smarty){
 
    if($params['print_prefs']=='pdf'){
       $print=FALSE;
@@ -418,7 +419,7 @@ class Order_Smarty {
       $print=TRUE;
     }
     
-    Order::print_order($params['order_id'],'','stream',$print);
+   Order::print_order($params['order_id'],'', 'stream', $print);
   }
   
   function secure_url_param($num=FALSE, $nonum=FALSE) 

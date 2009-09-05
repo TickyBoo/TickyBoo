@@ -3,15 +3,15 @@
  * Logiciel : HTML2PDF
  * 
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
- * Distribué sous la licence GPL. 
+ * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.22 - 08/06/2009
+ * @version		3.24 - 05/08/2009
  */
 
 if (!defined('__CLASS_HTML2PDF__'))
 {
-	define('__CLASS_HTML2PDF__', '3.22');
+	define('__CLASS_HTML2PDF__', '3.24');
 
 	// vous pouvez utiliser cette fonction de debug comme suit
 	// pour voir le temps et la mémoire utilisés (sous linux) pour la conversion :
@@ -833,9 +833,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/	
 		function vueHTML($content)
 		{
-			$content = preg_replace('/<page_header([^>]*)>/isU',	'<hr>'.HTML2PDF::textGET('vue01').' : $1<hr><div$1>', $content);
-			$content = preg_replace('/<page_footer([^>]*)>/isU',	'<hr>'.HTML2PDF::textGET('vue02').' : $1<hr><div$1>', $content);
-			$content = preg_replace('/<page([^>]*)>/isU',			'<hr>'.HTML2PDF::textGET('vue03').' : $1<hr><div$1>', $content);
+			$content = preg_replace('/<page_header([^>]*)>/isU',	'<hr>'.@HTML2PDF::textGET('vue01').' : $1<hr><div$1>', $content);
+			$content = preg_replace('/<page_footer([^>]*)>/isU',	'<hr>'.@HTML2PDF::textGET('vue02').' : $1<hr><div$1>', $content);
+			$content = preg_replace('/<page([^>]*)>/isU',			'<hr>'.@HTML2PDF::textGET('vue03').' : $1<hr><div$1>', $content);
 			$content = preg_replace('/<\/page([^>]*)>/isU',			'</div><hr>', $content);
 			$content = preg_replace('/<bookmark([^>]*)>/isU',		'<hr>bookmark : $1<hr>', $content);
 			$content = preg_replace('/<\/bookmark([^>]*)>/isU',		'', $content);
@@ -843,7 +843,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>'.HTML2PDF::textGET('vue04').' HTML</title>
+		<title>'.@HTML2PDF::textGET('vue04').' HTML</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
 	</head>
 	<body style="padding: 10px; font-size: 10pt;font-family:	Arial;">
@@ -882,7 +882,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 			else
 			{
-				HTML2PDF::makeError(1, __FILE__, __LINE__, strtoupper($row['name']));
+				@HTML2PDF::makeError(1, __FILE__, __LINE__, strtoupper($row['name']));
 				return false;
 			}
 		}
@@ -1287,9 +1287,11 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$h = $sub->maxY;
 				unset($sub);
 			}
-
-			$w+= $marge['l']+$marge['r'];
-			$h+= $marge['t']+$marge['b'];
+			if (($w==0 && $this->style->value['width']==0) || $this->style->value['position']=='absolute')
+			{
+				$w+= $marge['l']+$marge['r']+0.001;			
+			}
+			$h+= $marge['t']+$marge['b']+0.001;
 			
 			$this->style->value['width']	= max($w, $this->style->value['width']);
 			$this->style->value['height']	= max($h, $this->style->value['height']);
@@ -1562,7 +1564,6 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 
 			$txt = html_entity_decode($txt, ENT_QUOTES, 'ISO-8859-15');
-//			$txt = utf8_decode(html_entity_decode($txt, ENT_QUOTES, 'UTF-8'));
 
 			$txt = str_replace('[[page_cu]]',	$this->pdf->PageNo(),	$txt);
 			
@@ -1654,7 +1655,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				
 					// ligne suplémentaire. au bout de 1000 : trop long => erreur
 					$nb++;
-					if ($nb>1000) HTML2PDF::makeError(2, __FILE__, __LINE__, array($txt, $right-$left, $this->pdf->GetStringWidth($txt))); 
+					if ($nb>1000) @HTML2PDF::makeError(2, __FILE__, __LINE__, array($txt, $right-$left, $this->pdf->GetStringWidth($txt))); 
 
 					list($left, $right) = $this->getMargins($y);	// marges autorisees
 				}
@@ -1691,7 +1692,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			if (count($infos)<2)
 			{
-				HTML2PDF::makeError(6, __FILE__, __LINE__, $src);
+				@HTML2PDF::makeError(6, __FILE__, __LINE__, $src);
 				return false;
 			}
 			
@@ -1730,6 +1731,16 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$x = $this->pdf->getX();
 			$y = $this->pdf->getY();
 			
+			// si l'image ne rentre pas dans la ligne => nouvelle ligne 
+			if (!$float && ($x + $w>$this->pdf->w - $this->pdf->rMargin))
+			{
+				$hnl = $this->style->getLineHeight();
+				$hnl = max($this->maxH, $hnl);
+				$this->setNewLine($hnl);
+				$x = $this->pdf->getX();
+				$y = $this->pdf->getY();
+			}
+						
 			// si l'image ne rentre pas dans la page => nouvelle page 
 			if ($y + $h>$this->pdf->h - $this->pdf->bMargin)
 			{
@@ -1771,9 +1782,6 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($parent_w>$w && $float!='left')
 			{
 				if ($float=='right' || $this->style->value['text-align']=='li_right')	$x = $parent_x + $parent_w - $w-$this->style->value['margin']['r']-$this->style->value['margin']['l'];
-				
-//				if ($float=='right' || $this->style->value['text-align']=='right')	$x = $parent_x + $parent_w - $w-$this->style->value['margin']['r']-$this->style->value['margin']['l'];
-//				else if ($this->style->value['text-align']=='center')				$x = $parent_x + 0.5*($parent_w - $w);
 			}
 			
 			// affichage de l'image, et positionnement à la suite
@@ -1888,7 +1896,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 	
 				if (count($i_infos)<2)
 				{
-					HTML2PDF::makeError(6, __FILE__, __LINE__, $i_name);
+					@HTML2PDF::makeError(6, __FILE__, __LINE__, $i_name);
 					return false;
 				}
 				
@@ -2783,6 +2791,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/	
 		function c_SPAN($param)
 		{
+			$this->style->restorePosition($this->pdf->x, $this->pdf->y);
 			$this->style->load();
 			$this->style->FontSet();		
 			
@@ -4041,7 +4050,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			// si on est dans un sub_html
 			if ($this->sub_part)
 			{
-				if ($this->testTDin1page && $this->sub_html->pdf->page>1) HTML2PDF::makeError(7, __FILE__, __LINE__); 
+				if ($this->testTDin1page && $this->sub_html->pdf->page>1) @HTML2PDF::makeError(7, __FILE__, __LINE__); 
 				
 				// dimentions de cette case
 				$w0 = $this->sub_html->maxX + $marge['l'] + $marge['r'];
@@ -4552,6 +4561,11 @@ if (!defined('__CLASS_HTML2PDF__'))
 			return true;
 		}
 		
+		function CreateIndex($titre = 'Index', $size_title = 20, $size_bookmark = 15, $bookmark_title = true, $display_page = true)
+		{
+			$this->pdf->CreateIndex($this, $titre, $size_title, $size_bookmark, $bookmark_title, $display_page);
+		}
+		
 		function textLOAD($langue)
 		{
 			if (!preg_match('/^([a-z0-9]+)$/isU', $langue))
@@ -4598,44 +4612,44 @@ if (!defined('__CLASS_HTML2PDF__'))
 			switch($err)
 			{
 				case 1:
-					$msg = (HTML2PDF::textGET('err01'));
+					$msg = (@HTML2PDF::textGET('err01'));
 					$msg = str_replace('[[OTHER]]', $other, $msg); 
 					break;
 					
 				case 2:
-					$msg = (HTML2PDF::textGET('err02'));
+					$msg = (@HTML2PDF::textGET('err02'));
 					$msg = str_replace('[[OTHER_0]]', $other[0], $msg); 
 					$msg = str_replace('[[OTHER_1]]', $other[1], $msg); 
 					$msg = str_replace('[[OTHER_2]]', $other[2], $msg); 
 					break;
 					
 				case 3:
-					$msg = (HTML2PDF::textGET('err03'));
+					$msg = (@HTML2PDF::textGET('err03'));
 					$msg = str_replace('[[OTHER]]', $other, $msg); 
 					break;
 					
 				case 4:
-					$msg = (HTML2PDF::textGET('err04'));
+					$msg = (@HTML2PDF::textGET('err04'));
 					$msg = str_replace('[[OTHER]]', print_r($other, true), $msg); 
 					break;
 					
 				case 5:
-					$msg = (HTML2PDF::textGET('err05'));
+					$msg = (@HTML2PDF::textGET('err05'));
 					$msg = str_replace('[[OTHER]]', print_r($other, true), $msg); 
 					break;
 					
 				case 6:
-					$msg = (HTML2PDF::textGET('err06'));
+					$msg = (@HTML2PDF::textGET('err06'));
 					$msg = str_replace('[[OTHER]]', $other, $msg); 
 					break;	
 					
 				case 7:
-					$msg = (HTML2PDF::textGET('err07'));
+					$msg = (@HTML2PDF::textGET('err07'));
 					break;	
 			}
-			echo '<span style="color: #AA0000; font-weight: bold;">'.(HTML2PDF::textGET('txt01')).$err.'</span><br>';
-			echo (HTML2PDF::textGET('txt02')).' '.$file.'<br>';
-			echo (HTML2PDF::textGET('txt03')).' '.$line.'<br>';
+			echo '<span style="color: #AA0000; font-weight: bold;">'.(@HTML2PDF::textGET('txt01')).$err.'</span><br>';
+			echo (@HTML2PDF::textGET('txt02')).' '.$file.'<br>';
+			echo (@HTML2PDF::textGET('txt03')).' '.$line.'<br>';
 			echo '<br>';
 			echo $msg;
 			exit;	

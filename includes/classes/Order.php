@@ -961,6 +961,8 @@ class Order {
     require_once('classes/gui_smarty.php');
 
   	global $_SHOP;
+    if (!$mode) $mode = 'file';
+    
     $orderqry = '
         SELECT * FROM `Order` left join User     on (order_user_id= user_id)
                               left join Handling on (order_handling_id = handling_id)

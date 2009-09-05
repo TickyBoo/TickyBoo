@@ -152,9 +152,7 @@ class EventPropsView extends EventViewCommon {
 			$etime = formatTime( $row["event_time"] );
 //                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
 
-      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt'
-                                  onmouseover=\"rowOver('ROW_{$row['event_id']}','admin_list_hover');\"
-                                  onmouseout=\"rowOver('ROW_{$row['event_id']}','admin_list_row_$alt');\">
+      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >
                 <td class='admin_list_item' width='20' bgcolor='white' >&nbsp;</td>
                 <td class='admin_list_item' width='130' >";
       if (!$history) {
@@ -312,9 +310,7 @@ select SQL_CALC_FOUND_ROWS *
 //			echo "</td></tr>\n\n";
 //                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
 
-      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt'
-                                  onmouseover=\"rowOver('ROW_{$row['event_id']}','admin_list_hover');\"
-                                  onmouseout=\"rowOver('ROW_{$row['event_id']}','admin_list_row_$alt');\">";
+      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
       echo "<td colspan=2 class='admin_list_item' width=150>";
       if (!$history) {
    		  echo "<input type='checkbox' name='cbxEvents[]'

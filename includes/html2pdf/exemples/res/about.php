@@ -41,13 +41,17 @@
 	<br><br><br><br><br><br><br><br>
 	<h1>HTML2PDF</h1>
 	<h3>v<?php echo __CLASS_HTML2PDF__; ?></h3><br>
-	<br><br><br><br><br><br>
-	<img src="./res/logoHTMLtoPDF.gif" alt="Logo HTML2PDF" style="text-align: center; width: 150mm">
-	<br><br><br><br><br><br>
+	<br><br><br><br><br>
+	<div style="text-align: center; width: 100%;">
+		<br>
+		<img src="./res/logoHTMLtoPDF.gif" alt="Logo HTML2PDF" style="width: 150mm">
+		<br>
+	</div>
+	<br><br><br><br><br>
 	<div class="note">
 		HTML2PDF est un convertisseur de code HTML vers PDF écrit en PHP4, utilisant la librairie <a href="http://fpdf.org">Fpdf d'Olivier PLATHEY.</a><br>
 		<br>
-		Il permet la conversion d'HTML 4.01 valide au format PDF, et est distribué sous licence GPL.<br>
+		Il permet la conversion d'HTML 4.01 valide au format PDF, et est distribué sous licence LGPL.<br>
 		<br>
 		Cette librairie a été conçue pour gérer principalement les TABLE imbriquées afin de générer des factures, bon de livraison, et autres documents officiels.<br>
 		<br>
@@ -214,7 +218,6 @@
 	<br>
 	<ul class="main">
 		<li>Les float ne sont gérés que pour la balise IMG.</li>
-		<li>Lors de l'utilisation de text-align avec les valeurs right et center, le positionnement des éléments les un par rapport aux autres ne marche pas.</li>
 		<li>Elle ne permet généralement pas la conversion directe d'une page HTML en PDF, ni la conversion du résultat d'un WYSIWYG en PDF.</li>
 		<li>Cette librairie est là pour faciliter la génération de documents PDF, pas pour convertir n'importe quelle page HTML.</li>
 		<li>Les formulaires ne marchent qu'à partir de la version <b>9</b> de <b>Adobe Reader</b>.</li>

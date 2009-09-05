@@ -33,8 +33,10 @@
  *}
 {include file="header.tpl"}
 <br>
-{gui->Tabbar menu="!pos_currenttickets!|!pos_paidlist!|!pos_unsentlist!"}
-<div style=" border-top: 3px solid #FE7B09"></div>
+{capture assign="tabview"}{!pos_currenttickets!}|{!pos_paidlist!}|{!pos_unsentlist!}{/capture} 
+{gui->Tabbar menu=$tabview}
+
+
 
 {if $TabBarid == 0} {* eq "paid" *}
   {if $smarty.request.order_id}      

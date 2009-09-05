@@ -958,6 +958,7 @@ define("without_fee","Without Fee");
 
 define("event_sold","Event sold out"); //POS/EVENT_GROUP.TPL
 define("event_start","Event start"); //POS/EVENT.TPL
+
 define("pos_calender_info","To Book/Reserve Tickets, select an event from the list below.");
 define("pos_cart_info","Check the tickets below: to add more click 'Order More Tickets'<br>".
        "Check the Delivery method and Payment Method.<br>".
@@ -968,11 +969,12 @@ define("pos_timestampt","Time stamp");
 define("pos_deleteorder","Delete Order?");
 define("pos_reorder_info","To Order Tickets Click below:<br>".
 		"WARNING old order is CANCELED on Re-Order!");
+define("pos_nextorderid",'Next order id');
 define("pos_selectuser","Either Create a new user, or select an exsiting user if they have already purchased from us before.");
 define("pos_freetickets","Free / Complimentary Tickets");
 define("pos_exsistingusers","Exsisting Users");
 define("pos_userlist","List of Box office users:");
-define("pos_gobacktoorders","Click to go back to list of Processed Orders");
+define("pos_goback","Click to go back");
 define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
 define("pos_clicktosent","Click To Set to Sent!");
 define("pos_nextorder","Next Processed Order");
@@ -996,6 +998,7 @@ define("pos_homepage","Home Page");
 define("pos_currenttickets","Current Tickets");
 define("pos_booktickets","Book Tickets");
 define("pos_holdtickets","Hold Tickets");
+define("pos_enternote",'Notes about order and tickets:<br><b>Remember to save after any changes!!</b>');
 define("order_status_changed","Order Status Changed Successfully");
 define("dts_month_arr", "January|February|March|April|May|June|July|August|September|October|November|December");
 define("timestamp","timestamp");
