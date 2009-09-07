@@ -61,8 +61,8 @@ class ControlPage extends AUIComponent {
         $this->drawFoot();
     }
 
-    function drawHead()
-    {
+    function drawHead() {
+      Global $_SHOP;
         if (!$_SERVER["INTERFACE_LANG"]) {
             $_SERVER["INTERFACE_LANG"] = "de";
         }
@@ -85,20 +85,30 @@ class ControlPage extends AUIComponent {
     <script><!--
     function init(){if(document.f && document.f.codebar){document.f.codebar.focus();}}
     --></script>
-    </head><body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 onload='init();'>
-    <center><table style='border:#45436d 1px solid;' width='750'  cellspacing='0' cellpadding='0' bgcolor='#ffffff'>
-    <tr><td  class='control_head'><img src='images/logo_control.png'></td></tr>
-    <tr><td  valign='top' align='right' style='padding-left:20px;border-top:#45436d 1px solid;border-bottom:#45436d 1px solid; padding-bottom:5px; padding-top:5px;'>
-    <a class='link_head' href='control.php?action=change_event'>[" . change_event . "]</a>
-    <a class='link_head' href='control.php?action=search_form'>[" . search . "]</a>
-    <a class='link_head' href='control.php?action=logout'>[" . logout . "]</a>&nbsp;&nbsp;</td>
-    </tr><tr><td style='padding-left:20px;padding-right:20px;' valign='top' align='center'>";
+    </head><body onload='init();'>";
+    echo "  		<div id='wrap'>\n";
+        echo "<div  id='header'>
+               <img src='{$_SHOP->images_url}fusion.png'  border='0'/>
+               <h2>" . $this->getTitle() . "</h2>
+               </div>";
+        echo"<div id='navbar'>
+				<ul>
+					<li><a class='link_head' href='control.php?action=change_event'>". con('change_event')."</a></li>
+          <li><a class='link_head' href='control.php?action=search_form'>" . con('search')."</a></li>
+          <li><a class='link_head' href='control.php?action=logout'>" . con('logout') . "</a>&nbsp;&nbsp;</td></li>
+        </ul>
+      </div><br>";
     }
 
     function drawFoot()
     {
-        echo "<br></td></tr></table>";
-        echo "</center></body></html>";
+        echo "<br>";
+    echo "<div id='footer'>
+				Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
+			</div>
+		</div>
+	</body>
+</html>";
     }
 
     function setRobots($tags)

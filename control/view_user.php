@@ -44,7 +44,7 @@ require_once ("control/UserView.php");
 // width=150 for menu ...Change it to your preferd width;
 // 700 total table
 $page=new ControlPage();
-$page->setTitle("");
+$page->setTitle("Ticket Taker");
 $page->set("body",$body);
 $page->draw();
 

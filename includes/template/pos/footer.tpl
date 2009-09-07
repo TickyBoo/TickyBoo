@@ -32,30 +32,9 @@
 
  
 			</div>
-			<!--
-			<div id="left"> 
-
-				<h3>Categories :</h3>
-				<ul>
-					<li><a href="#">World Politics</a></li>
-				</ul>
-
-				<h3>Archives</h3>
-				<ul>
-					<li><a href="#">January 2007</a></li> 
-				</ul>
-
-			</div>
-			-->
-			
-			<div style="clear: both;"> </div>
 
 			<div id="footer">
 				Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office
-			{*	<a href="http://fusionticket.org" ><img src="images/atom.png" width="38" height="39" style="float:right;" /></a> *}
-				<!--
-				<a href='http://jquery.com/' title='jQuery JavaScript Library'><img src='http://jquery.com/files/buttons/propal2.png' alt='jQuery JavaScript Library' title='jQuery JavaScript Library' style='border:none; float:left; display:block;'/></a>
-				-->
 			</div>
 		</div>
 	</body>

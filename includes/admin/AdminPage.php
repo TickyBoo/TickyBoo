@@ -141,30 +141,35 @@ class AdminPage extends AUIComponent {
         -->
 		</script>
   </head>
-  <body  leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 >";
-        echo "<center><table border='0' width='" . $this->width . "'  cellspacing='0' cellpadding='0' bgcolor='#ffffff' >
-             <tr>
-               <td  colspan='2' style='padding-left:20px;padding-bottom:5px;'>
-               <img src='images/logo_admin.png'>
-               </td>
-             </tr>
-            <tr><td style='padding-left:20px;border-top:#cccccc 1px solid;border-bottom:#cccccc 1px solid; padding-bottom:5px; padding-top:5px;' valign='bottom'>";
+  <body >
+  		<div id='wrap'>\n";
+        echo "<div  id='header'>
+               <img src='{$_SHOP->images_url}fusion.png'  border='0'/>
+               <h2>Administration</h2>
+               </div>";
+        echo"<div id='navbar'><table width='100%'>
+            <tr><td>";
         $this->drawOrganizer();
-        echo "</td>
-                <td  align='right' style='padding-right:20px;border-top:#cccccc 1px solid;border-bottom:#cccccc 1px solid; '>";
-        echo "<select name='setlang' onChange='set_lang(this)'>";
+        echo "</td><td  align='right'>&nbsp;";
+//        echo "<select name='setlang' onChange='set_lang(this)'>";
 
-        $sel[$_SHOP->lang] = "selected";
-        foreach($_SHOP->langs_names as $lang => $name) {
-            echo"<option value='$lang' {$sel[$lang]}>$name</option>";
-        }
-        echo "</select>";
-        echo"</td></tr></table><br>";
+//        $sel[$_SHOP->lang] = "selected";
+//        foreach($_SHOP->langs_names as $lang => $name) {
+//            echo"<option value='$lang' {$sel[$lang]}>$name</option>";
+//        }
+//        echo "</select>";
+        echo"</td></tr></table></div><br>";
         if (isset($this->errmsg)) echo "<div class='error'>$this->errmsg</div><br>";
     }
 
-    function drawFoot()
-    {
+    function drawFoot() {
+      echo "<br>";
+      echo "<div id='footer'>
+				Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
+			</div>
+		</div>
+	</body>
+</html>";
     }
 
     function setTitle($tags)

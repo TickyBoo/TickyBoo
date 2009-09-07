@@ -253,10 +253,13 @@ if($_SHOP->event_ids !=''){
   <input type='submit' name='submit' value='".search."'>
   <input type='reset' name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n";
-  
   echo "<br><form method='GET' action='{$_SERVER['PHP_SELF']}'>\n";
   echo "<table class='admin_form' width='100%' cellspacing='1' cellpadding='4'>\n";
   echo "<tr><td class='admin_list_title' colspan='2'>".con("search_title_place")."</td></tr>"; 
+  echo "<tr><td class='admin_name'>".event_list."</td><td class='admin_value'>
+        <select name='event_id'><option value='' selected>".choice_please."</option>";
+
+  if (!empty($_SHOP->event_ids)) {
   $query="select event_id,event_name,event_date,event_time from Event
           where event_status!='unpub' and event_rep LIKE '%sub%' 
   	  and FIELD(event_id,{$_SHOP->event_ids})>0 
@@ -265,13 +268,12 @@ if($_SHOP->event_ids !=''){
     user_error(shopDB::error());
     return;
   }
-  echo "<tr><td class='admin_name'>".event_list."</td><td class='admin_value'>
-        <select name='event_id'><option value='' selected>".choice_please."</option>";
   while($event=shopDB::fetch_assoc($res)){
     $date=formatAdminDate($event["event_date"]);
     $time=formatTime($event["event_time"]);	
     echo "<option value='{$event["event_id"]}'>".$event["event_name"]." - $date - $time </option>";
   }  
+  }
     
   echo "</select></td></tr>";
   
@@ -294,13 +296,6 @@ if($_SHOP->event_ids !=''){
   <input type='reset' name='reset' value='".res."'></td></tr>";
   echo "</table></form>\n"; 
  }
-   function con($name){
-    if(defined($name)){
-      return constant($name);
-    }else{
-      return $name;
-    }
-  }
 
   function print_field ($name, &$data){
     echo "<tr><td class='admin_name' width='20%'>".con($name)."</td>

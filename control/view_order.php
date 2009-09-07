@@ -44,7 +44,7 @@ $body=new OrderView();
 // width=200 for menu ...Change it to your preferd width;
 // 700 total table
 $page=new ControlPage();
-$page->setTitle("Administration");
+$page->setTitle("Ticket taker");
 $page->set("body",$body);
 $page->draw();
 ?>
