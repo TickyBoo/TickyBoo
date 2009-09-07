@@ -65,7 +65,7 @@
     <div id="seat-chart" title='{!select_seat!}'></div>
   </form>
 
-  <table id="cart_table" class="scroll" cellpadding="2" cellspacing="2"></table>
+  <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
   <div id="order_action" title='{!order_page!}'></div>
   <br />
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
