@@ -163,7 +163,7 @@ class AdminPage extends AUIComponent {
     }
 
     function drawFoot() {
-      echo "<br>";
+      echo "<br><br>";
       echo "<div id='footer'>
 				Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
 			</div>

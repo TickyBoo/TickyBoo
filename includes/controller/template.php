@@ -71,6 +71,8 @@ $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
 $smarty->assign('_SHOP_lang', $_SHOP->lang);
 $smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
+$smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
+$smarty->assign("_SHOP_images", $_SHOP->images_url);
 
 $smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
 $smarty->assign('organizer', $_SHOP->organizer_data);

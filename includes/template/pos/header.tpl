@@ -83,7 +83,7 @@
 				<div class="loading">
 					<img src="images/LoadingImageSmall.gif" width="16" height="16" alt="Loading data, please wait" />
 				</div>
- 				<img style="" src="images/fusion.png" border="0"/>
+ 				<img style="" src="{$_SHOP_images}fusion.png" border="0"/>
  				<h2>Box Office <span style="color:red; font-size:14px;"><i>[AJAX Beta]</i></span></h2>
 			</div>
 			<div id="navbar">
