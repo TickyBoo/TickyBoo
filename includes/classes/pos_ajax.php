@@ -84,7 +84,7 @@ class PosAjax {
 			$toDate = 'event_date';
 		}
 		
-		$sql = "SELECT * 
+		$sql = "SELECT  event_id, event_name, ort_name, event_date, es_free
 				FROM Event,
 				Ort,
 				Event_stat
@@ -177,7 +177,7 @@ class PosAjax {
 		}
 		
 		//Select Events Discounts
-		$sql = "SELECT *
+		$sql = "SELECT discount_price, discount_id, discount_name, discount_value, discount_type
 			FROM Discount d
 			WHERE 1=1
 			AND d.discount_event_id = "._esc($eventId);
