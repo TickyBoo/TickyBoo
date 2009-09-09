@@ -53,7 +53,7 @@ $tbls['Control']['fields'] = array(
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'control'",
   'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
 $tbls['Control']['key'] = array(
-  "PRIMARY KEY id (`admin_id`)"
+  "PRIMARY KEY (`admin_id`)"
   );
 $tbls['Control']['engine'] = 'MyISAM';
 $tbls['Control']['remove'] = array ('control_organizer_id');
