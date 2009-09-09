@@ -104,11 +104,11 @@ class PosAjax {
 		$this->json['events'] = array(); //assign a blank array.
 		//Break down cats and array up with additional details.
 		while($evt = ShopDB::fetch_assoc($query)){
-      $date = formatDate($evt['event_date'],con('shortdate_format'));
+      		$date = formatDate($evt['event_date'],con('shortdate_format'));
 //         $date ='';
 			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date}</option>";
 			
-			$this->json['events'][$evt['event_id']] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
+			$this->json['events'][strval($evt['event_id'])] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}
 		return true;
 	}
@@ -168,7 +168,7 @@ class PosAjax {
 				//Load Place Map
 				$placemap = $this->loadPlaceMap($cat);
 			}
-			$this->json['categories'][$cat['category_id']] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price']); 
+			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price']); 
 		}
 		//Finish loading categories and there details lets grab the discounts to...
 		//If we only need the categories updating then just stop here.
