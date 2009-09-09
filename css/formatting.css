@@ -161,7 +161,6 @@ p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;marg
 #left ul { padding: 5px 10px 10px 10px; margin: 0; }
 
 
-#footer { font-size: 11px; text-align: center; border-top: 1px solid #ccc; padding: 0px 5px; display: block; overflow: auto; width:100%; }
 
 #navbar {
 	margin: 0 auto;
@@ -184,6 +183,7 @@ p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;marg
 	padding: 0 0px 0 0;
 	margin: 0;
   list-style-type: none;
+	line-height: 22px;
 	float: left;
 	background: url(../images/back1.gif) 0 100% no-repeat;
 }
@@ -192,7 +192,6 @@ p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;marg
 	display: block;
 	float: left;
 	padding: 0 10px;
-	line-height: 22px;
   color: #000;
   text-decoration: none;
 }
@@ -210,6 +209,17 @@ p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;marg
 	overflow: auto;
 
 }
+
+#footer { 
+  font-size: 11px; 
+	margin: 0 auto; 
+  text-align: center; 
+  border-top: 1px solid #ccc; 
+  padding: 0px 8px; 
+  display: block; 
+  overflow: auto; 
+  width:98%;}
+
 #header {
 	/*overflow: auto;*/
 	text-align: left;
@@ -234,11 +244,11 @@ p.event_group_description{font-family:Georgia; color:#000000;font-size:10px;marg
 }
 
 #header h2 {
-	color: #333;
+	color: #333000;
 	font-size: 19px;
 	font-weight: 100;
-	padding: 0 0 0 11px;
-	letter-spacing: -1px;
+	padding: 0 0 0 0px;
+	letter-spacing: 5px;
 	line-height: 12px;
 	text-align: left;
 }

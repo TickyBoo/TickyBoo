@@ -47,13 +47,14 @@ $tbls['Admin']['engine'] = 'MyISAM';
 $tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
 
 $tbls['Control']['fields'] = array(
+  'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'control_login' => " varchar(50) NOT NULL DEFAULT ''",
   'control_password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'control'",
   'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
-//$tbls['Control']['key'] = array(
-// "color_id" => "PRIMARY KEY id (color_id)");
-$tbls['Control']['key'] = array();
+$tbls['Control']['key'] = array(
+  "PRIMARY KEY id (`admin_id`)"
+  );
 $tbls['Control']['engine'] = 'MyISAM';
 $tbls['Control']['remove'] = array ('control_organizer_id');
 
