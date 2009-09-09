@@ -52,6 +52,8 @@ session_start();
 <html>
 <head>
   <title>Fusion Ticket Installation</title>
+  <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
+
   <script language="JavaScript">
   	function Confirm_Inst_Cancel()
   		{
@@ -75,21 +77,27 @@ session_start();
 
 </head>
 <body>
-
-
-  <center>
 <?php
 //  print_r($_REQUEST);
   $root = "http://" . $_SERVER['HTTP_HOST'];
   $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
 //  print_r($_POST);
-   echo "<img src='{$root}/images/fusion.png' border='0'><br><br />
-         <table width='600' cellpadding='5' cellspacing='0' border=1 style='border:1px solid #000000'>
-           <tr>
-             <td width='150' bgcolor='#FFFFFF' valign='top' style='border-right:1px solid #c0c0c0'>&nbsp;";
-  echo "<img src='{$root}/inst/install.jpg' width='130' border='0'>";
-  echo "</td><td  valign='top' height=100% bgcolor='#f5F5f5'>";
+echo "
+		<div id=\"wrap\">
+			<div id=\"header\">
+        <img src=\"{$root}/images/fusion.png\" border=\"0\"/>
+ 				<h2>Installation procedure <span style=\"color:red; font-size:14px;\"><i>[Beta 5]</i></span></h2>
+			</div>
+			<div id=\"navbar\">
+				<ul>
+					<li><a>pos_booktickets</a></li>
+					<li><a>pos_currenttickets</a></li>
+					<li><a href='?action=logout' >logout</a></li>
 
+				</ul>
+			</div>
+			<div id=\"right\">";
+      
 	function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true)
 		{
     if (!$ispage)
@@ -104,8 +112,8 @@ session_start();
         {$target_pg='';}
   		echo "<form name='install' method=\"post\" action='".$_SERVER['PHP_SELF'].$target_pg."' onSubmit=\"".$onsubmit."\">\n";
   		}
-		echo "<center><table border=0 cellpadding=\"0\" cellspacing=\"0\" width='100%' style=\"height: 100%\">";
-    echo "<tr ><td colspan=2 valign='top' height=100%>\n"  ;
+		echo "<table border=0 cellpadding=\"0\" cellspacing=\"0\" width='100%' style=\"height: 400\">";
+    echo "<tr ><td colspan=2 valign='top' height='100%' >\n"  ;
 		}
 
 	function Install_Form_Close ()
@@ -114,15 +122,19 @@ session_start();
 	function Install_Form_Buttons ()
 		{
     echo "</td></tr><tr>\n";
-		echo "<td bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"left\"><input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" /></td>\n";
-		echo "<td bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\"><input type=\"submit\" value=\"Next\" name=\"do\" class=\"UI_Submit\" />\n";
+		echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
+            <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" />
+            &nbsp;
+            <input type=\"submit\" value=\"Next\" name=\"do\" class=\"UI_Submit\" />\n";
 		}
 
 	function Install_Form_Rollback ()
 		{
     echo "</td></tr><tr>\n";
-		echo "<td bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"left\"><input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\"  class=\"UI_Button\" /></td>\n";
-		echo "<td bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\"><input type=\"submit\" value=\"Back\"  name=\"do\" class=\"UI_Submit\" />\n";
+		echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
+            <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\"  class=\"UI_Button\" />
+            &nbsp;
+            <input type=\"submit\" value=\"Back\"  name=\"do\" class=\"UI_Submit\" />\n";
 		}
 
   function Install_request($arr)
@@ -236,8 +248,8 @@ function file_to_db($filename)
       if (!is_writable("$install_dir/includes/fonts")){
         array_push($Install_Errors,"$install_dir/includes/fonts should be writable to create the PDF files.");
       }
-      if (!is_writable("$install_dir/includes/tmp")){
-        array_push($Install_Errors,"$install_dir/includes/tmp should be writable by the webserver user.");
+      if (!is_writable("$install_dir/includes/temp")){
+        array_push($Install_Errors,"$install_dir/includes/temp should be writable by the webserver user.");
       }
       if (!is_writable("$install_dir/files")){
         array_push($Install_Errors,"$install_dir/files should be writable by the webserver user.");
@@ -301,7 +313,7 @@ function file_to_db($filename)
 		{
 		case INST_DEFAULT: /* Default Installation Wizard Screen */
 			Install_Form_Open (INST_LICENSE,'');
-			echo "<h3>Welcome to the Fusion Ticket Installation Wizard.</h3> ";
+			echo "<h2>Welcome to the Fusion Ticket Installation Wizard.</h2> ";
 			echo "<p>This web based installer will help you install the software on your web server. To continue with the installation process click the Next button below.</p>\n";
 			echo "<p>If you need help performing the installation, please refer to the included <a href=\"../Install.\" target=\"_blank\">installation guide</a> located in the root folder of the installation package.</p>\n";
 			Install_Form_Buttons ();
@@ -619,6 +631,12 @@ function file_to_db($filename)
 </td>
 </tr>
 </table>
-</center>
-</body>
+
+			</div>
+
+			<div id="footer">
+				Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office
+			</div>
+		</div>
+	</body>
 </html>

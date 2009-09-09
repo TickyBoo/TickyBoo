@@ -36,10 +36,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>FusionTicket: Box Office / Sale Point </title>
 
-		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
 
-		<link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
 
 		
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
@@ -79,11 +79,14 @@
 	<body>
 		<div id="wrap">
 			<div id="header">
-{*		{if $organizer->organizer_logo} <div align="left"><img src='../files/{$organizer->organizer_logo}'/> </div>{/if}*}
 				<div class="loading">
 					<img src="images/LoadingImageSmall.gif" width="16" height="16" alt="Loading data, please wait" />
 				</div>
- 				<img style="" src="{$_SHOP_images}fusion.png" border="0"/>
+		    {if $organizer->organizer_logo} 
+           <img src='{$_SHOP_files}{$organizer->organizer_logo}' border="0" /> 
+        {else}
+           <img src="{$_SHOP_images}fusion.png" border="0"/>
+        {/if}
  				<h2>Box Office <span style="color:red; font-size:14px;"><i>[AJAX Beta]</i></span></h2>
 			</div>
 			<div id="navbar">
