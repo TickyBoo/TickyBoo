@@ -6,8 +6,16 @@ body {
 	line-height: 1.0em; 
 	background: #375AAA none repeat scroll 0 0; 
 	color: #444;  
+	text-align: center;
 }
-#wrap { overflow:auto; padding: 10px 10px 3px 10px; width: 805px; margin:20px auto; background: #fff; }
+#wrap {
+  padding: 10px 10px 3px 10px;
+  width: 805px;
+  margin:20px auto;
+  background: #fff;
+  text-align: left;
+}
+
 #header {
 	overflow: auto;
 }
@@ -25,7 +33,7 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 	text-align: left;
 }
 
-#footer { font-size: 11px; text-align: center; border-top: 1px solid #ccc; padding: 0px 5px; display: block; overflow: auto; width:100%; }
+#footer { font-size: 11px; text-align: center; border-top: 1px solid #ccc; padding: padding: 0px 5px 0px 5px;  display: block; overflow: auto; width:100%; }
 
 #footer a{ font-family:Verdana; color:#FF7A09; font-weight:bold; text-decoration:none; cursor: pointer;}
 
