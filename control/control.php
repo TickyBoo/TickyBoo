@@ -46,7 +46,7 @@ $body=new ControlContent();
 
 
 $page=new ControlPage();
-$page->setTitle("Ticket taker");
+$page->setTitle("Ticket Taker");
 $page->set("body",$body);
 $page->draw();
 

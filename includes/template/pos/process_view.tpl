@@ -163,8 +163,6 @@
               <td class="sub_title" valign="top">{$user_order.user_state}</td>
             </tr>
             <tr>
-              <td class="admin_info" valign="top">{!user_country!}</td>
-              <td class="sub_title" valign="top">{include file="countries.tpl" code=$user_order.user_country}</td>
             </tr>
             <tr>
               <td class="admin_info" valign="top">{!user_phone!}</td>

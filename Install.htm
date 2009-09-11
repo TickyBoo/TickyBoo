@@ -1,0 +1,254 @@
+<title>Installation</title>
+<table id="globalWrapper" border="0" cellSpacing="0" cellPadding="0" width="100%" height="100%">
+	<tr>
+		<td id="content" height="100%" vAlign="top" width="100%">
+		<h1 class="firstHeading"><font face="Times New Roman">Installation Guide</font></h1>
+		<div id="bodyContent">
+			<font face="Times New Roman"><!-- start content -->
+			</font>
+			<p><font face="Times New Roman">INSTALLATION or UPGRADE instructions for FusionTicket Beta 5 </font></p>
+			<table id="toc" class="toc">
+				<tr>
+					<td>
+					<div id="toctitle">
+						<h2><font face="Times New Roman"><a name="Contents">Contents</a></font></h2>
+					</div>
+					<ul>
+						<li class="toclevel-1"><font face="Times New Roman">
+						<span class="toctext"><a href="#Requirements_">
+						Requirements</a></span> </font></li>
+						<li class="toclevel-1"><font face="Times New Roman">
+						<span class="toctext">
+						<a href="#Upgrade_to_Beta5">Upgrade to Beta5</a></span> </font></li>
+						<li class="toclevel-1"><font face="Times New Roman">
+						<span class="toctext"><a href="#Full_Installation">Full 
+						Installation</a></span> </font></li>
+						<li class="toclevel-1"><font face="Times New Roman">
+						<span class="toctext"><a href="#Problems_">Problems</a></span>
+						</font></li>
+					</ul>
+					</td>
+				</tr>
+			</table>
+			<p><font face="Times New Roman">
+<SCRIPT type=text/javascript> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </SCRIPT>
+			</font></p>
+			<div style="FLOAT: right; MARGIN-LEFT: 5px" class="editsection">
+			<h1><font face="Times New Roman"><a name="Requirements_">
+			Requirements </a></font></h1>
+			<p><font face="Times New Roman">The server must have these 
+			programs/settings to run Fusion Ticket: </font></p>
+			<ul>
+				<li><font face="Times New Roman">PHP version =&gt;5.2.1 through 
+				5.2.10, tested with 
+				5.2.5.&nbsp; PHP &lt;5.2.1 or &gt;5.2.10 IS NOT SUPPORTED! </font></li>
+				<li><font face="Times New Roman">MySQL version &gt;4.1 with MySQLi 
+				is Mandatory. Tested with version 5.0.51a </font></li>
+				<li><font face="Times New Roman">Enable email support in PHP - 
+				Check email security settings. </font></li>
+				<li><font face="Times New Roman">Adobe Acrobat Reader (to 
+				view/print PDF files) </font></li>
+				<li><font face="Times New Roman">cURL should be enabled for some 
+				features (PayPal, Authorize.net) </font></li>
+				<li><font face="Times New Roman">openssl should be enabled for 
+				some features i.e. https: </font></li>
+				<li><font face="Times New Roman">XML parser should be enabled
+				</font></li>
+				<li><font face="Times New Roman">iconv support for non-latin 
+				text in PDF templates </font></li>
+			</ul>
+			<p><font face="Times New Roman">Some third party code is already 
+			included with the distribution: </font></p>
+			<ul>
+				<li><font face="Times New Roman">Smarty (see smarty.php.net) is 
+				installed in .../smarty folder </font></li>
+				<li><font face="Times New Roman">EzPDF in .../classes </font>
+				</li>
+				<li><font face="Times New Roman">HTMLMimeMail in .../classes
+				</font></li>
+				<li><font face="Times New Roman">Fusion Ticket provides all 
+				required pear components in .../includes/pear folder. </font>
+				</li>
+			</ul>
+			<p><font face="Times New Roman">Fusion Ticket has been tested on 
+			CentOS, Fedora Core, Ubuntu, and Windows with Apache 2.0. Generally, 
+			the latest stable version of software will have no problems but 
+			there are no guarantees. </font></p>
+			<p><font face="Times New Roman">If there are any problems with the 
+			above requirements, or the web host, contact
+			<a class="external free" title="mailto:hosting@fusionticket.co.uk" rel="nofollow" href="mailto:hosting@fusionticket.co.uk">
+			mailto:hosting@fusionticket.co.uk</a>. This e-mail address is being 
+			protected from spam bots. You need JavaScript enabled to view it for 
+			more information. </font></p>
+			<p><font face="Times New Roman">Fusion Ticket can provide hosting 
+			which is always up-to-date for security and compatibility. Use the 
+			same version that we design the software on. All we ask is that you 
+			donate regularly to the project. </font></p>
+			<div align="center">
+			<pre><b><font size="3" face="Times New Roman">We do not recommend the Beta Versions of Fusion Ticket for Production Use!  </font></b></pre>
+			</div>
+			<div align="left">
+				<pre><a href="#Contents"><b><font size="3" face="Times New Roman">[top]</font></b></a><b><font size="3" face="Times New Roman">
+</font></b></pre>
+			</div>
+			<h1><font face="Times New Roman"><a name="Upgrade_to_Beta5">Upgrade 
+			to Beta5</a> </font></h1>
+			<ul>
+				<li><font face="Times New Roman">Backup your database! </font>
+				</li>
+				<li><font face="Times New Roman">Download the archive Fusion 
+				Ticket Beta5 </font></li>
+				<li><font face="Times New Roman">Assuming the name of the Beta4 
+				folder is /Fusionticket/ rename it to ../Fusionticket _B4/ (or 
+				whatever you like). </font></li>
+				<li><font face="Times New Roman">Create a new folder and give it 
+				the name of the original folder, in this case ../Fusionticket/
+				</font></li>
+				<li><font face="Times New Roman">Copy the downloaded files to 
+				the new /Fusionticket/ folder. </font></li>
+				<li><font face="Times New Roman">Copy the the original /files/ 
+				folder to the new folder </font></li>
+				<li><font face="Times New Roman">Copy the original file 
+				init_config.php, now located in ../Fusionticket 
+				_B4/includes/config/ to the new folder. </font></li>
+			</ul>
+			<ul>
+				<li><font face="Times New Roman">Set the following folders and 
+				subfolders to writable </font></li>
+			</ul>
+			<pre><font face="Times New Roman"><i><font size="3">	.../includes/config/*
+	.../includes/fonts/*
+	.../includes/tmp/*
+	.../files/*
+</font></i>
+</font></pre>
+			<ul>
+				<li><font face="Times New Roman">Browse to the installation 
+				script ../yourhost/Fusionticket/inst/index.php and select 
+				‘Upgrade’ </font></li>
+				<li><font face="Times New Roman">Remove the <i>.../inst</i> folder from 
+				your server </font></li>
+				<li><font face="Times New Roman">Reset the<i> .../includes/config</i> 
+				folder to Read-only. </font></li>
+				<li><font face="Times New Roman">Check the new .tpl files 
+				against any you may have previously modified. </font></li>
+				<li><font face="Times New Roman">Compare the new 
+				<i>.../includes/config/init_config.php</i> against the old one. </font>
+				</li>
+			</ul>
+			<p><a href="#Contents"><b><font size="3" face="Times New Roman">
+			[top]</font></b></a></p>
+			<div style="FLOAT: right; MARGIN-LEFT: 5px" class="editsection">
+			<h1><font face="Times New Roman"><a name="Full_Installation">Full 
+			Installation</a> </font></h1>
+			<ul>
+				<li><font face="Times New Roman">Download the archive Fusion 
+				Ticket and decompress it somewhere in the web root path of the 
+				web server: </font></li>
+				<li><font face="Times New Roman">This produces a directory 
+				called Fusionticket - you can rename it. </font></li>
+				<li><font face="Times New Roman">Create new database using the 
+				MySQL client, for example: mysqladmin create Fusionticket </font>
+				</li>
+				<li><font face="Times New Roman">Set the following folders and 
+				subfolders to writable </font></li>
+			</ul>
+			<pre><i><font face="Times New Roman" size="3">	.../includes/config/*
+	.../includes/fonts/*
+	.../includes/tmp/* 
+	.../files/* 
+</font></i></pre>
+			<ul>
+				<li><font face="Times New Roman">Browse to the installation 
+				script /yourhost/Fusionticket/inst/index.php and select ‘Full 
+				Installation’ </font></li>
+				<li><font face="Times New Roman">Remove the <i>.../inst </i>folder from 
+				your server </font></li>
+				<li><font face="Times New Roman">Reset the <i>.../includes/config</i> 
+				folder to Read-only. </font></li>
+			</ul>
+			<div style="FLOAT: right; MARGIN-LEFT: 5px" class="editsection">
+			<h1><a href="#Contents"><b><font size="3" face="Times New Roman">
+			[top]</font></b></a></h1>
+			<h1><font face="Times New Roman"><a name="Problems_">Problems </a>
+			</font></h1>
+			<p><font face="Times New Roman">Some known problems can occur due to 
+			various PHP configurations.<br>
+			The solution to most of them is renaming <b>_.htaccess</b> file to
+			<b>.htaccess</b><br>
+			Some web servers will not read <b>.htaccess</b>; in this case, edit 
+			the config file: </font></p>
+			<p><font face="Times New Roman"><i>…/includes/config/init_common.php</i>
+			</font></p>
+			<p><font face="Times New Roman"><b>Register globals</b><br>
+			For security reasons this php flag should be off. </font></p>
+			<p><font face="Times New Roman">Install will produce a warning if it 
+			detects it is on. </font></p>
+			<p><font face="Times New Roman">If renaming <b>_.htacess</b> did not 
+			solve the problem then remove these two lines: </font></p>
+			<pre><i><font face="Times New Roman" size="3">echo &quot;Set register_globals to OFF please.  Bye.”;
+exit;
+</font></i></pre>
+			<hr>
+			<p><font face="Times New Roman"><b>Blank screen</b><br>
+			If you see a blank screen instead of the install page, your php is 
+			an older version and is not displaying the errors. </font></p>
+			<p><font face="Times New Roman">Update to a newer php version.
+			</font></p>
+			<hr>
+			<p><font face="Times New Roman"><b>Headers already sent</b><br>
+			This error displays because you have entered an extra whitespace in 
+			a file, usually in <i>…/init_common.php</i>. </font></p>
+			<p><font face="Times New Roman">Edit this file and remove everything 
+			before the &lt;?php at the beginning and after&nbsp;?&gt; at the end. </font>
+			</p>
+			<p><font face="Times New Roman">Some editors will insert a blank 
+			line even if you do not, in this case try another editor. </font>
+			</p>
+			<hr>
+			<p><font face="Times New Roman"><b>Email Issues</b> </font></p>
+			<p><font face="Times New Roman">Windows servers may not send email. 
+			If you experience this issue change the code in the email templates.
+			</font></p>
+			<p><font face="Times New Roman"><b>Standard email format:</b> </font>
+			</p>
+			<pre><i><font face="Times New Roman" size="3">&lt;FROM email=&quot;yourname&lt;yourname@yourdomain.com&quot;/&gt;
+&lt;TO email=&quot;$user_firstname $user_lastname&lt;$user_email&gt;&quot;/&gt;
+</font></i></pre>
+			<p><font face="Times New Roman"><b>Windows email format:</b> </font>
+			</p>
+			<pre><i><font face="Times New Roman" size="3">&lt;FROM email=&quot;yourname@yourdomain.com&quot; /&gt;
+&lt;TO email=&quot;$user_email&quot;/&gt;
+</font></i></pre>
+			<hr>
+			<p><font face="Times New Roman"><b>Service is temporarily 
+			unavailable</b> </font></p>
+			<p><font face="Times New Roman">This may be an installation bug.
+			</font></p>
+			<p><font face="Times New Roman">Check the database table &quot;ShopConfig&quot;. 
+			The field &quot;status&quot; must be set to ON. </font></p>
+			<hr>
+			<p><font face="Times New Roman"><b>Variables not found / Windows 
+			Apache</b> </font></p>
+			<p><font face="Times New Roman">Some problems with &quot;EasyPHP&quot; have 
+			been noticed, missing variable errors are noticed sometimes. </font>
+			</p>
+			<p><font face="Times New Roman">We recommend you use &quot;XAMPP&quot; instead 
+			over &quot;EasyPHP&quot;. </font></p>
+			<p>&nbsp;</p>
+			<p><font face="Times New Roman">You will find user manuals, forums, 
+			demos and other stuff on our web site:<br>
+			<br>
+			http://www.fusionticket.co.uk/<br>
+			<br>
+			Have Fun!<br>
+			Chris Jenkins and Niels van der Speck<br>
+			</font><a href="#Contents"><b><font size="3" face="Times New Roman">
+			[top]</font></b></a></p>
+			<font face="Times New Roman"><!-- end content --></font></div>
+		</td>
+	</tr>
+</table>
+
+
+</html>

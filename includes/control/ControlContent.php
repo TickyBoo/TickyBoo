@@ -228,7 +228,7 @@ if($_SHOP->event_ids !=''){
   }
   echo "</table>"; 
  }else{
-   echo no_event_sets;
+   echo ".con("no_event_sets").";
  }
  }
  function search_form (&$data){

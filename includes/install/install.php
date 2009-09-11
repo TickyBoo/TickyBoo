@@ -191,7 +191,7 @@ function file_to_db($filename)
     case INST_LICENSE:
       $ver = explode('.', phpversion());
       if ($ver[0] != 5){
-        array_push($Install_Errors,"FAILED: php version 5 is required, You have php version " .phpversion() );
+        array_push($Install_Errors,"FAILED: php version 5.2.1 is required, You have php version " .phpversion() );
       }else
       if ($ver[1] > 2 or $ver[2] > 6){
         array_push($Install_Warnings,"WARNING: this program was tested with php version 5.2.6. You have php version " . phpversion() . ". This shouldn't be a problem.");
@@ -313,13 +313,13 @@ function file_to_db($filename)
             You are agreeing to this licence by installing this software. 
             Therefore FusionTicket will not be responsible for any damages or loss of 
             profit caused by this software or any other patch script included with this software.</p>
-<p align=justify>This also means under the open software licence any modifactions to this script also fall under this licence.<br>
+<p align=justify>This also means under the open software licence any modifications to this script also fall under this licence.<br>
 <br>Therefore you are <b>NOT</b> allowed to sell this script but are able to make money from <b>USING</b> it.<br>
-There may be a proffesional version in the future.</p>";
+There may be a professional version in the future.</p>";
                 
-   		echo "<p align=justify>If you need help performing the installation, please refer to the included <a href=\"../Install.\" target=\"_blank\">installation guide</a> located in the root folder of the installation package.</p>\n";
+   		echo "<p align=justify>If you need help performing the installation, please refer to the included <a href=\"../Install.htm\" target=\"_blank\">installation guide</a> located in the root folder of the installation package.</p>\n";
 			echo "<p align=justify>This web based installer will help you install the software on your web server. 
-                To continue with the installation process click the Next button below.</p>\n";      
+                To continue with the installation process click the 'Next' button below.</p>\n";      
 			Install_Form_Buttons ();
 			Install_Form_Close ();
 	  	break;
@@ -576,13 +576,13 @@ There may be a proffesional version in the future.</p>";
       }else{
         Install_Form_Open ("$root/index.php",'', false);
         echo "<h2>Installation Completed</h2>You are now ready to start using Fusion Ticket.<br />\n";
-        echo "For the security reasons you should put this file/folder to read-only by webserver:
+        echo "For security reasons you should put this file/folder to read-only by webserver:
               <tt>includes/config/init_config.php</tt>";
         if (is_writable("$install_dir/includes/config")) {
           echo " and <tt>includes/config</tt>";
           }
 
-        echo  "<div>You also have to delete the <tt>inst</tt> folder.</div>
+        echo  "<div>You should also delete the <tt>inst</tt> folder.</div>
                 <br>
 		<ul>
                 <li><a href='$root/admin/index.php' target='_blank'>Go to Admin</a>.</li>
@@ -590,7 +590,7 @@ There may be a proffesional version in the future.</p>";
                 <li><a href='$root/control/index.php' target='_blank'>Go to Demo Ticket Control Point</a></li>
     </ul>
                 <br>
-                Please tell us if you run Fusion Ticket on your site by sending us an email to <i>admin at fusionticket dot co dot uk</i>!";
+                Please tell us if you run Fusion Ticket on your site by sending an email to <i>admin at fusionticket dot co dot uk</i>!";
 
         Install_Form_Buttons ();
         Install_Form_Close ();

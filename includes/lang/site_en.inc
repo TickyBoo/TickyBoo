@@ -50,15 +50,12 @@ define("show_seats","Seating Chart");
 define("unpublish","Unpublish");
 define("view","View");
 define("view_order","View Order");
-define("icon_unpublish","Click to Unpublish");
+define("icon_unpublish","Click to UnPublish");
 define("icon_unpublish_alt","Published");
 define("icon_publish","Click to Publish");
 define("icon_publish_alt","New Event");
-define("icon_nosal","Click to Re-Publish");
-define("icon_nosal_alt","Un-Published");
-
-
-
+define("icon_nosal","Click to RePublish");
+define("icon_nosal_alt","UnPublished");
 
 //NAVIGATION  
 //should remain the same throughout all pages.
@@ -89,7 +86,7 @@ define("welcome","Welcome");
 define("yes"," YES");
 
 //User Globals
-//basic user information not requiring page specifics.
+//basic user information not page specific.
 define("user_firstname","First Name");
 define("user_lastname","Last Name");
 define("user_name","Name");
@@ -111,8 +108,7 @@ define("user_status","Status");
 //Warnings and Flags
 //many of these are page specific but are more easily controlled in one spot.
 define("act_err", "User Not Found or Already Activated!");
-define("act_error",   "Account could Not be Activated! 
-						Please re-check the link or contact the system administrator.");
+define("act_error","Account Could Not be Activated! Please re-check the link or contact the system administrator.");
 define("act_uselink", "Please use the link that has been sent to your email address.");
 define("already_exist","This Name Already Exists. Choose Another!");
 define("alreadyexist","This E-mail is Already Registered in the Database!");
@@ -138,17 +134,14 @@ define("in_use","This Object is in use and <b>cannot</b> be Deleted!");
 define("internal_error","Internal Error!");
 define("invalid_date","Invalid Date!");
 define("invalid_number","Invalid Credit Card Number!");
-define("log_err_mailnotsend", "The Activation Email <b>could not</b> be sent, 
-								please check you have entered the correct email address.");
+define("log_err_mailnotsend", "The Activation Email <b>could not</b> be sent, please check you have entered the correct email address.");
 define("log_err_not_act","You are Not Activated!");
-define("log_err_not_act_info","<br />Please activate your account!<p>Please check your email for the activation email. Also
-        check your spam folder. Then follow the link to activate your account</p><p>If you
-        still haven't recieved anything after an hour please click <a href='resend_activation.php'
-        here</a> to resend activation email.</p>");
+define("log_err_not_act_info","<br />Please activate your account!
+	<p>Please check your email for the activation email. Also check your spam folder. Then follow the link to activate your account</p>
+	<p>If you still haven't recieved anything after an hour please click <a href='resend_activation.php'HERE</a> to resend activation email.</p>");
 define("log_err_wrong_usr","Wrong Username or Password!");
 define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />
-								If you have forgoten your username or password please click 
-								<a href='forgot_password.php'>here</a></p>");
+		If you have forgoten your username or password please click <a href='forgot_password.php'>here</a></p>");
 define("mand_all", "All Input Fields are Required!");
 define("mandatory"," Field Required!");
 define("MP3_loading_problem","Problem Loading MP3 File!");
@@ -171,13 +164,13 @@ define("phone_short","The Phone Number is too Short!");
 define("places_empty","Select a Seat, Please!");
 define("places_occupied","Sorry! The selected seats were taken by another customer.");
 define("places_remains"," Remaining seats");
-define("places_toomuch","This Number of Seats can not be Reserved!");
+define("places_toomuch","This Number of Seats can Not be Reserved!");
 define("pwd_not_thesame", "The Passwords Entered Do Not Match!");
 define("pwd_second_missing", "Second Password is Missing!");
 define("pwd_to_short", "Password Too Short!");
 define("pub_confirm_msg","Publish Event?");
 define("reservate_failed","Internal Error: Impossible to Save Seats ");
-define("restart_success","Successfully Restarted");
+define("restart_success","Successfully Restarted!");
 define("save_failed","Internal Error: Impossible to Save the Order ");
 define("send_order_email","Send Order by E-mail and Change Status to 'Sent'");
 define("split_pm","Split Seat Chart");
@@ -186,7 +179,7 @@ define("stop_success","Successfully Stopped!");
 define("system_halted","<b>SYSTEM IS HALTED!<b>");
 define("ticket_deleted","Ticket Deleted!");
 define("ticket_not_found","Ticket Not Found in Database!");
-define("tickets_printing","Tickets Will be Printed. Please Wait!");
+define("tickets_printing","Tickets are Printing. Please Wait!");
 define("too_low","Please Enter a Number Larger than 0 !");
 define("undefined","Undefined!");
 
@@ -698,7 +691,7 @@ define("order","Orders");
 define("change_event","Change Event");
 define("check","Check");
 define("checked","Checked");
-define("check_success","Ticket Check OK");
+define("check_success","Ticket Check OK!");
 define("com","Ordered");
 define("control_events_list","Events");
 define("free","Free");
@@ -708,6 +701,7 @@ define("place_only_reserved","Seat Reserved, but Not Paid");
 define("place_status_not_updated","Error: Seat Status Not Updated");
 define("place_without_nr","Seat Without Number");
 define("ticket_already_checked","Ticket Already Checked");
+define("no_event_sets","No Events Scheduled");
 
 //----------------------------------------------
 
@@ -717,20 +711,19 @@ define("ticket_already_checked","Ticket Already Checked");
 //if a define is followed by //file.tpl it is also used in that file. 
 
 //user_activate.tpl - resend_activation.tpl - user_registred.tpl
-define("act_name","Activate account"); //checkout_preview
-define("act_enter_title","Place your activation code here:");
-define("act_enter_code","You can complete your activation by filling the box below with the activation code sent to you by email. Or click on the link in the email.");
+define("act_name","Activate Account"); //checkout_preview
+define("act_enter_title","Place your Activation Code here:");
+
+define("act_enter_code","Complete your activation by entering the activation code, sent to you by Email, in the box below. Or click on the link in the Email.");
 define("act_code","Activation code:");
 define("act_send","Send");
-define("act_notarr","Activation email still not arrived?");
+define("act_notarr","Activation Email still not arrived?");
 define("resend_activation","Resend Activation Email");
-define("act_is_sent","Your activation email has been sent to your e-mail");
-define("act_sent","The activation email has been sent. Please check your in box for a link.");
-define("act_mess_line","Please check you email to activate your account.<br><br>");
-define("act_note","Enter your e-mail address. Click on 'Send'; and a new activation
-        email will be sent to your e-mail address.");
-define("act_norecived","If you have not recived an activation email within 
-						a few hours, please click this <strong>link</strong>");
+define("act_is_sent","Your Activation Email has been sent to your Inbox!");
+define("act_sent","The activation Email has been sent. Please check your Email for a link.");
+define("act_mess_line","Please check your email to activate your account.<br><br>");
+define("act_note","Enter your e-mail address. Click on 'Send'; and a new activation email will be sent to your e-mail address.");
+define("act_norecived","If you have not recived an activation email within a few hours, please click this <strong>link</strong>");
 define("success_activate","You have successfully activated your account.<br /> You may now login.");
 
 //agb.tpl
@@ -763,10 +756,8 @@ define("minutes","min.");
 
 //cart_view.tpl
 define("shopping_cart","Your shopping cart");
-define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved
-        tickets are released back to sale, so please either order more tickets or continue
-        with your order. <br><br>To change your tickets remove the ones you have reserved
-        and click 'Order More Tickets'.");
+define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved tickets are released back to sale. Please, either order more tickets or continue with your order. 
+	<br><br>To change your tickets 'Remove' the ones you have reserved and click 'Order More Tickets'.");
 
 //cat_description.tpl
 define("cat_description","Seating Sections and Prices");
@@ -774,7 +765,7 @@ define("tickets_available","Available:");
 define("category_sold","Category Sold");
 define("Discount_for","With Discount:");
 define("prices_in","Prices in");
-define("Please_login","<center><b>Please login or register to reserve seats.</b></center>");
+define("Please_login","<center><b>Please Login or Register to Reserve Seats.</b></center>");
 define("select_category","Select a Category");
 define("order_limit","Order Limit"); //category.tpl
 define("old_event","<center><B>This event is expired and can not be ordered anymore.</b></center>");
@@ -787,17 +778,16 @@ define("only_rows_numbered","Only rows numbered");
 
 //checkout_confirm.tpl
 define("order_reg","Order Registered");
-define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your
-        order follow the proccess below.<br><br>To view your order click");
+define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your order follow the proccess below.
+	<br><br>To view your order click ");
         
 //checkout_preview.tpl
-define("shopping_cart_check_out","Select Payment method");
+define("shopping_cart_check_out","Select Payment Method");
 define("Handling_cont_mess"," ");
 define("handlings","Payments");
 define("payment","Payment"); //personal_order.tpl
 define("shipment","Shipment"); //personal_order.tpl
-define("limit","Unfortunately, you have exceeded the amount of allowed reserved tickets. To check
-        your orders click <a href='index.php?personal_page=orders'>here</a>.");
+define("limit","Unfortunately, you have exceeded the amount of allowed reserved tickets. To check your orders click <a href='index.php?personal_page=orders'>here</a>.");
 define("orclick","Or Click below to:");
 
 //checkout_result.tpl
@@ -814,10 +804,8 @@ define("place_nr","Seat nr");
 
 //event.tpl
 define("shop","Order Tickets");
-define("shop_info","Select the desired number of tickets. Click on 'Next', to
-        check and confirm your order.");
-define("shop_condition","Conditions: Information collected by the Organizers will
-        be stored to handle shipping and payment.");
+define("shop_info","Select the desired number of tickets. Click on 'Next', to check and confirm your order.");
+define("shop_condition","<br>Conditions: Information collected will only be stored to handle shipping and payment.");
         
 //event_description.tpl
 define("doors_open","Doors Open");
@@ -829,7 +817,7 @@ define("venue","Location");
 define("event_groups","Event Groups");
 
 //event_type.tpl and event_types.tpl
-define("et_church","Church music");
+define("et_church","Church Music");
 define("et_cinema","Cinema");
 define("et_classics","Classical Music");
 define("et_expo","Expo");
@@ -849,12 +837,11 @@ define("pwd_forgot","Forgotten your Password?");
 define("forgot_password","Forgotten your Password?");
 define("pwd_err","User not found or other problem occured");
 define("pwd_is_sent","Your new password was sent to your e-mail");
-define("pwd_note","Enter your e-mail address here. Click on 'Send Password'
-        and a new password will be emailed to you");
+define("pwd_note","Enter your e-mail address here. Click on 'Send Password'and a new password will be emailed to you");
 
 //help.tpl
 define("helpme","Help information");
-//file is not currently used.  words need to be defined.
+//file is not currently used.  Words need to be defined.
 
 //last_event_list.tpl
 define("up_events","Upcoming Events");
@@ -895,8 +882,7 @@ define("pers_unknown","Unknown Status - Contact Admin");
 //personal_page.tpl 
 define("personal","Personal Details");
 define("pers_mess","To change your details please click <a href='index.php?personal_page=details'>Here</a>");
-define("pers_mess2","To change or see your orders in more detail please click
-         <a href='index.php?personal_page=orders'>Here</a><br><br>Only the last 6 orders are shown here.");
+define("pers_mess2","To change or see your orders in more detail please click <a href='index.php?personal_page=orders'>Here</a><br><br>Only the last 6 orders are shown here.");
 
 //personal_reorder.tpl
 define("payment_status","Payment Status");
@@ -904,7 +890,7 @@ define("shipment_status","Shipment Status");
 
 //programm.tpl
 define("program","Program");
-define("div_dates","Multiple dates");
+define("div_dates","Multiple Dates");
 
 //user_address/tpl
 define("your_addr","Your Address");
@@ -915,8 +901,7 @@ define("confirmemail","Confirm E-mail Address");
 
 //user_login.tpl
 define("login","Login name");
-define("memberinfo","Please enter your details below. To buy tickets you are required to
-        sign up, it is recommend that you sign up before you reserve tickets.");
+define("memberinfo","Please enter your details below. To buy tickets you are required to sign up, it is recommend that you sign up before you reserve tickets.");
 define("register","Register Here");
 
 //user_login_block.tpl - no unique defines
@@ -924,10 +909,7 @@ define("register","Register Here");
 //user_register.tpl
 define("becomemember","Become a Member");
 define("pers_info","Personal Information");
-define("user_notice","To order your tickets please complete the following fields and click on
-        'Continue'. Fields with (*) are mandatory. This information will stay confidential.
-        We will not give out your information or sell it to others. Yo can also choose to
-        become a member and never fill this form again.");
+define("user_notice","To order your tickets please complete the following fields and click on 'Continue'. Fields with (*) are mandatory. This information will stay confidential. We will not give out your information or sell it to others. You can also choose to become a member and never fill this form again.");
 define("becomememberorguest","Register as Member or Guest");
 define("becomeguest","Register as Guest");
 define("guest_info", "Fill your details here, so that the ticket can be sent to you.
@@ -936,9 +918,7 @@ define("pwd_min", " (min 6 letters)");
 define("user_nospam", "Security Code");
 define("nospam_info", "<------ Enter This Code ------>.");
 define("agrement","I have read and agree to the General Terms of Sale.");
-define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send
-        me information about future events and other {\$organizer->organizer_name} related 
-        matters, and that they will not pass on my details to any 3rd party.");
+define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send me information about future events and other {\$organizer->organizer_name} related matters, and that they will not pass on my details to any 3rd party.");
 define("member_info","Please enter your email address and password");
 
 //Progressbar.tpl
