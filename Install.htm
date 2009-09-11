@@ -1,74 +1,55 @@
-<title>Installation</title>
-<table id="globalWrapper" border="0" cellSpacing="0" cellPadding="0" width="100%" height="100%">
-	<tr>
-		<td id="content" height="100%" vAlign="top" width="100%">
-		<h1 class="firstHeading"><font face="Times New Roman">Installation Guide</font></h1>
-		<div id="bodyContent">
-			<font face="Times New Roman"><!-- start content -->
-			</font>
-			<p><font face="Times New Roman">INSTALLATION or UPGRADE instructions for FusionTicket Beta 5 </font></p>
-			<table id="toc" class="toc">
-				<tr>
-					<td>
-					<div id="toctitle">
-						<h2><font face="Times New Roman"><a name="Contents">Contents</a></font></h2>
-					</div>
-					<ul>
-						<li class="toclevel-1"><font face="Times New Roman">
-						<span class="toctext"><a href="#Requirements_">
-						Requirements</a></span> </font></li>
-						<li class="toclevel-1"><font face="Times New Roman">
-						<span class="toctext">
-						<a href="#Upgrade_to_Beta5">Upgrade to Beta5</a></span> </font></li>
-						<li class="toclevel-1"><font face="Times New Roman">
-						<span class="toctext"><a href="#Full_Installation">Full 
-						Installation</a></span> </font></li>
-						<li class="toclevel-1"><font face="Times New Roman">
-						<span class="toctext"><a href="#Problems_">Problems</a></span>
-						</font></li>
-					</ul>
-					</td>
-				</tr>
-			</table>
-			<p><font face="Times New Roman">
-<SCRIPT type=text/javascript> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </SCRIPT>
-			</font></p>
-			<div style="FLOAT: right; MARGIN-LEFT: 5px" class="editsection">
-			<h1><font face="Times New Roman"><a name="Requirements_">
-			Requirements </a></font></h1>
+<html>
+	<head>
+		<meta http-equiv="Content-Language" content="English" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>FusionTicket: Installation Guide </title>
+
+		<link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen" />
+
+	</head>
+<body>
+  <div id="wrap">
+	<div id="header">
+      <img src='images/fusion.png' border="0" /> 
+    	<h2>Installation Guide</h2>
+	</div>
+	<div id="navbar">
+		<ul>
+			<li><a href="#Requirements_">Requirements</a></li>
+			<li><a href="#Upgrade_to_Beta5">Upgrade to Beta5</a></li>
+			<li><a href="#Full_Installation">Full Installation</a></li>
+			<li><a href="#Problems_">Problems</a></li>
+		</ul>
+	</div>
+	<div id="right">
+		<p><font face="Times New Roman">INSTALLATION or UPGRADE instructions for FusionTicket Beta 5 </font></p>
+		<SCRIPT type=text/javascript> 
+		   if (window.showTocToggle) { 
+		      var tocShowText = "show"; 
+			  var tocHideText = "hide"; 
+			  showTocToggle(); 
+			} 
+		</SCRIPT>
+		<div style="FLOAT: right; MARGIN-LEFT: 5px" class="editsection">
+			<h1><font face="Times New Roman"><a name="Requirements_"> Requirements </a></font></h1>
 			<p><font face="Times New Roman">The server must have these 
 			programs/settings to run Fusion Ticket: </font></p>
 			<ul>
-				<li><font face="Times New Roman">PHP version =&gt;5.2.1 through 
-				5.2.10, tested with 
-				5.2.5.&nbsp; PHP &lt;5.2.1 or &gt;5.2.10 IS NOT SUPPORTED! </font></li>
-				<li><font face="Times New Roman">MySQL version &gt;4.1 with MySQLi 
-				is Mandatory. Tested with version 5.0.51a </font></li>
-				<li><font face="Times New Roman">Enable email support in PHP - 
-				Check email security settings. </font></li>
-				<li><font face="Times New Roman">Adobe Acrobat Reader (to 
-				view/print PDF files) </font></li>
-				<li><font face="Times New Roman">cURL should be enabled for some 
-				features (PayPal, Authorize.net) </font></li>
-				<li><font face="Times New Roman">openssl should be enabled for 
-				some features i.e. https: </font></li>
-				<li><font face="Times New Roman">XML parser should be enabled
-				</font></li>
-				<li><font face="Times New Roman">iconv support for non-latin 
-				text in PDF templates </font></li>
+				<li><font face="Times New Roman">PHP version =&gt;5.2.1 through 5.2.10, tested with 5.2.7.&nbsp; PHP &lt;5.2.1 or &gt;5.2.10 IS NOT SUPPORTED! </font></li>
+				<li><font face="Times New Roman">MySQL version &gt;4.1 with MySQLi is Mandatory. Tested with version 5.0.51a </font></li>
+				<li><font face="Times New Roman">Enable email support in PHP - Check email security settings. </font></li>
+				<li><font face="Times New Roman">Adobe Acrobat Reader (to view/print PDF files) </font></li>
+				<li><font face="Times New Roman">cURL should be enabled for some features (PayPal, Authorize.net) </font></li>
+				<li><font face="Times New Roman">openssl should be enabled for some features i.e. https: </font></li>
+				<li><font face="Times New Roman">XML parser should be enabled</font></li>
+				<li><font face="Times New Roman">iconv support for non-latin text in PDF templates </font></li>
 			</ul>
-			<p><font face="Times New Roman">Some third party code is already 
-			included with the distribution: </font></p>
+			<p><font face="Times New Roman">Some third party code is already included with the distribution: </font></p>
 			<ul>
-				<li><font face="Times New Roman">Smarty (see smarty.php.net) is 
-				installed in .../smarty folder </font></li>
-				<li><font face="Times New Roman">EzPDF in .../classes </font>
-				</li>
-				<li><font face="Times New Roman">HTMLMimeMail in .../classes
-				</font></li>
-				<li><font face="Times New Roman">Fusion Ticket provides all 
-				required pear components in .../includes/pear folder. </font>
-				</li>
+				<li><font face="Times New Roman">Smarty (see smarty.php.net) is installed in .../smarty folder </font></li>
+				<li><font face="Times New Roman">EzPDF in .../classes </font></li>
+				<li><font face="Times New Roman">HTMLMimeMail in .../classes</font></li>
+				<li><font face="Times New Roman">Fusion Ticket provides all required pear components in .../includes/pear folder. </font></li>
 			</ul>
 			<p><font face="Times New Roman">Fusion Ticket has been tested on 
 			CentOS, Fedora Core, Ubuntu, and Windows with Apache 2.0. Generally, 
@@ -246,9 +227,6 @@ exit;
 			</font><a href="#Contents"><b><font size="3" face="Times New Roman">
 			[top]</font></b></a></p>
 			<font face="Times New Roman"><!-- end content --></font></div>
-		</td>
-	</tr>
-</table>
-
-
+	</div>
+<body>
 </html>

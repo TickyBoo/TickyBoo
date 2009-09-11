@@ -149,6 +149,7 @@ class AdminPage extends AUIComponent {
                </div>";
         echo"<div id='navbar'><table width='100%'>
             <tr><td>&nbsp;";
+        $this->drawOrganizer();
         echo "</td><td  align='right'>&nbsp;";
 //        echo "<select name='setlang' onChange='set_lang(this)'>";
 
