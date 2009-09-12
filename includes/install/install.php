@@ -189,6 +189,9 @@ function file_to_db($filename){
   return 1;
 }
 
+function callback($matches){
+  return $_SESSION[$matches[1]];
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -253,9 +256,11 @@ echo "
     case INST_UPGRADE:
       $ver = explode('.', phpversion());
       if ($ver[0] != 5){
-        array_push($Install_Errors,"FAILED: php version 5.2.1 is required, You have php version " .phpversion() );
-      }elseif ($ver[1] <> 2 or $ver[2] > 10 or $ver[2] == 0){
-        array_push($Install_Warnings,"WARNING: this program was tested with php version 5.2.8. You have php version " . phpversion() . ". This shouldn't be a problem.");
+        array_push($Install_Errors,"FAILED: PHP version 5.2.x is required, You have php version " .phpversion() . ". Please update your server." );
+      }elseif ($$ver[1] < 2){
+        array_push($Install_Warnings,"WARNING: To take full advantage of the power of Fusion Ticket your server must have php 5.2.x . You have php version " . phpversion() . ". Please update your server.");
+      }elseif ($ver[1] > 2 or $ver[2] > 10 or $ver[2] == 0){
+        array_push($Install_Warnings,"WARNING: this program works best with php version 5.2.x.  You have php version " . phpversion() . ". This shouldn't be a problem.");
       }
       if (!function_exists('mysqli_connect')){
         array_push($Install_Errors,"MySQL-Exstentions havent been enabled, this is required for security reasons, its should be fairly standard on any PHP 5 Build it will be taking over from standard mysql function.");
@@ -356,7 +361,7 @@ echo "
       $_SESSION['admin_password'] = $_REQUEST['admin_password'];
       $result = $link->Query("SHOW TABLES LIKE 'admin'");
       if ($result) {
-        if(count($result->fetch_all())<> 1 or !loginmycheck ($link, $_SESSION['admin_login'], $_SESSION['admin_password'])){
+        if(count($result->fetch_rowdo())<> 1 or !loginmycheck ($link, $_SESSION['admin_login'], $_SESSION['admin_password'])){
           array_push($Install_Errors,"Admin User not found in database.");
         }    
       } elseif (strlen($_SESSION['admin_password']) < 6){
@@ -504,7 +509,9 @@ echo "
                   <td colspan=\"2\"><h2>Database Connection Settings</h2></td>
                 </tr>
                 <tr>
-                  <td colspan=\"2\">Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br> </td>
+                  <td colspan=\"2\">
+                    Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br> 
+                  </td>
                 </tr>
                 <tr>
                   <td width='30%'>Hostname</td>
@@ -551,7 +558,7 @@ echo "
               </tr>
               <tr>
                 <td colspan=\"2\">
-                  Please choose the username and the password for the Fusion Ticket super user.<br>
+                  Please choose the username and the password for the Fusion Ticket super user.<br><br>
                 </td>
               </tr>
               <tr>
@@ -574,43 +581,10 @@ echo "
       /* Save Config file first */
       $_SHOP->install_dir = $_SESSION['install_dir'];
 break;
-      function callback($matches){
-        return $_SESSION[$matches[1]];
-      }
-//      print_r($_SESSION);
-      $_SESSION['install_dir_esc'] = addslashes($_SESSION['install_dir']);
-      $_SESSION['full_include_path'] = get_include_path() . PATH_SEPARATOR . $_SESSION['install_dir'];
-      if ($install_mode == 'NORMAL'){
-        $_SESSION['old_organizer_id'] = 3;
-      }
-      $init_config = preg_replace_callback("/%(\w+)%/", "callback", $init_config);
-      if (!$fh = fopen("$includes_dir/config/init_config.php", 'w') or !fwrite($fh, $init_config) or !fclose($fh)){
-        array_push($Install_Errors,"Can not write configuration file <i>$includes_dir/config/init_config.php</i>");
-      }
-      if (!$Install_Errors) {
-        require_once("../includes/classes/ShopDB.php");
-        if ($install_mode == 'NORMAL'){
-          $DB_Hostname = $_SESSION['DB_Hostname'];
-          $pos = strpos($DB_Hostname,':');
-          if ($pos != false) {
-             $port = substr($DB_Hostname,$pos+1);
-             $DB_Hostname = substr($DB_Hostname,0, $pos);
-          } else
-            $port = 3306;
 
-          $_SHOP->link = new mysqli($DB_Hostname,
-                                    $_SESSION['DB_Username'],
-                                    $_SESSION['DB_Password'],
-                                    $_SESSION['DB_Database'],
-                                    $port);
-        }else{
-          require_once("../includes/config/init_config.php");
-          $_SHOP->link = new mysqli($_SHOP->db_host, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name);
-        }
-
-        if (!$_SHOP->link) {
-          array_push($Install_Errors,"<div class=err>ERROR: can not connect to the database</div>");
-        }
+      OpenDatabase();
+      if (!$_SHOP->link) {
+        array_push($Install_Errors,"<div class=err>ERROR: can not connect to the database</div>");
       }
 
       if(!$Install_Errors and $Install_Type == 'NORMAL'){
@@ -623,7 +597,7 @@ break;
       if (!$Install_Errors){
         global  $tbls;
         require_once("../includes/install/install_db.php");
-        if ($errors = ShopDB::DatabaseUpgrade($tbls)){
+        if ($errors = ShopDB::DatabaseUpgrade($tbls, true)){
           $Install_Errors[] = $errors;
         }
       }
