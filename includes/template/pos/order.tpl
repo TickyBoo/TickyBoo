@@ -20,8 +20,8 @@
         <tr>
           <td width="120" class='user_item'>{!event!}:</td>
           <td class='user_value' >
-            Date From (yyyy-mm-dd) : <input type="text" id="event-from" size="10" />
-            Date To (yyyy-mm-dd) : <input type="text" id="event-to" size="10" /><br />
+            {!date!}&nbsp;{!from!}&nbsp;{!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
+            {!date!}&nbsp;{!to!}&nbsp;{!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
             <select id="event-id" name="event_id" size="1">
             </select>
           </td>
@@ -47,7 +47,7 @@
           <td class='user_value' class="seat-selection" >
             <div id="show-seats" style="display:none;">
               <button type="button" name='submit' value='show seating'>{!show_seats!} </button>
-              Seat Count: <input type="text" size="2" />
+              {!seat_count!} <input type="text" size="2" />
             </div>
             <div id="seat-qty" style="display:none;"><input type='text' name='place' size='4' maxlength='2' /></div>
           </td>
@@ -70,7 +70,7 @@
   <br />
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-          <strong>Alert: </strong><span id='error-text'></span>
+          <strong>{!alert!} </strong><span id='error-text'></span>
        </p>
     </div>
     <table width='100%'>

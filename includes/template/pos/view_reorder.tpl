@@ -125,7 +125,7 @@
   		  <td class="sub_title" valign="top">{$user_order.user_address}</td>
   	  	</tr>
   	  	<tr>
-  		  <td class="admin_info" valign="top">{!user_Address1}</td>
+  		  <td class="admin_info" valign="top">{!user_address1}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_address1}</td>
   	  	</tr>
   	  	<tr>

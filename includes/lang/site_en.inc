@@ -20,7 +20,9 @@
 define("longdate_format","%Y-%m-%d %H:%M:%S");
 define("shortdate_format","%e %b %Y");
 define("shorterdate_format","%h %e");
-define("date","Date"); 
+define("date","Date");
+define("dd_mm_yyyy","(dd-mm-yyyy)");
+define("yyyy_mm_dd","(yyyy-mm-dd)"); 
 
 //BUTTONS & LINKS
 //for continuity all Buttons & Links should be defined the same if initiating the same action
@@ -47,6 +49,7 @@ define("reserve","Reserve");
 define("save","Save");
 define("search","Search");
 define("show_seats","Seating Chart");
+define("submit","Submit");
 define("unpublish","Unpublish");
 define("view","View");
 define("view_order","View Order");
@@ -701,6 +704,7 @@ define("place_only_reserved","Seat Reserved, but Not Paid");
 define("place_status_not_updated","Error: Seat Status Not Updated");
 define("place_without_nr","Seat Without Number");
 define("ticket_already_checked","Ticket Already Checked");
+define("header_ticket_taker","Ticket Takers");
 define("no_event_sets","No Events Scheduled");
 
 //----------------------------------------------
@@ -930,96 +934,84 @@ define("prg_payment","Payment");
 define("prg_complete","Complete");
 
 //---------------------------------------------------------
-//Under construction
+
 //POS
-define("exst_user","Existing");
-define("new_partron","New Patron");
-define("without_fee","Without Fee");
 
-define("event_sold","Event sold out"); //POS/EVENT_GROUP.TPL
-define("event_start","Event start"); //POS/EVENT.TPL
-
-define("pos_calender_info","To Book/Reserve Tickets, select an event from the list below.");
-define("pos_cart_info","Check the tickets below: to add more click 'Order More Tickets'<br>".
-       "Check the Delivery method and Payment Method.<br>".
-       "To reserve the tickets click 'Reserve Tickets Button'.<br>");
-define("select_seat_info"," the seat name will appear if you hover your mouse over it.<br>".
-       "Free Seats are Green, Red Seats are Taken.");
-define("pos_timestampt","Time stamp");
-define("pos_deleteorder","Delete Order?");
-define("pos_reorder_info","To Order Tickets Click below:<br>".
-		"WARNING old order is CANCELED on Re-Order!");
-define("pos_nextorderid",'Next order id');
-define("pos_selectuser","Either Create a new user, or select an exsiting user if they have already purchased from us before.");
-define("pos_freetickets","Free / Complimentary Tickets");
-define("pos_exsistingusers","Exsisting Users");
-define("pos_userlist","List of Box office users:");
-define("pos_goback","Click to go back");
-define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
-define("pos_clicktosent","Click To Set to Sent!");
-define("pos_nextorder","Next Processed Order");
-define("pos_gotounprocessed","Click to go back to list of UnProcessed Orders");
-define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
-define("pos_clicktoproc","Click To Finish Processing!");
-define("pos_nextunprocessed","Next Unprocessed Paid Order");
-define("pos_clicktoview","Click to View and Process");
-define("pos_listpaidunprocessed","<p>List of <u>paid</u> <b>but</b> <u>Unprocessed</u> orders</p>");
-define("pos_listpaidunsent","<p>List of <b>paid, processed</b> but <u>Unsent</u> orders</p>");
-define("pos_listpaidsent","<p>List of <u>completed/sent</u> orders</p>");
-define("pos_paidlist","Paid List");
-define("pos_unsentlist","UnSent List");
-define("pos_sentlist","Sent List");
-define("pos_sentorders","Sent Orders");
-define("pos_checkdetails","Check the details, If cash or check Click 'Confirm and Print'<br>".
-							"If you are paying with Credit/Debit Card click the 'PayNow' button and Follow the Paypal instructions.");
-define("pos_checkdetails2","Check the details, And Procced to 'Confirm' or 'Cancel' the order.");
-define("pos_checkdate","First, check you have the right date, then choose category of seats, this just determines the cost and area. Then click continue.");
-define("pos_homepage","Home Page");
-define("pos_currenttickets","Current Tickets");
-define("pos_booktickets","Book Tickets");
-define("pos_holdtickets","Hold Tickets");
-define("pos_enternote",'Notes about order and tickets:<br><b>Remember to save after any changes!!</b>');
-define("order_status_changed","Order Status Changed Successfully");
-define("dts_month_arr", "January|February|March|April|May|June|July|August|September|October|November|December");
-define("timestamp","timestamp");
-
-//Added by Niels 8-22-09
-define("No_useraddress_selected","No useraddress selected.");
+//checkout.php
 define("No_handling_selected","No handling method selected.");
 define("noting_checkout","There is nothing to checkout!!!");
+define("No_useraddress_selected","No useraddress selected.");
 
-// Change to user_* in pos and delete this section
-define("firstname","First Name");
-define("lastname","Last Name");
-define("address","Address");
-define("address2","Address 2");
-define("city","City");
-define("zip","Zip");
-define("state","State");
-define("phone","Phone Number");
-define("fax","Fax Number");
-
-define("error_eventnotfound","Event not found");
+//Errors
 define("error_missingcategorytype","Missing category numbering type");
 define("error_discountnotfound","Discount not found");
 
-//Moved from old file & used in POS - 8/26/09 Lou
+//event_group.tpl
+define("event_sold","Event sold out");
+
+//datetimeselect.php
+define("dts_month_arr", "January|February|March|April|May|June|July|August|September|October|November|December");
+
+//handlings.tpl
+define("without_fee","Without Fee");
+
+//header.tpl
+define("box_office","Box Office");
+define("ajax_beta","<i>[AJAX Beta]</i>");
+
+//order.tpl
+define("alert","Alert:");
+define("pos_booktickets","Book Tickets");//header.tpl
+define("seat_count","Seat Count:");
+
+
+//process_dateselect.tpl
+define("from","From");
+define("to","To");
+
+//process_list.tpl
 define("actions","Actions");
+define("timestamp","Timestamp");
+
+//process.menu.tpl
 define("cancel_and_delete","Status Changed to 'Cancelled' and Tickets Deleted");
-define("cancel_ticket","Cancel Ticket");
-define("categories_and_prices","Categories and prices");
-define("cat_sold_out","Category sold");
-define("charges","Charges");
-define("confirm_and_print","Confirm and Print");
-define("date_venue","Date,Venue");
-define("preferences","Preferences");
-define("processed_unsent","Paid and Processed Orders Ready to be Sent");
-define("open_with_acrobat","Open Orders in Acrobat");
 define("order_details","Order details");
+
+//process_select.tpl
+define("order_status_changed","Order Status Changed Successfully");
+define("order_status_changed","Order Status Changed Successfully");
+define("pos_currenttickets","Current Tickets"); //header.tpl
+define("pos_paidlist","Paid List");
+define("pos_unsentlist","UnSent List");
+
+//process_view.tpl
+define("paymentstatus","Payment Status");
+define("pos_clicktoproc","Click To Finish Processing!");
+define("pos_clicktosent","Click To Set to Sent!");
+define("pos_deleteorder","Delete Order?");
+define("pos_enternote",'Notes about order and tickets:<br><b>Remember to save after any changes!!</b>');
+define("pos_goback","Click to go back");
+define("pos_nextorder","Next Processed Order");
+define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
+define("pos_reorder_info","To Order Tickets Click below:<br>".
+		"WARNING old order is CANCELED on Re-Order!");
+define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
+define("shipmentstatus","Shipment Status");
+define("next_order_id","Next Order ID");
+//process_view.tpl; view.tpl; view_reorder.tpl
+define("cancel_ticket","Cancel Ticket");
 define("reemitted","Re-issued");
-define("total_without_charges","Total without charges");
+
+//user.tpl
+define("exst_user","Existing");
+define("new_partron","New Patron");
+
+//view_options.tpl
+define("open_with_acrobat","Open Orders in Acrobat");
+define("preferences","Preferences");
 define("send_orders_printer","Send Orders to printer");
-define("sure_to_cancel","Cancel?");
+
+
 
 //------------------------------------------------------
 //Not quite sure about these.  8/26/09 Lou

@@ -145,7 +145,7 @@ class AdminPage extends AUIComponent {
   		<div id='wrap'>\n";
         echo "<div  id='header'>
                <img src='{$_SHOP->images_url}fusion.png'  border='0'/>
-               <h2>Administration</h2>
+               <h2>".administration."</h2>
                </div>";
         echo"<div id='navbar'><table width='100%'>
             <tr><td>&nbsp;";

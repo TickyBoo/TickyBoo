@@ -57,7 +57,7 @@
               </td>
             </tr>
             <tr>
-              <td class='admin_info'>Next Order ID</td>
+              <td class='admin_info'>{!next_order_id!}</td>
               <td class='subtitle'>{$next_order_id}</td>
             </tr>
             <tr>
@@ -65,7 +65,7 @@
               <td class='subtitle'>{$shop_order.order_tickets_nr}</td>
             </tr>
             <tr>
-              <td class='admin_info'>{!user!} {!id!}</td>
+              <td class='admin_info'>{!user_id!}</td>
               <td class='subtitle'>{$shop_order.order_user_id}</td>
             </tr>
             <tr>
@@ -143,11 +143,11 @@
               <td class="sub_title" valign="top">{$user_order.user_lastname}</td>
             </tr>
             <tr>
-              <td class="admin_info" valign="top">{!user_Address!} </td>
+              <td class="admin_info" valign="top">{!user_address!} </td>
               <td class="sub_title" valign="top">{$user_order.user_address}</td>
             </tr>
             <tr>
-              <td class="admin_info" valign="top">{!user_Address1!}</td>
+              <td class="admin_info" valign="top">{!user_address1!}</td>
               <td class="sub_title" valign="top">{$user_order.user_address1}</td>
             </tr>
             <tr>
@@ -161,8 +161,6 @@
             <tr>
               <td class="admin_info" valign="top">{!user_state!}</td>
               <td class="sub_title" valign="top">{$user_order.user_state}</td>
-            </tr>
-            <tr>
             </tr>
             <tr>
               <td class="admin_info" valign="top">{!user_phone!}</td>
@@ -249,7 +247,6 @@
         <br />
       </td>
     </tr>
-    <tr>
       <form name='f' action='view.php' method='post'>
         <input type="hidden" name="action" value="update_note" />
         <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
