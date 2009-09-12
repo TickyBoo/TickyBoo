@@ -87,7 +87,7 @@
         {else}
            <img src="{$_SHOP_images}fusion.png" border="0"/>
         {/if}
- 				<h2>{!box_office!}<span style="color:red; font-size:14px;">{!ajax_beta!}</span></h2>
+ 				{!box_office!}
 			</div>
 			<div id="navbar">
 				<ul>

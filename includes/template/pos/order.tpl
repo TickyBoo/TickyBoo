@@ -20,8 +20,8 @@
         <tr>
           <td width="120" class='user_item'>{!event!}:</td>
           <td class='user_value' >
-            {!date!}&nbsp;{!from!}&nbsp;{!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
-            {!date!}&nbsp;{!to!}&nbsp;{!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
+            {!date_from!} {!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
+            {!date_to!} {!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
             <select id="event-id" name="event_id" size="1">
             </select>
           </td>

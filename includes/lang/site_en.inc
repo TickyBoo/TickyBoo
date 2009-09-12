@@ -22,7 +22,10 @@ define("shortdate_format","%e %b %Y");
 define("shorterdate_format","%h %e");
 define("date","Date");
 define("dd_mm_yyyy","(dd-mm-yyyy)");
-define("yyyy_mm_dd","(yyyy-mm-dd)"); 
+define("yyyy_mm_dd","(yyyy-mm-dd)");
+define("date_from","Date From");
+define("date_to","Date To");
+
 
 //BUTTONS & LINKS
 //for continuity all Buttons & Links should be defined the same if initiating the same action
@@ -940,7 +943,7 @@ define("prg_complete","Complete");
 //checkout.php
 define("No_handling_selected","No handling method selected.");
 define("noting_checkout","There is nothing to checkout!!!");
-define("No_useraddress_selected","No useraddress selected.");
+define("No_useraddress_selected","No user address selected.");
 
 //Errors
 define("error_missingcategorytype","Missing category numbering type");
@@ -956,18 +959,15 @@ define("dts_month_arr", "January|February|March|April|May|June|July|August|Septe
 define("without_fee","Without Fee");
 
 //header.tpl
-define("box_office","Box Office");
-define("ajax_beta","<i>[AJAX Beta]</i>");
+//define("box_office","Box Office");
+//define("ajax_beta","<i>[AJAX Beta]</i>");
+define("box_office","<h2>Box Office<span style='color:red; font-size:14px;'><i>[AJAX Beta]</i></span></h2>");
+
 
 //order.tpl
 define("alert","Alert:");
 define("pos_booktickets","Book Tickets");//header.tpl
 define("seat_count","Seat Count:");
-
-
-//process_dateselect.tpl
-define("from","From");
-define("to","To");
 
 //process_list.tpl
 define("actions","Actions");
@@ -1003,7 +1003,7 @@ define("cancel_ticket","Cancel Ticket");
 define("reemitted","Re-issued");
 
 //user.tpl
-define("exst_user","Existing");
+define("exist_user","Existing");
 define("new_partron","New Patron");
 
 //view_options.tpl

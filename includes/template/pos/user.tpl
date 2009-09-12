@@ -65,7 +65,7 @@
             </td>
             <td  class='user_item' >
               <input type='radio' id='user_info_search' class='checkbox_dark' name='user_info' value='1'>
-              <label for='user_info_search'> {!exst_user!} </label>
+              <label for='user_info_search'> {!exist_user!} </label>
           </td>
             <td class='user_item'  align  ='right' width='100'>
               <button type="button" id="search_user" name='action' value='search_user'>{!search!}</button>
