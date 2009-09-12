@@ -72,7 +72,7 @@ class ShopDB {
                         . mysqli_connect_error());
             }
             $_SHOP->link = $link;
-            ShopDB::checkdatabase(true, false);
+//            ShopDB::checkdatabase(true, false);
             return true;
           } else {
              echo 'db init - ';
@@ -378,20 +378,16 @@ class ShopDB {
         }
     }
 
-    function TableList ($prefix = '')
-    {
+    function TableList ($prefix = ''){
         $tables = Array ();
-
         $result = self::Query("SHOW TABLES" . ((!empty($prefix))?" LIKE '$prefix%'":""));
-
         if (!$result) {
             return false;
-        } while ($row = self::fetch_row($result)) {
+        } 
+        while ($row = self::fetch_row($result)) {
             $tables[] = $row[0];
         }
-
         $result->Free;
-
         Return $tables;
     }
 

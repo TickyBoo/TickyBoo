@@ -6,8 +6,8 @@
  *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
- *	phpMyTicket - ticket reservation system
- * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *  phpMyTicket - ticket reservation system
+ *   Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
  *
  * This file is part of FusionTicket.
  *
@@ -31,124 +31,141 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+ error_reporting(E_ALL);
+  if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
+    session_destroy();
+    echo "<script>window.location.href='{$_SERVER['PHP_SELF']}';</script>";
+    exit;
+  }
 
-	define("INSTALL_VERSION","1.3.5 BETA5");
+  define("INSTALL_VERSION","1.3.5 BETA5");
 
-	define("INST_DEFAULT",0);
-	define("INST_LICENSE",1);
-	define("INST_SYSTEM",2);
-	define("INST_DATABASE",3);
-	define("INST_LANGUAGE",4);
-	define("INST_MAIL",6);
-	define("INST_EDITOR",7);
-	define("INST_UPGRADE",8);
-	define("INST_INSTALL",9);
-	define("INST_LOGIN",10);
-	define("INST_TABLES",11);
+  define("INST_DEFAULT",0);
+  define("INST_LICENSE",1);
+  define("INST_SYSTEM",2);
+  define("INST_DATABASE",3);
+  define("INST_LANGUAGE",4);
+  define("INST_MAIL",6);
+  define("INST_EDITOR",7);
+  define("INST_UPGRADE",8);
+  define("INST_INSTALL",9);
+  define("INST_LOGIN",10);
+  define("INST_TABLES",11);
 
 session_start();
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-<head>
-  <title>Fusion Ticket Installation</title>
-  <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
 
-  <script language="JavaScript">
-  	function Confirm_Inst_Cancel()
-  		{
-      if(window.confirm('Cancel The Installation Process ?'))
-        {
-        window.close ();
-        return true;
-        }
-      }
-  	function Validate_Inst_Upgrade()
-  	  {
-      if (!document.install.radio[0].checked || window.confirm("Full installations removes all tables before the installation start.\n\nContinue The Installation Process ?"))
-        {return true} else {return false};
-      }
-  </script>
-  <style>
-    .err {color:#dd0000;}
-    .warn {color:#cc9900;}
-    .ok {color:#00dd00;}
-  </style>
+/**
+ * shortcut for / or \ (depending on OS)
+ */
+if (!defined('DS')) {
+  define('DS', DIRECTORY_SEPARATOR);
+}
+/**
+ * absolute filesystem path to the root directory of this framework
+ */
+if (!defined('ROOT')) {
+  define('ROOT',(dirname(dirname(dirname(__FILE__)))).DS);
+}
 
-</head>
-<body>
-<?php  
-//  print_r($_REQUEST);
-  $root = "http://" . $_SERVER['HTTP_HOST'];
-  $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
-//  print_r($_POST);
-echo "
-		<div id=\"wrap\">
-			<div id=\"header\">
-        <img src=\"{$root}/images/fusion.png\" border=\"0\"/>
- 				<h2>Installation Procedure <span style=\"color:red; font-size:14px;\"><i>[Beta 5]</i></span></h2>
-			</div>
-			<div id=\"navbar\">
-				<ul>
-				</ul>
-			</div>
-			<div id=\"right\">";
-      
-	function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true)
-		{
-    if (!$ispage)
-      {
-  		echo "<form name='install' method=\"post\" action='$target_pg' onSubmit=\"".$onsubmit."\">\n";
-      }
-    else
-      {
-      if (isset($target_pg))
-        {$target_pg= "?inst_pg=$target_pg";}
-      else
-        {$target_pg='';}
-  		echo "<form name='install' method=\"post\" action='".$_SERVER['PHP_SELF'].$target_pg."' onSubmit=\"".$onsubmit."\">\n";
-  		}
-		echo "<table border=0 cellpadding=\"0\" cellspacing=\"0\" width='100%' style=\"height: 400\">";
-    echo "<tr ><td colspan=2 valign='top' height='100%' >\n"  ;
-		}
+$root = "http://" . $_SERVER['HTTP_HOST'];
+$root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
 
-	function Install_Form_Close ()
-		{echo "</td></tr></table></center></form>\n";}
 
-	function Install_Form_Buttons ()
-		{
-    echo "</td></tr><tr>\n";
-		echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
-            <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" />
-            &nbsp;
-            <input type=\"submit\" value=\"Next\" name=\"do\" class=\"UI_Submit\" />\n";
-		}
+require_once(ROOT."includes".DS."classes".DS."basics.php");
+require_once(ROOT."includes/classes/ShopDB.php");
 
-	function Install_Form_Rollback ()
-		{
-    echo "</td></tr><tr>\n";
-		echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
-            <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\"  class=\"UI_Button\" />
-            &nbsp;
-            <input type=\"submit\" value=\"Back\"  name=\"do\" class=\"UI_Submit\" />\n";
-		}
+$_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
+$_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
 
-  function Install_request($arr)
-    {
-    foreach ($arr as $info)
-      {
-      If (isset($_REQUEST[$info]))
-        {
-		    $_SESSION[$info] = $_REQUEST[$info];
-		    }
-      }
+if (isset($_SERVER['SCRIPT_URI'])) {
+  $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
+}
+if (isset($_SERVER['SCRIPT_URL'])) {
+  $_SERVER['SCRIPT_URL'] = clean($_SERVER['SCRIPT_URL'] ,'HTML');
+}
+
+if (!defined('PHP_SELF')){
+  define('PHP_SELF',$_SERVER['PHP_SELF']);
+}
+
+
+function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true){
+  if (!$ispage){
+    echo "<form name='install' method=\"post\" action='$target_pg' onSubmit=\"".$onsubmit."\">\n";
+  }else{
+    if (isset($target_pg)){
+      $target_pg= "?inst_pg=$target_pg";
+    }else{
+      $target_pg='';
     }
-    
+    echo "<form name='install' method=\"post\" action='".$_SERVER['PHP_SELF'].$target_pg."' onSubmit=\"".$onsubmit."\">\n";
+  }
+  echo "<table border=0 cellpadding=\"0\" cellspacing=\"0\" width='100%' style=\"height: 400\">";
+  echo "<tr ><td colspan=2 valign='top' height='100%' >\n"  ;
+}
+
+function Install_Form_Close (){
+  echo "</td></tr></table></center></form>\n";
+}
+
+function Install_Form_Buttons (){
+  echo "</td></tr><tr>\n";
+  echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
+          <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" />
+          &nbsp;
+          <input type=\"submit\" value=\"Next\" name=\"do\" class=\"UI_Submit\" />\n";
+}
+
+function Install_Form_Rollback (){
+  echo "</td></tr><tr>\n";
+  echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
+          <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\"  class=\"UI_Button\" />
+          &nbsp;
+          <input type=\"submit\" value=\"Back\"  name=\"do\" class=\"UI_Submit\" />\n";
+}
+
+function Install_request($arr){
+  foreach ($arr as $info){
+    If (isset($_REQUEST[$info])){
+      $_SESSION['SHOP'][$info] = $_REQUEST[$info];
+    }
+  }
+}
+
+function loginmycheck ($link, $username,$auth){
+  $query="SELECT admin_id FROM `Admin` 
+          WHERE `admin_login`="._esc($username). "
+          AND  `admin_password`="._esc(Md5($auth));
+  if($res=ShopDB::query_One_row($query)){
+    return True;
+  }	else {
+    return false;
+  }
+}
+
+function Opendatabase(){
+  global $_SHOP;
+  $DB_Hostname = $_SESSION['SHOP']['db_host'];
+  $DB_Username = $_SESSION['SHOP']['db_uname'];
+  $DB_Password = $_SESSION['SHOP']['db_pass'];
+  $DB_Database = $_SESSION['SHOP']['db_name'];
+  
+  $pos = strpos($DB_Hostname,':');
+  if ($pos != false) {
+    $DB_Hostname = substr($DB_Hostname,0, $pos);
+    $port = substr($DB_Hostname,$pos+1);
+  } else
+    $port = 3306;
+  
+  $link = new mysqli($DB_Hostname, $DB_Username, $DB_Password, '', $port);
+  $link->select_db($DB_Database);
+  $_SHOP->link = $link;
+  return $link;
+}    
 /*
 * mysql < dump.sql
 */
-function file_to_db($filename)
-{
+function file_to_db($filename){
   if (!$lines = file($filename)){
     echo "<div class=err>ERROR: can not read $filename</div>";
     return 0;
@@ -171,30 +188,74 @@ function file_to_db($filename)
   }
   return 1;
 }
-  if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel')
-    {
-    session_destroy();
-    echo "<script>window.location.href='{$_SERVER['PHP_SELF']}';</script>";
-    }
 
-	if(!isset($_SESSION['is_started']) or !isset($_REQUEST['inst_pg']))
-		{$_REQUEST['inst_pg']=INST_DEFAULT;}
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Fusion Ticket Installation</title>
+  <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
+
+  <script language="JavaScript">
+    function Confirm_Inst_Cancel(){
+      if(window.confirm('Cancel The Installation Process ?')){
+        window.close ();
+        return true;
+      }
+    }
+    function Validate_Inst_Upgrade(){
+      if (!document.install.radio[0].checked || 
+          window.confirm("Full installations removes all tables before the installation start.\n\nContinue The Installation Process ?"))
+        {return true} else {return false};
+    } 
+    function Validate_License_page(){
+      if (!document.install.sla_radio[0].checked){
+        window.alert("You must accept the terms of the software license agreement in order to install and use this software.");
+        return false;
+      } else {
+        return true;
+      };
+    } 
+    
+  </script>
+  <style>
+    .err {color:#dd0000;}
+    .warn {color:#cc9900;}
+    .ok {color:#00dd00;}
+  </style>
+
+</head>
+<body>
+<?php  
+echo "
+  <div id=\"wrap\">
+    <div id=\"header\">
+      <img src=\"{$root}/images/fusion.png\" border=\"0\"/>
+      <h2>Installation Procedure <span style=\"color:red; font-size:14px;\"><i>[Beta 5]</i></span></h2>
+    </div>
+    <div id=\"navbar\">
+      <ul>
+      </ul>
+    </div>
+    <div id=\"right\">";
+      
+
+  if(!isset($_SESSION['is_started']) or !isset($_REQUEST['inst_pg'])){
+    $_REQUEST['inst_pg']=INST_DEFAULT;
+  }
 
   $_SESSION['is_started'] = True;
 
-	$Install_Errors = Array ();
-	$Install_Warnings = Array ();
-//
-//  array_push($Install_Warnings,"Your php is in 'SAFE MODE'. This can lead to problems during install (unable to create directory errors). Please read documentation.");
-	switch($_REQUEST['inst_pg'])
-		{
-    case INST_LICENSE:
+  $Install_Errors   = Array ();
+  $Install_Warnings = Array ();
+
+  switch($_REQUEST['inst_pg']){
+    case INST_UPGRADE:
       $ver = explode('.', phpversion());
       if ($ver[0] != 5){
         array_push($Install_Errors,"FAILED: php version 5.2.1 is required, You have php version " .phpversion() );
-      }else
-      if ($ver[1] > 2 or $ver[2] > 6){
-        array_push($Install_Warnings,"WARNING: this program was tested with php version 5.2.6. You have php version " . phpversion() . ". This shouldn't be a problem.");
+      }elseif ($ver[1] <> 2 or $ver[2] > 10 or $ver[2] == 0){
+        array_push($Install_Warnings,"WARNING: this program was tested with php version 5.2.8. You have php version " . phpversion() . ". This shouldn't be a problem.");
       }
       if (!function_exists('mysqli_connect')){
         array_push($Install_Errors,"MySQL-Exstentions havent been enabled, this is required for security reasons, its should be fairly standard on any PHP 5 Build it will be taking over from standard mysql function.");
@@ -219,31 +280,8 @@ function file_to_db($filename)
       if (ini_get('safe_mode')){
         array_push($Install_Warnings,"Your php is in 'SAFE MODE'. This can lead to problems during install (unable to create directory errors). Please read documentation.");
       }
-      break;
-    
- 		case INST_DATABASE:
-      $return_pg = INST_DATABASE;
 
-      if (isset($_POST['install_dir']) and $_POST['install_dir']){
-        $_SESSION['install_dir'] = $_POST['install_dir'];
-      }
-      if (!$install_dir = $_SESSION['install_dir']){
-        $cwd = getcwd();
-        $install_dir = substr($cwd, 0, - 5);
-      }
-      $_SHOP->install_dir =$install_dir;
-      if (!file_exists("$install_dir/includes/config/init_config.php")) {
-        if (!is_writable("$install_dir/includes/config")) {
-          array_push($Install_Errors,"$install_dir/includes/config should be writable by the webserver user.");
-          }
-        }
-      else
-      if (!is_writable("$install_dir/includes/config/init_config.php")){
-        array_push($Install_Errors,"$install_dir/includes/config/init_config.php should be writable by the webserver user.");
-      }
-      if (!is_writable("$install_dir/includes/fonts")){
-        array_push($Install_Errors,"$install_dir/includes/fonts should be writable to create the PDF files.");
-      }
+      $install_dir = ROOT;
       if (!is_writable("$install_dir/includes/temp")){
         array_push($Install_Errors,"$install_dir/includes/temp should be writable by the webserver user.");
       }
@@ -251,31 +289,87 @@ function file_to_db($filename)
         array_push($Install_Errors,"$install_dir/files should be writable by the webserver user.");
       }
 
-      break;
- 		case INST_TABLES:
-      $return_pg = INST_DATABASE;
-			if(empty($_REQUEST['DB_Hostname']))
-				{array_push($Install_Errors,'No database hostname specified.');}
-			if(empty($_REQUEST['DB_Database']))
-				{array_push($Install_Errors,'No database name specified.');}
-      break;
-
- 		case INST_UPGRADE:
-      $return_pg = INST_TABLES;
-      Install_Request(Array('admin_login','admin_password'));
-      if (strlen($_SESSION['admin_login']) <> 0){
-        if (strlen($_SESSION['admin_password']) < 6){
-          array_push($Install_Errors,"Admin password should be at least 6 letters long");
+      if (!file_exists("$install_dir/includes/config/init_config.php")) {
+        if (!is_writable("$install_dir/includes/config")) {
+          array_push($Install_Errors,"$install_dir/includes/config should be 	temporarily writable by the webserver user.");
+        }
+      } elseif (!is_writable("$install_dir/includes/config/init_config.php")){
+        array_push($Install_Errors,"$install_dir/includes/config/init_config.php should be temporarily writable by the webserver user.");
+      } else {
+        $_SESSION['ConfigExist'] = file_exists(ROOT."includes/config/init_config.php") and 
+                                   (filesize(ROOT."includes/config/init_config.php")>100);
+        If ($_SESSION['ConfigExist']){
+          include (ROOT."includes/config/init_config.php");
+          $_SESSION['SHOP'] = (Array)$_SHOP;
+          $_SESSION['radio']       = 'UPGRADE';
+          $_SESSION['ConfigExist'] = True;
         }
       }
+
       break;
- 		case INST_INSTALL:
-      $install_dir = $_SESSION['install_dir'];
-      $includes_dir = $install_dir . "/includes";
+    case INST_SYSTEM:   /* System Requirements & Directory Permissions Check */
+    case INST_DATABASE: /* Database Configuration */
+      If ($_REQUEST['radio']) {
+        $_SESSION['radio']    = $_REQUEST['radio'];
+        $_SESSION['db_demos'] = $_REQUEST['db_demos'];
+      }
+      if (!$_SESSION['DB_Error'] or $_SESSION['radio'] == 'NORMAL') {
+        break;
+      }
+
+    case INST_TABLES:
+      $return_pg = INST_DATABASE;
+      Install_Request(Array('db_name','db_uname','db_pass', 'db_host', 'db_prefix'));
+      if(empty($_SESSION['SHOP']['db_host']))
+        {array_push($Install_Errors,'No database hostname specified.');}
+      if(empty($_SESSION['SHOP']['db_name']))
+        {array_push($Install_Errors,'No database name specified.');}
+
+      $link = OpenDatabase();
+      if($link->errno==1049 and $_REQUEST['db_create_now']){
+        $link->query('CREATE DATABASE ' . $DB_Database);
+        $link->select_db($DB_Database);
+        $_SESSION['radio'] = 'NORMAL';
+        $_SESSION['db_demos'] = $_REQUEST['db_demos'];
+      }
+      
+      if($link->connect_errno or $link->errno){
+        array_push($Install_Errors,'A database connection could not be established using the settings you have provided.<br>'.
+                                   'Error code: ', mysqli_connect_error() ,'<br>', mysqli_error($link));
+        break;
+      } 
+
+      
+      if ($_SESSION['radio']=='UPGRADE' AND $result = $link->Query("SHOW TABLES") AND count( $result->fetch_All()) == 0) {
+        array_push($Install_Errors,'This database is empty and can not upgraded.');
+        $return_pg = INST_UPGRADE;
+        $_SESSION['radio'] = 'NORMAL';
+      }
+      
+      break;
+
+    case INST_LOGIN:
+      $return_pg = INST_TABLES;
+      $link      = OpenDatabase();
+
+      $_SESSION['admin_login']    = $_REQUEST['admin_login'];
+      $_SESSION['admin_password'] = $_REQUEST['admin_password'];
+      $result = $link->Query("SHOW TABLES LIKE 'admin'");
+      if ($result) {
+        if(count($result->fetch_all())<> 1 or !loginmycheck ($link, $_SESSION['admin_login'], $_SESSION['admin_password'])){
+          array_push($Install_Errors,"Admin User not found in database.");
+        }    
+      } elseif (strlen($_SESSION['admin_password']) < 6){
+        array_push($Install_Errors,"Admin password should be at least 6 letters long");
+      }
+      
+    case INST_INSTALL:
+      $includes_dir = ROOT . "/includes";
       if (!$init_config = @file_get_contents("$includes_dir/install/init_config.php")){
         array_push($Install_Errors,"Cannot read master configuration file <i>$includes_dir/install/init_config.php</i>.");
       }
   }
+
   If ((count($Install_Errors)>0 || count($Install_Warnings)>0) and !isset($_POST['continue'])){
     If (count($Install_Errors)==0) $return_pg = $_REQUEST['inst_pg'];
     Install_Form_Open ($return_pg,'');
@@ -286,203 +380,200 @@ function file_to_db($filename)
       for($i=0;$i<count($Install_Errors);$i++){echo "<li class='err'>".$Install_Errors[$i]."</li>\n";}
       echo "</ul></td></tr>";
     }
-		// Handle Warnings
-		if(count($Install_Warnings)>0){
+    // Handle Warnings
+    if(count($Install_Warnings)>0){
       echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Warning !</font></h2></td>\n</tr><tr><td>\n";
-			echo "The installer has issued the following warnings:<br><ul>\n";
+      echo "The installer has issued the following warnings:<br><ul>\n";
 
-			for($i=0;$i<count($Install_Warnings);$i++){echo "<li class='warn'>".$Install_Warnings[$i]."</li>\n";}
+      for($i=0;$i<count($Install_Warnings);$i++){echo "<li class='warn'>".$Install_Warnings[$i]."</li>\n";}
       echo "</ul></td></tr>";
-  	}
+    }
     echo "</table>";
     
     If (count($Install_Errors)>0){
       Install_Form_Rollback ();
     } else {
-			echo "<input type='hidden' name='continue' value='1' />\n";
+      echo "<input type='hidden' name='continue' value='1' />\n";
       Install_Form_Buttons ();
     }
-	  Install_Form_Close ();
+    Install_Form_Close ();
+    
   } else
-	switch($_REQUEST['inst_pg']){
-		case INST_DEFAULT: /* Default Installation Wizard Screen */
-			Install_Form_Open (INST_LICENSE,'');
-			echo "<h2>Welcome to the Fusion Ticket Installation Wizard.</h2> ";
-
-      echo "<p align=justify>Fusion Ticket is distributed under the GNU GPL v3 Licence. 
-            You are agreeing to this licence by installing this software. 
-            Therefore FusionTicket will not be responsible for any damages or loss of 
-            profit caused by this software or any other patch script included with this software.</p>
-<p align=justify>This also means under the open software licence any modifications to this script also fall under this licence.<br>
-<br>Therefore you are <b>NOT</b> allowed to sell this script but are able to make money from <b>USING</b> it.<br>
-There may be a professional version in the future.</p>";
-                
-   		echo "<p align=justify>If you need help performing the installation, please refer to the included <a href=\"../Install.htm\" target=\"_blank\">installation guide</a> located in the root folder of the installation package.</p>\n";
-			echo "<p align=justify>This web based installer will help you install the software on your web server. 
-                To continue with the installation process click the 'Next' button below.</p>\n";      
-			Install_Form_Buttons ();
-			Install_Form_Close ();
-	  	break;
-
-		case INST_LICENSE: /* software License Agreement */
-			Install_Form_Open (INST_SYSTEM,'');
-      $cwd = getcwd();
-      $install_dir = substr($cwd, 0, - 5);
-			echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-			echo "<tr>\n<td colspan=\"2\"><h2>Software License Agreement</h2></td>\n</tr>\n";
-			echo "<tr>\n<td colspan=\"2\"><textarea rows=\"15\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;\">\n";
-			$fp=@fopen("{$install_dir}/LICENCE",'r');
-			echo @fread($fp,filesize("{$install_dir}/LICENCE"));
-			@fclose($fp);
-			echo "</textarea></td>\n</tr>\n";
-			echo "<tr>\n<td colspan=\"2\">\n";
-			echo "<input type=\"radio\" name=\"SLA_Agree\" id=\"SLA_Agree_Yes\" value=\"1\" /> ";
-			echo "<label for=\"SLA_Agree_Yes\">I Agree and Accept the terms of the license agreement.</label><br />\n";
-			echo "<input type=\"radio\" name=\"SLA_Agree\" id=\"SLA_Agree_No\" value=\"0\" checked=\"checked\" /> ";
-			echo "<label for=\"SLA_Agree_No\">I Disagree with the terms of the license agreement.</label>\n";
-			echo "</td>\n</tr>\n";
-			echo "</table>\n";
-			Install_Form_Buttons ();
-			Install_Form_Close ();		
-		  break;
-
-		case INST_SYSTEM: /* System Requirements & Directory Permissions Check */
-			if($_REQUEST['SLA_Agree']!=1){
-				Install_Form_Open (INST_LICENSE,'');
-				echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-        echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Error</font></h2></td>\n</tr>
-              <tr><td hight='100%'>\n";
-				echo "You must accept the terms of the software license agreement in order to install and use this software.";
-	  		echo "</td>\n</tr>\n";
-	  		echo "</table>\n";
-				Install_Form_Rollback ();
-				Install_Form_Close ();	
-			}else{
-				Install_Form_Open (INST_DATABASE,'');
-
-        $_SESSION['ConfigExist'] = file_exists("../includes/config/init_config.php") and (filesize("../includes/config/init_config.php")>100);
-				If ($_SESSION['ConfigExist']){
-          include ("../includes/config/init_config.php");
-
-          $_SESSION['DB_Hostname'] = $_SHOP->db_host;
-          $_SESSION['DB_Username'] = $_SHOP->db_uname;
-          $_SESSION['DB_Password'] = $_SHOP->db_pass;
-          $_SESSION['DB_Database'] = $_SHOP->db_name;
-
-          $_SESSION['install_dir'] = $_SHOP->install_dir;
-          $_SESSION['root_url']    = $_SHOP->root;
-          $_SESSION['radio']       = 'UPGRADE';
-        }
-        Install_Request(Array('install_dir','root_url'));
-
-        if (!$install_dir = $_SESSION['install_dir']){
-          $cwd = getcwd();
-          $install_dir = substr($cwd, 0, - 5);
-        }
-        if (!$root = $_SESSION['root_url']){
-          $root = "http://" . $_SERVER['HTTP_HOST'];
-          $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 14);
-        }
-
-				echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-				echo "<tr>\n<td colspan=\"2\"><h2>Main folder</h2></td>\n</tr>\n";
-				echo "<tr>\n<td colspan=\"2\">This is the directory where Fusion Ticket is installed.<br>Fix if incorrect.</td>\n</tr>\n";
-				echo "<tr>\n<td>Folder:</td>\n";
-				echo "<td><input name='install_dir' value='$install_dir' size='50'></td>\n</tr>\n";
-				echo "<tr>\n<td colspan=\"2\"><br><h2>Base URL</h2></td>\n</tr>\n";
-				echo "<tr>\n<td colspan=\"2\">This is the URL of FusionTicket files. Fix if incorrect.</td>\n</tr>\n";
-				echo "<tr>\n<td>URL:</td>\n";
-				echo "<td><input name='root_url' value='$root' size='50'></td>\n</tr>\n";
-				echo "</table>\n";
-
-			  Install_Form_Buttons ();
-		    Install_Form_Close ();
-			  }
-		break;
-
-		case INST_DATABASE: /* Database Configuration */
-      Install_Request(Array('root_url','install_dir'));
-			Install_Form_Open (INST_TABLES,'Validate_Inst_Database()');
-			echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-			echo "<tr>\n<td colspan=\"2\"><h2>Database Connection Settings</h2></td>\n</tr>\n";
-			echo "<tr>\n<td colspan=\"2\">Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br> </td>\n</tr>\n";
-			echo "<tr>\n<td>Hostname</td>\n";
-			echo "<td><input type=\"text\" name=\"DB_Hostname\" value=\"".$_SESSION['DB_Hostname']."\" /></td>\n</tr>\n";
-			echo "<tr>\n<td>Username</td>\n";
-			echo "<td><input type=\"text\" name=\"DB_Username\" value=\"".$_SESSION['DB_Username']."\" /></td>\n</tr>\n";
-			echo "<tr>\n<td>Password</td>\n";
-			echo "<td><input type=\"text\" name=\"DB_Password\" value=\"".$_SESSION['DB_Password']."\" /></td>\n</tr>\n";
-			echo "<tr>\n<td>Database</td>\n";
-			echo "<td><input type=\"text\" name=\"DB_Database\" value=\"".$_SESSION['DB_Database']."\" /></td>\n</tr>\n";
-			echo "</table>\n";
-			Install_Form_Buttons ();
-			Install_Form_Close ();		
-		break;
-		
-		case INST_TABLES: /* Table Configuration & Testing */
-      Install_Request(Array('DB_Hostname','DB_Username','DB_Password', 'DB_Database', 'TB_Prefix'));
-
-			$DB_Hostname=$_SESSION['DB_Hostname'];
-			$DB_Username=$_SESSION['DB_Username'];
-			$DB_Password=$_SESSION['DB_Password'];
-			$DB_Database=$_SESSION['DB_Database'];
-			$pos = strpos($DB_Hostname,':');
-      if ($pos!= false) {
-         $port = substr($DB_Hostname,$pos+1);
-         $DB_Hostname = substr($DB_Hostname,0, $pos);
-      } else
-        $port = 3306;
-			if(!@mysqli_connect ($DB_Hostname, $DB_Username, $DB_Password, $DB_Database, $port)){
-				Install_Form_Open (INST_DATABASE,'');
-				echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-        echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Error</font></h2></td>\n</tr>
-              <tr><td hight='100%'>\n";
-				echo "A database connection could not be established using the settings you have provided.<br>";
-	  		echo "</td>\n</tr>\n";
-	  		echo "</table>\n";
-				echo mysqli_connect_error();
-			} else {
-  			Install_Form_Open (INST_UPGRADE,'Validate_Inst_Database()');
-				echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-  			echo "<tr>\n<td colspan=\"2\"><h2>Admin login and password</h2></td>\n</tr>\n";
-  			echo "<tr>\n<td colspan=\"2\">Please choose the username and the password for the Fusion Ticket super user.<br>Choose it even if you update, this will be your new login / password.<br><br></td>\n</tr>\n";
-  			echo "<tr>\n<td>Admin login:</td>\n";
-  			echo "<td><input type=\"text\" name=\"admin_login\" value=\"".$_SESSION['admin_login']."\" /></td>\n</tr>\n";
-  			echo "<tr>\n<td>Admin password:</td>\n";
-  			echo "<td><input type=\"text\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>\n</tr>\n";
-  			echo "</table>\n";
-  			Install_Form_Buttons ();
-  			Install_Form_Close ();
-      }
+  switch($_REQUEST['inst_pg']){
+    case INST_DEFAULT: /* Default Installation Wizard Screen */
+      Install_Form_Open (INST_LICENSE,'');
+      echo "<h2>Welcome to the Fusion Ticket Installation Wizard.</h2> ";
+      echo "<p align=justify>
+              Fusion Ticket is distributed under the GNU GPL v3 Licence. 
+              You are agreeing to this licence by installing this software. 
+              Therefore FusionTicket will not be responsible for any damages or loss of 
+              profit caused by this software or any other patch script included with this software.
+            </p>
+            <p align=justify>
+              This also means under the open software licence any modifications to 
+              this script also fall under this licence.<br><br>
+              Therefore you are <b>NOT</b> allowed to sell this script but are able to make money from <b>USING</b> it.<br>
+              There may be a professional version in the future.
+            </p>
+            <p align=justify>
+              If you need help performing the installation, please refer to the included 
+              <a href=\"../install.html\" target=\"_blank\">installation guide</a> located in the root folder of the installation package.
+            </p>
+            <p align=justify>
+              This web based installer will help you install the software on your web server. 
+              To continue with the installation process click the 'Next' button below.
+            </p>\n";      
+      Install_Form_Buttons ();
+      Install_Form_Close ();
       break;
-		case INST_UPGRADE: /* Table Configuration & Testing */
+
+    case INST_LICENSE: /* software License Agreement */
+      Install_Form_Open (INST_UPGRADE,'return(Validate_License_page());');
+      $license = @file_get_contents(ROOT."LICENCE");
+      echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+              <tr>
+                <td colspan=\"2\">
+                  <h2>Software License Agreement</h2>
+                </td>
+              </tr>
+              <tr>
+                <td colspan=\"2\">
+                  <textarea rows=\"15\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;\">
+                    {$license}
+                  </textarea>
+                </td>
+              </tr>
+              <tr>
+                <td colspan=\"2\">
+                  <input type=\"radio\" name=\"sla_radio\" id=\"SLA_Agree_Yes\" value=\"1\" />
+                    <label for=\"SLA_Agree_Yes\">I Agree and Accept the terms of the license agreement.</label><br />
+                  <input type=\"radio\" name=\"sla_radio\" id=\"SLA_Agree_No\" value=\"0\" checked=\"checked\" />
+                    <label for=\"SLA_Agree_No\">I Disagree with the terms of the license agreement.</label>
+                </td>
+              </tr>
+            </table>\n";
+      Install_Form_Buttons ();
+      Install_Form_Close ();    
+      break;
+    
+    
+    case INST_UPGRADE: /* Table Configuration & Testing */
       Install_Request(Array('admin_login','admin_password'));
-			Install_Form_Open (INST_INSTALL,'return(Validate_Inst_Upgrade());');
+      Install_Form_Open (INST_SYSTEM,'return(Validate_Inst_Upgrade());');
+      
       if (!$install_mode = $_SESSION['radio']){
         $install_mode = 'NORMAL';
       }
       $chk[$install_mode] = 'checked="checked"';
 
-			echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
-			echo "<tr>\n<td colspan=\"2\"><h2>Install Type</h2></td>\n</tr>\n";
-			echo "<tr>\n<td colspan=\"2\">The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade. If you wish to leave your existing database unchanged select the \"UPGRADE\" option below, otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br /><br /></td>\n</tr>\n";
-			echo "<tr>\n<td colspan=\"2\">\n";
-			echo "<input type=\"radio\" name=\"radio\" value=\"NORMAL\" {$chk['NORMAL']}/> ";
-			echo "FULL INSTALL<br />\n";
-			echo "<input type=\"radio\" name=\"radio\" value=\"UPGRADE\" {$chk['UPGRADE']} /> ";
-			echo "UPGRADE<br />\n";
-			echo "</td>\n</tr>\n";
-      echo "<tr><td colspan='2'><br>Install demonstration data:  <input type=checkbox name='db_demos' value='1'></td></tr>";
-			echo "</table>\n";
-			Install_Form_Buttons ();
-			Install_Form_Close ();
-		break;
-		/* Final Installation */
-		case INST_INSTALL:
-			$install_mode=$_REQUEST['radio'];
+      echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+              <tr>
+                <td colspan=\"2\">
+                  <h2>Install Type</h2>
+                </td>
+              </tr>
+              <tr>
+                <td colspan=\"2\">
+                  The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade. If you wish to leave your existing database unchanged select the \"UPGRADE\" option below, otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br /><br />
+                </td>
+              </tr>
+              <tr>
+                <td colspan=\"2\">
+                  <input type=\"radio\" name=\"radio\" value=\"NORMAL\" {$chk['NORMAL']}/> FULL INSTALL<br />
+                  <input type=\"radio\" name=\"radio\" value=\"UPGRADE\" {$chk['UPGRADE']} /> UPGRADE<br />
+                </td>\n
+              </tr>
+              <tr>
+                <td colspan='2'>
+                  <br>Install demonstration data:  <input type=checkbox name='db_demos' value='1'>
+                </td>
+              </tr>
+            </table>\n";
+      Install_Form_Buttons ();
+      Install_Form_Close ();
+      break;
+
+    case INST_SYSTEM: /* System Requirements & Directory Permissions Check */
+
+    case INST_DATABASE: /* Database Configuration */
+      if (!$_SESSION['DB_Error'] or $_SESSION['radio'] == 'NORMAL') {
+        Install_Request(Array('root_url','install_dir'));
+        Install_Form_Open (INST_TABLES,'');
+        echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+                <tr>
+                  <td colspan=\"2\"><h2>Database Connection Settings</h2></td>
+                </tr>
+                <tr>
+                  <td colspan=\"2\">Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br> </td>
+                </tr>
+                <tr>
+                  <td width='30%'>Hostname</td>
+                  <td><input type=\"text\" name=\"db_host\" value=\"".$_SESSION['SHOP']['db_host']."\" /></td>
+                </tr>        
+                <tr>
+                  <td>Username</td>
+                  <td><input type=\"text\" name=\"db_uname\" value=\"".$_SESSION['SHOP']['db_uname']."\" /></td>
+                </tr>
+                <tr>
+                  <td>Password</td>
+                  <td><input type=\"text\" name=\"db_pass\" value=\"".$_SESSION['SHOP']['db_pass']."\" /></td>
+                </tr>
+                <tr>
+                  <td>Database</td>
+                  <td><input type=\"text\" name=\"db_name\" value=\"".$_SESSION['SHOP']['db_name']."\" /></td>
+                </tr>\n";
+        if ($_SESSION['DB_Error'] ) {
+          $chk = ($_SESSION['db_demos'])?'checked="checked"':'';
+          echo "
+                <tr>
+                  <td><br>Create Database now:</td>
+                  <td><br><input type=checkbox name='db_create_now' value='1'></td>
+                </tr>
+                <tr>
+                  <td>Install demonstration data:</td>
+                  <td><input type=checkbox name='db_demos' $chk value='1'></td>
+                </tr>\n";
+        }
+        echo "</table>\n";
+          
+        Install_Form_Buttons ();
+        Install_Form_Close ();    
+        break;
+      }
+      
+    case INST_TABLES: /* Table Configuration & Testing */
+      Install_Form_Open (INST_LOGIN,'Validate_Inst_Database()');
+      echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+              <tr>
+                <td colspan=\"2\">
+                  <h2>Admin login and password</h2>
+                </td>
+              </tr>
+              <tr>
+                <td colspan=\"2\">
+                  Please choose the username and the password for the Fusion Ticket super user.<br>
+                </td>
+              </tr>
+              <tr>
+                <td>Admin login:</td>
+                <td><input type=\"text\" name=\"admin_login\" value=\"".$_SESSION['admin_login']."\" /></td>
+              </tr>
+              <tr>
+                <td>Admin password:</td>
+                <td><input type=\"text\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>
+              </tr>
+            </table>";
+      Install_Form_Buttons ();
+      Install_Form_Close ();
+      break;
+    /* Final Installation */
+    case INST_LOGIN:
+
+    case INST_INSTALL:
+      $install_mode=$_SESSION['radio'];
       /* Save Config file first */
       $_SHOP->install_dir = $_SESSION['install_dir'];
-
+break;
       function callback($matches){
         return $_SESSION[$matches[1]];
       }
@@ -500,7 +591,7 @@ There may be a professional version in the future.</p>";
         require_once("../includes/classes/ShopDB.php");
         if ($install_mode == 'NORMAL'){
           $DB_Hostname = $_SESSION['DB_Hostname'];
-    			$pos = strpos($DB_Hostname,':');
+          $pos = strpos($DB_Hostname,':');
           if ($pos != false) {
              $port = substr($DB_Hostname,$pos+1);
              $DB_Hostname = substr($DB_Hostname,0, $pos);
@@ -584,7 +675,7 @@ There may be a professional version in the future.</p>";
 
         echo  "<div>You should also delete the <tt>inst</tt> folder.</div>
                 <br>
-		<ul>
+              <ul>
                 <li><a href='$root/admin/index.php' target='_blank'>Go to Admin</a>.</li>
                 <li><a href='$root/pos/index.php' target='_blank'>Go to Demo Sale Point</a></li>
                 <li><a href='$root/control/index.php' target='_blank'>Go to Demo Ticket Control Point</a></li>
@@ -597,18 +688,18 @@ There may be a professional version in the future.</p>";
 //        session_destroy();
         }
 
-		break;
-		}
+    break;
+    }
 ?>
 </td>
 </tr>
 </table>
 
-			</div>
+      </div>
 
-			<div id="footer">
-				Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office
-			</div>
-		</div>
-	</body>
+      <div id="footer">
+        Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office
+      </div>
+    </div>
+  </body>
 </html>
