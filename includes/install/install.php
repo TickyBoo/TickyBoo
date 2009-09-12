@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- error_reporting(E_ALL);
+// error_reporting(E_ALL);
   if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
     session_destroy();
     echo "<script>window.location.href='{$_SERVER['PHP_SELF']}';</script>";

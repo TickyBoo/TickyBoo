@@ -11,8 +11,10 @@
 			  showTocToggle(); 
 			} 
 		</SCRIPT>
-
-	</head>
+  <style>
+    pre {font-size:1.21em;}
+  </style> 
+</head>
 <body>
   <div id="wrap">
     <div id="header">
@@ -21,17 +23,17 @@
     </div>
     <div id="navbar">
       <ul>
-        <li><a name="#Contents" href="#Requirements_">Requirements</a></li>
+        <li><a name="Contents" href="#Requirements_">Requirements</a></li>
         <li><a href="#Upgrade_to_Beta5">Upgrade to Beta5</a></li>
         <li><a href="#Full_Installation">Full Installation</a></li>
         <li><a href="#Problems_">Problems</a></li>
       </ul>
-    </div>
-	<div id="right"> <br>
-        <h1><a name="Requirements_"> Requirements </a></h1>
+    </div> 
+	<div id="right" style= "line-height:1.2em;"> <br><a name="Requirements_" ></a>
+        <h1> Requirements</h1>
         <p>The server must have these programs/settings to run Fusion Ticket: </p>
         <ul>
-            <li>PHP version =&gt;5.2.1 through 5.2.10, tested with 5.2.7.&nbsp; PHP &lt;5.2.1 or &gt;5.2.10 IS NOT SUPPORTED! </li>
+            <li>PHP version =&gt;5.2.1 through 5.2.10, tested with 5.2.7.&nbsp; We do NOT support: PHP &lt;5.2.1 or &gt;5.2.10! </li>
             <li>MySQL version &gt;4.1 with MySQLi is Mandatory. Tested with version 5.0.51a </li>
             <li>Enable email support in PHP - Check email security settings. </li>
             <li>Adobe Acrobat Reader (to view/print PDF files) </li>
@@ -60,13 +62,11 @@
             same version that we design the software on. All we ask is that you donate regularly to the project. 
         </p>
         <div align="center">
-          <pre><b>We do not recommend the Beta Versions of Fusion Ticket for Production Use!  </b></pre>
+            <b style="color:red">We do not recommend the Beta Versions of Fusion Ticket for Production Use!</b>
         </div>
-        <div align="left">
-            <pre><a href="#Contents"><b>[top]</b></a></pre>
-        </div>
+        <p align="right" width='100%'><a href="#Contents"><pre><b>[top]</b></pre></a></p>
 
-        <h1><a name="Upgrade_to_Beta5">Upgrade to Beta5</a> </h1>
+        <h1><a name="Upgrade_to_Beta5"></a>Upgrade to Beta5 </h1>
         <ul>
             <li>Backup your database! </li>
             <li>Download the archive Fusion Ticket Beta5 </li>
@@ -92,8 +92,8 @@
             <li>Check the new <i>.tpl</i> files against any you may have previously modified. </li>
             <li>Compare the new <i>.../includes/config/init_config.php</i> against the old one.</li>
         </ul>
-        <p><a href="#Contents"><b>[top]</b></a></p>
-        <h1><a name="Full_Installation">Full Installation</a> </h1>
+        <p align="right" width='100%'><a href="#Contents"><pre><b>[top]</b></pre></a></p>
+        <h1><a name="Full_Installation"></a>Full Installation</h1>
         <ul>
             <li>Download the archive Fusion Ticket and decompress it somewhere in the web root path of the web server: </li>
             <li>This produces a directory called Fusionticket - you can rename it. </li>
@@ -111,54 +111,46 @@
             <li>Remove the <i>.../inst </i>folder from your server </li>
             <li>Reset the <i>.../includes/config</i> folder to Read-only. </li>
         </ul>
-        <p><a href="#Contents"><b>[top]</b></a></p>
-        <h1><a name="Problems_">Problems </a></h1>
-        <p>
+        <p align="right" width='100%'><a href="#Contents"><pre><b>[top]</b></pre></a></p>
+        <h1><a name="Problems_"></a>Known Problems </h1>
+        The next problems are known to us and can be fixed by us but you can change it yourself by following the answars behind:
+            <table  cellpadding='5'  cellspacing='5'>
+              <tr class='admin_list_row_0'><td>
             Some known problems can occur due to various PHP configurations.<br>
-            The solution to most of them is renaming <b>_.htaccess</b> file to <b>.htaccess</b><br>
-            Some web servers will not read <b>.htaccess</b>; in this case, edit the config file: 
-        </p>
-        <p><i>…/includes/config/init_common.php</i></p>
-        <p>
+            <ul><li>The solution to most of them is renaming <b>_.htaccess</b> file to <b>.htaccess</b>.</li>
+            <li>Some web servers will not read <b>.htaccess</b>; in this case, edit the config file:<br>
+            <i>.../includes/config/init_common.php</i></li></ul>
+              </td></tr>
+              <tr class='admin_list_row_2'><td>
             <b>Register globals</b><br>
-            For security reasons this php flag should be off. 
-        </p>
-        <p>Install will produce a warning if it detects it is on. </p>
-        <p>If renaming <b>_.htacess</b> did not solve the problem then remove these two lines: </p>
-        <pre><i>
-    echo &quot;Set register_globals to OFF please.  Bye.”;
-    exit;</i></pre>
-        <hr>
-        <p>
+            For security reasons this php flag should be off. <br>
+            <ul><li>Install will produce a warning if it detects it is on. </li>
+            <li>If renaming <b>_.htacess</b> did not solve the problem then remove these two lines:<pre><i>    echo &quot;Set register_globals to OFF please.  Bye.”;
+    exit;</i></pre></li></ul>
+              </td></tr>
+              <tr class='admin_list_row_0'><td>
             <b>Blank screen</b><br>
-            If you see a blank screen instead of the install page, your php is 
-            an older version and is not displaying the errors. 
-        </p>
-        <p>Update to a newer php version.</p>
-        <hr>
-        <p>
+            If you see a blank screen instead of the install page, your php is an older version and is not displaying the errors. <br>
+            <ul><li>Update to a newer php version.</li></ul>
+              </td></tr>
+              <tr class='admin_list_row_2'><td>
             <b>Headers already sent</b><br>
-            This error displays because you have entered an extra whitespace in 
-            a file, usually in <i>…/init_common.php</i>. 
-        </p>
-        <p>
-            Edit this file and remove everything 
-            before the &lt;?php at the beginning and after&nbsp;?&gt; at the end. 
-        </p>
-        <p>Some editors will insert a blank line even if you do not, in this case try another editor.</p>
-        <hr>
-        <p><b>Service is temporarily unavailable</b> </p>
-        <p>This may be an installation bug.</p>
-        <p>
-            Check the database table &quot;ShopConfig&quot;. 
-            The field &quot;status&quot; must be set to ON. 
-        </p>
-        <hr>
-        <p><b>Variables not found / Windows Apache</b> </p>
-        <p>Some problems with &quot;EasyPHP&quot; have been noticed, missing variable errors are noticed sometimes. </p>
-        <p>We recommend you use &quot;XAMPP&quot; instead over &quot;EasyPHP&quot;. </p>
-        <hr>
-        <a href="#Contents"><b>[top]</b></a></p>
+            This error displays because you have entered an extra whitespace in a file, usually in <i>…/init_common.php</i>. <br>
+            <ul><li>Edit this file and remove everything before the &lt;?php at the beginning and after&nbsp;?&gt; at the end.</li>
+            <li>Some editors will insert a blank line even if you do not, in this case try another editor.</li></ul>
+              </td></tr>
+              <tr  class='admin_list_row_0'><td>
+            <b>Service is temporarily unavailable</b><BR>
+            This may be an installation bug.<BR>
+            <ul><li>Check the database table &quot;ShopConfig&quot;.The field &quot;status&quot; must be set to ON. </li></ul>
+              </td></tr>
+              <tr class='admin_list_row_2'><td>
+            <b>Variables not found / Windows Apache</b> <br>
+             Some problems with &quot;EasyPHP&quot; have been noticed, missing variable errors are noticed sometimes. <br>
+            <ul><li>We recommend you use &quot;XAMPP&quot; instead over &quot;EasyPHP&quot;.  </li></ul>
+        </td></tr></table>
+        
+        <p align="right" width='100%'><a href="#Contents"><pre><b>[top]</b></pre></a></p>
         <p>&nbsp;</p>
         <p>You will find user manuals, forums, demos and other stuff on our web site:<br>
         <br>
@@ -175,5 +167,5 @@
 	</div>
 </div>
   
-<body>
+</body>
 </html>
