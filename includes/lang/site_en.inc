@@ -979,7 +979,6 @@ define("order_details","Order details");
 
 //process_select.tpl
 define("order_status_changed","Order Status Changed Successfully");
-define("order_status_changed","Order Status Changed Successfully");
 define("pos_currenttickets","Current Tickets"); //header.tpl
 define("pos_paidlist","Paid List");
 define("pos_unsentlist","UnSent List");
