@@ -132,8 +132,7 @@ class install_execute {
             <li><a href='".BASE_URL."/admin/index.php' target='_blank'>Go to Admin</a>.</li>
             <li><a href='".BASE_URL."/pos/index.php' target='_blank'>Go to Box Office</a></li>
             <li><a href='".BASE_URL."/control/index.php' target='_blank'>Go to Ticket Control Point</a></li>
-          </ul>
-          Please tell us if you run Fusion Ticket on your site by sending an email to <i>admin at fusionticket dot com</i>!";
+          </ul>";
 
     Install_Form_Buttons ();
     Install_Form_Close ();

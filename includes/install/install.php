@@ -44,6 +44,7 @@ session_start();
         window.close ();
         return true;
       }
+      return false;
     }
     function Validate_Inst_Upgrade(){
       if (!document.install.radio[0].checked || 
@@ -58,6 +59,30 @@ session_start();
         return true;
       };
     } 
+    // Author: Matt Kruse <matt@mattkruse.com>
+    // WWW: http://www.mattkruse.com/
+    TabNext();
+    // Function to auto-tab field
+    // Arguments:
+    // obj :  The input object (this)
+    // event: Either 'up' or 'down' depending on the keypress event
+    // len  : Max length of field - tab when input reaches this length
+    // next_field: input object to get focus after this one
+    var field_length=0;
+    function TabNext(obj, event, len, next_field) {
+      if (event == \"down\") {
+        field_length=obj.value.length;
+      }
+      else if (event == \"up\") {
+        if (obj.value.length != field_length) {
+          field_length=obj.value.length;
+          if (field_length == len) {
+            next_field.focus();
+          }
+        }
+      }
+    }
+    
   </script>
   <style>
     .err {color:#dd0000;}
@@ -171,10 +196,10 @@ function selectnext($Install,$continue = false) {
   while ($first and $Install->return_pg <= count($states)) {
     //echo $states[$Install->return_pg],':',$Install->return_pg,"<br>";
     if ($continue or call_user_func(array ($states[$Install->return_pg], 'precheck'),$Install)) {
-      $first = false;
       if(!ShowResults($Install,'pre')) {
         call_user_func(array ($states[$Install->return_pg], 'display'),$Install);
       }
+      return;
     } elseif (!ShowResults($Install,'pre')) {
       $Install->return_pg ++;
     } else return;

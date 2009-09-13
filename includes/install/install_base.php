@@ -53,17 +53,18 @@ function Install_Form_Close (){
 function Install_Form_Buttons (){
   echo "</td></tr><tr>\n";
   echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
-          <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" />
+          <input type=\"submit\" tabindex='1' value=\"Next\" name=\"do\" class=\"UI_Submit\" />
           &nbsp;
-          <input type=\"submit\" value=\"Next\" name=\"do\" class=\"UI_Submit\" />\n";
+          <input type=\"button\" tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" />\n";
 }
 
 function Install_Form_Rollback ($name='Back'){
   echo "</td></tr><tr>\n";
   echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
-          <input type=\"submit\" value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\"  class=\"UI_Button\" />
+          <input type=\"submit\" tabindex='1' value=\"{$name}\"  name=\"do\" class=\"UI_Submit\" />
           &nbsp;
-          <input type=\"submit\" value=\"{$name}\"  name=\"do\" class=\"UI_Submit\" />\n";
+          <input type=\"button\"  tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"return(Confirm_Inst_Cancel());\"  class=\"UI_Button\" />
+          \n";
 }
 
 function Install_request($arr, $Sub=''){
