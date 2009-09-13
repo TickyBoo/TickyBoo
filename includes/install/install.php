@@ -177,7 +177,7 @@ function selectnext($Install,$continue = false) {
       }
     } elseif (!ShowResults($Install,'pre')) {
       $Install->return_pg ++;
-    }
+    } else return;
     $continue  = false;
   }
 }
