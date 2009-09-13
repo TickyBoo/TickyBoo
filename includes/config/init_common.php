@@ -39,12 +39,8 @@
   if (!file_exists(INC.'config'.DS."init_config.php")){
     echo "<a href='inst/index.php'>Install me now!</a>";
     exit;
-    }
-
-  if (!defined('CURRENT_VERSION')) {
-    define('CURRENT_VERSION','Unknown');
   }
-  
+
 
  /*
 	if (ini_get('register_globals')) {
@@ -74,6 +70,10 @@
   $_SHOP->install_dir =ROOT;
   $_SHOP->includes_dir=INC;
 
+	//where uploaded files lives (event images, ..)
+	//should be writable
+  $_SHOP->files_dir=ROOT."files";
+
   //this folder contains font files required by pdf templates
   //it should be writable by php
   $_SHOP->font_dir=INC."fonts".DS;
@@ -96,13 +96,7 @@
   $_SHOP->pdf_paper_size="A4";
   $_SHOP->pdf_paper_orientation="portrait";
 
-	//where uploaded files lives (event images, ..)
-	//should be writable
-  $_SHOP->files_dir=ROOT."files";
 
-  //mode for directories and files created by phpMyTicket
-  $_SHOP->dir_mode=0755;
-  $_SHOP->file_mode=0644;
 
   //external url connection settings, used by connect_func.php
   //choose one of settings:
@@ -117,8 +111,9 @@
   //$_SHOP->url_post_method='curl';
   //$_SHOP->url_post_curl_location='/usr/bin/curl';
   
-  include_once('classes/basics.php');
-
+  $_SHOP->input_time_type = 24; //12; //
+  $_SHOP->input_date_type = 'dmy'; // 'mdy'
+ 
   ini_set("magic_quotes_runtime",0);
   ini_set('allow_call_time_pass_reference',0);
 //emulates magic_quotes_gpc off
@@ -169,6 +164,11 @@
   
   $_SHOP->files_url=$_SHOP->root."files/";
   $_SHOP->images_url=$_SHOP->root."images/";
-  $_SHOP->input_time_type = 24; //12; //
-  $_SHOP->input_date_type = 'dmy'; // 'mdy'
+
+  if (!defined('CURRENT_VERSION')) {
+    define('CURRENT_VERSION','Unknown');
+  }
+
+  include_once('classes/basics.php');
+  
 ?>
