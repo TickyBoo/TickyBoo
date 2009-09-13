@@ -32,24 +32,17 @@
  * clear to you.
  */
  
-class install_register {
+class install_adminuser {
   function precheck($Install) {
-    return true;
+    return  (!$_SESSION['DatabaseExist'] or $_SESSION['radio']=='NORMAL');
   }
   
   function postcheck($Install) {
-    if ($_REQUEST['do_send']) {
-      $_REQUEST['forumname'] = clean($_REQUEST['forumname']);
-      $_REQUEST['comments']  = clean($_REQUEST['comments']);
-      if (@mail('hosting@fusionticket.com','Registerstation FusionTicket',
-          "Version: ".INSTALL_VERSION."\n".
-          "Website: ".BASE_URL."\n".
-          "ForumUser: ". $_REQUEST['forumname']."\n".
-          "Comment:\n".$_REQUEST['comments'],'From: ft_installer@fusionticket.com'. "\r\n" )) {
-        array_push($Install->Warnings,'Thanks, The mail is send to us.');
-      }else{
-        array_push($Install->Warnings,'Sorry the mail is not send, check your mail settings.<br>'.$php_errormsg  );
-      }
+    if (strlen($_SESSION['admin_login']) < 3){
+      array_push($Install->Errors,"You soult be fill in a real Admin login name.");
+    }
+    if (strlen($_SESSION['admin_password']) < 6){
+      array_push($Install->Errors,"Admin password should be at least 6 letters long");
     }
     return true;
   }
@@ -59,33 +52,22 @@ class install_register {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Register this copy.</h2>
+                <h2>Admin login and password</h2>
               </td>
             </tr>
             <tr>
               <td colspan=\"2\">
-                Dear user,<br>To see how and where FusionTicket is used we like you to register this copy on our server.<br>
-                The only information we will register is the url that you use for your site and the information uw write below.<br><br>
-                Thanks for your support. <br><br>
+                Please choose the username and the password for the Fusion Ticket super user.<br><br>
               </td>
             </tr>
             <tr>
-              <td>Forum login:</td>
-              <td><input type=\"text\" name=\"forumname\" value=\"\" /> Please fill her the name that you use on our website.</td>
+              <td>Admin login:</td>
+              <td><input type=\"text\" name=\"admin_login\" value=\"".$_SESSION['admin_login']."\" /></td>
             </tr>
             <tr>
-              <td valign='top'>Extra comments:</td>
-              <td >
-                <textarea rows=\"3\" name=\"comments\" cols=\"50\" >
-                </textarea>
-              </td>
+              <td>Admin password:</td>
+              <td><input type=\"text\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>
             </tr>
-            <tr>
-              <td colspan='2'>
-                <br>Register information:  <input type='checkbox' checked='checked' name='do_send' value='1'>
-              </td>
-            </tr>
-            
           </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();

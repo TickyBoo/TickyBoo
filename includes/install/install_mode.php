@@ -74,7 +74,7 @@ class install_mode {
       array_push($Install->Errors,ROOT."files should be writable by the webserver user.");
     }
 
-    return true;
+    return !$_SESSION['DatabaseExist'] ;
   }
 
   function postcheck($Install) {
@@ -88,10 +88,10 @@ class install_mode {
   function display($Install) {
     Install_Form_Open ($Install->return_pg,'return(Validate_Inst_Upgrade());');
     
-    if (!$Install->mode = $_SESSION['radio']){
-      $Install->mode = 'NORMAL';
+    if (!$mode = $_SESSION['radio']){
+      $mode = 'NORMAL';
     }
-    $chk[$Install->mode] = 'checked="checked"';
+    $chk[$mode] = 'checked="checked"';
 
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>

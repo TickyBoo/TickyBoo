@@ -34,21 +34,13 @@
  
 class install_login {
   function precheck($Install) {
-    return true;
+    return  ($_SESSION['DatabaseExist']);
   }
   
   function postcheck($Install) {
     $link      = OpenDatabase();
-
-    $_SESSION['admin_login']    = $_REQUEST['admin_login'];
-    $_SESSION['admin_password'] = $_REQUEST['admin_password'];
-    $result = $link->Query("SHOW TABLES LIKE 'Admin'");
-    if ($result) {
-      if(count($result->fetch_row())<> 1 or !loginmycheck ($link, $_SESSION['admin_login'], $_SESSION['admin_password'])){
-        array_push($Install->Errors,"Admin User not found in database.");
-      }    
-    } elseif (strlen($_SESSION['admin_password']) < 6){
-      array_push($Install->Errors,"Admin password should be at least 6 letters long");
+    if(!loginmycheck ($link, $_POST['admin_login'], $_POST['admin_password'])){
+      array_push($Install->Errors,"Admin User not found in database.");
     }
     return true;
   }
@@ -58,12 +50,12 @@ class install_login {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Admin login and password</h2>
+                <h2>Login to update you system</h2>
               </td>
             </tr>
             <tr>
               <td colspan=\"2\">
-                Please choose the username and the password for the Fusion Ticket super user.<br><br>
+                For safety issue you need to login as super user. That is the admin info you did you at the first time<br><br>
               </td>
             </tr>
             <tr>

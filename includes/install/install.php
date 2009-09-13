@@ -31,6 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+session_start(); 
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -74,11 +75,11 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 }
 
 define("INSTALL_VERSION","Beta 5");
-$states = array("install_welcome", "install_license", "install_mode", "install_database", "install_login",
+$states = array("install_welcome", "install_license", "install_login", "install_mode", "install_database", "install_adminuser",
                 "install_mail","install_register","install_execute");
 
                 
-session_start();
+
 
 /**
  * shortcut for / or \ (depending on OS)
@@ -174,7 +175,9 @@ function selectnext($Install,$continue = false) {
       if(!ShowResults($Install,'pre')) {
         call_user_func(array ($states[$Install->return_pg], 'display'),$Install);
       }
-    } else $Install->return_pg ++;
+    } elseif (!ShowResults($Install,'pre')) {
+      $Install->return_pg ++;
+    }
     $continue  = false;
   }
 }

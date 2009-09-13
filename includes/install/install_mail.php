@@ -38,7 +38,6 @@ class install_mail {
   }
   
   function postcheck($Install) {
-    print_R($_POST);
     switch($_POST['mail_mode']) {
       case 'sendmail':
         if (!empty($_POST['mail_sendmail'])) {
@@ -94,7 +93,8 @@ class install_mail {
   function display($Install) {
     Install_Form_Open ($Install->return_pg,'Validate_Inst_Database()');
     $chk[$_SESSION['SHOP']['mail_mode']] = 'selected="selected"';
-    print_r($chk);
+    $auth = ($_SESSION['SHOP']['mail_smtp_auth'])?"checked='checked'":'';
+    
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
@@ -125,8 +125,11 @@ class install_mail {
               <td><input type=\"text\" name=\"mail_smtp_port\" value=\"".$_SESSION['SHOP']['mail_smtp_port']."\" /></td>
             </tr>        
             <tr>
+               <td colspan=\"2\" width='30%' height='6px'></td>
+            </tr>        
+            <tr>
               <td width='30%'>Need Authrisation</td>
-              <td><input type='checkbox' checked='checked' name='mail_smtp_auth' value='1'></td>
+              <td><input type='checkbox' {$auth} name='mail_smtp_auth' value='1'></td>
             </tr>        
             <tr>
               <td width='30%'>SMTP Username</td>

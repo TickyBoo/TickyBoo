@@ -46,7 +46,11 @@ class install_license {
       If ($_SESSION['ConfigExist']){
         include (ROOT."includes/config/init_config.php");
         $_SESSION['SHOP']  = (Array)$_SHOP;
-        $_SESSION['radio'] = 'UPGRADE';
+        $link      = OpenDatabase();
+        $result = $link->Query("SHOW TABLES LIKE 'Admin'");
+        if ($_SESSION['DatabaseExist'] = ($result and $result->fetch_row())) {
+          $_SESSION['radio'] = 'UPGRADE';
+        } 
       }
     }
     return true;

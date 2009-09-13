@@ -166,6 +166,10 @@ Function ShowResults($Install,$inst_mode){
       echo "<input type='hidden' name='continue' value='1' />\n";
       Install_Form_Buttons ();
     }
+
+    $Install->Errors   = Array ();
+    $Install->Warnings = Array ();
+    
     Install_Form_Close ();
     return true;//count($Install->Errors)>0;
   }
