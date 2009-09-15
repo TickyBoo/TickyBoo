@@ -41,9 +41,9 @@ var loadOrder = function(){
 		colModel :[
 			{name:'Expire_in',  index:'Expire_in',  width:100, sortable:false },
 			{name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
-			{name:'Count',      index:'Count',      width:55,  sortable:false, resizable: false, align:'right' },
+			{name:'Count',      index:'Count',      width: 55, sortable:false, resizable: false, align:'right' },
 			{name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
-			{name:'Price',      index:'Price',      width:70,  sortable:false, resizable: false, align:'right' },
+			{name:'Price',      index:'Price',      width: 70, sortable:false, resizable: false, align:'right' },
 			{name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
 		altRows: true,
 		height: 116,

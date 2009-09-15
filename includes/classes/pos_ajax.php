@@ -177,7 +177,7 @@ class PosAjax {
 		}
 		
 		//Select Events Discounts
-		$this->json['discount_sql'] = $sql = "SELECT discount_price, discount_id, discount_name, discount_value, discount_type
+		$this->json['discount_sql'] = $sql = "select discount_id, discount_name, discount_value, discount_type
 			FROM Discount d
 			WHERE d.discount_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
@@ -185,15 +185,15 @@ class PosAjax {
 		//We count the number of rows to see if we should bother running through discounts.
 		$numRows = ShopDB::num_rows($query);
 		
-		if($numRows > 0){	
+//		if($numRows > 0){	
 			//Define json array for discounts
-			$this->json['enable_discounts'] = true; //enable discounts.
+			$this->json['enable_discounts'] = false; //enable discounts.
 			$this->json['discounts'] = array(); //assign a blank array.
 			//Add the  "None Discount"
 			$this->json['discounts'][] = array('html'=>"<option value='0' selected='selected'> ".con('normal')." </option>",'type'=>'fixed','price'=>0);
 			while($disc = ShopDB::fetch_array($query)){
 				//Check to see if percent or fixed
-				$price = $disc['discount_price'];
+  			$this->json['enable_discounts'] = true; //enable discounts.
 				if(strtolower($disc['discount_type']) == 'percent' ){
 					$option = "<option value='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."%</option>";
 					$type = "percent";
@@ -202,11 +202,11 @@ class PosAjax {
 					$type = "fixed";
 				}
 				//Load up each row
-				$this->json['discounts'][] = array('html'=>$option,'type'=>$type,'price'=>$price);
+				$this->json['discounts'][] = array('html'=>$option,'type'=>$type,'price'=>$disc['discount_value']);
 			}
-		}else{
-			$this->json['enable_discounts'] = false; //disable discounts.
-		}
+//		}else{
+//			$this->json['enable_discounts'] = false; //disable discounts.
+//		}
 		return true;
 	}
 
