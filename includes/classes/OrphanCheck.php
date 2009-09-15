@@ -45,14 +45,14 @@ from Category left join event on category_event_id = event_id
               left join Category_stat on category_id = cs_category_id
 where  (category_event_id <> 0 and event_id is null)
 or     (pm_id is null)
-or     (cs_category_id is null)
+or     (cs_category_id is null and catagory_state!='unpub')
 or     (category_pmp_id <> 0 and pmp_id is null)
 ";
 /**/
 $orphancheck[]="
 select 'Category_stat', cs_category_id, 'cat_id' l1 , cs_category_id, category_id
 from Category_stat left join Category on category_id = cs_category_id
-where  (category_id is null)
+where  (category_id is null )
 ";
 /**/
 $orphancheck[]="
@@ -74,7 +74,7 @@ from Event e left join Ort on event_ort_id = ort_id
              left join Event_stat es on e.event_id = es.es_event_id
 where  (ort_id is null)
 or     (pm_id is null)
-or     (es.es_event_id is null and e.event_state !='main')
+or     (es.es_event_id is null and e.event_state !='unpub' and e.event_rep !='main')
 or     (e.event_group_id<>0 and eg.event_group_id is null)
 or     (e.event_main_id is not null and me.event_id is null)
 ";

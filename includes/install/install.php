@@ -37,8 +37,9 @@ session_start();
 <head>
   <title>Fusion Ticket Installation</title>
   <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
-
-  <script language="JavaScript">
+  <link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+  <script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>    
+  <script language="JavaScript" >
     function Confirm_Inst_Cancel(){
       if(window.confirm('Cancel The Installation Process ?')){
         window.close ();
@@ -58,30 +59,10 @@ session_start();
       } else {
         return true;
       };
+    $(function() {
+            $("input[type='submit'] :enabled:first").focus();
+        });
     } 
-    // Author: Matt Kruse <matt@mattkruse.com>
-    // WWW: http://www.mattkruse.com/
-    TabNext();
-    // Function to auto-tab field
-    // Arguments:
-    // obj :  The input object (this)
-    // event: Either 'up' or 'down' depending on the keypress event
-    // len  : Max length of field - tab when input reaches this length
-    // next_field: input object to get focus after this one
-    var field_length=0;
-    function TabNext(obj, event, len, next_field) {
-      if (event == \"down\") {
-        field_length=obj.value.length;
-      }
-      else if (event == \"up\") {
-        if (obj.value.length != field_length) {
-          field_length=obj.value.length;
-          if (field_length == len) {
-            next_field.focus();
-          }
-        }
-      }
-    }
     
   </script>
   <style>
@@ -91,7 +72,7 @@ session_start();
   </style>
 
 </head>
-<body>
+<body onload="document.getElementsByTagName('install')[0].focus();">
 <?php
 if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
   session_destroy();

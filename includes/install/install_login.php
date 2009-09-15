@@ -39,7 +39,7 @@ class install_login {
   
   function postcheck($Install) {
     $link      = OpenDatabase();
-    if(!loginmycheck ($link, $_POST['admin_login'], $_POST['admin_password'])){
+    if(!loginmycheck ($link, $_POST['username'], $_POST['password'])){
       array_push($Install->Errors,"Admin User not found in database.");
     }
     return true;
@@ -60,11 +60,11 @@ class install_login {
             </tr>
             <tr>
               <td>Admin login:</td>
-              <td><input type=\"text\" name=\"admin_login\" value=\"".$_SESSION['admin_login']."\" /></td>
+              <td><input type=\"text\" name=\"username\" value=\"\" /></td>
             </tr>
             <tr>
               <td>Admin password:</td>
-              <td><input type=\"text\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>
+              <td><input type=\"password\" name=\"password\" value=\"\" /> (at least 6 letters)</td>
             </tr>
           </table>";
     Install_Form_Buttons ();

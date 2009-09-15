@@ -414,16 +414,17 @@ class ShopDB {
       }
 
       if ($update) {
-        ob_start();
         require_once($dbstructfile);
         if ($errors = ShopDB::DatabaseUpgrade($tbls, true, $viewonly)) {
           $handle=fopen($logfile,"a");
-          fwrite($handle, date('c',time()).": \n". $errors. "\n");
+          fwrite($handle, date('c',time()).": \n". print_r($errors,true). "\n");
           fclose($handle);
         }
-
-        $result = ob_get_contents();
-        ob_end_clean();
+        $result ='';
+        foreach ($errors as $data) {
+          $result .= $data['changes'];
+          if ($data['error']) $result .= $data['error'];
+        }
         If ($result) {
           require_once('admin'.DS.'AdminView.php');
           echo "
@@ -499,111 +500,110 @@ private static function TableCreateData( $tablename ) {
 }
 
 function DatabaseUpgrade($Struction, $logall =false, $viewonly=false) {
-  $error = '';
+  $error = '';  $returning = array();
   foreach ($Struction as $tablename => $fields) {
-      $update = false;
-      If ($tblFields = self::TableCreateData($tablename)) {
-          $sql = "";
-          $oldkey = '';
-          $primary ='';
-          $txt = '';
-          foreach ($fields['fields'] as $key => $info) {
-            if (stripos($info,'AUTO_INCREMENT') !== false) $primary = $key;
-            if (!array_key_exists($key, $tblFields['fields'])) {
-                echo "Add $tablename.$key $info\n";
-                $update = true;
-                $sql .= ', ADD `' . $key . "` " . $info;
-                $sql .= (($oldkey == '')?' FIRST':' AFTER ' . $oldkey)."\n";
-            } elseif ((trim($info)) != (trim($tblFields['fields'][$key]))) {
-                echo "mod $tablename.$key:\n     {".$tblFields['fields'][$key]."}\n     {".$info."}\n";
-                $update = true;
-                $sql .= ', MODIFY `' . $key . "` " . $info."\n";
-            }
-            $oldkey = $key;
-          }
-          if (isset( $fields['remove'])) {
-            foreach ($fields['remove'] as $key) {
-              if (array_key_exists($key, $tblFields['fields'])) {
-                  echo "del $tablename.$key:\n";
-                  $sql .= ', DROP COLUMN `' . $key . "`\n";
-                  $update = true;
-                  unset($tblFields['fields'][$key]);
-              }
-            }
-          }
-
-
-          foreach ($tblFields['fields'] as $key => $info) {
-            if (!array_key_exists($key, $fields['fields'])) {
-                echo "Missing in $tablename: ".$key. $tblFields['fields'][$key].".\n";
-            }
-          }
-          If ((isset($fields['key'])) and (count($fields['key']) > 0)) {
-             foreach ($fields['key'] as $info){
-               if (substr($info,0,1)!=='P')
-               {
-                  $sql .= ', ADD ' . $info."\n";
-                  if (!in_array($info, $tblFields['keys'])) $update = true;
-               } elseif (!in_array($info, $tblFields['keys'])) {
-                  $sql .= ', ADD ' . $info."\n";
-                  $update = true;
-                } elseif ( stripos($info,"`$primary`")===false ) {
-                  $sql .= ', ADD ' . $info."\n";
-               }
-             }
-          }
-          If (isset($fields['key']) and isset($tblFields['key']) and
-              count($fields['key']) <> count($tblFields['keys'])) $update = true;
-          $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
-          If ($update) {
-            $sql1 ='';
-            echo  $tablename,': db-', print_r($tblFields['keys'], true),' inst-',print_r($fields['key'], true);
-            If ((isset($tblFields['keys'])) and (count($tblFields['keys']) > 0)) {
-
-              foreach ($tblFields['keys'] as  $info) {
-                if (substr($info,0,1)!=='P') {
-                  $sql1 .= ', DROP '.str_replace('UNIQUE','', substr(trim($info),0,strpos($info,'(')-1))."\n";
-                } elseif ( stripos($info,"`$primary`")===false ) {
-                    $sql1 .= ', DROP PRIMARY KEY'."\n";
-                }
-              }
-            }
-            If (!empty($sql1)){
-              echo $sql1 = "ALTER TABLE `$tablename` " . substr($sql1, 2);
-              $result = self::query($sql1);
-              if (!$result) {
-                echo '<B>' .self::error ().".</b>\n\n";
-              }
-            }
-          }
-
-      } else {
-          $update = true;
-          $sql = '';
-          foreach ($fields['fields'] as $key => $info) {
-             $sql .= ", `" . $key . "` " . $info."\n";
-          }
-          If ((isset($fields['key'])) and (count($fields['key']) > 0))
-              foreach ($fields['key'] as $info) $sql .= ', ' . $info."\n";
-          $sql = "CREATE TABLE `$tablename` (" . substr($sql, 2) . ")";
-          if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
+    $update = false; $datainfo = ''; $error='';
+    If ($tblFields = self::TableCreateData($tablename)) {
+      $sql = "";
+      $oldkey = '';
+      $primary ='';
+      $txt = '';
+      foreach ($fields['fields'] as $key => $info) {
+        if (stripos($info,'AUTO_INCREMENT') !== false) $primary = $key;
+        if (!array_key_exists($key, $tblFields['fields'])) {
+            $datainfo .= "Add $tablename.$key $info\n";
+            $update = true;
+            $sql .= ', ADD `' . $key . "` " . $info;
+            $sql .= (($oldkey == '')?' FIRST':' AFTER ' . $oldkey)."\n";
+        } elseif ((trim($info)) != (trim($tblFields['fields'][$key]))) {
+            $datainfo .= "mod $tablename.$key:\n     {".$tblFields['fields'][$key]."}\n     {".$info."}\n";
+            $update = true;
+            $sql .= ', MODIFY `' . $key . "` " . $info."\n";
+        }
+        $oldkey = $key;
       }
-      If ($update) {
-         echo ($sql)."\n";//nl3br(
-//             self::dblogging("[SQLupdate:] ".$sql."\n");
-         if ($logall)  $error .= $sql."\n";
-         If (!$viewonly) {
-           $result = self::query($sql);
-           if (!$result) {
-             echo '<B>' .self::error ().".</b>\n\n";
-             $error .= self::error ()."\n\n";
+      if (isset( $fields['remove'])) {
+        foreach ($fields['remove'] as $key) {
+          if (array_key_exists($key, $tblFields['fields'])) {
+              $datainfo .= "del $tablename.$key:\n";
+              $sql .= ', DROP COLUMN `' . $key . "`\n";
+              $update = true;
+              unset($tblFields['fields'][$key]);
+          }
+        }
+      }
+
+
+      foreach ($tblFields['fields'] as $key => $info) {
+        if (!array_key_exists($key, $fields['fields'])) {
+            $datainfo .= "Missing in $tablename: ".$key. $tblFields['fields'][$key].".\n";
+        }
+      }
+      If ((isset($fields['key'])) and (count($fields['key']) > 0)) {
+         foreach ($fields['key'] as $info){
+           if (substr($info,0,1)!=='P')
+           {
+              $sql .= ', ADD ' . $info."\n";
+              if (!in_array($info, $tblFields['keys'])) $update = true;
+           } elseif (!in_array($info, $tblFields['keys'])) {
+              $sql .= ', ADD ' . $info."\n";
+              $update = true;
+            } elseif ( stripos($info,"`$primary`")===false ) {
+              $sql .= ', ADD ' . $info."\n";
            }
          }
       }
+      If (isset($fields['key']) and isset($tblFields['key']) and
+          count($fields['key']) <> count($tblFields['keys'])) $update = true;
+      $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
+      If ($update) {
+        $sql1 ='';
+        $datainfo .=  $tablename.': db-'. print_r($tblFields['keys'], true).' inst-'.print_r($fields['key'], true);
+        If ((isset($tblFields['keys'])) and (count($tblFields['keys']) > 0)) {
+
+          foreach ($tblFields['keys'] as  $info) {
+            if (substr($info,0,1)!=='P') {
+              $sql1 .= ', DROP '.str_replace('UNIQUE','', substr(trim($info),0,strpos($info,'(')-1))."\n";
+            } elseif ( stripos($info,"`$primary`")===false ) {
+                $sql1 .= ', DROP PRIMARY KEY'."\n";
+            }
+          }
+        }
+        If (!empty($sql1)){
+          $result = self::query($sql1 = "ALTER TABLE `$tablename` " . substr($sql1, 2));
+          if (!$result) {
+            $error .= '$sql1\n<B>' .self::error ().".</b>\n\n";
+          }
+        }
+      }
+
+    } else {
+      $update = true;
+      $sql = '';
+      $datainfo .= "Create table $tablename.";
+      foreach ($fields['fields'] as $key => $info) {
+         $sql .= ", `" . $key . "` " . $info."\n";
+      }
+      If ((isset($fields['key'])) and (count($fields['key']) > 0))
+          foreach ($fields['key'] as $info) $sql .= ', ' . $info."\n";
+      $sql = "CREATE TABLE `$tablename` (" . substr($sql, 2) . ")";
+      if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
+    }
+    If ($update) {
+      
+      If (!$viewonly) {
+        $result = self::query($sql);
+        if (!$result) {
+          $error .= $sql."\n".self::error ()."\n\n";
+        }
+      }
+      $returning[] = array( 'changes' => $datainfo, 'error' => $error);
+      
+    }
   }
 //      self::Upgrade_Autoincrements();
 //      self::dblogging("[SQLupdate:] Finnish \n");
-  return $error;
+  return $returning;
 }
 
     function Upgrade_Autoincrements()

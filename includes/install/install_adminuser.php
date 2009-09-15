@@ -38,8 +38,9 @@ class install_adminuser {
   }
   
   function postcheck($Install) {
+    Install_Request(Array('admin_login','admin_password'));
     if (strlen($_SESSION['admin_login']) < 3){
-      array_push($Install->Errors,"You soult be fill in a real Admin login name.");
+      array_push($Install->Errors,"You need to fill-in a real Admin login name.");
     }
     if (strlen($_SESSION['admin_password']) < 6){
       array_push($Install->Errors,"Admin password should be at least 6 letters long");
@@ -66,7 +67,7 @@ class install_adminuser {
             </tr>
             <tr>
               <td>Admin password:</td>
-              <td><input type=\"text\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>
+              <td><input type=\"password\" name=\"admin_password\" value=\"".$_SESSION['admin_password']."\" /> (at least 6 letters)</td>
             </tr>
           </table>";
     Install_Form_Buttons ();

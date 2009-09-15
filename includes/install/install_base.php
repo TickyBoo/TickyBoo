@@ -53,25 +53,25 @@ function Install_Form_Close (){
 function Install_Form_Buttons (){
   echo "</td></tr><tr>\n";
   echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
-          <input type=\"submit\" tabindex='1' value=\"Next\" name=\"do\" class=\"UI_Submit\" />
+          <input type=\"submit\" tabindex='1' value=\"Next\" name=\"do\" />
           &nbsp;
-          <input type=\"button\" tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" class=\"UI_Button\" />\n";
+          <input type=\"button\" tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" />\n";
 }
 
 function Install_Form_Rollback ($name='Back'){
   echo "</td></tr><tr>\n";
   echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
-          <input type=\"submit\" tabindex='1' value=\"{$name}\"  name=\"do\" class=\"UI_Submit\" />
+          <input type=\"submit\" tabindex='1' value=\"{$name}\"  name=\"do\"  />
           &nbsp;
-          <input type=\"button\"  tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"return(Confirm_Inst_Cancel());\"  class=\"UI_Button\" />
+          <input type=\"button\" tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"return(Confirm_Inst_Cancel());\" />
           \n";
 }
 
 function Install_request($arr, $Sub=''){
   foreach ($arr as $info){
     If (isset($_REQUEST[$info])){
-      if ($sub) {
-        $_SESSION[$sub][$info] = $_REQUEST[$info];
+      if ($Sub) {
+        $_SESSION[$Sub][$info] = $_REQUEST[$info];
       } else {
         $_SESSION[$info] = $_REQUEST[$info];
       }
@@ -113,9 +113,9 @@ function Opendatabase(){
 * mysql < dump.sql
 */
 function file_to_db($filename){
+  
   if (!$lines = file($filename)){
-    echo "<div class=err>ERROR: can not read $filename</div>";
-    return 0;
+    return "<div class=err>ERROR: can not read $filename</div>";
   }
   foreach ($lines as $l){
     if (preg_match("/^\s*(#|--)/", $l)){
@@ -125,15 +125,14 @@ function file_to_db($filename){
       $query = $query . substr($l, 0, - 1);
 
       if (!shopDB::query($query)){
-        echo "<div class=err>ERROR: cannot execute database query</div><pre>$query</pre>";
-        return 0;
+        return "<div class=err>ERROR: cannot execute database query</div><pre>$query/\n".ShopDB::Error()." </pre>";
       }
       $query = '';
     }else{
       $query = $query . $l;
     }
   }
-  return 1;
+  return '';
 }
 
 function callback($matches){

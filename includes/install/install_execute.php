@@ -35,12 +35,9 @@
 class install_execute {
   function precheck($Install) {
     global $_SHOP;
-    $includes_dir = ROOT . "includes";
-    if (!$init_config = @file_get_contents("$includes_dir/install/init_config.php")){
-      array_push($Install->Errors,"Cannot read master configuration file <i>$includes_dir/install/init_config.php</i>.");
-      return true;
-    }
-
+//    echo "<pre>";
+//    print_r($_SESSION);
+//    echo "</pre>";
     $install_mode=$_SESSION['radio'];
 
     OpenDatabase();
@@ -49,7 +46,7 @@ class install_execute {
       return true;
     }
 
-    if($Install_Type == 'NORMAL'){
+    if($install_mode == 'NORMAL'){
       $Table_Names = ShopDB::TableList('');
       for ($i=0;$i<count($Table_Names);$i++){
         ShopDB::query("drop table ".$Table_Names[$i]);
@@ -57,30 +54,37 @@ class install_execute {
     }
 
     global $tbls;
-    require_once("../includes/install/install_db.php");
+    require_once(ROOT."includes/install/install_db.php");
     if ($errors = ShopDB::DatabaseUpgrade($tbls, true)){
-      $Install->Errors[] = $errors;
-      return true;
+      foreach ($errors as $data) {
+        if ($data['error']) {
+          $Install->Errors[] = "<pre>".$data['changes']. $data['error']."<pre>";
+        } else {
+         //  $Install->Warnings[] = "<pre>".$data['changes']."<pre>";
+        }
+      }  
+      if ($Install->Errors) return true;
     }
 
     if ($install_mode == 'NORMAL'){
       // import contens of mysqldump to db
-      if (!file_to_db("$install_dir/includes/install/base_sql.sql")){
-        array_push($Install->Errors,"Can not create database structure!");
+      if ($error = file_to_db(ROOT."includes/install/base_sql.sql")){
+        array_push($Install->Errors,$error);
         return true;
       }
 
-      if ($_POST['db_demos']==1 and !file_to_db("$install_dir/includes/install/demo_sql.sql")){
-        array_push($Install_Errors,"Can't fill the demostration data!");
+      if ($_SESSION['db_demos']==1 and $error = file_to_db(ROOT."includes/install/demo_sql.sql")){
+        array_push($Install->Errors,$error);
         return true;
       }
       $query = "update Admin set
                   admin_login='{$_SESSION['admin_login']}',
-                  admin_password=md5('{$_SESSION['admin_password']}'
-                  admin_status='admin')";
+                  admin_password=md5('{$_SESSION['admin_password']}'),
+                  admin_status='admin'
+                where admin_id = 1";
 
       if (!shopDB::query($query)){
-        array_push($Install_Errors,"Admin user can not be created!");
+        array_push($Install->Errors,"Admin user can not be created!".ShopDB::error());
         return true;
       }
     }
@@ -115,8 +119,9 @@ class install_execute {
     }
 
     $config .= "\n?>";
-    return file_put_contents (ROOT."includes".DS."config".DS."install_config.php", $config);
+    return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);
   }
+  
   function display() {
     Install_Form_Open (BASE_URL."/index.php",'', false);
     echo "<h2>Installation Completed</h2>You are now ready to start using Fusion Ticket.<br />\n";
