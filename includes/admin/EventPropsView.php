@@ -139,7 +139,7 @@ class EventPropsView extends EventViewCommon {
               and event_rep='sub'
               and event_status!='trash'
               $where
-              order by event_date ";
+              order by event_date, event_time ";
 
 		if ( !$res = ShopDB::query($query) ) {
        return;
@@ -164,7 +164,7 @@ class EventPropsView extends EventViewCommon {
 
       echo "&nbsp;</td>
                 <td class='admin_list_item'>$edate $etime</td>
-                <td class='admin_list_item'>" . showstr( $row['ort_name'] ) .	"</td>\n";
+                <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
 
 			echo "<td class='admin_list_item'>";
       if (!$history) {
@@ -264,7 +264,7 @@ select SQL_CALC_FOUND_ROWS *
               order by event_date
               limit 0,15
 */
-    $wherex = (!$history)?"event_status='pub' or ":"";
+    $wherex = (!$history)?"event_status='pub' or ":"event_status !='pub' AND ";
     $where  = "and ((event_rep!='main' and  ($wherex event_date ".(($history)?'<':'>=')." NOW() )) \n";
     $where .= "     or (event_rep='main' and  (select COALESCE(count(*),0)
                                                from Event main
@@ -274,12 +274,13 @@ select SQL_CALC_FOUND_ROWS *
     $_REQUEST['page'] = is($_REQUEST['page'],1);
   //  $this->page_length = 2;
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
-		$query = "select SQL_CALC_FOUND_ROWS *
+		//echo $history,' => ',
+    $query = "select SQL_CALC_FOUND_ROWS *
               from Event LEFT JOIN Ort ON event_ort_id=ort_id
               WHERE event_rep!='sub'
               and event_status!='trash'
               $where
-              order by event_date
+              order by event_date, event_time
               limit {$recstart},{$this->page_length} ";
 
 		if ( !$res = ShopDB::query($query) ) {
@@ -311,14 +312,14 @@ select SQL_CALC_FOUND_ROWS *
 //                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
 
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
-      echo "<td colspan=2 class='admin_list_item' width=150>";
+      echo "<td colspan=2 class='admin_list_item' width=150 NOWRAP><nobr> ";
       if (!$history) {
    		  echo "<input type='checkbox' name='cbxEvents[]'
                  id='main_event_".$row['event_main_id']."'
                  class='".$row['event_main_id']."'
                  value='".$row['event_id']."'>";
        }
-       echo  '&nbsp;'. showstr( $row['event_name'], 30 ) . "</td>\n";
+       echo  '&nbsp;'. showstr( $row['event_name'], 30 ) . "</nobr></td>\n";
 
 			if ( $row['event_rep'] == 'main') {
         if (!$history) {
@@ -400,13 +401,13 @@ select SQL_CALC_FOUND_ROWS *
 			require_once ( "admin/PlaceMapView2.php" );
 			$pmp_view = new PlaceMapView2( $this->width );
 			if ( $pmp_view->draw($history) ) {
-				$this->event_list();
+				$this->event_list($history);
 			}
 		} elseif ( preg_match('/_sub$/', $_REQUEST['action']) ) {
 			require_once ( "admin/EventSubPropsView.php" );
 			$pmp_view = new EventSubPropsView( $this->width );
 			if ( $pmp_view->draw($history) ) {
-				$this->event_list();
+				$this->event_list($history);
 			}
 		} elseif($_POST['action'] == 'remove_events') {
 		  if(count($_REQUEST['cbxEvents']) > 0)
@@ -419,11 +420,11 @@ select SQL_CALC_FOUND_ROWS *
 			$this->event_list($history);
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
     	  if (!$this->state_change(1)) {
-          $this->event_list();
+          $this->event_list($history);
         }
 		} elseif ( $_REQUEST['action'] == 'unpublish' ) {
     	  if (!$this->state_change(2)) {
-          $this->event_list();
+          $this->event_list($history);
         }
 		} elseif ( $_REQUEST['action'] == 'add' ) {
 			$this->event_form( $row, $err, event_add_title );
@@ -436,7 +437,7 @@ select SQL_CALC_FOUND_ROWS *
 			} else {
         $this->save_recur_event($_POST, true);
       }
-			$this->event_list();
+			$this->event_list($history);
 		} elseif ( $_GET['action'] == 'edit' and $_GET['event_id'] ) {
 			$event = Event::load( $_GET['event_id'], false );
 			$row = ( array )$event;
