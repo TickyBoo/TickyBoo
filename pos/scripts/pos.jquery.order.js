@@ -24,7 +24,7 @@ var loadOrder = function(){
 		modal: true,
 		dialogClass: 'alert',
 		buttons: {'Close': function() {
-			$(this).dialog('close');
+		//	$(this).dialog('close');
 			}},
 	  close: function(event, ui) {
       refreshOrder();
@@ -37,9 +37,9 @@ var loadOrder = function(){
 		datatype: 'json',
 		mtype: 'POST',
 		postData: {"pos":true,"action":"CartInfo"},
-		colNames: ['expire_in','Event','Count','Tickets','Price','Total'],
+		colNames: ['Expire_in','Event','Count','Tickets','Price','Total'],
 		colModel :[
-			{name:'expire_in',  index:'expire_in',  width:100, sortable:false },
+			{name:'Expire_in',  index:'Expire_in',  width:100, sortable:false },
 			{name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
 			{name:'Count',      index:'Count',      width:55,  sortable:false, resizable: false, align:'right' },
 			{name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
@@ -47,7 +47,7 @@ var loadOrder = function(){
 			{name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
 		altRows: true,
 		height: 116,
-		width: 755,
+
 		hiddengrid : true,
 		hoverrows : false,
 		footerrow : false,

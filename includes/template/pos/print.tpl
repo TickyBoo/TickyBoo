@@ -32,30 +32,30 @@
  * clear to you.
  
  *}{strip}
-{if !$smarty.request.mode}
+{if !$smarty.request.layer}
   {include file="header.tpl"}
-  <iframe height='0' width='0' style='border  border=0 src='print.php?mode=true&order_id={$smarty.request.order_id}'></iframe>
+  <iframe height='0' width='0' style='border  border=0 src='print.php?layer=true&order_id={$smarty.request.order_id}&mode={$smarty.request.mode}'></iframe>
   <center><br>
     <div class='printer'>
       <img src='images/printing.gif' /><br/>
       {!tickets_printing!}
     </div><br>
-    <a href='print.php?mode=true&order_id={$smarty.request.order_id}'  class='shop_link' target='printer'>
+    <a href='print.php?layer=true&order_id={$smarty.request.order_id}&mode={$smarty.request.mode}'  class='shop_link' target='printer'>
       {!print_order!}
     </a>
     When you want to directly print the PDF's you not to setup our system.
   </center><br><br>
   {include file="footer.tpl"}
 {else}
-  {if $pos->user_prefs eq "stream" and $smarty.request.mode neq "doit"}
+  {if $pos->user_prefs eq "stream" and $smarty.request.layer neq "doit"}
       <script type='text/javascript'>
         <!--
-          F1 = window.open('print.php?order_id={$smarty.request.order_id}&mode=doit','printer','left=100'); 
+          F1 = window.open('print.php?order_id={$smarty.request.order_id}&layer=doit&mode={$smarty.request.mode}','printer','left=100'); 
           F1.focus();    
         -->
       </script>
   {else}
-    {order->order_print mode=$pos->user_prefs order_id=$smarty.request.order_id}
+    {order->order_print mode=$pos->user_prefs order_id=$smarty.request.order_id mode=$smarty.request.mode}
   {/if}
 {/if}
 {/strip}

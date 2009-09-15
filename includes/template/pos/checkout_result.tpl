@@ -26,22 +26,14 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}{strip}
-{if $smarty.request.ajax}
-  {include file='order.tpl' nofooter=true}
+{include file='order.tpl' nofooter=true}
   <div id="checkout_result" title='
-{else}
-  <h2>
-{/if}
 {if $pm_return.approved}
   {!pay_accept! }
 {else}
   {!pay_refused! }
 {/if}
-{if $smarty.request.ajax}
   '>
-{else}
-  </h2>
-{/if}
 {/strip}
     <table class="table_midtone" width='400'>
       <tr>
@@ -65,15 +57,19 @@
           {/if}
     		  </div>
           {if $pm_return.approved}
-            <br>
-              <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
+            <table width='100%'>
+              <tr> <td>
+                <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=2' target='_blank'>{!printinvoice!}</a>
+              </td><td align='right'>
+                <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=1' target='_blank'>{!printtickets!}</a>
+              </td></tr>
+            </table>
             <br>
           {/if}
         </td>
       </tr>
     </table>
 
-{if $smarty.request.ajax}
   </div>
   <script type="text/javascript">
   {literal}
@@ -97,7 +93,7 @@
   {/literal}
   </script>
   {include file="footer.tpl"}
-{/if}
+
 
 
 

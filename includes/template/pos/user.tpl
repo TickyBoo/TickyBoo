@@ -84,7 +84,7 @@
       {gui->input name='user_zip' mandatory=true size='8' maxlength='20'}
       {gui->input name='user_city' mandatory=true size='30' maxlength='50'}
       {gui->selectstate name='user_state'}
-      {gui->selectcountry name='user_country' mandatory=true}
+      {gui->selectcountry name='user_country' mandatory=true DefaultEmpty=true}
       {gui->input name='user_phone' size='15' maxlength='50'}
       {gui->input name='user_fax' size='15' maxlength='50'}
       {gui->input name='user_email' mandatory=true size='30' maxlength='50' }

@@ -804,6 +804,7 @@ define("pay_reg","Payment Registered");
 define("trx_id","Transation ID");
 define("orderdeleted","Order Deleted");
 define("printinvoice","Print Invoice");
+define("printtickets","Print Tickets");
 
 //discount.tpl
 define("discounts","Discounts");
@@ -1010,7 +1011,8 @@ define("open_with_acrobat","Open Orders in Acrobat");
 define("preferences","Preferences");
 define("send_orders_printer","Send Orders to printer");
 
-
+define("select_country","Select Country");
+define("eph_cash_confirm","The order is created, press '".con('pay')."' to continue.");
 
 //------------------------------------------------------
 //Not quite sure about these.  8/26/09 Lou

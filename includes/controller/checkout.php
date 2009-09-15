@@ -311,8 +311,9 @@ die();
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-
-    Order::print_order($myorder->order_id, '', 'stream', false, 2 );
+    $mode = (int)$_REQUEST['mode'];
+    If (!$mode) $mode =2;
+    Order::print_order($myorder->order_id, '', 'stream', false, $mode );
     return;
   }
 

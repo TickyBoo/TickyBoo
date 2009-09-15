@@ -373,7 +373,11 @@ class Gui_smarty {
   function selectcountry($params, &$smarty) { //($sel_name, $selected, &$err){
     global $_SHOP,  $_COUNTRY_LIST;
     $this->Loadcountrys();
-    $params['options'] = $_COUNTRY_LIST;
+    if (isset($params['DefaultEmpty'])) {
+      $params['options'] = array_merge(array(''=>'['.con('select_country').']'), $_COUNTRY_LIST);
+    }else{
+      $params['options'] = $_COUNTRY_LIST;
+    }
     return $this->selection($params, $smarty);
   }
 

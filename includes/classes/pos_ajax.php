@@ -177,10 +177,9 @@ class PosAjax {
 		}
 		
 		//Select Events Discounts
-		$sql = "SELECT discount_price, discount_id, discount_name, discount_value, discount_type
+		$this->json['discount_sql'] = $sql = "SELECT discount_price, discount_id, discount_name, discount_value, discount_type
 			FROM Discount d
-			WHERE 1=1
-			AND d.discount_event_id = "._esc($eventId);
+			WHERE d.discount_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
 		
 		//We count the number of rows to see if we should bother running through discounts.

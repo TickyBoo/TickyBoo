@@ -413,13 +413,15 @@ class Order_Smarty {
   
   function order_print ($params, &$smarty){
 
-   if($params['print_prefs']=='pdf'){
+    if($params['print_prefs']=='pdf'){
       $print=FALSE;
     }else{
       $print=TRUE;
     }
+    $mode = (int)$params['mode'];
+    If (!$mode) $mode =3;
     
-   Order::print_order($params['order_id'],'', 'stream', $print);
+   Order::print_order($params['order_id'],'', 'stream', $print, $mode);
   }
   
   function secure_url_param($num=FALSE, $nonum=FALSE) 
