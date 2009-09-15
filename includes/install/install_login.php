@@ -55,7 +55,7 @@ class install_login {
             </tr>
             <tr>
               <td colspan=\"2\">
-                For safety issue you need to login as super user. That is the admin info you did you at the first time<br><br>
+                For security please login with your admin username and password. This is the one that you use to administer the system.<br><br>
               </td>
             </tr>
             <tr>

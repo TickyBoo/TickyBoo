@@ -95,6 +95,9 @@ class install_mail {
     $chk[$_SESSION['SHOP']['mail_mode']] = 'selected="selected"';
     $auth = ($_SESSION['SHOP']['mail_smtp_auth'])?"checked='checked'":'';
     
+    if (empty($_SESSION['SHOP']['mail_smtp_host'])) $_SESSION['SHOP']['mail_smtp_host'] = 'localhost';
+    if (empty($_SESSION['SHOP']['mail_smtp_port'])) $_SESSION['SHOP']['mail_smtp_port'] = '25';
+    
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
@@ -128,7 +131,7 @@ class install_mail {
                <td colspan=\"2\" width='30%' height='6px'></td>
             </tr>        
             <tr>
-              <td width='30%'>Need Authrisation</td>
+              <td width='30%'>Need Authorisation</td>
               <td><input type='checkbox' {$auth} name='mail_smtp_auth' value='1'></td>
             </tr>        
             <tr>
