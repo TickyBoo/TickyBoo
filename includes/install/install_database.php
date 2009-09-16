@@ -69,6 +69,9 @@ class install_database {
 
   function display($Install) {
     Install_Form_Open ($Install->return_pg,'');
+    if (!$_SESSION['SHOP']['db_host']) $_SESSION['SHOP']['db_host'] = 'localhost';
+    if (!$_SESSION['SHOP']['db_name']) $_SESSION['SHOP']['db_name'] = 'ft_'.INSTALL_VERSION;
+    
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
               <td colspan=\"2\"><h2>Database Connection Settings</h2></td>
@@ -81,7 +84,11 @@ class install_database {
             <tr>
               <td width='30%'>Hostname</td>
               <td><input type=\"text\" name=\"db_host\" value=\"".$_SESSION['SHOP']['db_host']."\" /></td>
-            </tr>        
+            </tr> 
+            <tr>
+              <td>Database</td>
+              <td><input type=\"text\" name=\"db_name\" value=\"".$_SESSION['SHOP']['db_name']."\" /></td>
+            </tr>       
             <tr>
               <td>Username</td>
               <td><input type=\"text\" name=\"db_uname\" value=\"".$_SESSION['SHOP']['db_uname']."\" /></td>
@@ -89,10 +96,6 @@ class install_database {
             <tr>
               <td>Password</td>
               <td><input type=\"text\" name=\"db_pass\" value=\"".$_SESSION['SHOP']['db_pass']."\" /></td>
-            </tr>
-            <tr>
-              <td>Database</td>
-              <td><input type=\"text\" name=\"db_name\" value=\"".$_SESSION['SHOP']['db_name']."\" /></td>
             </tr>\n";
     if ($_SESSION['DB_Error'] ) {
       $chk = ($_SESSION['db_demos'])?'checked="checked"':'';
