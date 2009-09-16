@@ -38,44 +38,36 @@ class install_mail {
   }
   
   function postcheck($Install) {
+    Install_Request(Array('mail_mode','mail_sendmail','mail_smtp_host', 'mail_smtp_port', 'mail_smtp_auth',
+                          'mail_smtp_user', 'mail_smtp_pass', 'mail_smtp_helo'),'SHOP');
+ 
     switch($_POST['mail_mode']) {
       case 'sendmail':
-        if (!empty($_POST['mail_sendmail'])) {
-          $_SESSION['SHOP']['mail_mode']      = 'sendmail';
-          $_SESSION['SHOP']['mail_sendmail']  = $_POST['mail_sendmail'] ;
-
+        if (empty($_POST['mail_sendmail'])) {
+          array_push($Install->Errors,'You need to fill the sendmail path to use sendmail.');
+        } else {
           unset($_SESSION['SHOP']['mail_smtp_host']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_port']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_auth']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_user']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_pass']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_helo']);//= null;
-        } else {
-          array_push($Install->Errors,'You need to fill the sendmail path to use sendmail.');
         }        
         break;
       case 'SMTP':
         if (empty($_POST['mail_smtp_host']) or empty($_POST['mail_smtp_port'])) {
           array_push($Install->Errors,'You need to fill the Hostname and port to use SMTP.');
         }else{
-          $_SESSION['SHOP']['mail_mode']      = 'SMTP';
-          $_SESSION['SHOP']['mail_smtp_host'] = $_POST['mail_smtp_host'];
-          $_SESSION['SHOP']['mail_smtp_port'] = $_POST['mail_smtp_port'];
-          $_SESSION['SHOP']['mail_smtp_helo'] = $_POST['mail_smtp_helo'];
-          
           unset($_SESSION['SHOP']['mail_sendmail']);//  = null;         
         }
         
         if (isset($_POST['mail_smtp_auth']) and (empty($_POST['mail_smtp_user']) or empty($_POST['mail_smtp_pass']) )) {
           array_push($Install->Errors,'You need to fill the username and passwor to use SMTP with authrisation.');
-        } else {
-          $_SESSION['SHOP']['mail_smtp_auth'] = $_POST['mail_smtp_auth'];
-          $_SESSION['SHOP']['mail_smtp_user'] = $_POST['mail_smtp_user'];
-          $_SESSION['SHOP']['mail_smtp_pass'] = $_POST['mail_smtp_pass'];
         }
         break;
     default:
       unset($_SESSION['SHOP']['mail_mode']);//      = 'sendmail';
+
       unset($_SESSION['SHOP']['mail_smtp_host']);// = null;
       unset($_SESSION['SHOP']['mail_smtp_port']);// = null;
       unset($_SESSION['SHOP']['mail_smtp_auth']);// = null;

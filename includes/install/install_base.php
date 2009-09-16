@@ -46,10 +46,6 @@ function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true){
   echo "<tr ><td colspan=2 valign='top' height='100%' >\n"  ;
 }
 
-function Install_Form_Close (){
-  echo "</td></tr></table></center></form>\n";
-}
-
 function Install_Form_Buttons (){
   echo "</td></tr><tr>\n";
   echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
@@ -67,6 +63,10 @@ function Install_Form_Rollback ($name='Back'){
           \n";
 }
 
+function Install_Form_Close (){
+  echo "</td></tr></table></center></form>\n";
+}
+
 function Install_request($arr, $Sub=''){
   foreach ($arr as $info){
     If (isset($_REQUEST[$info])){
@@ -75,6 +75,13 @@ function Install_request($arr, $Sub=''){
       } else {
         $_SESSION[$info] = $_REQUEST[$info];
       }
+    } else {
+      if ($Sub) {
+        unset($_SESSION[$Sub][$info]);// = $_REQUEST[$info];
+      } else {
+        unset($_SESSION[$info]);// = $_REQUEST[$info];
+      }
+    
     }
   }
 }

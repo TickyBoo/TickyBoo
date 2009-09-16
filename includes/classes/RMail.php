@@ -16,6 +16,7 @@ require_once(dirname(__FILE__) . '/mimePart.php');
 
 class Rmail
 {
+    Public $errors;
     /**
     * The html part of the message
     * @var string
