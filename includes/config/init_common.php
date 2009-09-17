@@ -66,6 +66,10 @@
 
   //the same value for the shopping cart, usually smaller
   $_SHOP->cart_delay=$_SHOP->res_delay-60;
+  
+
+//  $_SHOP->dir_mode=0755;
+  $_SHOP->file_mode=0644;
 
   $_SHOP->install_dir =ROOT;
   $_SHOP->includes_dir=INC;
