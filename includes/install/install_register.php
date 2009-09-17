@@ -62,11 +62,11 @@ class install_register {
                       "Comment:\n".$_REQUEST['comments']);
 
       $result = $email->send('lumensoh@xs4all.nl',$type);
-      print_r($email);
+    //  print_r($email);
       if ($result) {
         array_push($Install->Warnings,'Thanks, The mail is send to us.');
       }else{
-        array_push($Install->Warnings,'Sorry the mail is not send, check your mail settings.<br>'.$email->errors  );
+        array_push($Install->Warnings,'Sorry the mail is not send, check your mail settings.<br>'.var_dump($email->errors ) );
       }
     }
     return true;

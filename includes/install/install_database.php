@@ -34,7 +34,7 @@
  
 class install_database {
   function precheck($Install) {
-    return (!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error'] or ($_SESSION['radio'] == 'NORMAL');
+    return (!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error']) or ($_SESSION['radio'] == 'NORMAL');
   }
 
   function postcheck($Install) {
