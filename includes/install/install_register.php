@@ -53,7 +53,9 @@ class install_register {
       if (!is_null($_SESSION['SHOP']['mail_sendmail'])) {
         $email->setSendmailPath($_SESSION['SHOP']['mail_sendmail']);
       }
-      $email->setReceipt('noreplay@fusionticket.com');
+      $email->setTextCharset("UTF-8");
+      $email->setHtmlCharset("UTF-8");
+      $email->setHeadCharset("UTF-8");
       $email->setSubject('Registerstation FusionTicket');
       $email->setFrom('noreplay@fusionticket.com');
       $email->setText("Version: ".INSTALL_VERSION."\n".
@@ -61,7 +63,7 @@ class install_register {
                       "ForumUser: ". $_REQUEST['forumname']."\n".
                       "Comment:\n".$_REQUEST['comments']);
 
-      $result = $email->send('lumensoh@xs4all.nl',$type);
+      $result = $email->send(array('lumensoh@xs4all.nl'),$type);
     //  print_r($email);
       if ($result) {
         array_push($Install->Warnings,'Thanks, The mail is send to us.');
