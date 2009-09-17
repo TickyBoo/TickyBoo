@@ -39,7 +39,7 @@ session_start();
   <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
   <script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>    
-  <script language="JavaScript" >
+  <script language="JavaScript">
     function Confirm_Inst_Cancel(){
       if(window.confirm('Cancel The Installation Process ?')){
         window.close ();

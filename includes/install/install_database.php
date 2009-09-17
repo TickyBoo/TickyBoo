@@ -34,7 +34,7 @@
  
 class install_database {
   function precheck($Install) {
-    return !$_SESSION['ConfigExist'] or $_SESSION['DB_Error'] or $_SESSION['radio'] == 'NORMAL';
+    return (!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error'] or ($_SESSION['radio'] == 'NORMAL');
   }
 
   function postcheck($Install) {
@@ -70,7 +70,12 @@ class install_database {
   function display($Install) {
     Install_Form_Open ($Install->return_pg,'');
     if (!$_SESSION['SHOP']['db_host']) $_SESSION['SHOP']['db_host'] = 'localhost';
-    if (!$_SESSION['SHOP']['db_name']) $_SESSION['SHOP']['db_name'] = 'ft_'.INSTALL_VERSION;
+    if (!$_SESSION['SHOP']['db_name']){
+      $tmp = strtolower( 'ft_'.INSTALL_VERSION);
+      $tmp = str_replace(" ", "", $tmp);
+      $tmp = str_replace(".", "_", $tmp);
+      $_SESSION['SHOP']['db_name'] = $tmp;
+    }
     
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>

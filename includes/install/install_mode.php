@@ -74,7 +74,7 @@ class install_mode {
       array_push($Install->Errors,ROOT."files should be writable by the webserver user.");
     }
 
-    return !$_SESSION['DatabaseExist'] ;
+    return $_SESSION['DatabaseExist'] ;
   }
 
   function postcheck($Install) {
