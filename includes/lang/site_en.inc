@@ -1039,5 +1039,32 @@ define("paypal_pay","Make payments with PayPal - it's fast, free and secure!");
 define("pm_title","All charts");
 //--------------------------------------------------
 
+//Html2pdf Templates
+define("tmp_receipt","Receipt");
+define("tmp_invoice","Invoice");
+define("tmp_sold_to","Sold To:");
+define("tmp_order_date","Order Date");
+define("tmp_order_number","Order Number");
+define("tmp_order_method","Order Method");
+define("tmp_shipping_method","Shipping Method ");
+define("tmp_payment_method","Payment Method");
+define("tmp_description","Description");
+define("temp_quantity","Qty.");
+define("tmp_category","Category ");
+define("tmp_discounts","Discounts");
+define("tmp_price","Price");
+define("tmp_total","Total ");
+define("tmp_subtotal","SubTotal:");
+define("tmp_fee","Handling Fee:");
+define("tmp_order_total","Total:");
+define("tmp_thank_you","Thank You!");
+
+
+define("tmp_inv_message","Your seats have been reserved.&nbsp; Please pay this invoice within 10 days. ");
+define(" "," ");
+define(" "," ");
+define(" "," ");
+
+
 
 ?>
