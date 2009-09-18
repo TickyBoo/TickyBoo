@@ -30,138 +30,110 @@
  * clear to you.
  *}{literal}
 <style type="text/css">
-
 .pagination{
-padding: 0px;
+  background-color: #99d9ea;
+  TEXT-ALIGN: center;    
+}
+.done{
+  background-color: #42729a;
+  color: #FFFFFF;
+  TEXT-ALIGN: center;  
+  border-left: 2px solid #5EA3DB;
+}
+.current{
+  background-repeat: no-repeat;
+  background-color: #BdC9D5;
+}
+.next{
+  TEXT-ALIGN: center;  
+  border-right: 2px solid #9FE1F2;
 }
 
-.pagination ul{
-margin: 0;
-padding: 0;
-text-align: left; /*Set to "right" to right align pagination interface*/
-font-size: 16px;
-}
-
-.pagination li{
-list-style-type: none;
-display: inline;
-padding-bottom: 1px;
-}
-
-.pagination a, .pagination a:visited{
-padding: 0 5px;
-border: 1px solid #42106b;
-text-decoration: none;
-color: #2e6ab1;
-}
-
-.pagination a:hover, .pagination a:active{
-border: 1px solid #2b66a5;
-color: #42106b;
-background-color: #FFFF80;
-}
-
-.pagination a.currentpage{
-background-color: #42106b;
-color: #FFF !important;
-border-color: #2b66a5;
-font-weight: bold;
-cursor: default;
-}
-
-.pagination a.disablelink, .pagination a.disablelink:hover{
-background-color: white;
-cursor: default;
-color: #929292;
-border-color: #929292;
-font-weight: normal !important;
-}
-
-.pagination a.prevnext{
-font-weight: bold;
-}
 </style> {/literal}
-{strip}       <br>
-<div align="center">
-  <table border="0" width="100%">
+  <br>
+
+  <table border="0" class="pagination" width="100%"  cellpadding="0" cellspacing="0" >
     <tr>
-      <td align="left">
-        <div class="pagination">
-          {if $name==!shop!}
-            {if $shop_event.event_pm_id}
-              <ul>
-                <li><a class="currentpage">Order</a></li>
-                <li><a class="disablelink">Select Discounts</a></li>
-                <li><a title="Click here to View, Edit, or Remove your Order!" href="index.php?action=view_cart">Review Order</a></li>
-                {if $user->logged}
-                  <li><a class="disablelink">Log-in or Register</a></li>
-                {else}
-                   <li><a title="Only Registered Shoppers can Purchase!" href="index.php?register_user=on">Log-in or Register</a></li>
-                {/if}
-                <li><a title="Choose Shipping &amp; Payment Options!" href="checkout.php">Select Payment</a></li>
-                <li><a class="disablelink">Complete Order</a></li>
-              </ul>
-            {/if}
-          {elseif $name==!select_seat!}
-            <ul>
-              <li><a class="currentpage">Order</a></li>
-              <li><a class="disablelink">Select Discounts</a></li>
-              <li><a title="Click here to View, Edit, or Remove your Order!" href="index.php?action=view_cart">Review Order</a></li>
-              {if $user->logged}
-                <li><a class="disablelink">Log-in or Register</a></li>
-              {else}
-                <li><a title="Only Registered Shoppers can Purchase!" href="index.php?register_user=on">Log-in or Register</a></li>
-              {/if}
-              <li><a title="Choose Shipping &amp; Payment Options!" href="checkout.php">Select Payment</a></li>
-              <li><a class="disablelink">Complete Order</a></li>
-            </ul>
-          {elseif $name==!discounts!}
-            <ul>
-              <li><a class="disablelink">Order</a></li>
-              <li><a class="currentpage">Select Discounts</a></li>
-              <li><a class="disablelink">Review Order</a></li>
-              <li><a class="disablelink">Log-in or Register</a></li>
-              <li><a class="disablelink">Select Payment</a></li>
-              <li><a class="disablelink">Complete Order</a></li>
-            </ul>
-          {elseif $name==!shopping_cart!}
-             {assign var="cart_empty" value=$cart->is_empty_f()}
-             {if !$cart_empty }
-               <ul>
-                 <li><a title="Order more Tickets!" href="calendar.php">Order</a></li>
-                 <li><a class="disablelink">Select Discounts</a></li>
-                 <li><a class="currentpage">Review Order</a></li>
-                 {if $user->logged}
-                   <li><a class="disablelink">Log-in or Register</a></li>
-                 {else}
-                   <li><a title="Only Registered Shoppers can Purchase!" href="index.php?register_user=on">Log-in or Register</a></li>
-                 {/if}
-                 <li><a title="Choose Shipping &amp;amp; Payment Options!" href="checkout.php">Select Payment</a></li>
-                 <li><a class="disablelink">Complete Order</a></li>
-               </ul>
-             {/if}
-          {elseif $name==!pers_info!}
-            <ul>
-              <li><a title="Order more Tickets!" href="calendar.php">Order</a></li>
-              <li><a class="disablelink">Select Discounts</a></li>
-              <li><a title="Click here to View, Edit, or Remove your Order!" href="index.php?action=view_cart">Review Order</a></li>
-              <li><a class="currentpage">Log-in or Register</a></li>
-              <li><a class="disablelink">Select Payment</a></li>
-              <li><a class="disablelink">Complete Order</a></li>
-            </ul>
-          {elseif $name==!shopping_cart_check_out!}
-             <ul>
-                <li><a title="Order more Tickets!" href="calendar.php">Order</a></li>
-                <li><a class="disablelink">Select Discounts</a></li>
-                <li><a title="Click here to View, Edit, or Remove your Order!" href="index.php?action=view_cart">Review Order</a></li>
-                <li><a class="disablelink">Log-in or Register</a></li>
-                <li><a class="currentpage">Select Payment</a></li>
-                <li><a class="disablelink">Complete Order</a></li>
-             </ul>
-           {/if}
-        </div>
-      </td>
+      {if $name==!shop! and $shop_event.event_pm_id}
+        <td class='current'> Order </td>
+        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td class='next'>Review Order</td>
+        {if !$user->logged}
+          <td class='next'>
+            Log-in or Register
+          </td>
+        {/if}
+        <td class='next'>Select Payment</td>
+        <td class="next">Complete Order</td>          
+      {elseif $name==!select_seat!}
+        <td class='done'>Order </td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td class='current'>Select seat </td>
+        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td class='next'>Review Order</td>
+        {if !$user->logged}
+          <td class='next'>
+            Log-in or Register
+          </td>
+        {/if}
+        <td class='next'>Select Payment</td>
+        <td class="next">Complete Order</td>          
+      {elseif $name==!discounts!}
+        <td class='done'>Order </td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td class='current'>Select discounts</td>
+        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td class='next'>Review Order</td>
+        {if !$user->logged}
+          <td class='next'>
+            Log-in or Register
+          </td>
+        {/if}
+        <td class='next'>Select Payment</td>
+        <td class="next">Complete Order</td>       
+      {elseif $name==!shopping_cart!}
+        <td class='done'>Order </td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td class='current'>Review Order </td>
+        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        {if !$user->logged}
+          <td class='next'>
+            Log-in or Register
+          </td>
+        {/if}
+        <td class='next'>Select Payment</td>
+        <td class="next">Complete Order</td>       
+      {elseif $name==!pers_info!}
+        <td class='done'>Order </td>
+        <td class='done'>Review Order </td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td class='current'>Log-in or Register </td>
+        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td class='next'>Select Payment</td>
+        <td class="next">Complete Order</td>       
+      {elseif $name==!shopping_cart_check_out!}
+        <td class='done'>Order </td>
+        <td class='done'>Review Order </td>
+        <td class='done'>Log-in or Register</td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td class='current'>Select Payment </td>
+        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td class="next">Complete Order</td>
+      {elseif $name==!order_reg!}
+        <td class='done'>Order </td>
+        <td class='done'>Review Order </td>
+        <td class='done'>Log-in or Register</td>
+        <td class='done'>Select Payment </td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td class="current">Complete Order</td>
+        <td width='25' ><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+      {elseif $name==!pay_accept! or $name==!pay_refused!}
+        <td class='done'>Order </td>
+        <td class='done'>Review Order </td>
+        <td class='done'>Log-in or Register</td>
+        <td class='done'>Select Payment </td>
+        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' height='20'></td>
+        <td class="current">Complete Order</td>
+      {/if}
     </tr>
   </table>
-</div>
-{/strip}

@@ -250,6 +250,7 @@ function order_list (){
           ORDER BY order_handling_id, order_status, order_shipment_status, order_payment_status ";
 
   if(!$res=ShopDB::query($query)){return;}
+  $orders = array();
   while($obj=shopDB::fetch_assoc($res)){
     If (!isset($orders[$obj['id']])) {
       $orders[$obj['id']]['_name'] = $obj;
@@ -321,6 +322,7 @@ function order_event_list (){
           ORDER BY seat_event_id, order_status, order_shipment_status, order_payment_status ";
 
   if(!$res=ShopDB::query($query)){return;}
+  $orders = array();
   while($obj=shopDB::fetch_assoc($res)){
     If (!isset($orders[$obj['event_id']])) {
       $orders[$obj['event_id']]['_name'] = $obj;
