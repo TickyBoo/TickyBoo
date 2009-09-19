@@ -53,32 +53,23 @@ class TemplateView extends AdminView{
     $name = $data['template_name'];
     switch ($data['template_type']) {
       case 'systm':
-        $query="select User.*, auth.active
-                from User left join auth on auth.user_id=User.user_id
-                limit 0,1";
-        $row=ShopDB::query_one_row($query);
-      	$row['is_member'] = ($row['user_status']==2);
-        $row['active']    = (empty($row['active']));
-        $row['link']          = '{HTML-ActivationCode}';
-        $row['activate_code'] = '{ActivationCode}';
-        $row['new_password']  = '{NewPassword}' ;
+        require_once('templatedata.php');
+      	$order['is_member']     = ($order['user_status']==2);
+        $order['active']        = (empty($order['active']));
+        $order['link']          = '{HTML-ActivationCode}';
+        $order['activate_code'] = '{ActivationCode}';
+        $order['new_password']  = '{NewPassword}' ;
 
       case 'email':
+        require_once('templatedata.php');
       	require_once('classes/htmlMimeMail.php');
-        If (!isset($row)) {
-          $query = "SELECT * FROM `Order` left join User on order_user_id=user_id
-                    limit 0,1";
-
-          $row=ShopDB::query_one_row($query);
-          $row['order_link']='OrderLink';
-        }
         require_once("classes/TemplateEngine.php");
         if (!$tpl = TemplateEngine::getTemplate($name)) {
           return false;
         }
         $email=&new htmlMimeMail();
         $lang = is($_GET['lang'], $_SHOP->lang);
-        $tpl->build($email, $row, $lang);
+        $tpl->build($email, $order, $lang);
         $email = $email->asarray() ;
         echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
         echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -110,67 +101,6 @@ class TemplateView extends AdminView{
         require_once("classes/TemplateEngine.php");
         require_once("html2pdf/html2pdf.class.php");
         require_once('templatedata.php');
-/*
-        $orderqry = '
-            SELECT * FROM `Order` left join User     on (order_user_id= user_id)
-                                  left join Handling on (order_handling_id = handling_id)
-            limit 0,1';
-
-        if(!$order=ShopDB::query_one_row($orderqry)){
-          echo 'error: cant load orderdata';
-          return FALSE;
-        }
-
-        $seatqry = "
-            SELECT * FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id
-                               left join Event    on event_id = seat_event_id
-                               left join Ort      on ort_id = event_ort_id
-                               left join Category on category_id = seat_category_id
-                               left join PlaceMapZone on seat_zone_id = pmz_id
-                               left join PlaceMapPart on seat_pmp_id = pmp_id
-            WHERE seat_order_id = {$order['order_id']} limit 0,1";
-
-        if(!$res=ShopDB::query($seatqry)){
-          echo 'error: cant load ticket data';
-          return FALSE;
-        }
-
-        while($data=shopDB::fetch_assoc($res)){
-      		if($data['category_numbering']=='none'){
-      			$data['seat_nr']='0';
-      			$data['seat_row_nr']='0';
-      		}else if($data['category_numbering']=='rows'){
-      			$data['seat_nr']='0';
-      		}else if($data['category_numbering']=='seat'){
-      			$data['seat_row_nr']='0';
-      		}
-      		//compute  barcode
-      		$data['barcode_text']= sprintf("%08d%s", $data['seat_id'], $data['seat_code']);
-          //save the data for the bill
-          $key = "({$data['category_id']},{$data['discount_id']})";
-
-          if(!isset($order['bill'][$key])){
-            $order['bill'][$key]=array(
-              'event_name'=>$data['event_name'],
-              'event_date'=>$data['event_date'],
-              'ort_name'=>$data['ort_name'],
-              'ort_city'=>$data['ort_city'],
-      				'qty'=>1,
-      				'category_name'=>$data['category_name'],
-      				'seat_price'=>$data['seat_price'],
-      				'discount_name'=>$data['discount_name']
-            );
-          }else{
-            $order['bill'][$key]['qty']++;
-          }
-          $seat = $data;
-        }
-        //calculating the sub-total
-        foreach(array_keys($order['bill']) as $key){
-          $order['bill'][$key]['total']= $order['bill'][$key]['seat_price'] * $order['bill'][$key]['qty'];
-        }
-        $order['order_subtotal'] = $order['order_total_price'] - $order['order_fee'];
-*/
 
        	$paper_size=$_SHOP->pdf_paper_size;
        	$paper_orientation=$_SHOP->pdf_paper_orientation;
