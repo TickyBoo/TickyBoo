@@ -1073,7 +1073,7 @@ define("tmp_row","Row #: ");
 define("tmp_seat","Seat#: ");
 define("tmp_details","Ticket Details");
 define("tmp_type","Type: ");
-define("","Discount: ");
+define("tmp_discount","Discount: ");
 
 define("tmp_conditions","<b>NOTE TO PURCHASER: TREAT THESE TICKETS AS YOU WOULD ANY OTHER VALUABLE OR CASH.</b>
 Unauthorized duplication, alteration, or sale of this ticket may prevent admittance to the event. 
