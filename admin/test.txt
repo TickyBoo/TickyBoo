@@ -1,88 +1,83 @@
 Array
 (
-    [0] => Array
+    [order_id] => 461
+    [order_user_id] => 246
+    [order_session_id] => inp4neauv7s92ls4adndqv4ig6
+    [order_tickets_nr] => 4
+    [order_total_price] => 205.40
+    [order_date] => 2009-03-08 21:48:12
+    [order_shipment_status] => send
+    [order_payment_status] => payed
+    [order_payment_id] => 7K285291BE675993X
+    [order_handling_id] => 33
+    [order_status] => pros
+    [order_reemited_id] => 
+    [order_fee] => 5.40
+    [order_place] => www
+    [order_owner_id] => 
+    [order_date_expire] => 0000-00-00 00:00:00
+    [order_responce] => 
+    [order_responce_date] => 0000-00-00 00:00:00
+    [order_note] => 
+    [user_id] => 246
+    [user_lastname] => Sample
+    [user_firstname] => John
+    [user_address] => 1234 Main St.
+    [user_address1] => 
+    [user_zip] => 11000
+    [user_city] => Sample Town
+    [user_state] => NY
+    [user_country] => US
+    [user_phone] => (555) 555-1212
+    [user_fax] => (555) 555-1213
+    [user_email] => sample@fusionticket.com
+    [user_status] => 2
+    [user_prefs] => 
+    [user_custom1] => 
+    [user_custom2] => 
+    [user_custom3] => 0
+    [user_custom4] => 0000-00-00 00:00:00
+    [user_owner_id] => 0
+    [user_lastlogin] => 0000-00-00 00:00:00
+    [user_order_total] => 1
+    [user_current_tickets] => 0
+    [user_total_tickets] => 4
+    [handling_id] => 33
+    [handling_payment] => paypal
+    [handling_shipment] => email
+    [handling_fee_fix] => 0.00
+    [handling_fee_percent] => 2.70
+    [handling_email_template] => ord=,send=,payed=Ticket_pdf2
+    [handling_pdf_template] => Invoice_pdf2
+    [handling_pdf_ticket_template] => 
+    [handling_pdf_format] => a:2:{i:0;a:4:{i:0;d:0;i:1;d:0;i:2;d:0;i:3;d:0;}i:1;s:0:"";}
+    [handling_html_template] =><div class="help">Click on "PayPal" to complete the transaction.</div>
+    [handling_sale_mode] => sp,www
+    [handling_extra] => a:2:{s:18:"pm_paypal_business";s:18:"demo@demo.com";s:14:"pm_paypal_test";N;}
+    [handling_text_shipment] => E-mail 
+    [handling_text_payment] => PayPal
+    [handling_expires_min] => 15
+    [handling_alt] => 1
+    [handling_alt_only] => No
+    [bill] => Array 
         (
-            [order_id] => 461
-            [order_user_id] => 246
-            [order_session_id] => inp4neauv7s92ls4adndqv4ig6
-            [order_tickets_nr] => 4
-            [order_total_price] => 205.40
-            [order_date] => 2009-03-08 21:48:12
-            [order_shipment_status] => send
-            [order_payment_status] => payed
-            [order_payment_id] => 7K285291BE675993X
-            [order_handling_id] => 33
-            [order_status] => pros
-            [order_reemited_id] => 
-            [order_fee] => 5.40
-            [order_place] => www
-            [order_owner_id] => 
-            [order_date_expire] => 0000-00-00 00:00:00
-            [order_responce] => 
-            [order_responce_date] => 0000-00-00 00:00:00
-            [order_note] => 
-            [user_id] => 246
-            [user_lastname] => Greenstein
-            [user_firstname] => Penny
-            [user_address] => 3765 Pacific St.
-            [user_address1] => 
-            [user_zip] => 89121
-            [user_city] => las  Vegas
-            [user_state] => NV
-            [user_country] => US
-            [user_phone] => 
-            [user_fax] => 
-            [user_email] => pgypsea@aol.com
-            [user_status] => 2
-            [user_prefs] => 
-            [user_custom1] => 
-            [user_custom2] => 
-            [user_custom3] => 0
-            [user_custom4] => 0000-00-00 00:00:00
-            [user_owner_id] => 0
-            [user_lastlogin] => 0000-00-00 00:00:00
-            [user_order_total] => 1
-            [user_current_tickets] => 0
-            [user_total_tickets] => 4
-            [handling_id] => 33
-            [handling_payment] => paypal
-            [handling_shipment] => email
-            [handling_fee_fix] => 0.00
-            [handling_fee_percent] => 2.70
-            [handling_email_template] => ord=,send=,payed=Tickets_Attached
-            [handling_pdf_template] => Invoice_pdf2
-            [handling_pdf_ticket_template] => 
-            [handling_pdf_format] => a:2:{i:0;a:4:{i:0;d:0;i:1;d:0;i:2;d:0;i:3;d:0;}i:1;s:0:"";}
-            [handling_html_template] => <br>
-<div class="help">Click on "PayPal" to complete the transaction.
-
-
-            [handling_sale_mode] => sp,www
-            [handling_extra] => a:2:{s:18:"pm_paypal_business";s:18:"kathyfives@cox.net";s:14:"pm_paypal_test";N;}
-            [handling_text_shipment] => E-mail 
-            [handling_text_payment] => PayPal
-            [handling_expires_min] => 15
-            [handling_alt] => 1
-            [handling_alt_only] => No
-            [bill] => Array
+            [(284,)] => Array
                 (
-                    [(284,)] => Array
-                        (
-                            [event_name] => 6th Annual Crawfish Boil
-                            [event_date] => 2009-12-25
-                            [ort_name] => PT's Gold
-                            [ort_city] => Las Vegas
-                            [qty] => 1
-                            [category_name] => Open Air Seating (Gold)
-                            [seat_price] => 50.00
-                            [discount_name] => 
-                            [total] => 50
-                        )
-
+                    [event_name] => Sample Event
+                    [event_date] => 2010-12-25
+                    [ort_name] => Sample Venue
+                    [ort_city] => Sample Town
+                    [qty] => 1
+                    [category_name] => Sample Category
+                    [seat_price] => 50.00
+                    [discount_name] => 
+                    [total] => 50
                 )
 
-            [order_subtotal] => 200
         )
+
+    [order_subtotal] => 200
+)
 
     [1] => Array
         (
@@ -108,51 +103,10 @@ Array
             [discount_type] => 
             [discount_value] => 
             [event_id] => 159
-            [event_name] => 6th Annual Crawfish Boil
-            [event_text] => <br>
-<font color="#0000FF"><b>Children (under 12) FREE</b><br>
-</font>
-<li>May share your Crawfish and your
-seat, plus free soda or water.<br>
-<li>1 Child per accompanying paid ticket.</li>
-<br><br>
-Each <b>Open Air Seating Ticket <font color="#FF9933">(Gold tables)</font></b> includes:
-<li>5 lbs of Crawfish plus potatoes and corn on the cob.
-<li>Free Beer from 12pm - 2pm <li>Free Soda and Water Entire Event
-<br><br>
-Each <b>Premier Ticket <font color="33CC33">(Green tables)</font></b> includes:<br>
-All of the above plus...
-<li>Covered Seating
-<li>Crawfish Delivered to your table.
-<li>Free Beer and Liquor Entire Event
-<li>Free T-Shirt.</li>
-<br><br>
-<b>VIP Table <font color="#990099">(Purple tables)</b></font> includes:
-<li>10 Premier Tickets</li>
-            [event_short_text] => <font color="green"><b>Located in the PT's Gold Event Area on Hualapai.  Click on the map in the the upper right hand block for directions.</font></b><br><br>
-<b>12pm to 4pm.  Gates open at 11:30am</b><br><br>
-<li>Live Crawfish flown in from Carr's Crawfish Farm in Louisiana and cooked on site by Master Chef Chris Carr.
-<li>The Pete Contino Band live and on stage.
-<li>Raffles
-<li>Silent auction
-</li><br><br>
-<b><font color="#FF9933">Open Air Seating Tickets </font></b> include:
-<li>5 lbs of Crawfish plus potatoes and corn on the cob.
-<li>Free Beer from 12pm - 2pm <li>Free Soda and Water Entire Event
-<br><br>
-<b><font color="purple">Premier Tickets </font></b> include:<br>
-All of the above plus...
-<li>Covered Seating
-<li>Crawfish Delivered to your table.
-<li>Free Beer and Liquor Entire Event
-<li>Free T-Shirt.</li>
-<br><br>
-<font color="#0000FF"><b>Children (under 12) FREE with accompanying paid adult.</b></li><br>
-<br>
-<hr>
-
-            [event_url] => 
-            [event_image] => event_image_159.gif
+            [event_name] => Sample Event
+            [event_text] => Sample of an actual Event
+            [event_url] => http://demoevent@demo.com
+            [event_image] => event25.jpg
             [event_ort_id] => 5
             [event_pm_id] => 149
             [event_categories_nr] => 
@@ -169,24 +123,24 @@ All of the above plus...
             [event_rep] => main,sub
             [event_main_id] => 159
             [event_type] => 
-            [ort_pm] => http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=3770+s+hualapai,+las+vegas,+nv+89147&sll=35.603719,-77.519531&sspn=64.325661,157.5&ie=UTF8&ll=36.122849,-115.314431&spn=0.008042,0.019226&z=16&iwloc=r0
+            [ort_pm] => http://maps.google.com/
             [ort_id] => 5
-            [ort_name] => PT's Gold
-            [ort_phone] => (702) 933-3080
+            [ort_name] => Sample VenueOld School
+            [ort_phone] => (555) 555-1214
             [ort_plan_nr] => 
-            [ort_url] => http://www.sincitytigers.com
+            [ort_url] => http://www.sample.com
             [ort_image] => ort_image_5.png
-            [ort_address] => 3770 S Hualapai Way
+            [ort_address] => 1234 Sample Rd.
             [ort_address1] => 
-            [ort_zip] => 89147
-            [ort_city] => Las Vegas
-            [ort_state] => NV
+            [ort_zip] => 11000
+            [ort_city] => Sample Town
+            [ort_state] => NY
             [ort_country] => US
-            [ort_fax] => 
+            [ort_fax] => (555) 555-1215
             [category_id] => 284
             [category_event_id] => 159
             [category_price] => 50.00
-            [category_name] => Open Air Seating (Gold)
+            [category_name] => Sample Category
             [category_pm_id] => 149
             [category_pmp_id] => 134
             [category_ident] => 1
@@ -201,15 +155,15 @@ All of the above plus...
             [pmz_id] => 207
             [pmz_pm_id] => 149
             [pmz_ident] => 2
-            [pmz_name] => Open Air
-            [pmz_short_name] => Gold
+            [pmz_name] => Sample Zone
+            [pmz_short_name] => SZ
             [pmz_color] => #d0d010
             [pmp_id] => 134
             [pmp_pm_id] => 149
             [pmp_ident] => 0
             [pmp_ort_id] => 0
             [pmp_event_id] => 159
-            [pmp_name] => Event Area
+            [pmp_name] => Sample Room
             [pmp_width] => 24
             [pmp_height] => 45
             [pmp_scene] => north

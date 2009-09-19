@@ -1058,13 +1058,26 @@ define("tmp_subtotal","SubTotal:");
 define("tmp_fee","Handling Fee:");
 define("tmp_order_total","Total:");
 define("tmp_thank_you","Thank You!");
+define("tmp_inv_message","Your seats have been reserved. Please pay this invoice within 10 days. ");
 
+//Tickets
+define("tmp_flourish"," Presents");
+define("tmp_venue","Location Details");
+define("tmp_date_time","Date and Time");
+define("tmp_event_date","Event Date:");
+define("tmp_start_time","Start Time: ");
+define("tmp_open_time","Doors Open: ");
+define("tmp_section","Seating Section");
+define("tmp_zone","Zone:");
+define("tmp_row","Row #: ");
+define("tmp_seat","Seat#: ");
+define("tmp_details","Ticket Details");
+define("tmp_type","Type: ");
+define("","Discount: ");
 
-define("tmp_inv_message","Your seats have been reserved.&nbsp; Please pay this invoice within 10 days. ");
-define(" "," ");
-define(" "," ");
-define(" "," ");
-
-
+define("tmp_conditions","<b>NOTE TO PURCHASER: TREAT THESE TICKETS AS YOU WOULD ANY OTHER VALUABLE OR CASH.</b>
+Unauthorized duplication, alteration, or sale of this ticket may prevent admittance to the event. 
+Present this page at the time of admission to be scanned. 
+The unique bar code on this ticket allows only one entry per ticket.");
 
 ?>
