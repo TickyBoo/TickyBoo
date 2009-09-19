@@ -109,7 +109,8 @@ class TemplateView extends AdminView{
       case 'pdf2':
         require_once("classes/TemplateEngine.php");
         require_once("html2pdf/html2pdf.class.php");
-
+        require_once('templatedata.php');
+/*
         $orderqry = '
             SELECT * FROM `Order` left join User     on (order_user_id= user_id)
                                   left join Handling on (order_handling_id = handling_id)
@@ -169,18 +170,19 @@ class TemplateView extends AdminView{
           $order['bill'][$key]['total']= $order['bill'][$key]['seat_price'] * $order['bill'][$key]['qty'];
         }
         $order['order_subtotal'] = $order['order_total_price'] - $order['order_fee'];
-
+*/
 
        	$paper_size=$_SHOP->pdf_paper_size;
        	$paper_orientation=$_SHOP->pdf_paper_orientation;
         $_SHOP->lang = is($_SHOP->lang,'en');
         $te  = new TemplateEngine();
         $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
-
+        
+       // file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
     		if($tpl =& $te->getTemplate($name)){
-     			$tpl->write($pdf,array_merge($seat,$order), false); //
+     			$tpl->write($pdf, $order, false); //
     		}else{
-    			echo "<div class=err>".no_template." : $name</div>";
+    			echo "<div class=err>".con('no_template')." : $name</div>";
     			return FALSE;
     		}
         $order_file_name = "pdf_".$data['template_name'].'.pdf';
@@ -266,10 +268,11 @@ class TemplateView extends AdminView{
   function compile_all ()
   {
     global $_SHOP;
-    $query = "SELECT template_name FROM Template order by template_name where template_type <>'PDF'";
+    $query = "SELECT template_name FROM Template where template_type <> 'PDF' order by template_name ";
     if (!$res = ShopDB::query($query)){
       return;
-    } while ($row = shopDB::fetch_assoc($res)){
+    } while ($row = shopDB::fetch_assoc($res)){ 
+    //echo "compile: {$row['template_name']}<br>\n";
       $this->compile_template($row['template_name']);
     }
   }

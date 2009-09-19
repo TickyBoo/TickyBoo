@@ -43,9 +43,11 @@
 .current{
   background-repeat: no-repeat;
   background-color: #BdC9D5;
+   font-weight: bold;
+   color: #000000;
 }
 .next{
-  TEXT-ALIGN: center;  
+  TEXT-ALIGN: center;
   border-right: 2px solid #9FE1F2;
 }
 

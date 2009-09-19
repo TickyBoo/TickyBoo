@@ -42,6 +42,7 @@ class EmailTCompiler {
   var $stack=array(); // local stack for various purposes
   var $vars=array(); //variables are collected for informative purposes
   var $args='data'; //name of the parameter array where variables are stored
+  var $langs = array();
 
   var $deflang=0;
   var $errors=array();
