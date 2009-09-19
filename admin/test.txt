@@ -1,0 +1,83 @@
+Array
+(
+    [order_id] => 461
+    [order_user_id] => 246
+    [order_session_id] => inp4neauv7s92ls4adndqv4ig6
+    [order_tickets_nr] => 4
+    [order_total_price] => 205.40
+    [order_date] => 2009-03-08 21:48:12
+    [order_shipment_status] => send
+    [order_payment_status] => payed
+    [order_payment_id] => 7K285291BE675993X
+    [order_handling_id] => 33
+    [order_status] => pros
+    [order_reemited_id] => 
+    [order_fee] => 5.40
+    [order_place] => www
+    [order_owner_id] => 
+    [order_date_expire] => 0000-00-00 00:00:00
+    [order_responce] => 
+    [order_responce_date] => 0000-00-00 00:00:00
+    [order_note] => 
+    [user_id] => 246
+    [user_lastname] => Greenstein
+    [user_firstname] => Penny
+    [user_address] => 3765 Pacific St.
+    [user_address1] => 
+    [user_zip] => 89121
+    [user_city] => las  Vegas
+    [user_state] => NV
+    [user_country] => US
+    [user_phone] => 
+    [user_fax] => 
+    [user_email] => pgypsea@aol.com
+    [user_status] => 2
+    [user_prefs] => 
+    [user_custom1] => 
+    [user_custom2] => 
+    [user_custom3] => 0
+    [user_custom4] => 0000-00-00 00:00:00
+    [user_owner_id] => 0
+    [user_lastlogin] => 0000-00-00 00:00:00
+    [user_order_total] => 1
+    [user_current_tickets] => 0
+    [user_total_tickets] => 4
+    [handling_id] => 33
+    [handling_payment] => paypal
+    [handling_shipment] => email
+    [handling_fee_fix] => 0.00
+    [handling_fee_percent] => 2.70
+    [handling_email_template] => ord=,send=,payed=Tickets_Attached
+    [handling_pdf_template] => Invoice_pdf2
+    [handling_pdf_ticket_template] => 
+    [handling_pdf_format] => a:2:{i:0;a:4:{i:0;d:0;i:1;d:0;i:2;d:0;i:3;d:0;}i:1;s:0:"";}
+    [handling_html_template] => <br>
+<div class="help">Click on "PayPal" to complete the transaction.
+
+
+    [handling_sale_mode] => sp,www
+    [handling_extra] => a:2:{s:18:"pm_paypal_business";s:18:"kathyfives@cox.net";s:14:"pm_paypal_test";N;}
+    [handling_text_shipment] => E-mail 
+    [handling_text_payment] => PayPal
+    [handling_expires_min] => 15
+    [handling_alt] => 1
+    [handling_alt_only] => No
+    [bill] => Array
+        (
+            [(284,)] => Array
+                (
+                    [event_name] => 6th Annual Crawfish Boil
+                    [event_date] => 2009-12-25
+                    [ort_name] => PT's Gold
+                    [ort_city] => Las Vegas
+                    [qty] => 1
+                    [category_name] => Open Air Seating (Gold)
+                    [seat_price] => 50.00
+                    [discount_name] => 
+                    [total] => 50
+                )
+
+        )
+
+    [order_subtotal] => 200
+)
