@@ -984,6 +984,9 @@ define("pos_currenttickets","Current Tickets"); //header.tpl
 define("pos_paidlist","Paid List");
 define("pos_unsentlist","UnSent List");
 
+define("pos_unpaidlist","UnPaid List");
+define("pos_reservedlist","Reserved List");
+
 //process_view.tpl
 define("paymentstatus","Payment Status");
 define("pos_clicktoproc","Click To Finish Processing!");

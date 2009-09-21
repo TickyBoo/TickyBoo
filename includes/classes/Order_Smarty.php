@@ -148,6 +148,22 @@ class Order_Smarty {
   }
 
 
+  /**
+   * Order_Smarty::order_list()
+   * 
+   * @param mixed $params
+   * @param mixed $content
+   * @param mixed $smarty
+   * @param mixed $repeat
+   * #Passable Params:
+   * 	status = 
+   * 	user = id
+   * 	place = 
+   * 	not_sent = bool
+   * 	not_status = status
+   * 	order = comma delimied order by
+   * 	order_id = id
+   */
   function order_list ($params, $content, &$smarty,&$repeat){
     
     if ($repeat) {
@@ -172,6 +188,35 @@ class Order_Smarty {
         }else{  
           $where="WHERE 1 AND Order.order_status!='trash'";
         }
+      }
+      
+      if($params['handling'] || $params['not_hand_payment'] || $params['not_hand_shipment'] || $params['hand_shipment'] || $params['hand_payment']){
+      	$from.=',Handling ';
+      	$where.=' AND handling_id = order_handling_id';
+      	if($params['not_hand_payment']){
+      		$types=explode(",",$params['not_hand_payment']);
+      		foreach($types as $type){
+      			$where.=" AND handling_payment <> '{$type}'";
+      		}
+      	}
+      	if($params['not_hand_shipment']){
+      		$types=explode(",",$params['not_hand_shipment']);
+      		foreach($types as $type){
+      			$where.=" AND handling_shipment <> '{$type}'";
+      		}
+      	}
+      	if($params['hand_shipment']){
+      		$types=explode(",",$params['hand_shipment']);
+      		foreach($types as $type){
+      			$where.=" AND handling_shipment = '{$type}'";
+      		}
+      	}
+      	if($params['hand_payment']){
+      		$types=explode(",",$params['hand_payment']);
+      		foreach($types as $type){
+      			$where.=" AND handling_payment = '{$type}'";
+      		}
+      	}
       }
         
       if($params['user']){
@@ -212,7 +257,7 @@ class Order_Smarty {
       }      
         
       if($params['order']){
-        $order_by="order by Shop::{$params['order']}";
+        $order_by="order by {$params['order']}";
       }
 
       if($params['order_id']){
