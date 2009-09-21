@@ -22,10 +22,6 @@ var loadOrder = function(){
 		height: 'auto',
 		width: 'auto',
 		modal: true,
-		dialogClass: 'alert',
-		buttons: {'Close': function() {
-		//	$(this).dialog('close');
-			}},
 	  close: function(event, ui) {
       refreshOrder();
     }
