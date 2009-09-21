@@ -110,7 +110,7 @@ die();
       global $order;
 	    $order->obj = $aorder;
 
-    	if (!is_object($aorder)) exit;
+    	if (!is_a  ( $aorder,'Order')) exit;
     	if (isset($aorder) and isset($aorder->places)) {
       		foreach($aorder->places as $ticket){
         		$seats[$ticket->id]=TRUE;
@@ -223,7 +223,7 @@ die();
     }
     ob_start();
     unset($_SESSION['_SHOP_order']) ;
-    $return = confirmaction($smarty,'pos', $user_id, $_POST['no_fee']  );
+    $return = confirmaction($smarty, 'pos', $user_id, $_POST['no_fee']  );
     $result = ob_get_contents();
     ob_end_clean();
     if ($return == 'checkout_preview' ) {
@@ -239,7 +239,7 @@ die();
   	global $order, $cart;
   	if (!isset($_SESSION['_SHOP_order'])) {
     	$myorder = $order->make_f($_POST['handling_id'], $origin, 0, $user_id, $no_fee);
-  	} else {
+   	} else {
 		  $myorder = $_SESSION['_SHOP_order'];
 	  }
   	if (!$myorder) {

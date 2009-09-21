@@ -320,8 +320,7 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
 	}
 
 	function _esc ($str, $quote=true){
-  		$str = shopDB::escape_string($str);
-  		return ($quote)?"'".$str."'":$str;
+    return shopDB::quote($str, $quote);
 	}
 
 function check_event($event_date){

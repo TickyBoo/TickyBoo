@@ -29,6 +29,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
+ 
 {if $ManualRegister}
   {include file="header.tpl" name=!becomemember! header=!memberinfo!}
   <form action='index.php' method='post'  id="user-register">
@@ -39,6 +40,7 @@
   {if $user_errors}
      <br/>
      <div class='error'>{$user_errors._error}</div><br>
+
   {/if}
 {*  <table width='100%'> <tr><td valign='top'> *}
     {ShowFormToken name='UserRegister'}

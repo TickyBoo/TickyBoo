@@ -60,42 +60,8 @@ class Order {
   	$this->no_cost=$no_cost;
     $hand=Handling::load($handling_id);
     $this->order_handling=&$hand;
+    $this->order_owner_id = ($place == 'pos')? $_SESSION['_SHOP_AUTH_USER_DATA']['user_id']: null;
     
-/*
- * This should check how the order is payed for and affect it appropriatly, such as if collecting it form the
- * Box Office no postage will be applied.
- *   
-    $shipment_id=$this->order_handling->handling_shipment;
-    if($shipment_id=='sp'){
-      $this->shipment_price_percent=0;
-      $this->shipment_price_fixe=0;      
-      $this->shipment_mode='sp';
-      $this->payment_mode='sp';
-    }elseif($shipment_id=='post'){
-      $this->shipment_mode="post";
-      $this->payment_mode="invoice";
-      if($no_fee){
-         $this->shipment_price_percent=0;
-         $this->shipment_price_fixe=0;
-      }else{
-        $query="select * from Handling WHERE handling_payment='invoice' and 
-	handling_shipment='post'";
-        if($pay=ShopDB::query_one_row($query)){
-          $this->shipment_price_percent=$pay["handling_fee_percent"];
-          $this->shipment_price_fixe=$pay["handling_fee_fix"];
-        }
-      } 
-    }else{
-      $query="select * from Handling where handling_id='$handling_id' handling_shipment='$shipment_id'";
-      if($pay=ShopDB::query_one_row($query)){
-        $this->shipment_price_percent=$pay["handling_fee_percent"];
-        $this->shipment_price_fixe=$pay["handling_fee_fix"];
-        $this->shipment_mode=$pay["handling_shipment"];
-        $this->payment_mode=$pay["handling_payment"];
-      }
-    }
-    
-*/
   }
   
 	function save_order_note($order_id,$note){
@@ -280,17 +246,19 @@ class Order {
 		`order_status`, 
 		`order_fee`, 
 		`order_place`, 
+		`order_owner_id`, 
 		`order_date_expire`
 		) VALUES ( ".
-      	ShopDB::quote($this->order_user_id).",".      
-      	ShopDB::quote($this->order_session_id).",".
-      	ShopDB::quote($this->size()).",".      
-      	ShopDB::quote($total).",".      
+      	_esc($this->order_user_id).",".      
+      	_esc($this->order_session_id).",".
+      	_esc($this->size()).",".      
+      	_esc($total).",".      
       	"NOW(),".      
-      	ShopDB::quote($this->order_handling->handling_id).",".
-      	ShopDB::quote($order_status).",".
-      	ShopDB::quote($fee).",".
-	      ShopDB::quote($this->order_place).",
+      	_esc($this->order_handling->handling_id).",".
+      	_esc($order_status).",".
+      	_esc($fee).",".
+	      _esc($this->order_place).",".
+	      _esc($this->order_owner_id).",
 	      $order_date_expire);";
 		
     if(ShopDB::query($query)){

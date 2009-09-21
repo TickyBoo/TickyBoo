@@ -213,12 +213,6 @@ class ShopDB {
             return $row;
         }
     }
-    function quote ($s)
-    {
-        return is_null($s) ? 'NULL' : "'" . self::escape_string($s) . "'";
-    }
-
-		function quoteParam($var) { return self::quote($_REQUEST[$var]); }
 
     function lock ($name, $time = 30)
     {
@@ -284,6 +278,15 @@ class ShopDB {
       return $_SHOP->db_errno;
       }
 
+    function quote ($s, $quote=true)
+    {
+        $str = self::escape_string($s);
+        return (!isset($s) or is_null($s)) ? 'NULL' : (($quote)?"'".$str."'":$str);
+    }
+
+
+		function quoteParam($var) { return self::quote($_REQUEST[$var]); }
+
     function escape_string($escapestr ){
       global $_SHOP;
       if (!get_magic_quotes_gpc ()) {
@@ -291,7 +294,7 @@ class ShopDB {
            self::init();
         }
         return $_SHOP->link->real_escape_string($escapestr);
-      } else { echo "get_magic_quotes_gpc<br>\n";
+      } else { //echo "get_magic_quotes_gpc<br>\n";
         return $escapestr;
       }
     }

@@ -71,7 +71,7 @@ class Order_Smarty {
 
     //begin the transaction
     if(!ShopDB::begin('Make order')){
-      $this->error =con('cant_start transaction');
+      $this->error = con('cant_start transaction');
       return; 
     }
 
