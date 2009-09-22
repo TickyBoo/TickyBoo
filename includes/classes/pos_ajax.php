@@ -233,7 +233,6 @@ class PosAjax {
 	private function getCartInfo(){
 	global $cart, $order;
 
-    $this->json['post'] = print_r($_POST,true);
     $this->json['page'] = 1;
     $this->json['total'] = 1;
     $this->json['records'] = 0;
@@ -395,6 +394,16 @@ class PosAjax {
 		while($user = ShopDB::fetch_row($query)){
   		$this->json['rows'][] = array('id'=>$user[0], 'cell'=> $user);
 		}
+		return true;
+	}
+
+	private function getCanprint(){
+		$sql = "SELECT order_payment_status
+            FROM `Order`
+            WHERE order_id="._esc($_SESSION['_SHOP_order']->order_id);
+    $q = ShopDB::query_one_row($sql);
+ 	  $this->json['status'] = $q['order_payment_status']=='payed';
+    
 		return true;
 	}
 

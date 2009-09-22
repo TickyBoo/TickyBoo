@@ -198,7 +198,7 @@ die();
   function PosConfirmAction($smarty) {
   	global $order, $cart, $user;
     if ((int)$_POST['handling_id']==0) {
-        echo "~~".con('No_handling_selected').print_r($_POST,true);
+        echo "~~".con('No_handling_selected');//.print_r($_POST,true);
         return "";
     } elseif ($_POST['user_id']==-2) {
         echo "~~".con('No_useraddress_selected');

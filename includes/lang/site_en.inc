@@ -969,6 +969,7 @@ define("box_office","<h2>Box Office<span style='color:red; font-size:14px;'><i>[
 define("alert","Alert:");
 define("pos_booktickets","Book Tickets");//header.tpl
 define("seat_count","Seat Count:");
+define("pos_order_page","Order checkout");
 
 //process_list.tpl
 define("actions","Actions");

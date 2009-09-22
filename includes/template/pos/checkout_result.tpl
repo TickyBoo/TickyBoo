@@ -29,49 +29,63 @@
 {include file='order.tpl' nofooter=true}
   <div id="checkout_result" title='
 {if $pm_return.approved}
-  {!pay_accept! }
+  {!pay_accept!}
 {else}
-  {!pay_refused! }
+  {!pay_refused!}
 {/if}
   '>
 {/strip}
     <table class="table_midtone" width='400'>
+      {if !$pm_return.approved}
+        <tr>
+          <td colspan=2>
+            {!pay_reg!}!
+          </td>
+        </tr>
+      {/if}
       <tr>
         <td>
-          {if !$pm_return.approved}
-            {!pay_reg!}!
-          {/if}
-          <br>
-    	    {!order_id!} <b>{$shop_order.order_id}</b><br>
-    	    {if $pm_return.transaction_id}
-            {!trx_id!}   <b>{$pm_return.transaction_id}</b><br>
-          {/if}
-          <br> <br>
-          {if !$pm_return.approved}
-            <div class='error'>
-    	    {else}
-            <div>
-          {/if}
-          {if $pm_return.response}
-            {eval var=$pm_return.response}
-          {/if}
-    		  </div>
-          {if $pm_return.approved}
-            <table width='100%'>
-              <tr> <td>
-                <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=2' target='_blank'>{!printinvoice!}</a>
-              </td><td align='right'>
-                <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=1' target='_blank'>{!printtickets!}</a>
-              </td></tr>
-            </table>
-            <br>
-          {/if}
+    	    {!order_id!} 
+        </td>
+        <td>
+          <b>{$shop_order.order_id}</b>
         </td>
       </tr>
+      {if $pm_return.transaction_id}
+        <tr>
+          <td>
+              {!trx_id!}
+          </td>
+          <td>
+              <b>{$pm_return.transaction_id}</b><br>
+          </td>
+        </tr>
+      {/if}
+      {if $pm_return.response}
+        <tr>
+          <td colspan=2 {if !$pm_return.approved}class='error'{/if}>
+            {eval var=$pm_return.response}
+          </td>
+        </tr>
+      {/if}
+ 
+      {if $pm_return.approved}
+        <tr> 
+          <td>
+            <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=2' target='_blank'>{!printinvoice!}</a>
+          </td><td align='right'>&nbsp;
+            {if $shop_order.handling->handling_shipment eq "sp"}
+              <a id='printticket' href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=1' style='display:none;' target='_blank'>{!printtickets!}</a>
+              
+            {/if}
+          </td>
+        </tr>
+      {/if}
     </table>
 
   </div>
   <script type="text/javascript">
+  var timerid = 0;
   {literal}
   	$(document).ready(function(){
     	$("#checkout_result").dialog({
@@ -86,11 +100,36 @@
           }
 	  		},
     	  close: function(event, ui) {
+          if (timerid) {
+            clearTimeout(timerid);
+          }
           {/literal}window.location = '{$_SHOP_root}index.php';{literal}
         }
     	});
   	});
   {/literal}
+  {if $shop_order.handling->handling_shipment eq "sp"}
+    {literal}
+
+      //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
+      var checkpaint = function(){
+        ajaxQManager.add({
+          type:		"POST",
+          url:		"ajax.php?x=canprint",
+          dataType:	"json",
+          data:		{"pos":true,"action":"Canprint"},
+          success:function(data, status){
+            if(data.status){
+              $('printticket').show();
+            } else {
+              timerid = setTimeout(checkpaint();, 1000);
+            }
+          }	
+        });
+      } 
+      checkpaint();       
+    {/literal}
+  {/if}
   </script>
   {include file="footer.tpl"}
 

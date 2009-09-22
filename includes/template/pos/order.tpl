@@ -37,7 +37,7 @@
         <tr id='discount-name' {* style="display:none;" *}>
           <td class='user_item' >{!discounts!}:</td>
           <td class='user_value'>
-            <select name='discount_id' id='discount-select' style="width:250px;"> {*display:none;      *}
+            <select name='discount_id' id='discount-select' style="width:250px;"> {* display:none;      *}
               <option value='0'></option>
             </select>
           </td>
@@ -66,7 +66,7 @@
   </form>
 
   <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
-  <div id="order_action" title='{!order_page!}'></div>
+  <div id="order_action" title='{!pos_order_page!}'></div>
   <br />
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
