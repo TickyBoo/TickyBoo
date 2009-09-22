@@ -82,7 +82,7 @@
         {$order_note}
       </div>
     {/if}
-    {include file="process_view.tpl" not_sent=true not_status="send" status="payed"}    
+    {include file="process_view.tpl" not_sent=true not_status="send" status="payed" hand_shipment='post,sp'}    
   {else}
     {include file="process_list.tpl" not_sent=true not_status="send" status="payed" hand_shipment='post,sp'}
   {/if}

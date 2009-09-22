@@ -33,7 +33,7 @@
  *}
 {assign var='order_id' value=$smarty.request.order_id}
 
-{order->order_list first=0 length=1 status=$status not_status=$not_status}
+{order->order_list first=0 length=1 hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent}
   {assign var='next_order_id' value=$shop_order.order_id}
 {/order->order_list}
 <br>
