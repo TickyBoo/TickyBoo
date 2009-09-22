@@ -241,7 +241,7 @@ class ShopDB {
     {
       global $_SHOP;
       if ($result)
-        return $result->fetch_array() ;
+        return $result->fetch_array();
     }
 
     function fetch_assoc($result)

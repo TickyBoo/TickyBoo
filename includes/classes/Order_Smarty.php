@@ -337,86 +337,81 @@ class Order_Smarty {
     return $content;
   }
   
-  function tickets ($params, $content, &$smarty,&$repeat){
-    
-    
-    if ($repeat) {
-      if(!$params['order_id']){
-        $repeat=FALSE;
-        return;
-      }
-      $order_id=$this->secure_url_param($params['order_id']);
+	function tickets ($params, $content, &$smarty,&$repeat){
+		
+		if ($repeat) {
+      		if(!$params['order_id']){
+        		$repeat=FALSE;
+        		return;
+      		}
+      		$order_id=$this->secure_url_param($params['order_id']);
         
-      $from='FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id 
-              LEFT JOIN Event ON seat_event_id=event_id 
-            LEFT JOIN Category ON seat_category_id= category_id
-            LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=pmz_id';
-      $where=" where seat_order_id='{$order_id}'";
+      		$from='FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id 
+            		LEFT JOIN Event ON seat_event_id=event_id 
+           			LEFT JOIN Category ON seat_category_id= category_id
+            		LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=pmz_id';
+      		$where=" where seat_order_id='{$order_id}'";
     
-    if($params['user_id']) {
-    $where.=" and seat_user_id='{$this->user_auth_id}'";
-    }
-    if($params['place']) {
-      $where .=" and order_place='{$params['place']}'";
-    }
-      if($params['order']){
-        $order_by="order by {$params['order']}";
-      } 
-    
-      if($params['limit']){
-        $length=$this->secure_url_param($params['limit']);
-        $limit='limit '.$length;
-      }
-    
-      $query="select * $from $where $order_by $limit";
-    
-      $res=ShopDB::query($query);
-    
-      $ticket=shopDB::fetch_array($res);
-    
-    }else{
-      $res=array_pop($smarty->_SHOP_db_res);
-      $ticket=shopDB::fetch_array($res);
-    }
-
-    if($params['all']){
-   
-   $repeat=!empty($ticket);
-     if($ticket){
-       $c=1;
-       $tickets[]=$ticket;
-       while($ticket=shopDB::fetch_array($res)){
-         $tickets[]=$ticket;$c++;
-       } 
-       
-       $smarty->assign("shop_tickets",$tickets);  
-       $smarty->assign("shop_tickets_count",$c);  
-     }
-   return $content;  
-    }elseif($params['min_date']){
-    $repeat=!empty($ticket);
-    if($ticket){
-        $c=1;
-        $min_date=true;
-           while($ticket=shopDB::fetch_array($res)){
-            $c++;
-            $min_date=min($ticket['event_date'],$min_date);
-      } 
-      $smarty->assign("shop_tickets_count",$c);
-    $smarty->assign("shop_ticket_min_date",$min_date);
-      }
-      return $content;
-    }else{
-
-      $repeat=!empty($ticket);
-
-      if($ticket){
-        $smarty->assign("shop_ticket",$ticket);  
-        //print_r($ticket);
-    $smarty->_SHOP_db_res[]=$res; 
-      
-      }
-    }
+	    	if($params['user_id']) {
+	    		$where.=" and seat_user_id='{$this->user_auth_id}'";
+	    	}
+	    	if($params['place']) {
+	      		$where .=" and order_place='{$params['place']}'";
+	    	}
+	      	if($params['order']){
+		        $order_by="order by {$params['order']}";
+	    	} 
+	    
+	      	if($params['limit']){
+				$length=$this->secure_url_param($params['limit']);
+	        	$limit='limit '.$length;
+	      	}
+	    
+	      	$query="select * $from $where $order_by $limit";
+     		
+	      	$res=ShopDB::query($query);
+    	
+	      	$ticket=ShopDB::fetch_array($res);
+    	}else{
+      		$res=array_pop($smarty->_SHOP_db_res);
+		  	$ticket=ShopDB::fetch_array($res);
+    	}
+    	if($params['all']){
+   			//$repeat=!empty($ticket); //not required
+     		if($ticket){
+       			$c=1;
+		       $tickets[]=$ticket;
+		       while($ticket=ShopDB::fetch_array($res)){
+		         $tickets[]=$ticket;$c++;
+		       } 
+		       
+		       $smarty->assign("shop_tickets",$tickets);  
+		       $smarty->assign("shop_tickets_count",$c);  
+     		}
+     		$repeat=FALSE;
+   			return $content;  
+    	}elseif($params['min_date']){
+    		//$repeat=!empty($ticket); //not required.
+    		if($ticket){
+		    	$c=1;
+		        $min_date=true;
+		        while($ticket=ShopDB::fetch_array($res)){
+		        	$c++;
+		            $min_date=min($ticket['event_date'],$min_date);
+      			}
+      			$smarty->assign("shop_tickets_count",$c);
+    			$smarty->assign("shop_ticket_min_date",$min_date);
+      		}
+      		$repeat=FALSE;
+      		return $content;
+    	}else{
+      		$repeat=!empty($ticket);
+      		if($ticket){
+	        	$smarty->assign("shop_ticket",$ticket);  
+	        	//print_r($ticket);
+	    		$smarty->_SHOP_db_res[]=$res; 
+			}
+	    }
     return $content;
     
   }
