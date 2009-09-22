@@ -34,6 +34,13 @@
     {gui->valuta value=$order_total_price assign=test}
     {gui->view name=total_price value=$test}
     {gui->view name=order_id value=$order_id}
- </table> <br>
+  </table> <br>
+  <table width='400'>
+    <tr>
+      <td>
+      {eval var=$confirmtext}
+      </td>
+    </tr>
+  </table>
 
- {eval var=$confirmtext}
+ 

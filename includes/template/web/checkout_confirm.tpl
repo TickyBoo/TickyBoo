@@ -39,7 +39,14 @@
     {gui->valuta value=$order_total_price assign=test}
     {gui->view name=total_price value=$test}
     {gui->view name=order_id value=$order_id}
- </table><br>
+  </table><br>
+  <table class='table_dark' cellpadding='5' bgcolor='white' width='400'>
+    <tr>
+      <td>
+      {eval var=$confirmtext}
+      </td>
+    </tr>
+  </table><br>
  
- {eval var=$confirmtext}
+ 
  {include file="footer.tpl"}

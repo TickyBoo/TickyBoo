@@ -51,7 +51,7 @@ class install_mail {
           unset($_SESSION['SHOP']['mail_smtp_auth']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_user']);// = null;
           unset($_SESSION['SHOP']['mail_smtp_pass']);// = null;
-          unset($_SESSION['SHOP']['mail_smtp_helo']);//= null;
+          unset($_SESSION['SHOP']['mail_smtp_helo']);// = null;
         }        
         break;
       case 'SMTP':
