@@ -73,6 +73,10 @@ function print_select_tpl ($name,$type,&$data,&$err){
 
 	 	$this->save_paper_format('pdf_paper',$data,$err);
 	 	$hand->admin_check($data, $err);
+    if ($data['handling_id']) {
+ 	  	if(empty($data['handling_text_payment'])){$err['handling_text_payment']=mandatory;}
+ 		  if(empty($data['handling_text_shipment'])){$err['handling_text_shipment']=mandatory;}
+    }
 
    		return empty($err);
   	}
@@ -272,17 +276,17 @@ function print_select_tpl ($name,$type,&$data,&$err){
 	  	  	  //Adds the default fields
 	  		  $this->extra_init($hand);
 	  		  $hand->admin_init();
-			// The new handling method is saved
-			  $id=$hand->save();
-			  $hand_a=(array)$hand;
-			  $this->handling_form($hand_a, $err, payment_update_title);
- 			}
+  			// The new handling method is saved
+  			  $id=$hand->save();
+  			  $hand_a=(array)$hand;
+  			  $this->handling_form($hand_a, $err, handling_add_title);
+   			}
 		}elseif($_GET['action']=='add'){
 			$this->handling_form(array(), $err, handling_add_title);
 		}else{
-	  		$this->handling_list();
-  		}
-  	}
+  		$this->handling_list();
+		}
+	}
 
 function extra_form($hand, &$data, &$err){
   Global $_SHOP;

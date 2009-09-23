@@ -183,9 +183,9 @@ class AdminView extends AUIComponent {
 
     function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='')
     {
-        echo "<tr><td colspan='2' class='admin_name'>$suffix" . con($name) . "</td></tr>
+        echo "<tr><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; <span class='err'>{$err[$name]}</span></td></tr>
                 <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
-                <span class='err'>{$err[$name]}</span>
+
                 </td></tr>\n";
     }
 
