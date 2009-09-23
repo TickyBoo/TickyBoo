@@ -369,32 +369,33 @@ class PosAjax {
 	}	
 
 	private function getUserSearch(){
-   $fields = ShopDB::fieldlist('User');
-    $where = '';
-    foreach($_POST as $field => $data) {
-      if (in_array($field,$fields) and strlen(clean($data))>1) {
-        if ($where) $where.='and ';
-        $where.= "({$field} like "._esc('%'.clean($data).'%').") \n";
-      }
-    }
-    if (!$where) $where = '1=1';
-     $this->json['POST'] = $where;
+   		$fields = ShopDB::fieldlist('User');
+    	$where = '';
+   		foreach($_POST as $field => $data) {
+      		if (in_array($field,$fields) and strlen(clean($data))>1) {
+     			if ($where){ $where.='and ';}
+        		$where.= "({$field} like "._esc('%'.clean($data).'%').") \n";
+  			}
+   		}
+   		if (!$where) $where = '1=2';
+   			
+	   	$this->json['POST'] = $where;
 
 		$sql = "SELECT user_id, CONCAT_WS(', ',user_lastname, user_firstname) AS user_data,
-                   user_zip, user_city, user_email
-            FROM `User`
-            WHERE {$where}";// and user_owner_id =". $_SESSION['_SHOP_AUTH_USER_DATA'][;
+               	user_zip, user_city, user_email
+				FROM `User`
+        		WHERE {$where}";// and user_owner_id =". $_SESSION['_SHOP_AUTH_USER_DATA'][;
 		$query = ShopDB::query($sql);
 		$numRows = ShopDB::num_rows($query);
-    $this->json['page'] = 1;
-    $this->json['total'] = 1;
-    $this->json['records'] = 0;
-    $this->json['userdata'] = array();
+	    $this->json['page'] = 1;
+	    $this->json['total'] = 1;
+	    $this->json['records'] = 0;
+	    $this->json['userdata'] = array();
 
 		while($user = ShopDB::fetch_row($query)){
-  		$this->json['rows'][] = array('id'=>$user[0], 'cell'=> $user);
+			$this->json['rows'][] = array('id'=>$user[0], 'cell'=> $user);
 		}
-		return true;
+	return true;
 	}
 
 	private function getCanprint(){

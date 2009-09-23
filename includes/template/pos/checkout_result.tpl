@@ -124,8 +124,3 @@
   {/if}
   </script>
   {include file="footer.tpl"}
-
-
-
-
-

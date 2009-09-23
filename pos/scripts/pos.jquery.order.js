@@ -194,7 +194,7 @@ var loadOrder = function(){
   	ajaxQManager.add({
   		type:		"POST",
   		url:		"checkout.php?x=order",
-  		dataType:	"HTML",
+  		dataType:	"html",
   		data:		userdata,
   		success:function(html, status){
         if(html.substring(0,2) == '~~') {
@@ -215,7 +215,7 @@ var loadOrder = function(){
   	ajaxQManager.add({
   		type:		"POST",
   		url:		"checkout.php?x=cancel",
-  		dataType:	"HTML",
+  		dataType:	"html",
   		data:		{pos:"yes",action:"PosCancel"},
   		success:function(html, status){
         refreshOrder();
