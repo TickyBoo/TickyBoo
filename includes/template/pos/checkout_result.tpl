@@ -77,6 +77,7 @@
   </div>
   <script type="text/javascript">
   var timerid = 0;
+  var orderid = {$shop_order.order_id};
   {literal}
   	$(document).ready(function(){
     	$("#checkout_result").dialog({
@@ -108,10 +109,10 @@
           type:		"POST",
           url:		"ajax.php?x=canprint",
           dataType:	"json",
-          data:		{"pos":true,"action":"Canprint"},
+          data:		{"pos":true,"action":"Canprint",orderid:orderid},
           success:function(data, status){
             if(data.status){
-              $('printticket').show();
+              $('#printticket').show();
             } else {
               	timerid = setTimeout('checkpaint()', 1000);
             }

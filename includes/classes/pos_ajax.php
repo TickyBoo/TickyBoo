@@ -398,11 +398,16 @@ class PosAjax {
 	}
 
 	private function getCanprint(){
+		if($this->request['orderid']){
+			$orderid = $this->request['orderid'];
+		}else{
+			return false;
+		}
 		$sql = "SELECT order_payment_status
             FROM `Order`
-            WHERE order_id="._esc($_SESSION['_SHOP_order']->order_id);
-    $q = ShopDB::query_one_row($sql);
- 	  $this->json['status'] = $q['order_payment_status']=='payed';
+            WHERE order_id="._esc($orderid);
+    	$q = ShopDB::query_one_row($sql);
+ 	  	$this->json['status'] = $q['order_payment_status']=='payed';
     
 		return true;
 	}
