@@ -261,7 +261,7 @@ class Handling {
       $tpl->build($email,$order_d,$_SHOP->lang);
 
       if(!$email->send($tpl->to)){
-        user_error($email->errors);
+        user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;
       }
     }

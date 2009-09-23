@@ -99,6 +99,8 @@ if (!defined('DS')) {
 if (!defined('ROOT')) {
   define('ROOT',(dirname(dirname(dirname(__FILE__)))).DS);
 }
+require_once(ROOT."includes".DS."config".DS."defines.php");
+
 
 $root = "http://" . $_SERVER['HTTP_HOST'];
 $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);

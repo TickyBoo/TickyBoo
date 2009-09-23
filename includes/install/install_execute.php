@@ -49,7 +49,7 @@ class install_execute {
     if($install_mode == 'NORMAL'){
       $Table_Names = ShopDB::TableList('');
       for ($i=0;$i<count($Table_Names);$i++){
-        ShopDB::query("drop table ".$Table_Names[$i]);
+        ShopDB::query("drop table `{$Table_Names[$i]}`");
       }
     }
 
