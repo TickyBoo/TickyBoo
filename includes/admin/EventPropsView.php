@@ -433,7 +433,13 @@ select SQL_CALC_FOUND_ROWS *
 			if ( !$this->event_check($_POST, $err) ) {
 				$this->event_form( $_POST, $err, event_add_title );
 			} elseif($_POST['event_recur_type'] == "nothing"){
-		    $this->save_event( $_POST, true );
+		    $id = $this->save_event( $_POST, true );
+        if ($_POST['event_rep'] == 'main') {
+        	require_once ( "admin/EventSubPropsView.php" );
+        	$_POST['event_rep']     = 'sub';
+        	$_POST['event_main_id'] = $id;
+          EventSubPropsView::insert_event( $_POST, $isnew ) ;
+        }
 			} else {
         $this->save_recur_event($_POST, true);
       }
@@ -474,7 +480,7 @@ select SQL_CALC_FOUND_ROWS *
 		$this->Set_Time('event_end',$data,$err);
     $this->Set_Date('event_date',$data,$err);
 
-		if ( $data['event_rep'] == 'unique' ) {
+//		if ( $data['event_rep'] == 'unique' ) {
 			if ( !isset($data['event_date']) and !isset($err['event_date']) ) {
 				$err['event_date'] = con('mandatory');
 			}
@@ -482,7 +488,7 @@ select SQL_CALC_FOUND_ROWS *
 				$err['event_time'] = con('mandatory');
 			}
 			// if(!isset($data['event_open'])){$err['event_open']=mandatory;}
-		}
+//		}
 
 		if ( !$data['event_id'] ) {
 			if ( $data['event_rep'] == 'unique' and $data['event_pm_ort_id'] == 'no_pm' ) {
@@ -537,15 +543,27 @@ select SQL_CALC_FOUND_ROWS *
 		if ( !$this->mp3_post($_POST, $event_id) ) {
 			echo "<div class=error>" . con('mp3_loading_problem') . "</div>";
 		}
+		return  $event_id;
 	}
 
   // #######################################################
   function save_recur_event (&$data, $isnew ) {
-	  $event_dates = $this->getEventRecurDates($data);
-		foreach ($event_dates as $event_date) {
-      $data['event_date'] = $event_date;
-      $this->save_event( $data, $isnew ) ;
-		}
+ 	  $event_dates = $this->getEventRecurDates($data);
+    if ($data['event_rep'] !== 'main') {
+  		foreach ($event_dates as $event_date) {
+        $data['event_date'] = $event_date;
+        $this->save_event( $data, $isnew ) ;
+  		}
+    } else {
+      $id = $this->save_event( $data, $isnew ) ;
+ 			require_once ( "admin/EventSubPropsView.php" );
+ 			$data['event_rep']     = 'sub';
+ 			$data['event_main_id'] = $id;
+  		foreach ($event_dates as $event_date) {
+        $data['event_date'] = $event_date;
+        EventSubPropsView::insert_event( $data, $isnew ) ;
+  		}
+    }
   }
 
 
@@ -557,7 +575,7 @@ select SQL_CALC_FOUND_ROWS *
 
       $agenda = (!$data['event_pm_id'])?' - ' . con('agenda_only'):'';
 
-      echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+      echo "xxxssdd<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
       echo "<tr><td colspan='2' class='admin_list_title'>" .$data['event_id']." - ". $data["event_name"] . "{$agenda} </td></tr>";
       $this->print_field('ort_name', $data);
       $this->print_field('event_short_text', $data);
