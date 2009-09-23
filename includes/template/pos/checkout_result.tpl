@@ -35,53 +35,44 @@
 {/if}
   '>
 {/strip}
-    <table class="table_midtone" width='400'>
-      {if !$pm_return.approved}
-        <tr>
-          <td colspan=2>
-            {!pay_reg!}!
-          </td>
+	<table class="table_midtone" width='400'>
+    	{if !$pm_return.approved}
+    	<tr>
+        	<td colspan=2>{!pay_reg!}!</td>
         </tr>
-      {/if}
-      <tr>
-        <td>
-    	    {!order_id!} 
-        </td>
-        <td>
-          <b>{$shop_order.order_id}</b>
-        </td>
-      </tr>
-      {if $pm_return.transaction_id}
+		{/if}
+      	<tr>
+	  		<td>{!order_id!}</td>
+        	<td><b>{$shop_order.order_id}</b></td>
+      	</tr>
+      	{if $pm_return.transaction_id}
         <tr>
-          <td>
-              {!trx_id!}
-          </td>
-          <td>
-              <b>{$pm_return.transaction_id}</b><br>
-          </td>
+        	<td>{!trx_id!}</td>
+          	<td><b>{$pm_return.transaction_id}</b><br/></td>
         </tr>
-      {/if}
-      {if $pm_return.response}
+      	{/if}
+      	{if $pm_return.response}
         <tr>
-          <td colspan=2 {if !$pm_return.approved}class='error'{/if}>
-            {eval var=$pm_return.response}
-          </td>
+        	<td colspan=2 {if !$pm_return.approved}class='error'{/if}>
+            	{eval var=$pm_return.response}
+          	</td>
         </tr>
-      {/if}
- 
-      {if $pm_return.approved}
+      	{/if}
+      	
+      	{if $pm_return.approved}
         <tr> 
-          <td>
-            <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=2' target='_blank'>{!printinvoice!}</a>
-          </td><td align='right'>&nbsp;
-            {if $shop_order.handling->handling_shipment eq "sp"}
-              <a id='printticket' href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=1' style='display:none;' target='_blank'>{!printtickets!}</a>
-              
+        	<td>
+            	<a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=2' target='_blank'>{!printinvoice!}</a>
+          	</td>
+  			<td align='right'>&nbsp;
+  			
+            {if $shop_order.order_handling->handling_shipment eq "sp"}
+            	<a id='printticket' href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=1' style='display:none;' target='_blank'>{!printtickets!}</a>
             {/if}
-          </td>
-        </tr>
-      {/if}
-    </table>
+          	</td>
+    	</tr>
+      	{/if}
+	</table>
 
   </div>
   <script type="text/javascript">
@@ -108,7 +99,7 @@
     	});
   	});
   {/literal}
-  {if $shop_order.handling->handling_shipment eq "sp"}
+  {if $shop_order.order_handling->handling_shipment eq "sp"}
     {literal}
 
       //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
@@ -122,7 +113,7 @@
             if(data.status){
               $('printticket').show();
             } else {
-              timerid = setTimeout(checkpaint();, 1000);
+              	timerid = setTimeout('checkpaint()', 1000);
             }
           }	
         });
