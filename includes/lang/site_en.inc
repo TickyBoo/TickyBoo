@@ -424,6 +424,9 @@ define("checkbox_all","Check/Uncheck All");
 define("also_sub","Subevents also");
 define("event_add_title","Add a New Event");
 define("event_edit_title","Modify Event");
+define("event_update_title","Modify Event");
+define("multi","Add Sub-Event");
+
 	define("event_id","Event ID#");
 	define("event_name","Event Name");
 	define("event_pm_ort_id","Seat Chart");
