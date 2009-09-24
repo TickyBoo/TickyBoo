@@ -112,6 +112,8 @@
               <td class="subtitle">
                 {if $shop_order.order_payment_status eq "none"}
                   <font color="#FF0000">{!notpaid!}</font>
+                {elseif $shop_order.order_payment_status eq "pending"}
+          			<font color="orange">{!pending!}</font>
                 {elseif $shop_order.order_payment_status eq "payed"}
                   <font color='#00CC00'>{!paid!}</font>
                 {/if}
