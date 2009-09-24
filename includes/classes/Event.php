@@ -137,9 +137,11 @@ class Event {
          require_once('classes/PlaceMap.php');
          $pm=PlaceMap::load($this->event_pm_id);
 
-         if($new_pm_id=$pm->copy($this->event_id)){
+         if($pm and $new_pm_id=$pm->copy($this->event_id)){
            $query="update Event set event_pm_id=$new_pm_id where event_id={$this->event_id}";
            ShopDB::query($query);
+         } else {
+           user_error('Cant find selected placemap.');   
          }
        }
 

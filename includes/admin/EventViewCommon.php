@@ -59,7 +59,8 @@ class EventViewCommon extends AdminView {
             echo "<option value='no_pm' {$sel['no_pm']}></option>";
         } elseif ($main == 'has_def') {
             echo "<option value='copy_main_pm' {$sel['no_pm']}>(" . copy_main_pm . ")</option>";
-        } while ($row = shopDB::fetch_assoc($res)) {
+        } 
+        while ($row = shopDB::fetch_assoc($res)) {
             if ($row['ort_id'] != $ort_id) {
                 $ort_id = $row['ort_id'];
                 echo "<option value='0,{$row['ort_id']}' {$sel[$row['pm_id']]}>{$row['ort_name']} - " . agenda_only . "</option>\n";
