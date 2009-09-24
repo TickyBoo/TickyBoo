@@ -25,8 +25,8 @@
  *
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
- *}
-  <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+ *}<link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
+  <table class='table_dark' cellpadding='5' bgcolor='white' width='500'>
     {eval var=$shop_handling.handling_text_payment assign=test}
     {gui->view name=payment value=$test}
     {eval var=$shop_handling.handling_text_shipment  assign=test}
@@ -35,7 +35,7 @@
     {gui->view name=total_price value=$test}
     {gui->view name=order_id value=$order_id}
   </table> <br>
-  <table width='400'>
+  <table width='500'>
     <tr>
       <td>
       {eval var=$confirmtext}
