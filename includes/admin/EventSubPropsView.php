@@ -114,7 +114,7 @@ function draw (){
       if($_POST['event_recur_type'] == "nothing")
       $this->insert_event($_POST);
       else
-      	$this->insert_recur_event($_POST);
+      	$this->save_recur_event($_POST);
       $main = Event::load($_POST['event_id'],FALSE);
       $main = (array)$main;
     } else {$main = $_POST;}
@@ -162,14 +162,16 @@ function draw (){
     if(!$main->event_date and  !$data['event_date']){$err['event_date']=con('mandatory');}
 
     if($data['action']=='insert_sub'){
-      if($data['event_pm_ort_id']=='copy_main_pm' and $main->event_pm_id){
+      if($data['event_pm_ort_id']=='no_pm' and $main->event_pm_id){
         $data['event_pm_id']    =$main->event_pm_id;
         $data['event_ort_id']   =$main->event_ort_id;
       }elseif($data['event_pm_ort_id']){
         list($event_pm_id,$event_ort_id)=explode(',',$data ['event_pm_ort_id']);
         $data['event_pm_id']=$event_pm_id;
         $data['event_ort_id']=$event_ort_id;
-      }else{
+      }
+        
+      if (!$data['event_pm_id']){
         $err['event_pm_ort_id']=con('mandatory');
       }
     }
@@ -221,11 +223,11 @@ function draw (){
   }
 
 ########################################################
-  function save_recur_event (&$data, $isnew ) {
+  function save_recur_event (&$data) {
 	  $event_dates = $this->getEventRecurDates($data);
 		foreach ($event_dates as $event_date) {
       $data['event_date'] = $event_date;
-      $this->insert_event( $data, $isnew ) ;
+      $this->insert_event( $data) ;
 		}
   }
 
