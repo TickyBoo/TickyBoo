@@ -51,7 +51,7 @@ $tbls['Control']['fields'] = array(
   'control_login' => " varchar(50) NOT NULL DEFAULT ''",
   'control_password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'control'",
-  'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
+  'control_event_ids' => " varchar(100) DEFAULT ''");
 $tbls['Control']['key'] = array(
   "PRIMARY KEY (`admin_id`)"
   );
