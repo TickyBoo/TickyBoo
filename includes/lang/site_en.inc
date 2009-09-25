@@ -869,7 +869,6 @@ define("autocancel","After this time your order is automaticaly canceled!");
 define("ordertickets","To Order Tickets Click below:");
 define("reserv_cancel","WARNING Reservation is CANCELLED on Ordering!");
 define("notpaid","Not Paid");
-define("pending","Payment Pending");
 define("paid","Paid");
 define("payhere","<br><br>To Pay Now, Check Here:");
 define("notsent","Not Sent");
