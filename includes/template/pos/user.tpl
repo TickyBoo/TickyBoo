@@ -75,7 +75,7 @@
       </td>
     </tr>
     </thead>
-    <tbody id='user_data' name='user_data' style="display:none;">
+    <tbody id='user_data' style="display:none;">
       {gui->setdata data=$user_data errors=$user_errors nameclass='user_item' valueclass='user_value' namewidth='120'}
       {gui->input name='user_firstname' mandatory=true size='30' maxlength='50'}
       {gui->input name='user_lastname' mandatory=true size='30' maxlength='50'}
@@ -88,7 +88,8 @@
       {gui->input name='user_phone' size='15' maxlength='50'}
       {gui->input name='user_fax' size='15' maxlength='50'}
       {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
-      <input type='hidden' id='user_id' name='user_id' value='-1'>
+      <tr><td colspan="2"><input type='hidden' id='user_id' name='user_id' value='-1' /></td></tr>
+      
     </tbody>
   </table>
   <div id="search-dialog" title="Personal Search dialog">
