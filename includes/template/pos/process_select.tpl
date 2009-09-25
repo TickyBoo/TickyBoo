@@ -36,18 +36,16 @@
 {capture assign="tabview"}{!pos_reservedlist!}|{!pos_unpaidlist!}|{!pos_unsentlist!}|{!pos_currenttickets!}{/capture} 
 {gui->Tabbar menu=$tabview}
 
-
-
 {if $TabBarid == 0} {* eq "reserved" *}
   {if $smarty.request.order_id}      
     {if $smarty.post.action eq "update_note"} {*Should be upgraded to an ajax call. that way just get a status back.*}
       {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
-      <div class='success'>
+      <div class='success' style="text-align:center;">
         {$order_note}
       </div>
     {elseif $smarty.get.action eq 'change_status'}
       {if $order->set_status_f($smarty.get.order_id,'pros') }
-        <div class='success'>
+        <div class='success' style="text-align:center;">
           {!order_status_changed!}
         </div>
       {/if}
@@ -58,39 +56,45 @@
   {/if}
 {elseif $TabBarid == 1} {*  eq "unpaid" *}
   {if $smarty.request.order_id}
-    {if $smarty.get.action eq 'send'}
-      {$order->set_status_f($smarty.get.order_id,'ord')}
-      {$order->set_send_f($smarty.get.order_id) }
-      <div class='success'>
-        {!order_status_changed!}
-      </div>
-    {elseif $smarty.post.action eq "update_note"}
-      {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
-      <div class='success'>
-        {$order_note}
-      </div>
-    {/if}
-    {include file="process_view.tpl" status="ord" not_status="payed" place='pos'}    
-  {else}
-    {include file="process_list.tpl" status="ord" not_status="payed" place='pos'}
-  {/if}
-{elseif $TabBarid == 2} {*  eq "unsent" *}
-  {if $smarty.request.order_id}
     {if $smarty.post.action eq "update_note"}
       {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
       <div class='success'>
         {$order_note}
       </div>
-    {/if}
-    {include file="process_view.tpl" not_sent=true not_status="send" status="payed" hand_shipment='post,sp'}    
+    {elseif $smarty.post.action eq "setpaid"}
+    	{$order->set_status_f($smarty.post.order_id,'ord') }
+      	{$order->set_payed_f($smarty.post.order_id) }
+      	<div class='success' style="text-align:center;">
+			{!order_status_changed!}
+      	</div>
+  	{/if}
+    {include file="process_view.tpl" status="ord" not_status="payed" place='pos' not_hand_payment='entrance'}    
   {else}
-    {include file="process_list.tpl" not_sent=true not_status="send" status="payed" hand_shipment='post,sp'}
+    {include file="process_list.tpl" status="ord" not_status="payed" place='pos' not_hand_payment='entrance'}
+  {/if}
+{elseif $TabBarid == 2} {*  eq "unsent" *}
+  {if $smarty.request.order_id}
+    {if $smarty.post.action eq 'setsend'}
+    	{$order->set_status_f($smarty.post.order_id,'ord') }
+      	{$order->set_send_f($smarty.post.order_id) }
+      	<div class='success' style="text-align:center;">
+        	{!order_status_changed!}
+      	</div>
+    {elseif $smarty.post.action eq "update_note"}
+      {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
+      <div class='success' style="text-align:center;">
+        {$order_note}
+      </div>
+    {/if}
+    {include file="process_view.tpl" not_status="send" status="payed" hand_shipment='post,sp'}    
+  {else}
+    {include file="process_list.tpl" not_status="send" status="payed" hand_shipment='post,sp'}
   {/if}
 {elseif $TabBarid == 3} {*  eq "pos owned orders" *}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq "update_note"}
       {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
-      <div class='success'>
+      <div class='success' style="text-align:center;">
         {$order_note}
       </div>
     {/if}

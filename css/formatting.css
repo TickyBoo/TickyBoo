@@ -44,6 +44,9 @@ h3 { padding-left: 10px; color: #000000; background: #FE7B09; font-size: 1em; he
 	border-right:#00ff00 1px solid;	border-bottom:#00ff00 1px solid;
 	padding:0px;
 }
+.pm_free:hover{
+	background-color:#099;
+}
 .pm_resp {
 	background-color:#FFA500;
 	width:18px; height:18px; 

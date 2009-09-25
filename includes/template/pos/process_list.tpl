@@ -91,7 +91,7 @@
           <td>{!actions!}</td>
         </tr>
 
-        {order->order_list hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to}
+        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to}
           {counter print=false assign=count}  
           {if $count lt ($length+1)}    
 
@@ -121,10 +121,12 @@
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
                   <a href='print.php?order_id={$shop_order.order_id}'>
                     <img border='0' src='images/printer.gif'>
-                  </a> 
+                  </a>
+                  {if $shop_order.payment_status eq 'none'}
                   <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
                     <img border='0' src='images/trash.png'>
                   </a>
+                  {/if}
                 {/if}
               </td>
             </tr>

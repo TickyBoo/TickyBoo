@@ -33,13 +33,13 @@
  *}
 {assign var='order_id' value=$smarty.request.order_id}
 
-{order->order_list first=0 length=1 hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent}
+{order->order_list curr_order_id=$order_id first=0 length=1 not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent}
   {assign var='next_order_id' value=$shop_order.order_id}
 {/order->order_list}
 <br>
 <form name='f' action='view.php' method='post'>
   <table width='100%' border=0>
-    {order->order_list order_id=$order_id}
+    {order->order_list order_id=$order_id handling=true}
       <tr>
         <td width='50%' valign='top'>
           <table width='99%' border='0'>
@@ -55,10 +55,6 @@
                   </a>
                 {/if}
               </td>
-            </tr>
-            <tr>
-              <td class='admin_info'>{!next_order_id!}</td>
-              <td class='subtitle'>{$next_order_id}</td>
             </tr>
             <tr>
               <td class='admin_info'>{!number_tickets!}</td>
@@ -119,6 +115,32 @@
                 {/if}
               </td>
             </tr>
+   			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") 
+				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"
+				and $shop_order.handling_payment neq 'entrance' }
+			<tr>
+				<td colspan="2">
+			  		<font color="Black" ><b>{!payhere!}</b></font>
+			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+						<input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
+					{/order->tickets}
+					{handling handling_id=$shop_order.order_handling_id}
+				  	{if $shop_order.order_payment_status eq 'none'}
+				  		{if $shop_handling.handling_html_template}
+				  			{eval var=$shop_handling.handling_html_template}
+						{else}
+							<form name='f' action='view.php' method='post'>
+						    	<input type="hidden" name="action" value="setpaid" />
+						        <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+				          		<input type="submit" value="{!change_order_to_payed!}" />
+					      	</form>			
+				  		{/if}
+				  		
+				  	{/if}
+					{/handling}
+			  </td>
+			</tr>
+			{/if}
             <tr>
               <td class="admin_info">{!shipmentstatus!}</td>
               <td class="subtitle">
@@ -129,9 +151,36 @@
                 {/if}
               </td>
             </tr>
+           	{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") 
+				and $shop_order.order_payment_status eq "payed" and $shop_order.order_shipment_status neq "send"
+				and ($shop_order.handling_shipment eq 'sp' or $shop_order.handling_shipment eq 'post') }
+			<tr>
+				<td colspan="2" style="text-align:center;">
+					<form name='f' action='view.php' method='post'>
+						<input type="hidden" name="action" value="setsend" />
+						<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+				        <input type="submit" value="{!change_order_to_send!}" />
+	     			</form>			
+			  	</td>
+			</tr>
+			{/if}
           </table>
+          	<table width="99%" border=0>
+            	<tr>
+              		<td class="title" colspan=2 valign="top">{!pos_handlinginfo!}</td>
+            	</tr>
+            	<tr>
+					<td class="admin_info" valign="top">{!handling_payment!}</td>
+              		<td class="sub_title" valign="top">{$shop_order.handling_text_payment}</td>
+				</tr>
+            	<tr>
+					<td class="admin_info" valign="top">{!handling_shipment!}</td>
+              		<td class="sub_title" valign="top">{$shop_order.handling_text_shipment}</td>
+				</tr>
+			</table>
         </td>
         <td width="50%" valign="top" align='right'>
+        {if $user_order.user_firstname or $user_order.user_lastname}
           <table width="99%" border=0>
             <tr>
               <td class="title" colspan=2 valign="top">{!pers_info!}</td>
@@ -173,6 +222,16 @@
               <td class="sub_title" valign="top">{$user_order.user_email}</td>
             </tr>
           </table>
+        {else}
+       		<table width="99%" border=0>
+            	<tr>
+              		<td class="title" colspan=2 valign="top">{!pers_info!}</td>
+            	</tr>
+            	<tr>
+            		<td colspan="2" style="text-align:center;"><strong>No user data</strong></td>
+				</tr>
+            </table>
+        {/if}
         </td>
       </tr>
     {/order->order_list}
@@ -181,21 +240,16 @@
         <table width='100%' bgcolor="lightgrey" border=0>
           <tr>
             <td width='33%' align="left"><a href="view.php">{!pos_goback!}</a></td>
-            <td width='34%' align="center"> &nbsp;
-              {if $status eq "payed"}
-                <a href='javascript:if(confirm("{!pos_processorder!}")){literal}{location.href="view.php?order_id={/literal}{$shop_order.order_id}{literal}&action=change_status";}{/literal}'>
-                  {!pos_clicktoproc!}
-                </a>
-              {elseif $status eq "pros" }
-                <a href='javascript:if(confirm("{!pos_ticketready!}")){literal}{location.href="view.php?process=processed&order_id={/literal}{$shop_order.order_id}{literal}&action=send";}{/literal}'>
-                  {!pos_clicktosent!}
-                </a>
-             {/if}
-              &nbsp;
-            </td>
+            <td width='34%' align="center"> &nbsp;</td>
             <td width='33%' align="right">
-              <a href="view.php?order_id={$next_order_id}">{!pos_nextorder!}
-                </a>
+            	
+				{if $not_status eq "payed"}
+              		<a href="view.php?order_id={$next_order_id}">{!pos_nextunpaid!}</a>
+  				{elseif $not_status eq "send" }
+  					<a href="view.php?order_id={$next_order_id}">{!pos_nextunsent!}</a>
+				{else}
+					<a href="view.php?order_id={$next_order_id}">{!pos_nextorder!}</a>
+				{/if}
             </td>
           </tr>
         </table>

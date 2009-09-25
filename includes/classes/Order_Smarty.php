@@ -196,29 +196,39 @@ class Order_Smarty {
       	if($params['not_hand_payment']){
       		$types=explode(",",$params['not_hand_payment']);
       		foreach($types as $type){
-      			$where.=" AND handling_payment <> '{$type}'";
+      			if($in){$in .= ",'".$type."'";
+      			}else{$in = "'".$type."'";}      			
       		}
+      		$where.=" AND handling_payment NOT IN ({$in})";
       	}
+      	unset($in);
       	if($params['not_hand_shipment']){
       		$types=explode(",",$params['not_hand_shipment']);
       		foreach($types as $type){
-      			$where.=" AND handling_shipment <> '{$type}'";
+      			if($in){$in .= ",'".$type."'";
+      			}else{$in = "'".$type."'";}
       		}
+  			$where.=" AND handling_shipment NOT IN ({$in})";
       	}
+      	unset($in);
       	if($params['hand_shipment']){
       		$types=explode(",",$params['hand_shipment']);
       		foreach($types as $type){
-      			$where.=" AND handling_shipment = '{$type}'";
+      			if($in){$in .= ",'".$type."'";
+      			}else{$in = "'".$type."'";}
       		}
+      		$where.=" AND handling_shipment IN ({$in})";
       	}
+      	unset($in);
       	if($params['hand_payment']){
       		$types=explode(",",$params['hand_payment']);
       		foreach($types as $type){
-      			$where.=" AND handling_payment = '{$type}'";
+      			if($in){$in .= ",'".$type."'";
+      			}else{$in = "'".$type."'";}
       		}
+      		$where.=" AND handling_payment IN ({$in})";
       	}
       }
-        
       if($params['user']){
         $from.=',User';
         $where.=' and order_user_id=user_id';
@@ -264,6 +274,10 @@ class Order_Smarty {
           $order_id=$this->secure_url_param($params['order_id']);
           $where .= " and order_id='{$order_id}'";
       }
+      if($params['curr_order_id']){
+          $curr_order_id=$this->secure_url_param($params['curr_order_id']);
+          $where .= " and order_id>'{$curr_order_id}'";
+      }
       if($params['order_by_date']){
         $order_by .= " ORDER BY order_date {$params['order_by_date']}";
       }
@@ -280,7 +294,7 @@ class Order_Smarty {
         $first=$this->secure_url_param($params['first']);
         $limit='limit '.$first;
       
-        if($params['length']){
+     	if($params['length']){
             $limit.=','.$params['length'];
         }
       }elseif($params['length']){
