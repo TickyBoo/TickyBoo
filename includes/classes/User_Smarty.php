@@ -99,7 +99,7 @@ class User_Smarty {
 
 /*The next bit of code creates users */
   function register_f ($ismember, &$member, &$err, $mandatory_l=0, $secure='', $short=0 ){
-    if ($_SESSION['_SHOP_AUTH_USER_DATA']['user_id']) {
+    if (!isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
       $type =($ismember)?2:3;
     } else {
       $type = 4;
