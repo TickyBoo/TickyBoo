@@ -178,7 +178,7 @@ class smtp
             return true;
 
         } else {
-            $this->errors[] = 'HELO command failed, output: ' . trim(substr(trim($error),3));
+            $this->errors[] = 'HELO command failed, output: ' . $error; // trim(substr(trim($error),3));
             return false;
         }
     }
@@ -195,7 +195,7 @@ class smtp
             return true;
 
         } else {
-            $this->errors[] = 'EHLO command failed, output: ' . trim(substr(trim($error),3));
+            $this->errors[] = 'EHLO command failed, output: ' . $error; // trim(substr(trim($error),3));
             return false;
         }
     }
@@ -212,7 +212,7 @@ class smtp
             return true;
 
         } else {
-            $this->errors[] = 'RSET command failed, output: ' . trim(substr(trim($error),3));
+            $this->errors[] = 'RSET command failed, output: ' . $error; // trim(substr(trim($error),3));
             return false;
         }
     }
@@ -231,7 +231,7 @@ class smtp
             return true;
 
         } else {
-            $this->errors[] = 'QUIT command failed, output: ' . trim(substr(trim($error),3));
+            $this->errors[] = 'QUIT command failed, output: ' .$error; // trim(substr(trim($error),3));
             return false;
         }
     }
@@ -245,15 +245,15 @@ class smtp
                 AND $this->send_data('AUTH LOGIN')
                 AND substr(trim($error = $this->get_data()), 0, 3) === '334'
                 AND $this->send_data(base64_encode($this->user))			// Send username
-                AND substr(trim($error = $this->get_data()),0,3) === '334'
+                AND substr(trim($error = $this->get_data()), 0, 3) === '334'
                 AND $this->send_data(base64_encode($this->pass))			// Send password
-                AND substr(trim($error = $this->get_data()),0,3) === '235' ){
+                AND substr(trim($error = $this->get_data()), 0, 3) === '235' ){
 
             $this->authenticated = true;
             return true;
 
         } else {
-            $this->errors[] = 'AUTH command failed: ' . trim(substr(trim($error),3));
+            $this->errors[] = 'AUTH command failed: ' . $error; //trim(substr(trim($error),3));
             return false;
         }
     }
@@ -265,11 +265,12 @@ class smtp
     {
         if ($this->is_connected()
             AND $this->send_data('MAIL FROM:<'.$from.'>')
-            AND substr(trim($this->get_data()), 0, 2) === '250' ) {
+            AND substr(trim($error = $this->get_data()), 0, 2) === '250' ) {
 
             return true;
 
         } else {
+            $this->errors[] = $error;// trim(substr(trim($error), 3));
             return false;
         }
     }
@@ -286,7 +287,7 @@ class smtp
             return true;
 
         } else {
-            $this->errors[] = trim(substr(trim($error), 3));
+            $this->errors[] = $error;// trim(substr(trim($error), 3));
             return false;
         }
     }
@@ -303,7 +304,7 @@ class smtp
             return true;
 
         } else {
-            $this->errors[] = trim(substr(trim($error), 3));
+            $this->errors[] = $error;// trim(substr(trim($error), 3));
             return false;
         }
     }
@@ -326,6 +327,7 @@ class smtp
             return fwrite($this->connection, $data.CRLF, strlen($data)+2);
             
         } else {
+            $this->errors[] = 'connection not made before calling "send_data".';
             return false;
         }
     }
@@ -347,8 +349,10 @@ class smtp
             }
             return $return;
 
-        }else
+        }else {
+            $this->errors[] = 'connection not made before calling "get_data".';
             return false;
+        }
     }
 
     /**
