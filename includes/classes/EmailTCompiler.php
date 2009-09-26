@@ -188,7 +188,7 @@ class EmailTCompiler {
     case "order_pdf" :
       $this->add('order_pdf',array(
         'name'=>$this->a2ps($a['NAME']),
-        'order_id'=>$this->a2ps($a['ORDER_ID']),
+        'order_id'=>$this->a2p($a['ORDER_ID']),
         'mark_send'=>$this->a2p($a['MARK_SEND']),
 				'summary'=>$this->a2p($a['SUMMARY']),
 				'mode'=>$this->a2p($a['MODE'])

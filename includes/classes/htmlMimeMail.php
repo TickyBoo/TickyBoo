@@ -50,7 +50,10 @@ class HtmlMimemail extends RMail{
       if (!is_null($_SHOP->mail_sendmail)) {
         parent::setSendmailPath($_SHOP->mail_sendmail);
       }
-      return parent::send($recipients,$type);
+      if (!$result = parent::send($recipients,$type)){
+        shopdb::dblogging("email '{$type}' errors:\n".print_r($email->errors,true));
+      }
+      return $result;
     }
 }
 ?>
