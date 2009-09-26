@@ -87,7 +87,7 @@ class Order {
     global $_SHOP;
     
     $query="select * from `Order` 
-    WHERE order_id = ".ShopDB::quote($order_id);
+    WHERE order_id = "._ESC($order_id);
     if($data=ShopDB::query_one_row($query)){
       $order=new Order(0,0,0,0,0,0);
       $order->_fill($data);
@@ -97,11 +97,11 @@ class Order {
           $order->handling= Handling::load($order->order_handling_id);
           $order->order_handling= &$order->handling;
         }
-//        $order->places = Ticket::loadall($order_id);
-       }
-
+      }
       return $order;
     }
+    // the next log is included to find when or why sometimes it is not possible set the send state.
+    ShopDB::dblogging("Can load Order '{$order_id}', check of it exist.");
   }
   
 	public function loadFromPaymentId($payment_id, $handling_id, $complete=false){
