@@ -310,7 +310,7 @@ class EmailTCompiler {
 
     if(isset($data['order_pdf'])){
       foreach($data['order_pdf'] as $order_pdf){
-        $r_data=$order_pdf['order_id'];
+        $order_id =$order_pdf['order_id'];
 
 				if(strcasecmp($order_pdf['mode'],'tickets')=='0'){
 					$mode=1;
@@ -321,12 +321,14 @@ class EmailTCompiler {
 				}
 
 
-       $res.=$pre.'$mail->addAttachment( new Attachment( Order::print_order('.$r_data.",'".
-             $order_pdf['summary']."','data',FALSE,$mode), ".$order_pdf['name'].", 'application/pdf', new Base64Encoding()))".$post;
+       $res.=$pre.'$mail->addAttachment( new Attachment( Order::print_order('.$order_id.",'".
+             $order_pdf['summary']."', 'data', FALSE, $mode), ".$order_pdf['name'].", 'application/pdf', new Base64Encoding()))".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
-          $res.=$pre.'$order=Order::load('.$r_data.')'.$post;
-          $res.=$pre.'$order->set_shipment_status(\'send\')'.$post;
+          $res.=$pre.'$order=Order::load('.$order_id.')'.$post;
+          $res.=$pre."if (\$order) {\n";
+          $res.=$pre.'  $order->set_shipment_status(\'send\')'.$post;
+          $res.=$pre."}\n";
 	      }
       }
     }
@@ -334,34 +336,29 @@ class EmailTCompiler {
     if(isset($data['attachment'])){
       foreach($data['attachment'] as $attach){
         $file=$attach['file'];
-	$data1=$attach['data'];
+        $data1=$attach['data'];
 
-	$r_data='$'.$this->args.'['.$data1.']';
+        $r_data='$'.$this->args.'['.$data1.']';
 
         if(isset($data1)){
-	  $res.=$pre.'if(isset('.$r_data.")){\n";
-
-
-
-	  $res.=$pre.'  $mail->addAttachment(new Attachment( '.$r_data.", ".$attach['name'].", ".$attach['type'].",new Base64Encoding()))$post";
-	  $res.=$pre."}\n";
-	}
+          $res.=$pre.'if(isset('.$r_data.")){\n";
+          $res.=$pre.'  $mail->addAttachment(new Attachment( '.$r_data.", ".$attach['name'].", ".$attach['type'].",new Base64Encoding()))$post";
+          $res.=$pre."}\n";
+        }
 
         if(isset($data1) and isset($file)){
-	  $res.=$pre."else{\n";
-	}
+          $res.=$pre."else{\n";
+        }
 
-	if(isset($file)){
-	  $res.=$pre.'$mail->addAttachment(new FileAttachment('.$attach['file'].', '.$attach['type']."))$post";
-	}
+        if(isset($file)){
+          $res.=$pre.'$mail->addAttachment(new FileAttachment('.$attach['file'].', '.$attach['type']."))$post";
+        }
 
         if(isset($data1) and isset($file)){
-	  $res.=$pre."}\n";
-	}
-
+          $res.=$pre."}\n";
+        }
       }
     }
-
     return $res;
   }
 
@@ -498,7 +495,7 @@ class '.$out_class_name.' {
   '.$this->build.'
 }
 ';
-//    echo nl2br($xyz);
+    echo ($xyz);
     return $xyz;
   }else{
     return FALSE;

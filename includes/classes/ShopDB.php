@@ -487,8 +487,9 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
            $sql_line = trim($sql_lines[$i]);
            if (substr($sql_line,-1) ==',') $sql_line = substr($sql_line,0,-1);
            if (preg_match('/^[\s]*(CONSTRAINT|FOREIGN|PRIMARY|UNIQUE)*[\s]*(KEY)+/', ' '.$sql_line)) {
-              $keys['keys'][] = str_replace('  ',' ',$sql_line);
+             $keys['keys'][] = str_replace('  ',' ',$sql_line);
            } else if (preg_match('/(ENGINE)+/', $sql_line)) {
+             $key['ENGINE'] = $sql_line;
            } else {
              $x = strpos( $sql_line,' ');
              $key = substr($sql_line,0,$x);
@@ -502,7 +503,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       Return $keys;
     }
 
-    function DatabaseUpgrade($Struction, $logall =false, $viewonly=false) {
+    function DatabaseUpgrade($Struction, $logall =false, $viewonly=false, $collation='utf8_general_ci') {
       $error = '';  $returning = array();
       foreach ($Struction as $tablename => $fields) {
         $update = false; $datainfo = ''; $error='';
@@ -535,7 +536,6 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
               }
             }
           }
-
 
           foreach ($tblFields['fields'] as $key => $info) {
             if (!array_key_exists($key, $fields['fields'])) {
@@ -591,6 +591,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
               foreach ($fields['key'] as $info) $sql .= ', ' . $info."\n";
           $sql = "CREATE TABLE `$tablename` (" . substr($sql, 2) . ")";
           if ($fields['engine']) $sql .= ' ENGINE='.$fields['engine']."\n";
+          $sql .= "COLLATE = {$collation}\n";
         }
         If ($update) {
 

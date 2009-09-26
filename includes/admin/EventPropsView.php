@@ -129,7 +129,7 @@ class EventPropsView extends EventViewCommon {
 	}
 
 
-	function event_sub_list( $event_main_id, &$alt, $history= false ) {
+	function event_sub_list( $event_main_id, &$alt, $main_name, $history= false ) {
 		global $_SHOP;
     $where = "and (event_date ".(($history)?'<':'>=')." NOW() ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
 
@@ -153,16 +153,21 @@ class EventPropsView extends EventViewCommon {
 //                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
 
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >
-                <td class='admin_list_item' width='20' bgcolor='white' >&nbsp;</td>
-                <td class='admin_list_item' width='130' >";
+                <td class='admin_list_item' style='width:5;' bgcolor='white' >&nbsp;</td>
+                <td class='admin_list_item' width='130' ><nobr>";
       if (!$history) {
         echo "<input type='checkbox' name='cbxEvents[]'
                  id='main_event_".$row['event_main_id']."'
                  class='".$row['event_main_id']."'
                  value='".$row['event_id']."'>";
       }
+      if ($main_name !== $row['event_name']) {
+        echo  '&nbsp;'. showstr( $row['event_name'], 28 ) ;
 
-      echo "&nbsp;</td>
+
+      }
+      
+      echo "&nbsp;</nobr></td>
                 <td class='admin_list_item'>$edate $etime</td>
                 <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
 
@@ -368,7 +373,7 @@ select SQL_CALC_FOUND_ROWS *
 
 			$alt = ( $alt + 1 ) % 2;
 			if ( $row['event_rep'] == 'main' ) {
-				$this->event_sub_list( $row['event_id'], $alt, $history);
+				$this->event_sub_list( $row['event_id'], $alt,$row['event_name'], $history);
 			}
 		}
 		if (!$history){
