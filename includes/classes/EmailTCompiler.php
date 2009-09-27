@@ -479,7 +479,9 @@ class EmailTCompiler {
 
     xml_parser_free($this->xml_parser);
 
-    if (!$this->errors) {
+    if (!$this->errors) {    	
+    	$langs = implode(",",$this->langs);
+    	$langs = str_replace('\'', '"', $langs);
     $xyz =
 '/*this is a generated code. do not edit!
 produced '.date("C").'
@@ -488,7 +490,7 @@ produced '.date("C").'
 class '.$out_class_name.' {
   var $object_id;
   var $engine;
-  var $langs = array('.implode(",",$this->langs).');
+  var $langs = array('.$langs.');
   
   function '.$out_class_name.'(){}
 
