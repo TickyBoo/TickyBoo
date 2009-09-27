@@ -40,7 +40,10 @@ class HtmlMimemail extends RMail{
     public function send($recipients, $type = null) {
       global $_SHOP;
       
-      if(is_null($type)) $type = is($_SHOP->mail_mode,'mail');
+      if(empty($type)) $type = is($_SHOP->mail_mode,'mail');
+      If(empty($type)) {
+        user_error(con('email_badconfig'));
+      }
       parent::setSMTPParams($_SHOP->mail_smtp_host,
                             $_SHOP->mail_smtp_port,
                             $_SHOP->mail_smtp_helo,

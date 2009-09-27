@@ -132,6 +132,8 @@ define("deleted_all_tickets","Deleted All Tickets!");
 define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
+define("email_badconfig","The mail system is not good defined!");
+
 define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
 define("fax_short","The Fax Number is too Short!");
 define("fax_long","The Fax Number is too Long!");
