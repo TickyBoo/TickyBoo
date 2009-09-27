@@ -291,7 +291,7 @@ define("spoint_update_title","Modify Point of Sale");
 			define("user_prefs_pdf","Open Orders in Acrobat");
 			define("user_prefs_pdt","Send Orders to Printer");
 		define("user_nickname","Nickname");
-
+define("print_warning","When you want to directly print the PDF's, you need to setup our system.");
 //Ticket Takers
 define("control_tab","Ticket Takers");
 define("control_title","All Ticket Takers");

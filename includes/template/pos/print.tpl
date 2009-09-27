@@ -42,8 +42,8 @@
     </div><br>
     <a href='print.php?layer=true&order_id={$smarty.request.order_id}&mode={$smarty.request.mode}'  class='shop_link' target='printer'>
       {!print_order!}
-    </a>
-    When you want to directly print the PDF's you not to setup our system.
+    </a><br>
+    {!print_warning!}
   </center><br><br>
   {include file="footer.tpl"}
 {else}
