@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -45,7 +45,7 @@
         <p>Some third party code is already included with the distribution: </p>
         <ul>
             <li>Smarty (see smarty.php.net) is installed in .../smarty folder </li>
-            <li>EzPDF in .../classes </li>
+            <li>Html2Pdf in .../Html2pdf </li>
             <li>HTMLMimeMail in .../classes</li>
             <li>Fusion Ticket provides all required pear components in .../includes/pear folder. </li>
         </ul>
@@ -77,12 +77,15 @@
             <li>Copy the original file init_config.php, now located in ../Fusionticket_B4/includes/config/ to the new folder. </li>
         </ul>
         <ul>
+            <li><font color=red>Make a backup of your current database, it will not be backwards compatible.</font> </li>
+        </ul>
+        <ul>
             <li>Set the following folders and subfolders to writable </li>
         </ul>
         <pre><i>
-        .../includes/config/*
+        .../includes/config/init_config.php
         .../includes/fonts/*
-        .../includes/tmp/*
+        .../includes/temp/*
         .../files/*
         </i></pre>
         <ul>
@@ -103,7 +106,7 @@
         <pre><i>
         .../includes/config/*
         .../includes/fonts/*
-        .../includes/tmp/* 
+        .../includes/temp/*
         .../files/* 
         </i></pre>
         <ul>
