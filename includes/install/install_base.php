@@ -111,9 +111,12 @@ function Opendatabase(){
   } else
     $port = 3306;
   
-  $link = new mysqli($DB_Hostname, $DB_Username, $DB_Password, '', $port);
-  $link->select_db($DB_Database);
-  $_SHOP->link = $link;
+  $link = @ new mysqli($DB_Hostname, $DB_Username, $DB_Password, '', $port);
+
+  If (isset($link->errno) and !($link->connect_errno or $link->errno)){
+    $link->select_db($DB_Database);
+    $_SHOP->link = $link;
+  }
   return $link;
 }  
 /*
