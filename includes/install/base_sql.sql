@@ -19,9 +19,6 @@ INSERT INTO `Color` (`color_id`, `color_code`) VALUES
 (9, '#00CCFF'),
 (10, '#000000');
 
-INSERT INTO `Handling` (`handling_id`, `handling_payment`, `handling_shipment`, `handling_alt`, `handling_alt_only`, `handling_fee_fix`, `handling_fee_percent`, `handling_email_template`, `handling_pdf_template`, `handling_pdf_ticket_template`, `handling_pdf_format`, `handling_html_template`, `handling_sale_mode`, `handling_extra`, `handling_text_shipment`, `handling_text_payment`, `handling_expires_min`) VALUES
-(1, NULL, NULL, NULL, 'No', '0.00', '0.00', 'res=email_res', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  7200);
-
 INSERT INTO `Handling` (`handling_id`, `handling_payment`, `handling_shipment`, `handling_fee_fix`, `handling_fee_percent`, `handling_email_template`, `handling_pdf_template`, `handling_pdf_ticket_template`, `handling_pdf_format`, `handling_html_template`, `handling_sale_mode`, `handling_extra`, `handling_text_shipment`, `handling_text_payment`, `handling_expires_min`, `handling_alt`, `handling_alt_only`) VALUES
 (1, NULL, NULL, '0.00', '0.00', 'res=email_res', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7200, NULL, 'No'),
 (2, 'cash', 'sp', '0.00', '0.00', 'ord=,send=,payed=', 'Invoice_pdf2', '', 'a:2:{i:0;a:4:{i:0;d:0;i:1;d:0;i:2;d:0;i:3;d:0;}i:1;s:8:"portrait";}', 'Put some explanations here (edit this in Admin - Order Handlings )', 'sp', NULL, 'Point of sale', 'Cash', NULL, 1, 'No'),
