@@ -497,7 +497,7 @@ class '.$out_class_name.' {
   '.$this->build.'
 }
 ';
-    echo ($xyz);
+//    echo ($xyz);
     return $xyz;
   }else{
     return FALSE;
