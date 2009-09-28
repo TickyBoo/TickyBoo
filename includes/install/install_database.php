@@ -45,16 +45,19 @@ class install_database {
       {array_push($Install->Errors,'No database name specified.');}
     if ($Install->Errors) return true;
     $link = OpenDatabase();
-    if(isset($link->errno) and $link->errno==1049 and $_REQUEST['db_create_now']){
-      $link->query('CREATE DATABASE ' . $DB_Database);
-      $link->select_db($DB_Database);
-      $_SESSION['radio']    = 'NORMAL';
-      $_SESSION['db_demos'] = $_REQUEST['db_demos'];
+    if(@mysqli_errno ($link)==1049 and $_REQUEST['db_create_now']){
+      $link->query('CREATE DATABASE ' . $_SESSION['SHOP']['db_name']);
+      if(!(@mysqli_connect_error($link) or @mysqli_error($link))){
+        $link->select_db($_SESSION['SHOP']['db_name']);
+        $_SESSION['radio']    = 'NORMAL';
+        $_SESSION['db_demos'] = $_REQUEST['db_demos'];
+      }
     }
-    
-    if(!isset($link->errno) or $link->connect_errno or $link->errno){
+
+    if(@mysqli_connect_error($link) or @mysqli_error($link)){
       array_push($Install->Errors,'A database connection could not be established using the settings you have provided.<br>'.
-                                 'Error code: ', @mysqli_connect_error() ,'<br>', @mysqli_error($link));
+                                 'Error code: ', @mysqli_connect_error($link) ,'<br>', @mysqli_error($link));
+      if(@mysqli_errno ($link)==1049) $_SESSION['DB_Error'] = true;
       return true;
     } 
     

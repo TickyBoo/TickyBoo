@@ -113,7 +113,7 @@ function Opendatabase(){
   
   $link = @ new mysqli($DB_Hostname, $DB_Username, $DB_Password, '', $port);
 
-  If (isset($link->errno) and !($link->connect_errno or $link->errno)){
+  If (!(@mysqli_connect_error() or @mysqli_error($link))){
     $link->select_db($DB_Database);
     $_SHOP->link = $link;
   }
