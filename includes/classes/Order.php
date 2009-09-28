@@ -87,7 +87,7 @@ class Order {
     global $_SHOP;
     
     $query="select * from `Order` 
-    WHERE order_id = "._ESC($order_id);
+    WHERE order_id = "._esc($order_id);
     if($data=ShopDB::query_one_row($query)){
       $order=new Order(0,0,0,0,0,0);
       $order->_fill($data);
