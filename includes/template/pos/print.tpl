@@ -55,7 +55,7 @@
         -->
       </script>
   {else}
-    {order->order_print mode=$pos->user_prefs order_id=$smarty.request.order_id mode=$smarty.request.mode}
+    {order->order_print print_prefs=$pos->user_prefs order_id=$smarty.request.order_id mode=$smarty.request.mode}
   {/if}
 {/if}
 {/strip}
