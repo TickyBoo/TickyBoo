@@ -184,7 +184,7 @@ class TemplateView extends AdminView{
     if (empty($data['template_name'])){
       $err['template_name'] = con('mandatory');
     }
-  		if(!eregi("^[_0-9a-zA-Z-]+$", $data['template_name'])){
+  		if(!preg_match("/^[_0-9a-zA-Z-]+$/", $data['template_name'])){
       	$err['template_name']=con('invalid');
   		}
 

@@ -408,15 +408,17 @@ class AdminView extends AUIComponent {
             <td class='admin_value'>";
 
             if ($type == 'img') {
-                 list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$data[$name]);
-
-                 if (($width>$height) and ($width > 300)) {
-                   $attr = "width='300'";
-                 } elseif ($height > 250) {
-                   $attr = "height='250'";
-                 }
-
-                echo "<img $attr src='$src'>";
+           		if(file_exists(ROOT.'files'.DS.$data[$name])){
+           			list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$data[$name]);
+					if (($width>$height) and ($width > 300)) {
+						$attr = "width='300'";
+					} elseif ($height > 250) {
+						$attr = "height='250'";
+					}
+					echo "<img $attr src='$src'>";	
+           		}else{
+           			echo "<strong>File does not exsist</strong>";
+           		}
             } else {
                 echo "<a href='$src'>{$data[$name]}</a>";
             }

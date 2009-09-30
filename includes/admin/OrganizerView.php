@@ -125,7 +125,7 @@ class OrganizerView extends AdminView{
 
     //if(empty($data['user_email'])){$err['user_email']=mandatory;}
     if($email=$data['organizer_email']){
-      $check_mail= eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $email);
+      $check_mail = preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email );
       if(!$check_mail){$err['organizer_email']=not_valid_email;}
     }
     return empty($err);
