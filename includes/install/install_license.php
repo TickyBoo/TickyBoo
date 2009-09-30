@@ -60,6 +60,7 @@ class install_license {
     if($_REQUEST['sla_radio']!=1){
       array_push($Install->Errors,"You must accept the terms of the software license agreement in order to install and use this software." );
     }
+
     return true;
   }
 

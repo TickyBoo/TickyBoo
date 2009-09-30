@@ -111,8 +111,13 @@ class install_execute {
     $config .= "define(\"CURRENT_VERSION\",\"".INSTALL_VERSION."\");\n\n";
 
     $_SESSION['SHOP']['root'] = BASE_URL."/";
+
     unset($_SESSION['SHOP']['install_dir']);
- //   unset($_SESSION['SHOP']['install_dir']);
+
+    if (!isset($_SESSION['SHOP']['root_secured']) {
+      $_SESSION['SHOP']['root_secured']
+    }
+
     foreach ($_SESSION['SHOP'] as $key =>$value) {
       $value = _esc($value);
       $config .= "\$_SHOP->{$key} = {$value};\n";

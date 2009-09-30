@@ -271,17 +271,17 @@ class ShopDB {
     function error() {
       global $_SHOP;
       return $_SHOP->db_error;
-      }
+    }
     
     function errno(){
       global $_SHOP;
       return $_SHOP->db_errno;
-      }
+    }
 
     function quote ($s, $quote=true)
     {
-        $str = self::escape_string($s);
-        return (!isset($s) or is_null($s)) ? 'NULL' : (($quote)?"'".$str."'":$str);
+      $str = self::escape_string($s);
+      return (!isset($s) or is_null($s)) ? 'NULL' : (($quote)?"'".$str."'":$str);
     }
 
 
@@ -289,26 +289,26 @@ class ShopDB {
 
     function escape_string($escapestr ){
       global $_SHOP;
-      if (!get_magic_quotes_gpc ()) {
+      // magic_quotes will be checked in the init.php procedure.
+//      if (!get_magic_quotes_gpc ()) {
         if (!isset($_SHOP->link)) {
-           self::init();
+          self::init();
         }
         return $_SHOP->link->real_escape_string($escapestr);
-      } else { //echo "get_magic_quotes_gpc<br>\n";
-        return $escapestr;
-      }
+//      } else { //echo "get_magic_quotes_gpc<br>\n";
+//        die ("<b><font color='red'>fusion ticket can only work with magic_quotes_gpc turned off</font></b>");
+//      }
     }
 
     function freeResult($result) {
       if (isset($_SHOP->link) and isset($result)) {
         $_SHOP->link->free;
-
       }
     }
+
     function tblclose($result) {
       if (isset($_SHOP->link) and isset($result)) {
         $result->close();
-
       }
     }
 

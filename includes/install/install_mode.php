@@ -59,8 +59,14 @@ class install_mode {
     if (!function_exists('openssl_seal')){
       array_push($Install->Warnings,"<a href='http://ch2.php.net/manual/en/ref.openssl.php'>openssl</a> is not compiled in your php. openssl is used to encrypt credit card information - you will be unable to use this feature.");
     }
+
     if (ini_get('register_globals')){
       array_push($Install->Warnings,"For security reasons 'register_globals' should be 'OFF'. Read documentation for explanations.");
+    }
+
+    if (ini_get('magic_quotes_gpc')){
+      array_push($Install->Warnings,"'magic_quotes_gpc' should be 'OFF' to use fusion ticket safely. All the quoting will be done ".
+                                    "insite the program itself. Read documentation for explanations.");
     }
 
     if (ini_get('safe_mode')){
