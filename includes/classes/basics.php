@@ -77,7 +77,7 @@ function debug($var = false, $escape = false)
  * Recursively strips slashes from all values in an array
  * @param mixed $value
  * @return mixed
- */
+ *
 function stripslashes_deep($value)
 {
    if (is_array($value)) {
@@ -414,17 +414,20 @@ function formatDate($edate, $format="%m/%d/%Y" ){
  }
 
 function formatAdminDate($edate,$year4=true){
-   ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
-   If ($year4) {
-     $pdate=$regs[3]."-".$regs[2]."-".$regs[1];
-   } else {
-     $pdate=$regs[3]."-".$regs[2]."-".substr($regs[1], -2);
-   }
+	$dateArr = date_parse($edate);
+   //ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
+	if ($year4) {
+  		$pdate=$dateArr['day']."-".$dateArr['month']."-".$dateArr['year'];
+     	//$pdate=$regs[3]."-".$regs[2]."-".$regs[1];
+   	} else {
+   		$pdate=$dateArr['day']."-".$dateArr['month']."-".substr($dateArr['year'], -2);
+    	//$pdate=$regs[3]."-".$regs[2]."-".substr($regs[1], -2);
+   	}
    return $pdate;
- }
+}
 
 function formatTime($time){
-  list($h,$m,$s)=split(":",$time);
+  list($h,$m,$s)=explode(":",$time);
 
   if(strlen($h) or strlen($m)){
     //return strftime("%X",mktime($h,$m));
