@@ -48,17 +48,41 @@ class TemplateView extends AdminView{
   }
   
   
-  function template_view ($data, $type) {
-    global $_SHOP;
-    $name = $data['template_name'];
-    switch ($data['template_type']) {
-      case 'systm':
-        require_once('templatedata.php');
-      	$order['is_member']     = ($order['user_status']==2);
-        $order['active']        = (empty($order['active']));
-        $order['link']          = '{HTML-ActivationCode}';
-        $order['activate_code'] = '{ActivationCode}';
-        $order['new_password']  = '{NewPassword}' ;
+	function template_view ($data, $type) {
+    	global $_SHOP;
+    	$name = $data['template_name'];
+    	switch ($data['template_type']) {
+      		case 'systm':
+        		require_once('templatedata.php');
+      			$order['is_member']     = ($order['user_status']==2);
+        		$order['active']        = (empty($order['active']));
+        		$order['link']          = '{HTML-ActivationCode}';
+        		$order['activate_code'] = '{ActivationCode}';
+        		$order['new_password']  = '{NewPassword}' ;
+      		case 'email':
+        		require_once('templatedata.php');
+      			require_once('classes/htmlMimeMail.php');
+        		require_once("classes/TemplateEngine.php");
+        		if (!$tpl = TemplateEngine::getTemplate($name)) {
+          			return false;
+        		}
+        		$email = &new htmlMimeMail();
+        		$lang = is($_GET['lang'], $_SHOP->lang);
+        		$tpl->build($email, $order, $lang);
+        		$email = $email->asarray() ;
+        		echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
+        		echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        		echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+        		$this->print_select ("lang", $_GET, $err, $tpl->langs, "onchange='javascript: document.frmEvents.submit();'");
+        		$this->print_field('email_from',htmlspecialchars($email['headers']['From']));
+        		$this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
+        		$this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
+        		$this->print_field_o('email_bcc',htmlspecialchars($email['headers']['Bcc']));
+        		$this->print_field_o('email_return',htmlspecialchars($email['return_path']));
+        		$this->print_field('email_subject',htmlspecialchars($email['headers']['Subject']));
+        		echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
+        		echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+				nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
 
       case 'email':
         require_once('templatedata.php');
@@ -91,55 +115,48 @@ class TemplateView extends AdminView{
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
               nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
 
+        		echo "</table>\n";
+        		echo "<input type='hidden' name='action' id='action' value='view'>
+              		<input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
+              		</form>";
 
-        echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
-        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-              nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
-
-        echo "</table>\n";
-        echo "<input type='hidden' name='action' id='action' value='view'>
-              <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
-              </form>";
-
-        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
-        break;
-      case 'pdf2':
-        require_once("classes/TemplateEngine.php");
-        require_once("html2pdf/html2pdf.class.php");
-        require_once('templatedata.php');
-
-       	$paper_size=$_SHOP->pdf_paper_size;
-       	$paper_orientation=$_SHOP->pdf_paper_orientation;
-        $_SHOP->lang = is($_SHOP->lang,'en');
-        $te  = new TemplateEngine();
-        $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+        		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+        		break;
+			case 'pdf2':
+        		require_once("classes/TemplateEngine.php");
+        		require_once("html2pdf/html2pdf.class.php");
+        		require_once('templatedata.php');
+        		
+       			$paper_size=$_SHOP->pdf_paper_size;
+       			$paper_orientation=$_SHOP->pdf_paper_orientation;
+        		$_SHOP->lang = is($_SHOP->lang,'en');
+        		$te  = new TemplateEngine();
+        		$pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
         
-       // file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
-    		if($tpl =& $te->getTemplate($name)){
-     			$tpl->write($pdf, $order, false); //
-    		}else{
-    			echo "<div class=err>".con('no_template')." : $name</div>";
-    			return FALSE;
-    		}
-        $order_file_name = "pdf_".$data['template_name'].'.pdf';
-        $pdf->output($order_file_name, 'I');
-        break;
+       			// file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
+    			if($tpl =& $te->getTemplate($name)){
+     				$tpl->write($pdf, $order, false); //
+    			}else{
+    				echo "<div class=err>".con('no_template')." : $name</div>";
+    				return FALSE;
+    			}
+        		$order_file_name = "pdf_".$data['template_name'].'.pdf';
+        		$pdf->output($order_file_name, 'I');
+        		break;
+      		default:
+        	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        	echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
 
-      default:
-        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+        	$this->print_field('template_ts', $data);
+        	$this->print_field('template_status', $data);
 
-        $this->print_field('template_ts', $data);
-        $this->print_field('template_status', $data);
+        	echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed; padding:10px;'>" .
+        		nl2br(htmlspecialchars($data["template_text"])) . "</td></tr>";
 
-        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed; padding:10px;'>" .
-              nl2br(htmlspecialchars($data["template_text"])) . "</td></tr>";
-
-        echo "</table>\n";
-        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
-    }
-
-  }
+        	echo "</table>\n";
+        	echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+    	}
+	}
 
   function template_form (&$data, &$err, $title, $type) {
     global $_SHOP;
@@ -253,118 +270,116 @@ class TemplateView extends AdminView{
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=compile_all'>" . compile_all . "</a></center>";
   }
 
-  function compile_template ($name)
-  {
-    global $_SHOP;
-    require_once("classes/TemplateEngine.php");
-    $te = new TemplateEngine;
-    if (!$te->getTemplate($name, true)){
-      echo "<div class=err>'$name': ";
-      if ($te->errors){
-        foreach($te->errors as $error){
-          echo "$error<br>";
-        }
-      }
-      echo compilation_failed;
-      echo "</div>";
-      return false;
-    }else{
-      echo "<div class=success>'$name': " . compilation_succeed . "</div>";
-      return true;
-    }
-  }
+	function compile_template ($name){
+		global $_SHOP;
+    	require_once("classes/TemplateEngine.php");
+    	$te = new TemplateEngine;
+    	if(!$te->getTemplate($name, true)){
+      		echo "<div class=err>'$name': ";
+      		if ($te->errors){
+        		foreach($te->errors as $error){
+          			echo "$error<br>";
+        		}
+      		}
+      		echo compilation_failed;
+      		echo "</div>";
+      		return false;
+    	}else{
+      		echo "<div class=success>'$name': " . compilation_succeed . "</div>";
+      		return true;
+    	}
+	}
 
-  function draw (){
-    global $_SHOP;
-    $types = array('systm','email','pdf2','pdf');
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
-    }
+	function draw (){
+    	global $_SHOP;
+    	$types = array('systm','email','pdf2','pdf');
+    	if(isset($_REQUEST['tab'])) {
+      		$_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
+    	}
     
-    $query = "SELECT count(*) FROM Template
+    	$query = "SELECT count(*) FROM Template
              where template_type = 'pdf'";
 
-    $menu = array(con("templ_System")=>"?tab=0", con("templ_email")=>'?tab=1',
+    	$menu = array(con("templ_System")=>"?tab=0", con("templ_email")=>'?tab=1',
                   con("templ_pdf2")=>"?tab=2" );
 
-    if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
-      $menu[con("templ_pdf")]= "?tab=3";
-    }
+    	if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
+      		$menu[con("templ_pdf")]= "?tab=3";
+    	}
 
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_TEMPLATE_tab'], "left");
+    	echo $this->PrintTabMenu($menu, (int)$_SESSION['_TEMPLATE_tab'], "left");
 
-    $type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
+    	$type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
 
-    if ($_POST['action'] == 'insert'){
-      if (!$this->template_check($_POST, $err)){
-        if (get_magic_quotes_gpc ())
-           $_POST['template_text'] = stripslashes (  $_POST['template_text']);
-        $this->template_form($_POST, $err, template_add_title, $type);
-      }else{
-        $query = "INSERT Template (template_name,template_type,template_text,template_status)
-     VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($type) . ",
-             "._ESC($_POST['template_text']).",'new')";
-        if (!ShopDB::query($query)){
-          return 0;
-        }
+		if ($_POST['action'] == 'insert'){
+      		if (!$this->template_check($_POST, $err)){
+        		//if (get_magic_quotes_gpc ()) Shouldnt need to be done as this is done in init_common.
+           		//	$_POST['template_text'] = stripslashes (  $_POST['template_text']);
+           			$this->template_form($_POST, $err, template_add_title, $type);
+			}else{
+        		$query = "INSERT Template (template_name,template_type,template_text,template_status)
+     					VALUES (" . _esc($_POST['template_name']) . "," . _esc($type) . ",
+       					"._esc($_POST['template_text']).",'new')";
+        		if (!ShopDB::query($query)){
+          			return 0;
+        		}
+        		
+        		if ($this->compile_template($_POST['template_name'])){
+          			$this->template_list($type);
+        		}else{
+          			$this->template_form($_POST, $err, template_add_title, $type);
+        		}
+			}
+    	}elseif ($_POST['action'] == 'update'){
+      		if (!$this->template_check($_POST, $err)){
+        		$this->template_form($_POST, $err, template_update_title, $type);
+      		}else{
+        		$query = "UPDATE Template SET
+    					template_name=" . _ESC($_POST['template_name']) . ",
+					    template_type=" . _ESC($type) . ",
+					    template_text=" . _ESC($_POST['template_text']) . ",
+					    template_status='new'
+					    WHERE template_id="._esc((int)$_POST['template_id']);
+ 				// echo $query;
+        		if (!ShopDB::query($query)){
+          			return 0;
+        		}
 
-        if ($this->compile_template($_POST['template_name'])){
-          $this->template_list($type);
-        }else{
-          $this->template_form($_POST, $err, template_add_title, $type);
-        }
-      }
-    }elseif ($_POST['action'] == 'update'){
-      if (!$this->template_check($_POST, $err)){
-        $this->template_form($_POST, $err, template_update_title, $type);
-      }else{
-        $query = "UPDATE Template SET
-    template_name=" . _ESC($_POST['template_name']) . ",
-    template_type=" . _ESC($type) . ",
-    template_text=" . _ESC($_POST['template_text']) . ",
-    template_status='new'
-    WHERE template_id="._esc((int)$_POST['template_id']);
-        // echo $query;
-        if (!ShopDB::query($query)){
-          return 0;
-        }
-
-        if ($this->compile_template($_POST['template_name'])){
-          $this->template_list($type);
-        }else{
-          if (get_magic_quotes_gpc ())
-             $_POST['template_text'] = stripslashes (  $_POST['template_text']);
-             
-          $this->template_form($_POST, $err, template_update_title, $type);
-        }
-      }
-    }elseif ($_GET['action'] == 'add'){
-      $this->template_form($row, $err, template_add_title, $type);
-    }elseif ($_GET['action'] == 'edit'){
-      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
-      if (!$row = ShopDB::query_one_row($query)){
-        return 0;
-      }
-     $this->template_form($row, $err, template_update_title, $type);
-    }elseif ($_GET['action'] == 'view'){
-      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
-      if (!$row = ShopDB::query_one_row($query)){
-        return 0;
-      }
-      $this->template_view($row, $type);
-    }elseif ($_GET['action'] == 'remove' and $_GET['template_id'] > 0){
-      $query = "DELETE FROM Template WHERE template_id="._esc($_GET['template_id']);
-      if (!ShopDB::query($query)){
-        return 0;
-      }
-      $this->template_list($type);
-    }elseif ($_GET['action'] == 'compile_all'){
-      $this->compile_all();
-      $this->template_list($type);
-    }else{
-      $this->template_list($type);
-    }
-  }
+        		if ($this->compile_template($_POST['template_name'])){
+          			$this->template_list($type);
+        		}else{
+          			//if (get_magic_quotes_gpc ()) this is done automaticaly by init_common now
+             		//$_POST['template_text'] = stripslashes (  $_POST['template_text']);
+          			$this->template_form($_POST, $err, template_update_title, $type);
+        		}
+      		}
+    	}elseif ($_GET['action'] == 'add'){
+      		$this->template_form($row, $err, template_add_title, $type);
+    	}elseif ($_GET['action'] == 'edit'){
+      		$query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
+      		if (!$row = ShopDB::query_one_row($query)){
+        		return 0;
+      		}
+     		$this->template_form($row, $err, template_update_title, $type);
+    	}elseif ($_GET['action'] == 'view'){
+      		$query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
+      		if (!$row = ShopDB::query_one_row($query)){
+        		return 0;
+      		}
+      		$this->template_view($row, $type);
+    	}elseif ($_GET['action'] == 'remove' and $_GET['template_id'] > 0){
+      		$query = "DELETE FROM Template WHERE template_id="._esc($_GET['template_id']);
+      		if (!ShopDB::query($query)){
+        		return 0;
+      		}
+      		$this->template_list($type);
+    	}elseif ($_GET['action'] == 'compile_all'){
+      		$this->compile_all();
+      		$this->template_list($type);
+    	}else{
+      		$this->template_list($type);
+    	}
+  	}
 }
 
 ?>
