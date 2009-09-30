@@ -186,7 +186,11 @@ var loadOrder = function(){
    $("#checkout").click(function(){
       var userdata = {ajax:"yes",pos:"yes",action:"PosConfirm"};
     	userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
-    	userdata['no_fee'] = $("input:checkbox[name='no_fee']").val();
+		if($("input:checkbox[name='no_fee']").is(":checked")){
+			userdata['no_fee'] = 1;	
+		}else{
+			userdata['no_fee'] = 0;
+		}
       $("#user_data :input").each(function() {
          userdata[$(this).attr("name")] = $(this).val();
       });
