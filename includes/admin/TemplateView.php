@@ -68,7 +68,13 @@ class TemplateView extends AdminView{
           return false;
         }
         $email=&new htmlMimeMail();
+
         $lang = is($_GET['lang'], $_SHOP->lang);
+        If (!in_array($lang, $tpl->langs )) {
+          $lang = $tpl->langs[0];
+        }
+        $_GET['lang'] = $lang;
+        
         $tpl->build($email, $order, $lang);
         $email = $email->asarray() ;
         echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";

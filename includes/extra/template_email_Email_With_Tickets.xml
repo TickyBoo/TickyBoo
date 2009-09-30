@@ -37,5 +37,4 @@ Your Order-No. is: <b>$order_id</b></p>
 </html>
 
 <order_pdf order_id="$order_id" name="order_$order_id.pdf" mark_send="no"/>
-</template>
-</templatefile>
+</template></templatefile>

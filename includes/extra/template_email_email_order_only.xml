@@ -1,5 +1,5 @@
 <templatefile type='email'><?xml version="1.0" encoding="UTF-8" ?>
-<template deflang="de">
+<template deflang="en">
 <TO email="$user_firstname $user_lastname &lt;$user_email&gt;"/>
 
 <subject lang="en" value="Your tickets (order nr. $order_id)"/>
