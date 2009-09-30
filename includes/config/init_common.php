@@ -85,7 +85,10 @@
   //temporary folder
   //should be writeable by php
   $_SHOP->tmp_dir=INC."temp".DS;
-
+  
+  	//Where templates are stored..
+	$_SHOP->templates_dir=INC."temp".DS;
+	
   //where smarty templates and other tpl related stuff lives
   $_SHOP->tpl_dir=INC."template".DS;
   

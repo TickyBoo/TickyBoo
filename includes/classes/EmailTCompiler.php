@@ -250,9 +250,9 @@ class EmailTCompiler {
     $pre='      ';
     $post=";\n";
     if(isset($data['from'])){
-      $res.=$pre.'$mail->setFrom('. $data['from'] .')'.$post;
+   		$res.=$pre.'$mail->setFrom('.$data['from'].')'.$post;
     } else if ($lang===0){
-      $res.=$pre.'$mail->setFrom("'. $_SHOP->organizer_data->organizer_name.' <'.$_SHOP->organizer_data->organizer_email.'>" )'.$post;
+    	$res.=$pre.'$mail->setFrom("'.$_SHOP->organizer_data['organizer_name'].' <'.$_SHOP->organizer_data['organizer_email'].'>" )'.$post;
     }
 
     if(isset($data['cc'])){

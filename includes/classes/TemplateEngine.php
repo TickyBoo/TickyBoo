@@ -44,92 +44,102 @@
   }
 
 	//internal function: loads, initializes the template object, and updates cache
-  function &try_load ($name, $t_class_name, $code){
-    global $_SHOP;
-    //print_r($code['template_code']);
-    eval($code['template_code']);
-    if(class_exists($t_class_name)){
-      $tpl = new $t_class_name;
-      $tpl->sourcetext= $code[template_text];
-//      $tpl->engine=&$this;
-      $_SHOP->templates[$name]=&$tpl;
-      return $tpl;
-    }
-  }  
+  	function &try_load ($name, $t_class_name, $code){
+    	global $_SHOP;
+    	//print_r($code['template_code']);
+    	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
+  			require_once($_SHOP->templates_dir.$t_class_name.'.php');
+  			echo "File Loaded";
+  		}else{
+    		eval($code['template_code']);
+    		echo "Code Eval'd";
+    	}
+    	if(class_exists($t_class_name)){
+      		$tpl = new $t_class_name;
+      		$tpl->sourcetext= $code['template_text'];
+		  	//$tpl->engine=&$this;
+      		$_SHOP->templates[$name]=&$tpl;
+      		return $tpl;
+    	}
+	}
 
 	//returns the template object or false
-  function &getTemplate($name, $recompile=false){
-    global $_SHOP;
+  	function &getTemplate($name, $recompile=false){
+    	global $_SHOP;
 
-    //check if the template is in cache
-    if(isset($_SHOP->templates[$name])){
-      $res=&$_SHOP->templates[$name];
-      return $res;
-    }
+    	//check if the template is in cache
+    	if(isset($_SHOP->templates[$name])){
+      		$res=&$_SHOP->templates[$name];
+      		return $res;
+    	}
     
 		//if not: load the template record from db
+    	$query="SELECT * FROM Template WHERE template_name='$name'";
+    	if(!$data=ShopDB::query_one_row($query)){
+      		return FALSE; //no template
+    	}
+    	//create template class name
+    	$t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
     
-    $query="SELECT * FROM Template WHERE template_name='$name'";
-    if(!$data=ShopDB::query_one_row($query)){
-      return FALSE;
-    }
+    	//trying to load already compiled template
+    	if(!$recompile and $data['template_status']=='comp'){
+      		if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)) {
+        		return $tpl;
+      		}
+		}
+		//echo "'{$data['template_type']}'";
     
-    $t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
-    
-    //trying to load already compiled template
-    if(!$recompile and $data['template_status']=='comp'){
-      if($tpl= TemplateEngine::try_load($name, $t_class_name, $data)) {
-        return $tpl;
-      }
-    }
-//    echo "'{$data['template_type']}'";
-    
-    //need to compile: loading compiler
-    switch ($data['template_type']) {
-      case 'systm':
-      case 'email':
-        require_once("classes/EmailTCompiler.php");
-        $comp=new EmailTCompiler;
-        break;
-      case 'pdf2':
-        require_once("classes/PDF2TCompiler.php");
-        $comp=new PDF2TCompiler;
-        break;
-      default:
+    	//no complied template, need to compile: loading compiler
+    	switch ($data['template_type']) {
+      		case 'systm':
+      		case 'email':
+        		require_once("classes/EmailTCompiler.php");
+        		$comp=new EmailTCompiler;
+        		break;
+      		case 'pdf2':
+        		require_once("classes/PDF2TCompiler.php");
+        		$comp=new PDF2TCompiler;
+        		break;
+      		default:
+        		user_error("unsupported template type: ".$data['template_type']);
+    	}
+    	
+		//trying to compile
+    	if(!$code = $comp->compile($data['template_text'],$t_class_name)){
+    		//if failed to compile set error.
+      		$this->errors = $comp->errors;
+      		$query="UPDATE Template SET template_status='error' WHERE template_id='{$data['template_id']}'";
+      		ShopDB::query($query);
+      		return FALSE;
+    	}
+    	
+    	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
+    		unlink($_SHOP->templates_dir.$t_class_name.'.php');
+    	}
+    	$data['template_code'] = $code;
+		
+		//trying to load just compiled template
+		if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)){
+			$fileStream = fopen($_SHOP->templates_dir.$t_class_name.'.php', 'w');
+			if($fileStream){fwrite($fileStream,"<?php \n\r".$code."\n\r?>");fclose($fileStream);}
+			
+			//compilation ok: saving the code in db
+			//$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
+			$query="UPDATE Template SET template_status='comp' WHERE template_id='{$data['template_id']}'";
 
-        user_error("unsupported template type: ".$data['template_type']);
-    }
-
-
-    //trying to compile
-    if(!$code=$comp->compile($data['template_text'],$t_class_name)){
-
-      $this->errors = $comp->errors;
-      $query="UPDATE Template SET template_status='error' WHERE template_id='{$data['template_id']}'";
-      ShopDB::query($query);
-      return FALSE;
-    }
-    $data['template_code'] = $code;
-		//truying to load just compile template
-	  if($tpl=TemplateEngine::try_load($name, $t_class_name, $data)){
-
-      //compilation ok: saving the code in db
-      $query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
-
-      if(!ShopDB::query($query)){
+			if(!ShopDB::query($query)){
 				return FALSE;
-      }
-
-      return $tpl;
-    }else{
+    		}
+      		return $tpl;
+		}else{
 			//compilation failed
-      $query="UPDATE Template SET template_status='error', template_code=NULL WHERE template_id='{$data['template_id']}'";
+			$query="UPDATE Template SET template_status='error', template_code=NULL WHERE template_id='{$data['template_id']}'";
 
-      if(!ShopDB::query($query)){
+      		if(!ShopDB::query($query)){
 				return FALSE;
-      }
-    }
-    return false;
-  }
+      		}
+		}
+    	return false;
+  	}
 }
 ?>
