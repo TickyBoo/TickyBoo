@@ -57,85 +57,85 @@
   <table border="0" class="pagination" width="100%"  cellpadding="0" cellspacing="0" >
     <tr>
       {if $name==!shop! and $shop_event.event_pm_id}
-        <td class='current'> Order </td>
+        <td class='current'> {!prg_order!} </td>
         <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
-        <td class='next'>Review Order</td>
+        <td class='next'>{!prg_review!}</td>
         {if !$user->logged}
           <td class='next'>
-            Log-in or Register
+            {!prg_signin!}
           </td>
         {/if}
-        <td class='next'>Select Payment</td>
-        <td class="next">Complete Order</td>          
+        <td class='next'>{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>          
       {elseif $name==!select_seat!}
-        <td class='done'>Order </td>
+        <td class='done'>{!prg_order!} </td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
-        <td class='current'>Select seat </td>
+        <td class='current'>{!prg_seat!} </td>
         <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
-        <td class='next'>Review Order</td>
+        <td class='next'>{!prg_review!}</td>
         {if !$user->logged}
           <td class='next'>
-            Log-in or Register
+            {!prg_signin!}
           </td>
         {/if}
-        <td class='next'>Select Payment</td>
-        <td class="next">Complete Order</td>          
+        <td class='next'>{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>          
       {elseif $name==!discounts!}
-        <td class='done'>Order </td>
+        <td class='done'>{!prg_order!} </td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
-        <td class='current'>Select discounts</td>
+        <td class='current'>{!prg_discounts!}</td>
         <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
-        <td class='next'>Review Order</td>
+        <td class='next'>{!prg_review!}</td>
         {if !$user->logged}
           <td class='next'>
-            Log-in or Register
+            {!prg_signin!}
           </td>
         {/if}
-        <td class='next'>Select Payment</td>
-        <td class="next">Complete Order</td>       
+        <td class='next'>{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>       
       {elseif $name==!shopping_cart!}
-        <td class='done'>Order </td>
+        <td class='done'>{!prg_order!} </td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
-        <td class='current'>Review Order </td>
+        <td class='current'>{!prg_review!} </td>
         <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
         {if !$user->logged}
           <td class='next'>
-            Log-in or Register
+            {!prg_signin!}
           </td>
         {/if}
-        <td class='next'>Select Payment</td>
-        <td class="next">Complete Order</td>       
+        <td class='next'>{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>       
       {elseif $name==!pers_info!}
-        <td class='done'>Order </td>
-        <td class='done'>Review Order </td>
+        <td class='done'>{!prg_order!} </td>
+        <td class='done'>{!prg_review!} </td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
-        <td class='current'>Log-in or Register </td>
+        <td class='current'>{!prg_signin!} </td>
         <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
-        <td class='next'>Select Payment</td>
-        <td class="next">Complete Order</td>       
+        <td class='next'>{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>       
       {elseif $name==!shopping_cart_check_out!}
-        <td class='done'>Order </td>
-        <td class='done'>Review Order </td>
-        <td class='done'>Log-in or Register</td>
+        <td class='done'>{!prg_order!} </td>
+        <td class='done'>{!prg_review!} </td>
+        <td class='done'>{!prg_signin!}</td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
-        <td class='current'>Select Payment </td>
+        <td class='current'>{!prg_payment!} </td>
         <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
-        <td class="next">Complete Order</td>
+        <td class="next">{!prg_complete!}</td>
       {elseif $name==!order_reg!}
-        <td class='done'>Order </td>
-        <td class='done'>Review Order </td>
-        <td class='done'>Log-in or Register</td>
-        <td class='done'>Select Payment </td>
+        <td class='done'>{!prg_order!} </td>
+        <td class='done'>{!prg_review!} </td>
+        <td class='done'>{!prg_signin!}</td>
+        <td class='done'>{!prg_payment!} </td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
-        <td class="current">Complete Order</td>
+        <td class="current">{!prg_complete!}</td>
         <td width='25' ><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
       {elseif $name==!pay_accept! or $name==!pay_refused!}
-        <td class='done'>Order </td>
-        <td class='done'>Review Order </td>
-        <td class='done'>Log-in or Register</td>
-        <td class='done'>Select Payment </td>
+        <td class='done'>{!prg_order!} </td>
+        <td class='done'>{!prg_review!} </td>
+        <td class='done'>{!prg_signin!}</td>
+        <td class='done'>{!prg_payment!} </td>
         <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' height='20'></td>
-        <td class="current">Complete Order</td>
+        <td class="current">{!prg_complete!}</td>
       {/if}
     </tr>
   </table>

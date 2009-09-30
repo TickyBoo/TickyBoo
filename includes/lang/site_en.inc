@@ -130,10 +130,9 @@ define("delete_confirm_msg","Delete This Event?");
 define("delete_item","Delete?");
 define("deleted_all_tickets","Deleted All Tickets!");
 define("delete_subs_first","Delete Sub-Events First!");
-define("email_valid","Please Enter a Valid Email Address!");
+define("email_badconfig","The program's mail configuration is incorrectly defined!");
 define("email_match","The Emails Do Not Match!");
-define("email_badconfig","The mail system is not good defined!");
-
+define("email_valid","Please Enter a Valid Email Address!");
 define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
 define("fax_short","The Fax Number is too Short!");
 define("fax_long","The Fax Number is too Long!");
@@ -937,11 +936,12 @@ define("member_info","Please enter your email address and password");
 
 //Progressbar.tpl
 define("prg_order","Order");
-define("prg_discounts","Discounts");
+define("prg_seat","Select Seat");
+define("prg_discounts","Select Discounts");
 define("prg_review","Review Order");
-define("prg_signin","Sign In");
-define("prg_payment","Payment");
-define("prg_complete","Complete");
+define("prg_signin","Log-in or Register");
+define("prg_payment","Select Payment");
+define("prg_complete","Complete Order");
 
 //---------------------------------------------------------
 
