@@ -185,8 +185,8 @@ var loadOrder = function(){
 
    $("#checkout").click(function(){
       var userdata = {ajax:"yes",pos:"yes",action:"PosConfirm"};
-    userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
-    userdata['no_fee']      = $("input:checkbox[name='no_fee']:checked").val();
+    	userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
+    	userdata['no_fee'] = $("input:checkbox[name='no_fee']").val();
       $("#user_data :input").each(function() {
          userdata[$(this).attr("name")] = $(this).val();
       });
@@ -230,8 +230,12 @@ var loadOrder = function(){
 var refreshOrder = function(){
     var data = $('#cart_table').getGridParam('postData');
   data['handling_id'] = $("input:radio[name='handling_id']:checked").val();
-  data['no_fee']      = $("input:checkbox[name='no_fee']:checked").val();
-
+  if($("input:checkbox[name='no_fee']").is(":checked")){
+  	data['no_fee'] = 1;	
+  }else{
+  	data['no_fee'] = 0;
+  }
+  
   $('#cart_table').setGridParam('postData', data);
 
   $('#cart_table').trigger("reloadGrid");
