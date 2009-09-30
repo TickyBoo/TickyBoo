@@ -2,9 +2,6 @@
 <template deflang="en">
 <TO email="$user_firstname $user_lastname &lt;$user_email&gt;"/>
 <subject lang="en" value="Confirmation of your tickets, order no. $order_id"/>
-<subject lang="de" value="BestÃ¤tigung Ihre Bestellung no. $order_id"/>
-<subject lang="fr" value="Confirmation de Votre commande nr. $order_id"/>
-<subject lang="it" value="Conferma del Suo ordine nr. $order_id"/>
 
 <text lang="en">
 TEST SYSTEM - PLEASE EDIT IN TEMPLATES!

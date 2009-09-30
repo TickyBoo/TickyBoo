@@ -17,8 +17,8 @@ td		{ vertical-align: middle; }
 			<td style="width:10%; border-left-style:solid; border-left-width:1px; border-top-style:solid; border-top-width:1px"><b>Sold To:</b></td>
 			<td style="width:40%; border-right-style:solid; border-right-width:1px; border-top-style:solid; border-top-width:1px">&nbsp;</td>
 			<td style="width:50%; border-left-style:solid; border-left-width:1px; text-align:center" rowspan="2">
-			{if $$organizer_logo}
-			<img src='../files/{$organizer_logo}'/><br>
+			{if $organizer_logo}
+			<img src='{$_SHOP_files}{$organizer_logo}'/><br>
 			{/if}
 			{$organizer_name}<br>
 			{$organizer_address}<br>
@@ -55,8 +55,7 @@ td		{ vertical-align: middle; }
 			Payment Method</th>
 		</tr>
 		<tr>
-			<td width="20%" style="border-style:solid; border-width:1px; text-align: center">{$order_date|date_format:" 
-			%B %e, %Y"}</td>
+			<td width="20%" style="border-style:solid; border-width:1px; text-align: center">{$order_date|date_format:"%B %e, %Y"}</td>
 			<td width="20%" style="border-style:solid; border-width:1px; text-align: center">{$order_id}</td>
 			<td width="20%" style="border-style:solid; border-width:1px; text-align: center">{if $order_place=="www"}On-Line{else}BoxOffice{/if}</td>
 			<td width="20%" style="border-style:solid; border-width:1px; text-align: center">{$handling_text_shipment}</td>
@@ -66,11 +65,9 @@ td		{ vertical-align: middle; }
 	<br><br><br>
 {foreach key=cid item=con from=$bill name=foo}
 	{if $smarty.foreach.foo.first}
-
 		<table align="center" cellspacing="0" cellpadding="0" style="width: 95%;" border="1" bordercolor="#000000" >
 			<tr>
-				<th style="width: 30%; background: #E7E7E7; text-align: center;">
-				Description</th>
+				<th style="width: 30%; background: #E7E7E7; text-align: center;">	Description</th>
 				<th style="width: 10%; background: #E7E7E7; text-align: center;">Qty.</th>
 				<th style="width: 17%; background: #E7E7E7; text-align: center;">Category</th>
 				<th style="width: 17%; background: #E7E7E7; text-align: center;">Discounts</th>
@@ -83,7 +80,7 @@ td		{ vertical-align: middle; }
 
 	<table align="center" cellspacing="0"  style="width: 95%;  font-size:; border-left-width:0px; border-right-width:0; border-top-width:0px; border-bottom-width:0px" border="0" cellpadding="0">
 		<tr>
-			<td style="border-style:none; border-width:medium; width: 30%; background: #F7F7F7; text-align: center; ">{$con.event_name}</td>
+			<td style="border-style:none; border-width:medium; width: 30%; background: #F7F7F7; text-align: center">{$con.event_name}</td>
 			<td style="border-style:none; border-width:medium; width: 10%; background: #F7F7F7; text-align: center">{$con.qty}</td>
 			<td style="border-style:none; border-width:medium; width: 17%; background: #F7F7F7; text-align: center">{$con.category_name}</td>
 			<td style="border-style:none; border-width:medium; width: 17%; background: #F7F7F7; text-align: center">{$con.discount_name}</td>
@@ -130,5 +127,4 @@ td		{ vertical-align: middle; }
 			<td align="center"><h1>Thank You!</h1></td>
 		</tr>
 	</table>
-
 </page></templatefile>

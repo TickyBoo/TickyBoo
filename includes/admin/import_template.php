@@ -82,13 +82,13 @@ class import_template extends AdminView {
         if (empty($m[2])){
           $this->err['main'] = template_text_missing;
         }
-        If (isset($err['main'])) return 0;
+        If (isset($this->err['main'])) return 0;
 
         $query = "INSERT Template (template_name,template_type,template_text,template_status)
                   VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($m[1]) . ",
                           " . _ESC($m[2]) . ",'new')";
         if (!ShopDB::query($query)){
-           $this->err['main'] = error.':'+$_SHOP->db_error;
+           $this->err['main'] = error.':'.$_SHOP->db_error;
            return 0;
         }
   			echo import_template_title." : ".$_FILES['import_template_file']['name']." ... ";
