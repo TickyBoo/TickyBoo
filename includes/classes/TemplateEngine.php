@@ -49,10 +49,8 @@
     	//print_r($code['template_code']);
     	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
   			require_once($_SHOP->templates_dir.$t_class_name.'.php');
-  			echo "File Loaded";
   		}else{
     		eval($code['template_code']);
-    		echo "Code Eval'd";
     	}
     	if(class_exists($t_class_name)){
       		$tpl = new $t_class_name;
@@ -124,8 +122,8 @@
 			if($fileStream){fwrite($fileStream,"<?php \n\r".$code."\n\r?>");fclose($fileStream);}
 			
 			//compilation ok: saving the code in db
-			//$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
-			$query="UPDATE Template SET template_status='comp' WHERE template_id='{$data['template_id']}'";
+			$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
+			//$query="UPDATE Template SET template_status='comp' WHERE template_id='{$data['template_id']}'";
 
 			if(!ShopDB::query($query)){
 				return FALSE;

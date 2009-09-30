@@ -114,8 +114,8 @@ class install_execute {
 
     unset($_SESSION['SHOP']['install_dir']);
 
-    if (!isset($_SESSION['SHOP']['root_secured']) {
-      $_SESSION['SHOP']['root_secured']
+    if (!isset($_SESSION['SHOP']['root_secured'])) {
+      $_SESSION['SHOP']['root_secured'];
     }
 
     foreach ($_SESSION['SHOP'] as $key =>$value) {

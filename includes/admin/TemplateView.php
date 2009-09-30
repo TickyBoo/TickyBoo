@@ -96,26 +96,26 @@ class TemplateView extends AdminView{
         		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
         		break;
 			case 'pdf2':
-        		require_once("classes/TemplateEngine.php");
-        		require_once("html2pdf/html2pdf.class.php");
-        		require_once('templatedata.php');
-        		
-       			$paper_size=$_SHOP->pdf_paper_size;
-       			$paper_orientation=$_SHOP->pdf_paper_orientation;
-        		$_SHOP->lang = is($_SHOP->lang,'en');
-        		$te  = new TemplateEngine();
-        		$pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
-        
-       			// file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
-    			if($tpl =& $te->getTemplate($name)){
-     				$tpl->write($pdf, $order, false); //
-    			}else{
-    				echo "<div class=err>".con('no_template')." : $name</div>";
-    				return FALSE;
-    			}
-        		$order_file_name = "pdf_".$data['template_name'].'.pdf';
-        		$pdf->output($order_file_name, 'I');
-        		break;
+				require_once("classes/TemplateEngine.php");
+			    require_once("html2pdf/html2pdf.class.php");
+			    require_once('templatedata.php');
+			
+			    $paper_size=$_SHOP->pdf_paper_size;
+			    $paper_orientation=$_SHOP->pdf_paper_orientation;
+			    $_SHOP->lang = is($_SHOP->lang,'en');
+			    $te  = new TemplateEngine();
+			    $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+			        
+			    // file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
+			    if($tpl =& $te->getTemplate($name)){
+		    		$tpl->write($pdf, $order, false); //
+		    	}else{
+			    	echo "<div class=err>".con('no_template')." : $name</div>";
+			    	return FALSE;
+		    	}
+			    $order_file_name = "pdf_".$data['template_name'].'.pdf';
+				$pdf->output($order_file_name, 'I');
+			    break;
       		default:
         	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         	echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
@@ -308,9 +308,9 @@ class TemplateView extends AdminView{
         		$this->template_form($_POST, $err, template_update_title, $type);
       		}else{
         		$query = "UPDATE Template SET
-    					template_name=" . _ESC($_POST['template_name']) . ",
-					    template_type=" . _ESC($type) . ",
-					    template_text=" . _ESC($_POST['template_text']) . ",
+    					template_name=" . _esc($_POST['template_name']) . ",
+					    template_type=" . _esc($type) . ",
+					    template_text=" . _esc($_POST['template_text']) . ",
 					    template_status='new'
 					    WHERE template_id="._esc((int)$_POST['template_id']);
  				// echo $query;
