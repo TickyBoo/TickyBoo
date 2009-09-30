@@ -221,9 +221,11 @@ die();
     } else {
        $user_id = $_POST['user_id'];
     }
+    $no_fee = is($_POST['no_fee'], 0);
+    
     ob_start();
     unset($_SESSION['_SHOP_order']) ;
-    $return = confirmaction($smarty, 'pos', $user_id, $_POST['no_fee']  );
+    $return = confirmaction($smarty, 'pos', $user_id, $no_fee );
     $result = ob_get_contents();
     ob_end_clean();
     if ($return == 'checkout_preview' ) {

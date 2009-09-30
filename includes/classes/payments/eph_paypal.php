@@ -71,7 +71,7 @@ class EPH_paypal extends payment{
         <input type='hidden' name='business' value='{$this->pm_paypal_business}'>
         <input type='hidden' name='item_name' value='".$order->order_description()."'>
         <input type='hidden' name='item_number' value='{$order->order_id}'>
-        <input type='hidden' name='amount' value='".($order->order_total_price-$order->order_fee)."'>
+        <input type='hidden' name='amount' value='".sprintf("%01.2F", ($order->order_total_price-$order->order_fee))."'>
         <input type='hidden' name='handling' value='".($order->order_fee)."'>
         <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."'>
         <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."'>
@@ -86,12 +86,12 @@ class EPH_paypal extends payment{
         <input type='submit' value='{!pay!}' name='submit2' alt='{!paypal_pay!}' >
         </div>
       </form>";
-	}
-	
+  }
+
   function on_return(&$order, $result){
     If ($result) {
       if ($_REQUEST['txn_id']) {
-	      Order::set_payment_id($order->order_id,'paypal:'.$_REQUEST['txn_id']);
+        Order::set_payment_id($order->order_id,'paypal:'.$_REQUEST['txn_id']);
       }
       $order->set_payment_status('pending');
       return array('approved'=>true,
