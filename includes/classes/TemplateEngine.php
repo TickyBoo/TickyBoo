@@ -77,7 +77,7 @@
     	if(!$data=ShopDB::query_one_row($query)){
       		return FALSE; //no template
     	}
-    	print_r($data);
+    	
     	//create template class name
     	$t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
     
