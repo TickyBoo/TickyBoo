@@ -55,7 +55,7 @@
     	}
     	if(class_exists($t_class_name)){
       		$tpl = new $t_class_name;
-      		$tpl->sourcetext= $code[template_text];
+      		$tpl->sourcetext= $code['template_text'];
 		  	//$tpl->engine=&$this;
       		$_SHOP->templates[$name]=&$tpl;
       		return $tpl;
@@ -90,13 +90,10 @@
 		//echo "'{$data['template_type']}'";
     
     	//no complied template, need to compile: loading compiler
-    	echo " no comp temp switch ";
     	switch ($data['template_type']) {
       		case 'systm':
       		case 'email':
-      			echo " grab email compiler. ";
         		require_once("classes/EmailTCompiler.php");
-        		echo " new email comp ";
         		$comp = new EmailTCompiler;
         		break;
       		case 'pdf2':
@@ -108,30 +105,24 @@
     	}
     	
 		//trying to compile
-		echo " try and compile code ";
     	if(!$code = $comp->compile($data['template_text'],$t_class_name)){
     		//if failed to compile set error.
-    		echo " code failed? ";
-    		print_r($code);
       		$this->errors = $comp->errors;
       		$query="UPDATE Template SET template_status='error' WHERE template_id='{$data['template_id']}'";
       		ShopDB::query($query);
       		return FALSE;
     	}
     	
-    	//if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
-    	//	unlink($_SHOP->templates_dir.$t_class_name.'.php');
-    	//}
-    	print_r($code);
+    	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
+    		unlink($_SHOP->templates_dir.$t_class_name.'.php');
+    	}
     	$data['template_code'] = $code;
 		
 		//trying to load just compiled template
 		if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)){
 			$fileStream = fopen($_SHOP->templates_dir.$t_class_name.'.php', 'w');
-			print_r($fileStream);
 			if($fileStream){$res=fwrite($fileStream,"<?php \n\r".$code."\n\r?>");$close=fclose($fileStream);}
-			print_r($res);
-			print_r($close);
+			
 			//compilation ok: saving the code in db
 			//$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
 			$query="UPDATE Template SET template_status='comp', template_code=NOW() WHERE template_id='{$data['template_id']}'";

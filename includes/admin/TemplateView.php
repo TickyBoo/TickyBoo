@@ -321,7 +321,6 @@ class TemplateView extends AdminView{
         		}
         		
         		if ($this->compile_template($_POST['template_name'])){
-        			echo "template list";
           			$this->template_list($type);
         		}else{
           			//if (get_magic_quotes_gpc ()) this is done automaticaly by init_common now
