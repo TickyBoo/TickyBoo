@@ -315,6 +315,7 @@ class TemplateView extends AdminView{
 					    WHERE template_id="._esc((int)$_POST['template_id']);
  				// echo $query;
         		if (!ShopDB::query($query)){
+        			echo "failed";
           			return 0;
         		}
 
