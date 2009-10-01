@@ -111,6 +111,7 @@
 		echo " try and compile code ";
     	if(!$code = $comp->compile($data['template_text'],$t_class_name)){
     		//if failed to compile set error.
+    		echo " code failed? ";
     		print_r($code);
       		$this->errors = $comp->errors;
       		$query="UPDATE Template SET template_status='error' WHERE template_id='{$data['template_id']}'";
