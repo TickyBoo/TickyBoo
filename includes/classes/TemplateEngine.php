@@ -47,6 +47,7 @@
   	function &try_load ($name, $t_class_name, $code){
     	global $_SHOP;
     	//print_r($code['template_code']);
+    	echo "try and load";
     	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
   			require_once($_SHOP->templates_dir.$t_class_name.'.php');
   		}else{
@@ -54,7 +55,7 @@
     	}
     	if(class_exists($t_class_name)){
       		$tpl = new $t_class_name;
-      		$tpl->sourcetext= $code['template_text'];
+      		$tpl->sourcetext= $code[template_text];
 		  	//$tpl->engine=&$this;
       		$_SHOP->templates[$name]=&$tpl;
       		return $tpl;
@@ -114,6 +115,7 @@
     	//if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
     	//	unlink($_SHOP->templates_dir.$t_class_name.'.php');
     	//}
+    	print_r($code);
     	$data['template_code'] = $code;
 		
 		//trying to load just compiled template
