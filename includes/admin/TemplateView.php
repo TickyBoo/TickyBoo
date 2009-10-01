@@ -245,8 +245,11 @@ class TemplateView extends AdminView{
 
 	function compile_template ($name){
 		global $_SHOP;
+		echo " require tempEng ";
     	require_once("classes/TemplateEngine.php");
+    	echo " new eng ";
     	$te = new TemplateEngine;
+    	echo " get Temp ";
     	if(!$te->getTemplate($name, true)){
       		echo "<div class=err>'$name': ";
       		if ($te->errors){
