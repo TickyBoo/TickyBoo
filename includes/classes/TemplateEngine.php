@@ -67,11 +67,8 @@
     	global $_SHOP;
 
     	//check if the template is in cache
-    	echo " is temp set? ";
     	if(isset($_SHOP->templates[$name])){
-    		echo " load temp from cache. ";
       		$res=&$_SHOP->templates[$name];
-      		echo "ret..";
       		return $res;
     	}
     
@@ -81,10 +78,13 @@
     	if(!$data=ShopDB::query_one_row($query)){
       		return FALSE; //no template
     	}
+    	print_r($data);
+    	echo " got data ";
     	//create template class name
     	$t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
     
     	//trying to load already compiled template
+    	echo " load comp temp ";
     	if(!$recompile and $data['template_status']=='comp'){
       		if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)) {
         		return $tpl;
@@ -93,6 +93,7 @@
 		//echo "'{$data['template_type']}'";
     
     	//no complied template, need to compile: loading compiler
+    	echo " no comp temp switch ";
     	switch ($data['template_type']) {
       		case 'systm':
       		case 'email':
