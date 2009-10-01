@@ -245,12 +245,11 @@ class TemplateView extends AdminView{
 
 	function compile_template ($name){
 		global $_SHOP;
-		echo " require tempEng ";
     	require_once("classes/TemplateEngine.php");
-    	echo " new eng ";
     	$te = new TemplateEngine;
     	echo " get Temp ";
     	if(!$te->getTemplate($name, true)){
+    		echo "template error";
       		echo "<div class=err>'$name': ";
       		if ($te->errors){
         		foreach($te->errors as $error){
@@ -317,12 +316,10 @@ class TemplateView extends AdminView{
 					    template_status='new'
 					    WHERE template_id="._esc((int)$_POST['template_id']);
  				// echo $query;
- 				echo "update query";
         		if (!ShopDB::query($query)){
           			return 0;
         		}
-        		echo "updated";
-        		echo "compile template";
+        		
         		if ($this->compile_template($_POST['template_name'])){
         			echo "template list";
           			$this->template_list($type);

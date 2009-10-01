@@ -67,13 +67,17 @@
     	global $_SHOP;
 
     	//check if the template is in cache
+    	echo " is temp set? ";
     	if(isset($_SHOP->templates[$name])){
+    		echo " load temp from cache. ";
       		$res=&$_SHOP->templates[$name];
+      		echo "ret..";
       		return $res;
     	}
     
 		//if not: load the template record from db
     	$query="SELECT * FROM Template WHERE template_name='$name'";
+    	echo " grab template ";
     	if(!$data=ShopDB::query_one_row($query)){
       		return FALSE; //no template
     	}
