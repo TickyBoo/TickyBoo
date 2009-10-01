@@ -47,7 +47,6 @@
   	function &try_load ($name, $t_class_name, $code){
     	global $_SHOP;
     	//print_r($code['template_code']);
-    	echo "try and load";
     	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
   			require_once($_SHOP->templates_dir.$t_class_name.'.php');
   		}else{
