@@ -74,17 +74,14 @@
     
 		//if not: load the template record from db
     	$query="SELECT * FROM Template WHERE template_name='$name'";
-    	echo " grab template ";
     	if(!$data=ShopDB::query_one_row($query)){
       		return FALSE; //no template
     	}
     	print_r($data);
-    	echo " got data ";
     	//create template class name
     	$t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
     
     	//trying to load already compiled template
-    	echo " load comp temp ";
     	if(!$recompile and $data['template_status']=='comp'){
       		if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)) {
         		return $tpl;
@@ -97,8 +94,10 @@
     	switch ($data['template_type']) {
       		case 'systm':
       		case 'email':
+      			echo " grab email compiler. ";
         		require_once("classes/EmailTCompiler.php");
-        		$comp=new EmailTCompiler;
+        		echo " new email comp ";
+        		$comp = new EmailTCompiler;
         		break;
       		case 'pdf2':
         		require_once("classes/PDF2TCompiler.php");
@@ -109,8 +108,10 @@
     	}
     	
 		//trying to compile
+		echo " try and compile code ";
     	if(!$code = $comp->compile($data['template_text'],$t_class_name)){
     		//if failed to compile set error.
+    		print_r($code);
       		$this->errors = $comp->errors;
       		$query="UPDATE Template SET template_status='error' WHERE template_id='{$data['template_id']}'";
       		ShopDB::query($query);
