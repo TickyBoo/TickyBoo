@@ -219,6 +219,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['font-underline']		= false;
 			$this->value['font-overline']		= false;
 			$this->value['font-linethrough']	= false;
+			$this->value['text-transform']		= 'none';
 			$this->value['font-size']			= $this->ConvertToMM('10pt');
 			$this->value['text-indent']			= 0;
 			$this->value['text-align']			= 'left';
@@ -236,6 +237,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['left']				= null;
 			$this->value['float']				= null;
 			$this->value['display']				= null;
+			$this->value['rotate']				= null;
 
 			$this->value['color']				= array(0, 0, 0);
 			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
@@ -273,6 +275,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['left']				= null;
 			$this->value['float']				= null;
 			$this->value['display']				= null;
+			$this->value['rotate']				= null;
 			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
 			$this->value['border']	= array(
 										't' => $this->readBorder('none'),
@@ -283,6 +286,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 										'collapse' => $collapse,
 									);
 									
+			if (!in_array($balise, array('h1', 'h2', 'h3', 'h4', 'h5', 'h6')))
 			$this->value['margin']	= array(
 									't' => 0,
 									'r' => 0,
@@ -536,6 +540,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 						$this->value['text-indent']			= $this->ConvertToMM($val);
 						break;
 					
+					case 'text-transform':
+						if (!in_array($val, array('none', 'capitalize', 'uppercase', 'lowercase'))) $val = 'none';
+						$this->value['text-transform']		= $val;
+						break;
+						
 					case 'font-size':
 						$val = $this->ConvertToMM($val, $this->value['font-size']);
 						if ($val) $this->value['font-size'] = $val;
@@ -576,7 +585,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 						if (preg_match('/^[0-9\.]+$/isU', $val)) $val = floor($val*100).'%';
 						$this->value['line-height'] = $val;
 						break;
-				
+					case 'rotate':
+						if (!in_array($val, array(0, -90, 90, 180, 270, -180, -270))) $val = null;
+						if ($val<0) $val+= 360;
+						$this->value['rotate'] = $val;
+						break;
 					case 'padding':
 						$val = explode(' ', $val);
 						foreach($val as $k => $v)
@@ -1001,6 +1014,14 @@ if (!defined('__CLASS_STYLEHTML__'))
 			return null;
 		}
 				
+		function getParentBalise()
+		{
+			$nb = count($this->table);
+			if ($nb>0)
+				return $this->table[$nb-1]['id_balise'];
+			return null;
+		}
+		
 		function getLastAbsoluteX()
 		{
 			for($k=count($this->table); $k>0; $k--)
@@ -1453,4 +1474,3 @@ if (!defined('__CLASS_STYLEHTML__'))
 		}
 	}
 }
-?>

@@ -11,6 +11,7 @@ table.liste td			{ background: #DDDDDD; }
 table.liste td.col1	{ color: #FF0000; }
 -->
 </style>
+<page>
 <table>
 	<tr>
 		<td>Ceci est un</td>
@@ -41,3 +42,4 @@ table.liste td.col1	{ color: #FF0000; }
 <s>Texte barré !</s><br>
 <br>
 <span>Texte avec la couleur par défault (style *)</span><br>
+</page>

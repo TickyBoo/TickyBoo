@@ -86,9 +86,10 @@
 		<li>&lt;sup&gt; :	Exemple<sup>haut</sup>.</li>
 		<li>&lt;sub&gt; :	Exemple<sub>bas</sub>.</li>
 		<li>&lt;u&gt; :		Texte <u>souligné</u></li>
-		<li>&lt;table&gt;, &lt;td&gt;, &lt;th&gt;, &lt;tr&gt;, &lt;thead&gt;, &lt;tbody&gt;, &lt;tfoot&gt;</li>
+		<li>&lt;table&gt;, &lt;td&gt;, &lt;th&gt;, &lt;tr&gt;, &lt;thead&gt;, &lt;tbody&gt;, &lt;tfoot&gt;, &lt;col&gt; </li>
 		<li>&lt;ol&gt;, &lt;ul&gt;, &lt;li&gt;</li>
 		<li>&lt;form&gt;, &lt;input&gt;, &lt;textarea&gt;, &lt;select&gt;, &lt;option&gt;</li>
+		<li>&lt;del&gt;, &lt;ins&gt;</li>
 	</ul>
 	<bookmark title="Balises spécifiques" level="2" ></bookmark>	
 	<div class="note">
@@ -122,6 +123,7 @@
 					<li>text-decoration</li>
 					<li>text-indent</li>
 					<li>text-align</li>
+					<li>text-transform</li>
 					<li>vertical-align</li>
 					<li>width</li>
 					<li>height</li>
@@ -142,9 +144,7 @@
 					<li>left</li>
 					<li>right</li>
 					<li>float</li>
-					<li>list-style</li>
-					<li>list-style-type</li>
-					<li>list-style-image</li>
+					<li>rotate</li>
 				</ul>
 			</td>
 			<td style="width: 50%">
@@ -176,6 +176,9 @@
 					<li>border-left-style</li>
 					<li>border-left-color</li>
 					<li>border-left-width</li>
+					<li>list-style</li>
+					<li>list-style-type</li>
+					<li>list-style-image</li>
 				</ul>
 			</td>
 		</tr>

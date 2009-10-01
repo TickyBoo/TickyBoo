@@ -177,4 +177,3 @@ require_once(dirname(__FILE__).'/00_fpdf_codebar.class.php');
 		}
 	}
 }
-?>

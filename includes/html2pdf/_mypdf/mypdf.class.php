@@ -480,6 +480,48 @@ if (!defined('__CLASS_MYPDF__'))
 
 			$this->_out($path . 'f');
 		}
+		
+		function startTransform()
+		{
+			$this->_out('q');
+		}
+		
+		function stopTransform()
+		{
+			$this->_out('Q');
+		}
+
+		function setTranslate($t_x, $t_y)
+		{
+			// matrice de transformation
+			$tm[0]=1;
+			$tm[1]=0;
+			$tm[2]=0;
+			$tm[3]=1;
+			$tm[4]=$t_x*$this->k;
+			$tm[5]=-$t_y*$this->k;
+			
+			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0],$tm[1],$tm[2],$tm[3],$tm[4],$tm[5]));
+		}
+
+		
+		function setRotation($angle, $x='', $y='')
+		{
+			if($x === '') $x=$this->x;
+			if($y === '') $y=$this->y;
+			
+			$y=($this->h-$y)*$this->k;
+			$x*=$this->k;
+			
+			// matrice de transformation
+			$tm[0]=cos(deg2rad($angle));
+			$tm[1]=sin(deg2rad($angle));
+			$tm[2]=-$tm[1];
+			$tm[3]=$tm[0];
+			$tm[4]=$x+$tm[1]*$y-$tm[0]*$x;
+			$tm[5]=$y-$tm[0]*$y-$tm[1]*$x;
+			
+			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0],$tm[1],$tm[2],$tm[3],$tm[4],$tm[5]));
+		}
 	}
 }
-?>

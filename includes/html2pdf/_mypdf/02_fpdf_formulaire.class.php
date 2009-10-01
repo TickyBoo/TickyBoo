@@ -225,4 +225,3 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 		}
 	}
 }
-?>
