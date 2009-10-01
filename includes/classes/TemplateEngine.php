@@ -123,7 +123,7 @@
 			
 			//compilation ok: saving the code in db
 			//$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
-			$query="UPDATE Template SET template_status='comp' WHERE template_id='{$data['template_id']}'";
+			$query="UPDATE Template SET template_status='comp', template_code=NOW() WHERE template_id='{$data['template_id']}'";
 
 			if(!ShopDB::query($query)){
 				return FALSE;
