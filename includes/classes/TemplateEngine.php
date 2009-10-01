@@ -111,9 +111,9 @@
       		return FALSE;
     	}
     	
-    	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
-    		unlink($_SHOP->templates_dir.$t_class_name.'.php');
-    	}
+    	//if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
+    	//	unlink($_SHOP->templates_dir.$t_class_name.'.php');
+    	//}
     	$data['template_code'] = $code;
 		
 		//trying to load just compiled template
