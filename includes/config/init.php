@@ -249,9 +249,10 @@
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
     $query="SELECT * FROM Organizer LIMIT 1";
 		
-    if($res=ShopDB::query($query) and $data=shopDB::fetch_object($res)){
-      $_SESSION['_SHOP_ORGANIZER_DATA']= $data;
-		}
+    if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
+      $_SESSION['_SHOP_ORGANIZER_DATA'] = (object)$data;
+	}
 	}
   $_SHOP->organizer_data=$_SESSION['_SHOP_ORGANIZER_DATA'];
+  print_r($_SHOP->organizer_data);
 ?>

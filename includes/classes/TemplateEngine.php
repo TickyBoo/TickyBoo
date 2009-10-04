@@ -120,7 +120,7 @@
 		//trying to load just compiled template
 		if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)){
 			$fileStream = fopen($_SHOP->templates_dir.$t_class_name.'.php', 'w');
-			if($fileStream){$res=fwrite($fileStream,"<?php \n\r".$code."\n\r?>");$close=fclose($fileStream);}
+			if($fileStream){$res=fwrite($fileStream,utf8_encode("<?php \n\r".$code."\n\r?>"));$close=fclose($fileStream);}
 			
 			//compilation ok: saving the code in db
 			//$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";
