@@ -81,7 +81,7 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 }
 
 define("INSTALL_VERSION","Beta 5");
-$states = array("install_welcome", "install_license", "install_login", "install_mode", "install_database", "install_adminuser",
+$states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode", "install_adminuser",
                 "install_mail","install_register","install_execute");
 
                 

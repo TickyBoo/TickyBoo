@@ -34,7 +34,7 @@
  
 class install_database {
   function precheck($Install) {
-    return (!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error']) or ($_SESSION['radio'] == 'NORMAL');
+    return true; //(!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error']) or ($_SESSION['radio'] == 'NORMAL');
   }
 
   function postcheck($Install) {
@@ -56,7 +56,7 @@ class install_database {
 
     if(@mysqli_connect_error($link) or @mysqli_error($link)){
       array_push($Install->Errors,'A database connection could not be established using the settings you have provided.<br>'.
-                                 'Error code: ', @mysqli_connect_error($link) ,'<br>', @mysqli_error($link));
+                                 'Error code: '. @mysqli_connect_error($link) . @mysqli_error($link));
       if(@mysqli_errno ($link)==1049) $_SESSION['DB_Error'] = true;
       return true;
     } 
@@ -106,16 +106,11 @@ class install_database {
               <td><input type=\"text\" name=\"db_pass\" value=\"".$_SESSION['SHOP']['db_pass']."\" /></td>
             </tr>\n";
     if ($_SESSION['DB_Error'] ) {
-      $chk = ($_SESSION['db_demos'])?'checked="checked"':'';
       echo "
             <tr>
-              <td><br>Create Database now:</td>
+              <td><br>Create Database:</td>
               <td><br><input type=checkbox name='db_create_now' value='1'></td>
-            </tr>
-            <tr>
-              <td>Install demonstration data:</td>
-              <td><input type=checkbox name='db_demos' $chk value='1'></td>
-            </tr>\n";
+            </tr>";
     }
     echo "</table>\n";
       

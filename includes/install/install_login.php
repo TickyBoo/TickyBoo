@@ -34,6 +34,15 @@
  
 class install_login {
   function precheck($Install) {
+    If ($_SESSION['ConfigExist']){
+      include (ROOT."includes/config/init_config.php");
+      $_SESSION['SHOP']  = (Array)$_SHOP;
+      $link      = OpenDatabase();
+      $result = $link->Query("SHOW TABLES STATUS LIKE 'Admin'");
+      if ($_SESSION['DatabaseExist'] = ($result and $row = $result->fetch_assoc()) and $row['rows']>0 ) {
+        $_SESSION['radio'] = 'UPGRADE';
+      } 
+    }
     return  ($_SESSION['DatabaseExist']);
   }
   
