@@ -50,7 +50,7 @@
     	if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
   			require_once($_SHOP->templates_dir.$t_class_name.'.php');
   		}else{
-    		eval($code['template_code']);
+			eval($code['template_code']);
     	}
     	if(class_exists($t_class_name)){
       		$tpl = new $t_class_name;
@@ -59,6 +59,7 @@
       		$_SHOP->templates[$name]=&$tpl;
       		return $tpl;
     	}
+    	return false;
 	}
 
 	//returns the template object or false
@@ -78,7 +79,7 @@
     	}
     	
     	//create template class name
-    	$t_class_name= str_replace(' ','_',"TT_{$data['template_name']}");
+    	$t_class_name= str_replace(' ','_',"TT_{$data['template_name']}_{$data['template_type']}");
     
     	//trying to load already compiled template
     	if(!$recompile and $data['template_status']=='comp'){
@@ -97,7 +98,7 @@
         		break;
       		case 'pdf2':
         		require_once("classes/PDF2TCompiler.php");
-        		$comp=new PDF2TCompiler;
+        		$comp = new PDF2TCompiler;
         		break;
       		default:
         		user_error("unsupported template type: ".$data['template_type']);

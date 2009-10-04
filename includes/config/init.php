@@ -249,10 +249,11 @@
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
     $query="SELECT * FROM Organizer LIMIT 1";
 		
-    if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
+    if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){ 
+    	// Some mysql settings WONT return objects and return an array instead. 
+		//Take this into consideration in the future.
       $_SESSION['_SHOP_ORGANIZER_DATA'] = (object)$data;
 	}
 	}
   $_SHOP->organizer_data=$_SESSION['_SHOP_ORGANIZER_DATA'];
-  print_r($_SHOP->organizer_data);
 ?>
