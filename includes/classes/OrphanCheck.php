@@ -154,6 +154,19 @@ or     (seat_zone_id is not null and seat_zone_id <> 0 and pmz_id is null)
 or     (seat_pmp_id is not null and seat_pmp_id <> 0 and pmp_id is null)
 or     (seat_discount_id is not null and seat_discount_id <> 0 and discount_id is null)
 ";
+$orphancheck[]="
+	SELECT event_id, event_name, event_date, 'Seats Missing' error
+	FROM event e
+	WHERE e.event_id > 0
+		AND lower(e.event_status) <> 'unpub'
+		AND lower(e.event_rep) LIKE ('sub')
+		AND (SELECT sum(category_size)
+ 			FROM category c
+ 			WHERE c.category_event_id = e.event_id) <>
+			(SELECT count(seat_id)
+ 			FROM seat s
+ 			WHERE s.seat_event_id = e.event_id)
+";
 /**/
 //require_once("includes/config/init_common.php");
 //include "ShopDB.php";
