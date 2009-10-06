@@ -76,7 +76,7 @@ class install_mode {
             </tr>
             <tr>
               <td colspan=\"2\"><br>
-                <input type=\"radio\" $disabled name=\"radio\" id='doupgrade'  value=\"UPGRADE\" {$chk['UPGRADE']} /> <label for='doupgrade'> Upgrade excistend selected database.</label>
+                <input type=\"radio\" $disabled name=\"radio\" id='doupgrade'  value=\"UPGRADE\" {$chk['UPGRADE']} /> <label for='doupgrade'> Upgrade existing selected database.</label>
               </td>\n
             </tr>
           </table>\n";
