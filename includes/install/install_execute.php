@@ -114,10 +114,10 @@ class install_execute {
 
     unset($_SESSION['SHOP']['install_dir']);
 
-    if (!isset($_SESSION['SHOP']['root_secured'])) {
-      $_SESSION['SHOP']['root_secured'];
+    if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
+      $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
     }
-
+    print_r($_SESSION['SHOP']);
     foreach ($_SESSION['SHOP'] as $key =>$value) {
       $value = _esc($value);
       $config .= "\$_SHOP->{$key} = {$value};\n";
