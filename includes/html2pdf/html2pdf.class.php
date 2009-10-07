@@ -99,7 +99,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->FirstPage	= true;
 			$this->langue		= strtolower($langue);
 			$this->setTestTdInOnePage(true);
-			$this->setTestIsImage(true);
+			$this->setTestIsImage(false);
 			
 			// chargement du fichier de langue
 			$this->textLOAD($this->langue);
