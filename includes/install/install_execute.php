@@ -35,9 +35,8 @@
 class install_execute {
   function precheck($Install) {
     global $_SHOP;
-//    echo "<pre>";
-//    print_r($_SESSION);
-//    echo "</pre>";
+    RemoveDir(ROOT."includes/temp",false);
+    
     $install_mode=$_SESSION['radio'];
 
     OpenDatabase();
@@ -93,6 +92,8 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where template_name='Signup_email'");
     shopDB::query("UPDATE Template set template_type='systm' where template_name='email_res'");
     install_execute::CreateConfig();
+
+    
     return true;
   }
 
@@ -117,7 +118,7 @@ class install_execute {
     if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
       $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
     }
-    print_r($_SESSION['SHOP']);
+
     foreach ($_SESSION['SHOP'] as $key =>$value) {
       $value = _esc($value);
       $config .= "\$_SHOP->{$key} = {$value};\n";

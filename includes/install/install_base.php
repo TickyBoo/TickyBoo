@@ -185,4 +185,16 @@ Function ShowResults($Install,$inst_mode){
   }
   return false;
 } 
+
+function RemoveDir($dir, $DeleteMe) {
+  if(!$dh = @opendir($dir)) return;
+  while (false !== ($obj = readdir($dh))) {
+    if($obj=='.' || $obj=='..') continue;
+    if (!@unlink($dir.'/'.$obj)) SureRemoveDir($dir.'/'.$obj, true);
+  }
+  closedir($dh);
+  if ($DeleteMe){
+    @rmdir($dir);
+  }
+}
 ?>
