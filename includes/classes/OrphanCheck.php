@@ -78,6 +78,16 @@ or     (es.es_event_id is null and e.event_status !='unpub' and e.event_rep !='m
 or     (e.event_group_id<>0 and eg.event_group_id is null)
 or     (e.event_main_id is not null and me.event_id is null)
 ";
+
+$orphancheck[]="
+	SELECT 'Seats Missing', event_id, 'cat_id', category_id
+	FROM event e  left join Category c on category_event_id = event_id
+	WHERE e.event_id > 0
+		AND lower(e.event_status) <> 'unpub'
+		AND lower(e.event_rep) LIKE ('%sub%')
+		AND category_size <> (SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id )
+";
+
 /**/
 $orphancheck[]="
 select 'Event_stat', es_event_id, 'event_id' l1 , es_event_id, event_id
@@ -154,19 +164,7 @@ or     (seat_zone_id is not null and seat_zone_id <> 0 and pmz_id is null)
 or     (seat_pmp_id is not null and seat_pmp_id <> 0 and pmp_id is null)
 or     (seat_discount_id is not null and seat_discount_id <> 0 and discount_id is null)
 ";
-$orphancheck[]="
-	SELECT event_id, event_name, event_date, 'Seats Missing' error
-	FROM event e
-	WHERE e.event_id > 0
-		AND lower(e.event_status) <> 'unpub'
-		AND lower(e.event_rep) LIKE ('sub')
-		AND (SELECT sum(category_size)
- 			FROM category c
- 			WHERE c.category_event_id = e.event_id) <>
-			(SELECT count(seat_id)
- 			FROM seat s
- 			WHERE s.seat_event_id = e.event_id)
-";
+
 /**/
 //require_once("includes/config/init_common.php");
 //include "ShopDB.php";
