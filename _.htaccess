@@ -4,7 +4,7 @@
 # to be able to run phpmyticket you should edit includes/config/init_common.php
 
 # Security
-#php_flag register_globals off
+php_flag register_globals off
 
 #misc
 #php_flag magic_quotes_gpc off

@@ -44,6 +44,7 @@ class install_database {
     if(empty($_SESSION['SHOP']['db_name']))
       {array_push($Install->Errors,'No database name specified.');}
     if ($Install->Errors) return true;
+
     $link = OpenDatabase();
     if(@mysqli_errno ($link)==1049 and $_REQUEST['db_create_now']){
       $link->query('CREATE DATABASE ' . $_SESSION['SHOP']['db_name']);
@@ -61,12 +62,7 @@ class install_database {
       return true;
     } 
     
-    if ($_SESSION['radio']=='UPGRADE' AND $result = $link->Query("SHOW TABLES") AND count( $result->fetch_All()) == 0) {
-      array_push($Install->Warning,'This database is empty and can not upgraded.');
-      $Install->return_pg = INSTALL_MODE;
-      $_SESSION['radio'] = 'NORMAL';
-    }
-      
+   
     return true;
   }
 

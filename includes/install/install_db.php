@@ -420,8 +420,7 @@ $tbls['Template']['fields'] = array(
   'template_type' => " varchar(5) NOT NULL DEFAULT ''",
   'template_text' => " text NOT NULL",
   'template_ts' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-  'template_status' => " varchar(5) NOT NULL DEFAULT 'new'",
-  'template_code' => " text");
+  'template_status' => " varchar(5) NOT NULL DEFAULT 'new'");
 $tbls['Template']['key'] = array(
   "PRIMARY KEY (`template_id`)",
   "KEY `template_name` (`template_name`)");

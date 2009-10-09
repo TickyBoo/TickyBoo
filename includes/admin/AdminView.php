@@ -334,7 +334,7 @@ class AdminView extends AUIComponent {
               </td></tr>\n";
     }
 
-    function print_select_assoc ($name, &$data, &$err, $opt, $mult = false)
+    function print_select_assoc ($name, &$data, &$err, $opt, $actions='', $mult = false)
     {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
@@ -344,7 +344,7 @@ class AdminView extends AUIComponent {
 
         echo "<tr><td class='admin_name'  width='40%' $mu>" . con($name) . "</td>
   <td class='admin_value'>
-   <select name='$name'>\n";
+   <select name='$name'  $actions>\n";
 
         foreach($opt as $k => $v) {
             echo "<option value='$k'{$sel[$k]}>".con($v)."</option>\n";
@@ -539,7 +539,6 @@ class AdminView extends AUIComponent {
 
   function print_countrylist($sel_name, $selected, &$err){
   global $_SHOP,  $_COUNTRY_LIST;
-
     if (!isset($_COUNTRY_LIST)) {
       If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
         include_once("lang/countries_". $_SHOP->lang.".inc");
@@ -565,6 +564,15 @@ class AdminView extends AUIComponent {
   function getCountry($val){
     global $_SHOP, $_COUNTRY_LIST;
     $val=strtoupper($val);
+
+    if (!isset($_COUNTRY_LIST)) {
+      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
+        include_once("lang/countries_". $_SHOP->lang.".inc");
+      }else {
+        include_once("lang/countries_en.inc");
+      }
+    }
+    
     return $_COUNTRY_LIST[$val];
   }
   

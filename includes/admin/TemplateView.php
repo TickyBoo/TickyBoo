@@ -49,7 +49,14 @@ class TemplateView extends AdminView{
   
   
 	function template_view ($data, $type) {
-    	global $_SHOP;
+  global $_SHOP,  $_COUNTRY_LIST;
+    if (!isset($_COUNTRY_LIST)) {
+      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
+        include_once("lang/countries_". $_SHOP->lang.".inc");
+      }else {
+        include_once("lang/countries_en.inc");
+      }
+    }
     	$name = $data['template_name'];
     	switch ($data['template_type']) {
       		case 'systm':
@@ -66,14 +73,27 @@ class TemplateView extends AdminView{
         		if (!$tpl = TemplateEngine::getTemplate($name)) {
           			return false;
         		}
-        		$email = &new htmlMimeMail();
+
         		$lang = is($_GET['lang'], $_SHOP->lang);
+            If (!in_array($lang, $tpl->langs )) {
+              $lang = $tpl->langs[0];
+            }
+            $_GET['lang'] = $lang; 
+            
+        		$email = &new htmlMimeMail();
         		$tpl->build($email, $order, $lang);
         		$email = $email->asarray() ;
+            $langs = array();
+            foreach($tpl->langs as $lng) {
+              $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
+            }
+
+            
+            
         		echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
         		echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         		echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
-        		$this->print_select ("lang", $_GET, $err, $tpl->langs, "onchange='javascript: document.frmEvents.submit();'");
+        		$this->print_select_assoc ("lang", $_GET, $err, $langs, "onchange='javascript: document.frmEvents.submit();'");
         		$this->print_field('email_from',htmlspecialchars($email['headers']['From']));
         		$this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
         		$this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
@@ -133,9 +153,7 @@ class TemplateView extends AdminView{
 
   function template_form (&$data, &$err, $title, $type) {
     global $_SHOP;
-        echo "<pre>";
-        print_r($err);
-        echo "</pre>";
+
 
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -233,7 +251,10 @@ class TemplateView extends AdminView{
       if ($row['template_type'] !=='pdf') {
         echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
       }
-      echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
+      if ($row['template_type'] !=='systm') {
+        echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>";
+      }          
+      echo "</td>\n";
       echo "</tr>";
       $alt = ($alt + 1) % 2;
     }

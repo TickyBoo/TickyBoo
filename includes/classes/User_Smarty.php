@@ -70,7 +70,9 @@ class User_Smarty {
     if ($user = User::Login($username, $password, $err)) {
     	$this->_fill($user);
     	$this->logged=true;
-    	$this->is_member=true;
+    	$this->is_member  = true;
+      $this->new_member = false;
+      $_SESSION['_NEW_MEMBER']= false;
   	  $url = ($params['uri'])?$params['uri']:$_SERVER["REQUEST_URI"];
       echo "<script>window.location.href='{$url}';</script>";
       exit;
@@ -82,6 +84,8 @@ class User_Smarty {
   }
 
   function logout_f (){
+    $this->new_member = false;
+    $_SESSION['_NEW_MEMBER']= false;
     User::logout();
     $this->_clean();
   }
@@ -106,15 +110,14 @@ class User_Smarty {
     }
 
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
-//  	  $url = "{$_SERVER["PHP_SELF"]}?action=activate";
-//      echo "<script>window.location.href='{$url}';</script>";
       $_SESSION['_NEW_MEMBER']= $ismember;
       $this->load_f($res);
-//      $this->new_member = $ismember;
+      $this->new_member = $ismember;
       return $res;
     }  
     $this->new_member = false;
-    $_SESSION['_NEW_MEMBER']= $ismember;
+    $_SESSION['_NEW_MEMBER']= false;
+    
 
     return false;
 //    echo "error";

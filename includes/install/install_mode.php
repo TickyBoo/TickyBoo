@@ -47,7 +47,6 @@ class install_mode {
 
   function display($Install) {
     Install_Form_Open ($Install->return_pg,'return(Validate_Inst_Upgrade());');
-    
     if (!$mode = $_SESSION['radio']){
       $mode = 'NORMAL';
     }
