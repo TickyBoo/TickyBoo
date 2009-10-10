@@ -6,7 +6,7 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.24 - 05/08/2009
+ * @version		3.25 - 07/10/2009
  */
  
 if (!defined('__CLASS_PARSINGHTML__'))
