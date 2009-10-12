@@ -302,6 +302,7 @@ define("control_title","All Ticket Takers");
 		define("control_event_ids","Authorized Events");
 		
 //Event Section
+define("event_status","Event Status");
 		
 //Venues
 define("ort_admin_tab","Venues");
@@ -348,6 +349,8 @@ define("categories","Categories");
 		define("category_size","Category Size");
 		define("number_taken","Seats Sold");	 
 		define("category_data","Category Data");
+		define("category_new_size_title","Change Category Size"); 
+		define("category_new_size","New Size");
 
 	define("pm_zones","Zones");
 	define("pm_zone","Zone");
