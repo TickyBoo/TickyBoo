@@ -122,14 +122,16 @@ function options_check (&$data, &$err){
 	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime', //'shopconfig_restime_remind',
                 'shopconfig_posttocollect') as $check) {
     if(empty($data[$check])){
-       $err[$check]=mandatory;
+       $err[$check]=con('mandatory');
     }elseif(!is_numeric($data[$check])){
-  		$err[$check]=not_number;
+  		$err[$check]=con('not_number');
   	}elseif($data[$check]<'0'){
-  		$err[$check]=too_low;
+  		$err[$check]=con('too_low') ;
     }
-	}
-	
+ 	}
+	if ($data['res_delay'] < $data['cart_delay']) {
+  		$err['res_delay']=con('res_delay_less_cart');
+   }
 	return empty($err);
 
 }

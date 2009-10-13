@@ -246,10 +246,10 @@ define("organizer_remove_image","Remove Logo");
 //Configuration
 define("shopconfig_tab","Configuration");
 define("option_update_title","Config Shop Auto-Updates");
-define("shopconfig_lastrun_int","Order check interval");
-define("shopconfig_restime","Reservation time. (<10 = off)");
+define("shopconfig_lastrun_int","Order check interval (0 = off)");
+define("shopconfig_restime","Reservation time. (0 = off)");
 //define("shopconfig_restime_remind","When reminder email is sent");
-define("shopconfig_check_pos","Don't check POS orders");
+define("shopconfig_check_pos","Check reservated POS orders, too ");
 	define("confirm_yes","Yes");
 	define("confirm_no","No");
 define("shopconfig_delunpaid","Global Delete Unpaid Orders");
@@ -264,7 +264,7 @@ define("shopconfig_maxres","Max Tickets Allowed");
 define("shopconfig_posttocollect","Switch to Alt Paymment");
 define("res_delay","Ticket Timeout");
 define("cart_delay","Cart Timeout");
-
+define("res_delay_less_cart","Ticket Timeout can't be less then the cart timeout");
 //System Managers
 
 define("admin_login","Login Name"); //used in admin, organizer, and spoint
