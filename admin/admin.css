@@ -89,7 +89,16 @@ BACKGROUND-COLOR:#ededed;
 
 .admin_list_subtitle{font-size:12px; font-weight:bold;}
 
-
+.menu_admin_link_selected{
+  font-size: 12px;
+  padding-left: 25px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-decoration:none;
+  color:#ffffff;
+  display:block;
+  background:#999999;
+}
 
 .admin_list_item{}
 
