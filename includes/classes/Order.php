@@ -226,11 +226,11 @@ class Order {
     
   	if($this->order_handling->handling_id=='1'){
   		$order_status="res";
-  		$order_date_expire = "(NOW()+INTERVAL ".$_SHOP->shopconfig_restime." MINUTE)";
+  		$order_date_expire = "TIMESTAMPADD( MINUTE , ".$_SHOP->shopconfig_restime.", NOW())";
   	}else{
   		$order_status="ord";
   		If ($this->order_handling->handling_expires_min>10) {
-  		  $order_date_expire = "(NOW()+INTERVAL ".$this->order_handling->handling_expires_min." MINUTE)";
+  		  $order_date_expire = "TIMESTAMPADD( MINUTE , ".$this->order_handling->handling_expires_min.", NOW())";
       }
   	}
 	
