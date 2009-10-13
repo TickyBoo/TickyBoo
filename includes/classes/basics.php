@@ -395,7 +395,7 @@ function check_system() {
 		}
 	}
   //    echo "store";
-	$query = "UPDATE `ShopConfig` SET shopconfig_lastrun= UNIX_TIMESTAMP(NOW()+INTERVAL shopconfig_lastrun_int MINUTE) LIMIT 1";
+	$query = "UPDATE `ShopConfig` SET shopconfig_lastrun= UNIX_TIMESTAMP(TIMESTAMPADD( MINUTE , shopconfig_lastrun_int, now( ) )) LIMIT 1";
 	if ( !$data = ShopDB::query($query) ) {
 		die( "Save Error, Could not save lastrun");
 		return;

@@ -91,24 +91,6 @@ class Update_Smarty {
 		}
 		$smarty->assign( "update_view", $enabled );
 	}
-	/*
-  function test(){
-	$time=Time::StringToTime('2008-02-24 19:00:20');
-	$array=Time::countdown($time);
-	
-	echo("{$array['justmins']} remaining");
-	
-	$query="SELECT * FROM `Handling` WHERE handling_delunpaid='Yes' ";
-	$query2="SELECT * FROM `Handling` LEFT JOIN `Order` 
-			ON handling_id=order_handling_id 
-			WHERE order_organizer_id={$_SHOP->organizer_id}
-			AND handling_delunpaid='Yes' 
-		  	AND (now() - interval $ttl minute) > order_date
-			AND order_status NOT IN ('trash','res','cancel')  
-			AND order_payment_status !='payed' 
-			AND order_place!='pos'";
-  }
-	*/
 
 	/**
 	 * Countdown now used the order_date_expire.
