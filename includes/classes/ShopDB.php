@@ -72,7 +72,7 @@ class ShopDB {
                         . mysqli_connect_error());
             }
             $_SHOP->link = $link;
-//            ShopDB::checkdatabase(true, false);
+            ShopDB::checkdatabase(true, false);
             return true;
           } else {
              echo 'db init - ';

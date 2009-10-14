@@ -51,6 +51,7 @@ class OptionsView extends AdminView{
 	      		shopconfig_restime="._ESC($_POST['shopconfig_restime']).",
 	      		shopconfig_check_pos="._ESC($_POST['shopconfig_check_pos']).",
 	      		shopconfig_delunpaid="._ESC($_POST['shopconfig_delunpaid']).",
+	      		shopconfig_delunpaid_pos="._ESC($_POST['shopconfig_delunpaid_pos']).",
 	      		shopconfig_posttocollect="._ESC($_POST['shopconfig_posttocollect']).",
 	      		shopconfig_user_activate="._ESC((int)$_POST['shopconfig_user_activate']).",
 	      		res_delay="._ESC((int)$_POST['res_delay']).",
@@ -88,6 +89,7 @@ function option_form (&$data, &$err){
 
   $this->print_select_assoc('shopconfig_check_pos',$data,$err,$yesno);
   $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
+  $this->print_select_assoc('shopconfig_delunpaid_pos',$data,$err,$yesno);
 
  	echo "</table>\n<br>";
 	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";

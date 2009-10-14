@@ -359,38 +359,39 @@ function check_system() {
 	//Checks to see if res time is enabled anything more than 9 will delete
 	if ( $_SHOP->shopconfig_restime >= 1 ) {
 		$query = "SELECT order_id FROM `Order`
-              WHERE order_status NOT IN ('trash','ord','cancel')
-          		AND order_payment_status NOT IN ('payed','pending')
-          		AND order_shipment_status !='send'
+              WHERE order_status = 'res'
+          		AND order_payment_status  = 'none'
+          		AND order_shipment_status = 'none'
           		AND order_date_expire <= NOW()";
 		if ( $_SHOP->shopconfig_check_pos == 'No' ) {
 			$query .= " AND order_place != 'pos' ";
 		}
 		if ( $res = ShopDB::query($query) ) {
 			while ( $row = shopDB::fetch_array($res) ) {
-				if ( !Order::Check_payment($row['order_id']) and
-           ($_SHOP->shopconfig_restime >=	10) ) {
-					Order::order_delete( $row['order_id'], 'AutoCancel_order');
-				}
+				Order::order_delete( $row['order_id'], 'AutoCancel_order');
 			}
 		}
 	}
 
 	if ( $_SHOP->shopconfig_delunpaid == "Yes" ) {
-		$query = "SELECT order_id
+		$query = "SELECT order_id, order_place
               FROM `Handling` left join `Order` on order_handling_id = handling_id
-  			      WHERE handling_expires_min > 10
+  			      WHERE handling_expires_min >= 1
               AND order_date_expire IS NOT NULL
               AND order_date_expire <= NOW()
-  			  		AND order_status NOT IN ('trash','res','cancel')
-  			  		AND order_payment_status NOT IN ('payed','pending')
-  			  		AND order_shipment_status != 'send'
-  			  		AND order_place != 'pos'";
+  			  		AND order_status = 'ord'
+  			  		AND order_payment_status  != 'payed'
+  			  		AND order_shipment_status != 'send'";
+		if ( $_SHOP->shopconfig_delunpaid_pos == 'No' ) {
+			$query .= " AND order_place != 'pos' ";
+		}
 
     if($resultOrder=ShopDB::query($query)){
 			//Cycles through orders to see if they should be canceled!
 			while ( $roword = shopDB::fetch_array($resultOrder) ) {
-				Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
+        if ( !Order::Check_payment($row['order_id']) {
+          Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
+        }
 			}
 		}
 	}

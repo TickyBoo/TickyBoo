@@ -404,6 +404,7 @@ $tbls['ShopConfig']['fields'] = array(
   'shopconfig_restime_remind' => " int(11) NOT NULL DEFAULT '0'",
   'shopconfig_check_pos' => " enum('No','Yes') NOT NULL DEFAULT 'No'",
   'shopconfig_delunpaid' => " enum('Yes','No') NOT NULL DEFAULT 'Yes'",
+  'shopconfig_delunpaid_pos' => " enum('Yes','No') NOT NULL DEFAULT 'Yes'",
   'shopconfig_posttocollect' => " varchar(20) NOT NULL DEFAULT '2'",
   'shopconfig_user_activate' => " tinyint(4) NOT NULL DEFAULT '0'",
   'shopconfig_maxres' => " int(11) NOT NULL DEFAULT '10'",
