@@ -222,7 +222,7 @@ define("InfoVenueCount",   	"Venue count:");
 define("InfoEventCount",   	"Event count:");
 define("InfoAdminCount",   	"Admin count:");
 define("system_summary",	"System Summary");
-define("index_admins_count","<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Controlers:</b> %d, <b>Total:</b> %d");
+define("index_admins_count","<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Controllers:</b> %d, <b>Total:</b> %d");
 define("index_user_count","<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d/%d/%d");
 define("index_events_count","<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d");
 define("index_ort_count","%d");
@@ -247,12 +247,12 @@ define("organizer_remove_image","Remove Logo");
 define("shopconfig_tab","Configuration");
 define("option_update_title","Config Shop Auto-Updates");
 define("shopconfig_lastrun_int","Order check interval (0 = off)");
-define("shopconfig_restime","Reservation time. (0 = off)");
+define("shopconfig_restime","Reservation time (0 = off)");
 //define("shopconfig_restime_remind","When reminder email is sent");
-define("shopconfig_check_pos","Check reservated POS orders, too ");
+define("shopconfig_check_pos","Check for Unpaid POS Orders?");
 	define("confirm_yes","Yes");
 	define("confirm_no","No");
-define("shopconfig_delunpaid","Global Delete Unpaid Orders");
+define("shopconfig_delunpaid","Global Delete Unpaid Orders?");
 define("option_others_title","Other Options");
 define("shopconfig_user_activate","Users Checkout Level");
 	define ("act_restrict_cart","Restrict Cart to Members");
@@ -262,9 +262,9 @@ define("shopconfig_user_activate","Users Checkout Level");
 	define("act_restrict_quest_only","Only guest users");
 define("shopconfig_maxres","Max Tickets Allowed");
 define("shopconfig_posttocollect","Switch to Alt Paymment");
-define("res_delay","Ticket Timeout");
+define("res_delay","Reserve Timeout");
 define("cart_delay","Cart Timeout");
-define("res_delay_less_cart","Ticket Timeout can't be less then the cart timeout");
+define("res_delay_less_cart"," < Can not be less than Cart Timeout");
 //System Managers
 
 define("admin_login","Login Name"); //used in admin, organizer, and spoint
