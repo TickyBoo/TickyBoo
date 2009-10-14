@@ -91,6 +91,7 @@
                 {/if}
               </td>
             </tr>
+            {* Needs better implimentation where the reserved order is taken back to cart.
             {if $shop_order.order_status eq "res"}
               <input type='hidden' name='action' value='reorder' />
               <input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
@@ -103,6 +104,7 @@
                 </td>
               </tr>
             {/if}
+            *}
             <tr>
               <td class="admin_info">{!paymentstatus!}</td>
               <td class="subtitle">

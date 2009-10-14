@@ -43,12 +43,8 @@
       <div class='success' style="text-align:center;">
         {$order_note}
       </div>
-    {elseif $smarty.get.action eq 'change_status'}
-      {if $order->set_status_f($smarty.get.order_id,'pros') }
-        <div class='success' style="text-align:center;">
-          {!order_status_changed!}
-        </div>
-      {/if}
+      {* Need to impliment reserve to order. Current function allready there.
+	  Really the reserved order needs throwing back into the cart. so they can modify it. *}
     {/if}
     {include file="process_view.tpl" status="res"}    
   {else}
