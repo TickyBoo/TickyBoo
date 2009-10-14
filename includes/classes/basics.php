@@ -382,15 +382,16 @@ function check_system() {
   			  		AND order_status = 'ord'
   			  		AND order_payment_status  != 'payed'
   			  		AND order_shipment_status != 'send'";
-		if ( $_SHOP->shopconfig_delunpaid_pos == 'No' ) {
-			$query .= " AND order_place != 'pos' ";
-		}
 
     if($resultOrder=ShopDB::query($query)){
 			//Cycles through orders to see if they should be canceled!
 			while ( $roword = shopDB::fetch_array($resultOrder) ) {
         if ( !Order::Check_payment($row['order_id']) {
-          Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
+          if ( $_SHOP->shopconfig_delunpaid_pos == 'Yes' or $row['order_place'] != 'pos'){
+            Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
+          }
+        }
+		}
         }
 			}
 		}
@@ -427,8 +428,8 @@ function formatAdminDate($edate,$year4=true){
 		if ($year4) { 
 			$pdate = $regs[3]."-".$regs[2]."-".$regs[1]; 
 		} else { 
-    		$pdate = $regs[3]."-".$regs[2]."-".substr($regs[1], -2);
-   		}	
+    	$pdate = $regs[3]."-".$regs[2]."-".substr($regs[1], -2);
+   	}	
 	}
    return $pdate;
 }
