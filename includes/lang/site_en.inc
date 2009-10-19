@@ -1097,4 +1097,8 @@ Unauthorized duplication, alteration, or sale of this ticket may prevent admitta
 Present this page at the time of admission to be scanned. 
 The unique bar code on this ticket allows only one entry per ticket.");
 
+define("cc_name","Card member: ");	
+define("cc_number","Credit card No: ");	
+define("cc_exp","Expare date: ");	
+define("cc_code","vccs: ");
 ?>
