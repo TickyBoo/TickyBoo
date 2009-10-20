@@ -544,7 +544,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
             }
           }
 
-          If ((isset($fields['key'])) and (count($fields['key']) > 0) OR 
+          If (((isset($fields['key'])) and (count($fields['key']) > 0)) OR 
               ($fields['engine'] <> $tblFields['engine'] )) {
             foreach ($fields['key'] as $info){
               if (substr($info,0,1)!=='P'){
@@ -565,7 +565,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
           }
           If ((isset($fields['key']) and isset($tblFields['key']) and
               count($fields['key']) <> count($tblFields['keys'])) or
-              ($fields['engine'] <> $tblFields['engine'] )) 
+              ($fields['engine'] <> $tblFields['engine'] )) $update = true;
 
           $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
           If ($update) {
