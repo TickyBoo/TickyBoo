@@ -383,14 +383,15 @@ class ShopDB {
 
     function TableList ($prefix = ''){
         $tables = Array ();
-        $result = self::Query("SHOW TABLES" . ((!empty($prefix))?" LIKE '$prefix%'":""));
+        $result = self::Query("SHOW TABLE" . ((!empty($prefix))?" status where lower(name)=lower('$prefix')":"s"));
         if (!$result) {
             return false;
         } 
         while ($row = self::fetch_row($result)) {
             $tables[] = $row[0];
         }
-        $result->Free;
+     //   $result->Free;
+     //  print_r($tables);
         Return $tables;
     }
 
@@ -507,7 +508,14 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       $error = '';  $returning = array();
       foreach ($Struction as $tablename => $fields) {
         $update = false; $datainfo = ''; $error='';
-        If ($tblFields = self::TableCreateData($tablename)) {
+        if (is_string($fields)) {
+          if (count(ShopDB::Tablelist ($tablename)) > 0 ){
+            $datainfo .= "Rename table $tablename to $fields.\n";
+            $update = true;
+            $sql = "ALTER TABLE `$tablename` rename to `$fields`;";
+          }
+        
+        } elseif ($tblFields = self::TableCreateData($tablename)) {
           if (!isset($fields['engine'])) $fields['engine'] = $tblFields['engine'];
           $sql = "";
           $oldkey = '';

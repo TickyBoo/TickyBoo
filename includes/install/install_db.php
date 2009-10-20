@@ -33,7 +33,8 @@
  */
 
 $tbls = array();
-
+//$tbls['Admin'] = 'myadmin';
+//$tbls['myadmin'] = 'Admin';
 $tbls['Admin']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
