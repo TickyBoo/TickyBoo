@@ -829,7 +829,7 @@ class Order {
   function emptyTrash(){
     global $_SHOP;
     if (!ShopDB::begin('empry trashed orders')){
-      return $this->_abort(con('Cant_start_transaction'));
+      return order::_abort(con('Cant_start_transaction'));
     }
 
   	$query="delete `Order`
@@ -838,7 +838,7 @@ class Order {
   					seat_id is NULL";
 
   	if(!ShopDB::query($query)){
-  		return $this->_abort(con('cant_delete_trashed_orders'));
+  		return order::_abort(con('cant_delete_trashed_orders'));
   	}
 
   	ShopDB::commit('trashed order emptyed');

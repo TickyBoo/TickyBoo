@@ -43,7 +43,7 @@ $tbls['Admin']['fields'] = array(
 $tbls['Admin']['key'] = array(
   "PRIMARY KEY (`admin_id`)",
   "KEY `admin_login` (`admin_login`)");
-$tbls['Admin']['engine'] = 'MyISAM';
+$tbls['Admin']['engine'] = 'InnoDB';
 $tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
 
 $tbls['Control']['fields'] = array(
@@ -55,7 +55,7 @@ $tbls['Control']['fields'] = array(
 $tbls['Control']['key'] = array(
   "PRIMARY KEY (`admin_id`)"
   );
-$tbls['Control']['engine'] = 'MyISAM';
+$tbls['Control']['engine'] = 'InnoDB';
 $tbls['Control']['remove'] = array ('control_organizer_id');
 
 $tbls['SPoint']['fields'] = array(
@@ -65,7 +65,7 @@ $tbls['SPoint']['fields'] = array(
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'pos'");
 $tbls['SPoint']['key'] = array(
   "UNIQUE KEY `user_id` (`user_id`)");
-$tbls['SPoint']['engine'] = 'MyISAM';
+$tbls['SPoint']['engine'] = 'InnoDB';
 $tbls['SPoint']['remove'] = array ();
 
 
@@ -451,4 +451,5 @@ $tbls['Sessions']['fields'] = array(
 $tbls['Sessions']['key'] = array(
   "PRIMARY KEY (`Sessions_id`)");
 $tbls['Sessions']['remove'] = array ();
+
 ?>

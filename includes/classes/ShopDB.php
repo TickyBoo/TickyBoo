@@ -72,7 +72,7 @@ class ShopDB {
                         . mysqli_connect_error());
             }
             $_SHOP->link = $link;
-            //ShopDB::checkdatabase(true, false);
+            ShopDB::checkdatabase(true, false);
             return true;
           } else {
              echo 'db init - ';
@@ -468,7 +468,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       }
       unset($result);
       if ($tables) {
-        $keys = array ( 'keys'=>array(),'fields'=>array());
+        $keys = array ( 'keys'=>array(),'fields'=>array(), 'engine'=>'');
         // Convert end of line chars to one that we want (note that MySQL doesn't return query it will accept in all cases)
         if (strpos($tables, "(\r\n ")) {
             $tables = str_replace("\r\n", "\n", $tables);
@@ -488,8 +488,8 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
            if (substr($sql_line,-1) ==',') $sql_line = substr($sql_line,0,-1);
            if (preg_match('/^[\s]*(CONSTRAINT|FOREIGN|PRIMARY|UNIQUE)*[\s]*(KEY)+/', ' '.$sql_line)) {
              $keys['keys'][] = str_replace('  ',' ',$sql_line);
-           } else if (preg_match('/(ENGINE)+/', $sql_line)) {
-             $key['ENGINE'] = $sql_line;
+           } else if (preg_match('/(ENGINE=)(?<name>\w+) /i', $sql_line, $matches)) {
+             $keys['engine'] = $matches[2];
            } else {
              $x = strpos( $sql_line,' ');
              $key = substr($sql_line,0,$x);
@@ -508,6 +508,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       foreach ($Struction as $tablename => $fields) {
         $update = false; $datainfo = ''; $error='';
         If ($tblFields = self::TableCreateData($tablename)) {
+          if (!isset($fields['engine'])) $fields['engine'] = $tblFields['engine'];
           $sql = "";
           $oldkey = '';
           $primary ='';
@@ -542,28 +543,35 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
                 $datainfo .= "Missing in $tablename: ".$key. $tblFields['fields'][$key].".\n";
             }
           }
-          If ((isset($fields['key'])) and (count($fields['key']) > 0)) {
-             foreach ($fields['key'] as $info){
-               if (substr($info,0,1)!=='P')
-               {
+
+          If ((isset($fields['key'])) and (count($fields['key']) > 0) OR 
+              ($fields['engine'] <> $tblFields['engine'] )) {
+            foreach ($fields['key'] as $info){
+              if (substr($info,0,1)!=='P'){
                   $sql .= ', ADD ' . $info."\n";
                   if (!in_array($info, $tblFields['keys'])) $update = true;
-               } elseif (!in_array($info, $tblFields['keys'])) {
+              } elseif (!in_array($info, $tblFields['keys'])) {
                   $sql .= ', ADD ' . $info."\n";
                   $update = true;
-                } elseif ( stripos($info,"`$primary`")===false ) {
+              } elseif ( stripos($info,"`$primary`")===false ) {
                   $sql .= ', ADD ' . $info."\n";
-               }
-             }
+              }
+            }
           }
-          If (isset($fields['key']) and isset($tblFields['key']) and
-              count($fields['key']) <> count($tblFields['keys'])) $update = true;
+          if ($fields['engine'] <> $tblFields['engine'] ) {
+            $datainfo .= "mod $tablename enigne to ".$fields['engine']."\n";
+            $sql .= ', ENGINE = '.$fields['engine'] ."\n";
+            $update = true;
+          }
+          If ((isset($fields['key']) and isset($tblFields['key']) and
+              count($fields['key']) <> count($tblFields['keys'])) or
+              ($fields['engine'] <> $tblFields['engine'] )) 
+
           $sql = "ALTER TABLE `$tablename` " . substr($sql, 2);
           If ($update) {
             $sql1 ='';
             $datainfo .=  $tablename.': db-'. print_r($tblFields['keys'], true).' inst-'.print_r($fields['key'], true);
             If ((isset($tblFields['keys'])) and (count($tblFields['keys']) > 0)) {
-
               foreach ($tblFields['keys'] as  $info) {
                 if (substr($info,0,1)!=='P') {
                   $sql1 .= ', DROP '.str_replace('UNIQUE','', substr(trim($info),0,strpos($info,'(')-1))."\n";

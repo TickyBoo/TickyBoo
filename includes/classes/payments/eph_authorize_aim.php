@@ -155,6 +155,7 @@ class EPH_authorize_aim Extends Payment{
 		$post['x_address'] = $order->user_address.' '.$order->user_address1;
 		$post['x_city'] = $order->user_city;
 		$post['x_zip'] = $order->user_zip;
+    $post['x_state'] = $order->user_state;
 		$post['x_country'] = $order->user_country;
 		$post['x_phone'] = $order->user_phone;
 		$post['x_fax'] = $order->user_fax;
