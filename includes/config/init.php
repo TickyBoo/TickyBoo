@@ -47,6 +47,7 @@
 
   
 //check if the site is online  
+  require_once("classes/sessions.php");
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
   
@@ -83,7 +84,7 @@
   }
 //  print_r($res);
 //starting a new session
-//  require_once("classes/sessions.php");
+
   session_name($_SHOP->session_name);
   session_start();
 

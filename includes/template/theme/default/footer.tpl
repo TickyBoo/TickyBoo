@@ -45,7 +45,7 @@ GLOBAL $_SHOP;
 $link = ShopDB::$link;
 printf("System status: %s \n", mysqli_stat($link));
 
-mysqli_close($link);
+//mysqli_close($link);
 if (function_exists('sys_getloadavg')) {
     	$loadArray = sys_getloadavg();
     	$load= "Load: ".$loadArray[0]." / ".$loadArray[1]." / ".$loadArray[2];
