@@ -512,7 +512,12 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
           if (count(ShopDB::Tablelist ($tablename)) > 0 ){
             $datainfo .= "Rename table $tablename to $fields.\n";
             $update = true;
-            $sql = "ALTER TABLE `$tablename` rename to `$fields`;";
+            // We have to change to a tmp table name as when changing case on the same table
+			//we cant actualy change from Admin to admin as the table name check performed 
+			//by MySQL thinks there the same thing and ERRORS.
+			//So change the name to temp and back to the correct one.
+            $sql = "RENAME TABLE `$tablename` TO  `tmp_$fields`, `tmp_$fields` TO `$fields`"; // The MySQL way.
+            //$sql = "ALTER TABLE `$tablename` rename to `$fields`;";
           }
         
         } elseif ($tblFields = self::TableCreateData($tablename)) {
