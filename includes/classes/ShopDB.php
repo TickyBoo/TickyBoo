@@ -552,7 +552,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
             }
           }
 
-          If (((isset($fields['key'])) and (count($fields['key']) > 0)) OR 
+          If ((isset($fields['key']) && count($fields['key']) > 0) || 
               ($fields['engine'] <> $tblFields['engine'] )) {
             foreach ($fields['key'] as $info){
               if (substr($info,0,1)!=='P'){
