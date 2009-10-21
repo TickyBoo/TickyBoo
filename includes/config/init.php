@@ -47,7 +47,7 @@
 
   
 //check if the site is online  
-  require_once("classes/sessions.php");
+  //require_once("classes/sessions.php");
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
   

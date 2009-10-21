@@ -84,7 +84,7 @@ class PosAjax {
 			$toDate = 'event_date';
 		}
 		
-		$sql = "SELECT  event_id, event_name, ort_name, event_date, es_free
+		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, es_free
 				FROM Event,
 				Ort,
 				Event_stat
@@ -105,8 +105,9 @@ class PosAjax {
 		//Break down cats and array up with additional details.
 		while($evt = ShopDB::fetch_assoc($query)){
       		$date = formatDate($evt['event_date'],con('shortdate_format'));
-//         $date ='';
-			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date}</option>";
+      		$time = formatTime($evt['event_time']);
+      		
+			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date} - {$time}</option>";
 			
 			$this->json['events'][strval($evt['event_id'])] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}
