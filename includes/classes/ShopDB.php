@@ -35,6 +35,8 @@
 define("DB_DEADLOCK", 1213);
 
 class ShopDB {
+    static $prefix = '';
+    static $link;
     // /
     // new SQLi extenstions
     function init ()
@@ -43,7 +45,7 @@ class ShopDB {
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
 
-        if (!isset($_SHOP->link)) {
+        if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
             $DB_Hostname = $_SHOP->db_host;
             $pos = strpos($DB_Hostname,':');
@@ -71,7 +73,7 @@ class ShopDB {
                 die('Connect Error (' . mysqli_connect_errno() . ') '
                         . mysqli_connect_error());
             }
-            $_SHOP->link = $link;
+            ShopDB::$link = $link;
             ShopDB::checkdatabase(true, false);
             return true;
           } else {
@@ -87,17 +89,17 @@ class ShopDB {
     function close(){
         global $_SHOP;
 
-        if (isset($_SHOP->link)) {
-           $_SHOP->link->close();
+        if (isset(ShopDB::$link)) {
+           ShopDB::$link->close();
         }
     }
 
     function GetServerInfo () {
         global $_SHOP;
-        if (!$_SHOP->link) {
+        if (!ShopDB::$link) {
            self::init();
         }
-        return mysqli_get_server_info($_SHOP->link);
+        return mysqli_get_server_info(ShopDB::$link);
     }
     
     function begin ($name='')
@@ -106,15 +108,15 @@ class ShopDB {
         if (!isset($_SHOP->db_trx_startedi)) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
-            if (!$_SHOP->link) {
+            if (!ShopDB::$link) {
                 self::init();
             }
-            if ($_SHOP->link->autocommit(false)) {
+            if (ShopDB::$link->autocommit(false)) {
                $_SHOP->db_trx_startedi = 1;
                self::dblogging("[Begin {$name}]");
                 return true;
             } else {
-                user_error($_SHOP->db_error= mysqli_error($_SHOP->link));
+                user_error($_SHOP->db_error= mysqli_error(ShopDB::$link));
                 self::dblogging("[Begin {$name}]Error: $_SHOP->db_error");
                 return false;
             }
@@ -124,19 +126,20 @@ class ShopDB {
             return true;
         }
     }
+    
     function commit ($name='')
     {
         global $_SHOP;
         if ($_SHOP->db_trx_startedi==1) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
-            if ($_SHOP->link->commit()) {
-                $_SHOP->link->autocommit(true);
+            if (ShopDB::$link->commit()) {
+                ShopDB::$link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
                 self::dblogging("[Commit {$name}]");
                 return true;
             } else {
-                user_error($_SHOP->db_error= $_SHOP->link->error);
+                user_error($_SHOP->db_error= ShopDB::$link->error);
                 self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
             }
         } elseif ($_SHOP->db_trx_startedi > 1) {
@@ -153,13 +156,13 @@ class ShopDB {
         if ($_SHOP->db_trx_startedi) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
-            if ($_SHOP->link->rollback()) {
-                $_SHOP->link->autocommit(true);
+            if (ShopDB::$link->rollback()) {
+                ShopDB::$link->autocommit(true);
                 self::dblogging("[Rollback {$name}] {$_SHOP->db_trx_started}");
                 unset($_SHOP->db_trx_startedi);
                 return true;
             } else {
-                user_error($_SHOP->db_error= $_SHOP->link->error);
+                user_error($_SHOP->db_error= ShopDB::$link->error);
                 self::dblogging("[rollback {$name}]Error: $_SHOP->db_error");
             }
         }  else {
@@ -171,7 +174,7 @@ class ShopDB {
     {
         global $_SHOP;
         // echo  "QUERY: $query <br>";
-        if (!isset($_SHOP->link)) {
+        if (!isset(ShopDB::$link)) {
             self::init();
         }
 		// Optionally allow extra args which are escaped and inserted in place of ?
@@ -179,16 +182,16 @@ class ShopDB {
   			{
   				$args = func_get_args();
   				foreach($args as &$item)
-  					$item = self::quote($item);
+  					$item = ShopDB::quote($item);
   				$query = vsprintf(str_replace('?', '%s', $query), array_slice($args, 1));
   			}
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-
-        $res = $_SHOP->link->query($query);
+        $query = ShopDB::replacePrefix($query);
+        $res = ShopDB::$link->query($query);
         if (!$res) {
-            $_SHOP->db_errno  = $_SHOP->link->errno ;
-            $_SHOP->db_error  = mysqli_error($_SHOP->link);
+            $_SHOP->db_errno  = ShopDB::$link->errno ;
+            $_SHOP->db_error  = mysqli_error(ShopDB::$link);
             self::dblogging("[Error: {$_SHOP->db_errno}] ".$query);
             self::dblogging($_SHOP->db_error);
             if ($_SHOP->db_errno == DB_DEADLOCK) {
@@ -201,10 +204,10 @@ class ShopDB {
     function insert_id()
     {
         global $_SHOP;
-        if (!$_SHOP->link) {
+        if (!ShopDB::$link) {
             self::init();
         }
-        return $_SHOP->link->insert_id;
+        return ShopDB::$link->insert_id;
     }
 
     function query_one_row ($query, $assoc = true){
@@ -231,10 +234,10 @@ class ShopDB {
     function affected_rows()
     {
       global $_SHOP;
-        if (!isset($_SHOP->link)) {
+        if (!isset(ShopDB::$link)) {
             self::init();
         }
-        return $_SHOP->link->affected_rows;
+        return ShopDB::$link->affected_rows;
     }
 
     function fetch_array($result)
@@ -291,25 +294,102 @@ class ShopDB {
       global $_SHOP;
       // magic_quotes will be checked in the init.php procedure.
 //      if (!get_magic_quotes_gpc ()) {
-        if (!isset($_SHOP->link)) {
+        if (!isset(ShopDB::$link)) {
           self::init();
         }
-        return $_SHOP->link->real_escape_string($escapestr);
+        return ShopDB::$link->real_escape_string($escapestr);
 //      } else { //echo "get_magic_quotes_gpc<br>\n";
 //        die ("<b><font color='red'>fusion ticket can only work with magic_quotes_gpc turned off</font></b>");
 //      }
     }
 
     function freeResult($result) {
-      if (isset($_SHOP->link) and isset($result)) {
-        $_SHOP->link->free;
+      if (isset(ShopDB::$link) and isset($result)) {
+        ShopDB::$link->free;
       }
     }
 
     function tblclose($result) {
-      if (isset($_SHOP->link) and isset($result)) {
+      if (isset(ShopDB::$link) and isset($result)) {
         $result->close();
       }
+    }
+    /**
+     * This function replaces a string identifier <var>$prefix</var> with the
+     * string held is the <var>_table_prefix</var> class variable.
+     *
+     * @access public
+     * @param string The SQL query
+     * @param string The common table prefix
+     */
+    function replacePrefix( $sql, $prefix='#__' )
+    {
+      $sql = trim( $sql );
+
+      $escaped = false;
+      $quoteChar = '';
+
+      $n = strlen( $sql );
+
+      $startPos = 0;
+      $literal = '';
+      while ($startPos < $n) {
+        $ip = strpos($sql, $prefix, $startPos);
+        if ($ip === false) {
+          break;
+        }
+
+        $j = strpos( $sql, "'", $startPos );
+        $k = strpos( $sql, '"', $startPos );
+        if (($k !== FALSE) && (($k < $j) || ($j === FALSE))) {
+          $quoteChar	= '"';
+          $j			= $k;
+        } else {
+          $quoteChar	= "'";
+        }
+
+        if ($j === false) {
+          $j = $n;
+        }
+
+        $literal .= str_replace( $prefix, shopDB::$prefix,substr( $sql, $startPos, $j - $startPos ) );
+        $startPos = $j;
+
+        $j = $startPos + 1;
+
+        if ($j >= $n) {
+          break;
+        }
+
+        // quote comes first, find end of quote
+        while (TRUE) {
+          $k = strpos( $sql, $quoteChar, $j );
+          $escaped = false;
+          if ($k === false) {
+            break;
+          }
+          $l = $k - 1;
+          while ($l >= 0 && $sql{$l} == '\\') {
+            $l--;
+            $escaped = !$escaped;
+          }
+          if ($escaped) {
+            $j	= $k+1;
+            continue;
+          }
+          break;
+        }
+        if ($k === FALSE) {
+          // error in the query - no end quote; ignore it
+          break;
+        }
+        $literal .= substr( $sql, $startPos, $k - $startPos + 1 );
+        $startPos = $k+1;
+      }
+      if ($startPos < $n) {
+        $literal .= substr( $sql, $startPos, $n - $startPos );
+      }
+      return $literal;
     }
 
   	//function to find the number of fields in a recordSet
@@ -464,11 +544,10 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
     */
     private static function TableCreateData( $tablename ) {
       $result = self::query_one_row('SHOW CREATE TABLE ' ."`$tablename`");
-      if ($result) {
-        $tables = $result['Create Table'];
-      }
+      $tables = ($result)? $result['Create Table']:'';
       unset($result);
       if ($tables) {
+       // echo "<pre>$tables</pre><br>\n ";
         $keys = array ( 'keys'=>array(),'fields'=>array(), 'engine'=>'');
         // Convert end of line chars to one that we want (note that MySQL doesn't return query it will accept in all cases)
         if (strpos($tables, "(\r\n ")) {
@@ -509,14 +588,15 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       foreach ($Struction as $tablename => $fields) {
         $update = false; $datainfo = ''; $error='';
         if (is_string($fields)) {
-          if (count(ShopDB::Tablelist ($tablename)) > 0 ){
+          if (count(ShopDB::Tablelist ($tablename)) > 0 && !ShopDB::TableExists ($fields)){
             $datainfo .= "Rename table $tablename to $fields.\n";
             $update = true;
             // We have to change to a tmp table name as when changing case on the same table
-			//we cant actualy change from Admin to admin as the table name check performed 
-			//by MySQL thinks there the same thing and ERRORS.
-			//So change the name to temp and back to the correct one.
-            $sql = "RENAME TABLE `$tablename` TO  `tmp_$fields`, `tmp_$fields` TO `$fields`"; // The MySQL way.
+            //we cant actualy change from Admin to admin as the table name check performed 
+            //by MySQL thinks there the same thing and ERRORS.
+            //So change the name to temp and back to the correct one.
+            $sql = "RENAME TABLE `$tablename` TO  `__tmp_$fields`, 
+                                 `__tmp_$fields` TO `$fields`"; // The MySQL way.
             //$sql = "ALTER TABLE `$tablename` rename to `$fields`;";
           }
         

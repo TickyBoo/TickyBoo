@@ -42,7 +42,7 @@
 {php}
 
 GLOBAL $_SHOP;
-$link = $_SHOP->link;
+$link = ShopDB::$link;
 printf("System status: %s \n", mysqli_stat($link));
 
 mysqli_close($link);

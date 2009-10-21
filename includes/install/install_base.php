@@ -115,7 +115,7 @@ function Opendatabase(){
 
   If (!(@mysqli_connect_error() or @mysqli_error($link))){
     $link->select_db($DB_Database);
-    $_SHOP->link = $link;
+    ShopDB::$link = $link;
   }
   return $link;
 }  

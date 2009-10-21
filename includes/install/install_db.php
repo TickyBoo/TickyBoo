@@ -34,7 +34,7 @@
 
 $tbls = array();
 
-//$tbls['Admin'] = 'admin';
+$tbls['xadmin'] = 'admin';
 //$tbls['admin'] = 'Admin';
 /* */
 $tbls['admin']['fields'] = array(

@@ -40,7 +40,7 @@ class install_execute {
     $install_mode=$_SESSION['radio'];
 
     OpenDatabase();
-    if (!$_SHOP->link) {
+    if (!ShopDB::$link) {
       array_push($Install->Errors,"<div class=err>ERROR: can not connect to the database</div>");
       return true;
     }
