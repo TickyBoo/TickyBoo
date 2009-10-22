@@ -131,7 +131,7 @@ class EventPropsView extends EventViewCommon {
 
 	function event_sub_list( $event_main_id, &$alt, $main_name, $history= false ) {
 		global $_SHOP;
-    $where = "and (event_date ".(($history)?'<':'>=')." NOW() ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
+    $where = "and (TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())+1 ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
 
 		$query = "select *
               from Event LEFT JOIN Ort ON event_ort_id=ort_id
@@ -270,12 +270,12 @@ select SQL_CALC_FOUND_ROWS *
               limit 0,15
 */
     $wherex = (!$history)?"event_status='pub' or ":"event_status !='pub' AND ";
-    $where  = "and ((event_rep!='main' and  ($wherex event_date ".(($history)?'<':'>=')." NOW() )) \n";
+    $where  = "and ((event_rep!='main' and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
     $where .= "     or (event_rep='main' and  (select COALESCE(count(*),0)
                                                from Event main
                                                where main.event_main_id = Event.event_id
                                                and event_status!='trash'
-                                               and  ($wherex event_date ".(($history)?'<':'>=')." NOW() ))) > 0)";
+                                               and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)";
     $_REQUEST['page'] = is($_REQUEST['page'],1);
   //  $this->page_length = 2;
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
