@@ -75,6 +75,10 @@ class ShopDB {
             }
             ShopDB::$link = $link;
             ShopDB::checkdatabase(true, false);
+            
+            //Set Session Time Zone.
+            ShopDB::query("SET time_zone = '-8'");
+            
             return true;
           } else {
              echo 'db init - ';
