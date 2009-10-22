@@ -79,7 +79,7 @@ class PosAjax {
 			$fromDate = date('Y-m-d');
 		}
 		if($this->request['dateto']){
-			$toDate = $this->request['dateto'];
+			$toDate = _esc($this->request['dateto']);
 		}else{
 			$toDate = 'event_date';
 		}
@@ -92,7 +92,7 @@ class PosAjax {
 				AND ort_id = event_ort_id
 				AND event_id = es_event_id
 				AND event_date >= "._esc($fromDate)." 
-				AND event_date <= "._esc($toDate)."
+				AND event_date <= ".$toDate."
 				and event_rep LIKE '%sub%'
 				AND event_status = 'pub'
 				ORDER BY event_date,event_time
