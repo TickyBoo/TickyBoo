@@ -82,7 +82,7 @@ class DiscountView extends AdminView {
         return empty($err);
     }
 
-    function discount_list ($discount_event_id, $showTable = true)
+    function discount_list ($discount_event_id, $live = false)
     {
         global $_SHOP;
         $query = "SELECT event_name,ort_name,event_status
@@ -118,16 +118,17 @@ class DiscountView extends AdminView {
             echo "<td class='admin_list_item'>{$row['discount_value']}$type</td>\n";
             echo "<td class='admin_list_item' width='20'></td>\n";
             echo "<td class='admin_list_item' width='20'><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a></td>\n";
-
-            if ($names['event_status'] == 'unpub' or $names['event_status'] == 'nosal') {
-                echo "<td class='admin_list_item' width='20'><a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
+            if (!$live) {
+                echo "<td class='admin_list_item' width='20'><a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
             } else {
                 echo "<td></td>";
             }
             echo "</tr>";
             $alt = ($alt + 1) % 2;
         }
-        echo "<tr><td colspan='6'><br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id=$discount_event_id'>" . add . "</a></td></tr>";
+        if (!$live) {
+          echo "<tr><td colspan='6'><br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id=$discount_event_id'>" . con('add') . "</a></td></tr>";
+        }
         echo "</table>\n";
     }
 

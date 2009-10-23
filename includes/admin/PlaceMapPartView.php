@@ -612,7 +612,7 @@ class PlaceMapPartView extends AdminView {
             $alt = ($alt + 1) % 2;
         }
 
-        if ($mine) {
+        if ($mine and !$live) {
             echo "<tr><td colspan=6 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmp&pm_id=$pm_id'>" . add . "</a></td></tr>";
         }
         echo '</table>';

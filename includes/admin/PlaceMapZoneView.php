@@ -130,7 +130,7 @@ class PlaceMapZoneView extends AdminView {
             $alt = ($alt + 1) % 2;
         }
 
-        if ($mine) {
+        if (!$live and $mine) {
             echo "<tr><td colspan=4 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>" . add . "</a></td></tr>";
         }
         echo '</table>';
