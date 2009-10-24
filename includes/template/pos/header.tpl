@@ -56,7 +56,8 @@
 
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
-		<script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
+    <script type="text/javascript" src="scripts/pos.jquery.order.functions.js"></script>
+    <script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.order.user.js"></script>
     {literal}
 			<script type="text/javascript">

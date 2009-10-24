@@ -31,7 +31,8 @@
           <td class='user_value'>
             <select name='category_id' id='cat-select' style="width:250px;">
               <option value='0'></option>
-            </select>
+            </select> 
+            {!free!} {!seat!}: <input readonly="readonly" id="cat-free-seats" size="4" style="text-align:center;">({!approx!})
           </td>
         </tr>
         <tr id='discount-name' {* style="display:none;" *}>
