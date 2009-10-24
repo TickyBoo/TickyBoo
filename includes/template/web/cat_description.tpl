@@ -71,7 +71,7 @@
           &nbsp;
           <span class='note'>
             {!Discount_for!} {$shop_discount.discount_name}:
-              {valuta value=$shop_discount.discount_price|string_format:"%.2f"}{* if $shop_discount.discount_type eq "percent"}%{/if *}
+              {valuta value=$shop_discount.discount_price|string_format:"%.2f"}
           </span>
         {/discount}
       </td>

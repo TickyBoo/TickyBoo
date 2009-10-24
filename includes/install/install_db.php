@@ -34,22 +34,7 @@
 
 $tbls = array();
 
-$tbls['xadmin'] = 'admin';
-//$tbls['admin'] = 'Admin';
 /* */
-$tbls['admin']['fields'] = array(
-  'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
-  'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
-  'admin_password' => " varchar(45) NOT NULL DEFAULT ''",
-  'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
-  'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
-$tbls['admin']['key'] = array(
-  "PRIMARY KEY (`admin_id`)",
-  "KEY `admin_login` (`admin_login`)");
-$tbls['admin']['engine'] = 'InnoDB';
-$tbls['admin']['remove'] = array ('control_organizer_id','admin_level')   ;
-/* */
-/* *
 $tbls['Admin']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
@@ -61,7 +46,7 @@ $tbls['Admin']['key'] = array(
   "KEY `admin_login` (`admin_login`)");
 $tbls['Admin']['engine'] = 'InnoDB';
 $tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
-/* */
+
 
 $tbls['Control']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
