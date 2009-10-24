@@ -26,6 +26,11 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}<link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
+{if !$smarty.request.ajax}
+  {strip}
+    {include file='order.tpl' nofooter=true}
+  {/strip}
+{/if}
 
   <div id="checkout_result" title='
     {if $pm_return.approved}
@@ -82,6 +87,25 @@
   <script type="text/javascript">
   var timerid = 0;
   var orderid = {$shop_order.order_id};
+  {if !$smarty.request.ajax}
+    {literal}
+      $(document).ready(function(){
+        $("#checkout_result").dialog({
+          bgiframe: false,
+          autoOpen: true,
+          height: 'auto',
+          width: 'auto',
+          modal: true,
+          close: function(event, ui) {
+            if (timerid) {
+              clearTimeout(timerid);
+            }
+            {/literal}window.location = '{$_SHOP_root}index.php';{literal}
+          }
+        });
+      });
+    {/literal}
+  {/if}  
   {if $shop_order.order_handling->handling_shipment eq "sp"}
     {literal}
 
@@ -106,3 +130,6 @@
     {/literal}
   {/if}
   </script>
+{if !$smarty.request.ajax}
+    {include file="footer.tpl"}
+{/if}

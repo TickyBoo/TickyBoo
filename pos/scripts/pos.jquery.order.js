@@ -310,6 +310,7 @@ var updateEvents = function(){
 }
 var bindCheckoutSubmitForm = function(){
   $("#payment-confirm-form").ajaxForm({
+    data:{ajax:true},
     success:function(html, status){
           $("#order_action").html(html);
           //$("#order_action").dialog('open');

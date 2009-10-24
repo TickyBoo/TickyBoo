@@ -77,7 +77,7 @@ class EPH_authorize_aim Extends Payment{
       $_POST['cc_name'] = "{$order->user_firstname} {$order->user_lastname}";
     }
 		$order_id=$order->order_id;
-    return "<form action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
+    return "<form id='payment-confirm-form' action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
             <table class='cc_form' cellpadding='0'>
             <input type='hidden' name='action' value='submit'>
             {gui->input name='cc_name'}
