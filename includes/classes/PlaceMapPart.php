@@ -432,7 +432,7 @@ class PlaceMapPart { // ZRS
 
     function add_rows ($count, $before_row = 0)
     {
-        $new_pmp_data = array();
+        $new_pmp = array();
 
         for($i = 0;$i < $before_row;$i++) {
             $new_pm[] = $this->pmp_data[$i];
@@ -446,7 +446,7 @@ class PlaceMapPart { // ZRS
             $new_pm[] = $this->pmp_data[$i];
         }
 
-        $this->pmp_data = $new_pmp_data;
+        $this->pmp_data = $new_pmp;
         $thia->pm_heigth = $this->pmp_height + $count;
     }
 

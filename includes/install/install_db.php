@@ -118,7 +118,7 @@ $tbls['User']['remove'] = array ('user_organizer_ids') ;
 
 $tbls['Category']['fields'] = array(
   'category_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'category_event_id' => " int(11) NOT NULL DEFAULT '0'",
+  'category_event_id' => " int(11) DEFAULT NULL",
   'category_price' => " decimal(10,2) DEFAULT NULL",
   'category_name' => " varchar(100) DEFAULT NULL",
   'category_pm_id' => " int(11) DEFAULT NULL",
@@ -197,7 +197,7 @@ $tbls['Event']['fields'] = array(
   'event_order_limit' => " int(4) NOT NULL DEFAULT '0'",
   'event_payment' => " set('CC','POST') NOT NULL DEFAULT ''",
   'event_template' => " varchar(30) DEFAULT NULL",
-  'event_group_id' => " int(11) NOT NULL DEFAULT '0'",
+  'event_group_id' => " int(11) DEFAULT NULL",
   'event_mp3' => " varchar(200) DEFAULT NULL",
   'event_rep' => " set('main','sub') NOT NULL DEFAULT 'main,sub'",
   'event_main_id' => " int(11) DEFAULT NULL",

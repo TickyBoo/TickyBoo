@@ -182,9 +182,9 @@ die();
     return "checkout_preview";
   }
 
-  function reserveaction($smarty,$origin='www',$user_id) {
+  function reserveaction($smarty,$origin='www',$user_id=null) {
     global $order, $cart;
-    $myorder = $order->make_f(1,$origin,NULL,$user_id);
+    $myorder = $order->make_f(1, $origin, NULL, $user_id);
     if (!$myorder) {
       return "checkout_preview";
     } else {

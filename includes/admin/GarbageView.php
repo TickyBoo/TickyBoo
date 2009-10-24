@@ -35,6 +35,7 @@
  
 require_once("admin/AdminView.php");
 require_once('classes/Trash.php');
+include "classes/OrphanCheck.php";
 
 class GarbageView extends AdminView{
 
@@ -63,13 +64,12 @@ class GarbageView extends AdminView{
 	
 		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?empty=true'>".con('empty_trash')."</a></center><br>";
 
-    GLOBAL $data, $keys;
+    $data = Orphans::getlist($keys);      
 
-		include "classes/OrphanCheck.php";
-
+    
     $space = (count($keys)*60 < $this->width -200)?1:0;
 
-
+    
 		$this->list_head(con('Record_Orphan_Test'),count($keys)+2+$space);
     print " <tr class='admin_list_header'>
               <th width=130 align='left'>
@@ -78,47 +78,42 @@ class GarbageView extends AdminView{
               <th width=50 align='right'>
                 ID
               </th>";
+    foreach ($keys as $key) {
+      print "<th width=60 align='center'> {$key}&nbsp;</th>";
+    }
+    if ($space) {
+      print "<th align='center'>&nbsp;</th>";
+    }
+
+    print "</tr>";
+    $alt =0;
+    foreach ($data as $row) {
+    
+      print "<tr class='admin_list_row_$alt'>
+        <td class='admin_list_item'>{$row['_table']}</td>
+        <td class='admin_list_item' align='right'>{$row['_id']}</td>\n";
       foreach ($keys as $key) {
-        print "<th width=60 align='center'> {$key}&nbsp;</th>";
+        print "<td align='center'>{$row[$key]}&nbsp;</td>\n";
       }
       if ($space) {
         print "<th align='center'>&nbsp;</th>";
       }
-
       print "</tr>";
-      $alt =0;
-      foreach ($data as $row) {
-      
-        print "<tr class='admin_list_row_$alt'>
-          <td class='admin_list_item'>{$row['_table']}</td>
-          <td class='admin_list_item' align='right'>{$row['_id']}</td>\n";
-        foreach ($keys as $key) {
-          print "<td align='center'>{$row[$key]}&nbsp;</td>\n";
-        }
-        if ($space) {
-          print "<th align='center'>&nbsp;</th>";
-        }
-        print "</tr>";
-        $alt = ($alt + 1) % 2;
-      }
-      print "</table>";
+      $alt = ($alt + 1) % 2;
+    }
+    print "</table>";
 
 	
 	}
 
-
-
-
-
 	function draw () { 
 		global $_SHOP;
-    
-		if($_GET['empty']){
+    if($_GET['fix']){ 
+      Orphans::dofix($_GET['fix']);
+    } elseif($_GET['empty']){
 			Trash::empty_trash();
-			$this->garbage_list();
-		}else{
-			$this->garbage_list();
 		}
+		$this->garbage_list();
 	}
 }
 ?>

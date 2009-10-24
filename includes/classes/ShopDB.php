@@ -77,7 +77,9 @@ class ShopDB {
             ShopDB::checkdatabase(true, false);
             
             //Set Session Time Zone.
-            ShopDB::query("SET time_zone = '-8'");
+//This does not work:             ShopDB::query("SET time_zone = '-8'");
+//2009-10-24T13:17:46+02:00 [Error: 1298] SET time_zone = '-8'
+//2009-10-24T13:17:46+02:00 Unknown or incorrect time zone: '-8'
             
             return true;
           } else {
@@ -641,8 +643,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
             }
           }
 
-          If ((isset($fields['key']) && count($fields['key']) > 0) || 
-              ($fields['engine'] <> $tblFields['engine'] )) {
+          If ((isset($fields['key']) && count($fields['key']) > 0)) {
             foreach ($fields['key'] as $info){
               if (substr($info,0,1)!=='P'){
                   $sql .= ', ADD ' . $info."\n";
