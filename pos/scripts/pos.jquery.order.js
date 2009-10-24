@@ -5,7 +5,7 @@ var eventData = new Object();
 var loadOrder = function(){
    $("#seat-chart").dialog({
       bgiframe: false,
-      autoOpen: false,
+      autoOpen: false, 
       height: 'auto',
       maxHeight: 400,
       width: 'auto',
@@ -93,43 +93,15 @@ var loadOrder = function(){
        updateEvents();
     });
 
-   $("#event-id").change(function() {
-      var eventId = $(this).val();
-      if(eventId > 0){
-         ajaxQManager.add({
-            type:      "POST",
-            url:      "ajax.php?x=cat",
-            dataType:   "json",
-            data:      {"pos":true,"action":"categories","event_id":eventId},
-            success:function(data, status){
-               catData = data; //set cat var
-               
-               //Fill Categories
-               $("#cat-select").hide().html("");
-               $.each(data.categories,function(){
-                  $("#cat-select").append(this.html);
-               });
-               $("#cat-select").show().change();
-               //Check catData for discounts...
-               if(catData.enable_discounts){
-                  $("#discount-select").html("");
-                  $.each(catData.discounts,function(){
-                     $("#discount-select").append(this.html);
-                  });
-                  $("#discount-name").show();
-                  $("#discount-select").show();
-               }else{
-                  $("#discount-name").hide();
-                  $("#discount-select").html("<option value='0'></option>"); //hide().
-               }
-            }   
-         });
-      }else{
-         $("#cat-select").html("<option value='0'></option>");
-         $("#discount-name").hide();
-         $("#discount-select").html("<option value='0'></option>");//hide().
-      }
-   });
+  $("#event-id").change(function(){
+    eventIdChange(); 
+  });
+  $("#event-id").keyup(function(event){
+    console.log(event.keyCode);
+    if(event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40){
+      eventIdChange();
+    } 
+  });
    
    $("#cat-select").change(function(){
       if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
@@ -159,6 +131,7 @@ var loadOrder = function(){
       $("#seat-chart").html("");
       $("#date-from").val('');
       $("#date-to").val('');
+      $("#event-free-seats").val('');
       //$("#continue").attr("type","button");
       unBindSeatChart();
       updateEvents();
@@ -236,6 +209,43 @@ var loadOrder = function(){
 
 //End of order startup
 
+var eventIdChange = function(){
+  var eventId = $("#event-id").val();
+  if(eventId > 0){
+    ajaxQManager.add({
+      type:      "POST",
+      url:      "ajax.php?x=cat",
+      dataType:   "json",
+      data:      {"pos":true,"action":"categories","event_id":eventId},
+      success:function(data, status){
+        catData = data; //set cat var
+        //Fill Categories
+        $("#cat-select").hide().html("");
+        $.each(data.categories,function(){
+          $("#cat-select").append(this.html);
+        });
+        $("#cat-select").show().change();
+        //Check catData for discounts...
+        if(catData.enable_discounts){
+          $("#discount-select").html("");
+          $.each(catData.discounts,function(){
+            $("#discount-select").append(this.html);
+          });
+          $("#discount-name").show();
+          $("#discount-select").show();
+        }else{
+          $("#discount-name").hide();
+          $("#discount-select").html("<option value='0'></option>"); //hide().
+        }
+      }   
+    });
+    $("#event-free-seats").val(eventData.events[eventId].free_seats);
+  }else{
+    $("#cat-select").html("<option value='0'></option>");
+    $("#discount-name").hide();
+    $("#discount-select").html("<option value='0'></option>");//hide().
+  }
+}
 
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){

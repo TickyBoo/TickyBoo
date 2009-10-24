@@ -61,7 +61,7 @@ class PosAjax {
 	 * 	- events 
 	 * 		| - id (event_id)
 	 *			| - html (option html)
-	 * 		  	  - free_seats (tot free seats)
+	 * 		  	- free_seats (tot free seats)
 	 * 		| - id ....
 	 * 	- event_dates
 	 * 		| - date ('yyyy-mm-dd')
@@ -95,6 +95,7 @@ class PosAjax {
 				AND event_date <= ".$toDate."
 				and event_rep LIKE '%sub%'
 				AND event_status = 'pub'
+				AND es_free > 0
 				ORDER BY event_date,event_time
 				LIMIT 0,50";
 		if(!$query = ShopDB::query($sql)){
@@ -125,7 +126,8 @@ class PosAjax {
 	 * 			|- html (category option)
 	 * 			|- numbering (true|false)
 	 * 			|- placemap (placemap html)
-	 * 			 - price (number)
+	 * 			|- price (number)
+	 *       - free_seats (int)
 	 * 		|- id.. (number)
 	 * |- enable_discounts (true|false)
 	 * |- discounts
@@ -169,7 +171,7 @@ class PosAjax {
 				//Load Place Map
 				$placemap = $this->loadPlaceMap($cat);
 			}
-			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price']); 
+			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['cs_free']); 
 		}
 		//Finish loading categories and there details lets grab the discounts to...
 		//If we only need the categories updating then just stop here.

@@ -980,6 +980,7 @@ define("alert","Alert:");
 define("pos_booktickets","Book Tickets");//header.tpl
 define("seat_count","Seat Count:");
 define("pos_order_page","Order checkout");
+define("approx","Approx");
 
 //process_list.tpl
 define("actions","Actions");

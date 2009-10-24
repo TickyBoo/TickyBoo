@@ -22,8 +22,8 @@
           <td class='user_value' >
             {!date_from!} {!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
             {!date_to!} {!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
-            <select id="event-id" name="event_id" size="1">
-            </select>
+            <select id="event-id" name="event_id" size="1"></select>  
+            {!free!} {!seat!}: <input readonly="readonly" id="event-free-seats" size="4" style="text-align:center;">({!approx!})
           </td>
         </tr>
         <tr>
