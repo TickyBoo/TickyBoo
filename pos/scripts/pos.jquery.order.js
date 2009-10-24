@@ -182,9 +182,12 @@ var loadOrder = function(){
       });
       return false;
    });
-
+   
+   /**
+   	* Sends the order information the POS Confirm action in controller/checkout.php.
+   	*/
    $("#checkout").click(function(){
-      var userdata = {ajax:"yes",pos:"yes",action:"PosConfirm"};
+      var userdata = {ajax:"yes",pos:"yes",action:"posConfirm"};
     	userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
       if($("input:checkbox[name='no_fee']").is(":checked")){
         userdata['no_fee'] = 1;	
@@ -207,7 +210,8 @@ var loadOrder = function(){
           setTimeout(function(){$("#error-message").hide();}, 40000);
         } else {
           $("#order_action").html(html);
-           $("#order_action").dialog('open');
+          $("#order_action").dialog('open');
+          bindCheckoutSubmitForm();
         }
         }
       });
@@ -230,9 +234,12 @@ var loadOrder = function(){
 
 }
 
+//End of order startup
+
+
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
-    var data = $('#cart_table').getGridParam('postData');
+  var data = $('#cart_table').getGridParam('postData');
   data['handling_id'] = $("input:radio[name='handling_id']:checked").val();
   if($("input:checkbox[name='no_fee']").is(":checked")){
   	data['no_fee'] = 1;	
@@ -241,7 +248,6 @@ var refreshOrder = function(){
   }
   
   $('#cart_table').setGridParam('postData', data);
-
   $('#cart_table').trigger("reloadGrid");
 }
 
@@ -302,6 +308,14 @@ var updateEvents = function(){
       }   
    });
 }
+var bindCheckoutSubmitForm = function(){
+  $("#payment-confirm-form").ajaxForm({
+    success:function(html, status){
+          $("#order_action").html(html);
+          //$("#order_action").dialog('open');
+    }
+  });
+}
 var seatCount = 0;
 var bindSeatChart = function(){
    $("#show-seats").show();
@@ -336,11 +350,4 @@ var BindEventRemove = function(){
       });
       return false;
    });
-}
-
-function formatItem(row) {
-   return row[1];
-}
-function formatResult(row) {
-   return row[1].replace(/(<.+?>)/gi, '');
 }

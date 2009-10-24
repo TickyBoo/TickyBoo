@@ -55,10 +55,10 @@ class EPH_cash extends payment{
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;
-    return "<form action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
-            <input type='hidden' name='action' value='submit'>
+    return "<form id='payment-confirm-form' action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
             ".eph_cash_confirm."<br>
             <div align='right'>
+              <input type='hidden' name='action' value='submit'>
               <INPUT type='submit' name='submit' value='{!pay!}' >
               <input type='hidden' name='order_id' value='{$order_id}'>
             </div>

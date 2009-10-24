@@ -195,21 +195,21 @@ die();
     }
   }
   
-  function PosConfirmAction($smarty) {
+  function posConfirmAction($smarty) {
   	global $order, $cart, $user;
-    if ((int)$_POST['handling_id']==0) {
+    if ((int)$_POST['handling_id']==0) { // Checks handling is selected
         echo "~~".con('No_handling_selected');//.print_r($_POST,true);
         return "";
-    } elseif ($_POST['user_id']==-2) {
+    } elseif ($_POST['user_id']==-2) { //Checks that a user type is selected.
         echo "~~".con('No_useraddress_selected');
         return "";
-    } elseif ($_POST['user_id']==-1) {
+    } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
        $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
        $user->load_f($user_id);
-    } elseif ($_POST['user_id']==0) {
+    } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
-      If (!$user_id ) {
+      if (!$user_id ) {
         echo "~~";
         foreach($errors as $key=> $err) {
           echo con($key).': '.$err."<br />\n";
@@ -237,7 +237,7 @@ die();
     }
   }
   
-	function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
+  function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
   	global $order, $cart;
   	if (!isset($_SESSION['_SHOP_order'])) {
     	$myorder = $order->make_f($_POST['handling_id'], $origin, 0, $user_id, $no_fee);
