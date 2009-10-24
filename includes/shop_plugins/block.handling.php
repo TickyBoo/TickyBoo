@@ -41,7 +41,7 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 	
   if ($repeat) {
     $from='FROM Handling';
-    $where="WHERE 0=0 ";
+    $where="WHERE 1=1 ";
     
   	if($params['event_date']){
   		$use_alt=check_event($params['event_date']);
@@ -69,6 +69,10 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 
     if($params['www']){
      $where .= " and handling_sale_mode LIKE '%www%'";
+    }
+    
+    if($_SHOP->shopconfig_restime > 0){
+      $where .= " OR handling_id = 1";
     }
     
     $limit= ($params['limit'])?'limit '.$params['limit']:'';

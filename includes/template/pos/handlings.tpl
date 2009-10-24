@@ -46,8 +46,12 @@
   		  </td>
   		  <td class='payment_form'>
   		  	<label for='{$shop_handling.handling_id}_check'>
+  		  	{if $shop_handling.handling_id eq 1}
+  		  	   {!reserve!} {!tickets!}
+	  	    {else}
     		  	{!payment!}: {eval var=$shop_handling.handling_text_payment}<br>
     		  	{!shipment!}: {eval var=$shop_handling.handling_text_shipment}
+   		  	{/if}
   		  	</label>
   		  </td>
   		  <td  class='view_cart_td'  valign='top'  align='right' width='100' id='price_{$shop_handling.handling_id}'>

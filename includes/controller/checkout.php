@@ -182,14 +182,14 @@ die();
     return "checkout_preview";
   }
 
-  function reserveaction($smarty) {
-    global $order;
-    $myorder = $order->make_f(1,"www");
-    If (!$myorder) {
+  function reserveaction($smarty,$origin='www',$user_id) {
+    global $order, $cart;
+    $myorder = $order->make_f(1,$origin,NULL,$user_id);
+    if (!$myorder) {
       return "checkout_preview";
     } else {
       setordervalues($myorder, $smarty);
-      $Mycart->destroy();
+      $cart->destroy();
       $smarty->assign('pm_return',array('approved'=>TRUE));
       return "checkout_result";
     }
@@ -225,7 +225,11 @@ die();
     
     ob_start();
     unset($_SESSION['_SHOP_order']) ;
-    $return = confirmaction($smarty, 'pos', $user_id, $no_fee );
+    if((int)$_POST['handling_id'] === 1){
+      $return = reserveaction($smarty,'pos',$user_id);
+    }else{
+      $return = confirmaction($smarty, 'pos', $user_id, $no_fee );
+    }
     $result = ob_get_contents();
     ob_end_clean();
     if ($return == 'checkout_preview' ) {
