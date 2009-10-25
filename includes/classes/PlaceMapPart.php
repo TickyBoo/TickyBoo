@@ -125,14 +125,14 @@ class PlaceMapPart { // ZRS
 		             pmp_scene,
 		             pmp_shift
                ) VALUES (
-	         {$this->pmp_pm_id},
-		 '{$this->pmp_event_id}',
-	         " . ShopDB::quote($this->pmp_name) . ",
-   	         {$this->pmp_width},
-	         {$this->pmp_height},
- 	         " . ShopDB::quote($data) . ",
-		 '{$this->pmp_scene}',
-		 '{$this->pmp_shift}')";
+                 {$this->pmp_pm_id},
+                '{$this->pmp_event_id}',
+                 " . ShopDB::quote($this->pmp_name) . ",
+                   {$this->pmp_width},
+                 {$this->pmp_height},
+                 " . ShopDB::quote($data) . ",
+           '{$this->pmp_scene}',
+           '{$this->pmp_shift}')";
         }
 
         if (ShopDB::query($query)) {
@@ -186,7 +186,7 @@ class PlaceMapPart { // ZRS
         $query = "select * from PlaceMapPart where pmp_pm_id=$pm_id  order by pmp_id";
 
         if ($res = ShopDB::query($query)) {
-            while ($data = shopDB::fetch_array($res)) {
+            while ($data = shopDB::fetch_assoc($res)) {
                 $new_pmp = new PlaceMapPart;
                 $new_pmp->_fill($data);
                 $new_pmp->pmp_data = PlaceMapPart::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);

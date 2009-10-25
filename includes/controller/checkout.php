@@ -189,7 +189,7 @@ die();
       return "checkout_preview";
     } else {
       setordervalues($myorder, $smarty);
-      $cart->destroy();
+      $cart->destroy_f();
       $smarty->assign('pm_return',array('approved'=>TRUE));
       return "checkout_result";
     }
@@ -224,6 +224,7 @@ die();
     $no_fee = is($_POST['no_fee'], 0);
     
     ob_start();
+    //print_r($_SESSION['_SHOP_AUTH_USER_DATA']);
     unset($_SESSION['_SHOP_order']) ;
     if((int)$_POST['handling_id'] === 1){
       $return = reserveaction($smarty,'pos',$user_id);

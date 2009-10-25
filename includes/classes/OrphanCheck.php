@@ -37,11 +37,12 @@ $orphancheck = array();
 
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null, 
-                            'Seats', 'Missing', null
+                            'Seats', category_size , null
 	FROM event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
 		AND lower(e.event_status) <> 'unpub'
 		AND lower(e.event_rep) LIKE ('%sub%')
+    AND category_status != 'unpub'
 		AND category_size <> (SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id )
 ";
 
@@ -63,7 +64,7 @@ or     (category_pmp_id is not null and pmp_id is null)
 $orphancheck[]="
 select 'Category_stat', cs_category_id, 'cat_id' l1 , cs_category_id, category_id
 from Category_stat left join Category on category_id = cs_category_id
-where  (category_id is null )
+where  (category_id is null and category_status != 'unpub')
 ";
 /**/
 $orphancheck[]="
@@ -96,6 +97,12 @@ select 'Event_stat', es_event_id, 'event_id' l1 , es_event_id, event_id
 from Event_stat left join Event  on es_event_id = event_id
 where  (event_id is null)
 ";
+$orphancheck[]="
+select 'Spoint', SPoint.user_id, 'user_id' , SPoint.user_id, user.user_id
+from SPoint left join User  on SPoint.user_id = user.user_id
+where  (user.user_id is null)
+";
+
 /**/
 $orphancheck[]="
 select 'Order', o.order_id, 'user_id'  l1 ,o.order_user_id, u.user_id ,
@@ -113,7 +120,7 @@ or     (o.order_reemited_id is not null and o2.order_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'PlaceMap2', pm_id, 'ort_id'  l1 ,pm_ort_id, ort_id,
+select 'PlaceMap', pm_id, 'ort_id'  l1 ,pm_ort_id, ort_id,
                            'event_id' l2 ,pm_event_id, event_id
 from `PlaceMap2` left join Ort on pm_ort_id = ort_id
                  left join Event on pm_event_id = event_id
@@ -174,13 +181,23 @@ class orphans {
        'Category~event_id'=>'Remove this category, event is already removed',
        'Category~zeros'=>'Clear all zero identifiers in the Catagory table',
        'Category_stat~cat_id'=>'Remove ALL old category_stat records',
+       'Discount~event_id'=>'Remove this Discount, event is already removed',
        'Event~stat_id'=>'Recreate this missing stat record',
        'Event_stat~event_id'=>'Remove ALL old Event_stat records',
        'Event~zeros'=>'Clear all zero identifiers in the event table',
        'Event~cat_id'=>'Recreate missing seats for this category',
+       'Order~user_id'=>'Recreate missing user info for this order',
+       'Order~owner_id'=>'Recreate missing POS login for this pos',
        'Order~zeros'=>'Clear all zero identifiers in the order table',
        'PlaceMapPart~zeros'=>'Clear all zero identifiers in the PlaceMapPart table',
-       'Seat~zeros'=>'Clear all zero identifiers in the seat table'
+       'PlaceMap~event_id'=>'Remove this placemap, event is already removed',
+       'PlaceMap~zeros'=>'Clear all zero identifiers in the PlaceMap table',
+       'Seat~zeros'=>'Clear all zero identifiers in the seat table',
+       'Seat~order_id'=>'Release the order lock from this seats',
+       'Seat~event_id'=>'Remove the seats with the already deleted event',
+       'Seat~user_id'=>'Recreate missing user info for this seats',
+       'Seat~cat_id'=>'Remove the seats with the deleted category',
+       'Spoint~user_id'=>'Recreate missing user info for this pos'
 
 
   );
@@ -211,7 +228,7 @@ class orphans {
             }
             if (!empty($thisfix)) {
               $z = "<a title='{$thisfix}' 
-                     href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}'>".$z."</a>\n";
+                       href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}'>".$z."</a>\n";
             }   
             $r[$row[$x]] = $z;
           }
@@ -224,7 +241,7 @@ class orphans {
 
   function dofix($key) {
     $fix = explode('~',$key);
-    echo $fixit = $fix[0].'~'.$fix[1],':';
+    $fixit = $fix[0].'~'.$fix[1];
     
     switch ($fixit) {
       //Fix category issues
@@ -250,11 +267,53 @@ class orphans {
         Orphans::clear_zeros('Category', array('category_pm_id','category_event_id','category_pmp_id'));
         break;
       // fix event issues
+      case 'Discount~event_id':
+        ShopDB::Query("delete from Discount
+                       where discount_event_id = '{$fix[4]}'") ;
+        break;
       case'Event_stat~event_id':
         ShopDB::Query("delete from Event_stat 
                        where (select Event_id from Event where event_id = es_event_id) is null") ;
         break;
-      case 'Event~stat_id':
+      case'Event~cat_id':
+        $sql = "SELECT seat_id, seat_category_id FROM seat WHERE seat_event_id = {$fix[2]}";
+        $result = ShopDB::Query($sql);
+        $seats  = array();
+        while ($row = ShopDB::fetch_row($result)) {
+          $seats[$row[1]][] = $row[0];
+        }
+
+        $sql = "SELECT event_pm_id FROM event e WHERE e.event_id = {$fix[2]}";
+        $result = ShopDB::Query_one_row($sql, false);
+        require_once('classes/PlaceMapPart.php');
+        $all = PlaceMapPart::loadAll_full( $result[0]);
+        echo "<pre>";
+       //PRint_r($seats);
+        foreach($all as $pmp) {
+         // print_r($pmp->categories);
+          foreach($pmp->pmp_data as &$pmp_row) {
+            foreach ($pmp_row as &$seat) {
+              $zone = $pmp->zones[$seat[PM_ZONE]];
+              $category = $pmp->categories[$seat[PM_CATEGORY]];
+              if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
+                if ($category->category_numbering == 'none') {
+                    
+                } elseif (!in_array($seat[PM_ID], $seats[$category->category_id])){
+                  print_r($seat);
+                  //if ($seat_id = Seat::publish($result[0], $seat[PM_ROW], $seat[PM_SEAT],
+                  //                             $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
+                  //  echo $seat[PM_ID] = $seat_id;
+                 // }  
+                }
+              }     
+            }
+            
+          }
+          echo "\n------------------------------------------------------------\n";
+        }
+        echo "</pre>";
+        break;
+     case 'Event~stat_id':
         require_once('classes/Event_stat.php');
         $sql = "SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = {$fix[2]}";
         $result = ShopDB::Query_one_row($sql, false);
@@ -265,7 +324,7 @@ class orphans {
         $es->save();
         break;
       case 'Event~zeros':
-        If ($fix[3] ='ort_id') {
+        If ($fix[2] =='ort_id') {
           echo "<script> window.alert('Ord_id can not be cleared you need to change this from within database editor lik phpmyadmin. Ask your system manager to help');</script>";
         } else {
           Orphans::clear_zeros('Event', array('event_group_id'));
@@ -274,13 +333,55 @@ class orphans {
       case 'Order~zeros':
         Orphans::clear_zeros('Order', array('order_owner_id'));
         break;
+        
+      case 'PlaceMap~event_id':
+        require_once('classes/PlaceMap.php');
+        PlaceMap::delete($fix[2]);
+        break;
+
       case 'PlaceMapPart~zeros':
         Orphans::clear_zeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
         break;
         
+      case 'Seat~event_id':
+        ShopDB::Query("delete from seat where seat_event_id = {$fix[4]}") ;
+        break;
+
+      case 'Seat~cat_id':
+        ShopDB::Query("delete from seat where seat_category_id = {$fix[4]}") ;
+        break;
+
+      case 'Seat~order_id':
+        ShopDB::Query("update seat set 
+                         seat_order_id = null,
+                         seat_user_id = null, 
+                         seat_ts = null, 
+                         seat_sid = null, 
+                         seat_price = null, 
+                         seat_discount_id = null,
+                         seat_code = null, 
+                         seat_sales_id = null,
+                         seat_status = 'free'
+                       where seat_order_id = {$fix[4]}") ;
+        break;
+
       case 'Seat~zeros':
         Orphans::clear_zeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_pmp_id' ,'seat_discount_id'));
         break;
+      case 'Order~owner_id':
+        ShopDB::Query("
+                      INSERT INTO `SPoint` (`user_id`, `login`, `password`, `admin_status`) VALUES
+                                           ({$fix[4]}, 'demo', 'c514c91e4ed341f263e458d44b3bb0a7', 'pos')") ;
+        break;
+      case 'Order~user_id':
+      case 'Seat~user_id':
+      case 'Spoint~user_id':
+        ShopDB::Query("
+                      INSERT IGNORE INTO `User` (`user_id`, `user_lastname`, `user_firstname`, `user_address`, `user_address1`, `user_zip`, `user_city`, `user_state`, `user_country`, `user_phone`, `user_fax`, `user_email`, `user_status`, `user_prefs`, `user_custom1`, `user_custom2`, `user_custom3`, `user_custom4`, `user_owner_id`, `user_lastlogin`, `user_order_total`, `user_current_tickets`, `user_total_tickets`) VALUES
+                      ({$fix[4]}, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213', 'demo@demoserver.com', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0, 0)") ;
+        break;
+
+        
     }
   }
   function clear_zeros($table, $fields){

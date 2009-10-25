@@ -101,8 +101,7 @@ class PlaceMap{ //ZRS
       while($data=shopDB::fetch_array($res)){
         $new_pm=new PlaceMap;
         $new_pm->_fill($data);
-        
-	$pms[]=$new_pm; 
+        $pms[]=$new_pm; 
       }	 
     }
     return $pms;
@@ -116,38 +115,38 @@ class PlaceMap{ //ZRS
     return false; // exit;
   }
   
-  function delete (){
+  function delete ($pm_id = 0){
     global $_SHOP; 
-
-    if(!ShopDB::begin('delete Placmep: '.$this->pm_id)){
+    if ($pm_id==0) $pm_id = $this->pm_id;
+    if(!ShopDB::begin('delete Placmep: '.$pm_id)){
         echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
         return FALSE;
     }
 
-    $query="delete from PlaceMap2 where pm_id={$this->pm_id} limit 1";
+    $query="delete from PlaceMap2 where pm_id={$pm_id} limit 1";
     if(!ShopDB::query($query)){
-      return $this->_abort(con('placemap_delete_failed'));;
+      return placemap::_abort(con('placemap_delete_failed'));;
     }
 
-    $query="delete from PlaceMapZone where pmz_pm_id={$this->pm_id}";
+    $query="delete from PlaceMapZone where pmz_pm_id={$pm_id}";
     if(!ShopDB::query($query)){
-      return  $this->_abort(con('placemapzone_stat_delete_failed'));
+      return  placemap::_abort(con('placemapzone_stat_delete_failed'));
     }
 
-    $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} ";
+    $query="delete from PlaceMapPart where pmp_pm_id={$pm_id} ";
     if(!ShopDB::query($query)){
-      return $this->_abort(con('PlaceMapPart_delete_failed'));
+      return placemap::_abort(con('PlaceMapPart_delete_failed'));
     }
     $query="DELETE a1, a2 FROM Category AS a1 INNER JOIN Category_stat AS a2
             WHERE a1.category_id=a2.cs_category_id
-            and category_pm_id={$this->pm_id}";
+            and category_pm_id={$pm_id}";
     if(!ShopDB::query($query)){
-       return $this->_abort(con('Category_delete_failed'));
+       return placemap::_abort(con('Category_delete_failed'));
     }
 
-    $query="delete from Category_stat where cs_category_id={$this->pm_id}";
+    $query="delete from Category_stat where cs_category_id={$pm_id}";
     if(!ShopDB::query($query)){
-       return $this->_abort(con('Category_stat_delete_failed'));;
+       return placemap::_abort(con('Category_stat_delete_failed'));;
     }
 
     ShopDB::commit('PlaceMap deleted');

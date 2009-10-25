@@ -154,7 +154,7 @@ class PlaceMapCategory{
     $query="select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id=$pm_id";
 
     if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_array($res)){
+      while($data=shopDB::fetch_assoc($res)){
         $new_cat=new PlaceMapCategory;
         $new_cat->_fill($data);
         $cats[$new_cat->category_ident]=$new_cat;
@@ -201,8 +201,6 @@ class PlaceMapCategory{
     ShopDB::query($query);
     $query="DELETE from Category_stat WHERE cs_category_id=$category_id limit 1";
     ShopDB::query($query);
-
-
   }
 
 
