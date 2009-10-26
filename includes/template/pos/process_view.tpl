@@ -91,20 +91,19 @@
                 {/if}
               </td>
             </tr>
-            {* Needs better implimentation where the reserved order is taken back to cart.
             {if $shop_order.order_status eq "res"}
+              
               <input type='hidden' name='action' value='reorder' />
               <input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
-              <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+              <input id="order-id" type="hidden" name="order_id" value="{$shop_order.order_id}" />
               <tr>
-                <td colspan="2" align="left"> {!pos_reorder_info!}<br>
+                <td colspan="2" align="left"> {!pos_reorder_info!}<br />
                   <center>
-                    <input type='submit' name='submit' value='Order'>
+                    <input id="reorder-button" type='button' name='submit' value='Order Tickets' />
                   </center>
                 </td>
               </tr>
             {/if}
-            *}
             <tr>
               <td class="admin_info">{!paymentstatus!}</td>
               <td class="subtitle">
@@ -160,7 +159,7 @@
 				<td colspan="2" style="text-align:center;">
 					<form name='f' action='view.php' method='post'>
 						<input type="hidden" name="action" value="setsend" />
-						<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+						<input id="order-id" type="hidden" name="order_id" value="{$shop_order.order_id}" />
 				        <input type="submit" value="{!change_order_to_send!}" />
 	     			</form>			
 			  	</td>
@@ -320,3 +319,12 @@
   </table>
 </form>
 <br />
+<!-- Dialog Box for order -->
+<div id="current-order" style="display:none;"></div>
+<script type="text/javascript">
+{literal}
+  $(document).ready(function(){
+    reOrder();  
+  });
+{/literal}
+</script>

@@ -59,6 +59,8 @@
     <script type="text/javascript" src="scripts/pos.jquery.order.functions.js"></script>
     <script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.order.user.js"></script>
+    <script type="text/javascript" src="scripts/pos.jq.current.js"></script>
+    <script type="text/javascript" src="scripts/pos.jq.current.functions.js"></script>
     {literal}
 			<script type="text/javascript">
 				$(document).ready(function(){

@@ -1012,7 +1012,7 @@ define("pos_nextunpaid","Next UnPaid Order");
 define("pos_nextunsent","Next UnSent Order");
 define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
 define("pos_reorder_info","To Order Tickets Click below:<br>".
-		"WARNING old order is CANCELED on Re-Order!");
+		"WARNING this is VERY EXPERIMENTAL! This adds the tickets back into the cart but is NOT fully tested!");
 define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
 define("shipmentstatus","Shipment Status");
 define("next_order_id","Next Order ID");

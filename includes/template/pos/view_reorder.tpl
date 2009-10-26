@@ -34,7 +34,7 @@
 <table width='700'>
   <tr>
   	<td  width='50%' valign='top'>
-    	{order->order_list order_id=$smarty.post.order_id}
+    	{order->order_list order_id=$smarty.request.order_id}
     	  <table  cellspacing='1' cellpadding='4' border='0'>
       		<tr>
       		  <td class='title'>{#order_id#} {$shop_order.order_id}</td>

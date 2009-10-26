@@ -33,6 +33,7 @@
  */
 
 require_once "classes/ShopDB.php";
+require_once "classes/Order.php";
 
 define("SEAT_ERR_INTERNAL",1);
 define("SEAT_ERR_OCCUPIED",2);
@@ -41,15 +42,19 @@ define("SEAT_ERR_TOOMUCH",3);
 class Seat {
 
   // Selects and reserves seats... Very Complex
-  function reservate ($sid,$event_id,$category_id,$seats,$numbering,$reserved){
+  /**
+   * @param (bool) force - use force to force current reserved ordered seats to back into the cart. 
+   */
+  function reservate ($sid,$event_id,$category_id,$seats,$numbering,$reserved,$force=false){
 
     global $_SHOP;   
     $_SHOP->seat_error=0;
-     
+    
+    //TODO: This needs to use the database_time + res_delay so timezones dont get confused.
     $time=time()+$_SHOP->res_delay;
 	
   	// if reserved is enabled it lets you book reserved seats handy for splitting big booking.
-  	if($reserved==true) {
+  	if($reserved==true || $force == true) {
   	  $status=" and seat_status IN ('free','resp') ";
   	}else{
   	  $status=" and seat_status='free' ";
@@ -62,17 +67,17 @@ class Seat {
 
     //numbering none: choose any $seats seats ($seats is a number)
     // Open seating....
-	  if($numbering=='none'){
+	  if($numbering=='none' && !$force){
         
       Seat::expire_category($category_id);
       
       $query="SELECT seat_id FROM Seat 
               WHERE seat_event_id='$event_id'
               and seat_category_id='$category_id' 
-	      and seat_status='free' 
-	      LIMIT $seats
-	      FOR UPDATE";
-
+        and seat_status='free' 
+        LIMIT $seats
+        FOR UPDATE";
+  
       if(!$res=ShopDB::query($query)){
         ShopDB::rollback('cant lock seats');
         $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:80');
@@ -91,7 +96,7 @@ class Seat {
         return FALSE;
       }
 
-    } elseif($numbering=='both' or $numbering=='rows' or $numbering=='seat') {
+    }elseif($numbering=='both' or $numbering=='rows' or $numbering=='seat' && !$force) {
       $seats_id=$seats;
 
 // IN
@@ -116,6 +121,32 @@ class Seat {
       	}
       }
       
+    //Forcing seats back into the cart.
+    }elseif($force){
+      //TODO: Check for order_id and lock if possible
+      //TODO: lock order to stop other users trying to reorder the same order.
+      
+      $seats_id=$seats;
+      foreach($seats_id as $seat_id){
+        $query="SELECT seat_id,seat_pmp_id FROM Seat 
+                WHERE seat_event_id='$event_id'
+                and seat_category_id='$category_id'
+		            and seat_id='$seat_id' $status
+		            LIMIT 1 FOR UPDATE";
+        if(!$res=ShopDB::query($query)){
+          ShopDB::rollback('cant lock seat');
+          $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:154.2');
+          return FALSE;
+        }
+	
+        if(!$row=ShopDB::fetch_array($res)){
+          ShopDB::rollback('Cant find seat');
+          $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
+      	  return FALSE;
+      	}else{
+      	  $pmps_id[$row['seat_pmp_id']]=1;
+      	}
+      }
     //some strange thing happens
     }else{
       user_error("unknown place_numbering $numbering category $category_id");
@@ -128,12 +159,17 @@ class Seat {
     //here we have seats_ids to reservate
     //reserving them one by one
     foreach($seats_id as $seat_id){
-      $query="UPDATE Seat set seat_status='res', seat_ts='$time',
-	      seat_sid='$sid' where 
-              seat_id='$seat_id' 
-              and seat_event_id='$event_id'
-              and seat_category_id='$category_id' 
-	      		$status";
+      $query="UPDATE Seat SET 
+                seat_old_status = seat_status, 
+                seat_old_order_id = seat_order_id, 
+                seat_status='res', 
+                seat_ts='$time', 
+                seat_sid='$sid' 
+              WHERE 
+                seat_id='$seat_id' 
+                and seat_event_id='$event_id' 
+                and seat_category_id='$category_id'  
+                $status";
 	      
      if(!ShopDB::query($query)){ 
         ShopDB::rollback('cant update seat');
@@ -141,7 +177,7 @@ class Seat {
         return FALSE;
       }else{
         //place taken by someone in the middle
-        if(shopDB::affected_rows()!=1){
+        if(ShopDB::affected_rows()!=1){
           ShopDB::rollback('seat not changed');
           $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
           return FALSE;
@@ -166,11 +202,11 @@ class Seat {
     return $seats_id;
   }
 
+
+
   //the order is cancelled -> moves places to 'free' status and 
   //updates stats
   //$seats = array(array('seat_id'=>,'event_id'=>,category_id=>,pmp_id=>))
-
-
   function cancel ($seats,$user_id,$nocommit=FALSE){
 
     global $_SHOP;

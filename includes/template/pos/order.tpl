@@ -1,11 +1,4 @@
 {include file="header.tpl"}
-<script type="text/javascript">
-{literal}
-  $(document).ready(function(){
-    loadOrder();  
-  });
-{/literal}
-</script>
 <div id="order-div" style="width:100%;">
    <br />
   <form id="order-form" name='addtickets' action='index.php' method='post'>
@@ -119,8 +112,14 @@
     <button type='button' id='cancel' name='action' value='PosCancel' >{!cancel!}</button>
   </form>
 </div>
-
 <br> <br>
+<script type="text/javascript">
+{literal}
+  $(document).ready(function(){
+    loadOrder();  
+  });
+{/literal}
+</script>
 {if !$nofooter}
   {include file="footer.tpl"}
 {/if}

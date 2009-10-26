@@ -279,7 +279,10 @@ $tbls['Order']['fields'] = array(
   'order_date_expire' => " datetime DEFAULT NULL",
   'order_responce' => "varchar(50) NOT NULL DEFAULT ''",
   'order_responce_date' => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
-  'order_note' => "text");
+  'order_note' => "text",
+  'order_lock' => "enum('0','1') NOT NULL DEFAULT '0'",
+  'order_lock_time' => "timestamp NULL DEFAULT '0000-00-00 00:00:00'",
+  'order_lock_admin_id' => "int(11) DEFAULT NULL");
 $tbls['Order']['key'] = array(
   "PRIMARY KEY (`order_id`)",
   "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
@@ -393,7 +396,9 @@ $tbls['Seat']['fields'] = array(
   'seat_discount_id' => " int(11) DEFAULT NULL",
   'seat_code' => " varchar(16) DEFAULT NULL",
   'seat_status' => " varchar(5) NOT NULL DEFAULT 'free'",
-  'seat_sales_id' => " int(11) DEFAULT NULL");
+  'seat_sales_id' => " int(11) DEFAULT NULL",
+  'seat_old_order_id' => "int(11) DEFAULT NULL",
+  'seat_old_status' => "varchar(5) DEFAULT NULL");
 $tbls['Seat']['key'] = array(
   "PRIMARY KEY (`seat_id`)",
   "KEY `seat_event_id` (`seat_event_id`,`seat_category_id`,`seat_order_id`,`seat_ts`,`seat_status`)");

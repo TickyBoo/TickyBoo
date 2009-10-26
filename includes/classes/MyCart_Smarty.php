@@ -89,18 +89,17 @@ class MyCart_Smarty {
 	* @param discount_id
 	* @return boolean : will return true if that many seats are avalible.
 	*/
-	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false, $discount_id=0){
+	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false, $discount_id=0,$force=false){
     if(!$mode){
     	$mode='mode_web';
 		}
-    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id);
+    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id,$force);
     if($res){
     	return $res;
     }else{
     	return FALSE;
     }
 	}
-
 
   function remove_item ($params, &$smarty){
     $this->remove_item_f($params['event_id'],$params['category_id'],$params['item_id']);
@@ -116,6 +115,28 @@ class MyCart_Smarty {
       
       $_SESSION['_SMART_cart']=$cart;
     }  
+  }
+  
+  function order_to_cart($order_id,$mode='mode_web'){
+    require_once ("classes/Order.php");
+    require_once ("classes/Seat.php");
+    if(is_numeric($order_id) && $order_id > 0){
+      $order = Order::load($order_id);
+      $tickets = $order->loadTickets();
+      //print_r($order);
+      //print_r($tickets);
+    }
+    //We need eventid, catid, seats, mode,reserved, discount.
+    if($order && $tickets){
+      if($order->order_payment_status <> 'none'){
+        return "~~Order Currently being paid for";
+      }
+      foreach($tickets as $ticket){
+        $res[] = $this->add_item_f($ticket['event_id'],$ticket['category_id'], array($ticket['seat_id']),$mode,false,$ticket['discount_id'],true);
+      }
+      print_r($res);
+    }
+    
   }
   
   function total_price ($params, &$smarty){
@@ -258,7 +279,20 @@ class MyCart_Smarty {
 
   }
 
-  function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved,$discount_id = 0){
+  
+  /**
+   * MyCart_Smarty::CartCheck()
+   * 
+   * @param mixed $event_id
+   * @param mixed $category_id
+   * @param mixed $places
+   * @param string $mode
+   * @param mixed $reserved
+   * @param integer $discount_id
+   * @param bool $force - Used to force current orders with thouse seats to be added to the cart. (Will currently only work on reservations)
+   * @return
+   */
+  function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved,$discount_id = 0, $force=false){
 
     require_once ("classes/Seat.php");
     require_once ("classes/Event.php");
@@ -274,14 +308,14 @@ class MyCart_Smarty {
       $this->error = con('error_missingcategorytype');
       return FALSE;
     }
-	//Load Discount if not 0.
-	if($discount_id > 0){
-		$discount = Discount::load($discount_id);
-		if(!$discount){
-      $this->error = con('error_discountnotfound');
-			return false;
-		}
-	}
+    //Load Discount if not 0.
+    if($discount_id > 0){
+		  $discount = Discount::load($discount_id);
+		  if(!$discount){
+        $this->error = con('error_discountnotfound');
+			 return false;
+		  }
+	 }
 
     //checks the seating numbering.
     if($category_numbering=='none'){
@@ -302,6 +336,7 @@ class MyCart_Smarty {
       $this->error="unknown: category_numbering '{$category_numbering}' category_id '{$category_id}'";
       return FALSE;
     }
+    
 
     $max=$event->event_order_limit;
 
@@ -320,14 +355,17 @@ class MyCart_Smarty {
         return FALSE;
       }
     }
+    
+    print_r($places);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved)){
+    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved, $force)){
+      print_r("reseve place");
+      
 
 	  //if cart empty create new cart
       if(!isset($cart)){
         $cart = new Cart();
       }
-
       // add place in cart.
       $res=$cart->add_place($event_id, $category_id, $places_id);
       If ($discount_id >0) {

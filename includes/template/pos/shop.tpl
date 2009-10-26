@@ -16,6 +16,8 @@
 		{/if}
  	{elseif $smarty.request.action eq "remove"}
 		{$cart->remove_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.item)}
+  {elseif $smarty.request.action eq "ordertocart"}
+		{$cart->order_to_cart($smarty.request.order_id)}
  	{/if}
 {else}
   {include file="order.tpl"}

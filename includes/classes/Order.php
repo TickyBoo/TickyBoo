@@ -47,6 +47,7 @@ class Order {
   public $no_fee = false;
   public $no_cost = false;
   public $order_handling = null;
+  public $tickets = array();
 
   function Order ($order_user_id, $sid, $handling_id, $dummy, $no_fee, $no_cost, $place='www'){
 
@@ -83,7 +84,7 @@ class Order {
     return count($this->places);
   }
   
-  function load ($order_id, $complete=false){
+  function load ($order_id, $complete=false, $tickets=false){
     global $_SHOP;
     
     $query="select * from `Order` 
@@ -95,8 +96,11 @@ class Order {
       if($order and $complete){
         if ($order->order_handling_id) {
           $order->handling= Handling::load($order->order_handling_id);
-          $order->order_handling= &$order->handling;
+          $order->order_handling = &$order->handling;
         }
+      }
+      if($order && $tickets){
+        $order->tickets = $this->loadTickets();
       }
       return $order;
     }
@@ -125,6 +129,34 @@ class Order {
       		return $order;
     	}	
 	}
+  
+  public function loadTickets($order_id = 0){
+    if($this->order_id){
+      return Order::_loadTickets($this->order_id);
+    }elseif($order_id>0){
+      return Order::_loadTickets($order_id);
+    }else{
+      return "~~No Order ID for ticket loading";
+    }
+  }
+  
+  private function _loadTickets($order_id){
+    
+    $sql = "SELECT * FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id 
+		        LEFT JOIN Event ON seat_event_id=event_id 
+            LEFT JOIN Category ON seat_category_id= category_id
+            LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=pmz_id
+            WHERE seat_order_id='{$order_id}'";
+    $result = ShopDB::query($sql);
+    if(!$result){
+      return "~~No Tickets for that event";
+    }
+    $seats = array();
+    while($seat = ShopDB::fetch_assoc($result)){
+      $seats[] = $seat;
+    }
+    return $seats;
+  }
 
   function load_ext ($order_id){
     global $_SHOP;
@@ -138,6 +170,23 @@ class Order {
       return $order;
     }
       
+  }
+  
+  //TODO: Add order locking in.
+  public function lockOrder($order_id=0,$user_id=0){
+    //TODO: Get user id from admin session if no user_id passed to it.
+    if($order_id > 0){
+      
+    }elseif($this->order_id > 0){
+      
+    }else{
+      return "~~No Order to Lock";
+    }
+  }
+  
+  //TODO: Dont let orders with certain status's be locked. Only, resp, and unpaid.
+  private function _lockOrder($order_id,$user_id){
+    
   }
 
   function _abort ($str=''){

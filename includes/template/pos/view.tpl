@@ -17,7 +17,7 @@
 {elseif $smarty.post.action eq 'confirm'}
   {include file="process_select.tpl"}
 
-{elseif $smarty.post.action eq 'reorder'}
+{elseif $smarty.request.action eq 'reorder'}
   {include file="view_reorder.tpl"}
   
 {elseif $smarty.post.action eq 'order_res'}
