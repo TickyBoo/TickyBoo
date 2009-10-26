@@ -68,8 +68,8 @@
       <td class="title" align='right'>
         {capture name='total_price'}
           {cart->total_price}
-        {/capture}
-        {valuta value=$smarty.capture.total_price|string_format:"%.2f"}
+        {/capture}        {* $smarty.capture.total_price} | *}
+        {valuta value=$smarty.capture.total_price} {* //it seems this is not needed: |string_format:"%.2f" *}
       </td>
       <td>&nbsp;</td>
     </tr>
