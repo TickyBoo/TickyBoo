@@ -51,13 +51,13 @@ class PlaceMapZone{
   
   function save (){
     global $_SHOP;
+
     if($this->pmz_id){
 
       $query="update PlaceMapZone set 
 	    pmz_short_name="._esc($this->pmz_short_name).",
 	    pmz_name="._esc($this->pmz_name).",
 	    pmz_color="._esc($this->pmz_color)."
-	    
 	    where pmz_id="._esc($this->pmz_id);
     }else{
        if(!$this->pmz_ident){$this->_find_ident();}

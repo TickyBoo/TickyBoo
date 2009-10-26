@@ -49,7 +49,7 @@ class PlaceMapCategory{
                               $category_color=0,
                               $category_numbering=0,
                               $category_size=0,
-                              $category_event_id=0 )
+                              $category_event_id=null )
   {
     if($category_pm_id){
       $this->category_pm_id=$category_pm_id;
@@ -65,20 +65,22 @@ class PlaceMapCategory{
 
   function save (){
     global $_SHOP;
+    $this->category_event_id =($this->category_event_id===0)?null:$this->category_event_id;
+    $this->category_pmp_id   =($this->category_pmp_id===0)?null:$this->category_pmp_id;
     if($this->category_id){
 
       $query="update Category set
-	        category_name=".ShopDB::quote($this->category_name).",
-	        category_price=".ShopDB::quote($this->category_price).",
-	        category_template=".ShopDB::quote($this->category_template).",
-	        category_color=".ShopDB::quote($this->category_color).",
+	        category_name="     .ShopDB::quote($this->category_name).",
+	        category_price="    .ShopDB::quote($this->category_price).",
+	        category_template=" .ShopDB::quote($this->category_template).",
+	        category_color="    .ShopDB::quote($this->category_color).",
           category_numbering=".ShopDB::quote($this->category_numbering).",
-	        category_size=".ShopDB::quote($this->category_size).",
-	        category_event_id=".ShopDB::quote($this->category_event_id).",
-	        category_pmp_id=".ShopDB::quote($this->category_pmp_id).",
-	        category_data=".ShopDB::quote($this->category_data).",
-		category_status=".ShopDB::quote($this->category_status)."
-	      WHERE category_id='{$this->category_id}' ";
+	        category_size="     .ShopDB::quote($this->category_size).",
+	        category_event_id=" .ShopDB::quote($this->category_event_id).",
+	        category_pmp_id="   .ShopDB::quote($this->category_pmp_id).",
+	        category_data="     .ShopDB::quote($this->category_data).",
+		      category_status="   .ShopDB::quote($this->category_status)."
+	      WHERE category_id="   .ShopDB::quote($this->category_id);
 	}else{
 		if(!$this->category_ident){
 			$this->category_ident=$this->_find_ident($this->category_pm_id);

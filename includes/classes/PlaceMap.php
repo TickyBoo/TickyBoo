@@ -55,7 +55,9 @@ class PlaceMap{ //ZRS
   
   function save (){
     global $_SHOP;
-  
+    $this->pm_ort_id =($this->pm_ort_id===0)?null:$this->pm_ort_id;
+    $this->pm_event_id   =($this->pm_event_id===0)?null:$this->pm_event_id;
+
     $query='set '.
     $this->_set('pm_ort_id').
     $this->_set('pm_event_id').
@@ -181,7 +183,7 @@ class PlaceMap{ //ZRS
         foreach($zones as $zone){
           unset($zone->category_id);
           $zone->category_pm_id=$new_id;
-            $zone->category_event_id=$event_id;
+          $zone->category_event_id=$event_id;
           $zone->save();
         }
       }
@@ -190,7 +192,7 @@ class PlaceMap{ //ZRS
         foreach($zones as $zone){
           unset($zone->pmp_id);
           $zone->pmp_pm_id=$new_id;
-            $zone->pmp_event_id=$event_id;
+          $zone->pmp_event_id=$event_id;
           $zone->save();
         }
       }
@@ -228,7 +230,7 @@ class PlaceMap{ //ZRS
     }
   }
 
-  function _set ($name,$value=0,$mandatory=FALSE){
+  function _set ($name, $value=null, $mandatory=FALSE){
 
     if($value){
       $val=$value;

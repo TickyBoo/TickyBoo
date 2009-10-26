@@ -279,20 +279,22 @@ class Seat {
   }
 
 
-  function free ($sid,$event_id,$category_id,$seats){
+  function free ($sid, $event_id, $category_id, $seats){
     global $_SHOP;   
      
     if(!ShopDB::begin('free seats')){ return FALSE;}
-    
+    $category_id    =($category_id===0)?null:$category_id;
+    $event_id       =($event_id===0)?null:$event_id;
+
     foreach($seats as $seat_id){
 
       $query="select seat_pmp_id 
               from `Seat` 
-	      where seat_id='$seat_id' 
+	      where seat_id="._esc($seat_id)."
 	      and seat_sid='$sid' 
 	      and seat_status='res'
-              and seat_event_id='$event_id' 
-	      and seat_category_id='$category_id' 
+        and seat_event_id="._esc($event_id)."
+	      and seat_category_id="._esc($category_id)."
 	      FOR UPDATE";
 
       if(!$row=ShopDB::query_one_row($query)){
@@ -304,13 +306,13 @@ class Seat {
       
       $query="UPDATE `Seat` 
               set seat_status='free', 
-	      seat_ts=NULL, 
-	      seat_sid=NULL
-              where seat_id='$seat_id' 
-	      and seat_sid='$sid' 
-	      and seat_status='res'
-              and seat_event_id='$event_id' 
-	      and seat_category_id='$category_id'";
+      	      seat_ts=NULL,
+      	      seat_sid=NULL
+      	      where seat_id="._esc($seat_id)."
+      	      and seat_sid='$sid'
+      	      and seat_status='res'
+              and seat_event_id="._esc($event_id)."
+      	      and seat_category_id="._esc($category_id);
 
       if(!ShopDB::query($query)){
         ShopDB::rollback('cant update seats');
@@ -379,9 +381,13 @@ class Seat {
 		    )
   {
     global $_SHOP; 
-   
+    $this->seat_zone_id  =($this->seat_zone_id===0)?null:$this->seat_zone_id;
+    $this->seat_event_id =($this->seat_event_id===0)?null:$this->seat_event_id;
+    $this->seat_pmp_id =($this->seat_pmp_id===0)?null:$this->seat_pmp_id;
+    $this->seat_category_id =($this->seat_category_id===0)?null:$this->seat_category_id;
+
     $query="INSERT INTO Seat SET
-	 seat_event_id='$seat_event_id',
+     seat_event_id='$seat_event_id',
   	 seat_row_nr='$seat_row_nr',
   	 seat_nr='$seat_nr',
   	 seat_zone_id='$seat_zone_id',

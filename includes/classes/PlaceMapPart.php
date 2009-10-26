@@ -101,6 +101,8 @@ class PlaceMapPart { // ZRS
         global $_SHOP;
 
         $data = $this->_ser_data();
+        $this->pmp_pm_id    =($this->pmp_pm_id===0)?null:$this->pmp_pm_id;
+        $this->pmp_event_id =($this->pmp_event_id===0)?null:$this->pmp_event_id;
 
         if ($this->pmp_id) {
             $query = "update PlaceMapPart set
