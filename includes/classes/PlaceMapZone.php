@@ -40,7 +40,7 @@ class PlaceMapZone{
   var $pmz_name;
   var $pmz_color;
     
-  function PlaceMapZone ($pmz_pm_id=0, $pmz_name=0, $pmz_short_name=0, $pmz_color=0){
+  function PlaceMapZone ($pmz_pm_id=null, $pmz_name=null, $pmz_short_name=null, $pmz_color=null){
     if($pmz_pm_id){
       $this->pmz_pm_id=$pmz_pm_id;
       $this->pmz_name=$pmz_name;
@@ -54,26 +54,26 @@ class PlaceMapZone{
     if($this->pmz_id){
 
       $query="update PlaceMapZone set 
-	    pmz_short_name=".ShopDB::quote($this->pmz_short_name).",
-	    pmz_name=".ShopDB::quote($this->pmz_name).",
-	    pmz_color=".ShopDB::quote($this->pmz_color)."
+	    pmz_short_name="._esc($this->pmz_short_name).",
+	    pmz_name="._esc($this->pmz_name).",
+	    pmz_color="._esc($this->pmz_color)."
 	    
-	    where pmz_id='{$this->pmz_id}'";
+	    where pmz_id="._esc($this->pmz_id);
     }else{
        if(!$this->pmz_ident){$this->_find_ident();}
 
        $query="insert into PlaceMapZone (
-                 pmz_pm_id, 
-    	         pmz_name, 
-    	         pmz_short_name, 
-	         pmz_ident, 
-	         pmz_color
+                pmz_pm_id, 
+                pmz_name, 
+                pmz_short_name, 
+                pmz_ident, 
+                pmz_color
                ) VALUES (
-	         $this->pmz_pm_id,
-	         ".ShopDB::quote($this->pmz_name).",
-	         ".ShopDB::quote($this->pmz_short_name).",
-	         ".ShopDB::quote($this->pmz_ident).",
-	         ".ShopDB::quote($this->pmz_color).")";
+	         "._esc($this->pmz_pm_id).",
+	         "._esc($this->pmz_name).",
+	         "._esc($this->pmz_short_name).",
+	         "._esc($this->pmz_ident).",
+	         "._esc($this->pmz_color).")";
     }
    
     if(ShopDB::query($query)){

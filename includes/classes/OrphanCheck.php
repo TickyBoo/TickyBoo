@@ -299,11 +299,11 @@ class orphans {
                 if ($category->category_numbering == 'none') {
                     
                 } elseif (!in_array($seat[PM_ID], $seats[$category->category_id])){
-                  print_r($seat);
-                  //if ($seat_id = Seat::publish($result[0], $seat[PM_ROW], $seat[PM_SEAT],
-                  //                             $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
-                  //  echo $seat[PM_ID] = $seat_id;
-                 // }  
+                  
+                  if ($seat_id = Seat::publish($result[0], $seat[PM_ROW], $seat[PM_SEAT],
+                                               $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
+                    echo $seat[PM_ID] = $seat_id;
+                  }  
                 }
               }     
             }

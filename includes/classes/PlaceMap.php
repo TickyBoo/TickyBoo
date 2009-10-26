@@ -45,7 +45,7 @@ class PlaceMap{ //ZRS
   var $pm_name;
   var $pm_ort_id;
     
-  function PlaceMap ($pm_ort_id=0, $pm_name=0){
+  function PlaceMap ($pm_ort_id=null, $pm_name=null){
     if($pm_ort_id){
       $this->pm_ort_id=$pm_ort_id;
       $this->pm_name=$pm_name;
@@ -169,31 +169,30 @@ class PlaceMap{ //ZRS
       require_once('classes/PlaceMapCategory.php');
       require_once('classes/PlaceMapPart.php');	
 
-
       if($zones=PlaceMapZone::loadAll($old_id)){
         foreach($zones as $zone){
-	  unset($zone->pmz_id);
-	  $zone->pmz_pm_id=$new_id;
-	  $zone->pmz_event_id=$event_id;
-	  $zone->save();
-	}
+          unset($zone->pmz_id);
+          $zone->pmz_pm_id=$new_id;
+          $zone->pmz_event_id=$event_id;
+          $zone->save();
+        }
       }
       if($zones=PlaceMapCategory::loadAll($old_id)){
         foreach($zones as $zone){
-	  unset($zone->category_id);
- 	  $zone->category_pm_id=$new_id;
-  	  $zone->category_event_id=$event_id;
-	  $zone->save();
-	}
+          unset($zone->category_id);
+          $zone->category_pm_id=$new_id;
+            $zone->category_event_id=$event_id;
+          $zone->save();
+        }
       }
 
       if($zones=PlaceMapPart::loadAll($old_id)){
         foreach($zones as $zone){
-	  unset($zone->pmp_id);
- 	  $zone->pmp_pm_id=$new_id;
-  	  $zone->pmp_event_id=$event_id;
-	  $zone->save();
-	}
+          unset($zone->pmp_id);
+          $zone->pmp_pm_id=$new_id;
+            $zone->pmp_event_id=$event_id;
+          $zone->save();
+        }
       }
     }
     

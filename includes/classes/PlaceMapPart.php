@@ -104,16 +104,16 @@ class PlaceMapPart { // ZRS
 
         if ($this->pmp_id) {
             $query = "update PlaceMapPart set
-            pmp_pm_id={$this->pmp_pm_id},
-            pmp_event_id='{$this->pmp_event_id}',
-      	    pmp_name=" . ShopDB::quote($this->pmp_name) . ",
-            pmp_width={$this->pmp_width},
-      	    pmp_height={$this->pmp_height},
-      	    pmp_data=" . ShopDB::quote($data) . ",
-      	    pmp_expires='{$this->pmp_expires}',
-      	    pmp_scene='{$this->pmp_scene}',
-      	    pmp_shift='{$this->pmp_shift}'
-      	    where pmp_id='{$this->pmp_id}'";
+            pmp_pm_id=" .   _esc($this->pmp_pm_id) . ",
+            pmp_event_id=". _esc($this->pmp_event_id) . ",
+      	    pmp_name=" .    _esc($this->pmp_name) . ",
+            pmp_width=" .   _esc($this->pmp_width) . ",
+      	    pmp_height=" .  _esc($this->pmp_height) . ",
+      	    pmp_data=" .    _esc($data) . ",
+      	    pmp_expires=" . _esc($this->pmp_expires) . ",
+      	    pmp_scene=" .   _esc($this->pmp_scene) . ",
+      	    pmp_shift=" .   _esc($this->pmp_shift) . "
+      	    where pmp_id=". _esc($this->pmp_id) ;
         } else {
             $query = "insert into PlaceMapPart (
                  pmp_pm_id,
@@ -125,14 +125,14 @@ class PlaceMapPart { // ZRS
 		             pmp_scene,
 		             pmp_shift
                ) VALUES (
-                 {$this->pmp_pm_id},
-                '{$this->pmp_event_id}',
-                 " . ShopDB::quote($this->pmp_name) . ",
-                   {$this->pmp_width},
-                 {$this->pmp_height},
-                 " . ShopDB::quote($data) . ",
-           '{$this->pmp_scene}',
-           '{$this->pmp_shift}')";
+                 ". _esc($this->pmp_pm_id) . ",
+                 ". _esc($this->pmp_event_id) . ",
+                 ". _esc($this->pmp_name) . ",
+                 ". _esc($this->pmp_width) . ",
+                 ". _esc($this->pmp_height) . ",
+                 ". _esc($data) . ",
+                 ". _esc($this->pmp_scene) . ",
+                 ". _esc($this->pmp_shift).")";
         }
 
         if (ShopDB::query($query)) {

@@ -216,7 +216,7 @@ class Event {
     return TRUE;
   }
 
-function publish (&$stats,&$pmps,$dry_run=FALSE){
+function publish (&$stats, &$pmps, $dry_run=FALSE){
     global $_SHOP;
 
     require_once('classes/Seat.php');
@@ -231,8 +231,8 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
       $parts=PlaceMapPart::loadAll_full($this->event_pm_id);
       if(!empty($parts)){
         foreach($parts as $part){
-         if (! $part->publish($this->event_id, 0, $stats, $pmps, $dry_run)) {
-           return $this->_abort('publish1');}
+          if (! $part->publish($this->event_id, 0, $stats, $pmps, $dry_run)) {
+            return $this->_abort('publish1');}
           if(!$dry_run and !($part->save() and $part->save_original())) {
             return $this->_abort('publish2');}
         }
@@ -249,9 +249,9 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 						if(!$dry_run){
 							if( !Seat::publish($this->event_id,0,0,0,0,$cat->category_id)) {
                  return $this->_abort('publish4');
-                 }
               }
-							$stats[$cat->category_ident]++;
+            }
+					  $stats[$cat->category_ident]++;
 					}
         }
       }
@@ -260,22 +260,22 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
 				foreach($stats as $category_ident=>$cs_total){
 					$cat=$cats[$category_ident];
 					$cs=new Category_stat($cat->category_id,$cs_total);
-					if(!$dry_run){$cs->save() or $this->_abort(publish5);}
+					if(!$dry_run){$cs->save() or $this->_abort('publish5');}
 					$es_total+=$cs_total;
 
 					$cat->category_status='pub';
 					$cat->category_size=$cs_total;
 					$cat->category_pmp_id=$pmps[$category_ident][0];
-					if(!$dry_run){$cat->save() or $this->_abort(publish5_5);}
+					if(!$dry_run){$cat->save() or $this->_abort('publish5_5');}
 				}
 			}
 
       $es=new Event_stat($this->event_id,$es_total,0);
-      if(!$dry_run){$es->save() or $this->_abort(publish6);}
+      if(!$dry_run){$es->save() or $this->_abort('publish6');}
     }
     $this->event_status='pub';
 
-    if(!$dry_run){$this->save() or $this->_abort(publish7);}
+    if(!$dry_run){$this->save() or $this->_abort('publish7');}
 
     if($dry_run or ShopDB::commit('Event publised')){
       return TRUE;
@@ -306,14 +306,15 @@ function publish (&$stats,&$pmps,$dry_run=FALSE){
     if(($this->event_rep=='sub' or $this->event_rep=='main,sub') and
         $cats=PlaceMapCategory::loadAll_event($this->event_id)){
       foreach($cats as $cat){
-        if($cat->category_status!=$old_s){
-          return $this->_abort(cat_state_change_error);
-        }
-        $cat->category_status=$new_s;
+        if($cat->category_status==$old_s){
+//          return $this->_abort(cat_state_change_error);
+//        }
+          $cat->category_status=$new_s;
 
-	      if(!$cat->save()){
-          return $this->_abort(error_cat_save_changes);
-        }
+	        if(!$cat->save()){
+            return $this->_abort(error_cat_save_changes);
+          }
+        }  
       }
     }
 
