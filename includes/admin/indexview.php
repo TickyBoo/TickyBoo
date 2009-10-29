@@ -50,26 +50,26 @@ class IndexView extends AdminView {
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_INDEX_tab'], "left");
 
     switch ((int)$_SESSION['_INDEX_tab'])
-       {
-       case 0:
-           $licention = file_get_contents (ROOT."licence.txt");
-       	 	 $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION,$this->width,1);
-        	 echo "<tr><td class='admin_value'>" ;
-           echo "<p><pre>",htmlspecialchars($licention),'</pre></p>';
-           echo "</td></tr>";
-		       echo "</table>\n<br>";
+      {
+      case 0:
+        $licention = file_get_contents (ROOT."licence.txt");
+       	$this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->getLatestVersion(),$this->width,1);
+        echo "<tr><td class='admin_value'>" ;
+        echo "<p><pre>",htmlspecialchars($licention),'</pre></p>';
+        echo "</td></tr>";
+		    echo "</table>\n<br>";
 
-      	 	 $this->form_head( con('system_summary'),$this->width,2);
-           $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
-           $this->print_field('InfoPhpVersion',  phpversion ());
-           $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
-           $this->print_field('InfoAdminCount',  $this->Admins_Count ());
-           $this->print_field('InfoUserCount',   $this->Users_Count ());
-//           $this->print_field('InfoGroupCount',  $this->Groups_Count ());
-//           $this->print_field('InfoVenueCount',  $this->Venues_Count ());
-           $this->print_field('InfoEventCount',  $this->Events_Count ());
-		       echo "</table>\n";
-           break;
+      	$this->form_head( con('system_summary'),$this->width,2);
+        $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
+        $this->print_field('InfoPhpVersion',  phpversion ());
+        $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
+        $this->print_field('InfoAdminCount',  $this->Admins_Count ());
+        $this->print_field('InfoUserCount',   $this->Users_Count ());
+//        $this->print_field('InfoGroupCount',  $this->Groups_Count ());
+//        $this->print_field('InfoVenueCount',  $this->Venues_Count ());
+        $this->print_field('InfoEventCount',  $this->Events_Count ());
+		    echo "</table>\n";
+        break;
        
        case 1:
            $viewer = new OrganizerView($this->width);
@@ -149,6 +149,27 @@ class IndexView extends AdminView {
 		}
 
     return vsprintf(con('index_admins_count'),$part);
+  }
+  
+  function getLatestVersion(){
+    require_once("classes/restserviceclient.php");
+    
+    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
+    try{
+      $rsc->excuteRequest();
+      $array = $rsc->getArray();
+      $currentVersion = $array['versions']['version_attr']['version'];
+    }catch(Exception $e){
+      return " - Could not check for new version.";
+    }
+    
+    if(CURRENT_VERSION <> $currentVersion){
+      $string = " - <span style='color:red; font-size:large;'> ".$currentVersion." is Available! </span>";
+    }else{
+      $string = " - You have the latest Version";
+    }
+    
+    return $string;
   }
 
 }
