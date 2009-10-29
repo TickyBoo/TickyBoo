@@ -56,7 +56,7 @@
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.maskedinput-1.2.2.js"></script>
+    <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
 		
 		<script type="text/javascript">
 			var lang = new Object();
@@ -66,7 +66,6 @@
 			lang.pass_short = '{!pass_too_short!}'; lang.pass_match = '{!pass_match!}';
 			lang.not_number = '{!not_number!}';     lang.condition ='{!check_condition!}';
 		</script>
-		<script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
 		
 		<script type="text/javascript" src="scripts/countdownpro.js" defer="defer"></script>
 		

@@ -21,13 +21,13 @@ $(window).load(function(){
 			user_phone : { minlength : lang.phone_short, maxlength : lang.phone_long },
 			user_fax : { minlength : lang.fax_short, maxlength : lang.fax_long },
 			user_email : { required : lang.required, email : lang.email_valid },
-			old_password : { required : lang.required,	minlength : lang.pass_short },
+			old_password : { required : lang.required,	minlength : lang.pass_short }
 		},
 		errorClass: "form-error",
 		success: "form-valid"
 	});
 	$("#user-register").validate({
-		rules: {
+ 	rules: {
 			user_firstname	: 	{ required :true },
 			user_lastname	:	{ required : true },
 			user_address	:	{ required : true },
@@ -78,6 +78,4 @@ $(window).load(function(){
 		errorClass: "form-error"
 		
 	});
-	//$(":input[name='user_phone']").mask("00000000000000");
-	//$(":input[type='submit']").addClass("submit");
 });
