@@ -31,6 +31,9 @@ Utilisation :
     ISO-8859-11, ISO-8859-15, ISO-8859-16, KOI8-R, KOI8-U
   Pour l'utiliser : $html2pdf->setEncoding('cp1250');
 
+ - Une fonte par défaut peut être précisée,au cas ou la fonte demandée n'existe pas ou si aucune fonte n'est indiquée :
+     $html2pdf->setDefaultFont('Arial');
+
  - la possibilité de protégé vos PDF est présente, CF Exemple 7. Elle utilise le script
    fpdf_protection de Klemen Vodopivec.
 
@@ -44,10 +47,10 @@ Utilisation :
      
  - Certaines balises spécifiques ont été introduites :
      * <page></page>  (CF Exemple 7) :
-      permet de définir l'orientation, les marges left, right, top et bottom, l'image
+      permet de définir le format, l'orientation, les marges left, right, top et bottom, l'image
       et la couleur de fond d'une page, sa taille et position, le footer.
       Il est egalement possible de garder les header et footer des pages précédentes,
-      grace à l'attribue pageset="old" (CF Exemple 3)
+      grace à l'attribue pageset="old" (CF Exemple 3 et 4)
  
      * <page_header></page_header> (CF Exemple 3)
      
@@ -84,6 +87,13 @@ Utilisation :
          
 Modification :
 -------------
+ 3.26 : correctif pour support des images générés en CGI
+        ajout de la gestion du canal alpha pour les PNGs (nécessite GD2)
+        ajout de la méthode setDefaultFont permettant de spécifier une fonte par défaut
+        ajout de la propriété format pour la balise <page> (cf exemple 4)
+        amélioration de la gestion des couleurs css RGB (cf exemple 2)
+        ajout de la gestion des couleurs css CMYK (cf exemple 2)
+        ajout de la propriété css overflow:hidden pour la balise <div>
  3.25 : correctif sur le calcul des tableaux dans le page_footer
         correctif sur l'interprétation des espaces entre certaines balises
         correction sur la gestion des balises H1, H2, H3, H4, H5, H6
@@ -95,6 +105,7 @@ Modification :
         ne plus rendre obligatoire l'existence d'une image (nouvelle méthode setTestIsImage)
         ajout d'un mode DEBUG - les anciennes fonction d'analyse des ressources ont été supprimées
         ajout de la méthode setEncoding
+        ajout de la langue danoise DA (merci à  Daniel K.)
  3.24 : correction sur le calcul de la largeur des divs
         modification pour compatibilité avec la localisation PHP
         modification pour compatibilité avec PHP 5.3.0
@@ -214,10 +225,10 @@ Informations :
  Programmation en PHP4
 
  Programmeur :	Spipu
-		email   : webmaster@spipu.net
+      email   : webmaster@html2pdf.fr
 		site    : http://html2pdf.fr/
-        wiki    : http://html2pdf.fr/wiki.php
-		support : http://html2pdf.fr/forum.php
+      wiki    : http://html2pdf.fr/fr/wiki
+      support : http://html2pdf.fr/fr/forum
 		
 Remerciement :
 -------------

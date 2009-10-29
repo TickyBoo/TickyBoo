@@ -73,7 +73,7 @@ Exemple de caracteres :<br>
 	$phrase.= "<i>de l'italique</i>,";
 	$phrase.= "<u>du souligné</u>,";
 	$phrase.= "<u><i><b>et une image</b></i></u> : ";
-	$phrase.= "<img src='./res/logoHTMLtoPDF.gif' alt='logo' style='width: 15mm'>";
+	$phrase.= "<img src='./res/logo.gif' alt='logo' style='width: 15mm'>";
 ?>
 Table :<br>
 <table style="border: solid 1px red; width: 100mm"> 

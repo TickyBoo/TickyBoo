@@ -39,12 +39,12 @@ td.div div
 <page backcolor="#AACCFF" backleft="5mm" backright="5mm" backtop="10mm" backbottom="10mm" >
 	<table>
 		<tr>
-			<td class="div"><div style="rotate:   0;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logoHTMLtoPDF.gif" style="width: 80px;" alt="logo"></div></td>
-			<td class="div"><div style="rotate: 270;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logoHTMLtoPDF.gif" style="width: 80px;" alt="logo"></div></td>
+			<td class="div"><div style="rotate: 0;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logo.png" style="width: 80px;" alt="logo"></div></td>
+			<td class="div"><div style="rotate: 270;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logo.png" style="width: 80px;" alt="logo"></div></td>
 		</tr>
 		<tr>
-			<td class="div"><div style="rotate:  90;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logoHTMLtoPDF.gif" style="width: 80px;" alt="logo"></div></td>
-			<td class="div"><div style="rotate: 180;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logoHTMLtoPDF.gif" style="width: 80px;" alt="logo"></div></td>
+			<td class="div"><div style="rotate: 90;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logo.png" style="width: 80px;" alt="logo"></div></td>
+			<td class="div"><div style="rotate: 180;">Hello ! ceci <b>est</b> un test !<br><img src="./res/logo.png" style="width: 80px;" alt="logo"></div></td>
 		</tr>
 	</table>
 	<br>

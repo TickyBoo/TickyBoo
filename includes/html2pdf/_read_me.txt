@@ -30,6 +30,9 @@ How to use :
     ISO-8859-11, ISO-8859-15, ISO-8859-16, KOI8-R, KOI8-U
   To use it: $html2pdf->setEncoding('cp1250');
 
+ - A default font can be specified, if the requested font does not exist or if no font is specified:
+     $html2pdf->setDefaultFont('Arial');
+
  - The possibility to protect your PDF is present, CF Example 7. It uses the script
    fpdf_protection of Klemen Vodopivec.
 
@@ -82,7 +85,7 @@ How to use :
                  
 change log :
 -----------
- see the _lisez_moi.txt file, in french sorry ;)
+ see on this page : http://html2pdf.fr/en/download
 
 Help & Support :
 ---------------
@@ -94,10 +97,10 @@ Informations :
  Programming in PHP4
 
  Programmer : Spipu
-      email    : webmaster@spipu.net
+      email    : webmaster@html2pdf.fr
       web site : http://html2pdf.fr/
-      wiki     : http://html2pdf.fr/wiki.php
-      support  : http://html2pdf.fr/forum.php
+      wiki     : http://html2pdf.fr/en/wiki
+      support  : http://html2pdf.fr/en/forum
 
 Thanks :
 -------

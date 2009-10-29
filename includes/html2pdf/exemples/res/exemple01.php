@@ -24,7 +24,7 @@ table.morpion td.j2 { color: #A00; }
 	<span style="font-weight: bold; font-size: 20pt; color: #F00">Bonjour, voici quelques exemples</span><br>
 	Bonjour, ceci est un test <b>de gras</b>, <i>d'italic</i>, <b><i>et des 2 ensembles</i></b>.<br>
 	<br>
-	<span style="background: RGB(255, 0, 0); color: RGB(100%,100%,100%);">Ceci est un message important</span><br>
+	<span style="background: red; color: white;">Ceci est un message important</span><br>
 	<br>
 	<small>Texte écrit avec small</small>, Texte écrit normalement, <big>Texte écrit avec big</big><br>
 	<br>

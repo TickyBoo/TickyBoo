@@ -1,3 +1,22 @@
+<style type="text/css">
+<!--
+div.zone
+{
+	border: solid 2mm #66AACC;
+	border-radius: 3mm 3mm;
+	padding: 1mm;
+	background-color: #FFEEEE;
+	color: #440000;
+}
+div.zone_over
+{
+	width: 30mm;
+	height: 35mm;
+	overflow: hidden;
+}
+
+-->
+</style>
 <page style="font-size: 10pt">
 	<span style="font-size: 16pt ; font-weight: bold">Démonstration des images<br></span>
 	<br>
@@ -35,4 +54,67 @@
 	Test différentes tailles texte, répétitif car besoin d'un retour à la ligne
 	<br>
 	<br>
+	<b>Exemple de couleur : </b><br>
+	<span style="color: RGB(255, 0, 0)">Texte de couleur</span><br>
+	<span style="color: RGB(0., 1., 0.)">Texte de couleur</span><br>
+	<span style="color: RGB(0, 0, 100%)">Texte de couleur</span><br>
+	<span style="color: CMYK(255, 0, 0, 0)">Texte de couleur</span><br>
+	<span style="color: CMYK(0., 1., 0., 0.)">Texte de couleur</span><br>
+	<span style="color: CMYK(0, 0, 100%, 0)">Texte de couleur</span><br>
+	<span style="color: CMYK(0, 0, 0, 255)">Texte de couleur</span><br>
+</page>
+<page pageset="old">
+<?php
+$content = 'A Test overflow<br>A Test overflow<br>A Test overflow<br>
+<img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
+B Test overflow<br>B Test overflow<br>B Test overflow<br>
+<img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
+C Test overflow<br>C Test overflow<br>C Test overflow<br>';
+?>
+	<table>
+		<tr style="vertical-align: top">
+			<td>
+				<u>Exemple 0 :</u><br><br>
+				<div class="zone" ><?php echo str_replace('XXX', '40', $content); ?></div>
+				sans overflow
+			</td>
+			<td>
+				<u>Exemple 1 :</u><br><br>
+				<div class="zone zone_over" style="text-align: left; vertical-align: top; "><?php echo str_replace('XXX', '40', $content); ?></div>
+				hidden left top
+			</td>
+			<td>
+				<u>Exemple 2 :</u><br><br>
+				<div class="zone zone_over" style="text-align: center; vertical-align: middle;"><?php echo str_replace('XXX', '40', $content); ?></div>
+				hidden center middle
+			</td>
+			<td>
+				<u>Exemple 3 :</u><br><br>
+				<div class="zone zone_over" style="text-align: right; vertical-align: bottom;"><?php echo str_replace('XXX', '40', $content); ?></div>
+				hidden right bottom
+			</td>
+		</tr>
+		<tr style="vertical-align: top">
+			<td>
+				<u>Exemple 0 :</u><br><br>
+				<div class="zone" ><?php echo str_replace('XXX', '20', $content); ?></div>
+				sans overflow
+			</td>
+			<td>
+				<u>Exemple 1 :</u><br><br>
+				<div class="zone zone_over" style="text-align: left; vertical-align: top; "><?php echo str_replace('XXX', '20', $content); ?></div>
+				hidden left top
+			</td>
+			<td>
+				<u>Exemple 2 :</u><br><br>
+				<div class="zone zone_over" style="text-align: center; vertical-align: middle;"><?php echo str_replace('XXX', '20', $content); ?></div>
+				hidden center middle
+			</td>
+			<td>
+				<u>Exemple 3 :</u><br><br>
+				<div class="zone zone_over" style="text-align: right; vertical-align: bottom;"><?php echo str_replace('XXX', '20', $content); ?></div>
+				hidden right bottom
+			</td>
+		</tr>
+	</table>
 </page>

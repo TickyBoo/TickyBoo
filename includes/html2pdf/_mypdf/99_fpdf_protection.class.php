@@ -33,9 +33,9 @@ if (!defined('__CLASS_FPDF_PROTECTION__'))
 {
 	define('__CLASS_FPDF_PROTECTION__', true);
 	
-	require_once(dirname(__FILE__).'/02_fpdf_formulaire.class.php');
+	require_once(dirname(__FILE__).'/03_fpdf_alpha.class.php');
 	
-	class FPDF_Protection extends FPDF_Formulaire
+	class FPDF_Protection extends FPDF_Alpha
 	{
 		var $encrypted;			//whether document is protected
 		var $Uvalue;			//U entry in pdf document

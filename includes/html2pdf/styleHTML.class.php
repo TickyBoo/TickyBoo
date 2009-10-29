@@ -22,6 +22,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		var $pdf		= null;			// référence au PDF parent
 		var $htmlColor	= array();		// liste des couleurs HTML
 		var $onlyLeft	= false;		// indique si on est dans un sous HTML et qu'on bloque à gauche
+		var $defaultFont = null;		// fonte par défaut si la fonte demandée n'existe pas
 
 		/**
 		 * Constructeur
@@ -33,6 +34,20 @@ if (!defined('__CLASS_STYLEHTML__'))
 		{
 			$this->init();		// initialisation
 			$this->pdf = &$pdf;
+		}
+		
+ 		/**
+		* définit la fonte par défaut si aucun fonte n'est spécifiée, ou si la fonte demandée n'existe pas
+		*
+		* @param	string	nom de la fonte par defaut. si null : Arial pour fonte non spécifiée, et erreur pour fonte non existante 
+		* @return	string	nom de l'ancienne fonte par defaut
+		*/
+		function setDefaultFont($default = null)
+		{
+			$old = $this->defaultFont;
+			$this->defaultFont = $default;
+			if ($default) $this->value['font-family'] = $default;
+			return $old;
 		}
 		
  		/**
@@ -238,6 +253,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['float']				= null;
 			$this->value['display']				= null;
 			$this->value['rotate']				= null;
+			$this->value['overflow']			= 'visible';
 
 			$this->value['color']				= array(0, 0, 0);
 			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
@@ -276,6 +292,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['float']				= null;
 			$this->value['display']				= null;
 			$this->value['rotate']				= null;
+			$this->value['overflow']			= 'visible';
 			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
 			$this->value['border']	= array(
 										't' => $this->readBorder('none'),
@@ -347,10 +364,25 @@ if (!defined('__CLASS_STYLEHTML__'))
 		 */
 		function FontSet()
 		{
+			$family = strtolower($this->value['font-family']);
 			$b = ($this->value['font-bold']			? 'B' : '');
 			$i = ($this->value['font-italic']		? 'I' : '');
 			$u = ($this->value['font-underline']	? 'U' : '');
 			
+			if ($this->defaultFont)
+			{
+				$style = $b.$i;
+				if($family=='arial')
+					$family='helvetica';
+				elseif($family=='symbol' || $family=='zapfdingbats')
+					$style='';
+					
+				$fontkey = $family.$style;
+				if (!isset($this->pdf->fonts[$fontkey]))
+					if (!isset($this->pdf->CoreFonts[$fontkey]))
+						$family = $this->defaultFont;
+			}
+					
 			// taille en mm, à ramener en pt
 			$size = $this->value['font-size'];
 			$size = 72 * $size / 25.4;
@@ -359,12 +391,12 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->pdf->setLinethrough($this->value['font-linethrough']);
 			
 			// application de la fonte 
-			$this->pdf->SetFont($this->value['font-family'], $b.$i.$u, $this->value['mini-size']*$size);
-			$this->pdf->SetTextColor($this->value['color'][0],$this->value['color'][1], $this->value['color'][2]);
+			$this->pdf->SetFont($family, $b.$i.$u, $this->value['mini-size']*$size);
+			$this->pdf->setMyTextColor($this->value['color']);
 			if ($this->value['background']['color'])
-				$this->pdf->SetFillColor($this->value['background']['color'][0],$this->value['background']['color'][1], $this->value['background']['color'][2]);
+				$this->pdf->setMyFillColor($this->value['background']['color']);
 			else
-				$this->pdf->SetFillColor(255);				
+				$this->pdf->setMyFillColor(1.);				
 		}
 
  		/**
@@ -552,7 +584,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 					
 					case 'color':
 						$res = null;
-						$this->value['color'] = $this->ConvertToRVB($val, $res);
+						$this->value['color'] = $this->ConvertToColor($val, $res);
 						
 						if ($balise=='hr')
 						{
@@ -585,11 +617,18 @@ if (!defined('__CLASS_STYLEHTML__'))
 						if (preg_match('/^[0-9\.]+$/isU', $val)) $val = floor($val*100).'%';
 						$this->value['line-height'] = $val;
 						break;
+						
 					case 'rotate':
 						if (!in_array($val, array(0, -90, 90, 180, 270, -180, -270))) $val = null;
 						if ($val<0) $val+= 360;
 						$this->value['rotate'] = $val;
 						break;
+						
+					case 'overflow':
+						if (!in_array($val, array('visible', 'hidden'))) $val = 'visible';
+						$this->value['overflow'] = $val;
+						break;
+						
 					case 'padding':
 						$val = explode(' ', $val);
 						foreach($val as $k => $v)
@@ -727,7 +766,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 
 						foreach($val as $val_k => $val_v)
 						{
-								$val[$val_k] = $this->ConvertToRVB($val_v, $res);
+								$val[$val_k] = $this->ConvertToColor($val_v, $res);
 								if (!$res) $val[$val_k] = null;
 						}
 						$this->duplicateBorder($val);
@@ -741,25 +780,25 @@ if (!defined('__CLASS_STYLEHTML__'))
 
 					case 'border-top-color':
 						$res = false;
-						$val = $this->ConvertToRVB($val, $res); 
+						$val = $this->ConvertToColor($val, $res); 
 						if ($res) $this->value['border']['t']['color'] = $val;
 						break;
 
 					case 'border-right-color':
 						$res = false;
-						$val = $this->ConvertToRVB($val, $res); 
+						$val = $this->ConvertToColor($val, $res); 
 						if ($res) $this->value['border']['r']['color'] = $val;
 						break;
 
 					case 'border-bottom-color':
 						$res = false;
-						$val = $this->ConvertToRVB($val, $res); 
+						$val = $this->ConvertToColor($val, $res); 
 						if ($res) $this->value['border']['b']['color'] = $val;
 						break;
 
 					case 'border-left-color':
 						$res = false;
-						$val = $this->ConvertToRVB($val, $res); 
+						$val = $this->ConvertToColor($val, $res); 
 						if ($res) $this->value['border']['l']['color'] = $val;
 						break;
 						
@@ -1138,7 +1177,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 				else if (in_array($key, array('solid', 'dotted', 'dashed')))	$type = $key;	
 				else
 				{
-					$tmp = $this->ConvertToRVB($key, $res);
+					$tmp = $this->ConvertToColor($key, $res);
 					if ($res) $color = $tmp;
 				}
 			}
@@ -1184,7 +1223,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			foreach($lst as $val)
 			{
 				$ok = false;
-				$color = $this->ConvertToRVB($val, $ok);
+				$color = $this->ConvertToColor($val, $ok);
 				
 				if ($ok)
 				{
@@ -1218,7 +1257,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		{
 			$res = null;
 			if ($val=='transparent')	return null;
-			else						return $this->ConvertToRVB($val, $res);
+			else						return $this->ConvertToColor($val, $res);
 		}
 
 		function ConvertBackgroundImage($val)
@@ -1311,7 +1350,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		 * @param	string			couleur au format CSS
 		 * @return	array(r, v, b)	couleur exprimé par ses comporantes R, V, B, de 0 à 255.
 		 */	
-		function ConvertToRVB($val, &$res)
+		function ConvertToColor($val, &$res)
 		{
 			$val = trim($val);
 			$res = true;
@@ -1319,32 +1358,53 @@ if (!defined('__CLASS_STYLEHTML__'))
 			if (strtolower($val)=='transparent') return array(null, null, null);
 			if (isset($this->htmlColor[strtolower($val)])) $val = $this->htmlColor[strtolower($val)];
 			
-			if (preg_match('/rgb\([\s]*([0-9%]+)[\s]*,[\s]*([0-9%]+)[\s]*,[\s]*([0-9%]+)[\s]*\)/isU', $val, $match))
+			if (preg_match('/^#[0-9A-Fa-f]{6}$/isU', $val))
 			{
-				$r =$match[1]; if (substr($r, -1)=='%') $r = floor(255*substr($r, 0, -1)/100);
-				$v =$match[2]; if (substr($v, -1)=='%') $v = floor(255*substr($v, 0, -1)/100);
-				$b =$match[3]; if (substr($b, -1)=='%') $b = floor(255*substr($b, 0, -1)/100);
+				$r = floatVal(hexdec(substr($val, 1, 2)))/255.;
+				$v = floatVal(hexdec(substr($val, 3, 2)))/255.;
+				$b = floatVal(hexdec(substr($val, 5, 2)))/255.;
+				$col = array($r, $v, $b);
 			}
-			else if (strlen($val)==7 && substr($val, 0, 1)=='#')
+			elseif (preg_match('/^#[0-9A-F]{3}$/isU', $val))
 			{
-				$r = hexdec(substr($val, 1, 2));
-				$v = hexdec(substr($val, 3, 2));
-				$b = hexdec(substr($val, 5, 2));
+				$r = floatVal(hexdec(substr($val, 1, 1).substr($val, 1, 1)))/255.;
+				$v = floatVal(hexdec(substr($val, 2, 1).substr($val, 2, 1)))/255.;
+				$b = floatVal(hexdec(substr($val, 3, 1).substr($val, 3, 1)))/255.;
+				$col = array($r, $v, $b);
 			}
-			else if (strlen($val)==4 && substr($val, 0, 1)=='#')
+			elseif (preg_match('/rgb\([\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*\)/isU', $val, $match))
 			{
-				$r = hexdec(substr($val, 1, 1).substr($val, 1, 1));
-				$v = hexdec(substr($val, 2, 1).substr($val, 2, 1));
-				$b = hexdec(substr($val, 3, 1).substr($val, 3, 1));
+				$r = $this->ConvertSubColor($match[1]);
+				$v = $this->ConvertSubColor($match[2]);
+				$b = $this->ConvertSubColor($match[3]);
+				$col = array($r, $v, $b);
+			}
+			elseif (preg_match('/cmyk\([\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*\)/isU', $val, $match))
+			{
+				$c = $this->ConvertSubColor($match[1]);
+				$m = $this->ConvertSubColor($match[2]);
+				$y = $this->ConvertSubColor($match[3]);
+				$k = $this->ConvertSubColor($match[4]);
+				$col = array($c, $m, $y, $k);
 			}
 			else
 			{
-				$r=0;
-				$v=0;
-				$b=0;
+				$col = array(0., 0., 0.);
 				$res = false;
 			}
-			return array(floor($r), floor($v), floor($b));	
+			
+			return $col;	
+		}
+		
+		function ConvertSubColor($c)
+		{
+			if (substr($c, -1)=='%') $c = floatVal(substr($c, 0, -1))/100.;
+			else
+			{
+				$c = floatVal($c);
+				if ($c>1) $c = $c/255.;
+			}
+			return $c;
 		}
 		
 		/**

@@ -9,7 +9,7 @@
 -->
 </style>
 <page style="font-size: 14px">
-	<span style="font-weight: bold; font-size: 18pt; color: #FF0000">Bonjour, voici quelques exemples<br></span>
+	<span style="font-weight: bold; font-size: 18pt; color: #FF0000; font-family: Times">Bonjour, voici quelques exemples<br></span>
 	<br>
 	Retours à la ligne autorisés : &lt;br&gt;, &lt;br &gt;, &lt;br/&gt;, &lt;br /&gt;	<br />
 	<br>
@@ -23,7 +23,7 @@
 	<table style="text-align: center; border: solid 2px red; background: #FFEEEE;width: 40%; margin: auto"><tr><td style="width: 100%">Test 2</td></tr></table><br />
 	<div style="text-align: center; border: solid 2px red; background: #FFEEEE;width: 40%; margin: auto">Test 3</div><br />
 	test de tableau imbriqué :<br>
-	<table border="1" bordercolor="#000077" bgcolor="#AAAAAA" align="center">
+	<table border="1" bordercolor="#007" bgcolor="#AAAAAA" align="center">
 		<tr>
 			<td border="1">
 				<table style="border: solid 1px #FF0000; background: #FFFFFF;">

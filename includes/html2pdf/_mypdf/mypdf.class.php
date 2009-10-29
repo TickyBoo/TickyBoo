@@ -72,84 +72,6 @@ if (!defined('__CLASS_MYPDF__'))
 			}
 		}
 		
-		// redéfinition de la fonction Image de FPDF afin de rajouter la gestion des fichiers PHP
-		function Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='')
-		{
-			//Put an image on the page
-			if(!isset($this->images[$file]))
-			{
-				//First use of this image, get info
-				if($type=='')
-				{
-					/* MODIFICATION HTML2PDF pour le support des images PHP */
-					$type = explode('?', $file);
-					$type = pathinfo($type[0]);
-					if (!isset($type['extension']) || !$type['extension'])
-						$this->Error('Image file has no extension and no type was specified: '.$file);
-						
-					$type = $type['extension'];
-					/* FIN MODIFICATION */
-				}
-
-				$type=strtolower($type);
-
-				/* MODIFICATION HTML2PDF pour le support des images PHP */
-				if ($type=='php')
-				{
-					// identification des infos
-					$infos=@GetImageSize($file);
-					if (!$infos) $this->Error('Unsupported image : '.$file);
-				
-					// identification du type
-					$type = explode('/', $infos['mime']);
-					if ($type[0]!='image') $this->Error('Unsupported image : '.$file);
-					$type = $type[1];
-				}
-				/* FIN MODIFICATION */
-				
-				if($type=='jpeg')
-					$type='jpg';
-				$mtd='_parse'.$type;
-				if(!method_exists($this,$mtd))
-					$this->Error('Unsupported image type: '.$type);
-				$info=$this->$mtd($file);
-				$info['i']=count($this->images)+1;
-				$this->images[$file]=$info;
-			}
-			else
-				$info=$this->images[$file];
-			//Automatic width and height calculation if needed
-			if($w==0 && $h==0)
-			{
-				//Put image at 72 dpi
-				$w=$info['w']/$this->k;
-				$h=$info['h']/$this->k;
-			}
-			elseif($w==0)
-				$w=$h*$info['w']/$info['h'];
-			elseif($h==0)
-				$h=$w*$info['h']/$info['w'];
-			//Flowing mode
-			if($y===null)
-			{
-				if($this->y+$h>$this->PageBreakTrigger && !$this->InHeader && !$this->InFooter && $this->AcceptPageBreak())
-				{
-					//Automatic page break
-					$x2=$this->x;
-					$this->AddPage($this->CurOrientation,$this->CurPageFormat);
-					$this->x=$x2;
-				}
-				$y=$this->y;
-				$this->y+=$h;
-			}
-			if($x===null)
-				$x=$this->x;
-				
-			$this->_out(sprintf('q %.2F 0 0 %.2F %.2F %.2F cm /I%d Do Q',$w*$this->k,$h*$this->k,$x*$this->k,($this->h-($y+$h))*$this->k,$info['i']));
-			if($link)
-				$this->Link($x,$y,$w,$h,$link);
-		}
-		
 		// Draw a polygon
 		// Auteur	: Andrew Meier
 		// Licence	: Freeware
@@ -522,6 +444,42 @@ if (!defined('__CLASS_MYPDF__'))
 			$tm[5]=$y-$tm[0]*$y-$tm[1]*$x;
 			
 			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0],$tm[1],$tm[2],$tm[3],$tm[4],$tm[5]));
+		}
+	
+		function setMyDrawColor($c)
+		{
+			$c = $this->setMyColor($c, true);
+			if (!$c) return false;
+
+			$this->DrawColor=$c;
+			if($this->page>0) $this->_out($this->DrawColor);
+		}
+		
+		function setMyFillColor($c)
+		{
+			$c = $this->setMyColor($c);
+			if (!$c) return false;
+
+			$this->FillColor=$c;
+			$this->ColorFlag=($this->FillColor!=$this->TextColor);
+			if($this->page>0) $this->_out($this->FillColor);
+		}
+			
+		function setMyTextColor($c)
+		{
+			$c = $this->setMyColor($c);
+			if (!$c) return false;
+
+			$this->TextColor=$c;
+			$this->ColorFlag=($this->FillColor!=$this->TextColor);
+		}
+		
+		function setMyColor($c, $mode = false)
+		{
+			if (!is_array($c))		return sprintf('%.3F ',$c).($mode ? 'G' : 'g');
+			elseif (count($c)==3)	return sprintf('%.3F %.3F %.3F ',$c[0],$c[1],$c[2]).($mode ? 'RG' : 'rg');
+			elseif (count($c)==4)	return sprintf('%.3F %.3F %.3F %.3F ',$c[0],$c[1],$c[2],$c[3]).($mode ? 'K' : 'k');
+			return null;
 		}
 	}
 }
