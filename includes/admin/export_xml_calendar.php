@@ -84,7 +84,7 @@ class export_xml_calendar extends AdminView {
 			//echo $filename;
 			$this->write_header($filename);
 
-			xml2sql::sql2xml_all_new($what,SQL2XML_OUT_ECHO);
+			xmldata::sql2xml_all_new($what,SQL2XML_OUT_ECHO);
 
 			return TRUE;
     }

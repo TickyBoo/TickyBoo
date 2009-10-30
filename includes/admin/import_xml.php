@@ -60,7 +60,7 @@ class import_xml extends AdminView {
 			require_once('classes/xml2sql.php');
 			echo import_xml_title." : ".$_FILES['import_xml_file']['name']." ... ";
 			flush();
-			xml2xml::xml2sql($_FILES['import_xml_file']['tmp_name']);
+			xmldata::xml2sql($_FILES['import_xml_file']['tmp_name']);
 			echo done;
 			return TRUE;
     }  

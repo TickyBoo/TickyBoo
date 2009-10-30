@@ -68,19 +68,18 @@ class PlaceMapCategory{
     $this->category_event_id =($this->category_event_id===0)?null:$this->category_event_id;
     $this->category_pmp_id   =($this->category_pmp_id===0)?null:$this->category_pmp_id;
     if($this->category_id){
-
       $query="update Category set
-	        category_name="     .ShopDB::quote($this->category_name).",
-	        category_price="    .ShopDB::quote($this->category_price).",
-	        category_template=" .ShopDB::quote($this->category_template).",
-	        category_color="    .ShopDB::quote($this->category_color).",
-          category_numbering=".ShopDB::quote($this->category_numbering).",
-	        category_size="     .ShopDB::quote($this->category_size).",
-	        category_event_id=" .ShopDB::quote($this->category_event_id).",
-	        category_pmp_id="   .ShopDB::quote($this->category_pmp_id).",
-	        category_data="     .ShopDB::quote($this->category_data).",
-		      category_status="   .ShopDB::quote($this->category_status)."
-	      WHERE category_id="   .ShopDB::quote($this->category_id);
+	        category_name="     ._esc($this->category_name).",
+	        category_price="    ._esc($this->category_price).",
+	        category_template=" ._esc($this->category_template).",
+	        category_color="    ._esc($this->category_color).",
+          category_numbering="._esc($this->category_numbering).",
+	        category_size="     ._esc($this->category_size).",
+	        category_event_id=" ._esc($this->category_event_id).",
+	        category_pmp_id="   ._esc($this->category_pmp_id).",
+	        category_data="     ._esc($this->category_data).",
+		      category_status="   ._esc($this->category_status)."
+	      WHERE category_id="   ._esc($this->category_id);
 	}else{
 		if(!$this->category_ident){
 			$this->category_ident=$this->_find_ident($this->category_pm_id);
@@ -99,18 +98,18 @@ class PlaceMapCategory{
             category_data,
             category_ident
                ) VALUES (
-	         ".ShopDB::quote($this->category_name).",
-	         ".ShopDB::quote($this->category_price).",
-	         ".ShopDB::quote($this->category_template).",
-	         ".ShopDB::quote($this->category_color).",
-	         ".ShopDB::quote($this->category_size).",
-	         ".ShopDB::quote($this->category_numbering).",
-	         ".ShopDB::quote($this->category_event_id).",
-	         ".ShopDB::quote($this->category_pmp_id).",
+	         "._esc($this->category_name).",
+	         "._esc($this->category_price).",
+	         "._esc($this->category_template).",
+	         "._esc($this->category_color).",
+	         "._esc($this->category_size).",
+	         "._esc($this->category_numbering).",
+	         "._esc($this->category_event_id).",
+	         "._esc($this->category_pmp_id).",
 	         'unpub',
-	         ".ShopDB::quote($this->category_pm_id).",
-	         ".ShopDB::quote($this->category_data).",
-	         ".ShopDB::quote($this->category_ident).")";
+	         "._esc($this->category_pm_id).",
+	         "._esc($this->category_data).",
+	         "._esc($this->category_ident).")";
     }
 
     if(ShopDB::query($query)){
@@ -172,7 +171,7 @@ class PlaceMapCategory{
             where category_event_id=$event_id";
 
     if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_array($res)){
+      while($data=shopDB::fetch_assoc($res)){
         $new_cat=new PlaceMapCategory;
         $new_cat->_fill($data);
         $cats[$new_cat->category_ident]=$new_cat;

@@ -35,7 +35,7 @@
 define('SQL2XML_OUT_RETURN',0);
 define('SQL2XML_OUT_ECHO',1);
 
-class xml2sql {
+class xmldata {
   /**
    * export mysql query results to xml format
    */

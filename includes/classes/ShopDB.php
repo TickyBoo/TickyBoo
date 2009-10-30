@@ -198,8 +198,16 @@ class ShopDB {
         if (!$res) {
             $_SHOP->db_errno  = ShopDB::$link->errno ;
             $_SHOP->db_error  = mysqli_error(ShopDB::$link);
-            self::dblogging("[Error: {$_SHOP->db_errno}] ".$query);
-            self::dblogging($_SHOP->db_error);
+            $traceArr = debug_backtrace();
+            $err = "[Error: {$_SHOP->db_errno}] ";
+            if(isset($traceArr) && count($traceArr) > 2) {
+              //print_r($traceArr);
+              self::dblogging("$err".basename($traceArr[1]['file']).' '.
+                           $traceArr[1]['class'].$traceArr[1]['type'].$traceArr[1]['function'].' ('.$traceArr[1]['line'].')' ); 
+              $err = ""; 
+            }
+            self::dblogging("$err".$_SHOP->db_error);
+            self::dblogging($query);
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 $_SHOP->db_trx_started = false;
             }
@@ -302,6 +310,9 @@ class ShopDB {
 //      if (!get_magic_quotes_gpc ()) {
         if (!isset(ShopDB::$link)) {
           self::init();
+        }
+        if (!is_string($escapestr)) {
+          print_r($escapestr);
         }
         return ShopDB::$link->real_escape_string($escapestr);
 //      } else { //echo "get_magic_quotes_gpc<br>\n";

@@ -37,7 +37,7 @@ $orphancheck = array();
 
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null, 
-                            'Seats', category_size , null
+                            category_numbering,  category_size -(SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id ) , null
 	FROM event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
 		AND lower(e.event_status) <> 'unpub'
@@ -179,13 +179,16 @@ class orphans {
   static $fixes = array(
        'Category~stat_id'=>'Recreate this missing stat record',
        'Category~event_id'=>'Remove this category, event is already removed',
+       'Category~pmp_id'=>'Clear the link to the removed placemapPart',
        'Category~zeros'=>'Clear all zero identifiers in the Catagory table',
        'Category_stat~cat_id'=>'Remove ALL old category_stat records',
        'Discount~event_id'=>'Remove this Discount, event is already removed',
        'Event~stat_id'=>'Recreate this missing stat record',
+       'Event~group_id'=>'Clear the link to this removed eventgroup',
        'Event_stat~event_id'=>'Remove ALL old Event_stat records',
        'Event~zeros'=>'Clear all zero identifiers in the event table',
        'Event~cat_id'=>'Recreate missing seats for this category',
+       'Event~pm_id'=>'Clear the link to the removed placemap',
        'Order~user_id'=>'Recreate missing user info for this order',
        'Order~owner_id'=>'Recreate missing POS login for this pos',
        'Order~zeros'=>'Clear all zero identifiers in the order table',
@@ -242,7 +245,7 @@ class orphans {
   function dofix($key) {
     $fix = explode('~',$key);
     $fixit = $fix[0].'~'.$fix[1];
-    
+    //print_r( debug_backtrace());
     switch ($fixit) {
       //Fix category issues
       case 'Category_stat~cat_id':
@@ -263,6 +266,11 @@ class orphans {
         require_once('classes/PlaceMapCategory.php');
         PlaceMapCategory::delete($fix[2]);
         break;
+      case 'Category~pmp_id':
+        ShopDB::Query("update Category set 
+                         category_pmp_id = null
+                       where Category_id = {$fix[2]}") ;
+        break;
       case 'Category~zeros':
         Orphans::clear_zeros('Category', array('category_pm_id','category_event_id','category_pmp_id'));
         break;
@@ -276,6 +284,8 @@ class orphans {
                        where (select Event_id from Event where event_id = es_event_id) is null") ;
         break;
       case'Event~cat_id':
+        require_once('classes/PlaceMapPart.php');
+
         $sql = "SELECT seat_id, seat_category_id FROM seat WHERE seat_event_id = {$fix[2]}";
         $result = ShopDB::Query($sql);
         $seats  = array();
@@ -283,35 +293,89 @@ class orphans {
           $seats[$row[1]][] = $row[0];
         }
 
-        $sql = "SELECT event_pm_id FROM event e WHERE e.event_id = {$fix[2]}";
+        $sql = "SELECT event_pm_id FROM event e WHERE e.event_id = "._esc($fix[2]);
         $result = ShopDB::Query_one_row($sql, false);
-        require_once('classes/PlaceMapPart.php');
-        $all = PlaceMapPart::loadAll_full( $result[0]);
+        if (!$result) { 
+          echo "cant find selected order placmap";
+          exit;
+        } 
+        $pm_id = $result[0];
+        $all = PlaceMapPart::loadAll_full( $pm_id);
+        
         echo "<pre>";
-       //PRint_r($seats);
-        foreach($all as $pmp) {
-         // print_r($pmp->categories);
-          foreach($pmp->pmp_data as &$pmp_row) {
-            foreach ($pmp_row as &$seat) {
-              $zone = $pmp->zones[$seat[PM_ZONE]];
-              $category = $pmp->categories[$seat[PM_CATEGORY]];
-              if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
-                if ($category->category_numbering == 'none') {
+        // PRint_r($all);
+        if ($all) {
+          foreach($all as $pmp) {
+           // print_r($pmp->categories);
+            $changed = false;
+            foreach($pmp->pmp_data as $x =>&$pmp_row) {
+              foreach ($pmp_row as $y=>&$seat) {
+                $zone = $pmp->zones[$seat[PM_ZONE]];
+                $category = $pmp->categories[$seat[PM_CATEGORY]];
+                if ($seat[PM_ZONE] > 0 && $seat[PM_CATEGORY] &&
+                    $category->category_numbering != 'none'){
+                      
+                  if (!in_array($seat[PM_ID], $seats[$category->category_id])){
                     
-                } elseif (!in_array($seat[PM_ID], $seats[$category->category_id])){
-                  
-                  if ($seat_id = Seat::publish($result[0], $seat[PM_ROW], $seat[PM_SEAT],
-                                               $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
-                    echo $seat[PM_ID] = $seat_id;
-                  }  
-                }
-              }     
+                    if ($seat_id = Seat::publish($fix[2], $seat[PM_ROW], $seat[PM_SEAT],
+                                                 $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
+                      echo $x,' ',$y,' ',$pmp->pmp_data[$x][$y][PM_ID] = $seat_id,'|';
+                      $changed = True;
+                    }  
+                  }
+                }     
+              }
             }
-            
+            if ($changed) {
+              $pmp->save();
+              echo "\n------------------------------------------------------------\n";
+            }
           }
-          echo "\n------------------------------------------------------------\n";
         }
+        $cats=PlaceMapCategory::loadAll_event($fix[2]);
+        if(!$cats){
+          return $this->_abort('No Categories found');
+        }
+        //print_r($cats);
+        foreach($cats as $cat_ident=>$cat){
+          if($cat->category_status != 'unpub' and $cat->category_numbering=='none' ){//and $cat->category_size>0
+            $stats[$cat->category_ident] = count($seats[$cat->category_id]);
+            for($i=count($seats[$cat->category_id]);$i<$cat->category_size;$i++){
+              if($seat_id = Seat::publish($fix[2],null,null,null,null,$cat->category_id)) {
+                echo $seat_id,'|';
+              }
+              $stats[$cat->category_ident]++;
+            }
+            if ($cat->category_size <> $stats[$cat->category_ident]) {
+              $cat->category_size = $stats[$cat->category_ident];
+              $cat->save();
+            }
+          }
+        }
+/*        
+        if($stats){
+          foreach($stats as $category_ident=>$cs_total){
+            $cat=$cats[$category_ident];
+            $cs=new Category_stat($cat->category_id,$cs_total);
+            if(!$dry_run){$cs->save() or $this->_abort('publish5');}
+          }
+        }
+*/        
+        
         echo "</pre>";
+        break;
+
+        
+      case 'Event~group_id':
+        ShopDB::Query("update Event set 
+                         event_group_id = null
+                       where Event_id = {$fix[2]}") ;
+        break;
+        
+      case 'Event~pm_id':
+        ShopDB::Query("update Event set 
+                         event_pm_id = null
+                       where Event_id = {$fix[2]}") ;
         break;
      case 'Event~stat_id':
         require_once('classes/Event_stat.php');
@@ -324,10 +388,10 @@ class orphans {
         $es->save();
         break;
       case 'Event~zeros':
-        If ($fix[2] =='ort_id') {
-          echo "<script> window.alert('Ord_id can not be cleared you need to change this from within database editor lik phpmyadmin. Ask your system manager to help');</script>";
+        If ($fix[3] =='ort_id') {
+          echo "<script> window.alert('Ord_id can not be cleared you need to change this from within database editor like phpmyadmin. Ask your system manager to help');</script>";
         } else {
-          Orphans::clear_zeros('Event', array('event_group_id'));
+          Orphans::clear_zeros('Event', array('event_group_id','event_main_id'));
         }
         break;
       case 'Order~zeros':
