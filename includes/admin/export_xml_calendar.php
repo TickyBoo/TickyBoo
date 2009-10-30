@@ -65,7 +65,7 @@ class export_xml_calendar extends AdminView {
     global $_SHOP;
 
     if($_GET['submit'] and $_GET['export_xml_calendar_event']>0){
-			require_once('classes/xml2sql.php');
+			require_once('classes/xmldata.php');
 			$event_id=(int)$_GET['export_xml_calendar_event'];
 
 

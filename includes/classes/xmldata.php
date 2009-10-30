@@ -35,7 +35,7 @@
 define('SQL2XML_OUT_RETURN',0);
 define('SQL2XML_OUT_ECHO',1);
 
-class xmldata {
+class XMLData {
   /**
    * export mysql query results to xml format
    */
@@ -91,7 +91,7 @@ class xmldata {
   		$table=$w['table'];
   		$pk=$w['pk'];
 
-  		$ret.= xml2sql::sql2xml($query,$table,$out,$pk);
+  		$ret.= XMLData::sql2xml($query,$table,$out,$pk);
   	}
 
   	if($out==SQL2XML_OUT_ECHO){
@@ -222,7 +222,7 @@ class xmldata {
   		$table	= $w['table'];
   		$pk		= $w['pk'];
 
-  		$ret	.= xml2sql::sql2xml_new($query,$table,$out,$pk);
+  		$ret	.= XMLData::sql2xml_new($query,$table,$out,$pk);
   	}
 
   	if($out==SQL2XML_OUT_ECHO){

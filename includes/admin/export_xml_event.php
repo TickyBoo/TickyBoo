@@ -65,13 +65,13 @@ class export_xml_event extends AdminView {
     global $_SHOP;
   
     if($_GET['submit'] and $_GET['export_xml_event_event']>0){
-			require_once('classes/xml2sql.php');
+			require_once('classes/xmldata.php');      
 			$event_id=_esc((int)$_GET['export_xml_event_event']);
 			
 			$what[]=array(
 			'table'=>'Event',
 			'query'=>"select * from Event where event_id=$event_id");
-			
+
 			$what[]=array(
 			'table'=>'PlaceMap2',
 			'query'=>"SELECT * FROM `PlaceMap2` WHERE `pm_event_id`=$event_id");
@@ -104,7 +104,7 @@ class export_xml_event extends AdminView {
 			'table'=>'Order',
 			'pk'=>'order_id',
 			'query'=>"SELECT  DISTINCT `Order`.* FROM Seat left join `Order` on seat_order_id=order_id
-                WHERE seat_event_id=$event_id and ");
+                WHERE seat_event_id=$event_id ");
 
 			$what[]=array(
 			'table'=>'User',
@@ -115,12 +115,13 @@ class export_xml_event extends AdminView {
 			$what[]=array(
 			'table'=>'Color',
 			'pk'=>'color_id',
-			'query'=>"SELECT DISTINCT Color.* FROM Color left join,`Category` on `category_color`=color_id WHERE `category_event_id`=$event_id");
+			'query'=>"SELECT DISTINCT Color.* FROM Color left join `Category` on `category_color`=color_id WHERE `category_event_id`=$event_id");
 
 			$what[]=array(
 			'table'=>'Category_stat',
 			'pk'=>'cs_category_id',
-			'query'=>"SELECT DISTINCT Category_stat.* FROM Category_stat,`Category`  WHERE `cs_category_id`=category_id and `category_event_id`=$event_id");
+			'query'=>"SELECT DISTINCT Category_stat.* FROM Category_stat, `Category`  
+                WHERE `cs_category_id`=category_id and `category_event_id`=$event_id");
 
 			$what[]=array(
 			'table'=>'Event_stat',
@@ -128,8 +129,9 @@ class export_xml_event extends AdminView {
 
 			$filename=$_GET['export_xml_event_file'];
 			if(empty($filename)){
-			  $filename='event'.$event_id.'.xml';
+			  $filename='event'.(int)$_GET['export_xml_event_event'].'.xml';
 			}
+
 			$this->write_header($filename);
 			
 			xmldata::sql2xml_all($what,SQL2XML_OUT_ECHO);

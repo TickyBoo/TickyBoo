@@ -311,7 +311,7 @@ class ShopDB {
         if (!isset(ShopDB::$link)) {
           self::init();
         }
-        if (!is_string($escapestr)) {
+        if (is_array($escapestr) || is_object($escapestr)) {
           print_r($escapestr);
         }
         return ShopDB::$link->real_escape_string($escapestr);
