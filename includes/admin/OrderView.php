@@ -537,15 +537,21 @@ function _order_status_color($row){
 		return $alt;
 }
 
-function draw (){
+function draw($noTab=false){
   global $_SHOP;
+  
+  if(!$noTab){
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
     }
-
     $menu = array( con("orders_handlings_tab")=>"?tab=0", con("orders_event_tab")=>'?tab=1');
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
-
+  }
+  
+  if(!isset($_REQUEST['order_id'])){
+    $_REQUEST['order_id']=$_REQUEST['order_id1'];
+  }
+  
   if(preg_match('/^set_status_/',$_GET['action1']) and $_GET['order_id1']>0){
     if(!$order=Order::load($_GET['order_id1'])){return;}
     switch($_GET['action1']){
@@ -555,34 +561,29 @@ function draw (){
       case 'set_status_payment_none':  $order->set_payment_status('none');break;
       case 'set_status_ord':           $order->set_status('ord');break;
     }
-  }else
-  if($_GET['action1']=="make_new" and $_GET["order_id1"]){
+  }elseif($_GET['action1']=="make_new" and $_GET["order_id1"]){
     if($new_id=Order::order_reemit($_GET["order_id1"], 0)){
       $this->order_details($new_id);
     }
-  }else
-  if($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
+  }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Order::order_delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
-  }else
-  if($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
+  }elseif($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Ticket::reemit($_GET["order_id1"], $_GET['seat_id']);
   }
-
-
-
+  
   if($_GET['action']=='list_type'){
     $this->order_bytype($_GET["order_status"],$_GET["order_type"],$_GET["page"]);
-  }else
-  if($_GET['action']=='details'){
-    $this->order_details($_GET["order_id"]);
-  }else
-  if($_GET['action']=='delete'){
+    
+  }elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
+    $this->order_details($_REQUEST["order_id"]);
+    
+  }elseif($_GET['action']=='delete'){
     $this->order_prepare_delete($_GET["order_id"]);
-  }else
-  if($_GET['action']=='cancel'){
+    
+  }elseif($_GET['action']=='cancel'){
     Order::order_delete($_GET["order_id"], 'order_deleted_manual');
     $this->order_details($_GET["order_id"]);
-
+    
   } elseif($_GET['action']=='list_all'){
     $this->order_sub_list($_GET["order_handling_id"],
                           $_GET["order_status"],
@@ -600,11 +601,14 @@ function draw (){
 	} else if($_GET['action']=='purge_deleted'){
 		Order::purgeDeleted((int)$_GET['order_handling_id']);
     $this->order_list();
+    
 	} else if($_GET['action']=='purge_reemited'){
 		Order::purgeReemited((int)$_GET['order_handling_id']);
     $this->order_list();
+    
   } elseif($_SESSION['_overview_tab']==1) {
      $this->order_event_list();
+     
   } else {
      $this->order_list();
   }

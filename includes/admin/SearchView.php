@@ -401,7 +401,8 @@ function draw () {
   if ($_REQUEST['action']=='order_detail'){
     require_once("admin/OrderView.php");
     $view = new OrderView($this->width);
-    $view->order_details($_REQUEST['order_id']);
+    $view->draw(true);
+    //$view->order_details($_REQUEST['order_id']);
   }elseif ($_REQUEST['action']=='user_detail'){
     require_once("admin/UserView.php");
     $view = new UserView($this->width, $_REQUEST['user_id']);
