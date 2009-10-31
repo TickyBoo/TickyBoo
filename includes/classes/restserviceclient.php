@@ -37,7 +37,7 @@ class RestServiceClient {
 
 		// Retrieve HTTP status code
 		list($httpVersion, $httpStatusCode, $httpMessage) = explode(' ', $http_response_header[0], 3);
-
+    
 		//if we didn't get a '200 OK' then thow an Exception
 		if ($httpStatusCode != 200) {
 			throw new Exception('HTTP/REST error: ' . $httpMessage, $httpStatusCode);
@@ -68,7 +68,11 @@ class RestServiceClient {
 
 	//turn our array of variables to send into a query string
 	protected function getQueryString() {
-
+    global $_SHOP;
+    
+    $this->siteUrl = $_SHOP->root;
+    $this->siteVersion = CURRENT_VERSION;
+    
 		$queryArray = array();
 
 		foreach ($this->data as $var => $val) {

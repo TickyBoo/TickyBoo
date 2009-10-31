@@ -154,11 +154,16 @@ class IndexView extends AdminView {
   function getLatestVersion(){
     require_once("classes/restserviceclient.php");
     
+    //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
     $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
     try{
       $rsc->excuteRequest();
       $array = $rsc->getArray();
-      $currentVersion = $array['versions']['version_attr']['version'];
+      if(isset($array['versions']['version_attr']['version'])){
+        $currentVersion = $array['versions']['version_attr']['version'];
+      }else{
+        throw new Exception('Couldnt get version');
+      }
     }catch(Exception $e){
       return " - Could not check for new version.";
     }
