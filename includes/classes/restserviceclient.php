@@ -31,9 +31,17 @@ class RestServiceClient {
 	public function excuteRequest() {
 		//work ok the URI we are calling
 		$uri = $this->url . $this->getQueryString();
-
+    
+    //set timeout so that you wont be waiting forever if our server is under heavy load.
+    $ctx = stream_context_create(array( 
+      'http' => array( 
+        'timeout' => 1 
+        ) 
+      ) 
+    );
+    
 		//get the URI trapping errors
-		$result = @file_get_contents($uri);
+		$result = @file_get_contents($uri,0,$ctx);
 
 		// Retrieve HTTP status code
 		list($httpVersion, $httpStatusCode, $httpMessage) = explode(' ', $http_response_header[0], 3);
