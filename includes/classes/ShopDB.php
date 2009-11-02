@@ -77,7 +77,7 @@ class ShopDB {
                         . mysqli_connect_error());
             }
             ShopDB::$link = $link;
-           // ShopDB::checkdatabase(true, false);
+            ShopDB::checkdatabase(true, false);
             
             //Set Session Time Zone.
 //This does not work:             ShopDB::query("SET time_zone = '-8'");

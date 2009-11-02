@@ -179,6 +179,7 @@ class orphans {
   static $fixes = array(
        'Category~stat_id'=>'Recreate this missing stat record',
        'Category~event_id'=>'Remove this category, event is already removed',
+       'Category~pm_id'=>'Remove this category, Placemap is already removed',
        'Category~pmp_id'=>'Clear the link to the removed placemapPart',
        'Category~zeros'=>'Clear all zero identifiers in the Catagory table',
        'Category_stat~cat_id'=>'Remove ALL old category_stat records',
@@ -266,6 +267,10 @@ class orphans {
         require_once('classes/PlaceMapCategory.php');
         PlaceMapCategory::delete($fix[2]);
         break;
+      case 'Category~pm_id':
+        require_once('classes/PlaceMapCategory.php');
+        PlaceMapCategory:delete($fix[2]) ;
+        break;        
       case 'Category~pmp_id':
         ShopDB::Query("update Category set 
                          category_pmp_id = null
@@ -430,7 +435,8 @@ class orphans {
         break;
 
       case 'Seat~zeros':
-        Orphans::clear_zeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_pmp_id' ,'seat_discount_id'));
+        Orphans::clear_zeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
+                                           'seat_order_id'   ,'seat_pmp_id'  ,'seat_discount_id'));
         break;
       case 'Order~owner_id':
         ShopDB::Query("
