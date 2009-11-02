@@ -143,12 +143,20 @@ class PlaceMap{ //ZRS
     if(!ShopDB::query($query)){
       return placemap::_abort(con('PlaceMapPart_delete_failed'));
     }
+    
+    $query="DELETE c.*, cs.*
+            FROM   Category c LEFT JOIN Category_stat cs
+              ON c.category_id = cs.cs_category_id
+            WHERE 1=1
+            and c.category_pm_id={$pm_id}";
+    /*Old query.
     $query="DELETE Category, Category_stat 
             FROM   Category INNER JOIN Category_stat
             WHERE  Category.category_id=Category_stat.cs_category_id
             and    Category.category_pm_id={$pm_id}";
             //DELETE t1, t2 FROM t1 INNER JOIN t2 INNER JOIN t3
             //WHERE t1.id=t2.id AND t2.id=t3.id;
+    */
     if(!ShopDB::query($query)){
       return placemap::_abort(con('Category_delete_failed'));
     }
