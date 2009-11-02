@@ -154,9 +154,9 @@ class Event {
   //LA FONCTION DELETE EST PUISSANTE!
   function delete (){
     global $_SHOP;
-
+    
     if($this->event_status=='pub' ){
-        echo '<div class=error>'.Status_is_pub.'</div>';
+        echo '<div class=error>'.con('Status_is_pub').'</div>';
         return FALSE;
     }
 
@@ -164,18 +164,20 @@ class Event {
     if($this->event_rep=='main'){
       $query="select count(*) from Event where event_status!='trash' and event_main_id={$this->event_id}";
       if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
-        echo '<div class=error>'.delete_subs_first.'</div>';
+        echo '<div class=error>'.con('delete_subs_first').'</div>';
         return FALSE;
       }
     }else if($this->event_status=='nosal' and $this->event_pm_id){
-      echo '<div class=error>'.To_Trash.'</div>';
+      echo '<div class=error>'.con('To_Trash').'</div>';
 			return $this->toTrash();
 		}
+
     if(!ShopDB::begin('Delete event: '.$this->event_id )){
-        echo '<div class=error>'.Cant_Start_transaction.'</div>';
+        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
         return FALSE;
     }
 
+ //   mysqli_report(MYSQLI_REPORT_ALL ^ MYSQLI_REPORT_STRICT);
     if($this->event_status!='trash'){
 			//check if there are non-free seats
 			$query="select count(*) from Seat where seat_event_id={$this->event_id} and seat_status!='free' FOR UPDATE";
@@ -213,6 +215,7 @@ class Event {
     }
 
     ShopDB::commit('Event deleted');
+ //   mysqli_report(MYSQLI_REPORT_OFF);
     return TRUE;
   }
 

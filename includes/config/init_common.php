@@ -171,13 +171,20 @@
                             'JPY' => '&yen;');
 
   require_once(INC.'config'.DS."init_config.php");
-  
-  $_SHOP->files_url=$_SHOP->root."files/";
-  $_SHOP->images_url=$_SHOP->root."images/";
+  require_once(INC.'install'.DS."install_version.php");
 
   if (!defined('CURRENT_VERSION')) {
     define('CURRENT_VERSION','Unknown');
   }
+  
+  if (CURRENT_VERSION <> INSTALL_VERSION){
+    echo "<a href='{$_SHOP->root}inst/index.php'>Upgrade me now!</a>";
+    exit;
+  }
+  
+  
+  $_SHOP->files_url=$_SHOP->root."files/";
+  $_SHOP->images_url=$_SHOP->root."images/";
 
   include_once('classes/basics.php');
   

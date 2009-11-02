@@ -34,15 +34,17 @@
  
  
 require_once("admin/AdminView.php");
-require_once('classes/Trash.php');
-include "classes/OrphanCheck.php";
+require_once("classes/OrphanCheck.php");
+require_once("classes/Order.php");
+require_once("classes/Event.php");
+require_once("classes/User.php");
 
 class GarbageView extends AdminView{
 
 	function garbage_list (){
 			
 		$this->list_head(con('garbage'),2);
-		$stats=Trash::stats();
+		$stats= $this->stats();
 		
 		echo "<tr class='admin_list_row_0'>
 		<td class='admin_list_item'>".con('event')."</td>
@@ -111,9 +113,51 @@ class GarbageView extends AdminView{
     if($_GET['fix']){ 
       Orphans::dofix($_GET['fix']);
     } elseif($_GET['empty']){
-			Trash::empty_trash();
+			$this->empty_trash();
 		}
 		$this->garbage_list();
 	}
+  
+	function stats(){
+	  global $_SHOP;
+		
+		$res=array('event'=>0,'seat'=>0,'order'=>0);
+		
+		$query="select count(event_id) as count 
+						from Event 
+						where event_status='trash'";
+						
+		if($data=ShopDB::query_one_row($query)){
+		  $res['event']=$data['count'];
+		}				
+
+		$query="select count(seat_id) as count 
+						from Seat 
+						where seat_status='trash'";
+						
+		if($data=ShopDB::query_one_row($query)){
+		  $res['seat']=$data['count'];
+		}				
+
+				$query="select count(order_id) as count 
+						from `Order` 
+						where order_status='trash'";
+						
+		if($data=ShopDB::query_one_row($query)){
+		  $res['order']=$data['count'];
+		}				
+		$res['guests']= User::cleanup();
+		
+		return $res;
+
+	}
+	
+	function empty_trash(){
+	  Order::toTrash();
+		Event::emptyTrash();
+		Order::emptyTrash();
+		User::cleanup(0,true);
+	}
+  
 }
 ?>

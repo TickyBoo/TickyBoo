@@ -117,9 +117,12 @@ class PlaceMap{ //ZRS
     return false; // exit;
   }
   
-  function delete ($pm_id = 0){
+  function delete ($pm_id = -1){
     global $_SHOP; 
-    if ($pm_id==0) $pm_id = $this->pm_id;
+    
+    $pm_id = (int)$pm_id;
+    
+    if ($pm_id== -1) $pm_id = $this->pm_id;
     if(!ShopDB::begin('delete Placmep: '.$pm_id)){
         echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
         return FALSE;
@@ -139,18 +142,22 @@ class PlaceMap{ //ZRS
     if(!ShopDB::query($query)){
       return placemap::_abort(con('PlaceMapPart_delete_failed'));
     }
-    $query="DELETE a1, a2 FROM Category AS a1 INNER JOIN Category_stat AS a2
-            WHERE a1.category_id=a2.cs_category_id
-            and category_pm_id={$pm_id}";
+    $query="DELETE Category, Category_stat 
+            FROM   Category INNER JOIN Category_stat
+            WHERE  Category.category_id=Category_stat.cs_category_id
+            and    Category.category_pm_id={$pm_id}";
+            //DELETE t1, t2 FROM t1 INNER JOIN t2 INNER JOIN t3
+            //WHERE t1.id=t2.id AND t2.id=t3.id;
     if(!ShopDB::query($query)){
-       return placemap::_abort(con('Category_delete_failed'));
+      return placemap::_abort(con('Category_delete_failed'));
     }
 
+/* This does not work properly....
     $query="delete from Category_stat where cs_category_id={$pm_id}";
     if(!ShopDB::query($query)){
        return placemap::_abort(con('Category_stat_delete_failed'));;
     }
-
+*/
     ShopDB::commit('PlaceMap deleted');
     return TRUE;
 

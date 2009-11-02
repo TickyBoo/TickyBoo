@@ -36,6 +36,7 @@ if (empty($_POST)) {
   session_destroy();
   session_start(); 
 }
+include_once "install_version.php";
 
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -85,7 +86,7 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
   exit;
 }
 
-define("INSTALL_VERSION","Beta 5");
+
 $states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode", "install_adminuser",
                 "install_mail","install_register","install_execute");
 

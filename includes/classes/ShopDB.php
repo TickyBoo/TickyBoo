@@ -34,6 +34,9 @@
 
 define("DB_DEADLOCK", 1213);
 
+
+
+
 class ShopDB {
     static $prefix = '';
     static $link;
@@ -74,7 +77,7 @@ class ShopDB {
                         . mysqli_connect_error());
             }
             ShopDB::$link = $link;
-            ShopDB::checkdatabase(true, false);
+           // ShopDB::checkdatabase(true, false);
             
             //Set Session Time Zone.
 //This does not work:             ShopDB::query("SET time_zone = '-8'");
@@ -585,7 +588,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
            if (substr($sql_line,-1) ==',') $sql_line = substr($sql_line,0,-1);
            if (preg_match('/^[\s]*(CONSTRAINT|FOREIGN|PRIMARY|UNIQUE)*[\s]*(KEY)+/', ' '.$sql_line)) {
              $keys['keys'][] = str_replace('  ',' ',$sql_line);
-           } else if (preg_match('/(ENGINE=)(?<name>\w+) /i', $sql_line, $matches)) {
+           } else if (preg_match('/(ENGINE=)(?P<name>\w+) /i', $sql_line, $matches)) {
              $keys['engine'] = $matches[2];
            } else {
              $x = strpos( $sql_line,' ');
@@ -596,7 +599,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
              $keys['fields'][$key] = substr($sql_line,$x);
            }
         }
-      }
+      }// print_r($keys);
       Return $keys;
     }
 

@@ -465,14 +465,14 @@ class Order {
     return TRUE;
   }
   
-   function order_description() {
-     return con('orderDescription');
-   }
+  function order_description() {
+    return con('orderDescription');
+  }
 
 
   function Check_payment($order_id){
-   $order = Order::load($order_id, true);
-   return $order->order_handling->on_check($order);
+    $order = Order::load($order_id, true);
+    return $order->order_handling->on_check($order);
   }
   
   function order_delete ($order_id, $reason = 0){
@@ -849,27 +849,32 @@ class Order {
 
   	$query="SELECT order_id, order_tickets_nr, count(seat_id) as count
   	        FROM `Order`, Seat
-  					WHERE seat_order_id=order_id AND
-  					seat_status='trash'
+  					WHERE order_status !='trash'
+            and seat_order_id=order_id 
+            AND seat_status='trash'
   					GROUP BY order_id
   					FOR UPDATE";
 
   	if(!$res=ShopDB::query($query)){
-  		return $this->_abort(con('cant_lock_order'));;
+  		return Order::_abort(con('cant_lock_order'));;
   	}
 
   	$count=0;
-
-  	while($data=shopDB::fetch_array($res)){
+    echo "<pre>";
+    
+  	while($data=shopDB::fetch_assoc($res)){
+      //print_r($data);
   	  if($data['order_tickets_nr']==$data['count']){
     		$count++;
 
-        $query="update `Order` set order_status='trash' where order_id='{$data['order_id']}'";
+        $query="update `Order` set order_status='trash' 
+                where order_id='{$data['order_id']}'";
   			if(!ShopDB::query($query)){
-  				return $this->_abort(con('cant_change_order_to_trash'));;
+  				return Order::_abort(con('cant_change_order_to_trash'));;
   			}
   		}
   	}
+    echo "</pre>";
 
   	ShopDB::commit('order trashed');
   	return $count;
@@ -883,8 +888,8 @@ class Order {
 
   	$query="delete `Order`
   					from `Order` left join Seat on order_id=seat_order_id
-  					where order_status='trash' and
-  					seat_id is NULL";
+  					where order_status='trash' 
+            and seat_id is NULL";
 
   	if(!ShopDB::query($query)){
   		return order::_abort(con('cant_delete_trashed_orders'));
