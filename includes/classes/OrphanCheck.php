@@ -269,7 +269,7 @@ class orphans {
         break;
       case 'Category~pm_id':
         require_once('classes/PlaceMapCategory.php');
-        PlaceMapCategory:delete($fix[2]) ;
+        PlaceMapCategory::delete($fix[2]) ;
         break;        
       case 'Category~pmp_id':
         ShopDB::Query("update Category set 
