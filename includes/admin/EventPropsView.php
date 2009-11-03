@@ -580,7 +580,7 @@ select SQL_CALC_FOUND_ROWS *
 
       $agenda = (!$data['event_pm_id'])?' - ' . con('agenda_only'):'';
 
-      echo "xxxssdd<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+      echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
       echo "<tr><td colspan='2' class='admin_list_title'>" .$data['event_id']." - ". $data["event_name"] . "{$agenda} </td></tr>";
       $this->print_field('ort_name', $data);
       $this->print_field('event_short_text', $data);
@@ -631,7 +631,7 @@ select SQL_CALC_FOUND_ROWS *
 
   function state_test(&$data, $event, $stats, $pmps) {
     if (empty($stats)) return false;
-
+    $err = false; 
 
     if (!$data['category_template'] and !$event['event_template']) {
         $data['category_template'] = '<div class=warning>' . con('undefined') . '</div>';
@@ -662,6 +662,7 @@ select SQL_CALC_FOUND_ROWS *
         $data['category_price'] = '<div class=error>0.00</div>';
         $err = true;
     }
+    return $err;
 	}
 
 
@@ -727,7 +728,7 @@ select SQL_CALC_FOUND_ROWS *
       	foreach($_REQUEST['cbxEvents'] as $eventID) {
           if ($event = Event::load($eventID, false)) {
             if ($state == 1 and $event->event_status == 'unpub' and $_POST['confirm'] !== con('confirm_yes') ) {
-              echo $event->event_status;
+              //echo $event->event_status;
               unset($stats);
               unset($pmps);
               $event->publish($stats, $pmps, true);

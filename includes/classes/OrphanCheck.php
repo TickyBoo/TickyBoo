@@ -38,7 +38,7 @@ $orphancheck = array();
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null, 
                             category_numbering,  category_size -(SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id ) , null
-	FROM event e  left join Category c on category_event_id = event_id
+	FROM Event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
 		AND lower(e.event_status) <> 'unpub'
 		AND lower(e.event_rep) LIKE ('%sub%')
@@ -98,9 +98,9 @@ from Event_stat left join Event  on es_event_id = event_id
 where  (event_id is null)
 ";
 $orphancheck[]="
-select 'Spoint', SPoint.user_id, 'user_id' , SPoint.user_id, user.user_id
-from SPoint left join User  on SPoint.user_id = user.user_id
-where  (user.user_id is null)
+select 'Spoint', SPoint.user_id, 'user_id' , SPoint.user_id, User.user_id
+from SPoint left join User  on SPoint.user_id = User.user_id
+where  (User.user_id is null)
 ";
 
 /**/
@@ -258,7 +258,7 @@ class orphans {
         require_once('classes/PlaceMapCategory.php');
         $cat = PlaceMapCategory::load($fix[2]);
         $cs  = new Category_stat($cat->category_id,$cat->category_size);
-        $sql = "SELECT count(seat_id) FROM seat s WHERE s.seat_category_id = {$cat->category_id} and seat_status = 'free'";
+        $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_category_id = {$cat->category_id} and seat_status = 'free'";
         $result = ShopDB::Query_one_row($sql, false);
         $cs->cs_free = $result[0];
         $cs->save();
@@ -291,14 +291,14 @@ class orphans {
       case'Event~cat_id':
         require_once('classes/PlaceMapPart.php');
 
-        $sql = "SELECT seat_id, seat_category_id FROM seat WHERE seat_event_id = {$fix[2]}";
+        $sql = "SELECT seat_id, seat_category_id FROM Seat WHERE seat_event_id = {$fix[2]}";
         $result = ShopDB::Query($sql);
         $seats  = array();
         while ($row = ShopDB::fetch_row($result)) {
           $seats[$row[1]][] = $row[0];
         }
 
-        $sql = "SELECT event_pm_id FROM event e WHERE e.event_id = "._esc($fix[2]);
+        $sql = "SELECT event_pm_id FROM Event e WHERE e.event_id = "._esc($fix[2]);
         $result = ShopDB::Query_one_row($sql, false);
         if (!$result) { 
           echo "cant find selected order placmap";
@@ -384,10 +384,10 @@ class orphans {
         break;
      case 'Event~stat_id':
         require_once('classes/Event_stat.php');
-        $sql = "SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = {$fix[2]}";
+        $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = {$fix[2]}";
         $result = ShopDB::Query_one_row($sql, false);
         $es  = new Event_stat($fix[2], $result[0]);
-        $sql = "SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = {$fix[2]} and seat_status = 'free'";
+        $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = {$fix[2]} and seat_status = 'free'";
         $result = ShopDB::Query_one_row($sql, false);
         $es->cs_free = $result[0];
         $es->save();
@@ -413,15 +413,15 @@ class orphans {
         break;
         
       case 'Seat~event_id':
-        ShopDB::Query("delete from seat where seat_event_id = {$fix[4]}") ;
+        ShopDB::Query("delete from Seat where seat_event_id = {$fix[4]}") ;
         break;
 
       case 'Seat~cat_id':
-        ShopDB::Query("delete from seat where seat_category_id = {$fix[4]}") ;
+        ShopDB::Query("delete from Seat where seat_category_id = {$fix[4]}") ;
         break;
 
       case 'Seat~order_id':
-        ShopDB::Query("update seat set 
+        ShopDB::Query("update Seat set 
                          seat_order_id = null,
                          seat_user_id = null, 
                          seat_ts = null, 
@@ -448,7 +448,7 @@ class orphans {
       case 'Spoint~user_id':
         ShopDB::Query("
                       INSERT IGNORE INTO `User` (`user_id`, `user_lastname`, `user_firstname`, `user_address`, `user_address1`, `user_zip`, `user_city`, `user_state`, `user_country`, `user_phone`, `user_fax`, `user_email`, `user_status`, `user_prefs`, `user_custom1`, `user_custom2`, `user_custom3`, `user_custom4`, `user_owner_id`, `user_lastlogin`, `user_order_total`, `user_current_tickets`, `user_total_tickets`) VALUES
-                      ({$fix[4]}, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213', 'demo@demoserver.com', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0, 0)") ;
+                      ({$fix[4]}, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213', 'demo@fusionticket.test', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0, 0)") ;
         break;
 
         

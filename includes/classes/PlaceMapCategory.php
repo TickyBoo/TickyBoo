@@ -84,6 +84,9 @@ class PlaceMapCategory{
 		if(!$this->category_ident){
 			$this->category_ident=$this->_find_ident($this->category_pm_id);
 		}
+    if ($this->category_numbering<>'none') {
+      $this->category_size = 0;
+    }
          $query="insert into Category (
             category_name,
             category_price,
