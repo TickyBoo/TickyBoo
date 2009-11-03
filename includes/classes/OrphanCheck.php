@@ -37,13 +37,13 @@ $orphancheck = array();
 
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null, 
-                            category_numbering,  category_size -(SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id ) , null
+                            category_numbering,  category_size -(SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id ) , null
 	FROM Event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
 		AND lower(e.event_status) <> 'unpub'
 		AND lower(e.event_rep) LIKE ('%sub%')
     AND category_status != 'unpub'
-		AND category_size <> (SELECT count(seat_id) FROM seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id )
+		AND category_size <> (SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id )
 ";
 
 $orphancheck[]="
