@@ -85,7 +85,7 @@ class PlaceMap{ //ZRS
   function load ($pm_id){
     global $_SHOP;
   
-    $query="select * from PlaceMap2,Ort where pm_ort_id=ort_id and pm_id='$pm_id'";
+    $query="select * from PlaceMap2, Ort where pm_ort_id=ort_id and pm_id='$pm_id'";
     if($res=ShopDB::query_one_row($query)){
 
       $new_pm=new PlaceMap;
@@ -145,31 +145,15 @@ class PlaceMap{ //ZRS
     }
     
     $query="DELETE c.*, cs.*
-            FROM   Category c LEFT JOIN Category_stat cs
-              ON c.category_id = cs.cs_category_id
-            WHERE 1=1
-            and c.category_pm_id={$pm_id}";
-    /*Old query.
-    $query="DELETE Category, Category_stat 
-            FROM   Category INNER JOIN Category_stat
-            WHERE  Category.category_id=Category_stat.cs_category_id
-            and    Category.category_pm_id={$pm_id}";
-            //DELETE t1, t2 FROM t1 INNER JOIN t2 INNER JOIN t3
-            //WHERE t1.id=t2.id AND t2.id=t3.id;
-    */
+            FROM Category c LEFT JOIN Category_stat cs
+            ON c.category_id = cs.cs_category_id
+            WHERE c.category_pm_id={$pm_id}";
     if(!ShopDB::query($query)){
       return placemap::_abort(con('Category_delete_failed'));
     }
 
-/* This does not work properly....
-    $query="delete from Category_stat where cs_category_id={$pm_id}";
-    if(!ShopDB::query($query)){
-       return placemap::_abort(con('Category_stat_delete_failed'));;
-    }
-*/
     ShopDB::commit('PlaceMap deleted');
     return TRUE;
-
   }
 
  
@@ -218,17 +202,18 @@ class PlaceMap{ //ZRS
   }  
   
   function split ($pm_parts=0,$split_zones=true){
+    if(!is_array($pm_parts)) { return false}
     require_once('classes/PlaceMapCategory.php');
-    $index=PlaceMapCategory::_find_ident($this->pm_id);
-
     require_once('classes/PlaceMapPart.php');
+
+    $index=PlaceMapCategory::_find_ident($this->pm_id);
     $parts=PlaceMapPart::loadAll($this->pm_id);
     
     foreach($parts as $part_small){
-      if(!is_array($pm_parts) or !in_array($part_small->pmp_id,$pm_parts)){continue;}
+      if(!in_array($part_small->pmp_id, $pm_parts)){continue;}
 
       $part=PlaceMapPart::load_full($part_small->pmp_id);
-      if($part->split($index,$cats,$old_cats,$split_zones)){
+      if($part->split($index, $cats, $old_cats, $split_zones)){
         $part->save();
       }
     }
