@@ -34,27 +34,32 @@
 
 class Event {
 
- function select ($only_published=TRUE,$with_stats=FALSE){
-   global $_SHOP;
+  function select ($only_published=TRUE,$with_stats=FALSE){
+    global $_SHOP;
 
-   $pub=($only_published)? "and event_status='pub'":"";
+    $pub=($only_published)? "and event_status='pub'":"";
 
-   $date=date("Y-m-d");
+    $date=date("Y-m-d");
 
-   if($with_stats){
-     $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id, LEFT JOIN Event_stat ON event_id=es_event_id WHERE Event.event_date >=$date
-            $pub order by event_date,event_time";
-   }else{
-     $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
-     where Event.event_date >=$date $pub order by event_date,event_time";
-   }
-
-   if($res=ShopDB::query($query)){
-     return $res;
-   }else{
-     return FALSE;
-   }
- }
+    if($with_stats){
+      $query="select * 
+              from Event LEFT JOIN Ort ON event_ort_id=ort_id, 
+                         LEFT JOIN Event_stat ON event_id=es_event_id 
+              WHERE Event.event_date >=$date
+              $pub 
+              order by event_date, event_time";
+    }else{
+      $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
+              WHERE Event.event_date >=$date 
+              $pub 
+              ORDER BY event_date, event_time";
+    }
+    if($res=ShopDB::query($query)){
+      return $res;
+    }else{
+      return FALSE;
+    }
+  }
 
  function load ($id,$only_published=TRUE){
    global $_SHOP;
@@ -76,20 +81,20 @@ class Event {
 
  }
 
- function load_all_sub ($event_main_id){
-   $query="select * from Event where event_rep='sub' and event_main_id="._esc($event_main_id);
-   if($res=ShopDB::query($query)){
-     while($event_d=shopDB::fetch_array($res)){
-       $event=new Event;
-       $event->_fill($event_d);
-       $events[]=$event;
-     }
-     return $events;
-   }
- }
+  function load_all_sub ($event_main_id){
+    $query="select * from Event where event_rep='sub' and event_main_id="._esc($event_main_id);
+    if($res=ShopDB::query($query)){
+      while($event_d=shopDB::fetch_array($res)){
+        $event=new Event;
+        $event->_fill($event_d);
+        $events[]=$event;
+      }
+      return $events;
+    }
+  }
 
- function save (){
-   global $_SHOP;
+  function save (){
+    global $_SHOP;
 
    $query='set '.
            $this->_set('event_text').
@@ -167,7 +172,7 @@ class Event {
         echo '<div class=error>'.con('delete_subs_first').'</div>';
         return FALSE;
       }
-    }else if($this->event_status=='nosal' and $this->event_pm_id){
+    } elseif($this->event_status=='nosal' and $this->event_pm_id){
       echo '<div class=error>'.con('To_Trash').'</div>';
 			return $this->toTrash();
 		}
