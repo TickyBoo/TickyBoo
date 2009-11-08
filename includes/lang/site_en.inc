@@ -189,6 +189,7 @@ define("ticket_deleted","Ticket Deleted!");
 define("ticket_not_found","Ticket Not Found in Database!");
 define("tickets_printing","Tickets are Printing. Please Wait!");
 define("too_low","Please Enter a Number Larger than 0 !");
+define("To_Trash","Sent to Garbage");
 define("undefined","Undefined!");
 
 //------------------------------------------------------
@@ -227,9 +228,9 @@ define("index_user_count","<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d
 define("index_events_count","<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d");
 define("index_ort_count","%d");
 
-//Owner
-define("owner_tab","Owner");
-define("organizer_update_title","Modify Owner information");
+//Merchant
+define("owner_tab","Merchant Details");
+define("organizer_update_title","Modify Merchant Information");
 define("organizer_name","Name");
 define("organizer_address","Address");
 define("organizer_plz","Zip");
@@ -240,7 +241,7 @@ define("organizer_phone","Phone");
 define("organizer_fax","Fax");
 define("organizer_email","E-Mail");
 define("organizer_currency","Currency");
-define("organizer_logo","Owner's Logo");
+define("organizer_logo","Merchant's Logo");
 define("organizer_remove_image","Remove Logo");
 
 //Configuration
@@ -253,6 +254,7 @@ define("shopconfig_check_pos","Check for Unpaid POS Orders?");
 	define("confirm_yes","Yes");
 	define("confirm_no","No");
 define("shopconfig_delunpaid","Global Delete Unpaid Orders?");
+define("shopconfig_delunpaid_pos","Delete UnPaid POS Orders?");
 define("option_others_title","Other Options");
 define("shopconfig_user_activate","Users Checkout Level");
 	define ("act_restrict_cart","Restrict Cart to Members");
@@ -265,6 +267,7 @@ define("shopconfig_posttocollect","Switch to Alt Paymment");
 define("res_delay","Reserve Timeout");
 define("cart_delay","Cart Timeout");
 define("res_delay_less_cart"," < Can not be less than Cart Timeout");
+
 //System Managers
 
 define("admin_login","Login Name"); //used in admin, organizer, and spoint
@@ -980,7 +983,6 @@ define("alert","Alert:");
 define("pos_booktickets","Book Tickets");//header.tpl
 define("seat_count","Seat Count:");
 define("pos_order_page","Order checkout");
-define("approx","Approx");
 
 //process_list.tpl
 define("actions","Actions");
@@ -1012,7 +1014,7 @@ define("pos_nextunpaid","Next UnPaid Order");
 define("pos_nextunsent","Next UnSent Order");
 define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
 define("pos_reorder_info","To Order Tickets Click below:<br>".
-		"WARNING this is VERY EXPERIMENTAL! This adds the tickets back into the cart but is NOT fully tested!");
+		"WARNING old order is CANCELED on Re-Order!");
 define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
 define("shipmentstatus","Shipment Status");
 define("next_order_id","Next Order ID");
@@ -1098,8 +1100,4 @@ Unauthorized duplication, alteration, or sale of this ticket may prevent admitta
 Present this page at the time of admission to be scanned. 
 The unique bar code on this ticket allows only one entry per ticket.");
 
-define("cc_name","Card member: ");	
-define("cc_number","Credit card No: ");	
-define("cc_exp","Expare date: ");	
-define("cc_code","vccs: ");
 ?>
