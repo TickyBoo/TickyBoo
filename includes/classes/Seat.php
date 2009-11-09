@@ -233,7 +233,7 @@ class Seat {
             		seat_code=NULL
               where seat_id="._esc($seat['seat_id'])."
   	          and seat_event_id="._esc($seat['event_id'])."
-	            and seat_category_id="._esc($seat['category_id');
+	            and seat_category_id="._esc($seat['category_id']);
     //echo "<div class=info>$query</div>";
 		
       if(!ShopDB::query($query)){ //echo a;
