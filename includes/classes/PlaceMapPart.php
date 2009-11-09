@@ -170,7 +170,7 @@ class PlaceMapPart { // ZRS
 
         $query = "select pmp_id,pmp_name from PlaceMapPart where pmp_pm_id=$pm_id order by pmp_id";
         if ($res = ShopDB::query($query)) {
-            while ($data = shopDB::fetch_array($res)) {
+            while ($data = shopDB::fetch_assoc($res)) {
                 $new_pmp = new PlaceMapPart;
                 $new_pmp->_fill($data);
 
@@ -204,7 +204,7 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from Ort,PlaceMapPart,PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id where pmp_pm_id=pm_id and ort_id=pm_ort_id and pmp_id=$pmp_id ";
+        $query = "select * from Ort, PlaceMapPart, PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id where pmp_pm_id=pm_id and ort_id=pm_ort_id and pmp_id=$pmp_id ";
 
         if ($res = ShopDB::query_one_row($query)) {
             $new_pmp = new PlaceMapPart;
@@ -226,7 +226,7 @@ class PlaceMapPart { // ZRS
                   where pmp_pm_id=pm_id and ort_id=pm_ort_id and  pm_id=$pm_id ";
 
         if ($res = ShopDB::query($query)) {
-            while ($data = shopDB::fetch_array($res)) {
+            while ($data = shopDB::fetch_assoc($res)) {
                 $new_pmp = new PlaceMapPart;
                 $new_pmp->_fill($data);
                 $new_pmp->pmp_data = PlaceMapPart::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);

@@ -142,7 +142,9 @@ class PlaceMapCategory{
   function load_full ($category_id){
     global $_SHOP;
 
-    $query="select * from Category LEFT JOIN Color ON category_color=color_id LEFT JOIN Event ON event_id=category_event_id where category_id=$category_id ";
+    $query="select * from Category LEFT JOIN Color ON category_color=color_id
+                                   LEFT JOIN Event ON event_id=category_event_id
+            where category_id=$category_id ";
 
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
@@ -192,6 +194,11 @@ class PlaceMapCategory{
 		  return;
 		}
 
+    if(!ShopDB::begin('delete category: '.$category_id)){
+        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
+        return FALSE;
+    }
+
 		require_once('classes/PlaceMapPart.php');
 		if($pmps=PlaceMapPart::loadAll($cat->category_pm_id) and is_array($pmps)){
   		foreach($pmps as $pmp){
@@ -201,10 +208,16 @@ class PlaceMapCategory{
   		}
     }
 
-    $query="DELETE from Category WHERE category_id=$category_id limit 1 ";
-    ShopDB::query($query);
-    $query="DELETE from Category_stat WHERE cs_category_id=$category_id limit 1";
-    ShopDB::query($query);
+    $query="DELETE c.*, cs.*
+            FROM Category c LEFT JOIN Category_stat cs
+            ON c.category_id = cs.cs_category_id
+            WHERE c.category_id={$category_id}";
+    if(!ShopDB::query($query)){
+      return placemap::_abort(con('Category_delete_failed'));
+    }
+
+    ShopDB::commit('Category deleted');
+    return TRUE;
   }
 
 

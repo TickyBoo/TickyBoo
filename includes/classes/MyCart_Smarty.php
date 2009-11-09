@@ -356,7 +356,7 @@ class MyCart_Smarty {
       }
     }
     
-    print_r($places);
+   // print_r($places);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved, $force)){
       print_r("reseve place");

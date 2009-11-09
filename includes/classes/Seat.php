@@ -44,8 +44,10 @@ class Seat {
   // Selects and reserves seats... Very Complex
   /**
    * @param (bool) force - use force to force current reserved ordered seats to back into the cart. 
+   *
+   * On error fill 'place'=>"seat:[lineNo]"
    */
-  function reservate ($sid,$event_id,$category_id,$seats,$numbering,$reserved,$force=false){
+  function reservate ($sid, $event_id, $category_id, $seats, $numbering, $reserved, $force=false){
 
     global $_SHOP;   
     $_SHOP->seat_error=0;
@@ -55,9 +57,9 @@ class Seat {
 	
   	// if reserved is enabled it lets you book reserved seats handy for splitting big booking.
   	if($reserved==true || $force == true) {
-  	  $status=" and seat_status IN ('free','resp') ";
+  	  $status="AND seat_status IN ('free','resp') ";
   	}else{
-  	  $status=" and seat_status='free' ";
+  	  $status="AND seat_status='free' ";
   	}
 
     if(!ShopDB::begin('Reservate seats')){
@@ -67,25 +69,55 @@ class Seat {
 
     //numbering none: choose any $seats seats ($seats is a number)
     // Open seating....
-	  if($numbering=='none' && !$force){
-        
+
+    //Forcing seats back into the cart.
+    if($force) {
+      //TODO: Check for order_id and lock if possible
+      //TODO: lock order to stop other users trying to reorder the same order.
+
+      $seats_id=$seats;
+      foreach($seats_id as $seat_id){
+       $query="SELECT seat_id, seat_pmp_id
+                FROM Seat
+                WHERE seat_event_id="._esc($event_id)."
+                AND seat_category_id="._esc($category_id)."
+                AND seat_id="._esc($seat_id)."
+                $status
+                LIMIT 1 FOR UPDATE";
+
+        if(!$res=ShopDB::query($query)){
+          ShopDB::rollback('cant lock seat');
+          $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:90');
+          return FALSE;
+        }
+
+        if(!$row=ShopDB::fetch_assoc($res)){
+          ShopDB::rollback('Cant find seat');
+          $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
+      	  return FALSE;
+      	}else{
+      	  $pmps_id[$row['seat_pmp_id']]=1;
+      	}
+      }
+    } elseif($numbering=='none'){
+      $seats_id = array();
       Seat::expire_category($category_id);
       
-      $query="SELECT seat_id FROM Seat 
-              WHERE seat_event_id='$event_id'
-              and seat_category_id='$category_id' 
-        and seat_status='free' 
-        LIMIT $seats
-        FOR UPDATE";
-  
+      $query="SELECT seat_id
+              FROM Seat
+              WHERE seat_event_id="._esc($event_id)."
+              AND seat_category_id="._esc($category_id)."
+              $status
+              LIMIT ".(int)$seats." FOR UPDATE";
+
       if(!$res=ShopDB::query($query)){
         ShopDB::rollback('cant lock seats');
-        $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:80');
+        $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:115');
         return FALSE;
       }
       
       //register selected seats ids
-      while($row=shopDB::fetch_array($res)){
+      while($row=shopDB::fetch_assoc($res)){
         $seats_id[]=$row['seat_id'];
       }
       
@@ -96,23 +128,24 @@ class Seat {
         return FALSE;
       }
 
-    }elseif($numbering=='both' or $numbering=='rows' or $numbering=='seat' && !$force) {
+    }elseif($numbering=='both' or $numbering=='rows' or $numbering=='seat') {
       $seats_id=$seats;
 
-// IN
       foreach($seats_id as $seat_id){
-        $query="SELECT seat_id,seat_pmp_id FROM Seat 
-                WHERE seat_event_id='$event_id'
-                and seat_category_id='$category_id'
-		            and seat_id='$seat_id' $status
-		            LIMIT 1 FOR UPDATE";
+        $query="SELECT seat_id,seat_pmp_id
+                FROM Seat
+                WHERE seat_event_id="._esc($event_id)."
+                AND seat_category_id="._esc($category_id)."
+                AND seat_id="._esc($seat_id)."
+                $status
+                LIMIT 1 FOR UPDATE";
         if(!$res=ShopDB::query($query)){
           ShopDB::rollback('cant lock seat');
-          $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:154');
+          $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:142');
           return FALSE;
         }
 	
-  	  if(!$row=shopDB::fetch_array($res)){
+  	    if(!$row=shopDB::fetch_assoc($res)){
           ShopDB::rollback('Cant find seat');
           $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
       	  return FALSE;
@@ -121,32 +154,6 @@ class Seat {
       	}
       }
       
-    //Forcing seats back into the cart.
-    }elseif($force){
-      //TODO: Check for order_id and lock if possible
-      //TODO: lock order to stop other users trying to reorder the same order.
-      
-      $seats_id=$seats;
-      foreach($seats_id as $seat_id){
-        $query="SELECT seat_id,seat_pmp_id FROM Seat 
-                WHERE seat_event_id='$event_id'
-                and seat_category_id='$category_id'
-		            and seat_id='$seat_id' $status
-		            LIMIT 1 FOR UPDATE";
-        if(!$res=ShopDB::query($query)){
-          ShopDB::rollback('cant lock seat');
-          $_SHOP->place_error=array('errno'=>PLACE_ERR_INTERNAL,'place'=>'seat:154.2');
-          return FALSE;
-        }
-	
-        if(!$row=ShopDB::fetch_array($res)){
-          ShopDB::rollback('Cant find seat');
-          $_SHOP->place_error=array('errno'=>PLACE_ERR_OCCUPIED);
-      	  return FALSE;
-      	}else{
-      	  $pmps_id[$row['seat_pmp_id']]=1;
-      	}
-      }
     //some strange thing happens
     }else{
       user_error("unknown place_numbering $numbering category $category_id");
@@ -163,13 +170,12 @@ class Seat {
                 seat_old_status = seat_status, 
                 seat_old_order_id = seat_order_id, 
                 seat_status='res', 
-                seat_ts='$time', 
-                seat_sid='$sid' 
-              WHERE 
-                seat_id='$seat_id' 
-                and seat_event_id='$event_id' 
-                and seat_category_id='$category_id'  
-                $status";
+                seat_ts="._esc($time).",
+                seat_sid="._esc($sid)."
+              WHERE seat_event_id="._esc($event_id)."
+              AND seat_category_id="._esc($category_id)."
+              AND seat_id="._esc($seat_id)."
+              $status";
 	      
      if(!ShopDB::query($query)){ 
         ShopDB::rollback('cant update seat');
@@ -218,16 +224,16 @@ class Seat {
 
     foreach($seats as $seat){
       $query="UPDATE `Seat` set seat_status='free', 
-		seat_ts=NULL,
-		seat_sid=NULL,
-		seat_user_id=NULL,
-		seat_order_id=NULL,
-		seat_price=NULL,
-		seat_discount_id=NULL,
-		seat_code=NULL
-              where seat_id='{$seat['seat_id']}'
-  	        and seat_event_id='{$seat['event_id']}' 
-	        and seat_category_id='{$seat['category_id']}'";
+            		seat_ts=NULL,
+            		seat_sid=NULL,
+            		seat_user_id=NULL,
+            		seat_order_id=NULL,
+            		seat_price=NULL,
+            		seat_discount_id=NULL,
+            		seat_code=NULL
+              where seat_id="._esc($seat['seat_id'])."
+  	          and seat_event_id="._esc($seat['event_id'])."
+	            and seat_category_id="._esc($seat['category_id');
     //echo "<div class=info>$query</div>";
 		
       if(!ShopDB::query($query)){ //echo a;
@@ -345,9 +351,10 @@ class Seat {
   function load_pmp_all ($pmp_id){
     global $_SHOP;
   
-    $query="select seat_id,seat_status,seat_ts from Seat where seat_pmp_id=$pmp_id";
+    $query="select seat_id, seat_status, seat_ts
+           from Seat where seat_pmp_id=$pmp_id";
     if($res=ShopDB::query($query)){
-      while($seat=shopDB::fetch_array($res)){
+      while($seat=shopDB::fetch_assoc($res)){
         $pmp[$seat['seat_id']]=$seat;
       }
     }
@@ -387,12 +394,12 @@ class Seat {
     $this->seat_category_id =($this->seat_category_id===0)?null:$this->seat_category_id;
 
     $query="INSERT INTO Seat SET
-     seat_event_id='$seat_event_id',
-  	 seat_row_nr='$seat_row_nr',
-  	 seat_nr='$seat_nr',
-  	 seat_zone_id='$seat_zone_id',
-  	 seat_pmp_id='$seat_pmp_id',
-  	 seat_category_id='$seat_category_id',
+     seat_event_id="._esc($seat_event_id).",
+  	 seat_row_nr="._esc($seat_row_nr).",
+  	 seat_nr="._esc($seat_nr).",
+  	 seat_zone_id="._esc($seat_pmp_id).",
+  	 seat_pmp_id="._esc($seat_pmp_id).",
+  	 seat_category_id="._esc($seat_category_id).",
   	 seat_status='free'";
 
     if(ShopDB::query($query)){

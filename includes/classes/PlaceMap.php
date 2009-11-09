@@ -124,7 +124,7 @@ class PlaceMap{ //ZRS
     
     if ($pm_id== -1) $pm_id = $this->pm_id;
     
-    if(!ShopDB::begin('delete Placmep: '.$pm_id)){
+    if(!ShopDB::begin('delete Placmap: '.$pm_id)){
         echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
         return FALSE;
     }

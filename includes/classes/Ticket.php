@@ -67,17 +67,17 @@ class Ticket {
     $code=$this->generate_code(8);
 
     $query="update Seat set 
-    seat_order_id={$this->order_id}, 
-    seat_user_id={$this->user_id}, 
-    seat_price='{$this->price}',
-    seat_discount_id='{$this->discount_id}',
-    seat_code='$code',
-    seat_status='com'
-    where seat_id='{$this->seat_id}' and 
-    seat_status='res' and
-    seat_sid='{$this->sid}'
-    limit 1";
-    
+              seat_order_id={$this->order_id},
+              seat_user_id={$this->user_id},
+              seat_price='{$this->price}',
+              seat_discount_id='{$this->discount_id}',
+              seat_code='$code',
+              seat_status='com'
+            where seat_id='{$this->seat_id}'
+            and seat_status='res'
+            and seat_sid='{$this->sid}'
+            limit 1";
+
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
       return $this->seat_id;
     }else{
