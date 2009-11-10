@@ -62,20 +62,21 @@ class Ticket {
     return $this->order_id;
   }
   
-  function save (){
+  function save ($reservate= false){
     if(!$this->order_id){ return FALSE; }
     $code=$this->generate_code(8);
+    $status=($reservate)?'resp':'com';
 
     $query="update Seat set 
-              seat_order_id={$this->order_id},
-              seat_user_id={$this->user_id},
-              seat_price='{$this->price}',
-              seat_discount_id='{$this->discount_id}',
-              seat_code='$code',
-              seat_status='com'
-            where seat_id='{$this->seat_id}'
+              seat_order_id="._esc($this->order_id).",
+              seat_user_id="._esc($this->user_id).",
+              seat_price="._esc($this->price).",
+              seat_discount_id="._esc($this->discount_id).",
+              seat_code="._esc($code)."
+              seat_status="._esc($status)."
+            where seat_id="._esc($this->seat_id)."
             and seat_status='res'
-            and seat_sid='{$this->sid}'
+            and seat_sid="._esc($this->sid)."
             limit 1";
 
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
@@ -88,27 +89,8 @@ class Ticket {
   // Like placing an order but insted of setting the tickets or 'ord' we set them too
   // 'resp' as this is reserved by the Sale Point
   function reserve (){
-    if(!$this->order_id){ return FALSE; }
-    $code=$this->generate_code(8);
-
-    $query="update Seat set 
-    seat_order_id={$this->order_id}, 
-    seat_user_id={$this->user_id}, 
-    seat_price='{$this->price}',
-    seat_discount_id='{$this->discount_id}',
-    seat_code='$code',
-    seat_status='resp'
-    where seat_id='{$this->seat_id}' and 
-    seat_status='res' and
-    seat_sid='{$this->sid}'
-    limit 1";
-    
-    if(ShopDB::query($query) and shopDB::affected_rows()==1){
-      return $this->seat_id;
-    }else{
-      return FALSE;
-    }
-  }  
+    $this->save(true);
+  }
   
   function generate_code ($length){
     $chars = "0123456789";
@@ -129,10 +111,10 @@ class Ticket {
     $new_code=Ticket::generate_code($code_length);
 
     $query="update Seat 
-            set seat_code='$new_code'
-	    where seat_id='$seat_id' and
-	          seat_order_id='$order_id'
-	    LIMIT 1";
+              set seat_code='$new_code'
+      	    where seat_id='$seat_id'
+            and seat_order_id='$order_id'
+	          LIMIT 1";
   
   
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
