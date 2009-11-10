@@ -58,7 +58,7 @@ table.morpion td.j2 { color: #A00; }
 		</tr>
 	</table>
 	<br>
-	<table style="border: solid 2px #550000; background: #000022 url(./res/logoHTMLtoPDF.gif) center center no-repeat; color: #FFFFFF;">
+	<table style="border: solid 2px #550000; background: #000022 url(./res/logo.png) center center no-repeat; color: #FFFFFF;">
 		<tr >
 			<td style="border: solid 1px #AAAAAA;">Case A1<BR>avec tests diverses</td>
 			<td style="border: solid 1px #AAAAAA;">Case A2</td>

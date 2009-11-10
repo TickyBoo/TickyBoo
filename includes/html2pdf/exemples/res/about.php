@@ -44,7 +44,7 @@
 	<br><br><br><br><br>
 	<div style="text-align: center; width: 100%;">
 		<br>
-		<img src="./res/logoHTMLtoPDF.gif" alt="Logo HTML2PDF" style="width: 150mm">
+		<img src="./res/logo.gif" alt="Logo HTML2PDF" style="width: 150mm">
 		<br>
 	</div>
 	<br><br><br><br><br>

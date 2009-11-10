@@ -235,7 +235,6 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			preg_match('/'.$balise.'/isU', $code, $match);
 			$close	= ($match[1]=='/' ? true : false);
 			$autoclose = preg_match('/\/>$/isU', $code);
-			
 			$name	= strtolower($match[2]);
 			
 			// paramètres obligatoires en fonction du nom de la balise

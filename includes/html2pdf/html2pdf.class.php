@@ -67,8 +67,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 		var $lstChamps		= array();	// liste des champs
 		var $lstSelect		= array();	// options du select en cours
 		var $previousCall	= null;		// dernier appel
-		var $isInTfoot		= false;	// indique si on est dans un tfoot
 		var $pageMarges		= array();	// marges spécifiques dues aux floats
+		var $isInTfoot		= false;	// indique si on est dans un tfoot
+		var $isInOverflow	= false;	// indique si on est dans une div overflow
 		var $isAfterFloat	= false;	// indique si on est apres un float
 		var $forOneLine		= false;	// indique si on est dans un sous HTML ne servant qu'a calculer la taille de la prochaine ligne
 		var $encoding		= 'ISO-8859-15';		// encodage utilisé pour les entites html
@@ -113,7 +114,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			
 			// initialisations diverses
 			$this->setTestTdInOnePage(true);
-			$this->setTestIsImage(false);
+			$this->setTestIsImage(false);//changed by FT.
 			$this->setDefaultFont(null);
 			
 			// initialisation du parsing
@@ -122,6 +123,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->sub_part	= false;
 			
 			// initialisation des marges
+			if (!is_array($marges)) $marges = array($marges, $marges, $marges, $marges);	
 			$this->setDefaultMargins($marges[0], $marges[1], $marges[2], $marges[3]);
 			$this->setMargins();
 			$this->marges = array();
@@ -657,6 +659,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$sub_html->isSubPart = true;
 			$sub_html->setEncoding($this->encoding);
 			$sub_html->setTestTdInOnePage($this->testTDin1page);
+			$sub_html->setTestIsImage($this->testIsImage);
 			$sub_html->setDefaultFont($this->defaultFont);
 			$sub_html->style->css			= $this->style->css;
 			$sub_html->style->css_keys		= $this->style->css_keys;
@@ -873,6 +876,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/	
 		function WriteHTML($html, $vue = false)
 		{
+			// si c'est une vrai page HTML, une conversion s'impose
+			if (preg_match('/<body/isU', $html))
+				$html = $this->getHtmlFromPage($html);
+				
 			$html = str_replace('[[page_nb]]',	'{nb}',	 $html);
 			
 			$html = str_replace('[[date_y]]',	date('Y'),	 $html);
@@ -895,6 +902,31 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->MakeHTMLcode();
 		}
 
+		function getHtmlFromPage($html)
+		{
+			$html = str_replace('<BODY', '<body', $html);
+			$html = str_replace('</BODY', '</body', $html);
+			
+			// extraction du contenu
+			$res = explode('<body', $html);
+			if (count($res)<2) return $html;
+			$content = '<page'.$res[1];
+			$content = explode('</body', $content);
+			$content = $content[0].'</page>';
+
+			// extraction des balises link
+			preg_match_all('/<link([^>]*)>/isU', $html, $match);
+			foreach($match[0] as $src)
+				$content = $src.'</link>'.$content;	
+			
+			// extraction des balises style
+			preg_match_all('/<style[^>]*>(.*)<\/style[^>]*>/isU', $html, $match);
+			foreach($match[0] as $src)
+				$content = $src.$content;	
+						
+			return $content;	
+		}
+		
 		function MakeHTMLcode()
 		{
 			// pour chaque element identifié par le parsing
@@ -1204,27 +1236,34 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			if ($this->forOneLine) return false;
 
+			// sauvegarde de l'état
 			$this->subSTATES = array();
 			$this->subSTATES['x']	= $this->pdf->x;
 			$this->subSTATES['y']	= $this->pdf->y;
 			$this->subSTATES['s']	= $this->style->value;
 			$this->subSTATES['t']	= $this->style->table;
-			$this->subSTATES['ml']	= $this->pdf->lMargin;
-			$this->subSTATES['mr']	= $this->pdf->rMargin;
-			$this->subSTATES['mt']	= $this->pdf->tMargin;
-			$this->subSTATES['mb']	= $this->pdf->bMargin;
+			$this->subSTATES['ml']	= $this->margeLeft;
+			$this->subSTATES['mr']	= $this->margeRight;
+			$this->subSTATES['mt']	= $this->margeTop;
+			$this->subSTATES['mb']	= $this->margeBottom;
+			$this->subSTATES['mp']	= $this->pageMarges;
 	
+			// nouvel etat pour le footer
+			$this->pageMarges = array();
+			$this->margeLeft	= $this->defaultLeft;
+			$this->margeRight	= $this->defaultRight;
+			$this->margeTop		= $this->defaultTop;
+			$this->margeBottom	= $this->defaultBottom;
+			$this->pdf->SetMargins($this->margeLeft, $this->margeTop, $this->margeRight);
+			$this->pdf->bMargin	= $this->margeBottom;
+			$this->pdf->PageBreakTrigger = $this->pdf->h - $this->pdf->bMargin;
 			$this->pdf->x						= $this->defaultLeft;
 			$this->pdf->y						= $this->defaultTop;
+			
 			$this->style->initStyle();
 			$this->style->resetStyle();
 			$this->style->value['width']		= $this->pdf->w - $this->defaultLeft - $this->defaultRight;
 			$this->style->table					= array();
-			$this->pdf->lMargin					= $this->defaultLeft;
-			$this->pdf->rMargin					= $this->defaultRight;
-			$this->pdf->tMargin					= $this->defaultTop;
-			$this->pdf->bMargin					= $this->defaultBottom;
-			$this->pdf->PageBreakTrigger		= $this->pdf->h - $this->pdf->bMargin;
 
 			$this->style->save();
 			$this->style->analyse('page_header_sub', $param);
@@ -1240,15 +1279,18 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			$this->style->load();
 
-			$this->pdf->x						= $this->subSTATES['x'];
-			$this->pdf->y						= $this->subSTATES['y'];
+			// retablissement de l'etat
 			$this->style->value					= $this->subSTATES['s'];
 			$this->style->table					= $this->subSTATES['t'];
-			$this->pdf->lMargin					= $this->subSTATES['ml'];
-			$this->pdf->rMargin					= $this->subSTATES['mr'];
-			$this->pdf->tMargin					= $this->subSTATES['mt'];
-			$this->pdf->bMargin					= $this->subSTATES['mb'];
+			$this->pageMarges				= $this->subSTATES['mp'];
+			$this->margeLeft				= $this->subSTATES['ml'];
+			$this->margeRight				= $this->subSTATES['mr'];
+			$this->margeTop					= $this->subSTATES['mt'];
+			$this->margeBottom				= $this->subSTATES['mb'];
+			$this->pdf->SetMargins($this->margeLeft, $this->margeTop, $this->margeRight);
 			$this->pdf->PageBreakTrigger		= $this->pdf->h - $this->pdf->bMargin;
+			$this->pdf->x					= $this->subSTATES['x'];
+			$this->pdf->y					= $this->subSTATES['y'];
 
 			$this->style->FontSet();			
 			$this->maxH = 0;		
@@ -1265,22 +1307,29 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->subSTATES['y']	= $this->pdf->y;
 			$this->subSTATES['s']	= $this->style->value;
 			$this->subSTATES['t']	= $this->style->table;
-			$this->subSTATES['ml']	= $this->pdf->lMargin;
-			$this->subSTATES['mr']	= $this->pdf->rMargin;
-			$this->subSTATES['mt']	= $this->pdf->tMargin;
-			$this->subSTATES['mb']	= $this->pdf->bMargin;
+			$this->subSTATES['ml']	= $this->margeLeft;
+			$this->subSTATES['mr']	= $this->margeRight;
+			$this->subSTATES['mt']	= $this->margeTop;
+			$this->subSTATES['mb']	= $this->margeBottom;
+			$this->subSTATES['mp']	= $this->pageMarges;
 	
+			// nouvel etat pour le footer
+			$this->pageMarges = array();
+			$this->margeLeft	= $this->defaultLeft;
+			$this->margeRight	= $this->defaultRight;
+			$this->margeTop		= $this->defaultTop;
+			$this->margeBottom	= $this->defaultBottom;
+			$this->pdf->SetMargins($this->margeLeft, $this->margeTop, $this->margeRight);
+			$this->pdf->bMargin	= $this->margeBottom;
+			$this->pdf->PageBreakTrigger = $this->pdf->h - $this->pdf->bMargin;
 			$this->pdf->x						= $this->defaultLeft;
 			$this->pdf->y						= $this->defaultTop;
+			
+	
 			$this->style->initStyle();
 			$this->style->resetStyle();
 			$this->style->value['width']		= $this->pdf->w - $this->defaultLeft - $this->defaultRight;
 			$this->style->table					= array();			
-			$this->pdf->lMargin					= $this->defaultLeft;
-			$this->pdf->rMargin					= $this->defaultRight;
-			$this->pdf->tMargin					= $this->defaultTop;
-			$this->pdf->bMargin					= $this->defaultBottom;
-			$this->pdf->PageBreakTrigger		= $this->pdf->h - $this->pdf->bMargin;
 
 			// on en créé un sous HTML que l'on transforme en PDF
 			// pour récupérer la hauteur
@@ -1307,15 +1356,17 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			$this->style->load();
 
-			$this->pdf->x						= $this->subSTATES['x'];
-			$this->pdf->y						= $this->subSTATES['y'];
 			$this->style->value					= $this->subSTATES['s'];
 			$this->style->table					= $this->subSTATES['t'];
-			$this->pdf->lMargin					= $this->subSTATES['ml'];
-			$this->pdf->rMargin					= $this->subSTATES['mr'];
-			$this->pdf->tMargin					= $this->subSTATES['mt'];
-			$this->pdf->bMargin					= $this->subSTATES['mb'];
+			$this->pageMarges 				= $this->subSTATES['mp'];
+			$this->margeLeft				= $this->subSTATES['ml'];
+			$this->margeRight				= $this->subSTATES['mr'];
+			$this->margeTop					= $this->subSTATES['mt'];
+			$this->margeBottom				= $this->subSTATES['mb'];
+			$this->pdf->SetMargins($this->margeLeft, $this->margeTop, $this->margeRight);
 			$this->pdf->PageBreakTrigger		= $this->pdf->h - $this->pdf->bMargin;
+			$this->pdf->x					= $this->subSTATES['x'];
+			$this->pdf->y					= $this->subSTATES['y'];
 
 			$this->style->FontSet();			
 			$this->maxH = 0;		
@@ -1429,6 +1480,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$this->style->value['old_maxX'] = $this->maxX;
 				$this->style->value['old_maxY'] = $this->maxY;
 				$this->style->value['old_maxH'] = $this->maxH;
+				$this->style->value['old_overflow'] = $this->isInOverflow;
+				$this->isInOverflow = true;
 			}
 			else
 			{
@@ -1486,8 +1539,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$this->o_BR(array());
 	
 				if (
-						$h < ($this->pdf->h - $this->pdf->tMargin-$this->pdf->bMargin) &&
-						$this->pdf->y + $h>=($this->pdf->h - $this->pdf->bMargin)
+						($h < ($this->pdf->h - $this->pdf->tMargin-$this->pdf->bMargin)) &&
+						($this->pdf->y + $h>=($this->pdf->h - $this->pdf->bMargin)) && 
+						!$this->isInOverflow
 					)
 					$this->setNewPage();
 				
@@ -1505,6 +1559,16 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 			else
 			{
+				// en cas d'alignement => correction
+				$old = isset($this->style->table[count($this->style->table)-1]) ? $this->style->table[count($this->style->table)-1] : $this->style->value;
+				$parent_w = $old['width'] ? $old['width'] : $this->pdf->w - $this->pdf->lMargin - $this->pdf->rMargin;
+				
+				if ($parent_w>$w)
+				{				
+					if ($align_object=='center')		$this->pdf->x = $this->pdf->x + ($parent_w-$w)*0.5;
+					else if ($align_object=='right')	$this->pdf->x = $this->pdf->x + $parent_w-$w;
+				}
+				
 				$this->style->setPosition($this->pdf->x, $this->pdf->y);
 				$this->saveMax();
 				$this->saveX = 0;
@@ -1581,9 +1645,12 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$mL = $this->style->value['x']+$marge['l'];
 				$mR = $this->pdf->w - $mL - $this->style->value['width'];
 			}
+			
+			$x = $this->style->value['x']+$marge['l'];
+			$y = $this->style->value['y']+$marge['t']+$y_corr;
 			$this->saveMargin($mL, 0, $mR);
-			$this->pdf->setX($this->style->value['x']+$marge['l']);
-			$this->pdf->setY($this->style->value['y']+$marge['t']+$y_corr);
+			$this->pdf->setX($x);
+			$this->pdf->setY($y);
 			
 			$this->setNewPositionForNewLine();
 			
@@ -1608,6 +1675,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$this->maxX = $this->style->value['old_maxX'];
 				$this->maxY = $this->style->value['old_maxY'];
 				$this->maxH = $this->style->value['old_maxH'];
+				$this->isInOverflow = $this->style->value['old_overflow'];
 				$this->pdf->clippingPathClose();
 			}
 				
@@ -1755,6 +1823,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 			
 			if ($param['value']==='') return true;
 			
+			$noborder = isset($param['noborder']);
+			
 			$this->style->save();
 			$this->style->analyse('qrcode', $param);
 			$this->style->setPosition($this->pdf->x, $this->pdf->y);
@@ -1779,9 +1849,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 			
 			require_once(dirname(__FILE__).'/qrcode/qrcode.class.php');
 			$qrcode = new QRcode($param['value'], $ec);
-			$size = $s*$qrcode->getQrSize();
+			if ($noborder) $qrcode->disableBorder();
 			if (!$this->sub_part && !$this->isSubPart)
 				$qrcode->displayFPDF($this->pdf, $x, $y, $s, $background, $color);
+			$size = $s*$qrcode->getQrSize();
 			unset($qrcode);
 			
 			// position maximale globale
@@ -1962,7 +2033,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$x = $this->pdf->getX();
 					
 					// si la prochaine ligne ne rentre pas dans la page => nouvelle page 
-					if ($y + $h>$this->pdf->h - $this->pdf->bMargin) $this->setNewPage(null, '', null, $curr_max - strlen($txt));
+					if ($y + $h>$this->pdf->h - $this->pdf->bMargin)
+						if (!$this->isInOverflow)
+							$this->setNewPage(null, '', null, $curr_max - strlen($txt));
+				
 				
 					// ligne suplémentaire. au bout de 1000 : trop long => erreur
 					$nb++;
@@ -2058,7 +2132,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 						
 			// si l'image ne rentre pas dans la page => nouvelle page 
-			if ($y + $h>$this->pdf->h - $this->pdf->bMargin)
+			if (
+					($y + $h>$this->pdf->h - $this->pdf->bMargin) && 
+					!$this->isInOverflow
+				)
 			{
 				$this->setNewPage();
 				$x = $this->pdf->getX();
@@ -2140,7 +2217,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 			else
 			{
-				$this->pdf->SetX($x+$w);
+				$this->pdf->setX($x+$w);
 			$this->maxX = max($this->maxX, $x+$w);
 			$this->maxY = max($this->maxY, $y+$h);
  			$this->maxH = max($this->maxH, $h);
@@ -2588,8 +2665,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($this->maxH==0) $this->maxY = max($this->maxY, $y+$h);
 			
 			// si le saut de ligne rentre => on le prend en compte, sinon nouvelle page
-			if ($y+$h<$this->pdf->h - $this->pdf->bMargin) $this->setNewLine($h, $curr);
-			else $this->setNewPage(null, '', null, $curr);
+			if (($y+$h<$this->pdf->h - $this->pdf->bMargin) || $this->isInOverflow)
+				$this->setNewLine($h, $curr);
+			else
+				$this->setNewPage(null, '', null, $curr);
 				
 			$this->maxH = 0;
 			

@@ -525,7 +525,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			{
 				$this->value['id_lst'][] = '*#'.$id;
 				$this->value['id_lst'][] = '#'.$id;
-				$this->value['id_lst'][] = $id.'#'.$id;
+				$this->value['id_lst'][] = $balise.'#'.$id;
 			}
 
 			// style CSS

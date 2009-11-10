@@ -1,3 +1,10 @@
+<?php
+$content = 'A Test overflow<br>A Test overflow<br>A Test overflow<br>
+<img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
+B Test overflow<br>B Test overflow<br>B Test overflow<br>
+<img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
+C Test overflow<br>C Test overflow<br>C Test overflow<br>';
+?>
 <style type="text/css">
 <!--
 div.zone
@@ -20,12 +27,11 @@ div.zone_over
 <page style="font-size: 10pt">
 	<span style="font-size: 16pt ; font-weight: bold">Démonstration des images<br></span>
 	<br>
-	<br>
 	<b>Dans un tableau :</b><br>
 	<table style="width: 50%;border: solid 3px #5544DD" align="center">
 		<tr>
 			<td style="width: 30%; text-align: left; ">Text à gauche<br>avec retour à<br>la ligne</td>
-			<td style="width: 40%; text-align: center;"><img src="./res/logoHTMLtoPDF.gif" alt="" ><br><i>légende</i></td>
+			<td style="width: 40%; text-align: center;"><img src="./res/logo.gif" alt="" ><br><i>légende</i></td>
 			<td style="width: 30%; text-align: right; ">Texte à droite</td>
 		</tr>
 	</table>
@@ -36,7 +42,7 @@ div.zone_over
 	texte <span style="text-decoration: underline overline line-through">avec les trois</span>.<br>
 	<br>
 	<b>Dans un texte :</b><br>
-	texte à la suite d'une image, <img src="./res/logoHTMLtoPDF.gif" alt="" style="height: 10mm">
+	texte à la suite d'une image, <img src="./res/logo.gif" alt="" style="height: 10mm">
 	texte à la suite d'une image, répétitif car besoin d'un retour à la ligne
 	texte à la suite d'une image, répétitif car besoin d'un retour à la ligne
 	texte à la suite d'une image, répétitif car besoin d'un retour à la ligne
@@ -62,15 +68,7 @@ div.zone_over
 	<span style="color: CMYK(0., 1., 0., 0.)">Texte de couleur</span><br>
 	<span style="color: CMYK(0, 0, 100%, 0)">Texte de couleur</span><br>
 	<span style="color: CMYK(0, 0, 0, 255)">Texte de couleur</span><br>
-</page>
-<page pageset="old">
-<?php
-$content = 'A Test overflow<br>A Test overflow<br>A Test overflow<br>
-<img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
-B Test overflow<br>B Test overflow<br>B Test overflow<br>
-<img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
-C Test overflow<br>C Test overflow<br>C Test overflow<br>';
-?>
+	<br>
 	<table>
 		<tr style="vertical-align: top">
 			<td>

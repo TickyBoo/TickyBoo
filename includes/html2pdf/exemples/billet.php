@@ -14,6 +14,8 @@
  	// récupération du contenu HTML
  	ob_start();
  	$num = 'CMD01-'.date('ymd');
+ 	$nom = 'DUPONT Alphonse';
+ 	$date = '01/01/2010';
 ?>
 <style type="text/css">
 <!--
@@ -23,10 +25,9 @@
 -->
 </style>
 <page format="100x200" orientation="L" backcolor="#AAAACC" style="font: arial;">
-	<page_footer style="font-style: italic; font-weight: normal; text-align: right; font-size: 2.5mm;">
+	<div style="rotate: 90; position: absolute; width: 100mm; height: 4mm; left: 195mm; top: 0; font-style: italic; font-weight: normal; text-align: center; font-size: 2.5mm;">
 		Ceci est votre e-ticket à présenter au contrôle d'accès -
 		billet généré par <a href="http://html2pdf.fr/" style="color: #222222; text-decoration: none;">html2pdf</a>
-		&nbsp;&nbsp;&nbsp;
 	</page_footer>
 	<table style="width: 100%;border: none;" cellspacing="4mm" cellpadding="0">
 		<tr>

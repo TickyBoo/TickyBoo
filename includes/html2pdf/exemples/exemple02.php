@@ -18,6 +18,7 @@
 
 	// conversion HTML => PDF
 	require_once(dirname(__FILE__).'/../html2pdf.class.php');
-	$html2pdf = new HTML2PDF('P','A4', 'fr', array(30, 30, 20, 20));
+	$html2pdf = new HTML2PDF('P','A4', 'fr', array(15, 5, 15, 5));
+	$html2pdf->pdf->SetDisplayMode('fullpage');
 	$html2pdf->WriteHTML($content, isset($_GET['vuehtml']));
 	$html2pdf->Output('exemple02.pdf');

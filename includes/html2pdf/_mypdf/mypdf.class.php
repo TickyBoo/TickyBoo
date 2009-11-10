@@ -6,7 +6,7 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.25 - 07/10/2009
+ * @version		3.26 - xx/xx/2009
  */
 
 if (!defined('__CLASS_MYPDF__'))
@@ -480,6 +480,17 @@ if (!defined('__CLASS_MYPDF__'))
 			elseif (count($c)==3)	return sprintf('%.3F %.3F %.3F ',$c[0],$c[1],$c[2]).($mode ? 'RG' : 'rg');
 			elseif (count($c)==4)	return sprintf('%.3F %.3F %.3F %.3F ',$c[0],$c[1],$c[2],$c[3]).($mode ? 'K' : 'k');
 			return null;
+		}
+		
+		function SetX($x)
+		{
+			$this->x=$x;
+		}
+		
+		function SetY($y)
+		{
+			$this->x=$this->lMargin;
+			$this->y=$y;
 		}
 	}
 }

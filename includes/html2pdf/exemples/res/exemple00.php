@@ -16,7 +16,7 @@
 	Barre horizontale &lt;hr&gt;<hr style="height: 4mm; background: #AA5500; border: solid 1mm #0055AA">
 	Exemple de lien : <a href="http://html2pdf.fr/" >le site HTML2PDF</a><br>
 	<br>
-	Image : <img src="./res/logoHTMLtoPDF.gif" alt="Logo" width=150 /><br>
+	Image : <img src="./res/logo.gif" alt="Logo" width=150 /><br>
 	<br>
 	Alignement horizontal des DIVs et TABLEs<br />
 	<table style="text-align: center; border: solid 2px red; background: #FFEEEE;width: 40%" align="center"><tr><td style="width: 100%">Test 1</td></tr></table><br />
@@ -50,7 +50,7 @@
 							<table style="border: solid 1px #445500">
 								<tr>
 									<td>
-										<img src="./res/logoHTMLtoPDF.gif" alt="Logo" width=100 />
+										<img src="./res/logo.gif" alt="Logo" width=100 />
 									</td>
 								</tr>
 							</table>
