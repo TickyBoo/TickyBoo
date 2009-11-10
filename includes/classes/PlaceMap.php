@@ -202,7 +202,7 @@ class PlaceMap{ //ZRS
   }  
   
   function split ($pm_parts=0,$split_zones=true){
-    if(!is_array($pm_parts)) { return false}
+    if(!is_array($pm_parts)) { return false; }
     require_once('classes/PlaceMapCategory.php');
     require_once('classes/PlaceMapPart.php');
 

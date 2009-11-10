@@ -85,4 +85,7 @@ if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUE
 	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
 }
 
+orphanCheck();
+trace("End of ajax req \n");
+
 ?>

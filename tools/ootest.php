@@ -16,9 +16,9 @@ class b {
    
   function echo2(){  
     $this->id = 5;
-    $a = new a();
+    //$a = new a();
     //$a->id = 1;
-    $a->echoId();
+    a::echoId();
   }
   
 }

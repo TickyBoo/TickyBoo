@@ -66,8 +66,7 @@ class GarbageView extends AdminView{
 	
 		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?empty=true'>".con('empty_trash')."</a></center><br>";
 
-    $data = Orphans::getlist($keys);      
-
+    $data = Orphans::getlist($keys);
     
     $space = (count($keys)*60 < $this->width -200)?1:0;
 

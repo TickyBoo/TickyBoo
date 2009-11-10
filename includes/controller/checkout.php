@@ -402,5 +402,8 @@ die();
 			$hand->on_notify($order);
 		}
   	}
+    
+  orphanCheck();
+  trace("End of checkout \n\n\r");
 //session_write_close();
 ?>

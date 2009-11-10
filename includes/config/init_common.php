@@ -92,6 +92,11 @@
   //where smarty templates and other tpl related stuff lives
   $_SHOP->tpl_dir=INC."template".DS;
   
+  //Trace File settings
+  $_SHOP->trace_dir = INC."temp".DS;
+  $_SHOP->trace_name = 'trace.log';
+  $_SHOP->trace_on = true;
+  
   // this selects the theme that you like to use.
   $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS."default".DS;
 

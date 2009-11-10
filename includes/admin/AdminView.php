@@ -64,6 +64,9 @@ class AdminView extends AUIComponent {
         }
         $page->setbody($this);
         $page->draw();
+        
+        orphanCheck();
+        trace("End of page \n\n\r");
     }
     
     function print_field ($name, &$data, $prefix='') {

@@ -455,6 +455,27 @@ function subtractDaysFromDate($date,$no_days) {
 	return date('Y-m-d', $res);
 }
 
+ /**
+  * trace()
+  * 
+  * Will print full traces to file when enabled in config_common.php
+  * 
+  * Tempted to remove dblogging and do both in trace function. 
+  * Like trace($content,$dblog=false){} 
+  * 
+  * @param mixed $content
+  * @return void
+  */
+  function trace($content){
+    global $_SHOP;
+    
+    if(is($_SHOP->trace_on,false)){
+      $content = date('c',time()).' : '. $content."\n";
+      file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content,FILE_APPEND);
+    }      
+  }
+
+
 function addDaysToDate($date,$no_days) {
 	$time1  = strtotime($date);
 	$res = strtotime((date('Y-m-d', $time1)." +$no_days"."days"));
@@ -528,6 +549,19 @@ function md5pass($user,$pass) {
 	return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
 }
 
+
+function orphanCheck(){
+  global $_SHOP, $orphancheck;
+  if(is($_SHOP->trace_on,false)){
+    trace("Start Orphan Check");
+    require_once("classes/OrphanCheck.php");
+    //Turn Off trace to run the Orphan check so we only get querys
+    $_SHOP->trace_on=false;
+    $data = Orphans::getlist($keys);
+    $_SHOP->trace_on=true;
+    trace("Orphan Check Dump: ".var_export($data,true));  
+  }
+}
 
 /**
  * This function creates a md5 password code to allow login true WWW-Authenticate

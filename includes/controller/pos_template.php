@@ -89,5 +89,6 @@ $smarty->plugins_dir  = array( "plugins", $_SHOP->includes_dir . "shop_plugins" 
 if ($fond) {
   $smarty->display( $fond . '.tpl' );
 }
-
+orphanCheck();
+trace("End of pos \n\n\r");
 ?>

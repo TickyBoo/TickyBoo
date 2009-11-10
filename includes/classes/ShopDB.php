@@ -47,7 +47,9 @@ class ShopDB {
         global $_SHOP;
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-
+        
+        trace("\n Database Init");
+        
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
             $DB_Hostname = $_SHOP->db_host;
@@ -80,9 +82,11 @@ class ShopDB {
             ShopDB::checkdatabase(true, false);
             
             //Set Session Time Zone.
-//This does not work:             ShopDB::query("SET time_zone = '-8'");
-//2009-10-24T13:17:46+02:00 [Error: 1298] SET time_zone = '-8'
-//2009-10-24T13:17:46+02:00 Unknown or incorrect time zone: '-8'
+            //This does not work:             ShopDB::query("SET time_zone = '-8'");
+            //2009-10-24T13:17:46+02:00 [Error: 1298] SET time_zone = '-8'
+            //2009-10-24T13:17:46+02:00 Unknown or incorrect time zone: '-8'
+            
+            //Time Zone should be "SET time_zone = -8" or "SET time_zone = 'London/Europe' ";
             
             return true;
           } else {
@@ -97,7 +101,7 @@ class ShopDB {
     
     function close(){
         global $_SHOP;
-
+        
         if (isset(ShopDB::$link)) {
            ShopDB::$link->close();
         }
@@ -123,15 +127,18 @@ class ShopDB {
             if (ShopDB::$link->autocommit(false)) {
                $_SHOP->db_trx_startedi = 1;
                self::dblogging("[Begin {$name}]");
+               trace("[Begin {$name}]");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error(ShopDB::$link));
                 self::dblogging("[Begin {$name}]Error: $_SHOP->db_error");
+                trace("[Begin {$name}]Error: $_SHOP->db_error");
                 return false;
             }
         } else {
             $_SHOP->db_trx_startedi++;
             self::dblogging("[Begin {$name}] {$_SHOP->db_trx_startedi}");
+            trace("[Begin {$name}] {$_SHOP->db_trx_startedi}");
             return true;
         }
     }
@@ -146,17 +153,21 @@ class ShopDB {
                 ShopDB::$link->autocommit(true);
                 unset($_SHOP->db_trx_startedi);
                 self::dblogging("[Commit {$name}]");
+                trace("[Commit {$name}]");
                 return true;
             } else {
                 user_error($_SHOP->db_error= ShopDB::$link->error);
                 self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
+                trace("[Commit {$name}]Error: $_SHOP->db_error");
             }
         } elseif ($_SHOP->db_trx_startedi > 1) {
             self::dblogging("[Commit {$name}] {$_SHOP->db_trx_startedi}");
+            trace("[Commit {$name}] {$_SHOP->db_trx_startedi}");
             $_SHOP->db_trx_startedi--;
             return true;
         } else {
             self::dblogging("[Commit {$name}] - no transaction");
+            trace("[Commit {$name}] - no transaction");
         }
     }
     function rollback ($name='')
@@ -168,14 +179,17 @@ class ShopDB {
             if (ShopDB::$link->rollback()) {
                 ShopDB::$link->autocommit(true);
                 self::dblogging("[Rollback {$name}] {$_SHOP->db_trx_started}");
+                trace("[Rollback {$name}] {$_SHOP->db_trx_started}");
                 unset($_SHOP->db_trx_startedi);
                 return true;
             } else {
                 user_error($_SHOP->db_error= ShopDB::$link->error);
                 self::dblogging("[rollback {$name}]Error: $_SHOP->db_error");
+                trace("[rollback {$name}]Error: $_SHOP->db_error");
             }
         }  else {
             self::dblogging("[Rollback {$name}] no transaction");
+            trace("[Rollback {$name}] no transaction");
         }
     }
 
@@ -196,6 +210,7 @@ class ShopDB {
   			}
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
+        trace(" Query: ".$query);
         $query = ShopDB::replacePrefix($query);
         $res = ShopDB::$link->query($query);
         if (!$res) {
@@ -205,12 +220,17 @@ class ShopDB {
             $err = "[Error: {$_SHOP->db_errno}] ";
             if(isset($traceArr) && count($traceArr) > 2) {
               //print_r($traceArr);
-              self::dblogging("$err".basename($traceArr[1]['file']).' '.
-                           $traceArr[1]['class'].$traceArr[1]['type'].$traceArr[1]['function'].' ('.$traceArr[1]['line'].')' ); 
+              $errString = "$err".basename($traceArr[1]['file']).' '.
+                           $traceArr[1]['class'].$traceArr[1]['type'].$traceArr[1]['function'].' ('.$traceArr[1]['line'].')';
+              self::dblogging($errString);
+              trace($errString);
+               
               $err = ""; 
             }
             self::dblogging("$err".$_SHOP->db_error);
+            trace("$err".$_SHOP->db_error);
             self::dblogging($query);
+            trace($query);
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 $_SHOP->db_trx_started = false;
             }
@@ -237,6 +257,7 @@ class ShopDB {
     function lock ($name, $time = 30)
     {
         $query_lock = "SELECT GET_LOCK('SHOP_$name','$time')";
+        trace(" Database Lock: ".$query_lock."\n");
         if ($res = self::query($query_lock) and $row = $res->fetch_array()) {
             return $row[0];
         }
@@ -245,6 +266,7 @@ class ShopDB {
     function unlock ($name)
     {
         $query_lock = "SELECT RELEASE_LOCK('SHOP_$name')";
+        trace(" Database Unlock: ".$query_lock."\n");
         self::query($query_lock);
     }
 
@@ -334,6 +356,7 @@ class ShopDB {
         $result->close();
       }
     }
+    
     /**
      * This function replaces a string identifier <var>$prefix</var> with the
      * string held is the <var>_table_prefix</var> class variable.
@@ -749,7 +772,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
         $handle=fopen(INC."temp".DS."shopdb.log","a");
         fwrite($handle, date('c',time()).' '. $debug."\n");
         fclose($handle);
-
     }
+    
 }
 ?>
