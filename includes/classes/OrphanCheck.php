@@ -206,7 +206,7 @@ class orphans {
 
   );
 
-  function getlist(& $keys) {
+  function getlist(& $keys, $showlinks= true) {
     global $orphancheck;
     $data = array();
     $keys = array();
@@ -230,7 +230,8 @@ class orphans {
               $thisfix =  Orphans::$fixes["{$row[0]}~{$row[$x]}"];
               $fixit = "{$row[0]}~{$row[$x]}";
             }
-            if (!empty($thisfix)) {
+            $z = substr($z, 1,-1);
+            if (!empty($thisfix) and $showlinks) {
               $z = "<a title='{$thisfix}' 
                        href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}'>".$z."</a>\n";
             }   

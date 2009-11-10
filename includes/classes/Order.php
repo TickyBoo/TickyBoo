@@ -112,8 +112,8 @@ class Order {
 		global $_SHOP;
     
     	$query="select * from `Order`  
-    		WHERE order_payment_id = "._esc($payment_id)." 
-			AND order_handling_id = "._esc($handling_id);
+              WHERE order_payment_id = "._esc($payment_id)."
+			        AND order_handling_id = "._esc($handling_id);
    		
 	   	if($data=ShopDB::query_one_row($query)){
       		$order=new Order(0,0,0,0,0,0);
@@ -225,13 +225,9 @@ class Order {
   }
   
   function save_full (){
- 	  if(!ShopDB::begin('Save Order')){return FALSE;}
-    
-    if(!$this->save()){ShopDB::rollback('Error_saving_order');return FALSE;}
-      
-    if(!ShopDB::commit('Order saved')){ShopDB::rollback('Errors_commiting_order');return FALSE;}
 
-    return $this->order_id;
+    return $this->save();
+      
   }
   
   /**
@@ -248,7 +244,8 @@ class Order {
       echo "this order is already saved!!!";
       return FALSE; //already saved
     }
-	
+ 	  if(!ShopDB::begin('Save Order')){return FALSE;}
+
     $parzial=$this->parzial();
   	if(!$this->no_fee){
   		$fee=$this->order_handling->calculate_fee($parzial);
@@ -268,11 +265,8 @@ class Order {
     $this->order_total_price=$total;
     $this->order_fee=$fee;
     
-    $order_date_expire = 'null';
-//    if(!$this->order_handling->handling_expires_min){
-//    	$this->order_handling->handling_expires_min = 20;
-//    }
-    
+    $order_date_expire = null;
+
   	if($this->order_handling->handling_id=='1'){
   		$order_status="res";
   		$order_date_expire = "TIMESTAMPADD( MINUTE , ".$_SHOP->shopconfig_restime.", NOW())";
@@ -307,8 +301,8 @@ class Order {
       	_esc($order_status).",".
       	_esc($fee).",".
 	      _esc($this->order_place).",".
-	      _esc($this->order_owner_id).",
-	      $order_date_expire);";
+	      _esc($this->order_owner_id).",".
+	      _esc($order_date_expire).");";
 		
     if(ShopDB::query($query)){
       $order_id=ShopDB::insert_id();
@@ -320,9 +314,11 @@ class Order {
     		/////////////////////////////// Tickets are saved here if handled==1 tickets are reserved instead of ordered.
     		if($this->order_handling->handling_id=='1'){
   	  		if(!$ticket->reserve()){
+            ShopDB::rollback('Errors_commiting_order');
       			return FALSE;
    	  		}
      		}elseif(!$ticket->save()){
+          ShopDB::rollback('Errors_commiting_order');
     			return FALSE;
     		}
         $event_stat[$ticket->event_id]++;
@@ -333,21 +329,29 @@ class Order {
       require_once('classes/Category_stat.php');
       
       foreach($event_stat as $event_id=>$count){
-        if(!Event_stat::dec($event_id,$count)){return FALSE;}
+        if(!Event_stat::dec($event_id,$count)){
+          ShopDB::rollback('Errors_commiting_order');
+          return FALSE;
+        }
       }
       
       foreach($category_stat as $cat_id=>$count){
-        if(!Category_stat::dec($cat_id,$count)){return FALSE;}
+        if(!Category_stat::dec($cat_id,$count)){
+          ShopDB::rollback('Errors_commiting_order');
+          return FALSE;}
       }
   	  if($this->order_handling->handling_id=='1'){
     		$this->set_status('res',TRUE);
   	  }else{
        	$this->set_status('ord',TRUE);
       }
-      return $order_id;
     }else{
+       ShopDB::rollback('Errors_commiting_order');
        return FALSE;
     }
+    if(!ShopDB::commit('Order saved')){return FALSE;}
+    return $order_id;
+
   }
 
   function getID () {

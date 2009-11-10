@@ -532,6 +532,8 @@ class ShopDB {
 
     function checkdatabase($update=false, $viewonly=false){
       global $_SHOP;
+      $trace = $_SHOP->trace_on;
+ //     $_SHOP->trace_on=false;
       $logfile = $_SHOP->tmp_dir.'databasehist.log';
       $dbstructfile = INC.'install'.DS.'install_db.php';
       if (!$update and file_exists($_SHOP->tmp_dir.'databasehist.log')) {
@@ -576,6 +578,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
           die();
         }
       }
+   //   $_SHOP->trace_on = $trace;
     }
 
 

@@ -15,15 +15,17 @@ class b {
   var $id;
    
   function echo2(){  
+    echo 'B:';
     $this->id = 5;
     //$a = new a();
-    //$a->id = 1;
+    $a->id = 1;
+    a::echoId();
     a::echoId();
   }
   
 }
-
-$b = new b;
+ echo 'tedt:';
+$b = new b();
 $b->echo2();
 
 

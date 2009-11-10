@@ -553,12 +553,12 @@ function md5pass($user,$pass) {
 function orphanCheck(){
   global $_SHOP, $orphancheck;
   if(is($_SHOP->trace_on,false)){
-    trace("Start Orphan Check");
+ //   trace("Start Orphan Check");
     require_once("classes/OrphanCheck.php");
     //Turn Off trace to run the Orphan check so we only get querys
     $_SHOP->trace_on=false;
-    $data = Orphans::getlist($keys);
-    $_SHOP->trace_on=true;
+    $data = Orphans::getlist($keys, false);
+    $_SHOP->trace_on=true; 
     trace("Orphan Check Dump: ".var_export($data,true));  
   }
 }
