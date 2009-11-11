@@ -59,23 +59,25 @@ $font = 'includes/fonts/Gibberish.ttf';
 $text = '2346789ABCEFGHKNPRT';
 // schaduw toevoegen
 // voorkomen dat afbeelding ge-cached wordt
-  for ($i = 0; $i < 2500; $i++) {
+ for ($i = 0; $i < 2500; $i++) {
   	$color_pixel  = imagecolorallocatealpha ($im, mt_rand(200, 255), mt_rand(200, 255), mt_rand(200, 255),64);
 		ImageSetPixel($im, rand(0, 100), rand(0, 46), $color_pixel);
  }
  $white = imagecolorallocate($im,0,0,0); //mt_rand(010,120), mt_rand(010,120), mt_rand(010,120)); //
 
- for ($i = 0; $i < 5; $i++) {
+  for ($i = 0; $i < 5; $i++) {
    $char = substr($text,rand(0,strlen($text)-1),1);
    $randomnr .= $char;
    $angle = rand(-15,15);
    $y = rand(-15,5);
-   imagettftext($im, 16, $angle, 7+($i*19), 34+$y, $grey, $font, $char);
-   imagettftext($im, 16, $angle, 5+($i*19), 36+$y, $white, $font, $char);
+   if (function_exists(imagettftext)) {
+     imagettftext($im, 16, $angle, 7+($i*19), 34+$y, $grey, $font, $char);
+     imagettftext($im, 16, $angle, 5+($i*19), 36+$y, $white, $font, $char);
+   } else {
+     imagestring($im, 5,  7+($i*19), 14+$y, $char, $grey);
+     imagestring($im, 5,  5+($i*19), 16+$y, $char, $white);
+   }
  }
-
-
-
 
 session_name('ShopSession');
 session_start();

@@ -388,10 +388,10 @@ class Seat {
 		    )
   {
     global $_SHOP; 
-    $this->seat_zone_id  =($this->seat_zone_id===0)?null:$this->seat_zone_id;
-    $this->seat_event_id =($this->seat_event_id===0)?null:$this->seat_event_id;
-    $this->seat_pmp_id =($this->seat_pmp_id===0)?null:$this->seat_pmp_id;
-    $this->seat_category_id =($this->seat_category_id===0)?null:$this->seat_category_id;
+    $seat_zone_id  =($seat_zone_id===0)?null:$seat_zone_id;
+    $seat_event_id =($seat_event_id===0)?null:$seat_event_id;
+    $seat_pmp_id   =($seat_pmp_id===0)?null:$seat_pmp_id;
+    $seat_category_id =($seat_category_id===0)?null:$seat_category_id;
 
     $query="INSERT INTO Seat SET
      seat_event_id="._esc($seat_event_id).",

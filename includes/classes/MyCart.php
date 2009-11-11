@@ -66,8 +66,7 @@ class Cart {
         $res=array_merge($res,$this->remove_place($id,null,null));
       }
       return $res;
-    }else
-    if(isset($this->event_items[$event_id])){
+    }elseif(isset($this->event_items[$event_id])){
       $event =& $this->event_items[$event_id];
       $res = $event->remove_place($cat_id, $place_id);
       
@@ -96,8 +95,8 @@ class Cart {
     if($use_alt>=1){
     	return true;
     }else{
-		return false;
-	}
+   		return false;
+  	}
 	
   }
   function min_date (){
@@ -155,8 +154,7 @@ class Cart {
       foreach($event_item->cat_items as $cat_item){
         foreach($cat_item->place_items as $place_item){
           call_user_func_array($iter_func,array(&$event_item,&$cat_item,&$place_item,&$data));
-// old:         call_user_func(&$iter_func,&$event_item,&$cat_item,&$place_item,&$data);
-		}
+        }
       }
     }
   }
@@ -289,11 +287,11 @@ class EventItem {
 	        $this->event_ort_city=$obj->ort_city;
 	        $this->event_order_limit=$obj->event_order_limit;
 	        // Loads event checker.
-	  		$this->event_use_alt= check_event($this->event_date);
+	  		  $this->event_use_alt= check_event($this->event_date);
       	}else{
 		//echo shopDB::error();      
         	$this->invalid = TRUE;
-			return FALSE;
+			    return FALSE;
         }
       	$this->not_load=0;	
     }
@@ -302,7 +300,7 @@ class EventItem {
       $cat =& $this->cat_items[$cat_id];
       if(!$cat->load_info()){
         $this->invalid = TRUE;
-	return FALSE;
+	      return FALSE;
       }
     }
     
@@ -419,12 +417,12 @@ class CatItem {
       $qry="select * from Category where category_id='{$this->cat_id}' and category_event_id='{$this->event_id}'";
       if($result=ShopDB::query($qry) and $obj=shopDB::fetch_object($result)){
         $this->cat_name=$obj->category_name;
-	$this->cat_price=$obj->category_price;
+	      $this->cat_price=$obj->category_price;
         $this->cat_event_id=$obj->category_event_id;
-	$this->cat_numbering=$obj->category_numbering;
+	      $this->cat_numbering=$obj->category_numbering;
       }else{
         $this->invalid=TRUE;
-	return FALSE;
+	      return FALSE;
       }
 
       $this->not_load=0;	
@@ -434,7 +432,7 @@ class CatItem {
       $place =& $this->place_items[$place_id];
       if(!$place->load_info()){
         $this->invalid=TRUE;
-	return FALSE;
+	      return FALSE;
       }
     }    
     return TRUE;
