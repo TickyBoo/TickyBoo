@@ -258,11 +258,9 @@ class orphans {
         require_once('classes/Category_stat.php');
         require_once('classes/PlaceMapCategory.php');
         $cat = PlaceMapCategory::load($fix[2]);
-        $cs  = new Category_stat($cat->category_id,$cat->category_size);
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_category_id = {$cat->category_id} and seat_status = 'free'";
         $result = ShopDB::Query_one_row($sql, false);
-        $cs->cs_free = $result[0];
-        $cs->save();
+        PlaceMapCategory::create_stat($cat->category_id,$cat->category_size, $result[0]);
         break;
       case 'Category~event_id':
         require_once('classes/PlaceMapCategory.php');
@@ -384,14 +382,12 @@ class orphans {
                        where Event_id = {$fix[2]}") ;
         break;
      case 'Event~stat_id':
-        require_once('classes/Event_stat.php');
+        require_once('classes/Event.php');
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = {$fix[2]}";
-        $result = ShopDB::Query_one_row($sql, false);
-        $es  = new Event_stat($fix[2], $result[0]);
+        $resulty = ShopDB::Query_one_row($sql, false);
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = {$fix[2]} and seat_status = 'free'";
-        $result = ShopDB::Query_one_row($sql, false);
-        $es->cs_free = $result[0];
-        $es->save();
+        $resultx = ShopDB::Query_one_row($sql, false);
+        Event::create_stat($fix[2], $resulty[0],$resultx[0]);
         break;
       case 'Event~zeros':
         If ($fix[3] =='ort_id') {

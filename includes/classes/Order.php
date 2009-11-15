@@ -322,18 +322,18 @@ class Order {
         $category_stat[$ticket->category_id]++;
       }
       
-      require_once('classes/Event_stat.php');
-      require_once('classes/Category_stat.php');
+      require_once('classes/Event.php');
+      require_once('classes/PlaceMapCategory.php');
       
       foreach($event_stat as $event_id=>$count){
-        if(!Event_stat::dec($event_id,$count)){
+        if(!Event::dec_stat($event_id,$count)){
           ShopDB::rollback('Errors_commiting_order');
           return FALSE;
         }
       }
       
       foreach($category_stat as $cat_id=>$count){
-        if(!Category_stat::dec($cat_id,$count)){
+        if(!Category::dec_stat($cat_id,$count)){
           ShopDB::rollback('Errors_commiting_order');
           return FALSE;}
       }
@@ -679,11 +679,11 @@ class Order {
   		return $this->_abort(con('order_cannot_reorder')."(load seats)");
   	}
   	//Runs through each seat and gives it a new seat_code and the new order_id.
-  	while($seat = shopDB::fetch_array($res)){
+  	while($seat = shopDB::fetch_assoc($res)){
   		$code=Ticket::generate_code(8);
   		$query="UPDATE `Seat` set
-                seat_order_id='$new_id',
-                seat_code='$code'
+                seat_order_id='{$new_id}',
+                seat_code='{$code}'
               WHERE seat_id='{$seat['seat_id']}' ";
   		if(!ShopDB::query($query)){
   	  	return order::_abort(con('order_cannot_reorder')."(update seats)");
@@ -765,7 +765,7 @@ class Order {
       return order::_abort(order_cannot_lock_seats);
     }
     //Runs through each seat and gives it a new seat_code and the new order_id.
-    while($seat = shopDB::fetch_array($res)){
+    while($seat = shopDB::fetch_assoc($res)){
       $code=Ticket::generate_code(8);
       $query="UPDATE `Seat` SET
                 seat_order_id='$new_id',

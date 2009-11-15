@@ -106,7 +106,7 @@ global $_SHOP;
   echo "<tr><td  class='admin_name' width='40%' valign='top'>".con('control_event_ids')."</td>
         <td class='admin_value'>";//&nbsp;</td></tr><tr><td class='admin_value' colspan='2' align='center'>";
   echo "<select multiple size='10' name='control_event_ids[]'>";
-  while($row=shopDB::fetch_array($res)){
+  while($row=shopDB::fetch_assoc($res)){
     $sel=(in_array($row["event_id"], $event))?"selected":"";
     $date=formatAdminDate($row["event_date"]);
     $time=formatTime($row["event_time"]);

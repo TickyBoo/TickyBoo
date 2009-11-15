@@ -33,53 +33,5 @@
  */
 
 
-require_once('classes/ShopDB.php');
-
-class Category_stat{
-
-  var $cs_category_id;
-  var $cs_free;
-  var $cs_total;
-
-  function Category_stat($cs_category_id=0,$cs_total=0) {
-    if($cs_category_id){
-      $this->cs_category_id=$cs_category_id;
-      $this->cs_total=$cs_total;
-      $this->cs_free=$cs_total;
-    }
-  }
-  
-  function save(){
-    $query="insert into Category_stat
-    set cs_category_id="._esc($this->cs_category_id).",
-    cs_free="._esc($this->cs_free).",
-    cs_total="._esc($this->cs_total);
-    
-    if(ShopDB::query($query)){
-      return TRUE;
-    }
-  }
-
-  function dec ($cs_category_id,$count){
-  	global $_SHOP;
-    $query="UPDATE Category_stat SET cs_free=cs_free-$count 
-            WHERE cs_category_id="._esc($cs_category_id)." LIMIT 1";
-    if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
-      return FALSE;
-    }else{
-      return TRUE;
-    }   
-  }
-
-  function inc ($cs_category_id,$count){
-    $query="UPDATE Category_stat SET cs_free=cs_free+$count 
-            WHERE cs_category_id="._esc($cs_category_id)." LIMIT 1";
-    if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
-      return FALSE;
-    }else{
-      return TRUE;
-    }  
-  }
-
-}
+require_once('classes/PlaceMapCategory.php');
 ?>

@@ -194,7 +194,7 @@ class PosAjax {
 			$this->json['discounts'] = array(); //assign a blank array.
 			//Add the  "None Discount"
 			$this->json['discounts'][] = array('html'=>"<option value='0' selected='selected'> ".con('normal')." </option>",'type'=>'fixed','price'=>0);
-			while($disc = ShopDB::fetch_array($query)){
+			while($disc = ShopDB::fetch_assoc($query)){
 				//Check to see if percent or fixed
   			$this->json['enable_discounts'] = true; //enable discounts.
 				if(strtolower($disc['discount_type']) == 'percent' ){
@@ -330,7 +330,7 @@ class PosAjax {
     $res=ShopDB::query($sql);
     $totalprice = $subprice;
     $handlings = array();
-    while ($pay=shopDB::fetch_array($res)){
+    while ($pay=shopDB::fetch_assoc($res)){
       $fee = ($subprice*is($pay['handling_fee_percent'],0.0)/100.00) + is($pay['handling_fee_fix'],0.0);
       if (($_POST['handling_id']== $pay['handling_id'] and $counter and $_POST['no_fee']!=='1')) { // and !$counter and $_POST['no_fee']!==1
         $totalprice += $fee;

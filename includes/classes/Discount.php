@@ -70,7 +70,7 @@ class Discount {
     $query="SELECT * FROM Discount";
     if($res=ShopDB::query($query)){
       $discounts = array();
-      while($event_d=shopDB::fetch_array($res)){
+      while($event_d=shopDB::fetch_assoc($res)){
         $discounts[]=new Discount (
           $row['discount_id'],
           $row['discount_type'],

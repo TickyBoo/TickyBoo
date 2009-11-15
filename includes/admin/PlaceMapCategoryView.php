@@ -194,16 +194,10 @@ class PlaceMapCategoryView extends AdminView {
             if (!$this->category_check($_POST, $err)) {
                 $this->category_form($_POST, $err);
             } else {
-                $category = new PlaceMapCategory( $_POST['pm_id'],
-                                                  $_POST['category_name'],
-                                                  $_POST['category_price'],
-                                                  $_POST['category_template'],
-
-                                                  $_POST['category_color'],
-                                                  $_POST['category_numbering'],
-                                                  $_POST['category_size'],
-                                                  $pm->pm_event_id);
-                $category->category_data = $_POST['category_data'];
+                $category = new PlaceMapCategory;
+                $category->fillPost();
+                $category->category_event = $pm->pm_event_id;
+//                $category->category_data = $_POST['category_data'];
 
                 $category->save();
 

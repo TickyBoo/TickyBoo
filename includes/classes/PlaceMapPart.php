@@ -35,24 +35,13 @@
 require_once('classes/PlaceMapZone.php');
 require_once('classes/PlaceMapCategory.php');
 
-
-define('PM_ZONE', 0);
-define('PM_LABEL', 0);
-define('PM_ROW', 1);
-define('PM_LABEL_TYPE', 1);
-define('PM_SEAT', 2);
-define('PM_LABEL_SIZE', 2);
-define('PM_CATEGORY', 3);
-define('PM_LABEL_TEXT', 3);
-define('PM_ID', 4);
-define('PM_STATUS', 5);
-
-define('PM_STATUS_FREE', 0);
-define('PM_STATUS_OCC', 1);
-define('PM_STATUS_RESP', 2);
-define('PM_STATUS_HOLD', 3);
-
-class PlaceMapPart { // ZRS
+class PlaceMapPart Extends Model { 
+  protected $_idName    = 'pmx_id';
+  protected $_tableName = 'PlaceMapZone';
+  protected $_columns   = array( '#pmp_id', '*pmp_pm_id', 'pmp_ident', '#pmp_ort_id',
+                                 '#pmp_event_id', '*pmp_name', '*pmp_width', '*pmp_height', 
+                                 '*pmp_scene', '*pmp_shift', '*pmp_data', 'pmp_data_orig', 'pmp_expires');
+ 
     var $pmp_id;
     var $pmp_name;
     var $pmp_pm_id;
@@ -60,31 +49,25 @@ class PlaceMapPart { // ZRS
     var $pmp_height;
     var $pmp_data;
 
-    function PlaceMapPart ($pmp_pm_id = 0, $pmp_name = 0, $pmp_width = 0, $pmp_height = 0)
-    {
-        if ($pmp_pm_id) {
-            $this->pmp_pm_id = $pmp_pm_id;
-            $this->pmp_name = $pmp_name;
-            $this->pmp_width = $pmp_width;
-            $this->pmp_height = $pmp_height;
+    static function create ($pmp_pm_id = 0, $pmp_name = 0, $pmp_width = 0, $pmp_height = 0){
+      $new = new PlaceMapPart;
+      $new->pmp_pm_id = $pmp_pm_id;
+      $new->pmp_name = $pmp_name;
+      $new->pmp_width = $pmp_width;
+      $new->pmp_height = $pmp_height;
 
-            $this->pmp_data = array_fill(0, $pmp_height, array_fill(0, $pmp_width, array(0, 0, 0)));
-        }
+      $new->pmp_data = array_fill(0, $pmp_height, array_fill(0, $pmp_width, array(0, 0, 0)));
+      return $new;
     }
 
-    function _ser_data ()
-    {
-        foreach($this->pmp_data as $row) {
-            foreach($row as $seat) {
-                $res .= implode(',', $seat) . '|';
-            }
-        }
-
-        return substr($res, 0, - 1);
+    function _ser_data () {
+      return serialize($this->pmp_data);
     }
 
-    function _unser_data ($pmp_data_s, $w, $h)
-    {
+    function _unser_data ($pmp_data_s, $w, $h) {
+      if (substr($pmp_data_s,0,2)=='a:')
+         return unserialize($pmp_data_s);
+      } else {
         $pmp_data_0 = explode('|', $pmp_data_s);
         $c = 0;
         for($j = 0;$j < $h;$j++) {
@@ -92,58 +75,15 @@ class PlaceMapPart { // ZRS
                 $pmp_data_a[$j][$k] = explode(',', $pmp_data_0[$c++]);
             }
         }
-
         return $pmp_data_a;
+      }
     }
 
     function save ()
     {
-        global $_SHOP;
+        $this->pmp_data  = $this->_ser_data();
 
-        $data = $this->_ser_data();
-        $this->pmp_pm_id    =($this->pmp_pm_id===0)?null:$this->pmp_pm_id;
-        $this->pmp_event_id =($this->pmp_event_id===0)?null:$this->pmp_event_id;
-
-        if ($this->pmp_id) {
-            $query = "update PlaceMapPart set
-            pmp_pm_id=" .   _esc($this->pmp_pm_id) . ",
-            pmp_event_id=". _esc($this->pmp_event_id) . ",
-      	    pmp_name=" .    _esc($this->pmp_name) . ",
-            pmp_width=" .   _esc($this->pmp_width) . ",
-      	    pmp_height=" .  _esc($this->pmp_height) . ",
-      	    pmp_data=" .    _esc($data) . ",
-      	    pmp_expires=" . _esc($this->pmp_expires) . ",
-      	    pmp_scene=" .   _esc($this->pmp_scene) . ",
-      	    pmp_shift=" .   _esc($this->pmp_shift) . "
-      	    where pmp_id=". _esc($this->pmp_id) ;
-        } else {
-            $query = "insert into PlaceMapPart (
-                 pmp_pm_id,
-		             pmp_event_id,
-    	           pmp_name,
-	               pmp_width,
-	               pmp_height,
-   	             pmp_data,
-		             pmp_scene,
-		             pmp_shift
-               ) VALUES (
-                 ". _esc($this->pmp_pm_id) . ",
-                 ". _esc($this->pmp_event_id) . ",
-                 ". _esc($this->pmp_name) . ",
-                 ". _esc($this->pmp_width) . ",
-                 ". _esc($this->pmp_height) . ",
-                 ". _esc($data) . ",
-                 ". _esc($this->pmp_scene) . ",
-                 ". _esc($this->pmp_shift).")";
-        }
-
-        if (ShopDB::query($query)) {
-            if (!$this->pmp_id) {
-                $this->pmp_id = shopDB::insert_id();
-            }
-
-            return $this->pmp_id;
-        } else {
+        if (!$this->save()){
             echo shopDB::error();
             return false;
         }
@@ -153,28 +93,30 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from PlaceMapPart where pmp_id=$pmp_id ";
+        $query = "select * 
+                  from PlaceMapPart 
+                  where pmp_id="._esc($pmp_id);
 
         if ($res = ShopDB::query_one_row($query)) {
             $new_pmp = new PlaceMapPart;
             $new_pmp->_fill($res);
-            $new_pmp->pmp_data = PlaceMapPart::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
+            $new_pmp->pmp_data = self::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
 
             return $new_pmp;
         }
     }
 
-    function loadAll_short ($pm_id)
+    function loadAll_names ($pm_id)
     {
         global $_SHOP;
 
-        $query = "select pmp_id,pmp_name from PlaceMapPart where pmp_pm_id=$pm_id order by pmp_id";
+        $query = "select pmp_id, pmp_name 
+                  from PlaceMapPart 
+                  where pmp_pm_id=".+esc($pm_id)."
+                  order by pmp_id";
         if ($res = ShopDB::query($query)) {
-            while ($data = shopDB::fetch_assoc($res)) {
-                $new_pmp = new PlaceMapPart;
-                $new_pmp->_fill($data);
-
-                $all[] = $new_pmp;
+            while ($data = shopDB::fetch_object($res)) {
+                $all[] = $data;
             }
         }
 
@@ -185,13 +127,16 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from PlaceMapPart where pmp_pm_id=$pm_id  order by pmp_id";
+        $query = "select * 
+                  from PlaceMapPart 
+                  where pmp_pm_id="._esc($pm_id)."
+                  order by pmp_id";
 
         if ($res = ShopDB::query($query)) {
             while ($data = shopDB::fetch_assoc($res)) {
                 $new_pmp = new PlaceMapPart;
                 $new_pmp->_fill($data);
-                $new_pmp->pmp_data = PlaceMapPart::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
+                $new_pmp->pmp_data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
 
                 $all[] = $new_pmp;
             }
@@ -204,12 +149,15 @@ class PlaceMapPart { // ZRS
     {
         global $_SHOP;
 
-        $query = "select * from Ort, PlaceMapPart, PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id where pmp_pm_id=pm_id and ort_id=pm_ort_id and pmp_id=$pmp_id ";
+        $query = "select * from PlaceMapPart left join PlaceMap2 on pmp_pm_id=pm_id 
+                                             left join Ort       on pm_ort_id=ort_id
+                                             LEFT JOIN Event     ON pm_event_id=event_id 
+                  where pmp_id= "._esc($pmp_id);
 
         if ($res = ShopDB::query_one_row($query)) {
             $new_pmp = new PlaceMapPart;
             $new_pmp->_fill($res);
-            $new_pmp->pmp_data = PlaceMapPart::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
+            $new_pmp->pmp_data = self::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
 
             $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pm_id);
             $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pm_id);
@@ -221,15 +169,15 @@ class PlaceMapPart { // ZRS
     function loadAll_full ($pm_id)
     {
         global $_SHOP;
-
-        $query = "select * from Ort, PlaceMapPart, PlaceMap2 LEFT JOIN Event ON pm_event_id=event_id
-                  where pmp_pm_id=pm_id and ort_id=pm_ort_id and  pm_id=$pm_id ";
-
+        $query = "select * from PlaceMap2 left join PlaceMapPart on pmp_pm_id=pm_id 
+                                          left join Ort       on pm_ort_id=ort_id
+                                          LEFT JOIN Event     ON pm_event_id=event_id 
+                  where pm_id= "._esc($mp_id);
         if ($res = ShopDB::query($query)) {
             while ($data = shopDB::fetch_assoc($res)) {
                 $new_pmp = new PlaceMapPart;
                 $new_pmp->_fill($data);
-                $new_pmp->pmp_data = PlaceMapPart::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
+                $new_pmp->pmp_data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
 
                 $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pm_id);
                 $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pm_id);
@@ -240,11 +188,16 @@ class PlaceMapPart { // ZRS
         return $pmps;
     }
 
-    function delete ()
-    {
-        global $_SHOP;
+    function delete () {
+        $seats = shopDB::query_on_row("select count(*) from Seats 
+                                       where seat_pmp_id ={$this->pmp_id}", false);
+        if ($seats[0]>0) {
+          echo '<div class=error>'.con('PlaceMapPart_delete_failed_seats_exists').'</div>';
+          return false;
+        }
 
-        $query = "delete from PlaceMapPart where pmp_id={$this->pmp_id} limit 1";
+        $query = "delete from PlaceMapPart 
+                  where pmp_id={$this->pmp_id} limit 1";
         ShopDB::query($query);
     }
 
@@ -576,11 +529,12 @@ class PlaceMapPart { // ZRS
                             $category_name = "{$this->pmp_name} {$old_cat->category_name}";
                         }
 
-                        $cat = new PlaceMapCategory($this->pmp_pm_id, $category_name,
-                            $old_cat->category_price,
-                            $old_cat->category_template, $old_cat->category_color,
-                            $old_cat->category_numbering, 0,
-                            $old_cat->category_event_id);
+                        $cat = PlaceMapCategory.create($this->pmp_pm_id, $category_name,
+                                                        $old_cat->category_price,
+                                                        $old_cat->category_template, 
+                                                        $old_cat->category_color,
+                                                        $old_cat->category_numbering, 0,
+                                                        $old_cat->category_event_id);
 
                         $cat->category_ident = $category_ident;
                         $this->pmp_data[$j][$k][PM_CATEGORY] = $cat->category_ident;
@@ -596,49 +550,46 @@ class PlaceMapPart { // ZRS
         return $index_0 != $index;
     }
 
-    function _fill ($data)
-    {
-        foreach($data as $k => $v) {
-            $this->$k = $v;
-        }
-    }
+    function publish ($event_id, $dummy, &$stats, &$pmps, $dry_run = false) {
+      require_once('classes/Seat.php');
 
-    function publish ($event_id, $dummy, &$stats, &$pmps, $dry_run = false)
-    {
-        require_once('classes/Seat.php');
+      for($j = 0;$j < $this->pmp_height;$j++) {
+          for($k = 0;$k < $this->pmp_width;$k++) {
+              $seat = $this->pmp_data[$j][$k];
+              if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
+                  $zone = $this->zones[$seat[PM_ZONE]];
+                  $category = $this->categories[$seat[PM_CATEGORY]];
 
-        for($j = 0;$j < $this->pmp_height;$j++) {
-            for($k = 0;$k < $this->pmp_width;$k++) {
-                $seat = $this->pmp_data[$j][$k];
-                if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
-                    $zone = $this->zones[$seat[PM_ZONE]];
-                    $category = $this->categories[$seat[PM_CATEGORY]];
+                  if ($category->category_numbering == 'none') {
+                      continue;
+                  }
 
-                    if ($category->category_numbering == 'none') {
-                        continue;
-                    }
+                  if ($dry_run or $seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
+                          $zone->pmz_id, $this->pmp_id, $category->category_id)) {
+                      if (!$dry_run) {
+                          $this->pmp_data[$j][$k][PM_ID] = $seat_id;
+                      }
 
-                    if ($dry_run or $seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
-                            $zone->pmz_id, $this->pmp_id, $category->category_id)) {
-                        if (!$dry_run) {
-                            $this->pmp_data[$j][$k][PM_ID] = $seat_id;
-                        }
+                      $stats[$category->category_ident]++;
+                      $pmps_n[$category->category_ident] = $this->pmp_id;
+                  } else {
+                      return false;
+                  }
+              }
+          }
+      }
 
-                        $stats[$category->category_ident]++;
-                        $pmps_n[$category->category_ident] = $this->pmp_id;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        if ($pmps_n) {
-            foreach($pmps_n as $cat_ident => $pmp_id) {
-                $pmps[$cat_ident][] = $pmp_id;
-            }
-        }
-        return true;
+      if ($pmps_n) {
+          foreach($pmps_n as $cat_ident => $pmp_id) {
+              $pmps[$cat_ident][] = $pmp_id;
+          }
+      }
+      
+//          Category::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pmp.publish5');
+      
+      if(!$dry_run and !($part->save() and $part->save_original())) {
+        return $this->_abort('pmp.publish2');}
+      return true;
     }
 
     function save_original ()

@@ -162,7 +162,7 @@ class Handling {
     
     $query="select * from Handling $sale";
     if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_array($res)){
+      while($data=shopDB::fetch_assoc($res)){
         $hand=new Handling;
         $hand->_fill($data);
         $hand->templates=Handling::_unser_templates($data['handling_email_template']);
@@ -533,7 +533,7 @@ class Handling {
     if ($include)
 			$options["1"] = $include;
 		
-		while ($row=shopDB::fetch_array($result)) { 
+		while ($row=shopDB::fetch_assoc($result)) { 
 			$id=$row["handling_id"];
 			$payment= $row["handling_payment"];
 			$shipping=$row["handling_shipment"];

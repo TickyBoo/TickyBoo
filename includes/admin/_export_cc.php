@@ -68,7 +68,7 @@ class export_cc extends AdminView {
 			
 			$this->write_header();
 			
-			while($row=shopDB::fetch_array($res)){
+			while($row=shopDB::fetch_row($res)){
 				echo $row[0].':'.$row[1]."\n";
 			}
 			return TRUE;

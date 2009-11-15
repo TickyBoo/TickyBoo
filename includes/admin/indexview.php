@@ -92,7 +92,7 @@ class IndexView extends AdminView {
 			return FALSE;
 		}
 
-		while($data=shopDB::fetch_array($res)){
+		while($data=shopDB::fetch_row($res)){
       $part[$data[1]][$data[2]]=$data[0];
 		}
 
@@ -122,7 +122,7 @@ class IndexView extends AdminView {
 			return FALSE;
 		}
 
-		while($data=shopDB::fetch_array($res)){
+		while($data=shopDB::fetch_row($res)){
       $part['total'] += $data[0];
       $part[$data[1]]=$data[0];
 		}
@@ -143,7 +143,7 @@ class IndexView extends AdminView {
 			return FALSE;
 		}
 
-		while($data=shopDB::fetch_array($res)){
+		while($data=shopDB::fetch_row($res)){
       $part['total'] += $data[0];
       $part[$data[1]]=$data[0];
 		}

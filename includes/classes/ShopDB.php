@@ -493,6 +493,26 @@ class ShopDB {
         Return $Fields;
     }
 
+    function FieldListExt ($TableName, $prefix = '')
+    {
+        $Fields = Array ();
+
+        $result = self::Query("SHOW COLUMNS FROM `$TableName`" . ((!empty($prefix))?" LIKE '$prefix%'":""));
+
+        if (!$result) {
+            return $Fields;
+        }
+        while ($row = self::fetch_object($result)) {
+          $field =$row->Field;
+          unset($row->Field);
+          $Fields[$field] = $row;
+        }
+
+     //   $result->Free;
+
+        Return $Fields;
+    }
+
     function FieldExists ($tablename, $Fieldname)
     {
         $Fields = self::FieldList ($tablename);
@@ -517,7 +537,6 @@ class ShopDB {
      //  print_r($tables);
         Return $tables;
     }
-
 
     function TableExists ($tablename)
     {

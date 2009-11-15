@@ -31,61 +31,28 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+ require_once ( "model.php" );
 
-if (!defined('PM_ZONE')) {
-  define('PM_ZONE',0);
-  define('PM_ROW',1);
-  define('PM_SEAT',2);
-  define('PM_CATEGORY',3);
-  }
+class PlaceMap Extends Model { 
+  protected $_idName    = 'pm_id';
+  protected $_tableName = 'PlaceMap2';
+  protected $_columns   = array( '#pm_id','*pm_ort_id','#pm_event_id','*pm_name', 'pm_image');
 
-class PlaceMap{ //ZRS
-
-  var $pm_id;
-  var $pm_name;
-  var $pm_ort_id;
-    
-  function PlaceMap ($pm_ort_id=null, $pm_name=null){
+  static function create ($pm_ort_id, $pm_name){
+    $pm = new PlaceMap;
     if($pm_ort_id){
-      $this->pm_ort_id=$pm_ort_id;
-      $this->pm_name=$pm_name;
+      $pm->pm_ort_id=$pm_ort_id;
+      $pm->pm_name=$pm_name;
     }
+    return $pm;
   }
   
-  
-  function save (){
-    global $_SHOP;
-    $this->pm_ort_id =($this->pm_ort_id===0)?null:$this->pm_ort_id;
-    $this->pm_event_id   =($this->pm_event_id===0)?null:$this->pm_event_id;
-
-    $query='set '.
-    $this->_set('pm_ort_id').
-    $this->_set('pm_event_id').
-    $this->_set('pm_image').
-    $this->_set('pm_name');
-    $query=substr($query,0,-1);
-    
-    if($this->pm_id){
-      $query="update PlaceMap2 $query
-  	      where pm_id='{$this->pm_id}' ";
-    }else{
-      $query="insert into PlaceMap2 $query";
-    }
-
-    if(ShopDB::query($query)){
-      if(!$this->pm_id){
-        $this->pm_id=shopDB::insert_id();
-      }
-      return $this->pm_id;
-    }else{
-      return FALSE;
-    }
-  }
-
   function load ($pm_id){
     global $_SHOP;
   
-    $query="select * from PlaceMap2, Ort where pm_ort_id=ort_id and pm_id='$pm_id'";
+    $query="select * 
+           from PlaceMap2 left join Ort on pm_ort_id=ort_id 
+           where pm_id="._esc($pm_id);
     if($res=ShopDB::query_one_row($query)){
 
       $new_pm=new PlaceMap;
@@ -96,27 +63,57 @@ class PlaceMap{ //ZRS
   }
 
   function loadAll ($ort_id){
+    return parent::loadall("ort_id="._esc($ort_id));
+  }
+
+
+  function publish ($pm_id, $event_id, &$stats, &$pmps, $dry_run=FALSE){
     global $_SHOP;
 
-    $query="select * from PlaceMap2,Ort where pm_ort_id=ort_id and ort_id='$ort_id'";
-    if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_array($res)){
-        $new_pm=new PlaceMap;
-        $new_pm->_fill($data);
-        $pms[]=$new_pm; 
-      }	 
+    require_once('classes/Seat.php');
+    require_once('classes/PlaceMapCategory.php');
+    require_once('classes/PlaceMapPart.php');
+
+    if(!$dry_run){ShopDB::begin('Publish placemap');}
+
+    $parts=PlaceMapPart::loadAll_full($pm_id);
+    if(!empty($parts)){
+      foreach($parts as $part){
+        if (! $part->publish($event_id, 0, $stats, $pmps, $dry_run)) {
+          return $this->_abort('pm.publish1');
+        }
+      }
     }
-    return $pms;
-  }
-  
-  function _abort ($str=''){
-    if ($str) {
-      echo "<div class=error>$str</div>";
+
+    $cats=PlaceMapCategory::loadAll($pm_id);
+    if(!$cats){
+      return $this->_abort('No Categories found');
     }
-    ShopDB::rollback($str);
-    return false; // exit;
+
+    foreach($cats as $cat_ident=>$cat){
+      if($cat->category_numbering=='none' and $cat->category_size>0){
+        if(!$dry_run){
+          for($i=0;$i<$cat->category_size;$i++){
+            if( !Seat::publish($event_id,0,0,0,0,$cat->category_id)) {
+               return self::_abort('pm.publish4.a');
+            }
+          }
+          Category::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pm.publish5');
+        }
+        $stats[$cat->category_ident]+= $cat->category_size;
+      } elseif ($cat->category_size ==0) {
+         return self::_abort('pm.publish4.b');
+      } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
+         return self::_abort('pm.publish4.b');
+      }
+    }
+
+    if($dry_run or ShopDB::commit('placemap publised')){
+      return TRUE;
+    }
+
   }
-  
+
   function delete ($pm_id = -1){
     global $_SHOP; 
     
@@ -128,22 +125,20 @@ class PlaceMap{ //ZRS
         echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
         return FALSE;
     }
-
-    $query="delete from PlaceMap2 where pm_id={$pm_id} limit 1";
-    if(!ShopDB::query($query)){
-      return placemap::_abort(con('placemap_delete_failed'));;
+    $pm = shopDB::query_on_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
+    if ($pm and $pm['pm_event_id']){
+      $seats = shopDB::query_on_row("select count(*) from Seats 
+                                     where seat_event_id ={$pm['pm_event_id']}", false);
+      if ($seats[0]>0) {
+        return placemap::_abort(con('placemap_delete_failed_seats_exists'));
+      }
     }
-
+    
     $query="delete from PlaceMapZone where pmz_pm_id={$pm_id}";
     if(!ShopDB::query($query)){
       return  placemap::_abort(con('placemapzone_stat_delete_failed'));
     }
 
-    $query="delete from PlaceMapPart where pmp_pm_id={$pm_id} ";
-    if(!ShopDB::query($query)){
-      return placemap::_abort(con('PlaceMapPart_delete_failed'));
-    }
-    
     $query="DELETE c.*, cs.*
             FROM Category c LEFT JOIN Category_stat cs
             ON c.category_id = cs.cs_category_id
@@ -152,11 +147,19 @@ class PlaceMap{ //ZRS
       return placemap::_abort(con('Category_delete_failed'));
     }
 
+    $query="delete from PlaceMapPart where pmp_pm_id={$pm_id} ";
+    if(!ShopDB::query($query)){
+      return placemap::_abort(con('PlaceMapPart_delete_failed'));
+    }
+
+    $query="delete from PlaceMap2 where pm_id={$pm_id} limit 1";
+    if(!ShopDB::query($query)){
+      return placemap::_abort(con('placemap_delete_failed'));;
+    }
+
     ShopDB::commit('PlaceMap deleted');
     return TRUE;
   }
-
- 
 
   function copy ($event_id=''){
     $old_id=$this->pm_id;
@@ -230,26 +233,5 @@ class PlaceMap{ //ZRS
       }
     }
   }
-
-  function _set ($name, $value=null, $mandatory=FALSE){
-
-    if($value){
-      $val=$value;
-    }else{
-      $val=$this->$name;
-    }
-
-    if($val or $mandatory){
-      return $name.'='.ShopDB::quote($val).',';   
-    }
-  }
-
-  
-  function _fill ($data){
-    foreach($data as $k=>$v){
-      $this->$k=$v;
-    }
-  }
 }
-
 ?>

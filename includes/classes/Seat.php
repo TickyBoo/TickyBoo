@@ -32,12 +32,8 @@
  * clear to you.
  */
 
-require_once "classes/ShopDB.php";
 require_once "classes/Order.php";
 
-define("SEAT_ERR_INTERNAL",1);
-define("SEAT_ERR_OCCUPIED",2);
-define("SEAT_ERR_TOOMUCH",3);
 
 class Seat {
 

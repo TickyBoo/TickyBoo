@@ -43,7 +43,7 @@ class export_templates extends AdminView {
               order by template_name, template_type";
 
 		if($res=ShopDB::query($query)){
-		  while($row=shopDB::fetch_array($res)){
+		  while($row=shopDB::fetch_assoc($res)){
 			  $event[$row['template_id']]=$row['template_name'].' ('.$row['template_type'].')';
 			}
 		}

@@ -81,4 +81,22 @@ if (!defined('PATH_SEPARATOR')) {
 set_include_path(INC. PATH_SEPARATOR.
                  INC.'pear'.PATH_SEPARATOR.
                  get_include_path());
+// system defines
+                 
+define('PM_ZONE', 0);
+define('PM_ROW', 1);
+define('PM_SEAT', 2);
+define('PM_CATEGORY', 3);
+define('PM_ID', 4);
+define('PM_STATUS', 5);
+
+define('PM_LABEL', 0);
+define('PM_LABEL_TYPE', 1);
+define('PM_LABEL_SIZE', 2);
+define('PM_LABEL_TEXT', 3);
+
+define('PM_STATUS_FREE', 0);
+define('PM_STATUS_OCC', 1);
+define('PM_STATUS_RESP', 2);
+define('PM_STATUS_HOLD', 3);  
 ?>

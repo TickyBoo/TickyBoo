@@ -434,7 +434,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 		   " ({$tr[$order_shipment_status]}/{$tr[$order_payment_status]})
   </td></tr>\n";
 
-  while($row=shopDB::fetch_array($res)){
+  while($row=shopDB::fetch_assoc($res)){
 		$alt=$this->_order_status_color($row);
 
     echo "<tr class='admin_order_$alt'><td class='admin_list_item'>".$row["order_id"]."</td>
@@ -503,7 +503,7 @@ function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$o
             {$event->event_name} {$event->event_date} {$hand->event_time} ({$info})
           </td>
         </tr>\n";
-  while($row=shopDB::fetch_array($res)){
+  while($row=shopDB::fetch_assoc($res)){
 		$alt=$this->_order_status_color($row);
 
     echo "<tr class='admin_order_$alt'><td class='admin_list_item'>".$row["order_id"]."</td>

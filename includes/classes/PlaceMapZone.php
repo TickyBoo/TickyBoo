@@ -32,7 +32,10 @@
  * clear to you.
  */
 
-class PlaceMapZone{ 
+class PlaceMapZone Extends Model { 
+  protected $_idName    = 'pmx_id';
+  protected $_tableName = 'PlaceMapZone';
+  protected $_columns   = array( '#pmz_id','*pmz_pm_id','#pmz_ident','*pmz_name', 'pm_color');
 
   var $pmz_id;
   var $pmz_pm_id;
@@ -40,57 +43,22 @@ class PlaceMapZone{
   var $pmz_name;
   var $pmz_color;
     
-  function PlaceMapZone ($pmz_pm_id=null, $pmz_name=null, $pmz_short_name=null, $pmz_color=null){
+  function create ($pmz_pm_id=null, $pmz_name=null, $pmz_short_name=null, $pmz_color=null){
+    $new = new PlaceMapZone;
     if($pmz_pm_id){
-      $this->pmz_pm_id=$pmz_pm_id;
-      $this->pmz_name=$pmz_name;
-      $this->pmz_short_name=$pmz_short_name;
-      $this->pmz_color=$pmz_color;
+      $new->pmz_pm_id=$pmz_pm_id;
+      $new->pmz_name=$pmz_name;
+      $new->pmz_short_name=$pmz_short_name;
+      $new->pmz_color=$pmz_color;
     }
+    return $new;
   }
   
-  function save (){
+   function load ($pmz_id){
     global $_SHOP;
-
-    if($this->pmz_id){
-
-      $query="update PlaceMapZone set 
-	    pmz_short_name="._esc($this->pmz_short_name).",
-	    pmz_name="._esc($this->pmz_name).",
-	    pmz_color="._esc($this->pmz_color)."
-	    where pmz_id="._esc($this->pmz_id);
-    }else{
-       if(!$this->pmz_ident){$this->_find_ident();}
-
-       $query="insert into PlaceMapZone (
-                pmz_pm_id, 
-                pmz_name, 
-                pmz_short_name, 
-                pmz_ident, 
-                pmz_color
-               ) VALUES (
-	         "._esc($this->pmz_pm_id).",
-	         "._esc($this->pmz_name).",
-	         "._esc($this->pmz_short_name).",
-	         "._esc($this->pmz_ident).",
-	         "._esc($this->pmz_color).")";
-    }
-   
-    if(ShopDB::query($query)){
-      if(!$this->pmz_id){
-        $this->pmz_id=shopDB::insert_id();
-      }
-      
-      return $this->pmz_id;
-      
-    }else{
-      return FALSE;
-    }
-  }
-
-  function load ($pmz_id){
-    global $_SHOP;
-    $query="select * from PlaceMapZone where pmz_id=$pmz_id";
+    $query="select * 
+            from PlaceMapZone 
+            where pmz_id="._esc($pmz_id);
 
     if($res=ShopDB::query_one_row($query)){
       $new_pmz=new PlaceMapZone;
@@ -103,10 +71,12 @@ class PlaceMapZone{
   function loadAll ($pm_id){
     global $_SHOP;
     
-    $query="select * from PlaceMapZone where pmz_pm_id='$pm_id'";
+    $query="select * 
+            from PlaceMapZone 
+            where pmz_pm_id="._esc($pm_id);
 
     if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_array($res)){
+      while($data=shopDB::fetch_assoc($res)){
         $new_pmz=new PlaceMapZone;
         $new_pmz->_fill($data);
         $zones[$new_pmz->pmz_ident]=$new_pmz;
@@ -122,25 +92,43 @@ class PlaceMapZone{
 		if(!$zone=PlaceMapZone::load($pmz_id)){
 		  return;
 		}
-
-		require_once('classes/PlaceMapPart.php');
-		if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
-  		foreach($pmps as $pmp){
-  		  if($pmp->delete_zone($zone->pmz_ident)){
-  				$pmp->save();
-  			}
-  		}
+    $seats = shopDB::query_on_row("select count(*) from Seats 
+                                   where seat_zone_id ={$zone_id}", false);
+    if ($seats[0]>0) {
+      echo '<div class=error>'.con('Zone_delete_failed_seats_exists').'</div>';
+      return false;
     }
-	
+    
+
+    if(!ShopDB::begin('delete zone: '.$zone_id)){
+        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
+        return FALSE;
+    }
+
   
     $query="delete from PlaceMapZone where pmz_id=$pmz_id limit 1";
     ShopDB::query($query);
+    
+    require_once('classes/PlaceMapPart.php');
+    if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
+      foreach($pmps as $pmp){
+        if($pmp->delete_zone($zone->pmz_ident)){
+          $pmp->save();
+        }
+      }
+    }
+
+    if (ShopDB::commit('Zone deleted')) {return false;}
+    return TRUE;
   }
 
+  /* ??? this code need to be checked !!!! */
   function _find_ident (){
     global $_SHOP;
 
-    $query="select pmz_ident from PlaceMapZone where pmz_pm_id={$this->pmz_pm_id}";
+    $query="select pmz_ident 
+            from PlaceMapZone 
+            where pmz_pm_id={$this->pmz_pm_id}";
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_array($res)){
       $ident[$i['pmz_ident']]=1;
@@ -149,12 +137,6 @@ class PlaceMapZone{
     $pmz_ident=1;
     while($ident[$pmz_ident]){$pmz_ident++;}
     $this->pmz_ident=$pmz_ident;
-  }
-
-  function _fill ($data){
-    foreach($data as $k=>$v){
-      $this->$k=$v;
-    }
   }
 }
 

@@ -367,7 +367,7 @@ function check_system() {
 			$query .= " AND order_place != 'pos' ";
 		}
 		if ( $res = ShopDB::query($query) ) {
-			while ( $row = shopDB::fetch_array($res) ) {
+			while ( $row = shopDB::fetch_assoc($res) ) {
 				Order::order_delete( $row['order_id'], 'AutoCancel_order');
 			}
 		}
@@ -385,7 +385,7 @@ function check_system() {
 
     if($resultOrder=ShopDB::query($query)){
 			//Cycles through orders to see if they should be canceled!
-			while ( $roword = shopDB::fetch_array($resultOrder) ) {
+			while ( $roword = shopDB::fetch_assoc($resultOrder) ) {
         if ( !Order::Check_payment($roword['order_id'])) {
           if ( $_SHOP->shopconfig_delunpaid_pos == 'Yes' or $roword['order_place'] != 'pos'){
             Order::order_delete( $roword['order_id'], 'AutoCancel_paying');

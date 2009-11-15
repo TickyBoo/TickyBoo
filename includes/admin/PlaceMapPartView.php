@@ -592,7 +592,7 @@ class PlaceMapPartView extends AdminView {
         $query = "select * from PlaceMapPart where pmp_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
             return;
-        } while ($pmp = shopDB::fetch_array($res)) {
+        } while ($pmp = shopDB::fetch_assoc($res)) {
             echo "<tr class='admin_list_row_$alt'>";
             echo "<td class='admin_list_item' width=10>&nbsp;</td>\n";
             echo "<td class='admin_list_item' title='{$pmp['pmp_id']}' width='50%'>{$pmp['pmp_name']}</td>\n";
@@ -620,7 +620,7 @@ class PlaceMapPartView extends AdminView {
 
     function pmp_short_list ($pm_id, $pmp_id = 0, $view_only = false)
     {
-        if (!$pmps = PlaceMapPart::loadAll_short($pm_id) or count($pmps) < 2) {
+        if (!$pmps = PlaceMapPart::loadAll_names($pm_id) or count($pmps) < 2) {
             return;
         }
 
@@ -673,9 +673,8 @@ class PlaceMapPartView extends AdminView {
             if (!$this->pmp_check($_POST, $err)) {
                 $this->pmp_form($_POST, $err);
             } else {
-                $pmp = new PlaceMapPart($_POST['pm_id'], $_POST['pmp_name'], $_POST['pmp_width'], $_POST['pmp_height']);
-                $pmp->pmp_scene = $_POST['pmp_scene'];
-                $pmp->pmp_shift = $_POST['pmp_shift'];
+                $pmp = new PlaceMapPart
+                $pmp->fillPost();
                 $pmp->pmp_event_id = $pm->pm_event_id;
                 $pmp->save();
                 $this->pmp_view($pmp->pmp_id,$err);
@@ -683,26 +682,17 @@ class PlaceMapPartView extends AdminView {
             }
         } else if ($_GET['action'] == 'edit_pmp' and $_GET['pmp_id'] > 0) {
             if ($pmp = PlaceMapPart::load($_GET['pmp_id'])) {
-                $data['pmp_id'] = $pmp->pmp_id;
-                $data['pm_id'] = $pmp->pmp_pm_id;
-                $data['pmp_name'] = $pmp->pmp_name;
-                $data['pmp_scene'] = $pmp->pmp_scene;
-                $data['pmp_shift'] = $pmp->pmp_shift;
-
+                $data = (array)$pmp;
                 $this->pmp_form($data, $err);
             }
         } else if ($_POST['action'] == 'update_pmp' and $_POST['pmp_id'] > 0) {
             if ($this->pmp_check($_POST, $err)) {
-                $pmp = PlaceMapPart::load($_POST['pmp_id']);
-                if (!$pmp ) {
-                    return;
-                }
-
-                $pmp->pmp_name = $_POST['pmp_name'];
-                $pmp->pmp_scene = $_POST['pmp_scene'];
-                $pmp->pmp_shift = $_POST['pmp_shift'];
-                $pmp->save();
-                //return true;
+              if (!$pmp = PlaceMapPart::load($_POST['pmp_id']) ) {
+                  return;
+              }
+              $pmp->fillPost();
+              $pmp->save();
+              //return true;
             }
             $this->pmp_view($_POST['pmp_id'], $err);
         } else if ($_POST['action'] == 'def_cat_pmp' and $_POST['pmp_id'] > 0 and $_POST['category_id'] > 0) {

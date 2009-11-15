@@ -161,7 +161,7 @@ class PlaceMapView2 extends AdminView {
 		$this->list_head( place_maps, 3 );
 		$alt = 0;
 
-		while ( $pm = shopDB::fetch_array($res) ) {
+		while ( $pm = shopDB::fetch_assoc($res) ) {
 			echo "<tr class='admin_list_row_$alt'>";
 
 			echo "<td class='admin_list_item'>{$pm['pm_id']}</td>\n";
@@ -260,7 +260,7 @@ class PlaceMapView2 extends AdminView {
 					if ( !$this->pm_check($_POST, $err) ) {
 						$this->pm_form( $_GET, $err, add_pm );
 					} else {
-						$pm = new PlaceMap( $_POST['pm_ort_id'], $_POST['pm_name'] );
+						$pm = PlaceMap.create( $_POST['pm_ort_id'], $_POST['pm_name'] );
 						if ( $pm_id = $pm->save() ) {
 							if ( !$this->photo_post($_POST, $pm_id) ) {
 								echo "<div class=error>" . img_loading_problem . "</div>";

@@ -42,7 +42,7 @@ class export_xml_event extends AdminView {
 		$query = "select * from Event where event_rep LIKE '%sub%' ORDER BY event_date,event_time,event_name";
 
 		if($res=ShopDB::query($query)){
-		  while($row=shopDB::fetch_array($res)){
+		  while($row=shopDB::fetch_assoc($res)){
 			  $event[$row['event_id']]=$row['event_name'].' ('.formatDate($row['event_date']).'-'.formatTime($row['event_time']).')';
 			}
 		}

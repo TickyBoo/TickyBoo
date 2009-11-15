@@ -219,16 +219,16 @@ class OrtView extends AdminView {
             }
         } else
         if ($_GET['action'] == 'add') {
-            $this->ort_form($row, $err, ort_add_title);
+            $this->ort_form($row, $err, con('ort_add_title'));
         } else
         if ($_GET['action'] == 'remove' and $_GET['ort_id'] > 0) {
             // check if not in use
             $query = "SELECT event_name FROM Event Where event_ort_id="._ESC($_GET['ort_id']);
             if (!$res = ShopDB::query($query)) {
                 return 0;
-            } while ($name = shopDB::fetch_array($res)) {
+            } while ($name = shopDB::fetch_assoc($res)) {
                 if (!$used) {
-                    echo "<div class=error>" . in_use . "</div>";
+                    echo "<div class=error>" . con('in_use') . "</div>";
                 }
                 echo "<div class=error>" . $name['event_name'] . "</div>";
                 $used = true;
