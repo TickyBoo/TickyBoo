@@ -87,13 +87,13 @@ class Order {
   function load ($order_id, $complete=false, $tickets=false){
     global $_SHOP;
     
-    $query="select * from `Order` 
-    WHERE order_id = "._esc($order_id);
+    ShopDB::dblogging($query="select * from `Order` 
+    WHERE order_id = "._esc($order_id));
     if($data=ShopDB::query_one_row($query)){
       $order=new Order(0,0,0,0,0,0);
       $order->_fill($data);
 
-      if($order and $complete){
+      if($order && $complete){
         if ($order->order_handling_id) {
           $order->handling= Handling::load($order->order_handling_id);
           $order->order_handling = &$order->handling;
@@ -102,10 +102,12 @@ class Order {
       if($order && $tickets){
         $order->tickets = $this->loadTickets();
       }
-      return $order;
+      if($order){
+        return $order;
+      }
     }
     // the next log is included to find when or why sometimes it is not possible set the send state.
-    ShopDB::dblogging("Can load Order '{$order_id}', check of it exist.");
+    ShopDB::dblogging("Cant load Order '{$order_id}', check of it exist.");
   }
   
 	public function loadFromPaymentId($payment_id, $handling_id, $complete=false){
@@ -460,7 +462,10 @@ class Order {
 
   function Check_payment($order_id){
     $order = Order::load($order_id, true);
-    return $order->order_handling->on_check($order);
+    if ($order->order_handling) {
+      return $order->order_handling->on_check($order);
+    } else 
+      return true;
   }
   
   
