@@ -88,7 +88,7 @@ class Order {
     global $_SHOP;
     
     ShopDB::dblogging($query="select * from `Order` 
-    WHERE order_id = "._esc($order_id));
+                              WHERE order_id = "._esc($order_id));
     if($data=ShopDB::query_one_row($query)){
       $order=new Order(0,0,0,0,0,0);
       $order->_fill($data);
@@ -103,8 +103,8 @@ class Order {
         $order->tickets = $this->loadTickets();
       }
       if($order){
-        return $order;
-      }
+      return $order;
+    }
     }
     // the next log is included to find when or why sometimes it is not possible set the send state.
     ShopDB::dblogging("Cant load Order '{$order_id}', check of it exist.");
@@ -462,10 +462,10 @@ class Order {
 
   function Check_payment($order_id){
     $order = Order::load($order_id, true);
-    if ($order->order_handling) {
+    if ($order && $order->order_handling) {
       return $order->order_handling->on_check($order);
-    } else 
-      return true;
+    } else
+      return false;
   }
   
   
