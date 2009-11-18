@@ -40,6 +40,7 @@ define("DB_DEADLOCK", 1213);
 class ShopDB {
     static $prefix = '';
     static $link;
+    static $db_trx_startedi = 0;
     // /
     // new SQLi extenstions
     function init ()
@@ -118,16 +119,16 @@ class ShopDB {
     function begin ($name='')
     {
         global $_SHOP;
-        if (!isset($_SHOP->db_trx_startedi)) {
+        if (self::$db_trx_startedi===0)) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (!ShopDB::$link) {
                 self::init();
             }
             if (ShopDB::$link->autocommit(false)) {
-               $_SHOP->db_trx_startedi = 1;
-               self::dblogging("[Begin {$name}]");
-               trace("[Begin {$name}]");
+                self::$db_trx_startedi = 1;
+                self::dblogging("[Begin {$name}]");
+                trace("[Begin {$name}]");
                 return true;
             } else {
                 user_error($_SHOP->db_error= mysqli_error(ShopDB::$link));
@@ -136,9 +137,9 @@ class ShopDB {
                 return false;
             }
         } else {
-            $_SHOP->db_trx_startedi++;
-            self::dblogging("[Begin {$name}] {$_SHOP->db_trx_startedi}");
-            trace("[Begin {$name}] {$_SHOP->db_trx_startedi}");
+            self::$db_trx_startedi++;
+            self::dblogging("[Begin {$name}] {self::$db_trx_startedi}");
+            trace("[Begin {$name}] {self::$db_trx_startedi}");
             return true;
         }
     }
@@ -146,12 +147,12 @@ class ShopDB {
     function commit ($name='')
     {
         global $_SHOP;
-        if ($_SHOP->db_trx_startedi==1) {
+        if (self::$db_trx_startedi==1) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (ShopDB::$link->commit()) {
                 ShopDB::$link->autocommit(true);
-                unset($_SHOP->db_trx_startedi);
+                self::$db_trx_startedi = 0;
                 self::dblogging("[Commit {$name}]");
                 trace("[Commit {$name}]");
                 return true;
@@ -160,10 +161,10 @@ class ShopDB {
                 self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
                 trace("[Commit {$name}]Error: $_SHOP->db_error");
             }
-        } elseif ($_SHOP->db_trx_startedi > 1) {
-            self::dblogging("[Commit {$name}] {$_SHOP->db_trx_startedi}");
-            trace("[Commit {$name}] {$_SHOP->db_trx_startedi}");
-            $_SHOP->db_trx_startedi--;
+        } elseif (self::$db_trx_startedi > 1) {
+            self::dblogging("[Commit {$name}] {self::$db_trx_startedi}");
+            trace("[Commit {$name}] {self::$db_trx_startedi}");
+            self::$db_trx_startedi--;
             return true;
         } else {
             self::dblogging("[Commit {$name}] - no transaction");
@@ -173,14 +174,14 @@ class ShopDB {
     function rollback ($name='')
     {
         global $_SHOP;
-        if ($_SHOP->db_trx_startedi) {
+        if (self::$db_trx_startedi) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (ShopDB::$link->rollback()) {
                 ShopDB::$link->autocommit(true);
-                self::dblogging("[Rollback {$name}] {$_SHOP->db_trx_started}");
-                trace("[Rollback {$name}] {$_SHOP->db_trx_started}");
-                unset($_SHOP->db_trx_startedi);
+                self::dblogging("[Rollback {$name}] {self::$db_trx_started}");
+                trace("[Rollback {$name}] {self::$db_trx_started}");
+                self::$b_trx_startedi= 0;
                 return true;
             } else {
                 user_error($_SHOP->db_error= ShopDB::$link->error);

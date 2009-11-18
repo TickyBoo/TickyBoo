@@ -63,7 +63,17 @@ class PlaceMap Extends Model {
   }
 
   function loadAll ($ort_id){
-    return parent::loadall("ort_id="._esc($ort_id));
+    $query="select * 
+            from PlaceMap2 left join Ort on pm_ort_id=ort_id 
+            where ort_id="._esc($ort_id);
+    if($res=ShopDB::query($query)){
+      while($data=shopDB::fetch_array($res)){
+        $new_pm=new PlaceMap;
+        $new_pm->_fill($data);
+        $pms[]=$new_pm; 
+      }	 
+    }
+    return $pms;
   }
 
 

@@ -1,32 +1,35 @@
 <?php
 
 class a {
-  
-  var $id;
+  const MYCLASS =  __CLASS__;
+  var $ida;
   
   function echoId(){
-    echo $this->id;
+    print_r(self::MYCLASS)  ;
   }
 }
 
 
-class b {
+class b extends a {
   
-  var $id;
+  var $idb = 123;
    
   function echo2(){  
-    echo 'B:';
-    $this->id = 5;
-    //$a = new a();
-    $a->id = 1;
-    a::echoId();
-    a::echoId();
+    self::echoId();      echo ':';
+    print_r(self::MYCLASS)  ;
   }
   
 }
- echo 'tedt:';
+function test () {
+  print ($b);
+}
+
 $b = new b();
+$GLOBALS['b'] = $b;
+
 $b->echo2();
-
-
+echo '-';
+b::echo2();
+echo '-';
+test();
 ?>

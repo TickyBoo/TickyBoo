@@ -562,11 +562,11 @@ function draw($noTab=false){
       case 'set_status_ord':           $order->set_status('ord');break;
     }
   }elseif($_GET['action1']=="make_new" and $_GET["order_id1"]){
-    if($new_id=Order::order_reemit($_GET["order_id1"], 0)){
+    if($new_id=Order::reissue($_GET["order_id1"], 0)){
       $this->order_details($new_id);
     }
   }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-    Order::order_delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
+    Order::delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
   }elseif($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Ticket::reemit($_GET["order_id1"], $_GET['seat_id']);
   }

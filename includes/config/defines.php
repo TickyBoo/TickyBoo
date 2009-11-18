@@ -99,4 +99,9 @@ define('PM_STATUS_FREE', 0);
 define('PM_STATUS_OCC', 1);
 define('PM_STATUS_RESP', 2);
 define('PM_STATUS_HOLD', 3);  
+
+
+define("SEAT_ERR_INTERNAL",1);
+define("SEAT_ERR_OCCUPIED",2);
+define("SEAT_ERR_TOOMUCH",3);
 ?>

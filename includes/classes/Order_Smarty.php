@@ -67,7 +67,7 @@ class Order_Smarty {
     }
      //compile order (order and tickets) from the shopping cart in order_func.php
 
-    $order = new Order($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
+    $order = Order::create($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
 
     //begin the transaction
     if(!ShopDB::begin('Make order')){
@@ -135,7 +135,7 @@ class Order_Smarty {
   
   function cancel_f ($order_id, $reason = null ){
     global $_SHOP;
-    return Order::order_delete($order_id, is($reason,'order_canceled_by_user'),$this->user_auth_id);
+    return Order::delete($order_id, is($reason,'order_canceled_by_user'), $this->user_auth_id);
   }
   
   function delete_ticket ($params, &$smarty){
@@ -144,7 +144,7 @@ class Order_Smarty {
   
   function delete_ticket_f ($order_id,$ticket_id){
     global $_SHOP;
-    return Order::order_delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
+    return Order::delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
   }
 
 
