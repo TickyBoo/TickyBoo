@@ -432,6 +432,5 @@ class Event Extends Model {
       return TRUE;
     }  
   }
-}  
 }
 ?>

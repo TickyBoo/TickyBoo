@@ -65,7 +65,7 @@ class PlaceMapPart Extends Model {
     }
 
     function _unser_data ($pmp_data_s, $w, $h) {
-      if (substr($pmp_data_s,0,2)=='a:')
+      if (substr($pmp_data_s,0,2)=='a:'){
          return unserialize($pmp_data_s);
       } else {
         $pmp_data_0 = explode('|', $pmp_data_s);

@@ -119,7 +119,7 @@ class ShopDB {
     function begin ($name='')
     {
         global $_SHOP;
-        if (self::$db_trx_startedi===0)) {
+        if (self::$db_trx_startedi===0) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (!ShopDB::$link) {
