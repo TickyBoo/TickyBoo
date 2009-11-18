@@ -70,7 +70,7 @@ class PlaceMapCategory {
   }
 
   function save (){
-    if(!this->category_id) { 
+    if(!$this->category_id) { 
       if ($this->category_numbering<>'none') {
         $this->category_size = 0;
       }

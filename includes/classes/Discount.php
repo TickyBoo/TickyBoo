@@ -39,6 +39,7 @@ class Discount {
   var $discount_name;
   var $discount_event_id;
 
+  
   function Discount ($discount_id,$discount_type,$discount_value,$discount_name,$discount_event_id){
      $this->discount_id=$discount_id;  
      $this->discount_type=$discount_type;  

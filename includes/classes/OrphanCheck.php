@@ -255,7 +255,6 @@ class orphans {
                        where (select category_id from Category where category_id = cs_category_id) is null") ;
         break;
       case 'Category~stat_id':
-        require_once('classes/Category_stat.php');
         require_once('classes/PlaceMapCategory.php');
         $cat = PlaceMapCategory::load($fix[2]);
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_category_id = {$cat->category_id} and seat_status = 'free'";
