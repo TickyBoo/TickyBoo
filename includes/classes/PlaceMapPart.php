@@ -620,8 +620,6 @@ class PlaceMapPart Extends Model {
     { 
         // echo rebuild_cache;
         require_once('classes/Seat.php');
-        Seat::expire_pmp($this->pmp_id);
-
         $seats_db = Seat::load_pmp_all($this->pmp_id);
         $expires = time() + 3600;
 

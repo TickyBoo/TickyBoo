@@ -6,8 +6,8 @@
  *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
- *	phpMyTicket - ticket reservation system
- * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *  phpMyTicket - ticket reservation system
+ *   Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
  *
  * This file is part of FusionTicket.
  *
@@ -284,65 +284,65 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
   }
   return $result;
 }
-	/**
-	 * redirect to the given url. if relative the base-url to the framework is added.
-	 * @param string url to redirect to
-	 * @param int status http status-code to use for redirection (default 303=get the new url via GET even if this page was reached via POST)
-	 */
-	function Redirect($url, $status = 303) {
+  /**
+   * redirect to the given url. if relative the base-url to the framework is added.
+   * @param string url to redirect to
+   * @param int status http status-code to use for redirection (default 303=get the new url via GET even if this page was reached via POST)
+   */
+  function Redirect($url, $status = 303) {
     GLOBAL $_SHOP;
-		if (function_exists('session_write_close')) {
-			session_write_close();
-		}
-
-		$pos = strpos($url, '://');
-		if ($pos === false) { // is relative url, construct rest
-			$url = $_SHOP->root . $url;
-		}
-    if ($status===true) {
-      echo 	"<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($url)."';\n</script>";
-    }else{
-  		if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
-  			header('HTTP/1.1 ' . $status);
-  		}
-  		header('Location: ' . $url);
+    if (function_exists('session_write_close')) {
+      session_write_close();
     }
-	}
 
-	function constructBase() {
-		$base = 'http' . (env('https') != '' ? 's' : '') . '://' .
-		env('SERVER_NAME') . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '') .
-		(dirname(env('PHP_SELF')));
-		if (substr($base, -1, 1) != '/') {
-			$base .= '/';
-		}
-		return $base;
-	}
+    $pos = strpos($url, '://');
+    if ($pos === false) { // is relative url, construct rest
+      $url = $_SHOP->root . $url;
+    }
+    if ($status===true) {
+      echo   "<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($url)."';\n</script>";
+    }else{
+      if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
+        header('HTTP/1.1 ' . $status);
+      }
+      header('Location: ' . $url);
+    }
+  }
 
-	function _esc ($str, $quote=true){
+  function constructBase() {
+    $base = 'http' . (env('https') != '' ? 's' : '') . '://' .
+    env('SERVER_NAME') . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '') .
+    (dirname(env('PHP_SELF')));
+    if (substr($base, -1, 1) != '/') {
+      $base .= '/';
+    }
+    return $base;
+  }
+
+  function _esc ($str, $quote=true){
     return shopDB::quote($str, $quote);
-	}
+  }
 
 function check_event($event_date){
   require_once("classes/Time.php");
 
   global $_SHOP;
-	if($_SHOP->shopconfig_posttocollect>=10){
-	  $time=Time::StringToTime($event_date);
-		$remain=Time::countdown($time);
-		//if there is less than 10 mins till the event needs to go to alt payment return a 1
-		// so alt payment should be used.
-		//echo $remain["justmins"]."-".$this->shopconfig_posttocollect;
-		if($remain["justmins"]<=($_SHOP->shopconfig_posttocollect+10)){
-			return 1;
-		}else{
-			return 0;
-		}
-	}
+  if($_SHOP->shopconfig_posttocollect>=10){
+    $time=Time::StringToTime($event_date);
+    $remain=Time::countdown($time);
+    //if there is less than 10 mins till the event needs to go to alt payment return a 1
+    // so alt payment should be used.
+    //echo $remain["justmins"]."-".$this->shopconfig_posttocollect;
+    if($remain["justmins"]<=($_SHOP->shopconfig_posttocollect+10)){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
 }
 
 function check_system() {
-	global $_SHOP;
+  global $_SHOP;
   require_once("classes/Time.php");
   require_once("classes/order.php");
 
@@ -350,57 +350,67 @@ function check_system() {
   // also i have moved the error messages to the language file. so the can be translated.
   
   if ($_SHOP->shopconfig_lastrun_int == 0) {
-    	return;
-	} elseif ( $_SHOP->current_db_time <= $_SHOP->shopconfig_lastrun ) {
-    	return;
-	}
-  	
-  //	print_r('run');
-	//Checks to see if res time is enabled anything more than 9 will delete
-	if ( $_SHOP->shopconfig_restime >= 1 ) {
-		$query = "SELECT order_id FROM `Order`
+      return;
+  } elseif ( $_SHOP->current_db_time <= $_SHOP->shopconfig_lastrun ) {
+      return;
+  }
+    
+  //  print_r('run');
+  //Checks to see if res time is enabled anything more than 9 will delete
+  if ( $_SHOP->shopconfig_restime >= 1 ) {
+    $query = "SELECT order_id FROM `Order`
               WHERE order_status = 'res'
-          		AND order_payment_status  = 'none'
-          		AND order_shipment_status = 'none'
-          		AND order_date_expire <= NOW()";
-		if ( $_SHOP->shopconfig_check_pos == 'No' ) {
-			$query .= " AND order_place != 'pos' ";
-		}
-		if ( $res = ShopDB::query($query) ) {
-			while ( $row = shopDB::fetch_assoc($res) ) {
-				Order::order_delete( $row['order_id'], 'AutoCancel_order');
-			}
-		}
-	}
+              AND order_payment_status  = 'none'
+              AND order_shipment_status = 'none'
+              AND order_date_expire <= NOW()";
+    if ( $_SHOP->shopconfig_check_pos == 'No' ) {
+      $query .= " AND order_place != 'pos' ";
+    }
+    if ( $res = ShopDB::query($query) ) {
+      while ( $row = shopDB::fetch_assoc($res) ) {
+        Order::order_delete( $row['order_id'], 'AutoCancel_order');
+      }
+    }
+  }
 
-	if ( $_SHOP->shopconfig_delunpaid == "Yes" ) {
-		$query = "SELECT order_id, order_place
+  if ( $_SHOP->shopconfig_delunpaid == "Yes" ) {
+    $query = "SELECT order_id, order_place
               FROM `Handling` left join `Order` on order_handling_id = handling_id
-  			      WHERE handling_expires_min >= 1
+              WHERE handling_expires_min >= 1
               AND order_date_expire IS NOT NULL
               AND order_date_expire <= NOW()
-  			  		AND order_status = 'ord'
-  			  		AND order_payment_status  != 'payed'
-  			  		AND order_shipment_status != 'send'";
+              AND order_status = 'ord'
+              AND order_payment_status  != 'payed'
+              AND order_shipment_status != 'send'";
 
     if($resultOrder=ShopDB::query($query)){
-			//Cycles through orders to see if they should be canceled!
-			while ( $roword = shopDB::fetch_assoc($resultOrder) ) {
+      //Cycles through orders to see if they should be canceled!
+      while ( $roword = shopDB::fetch_assoc($resultOrder) ) {
         if ( !Order::Check_payment($roword['order_id'])) {
           if ( $_SHOP->shopconfig_delunpaid_pos == 'Yes' or $roword['order_place'] != 'pos'){
             Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
           }
         }
-			}
-		}
-	}
+      }
+    }
+  }
+
+  $time=time();
+  $query="UPDATE Seat SET 
+            seat_status='free', 
+            seat_ts=NULL, 
+            seat_sid=NULL
+         where seat_status='res' 
+         and seat_ts<"._esc($time);
+  ShopDB::query($query);
+
   //    echo "store";
-	$query = "UPDATE `ShopConfig` SET shopconfig_lastrun= UNIX_TIMESTAMP(TIMESTAMPADD( MINUTE , shopconfig_lastrun_int, now( ) )) LIMIT 1";
-	if ( !$data = ShopDB::query($query) ) {
-		die( "Save Error, Could not save lastrun");
-		return;
-	}
-	return true;
+  $query = "UPDATE `ShopConfig` SET shopconfig_lastrun= UNIX_TIMESTAMP(TIMESTAMPADD( MINUTE , shopconfig_lastrun_int, now( ) )) LIMIT 1";
+  if ( !$data = ShopDB::query($query) ) {
+    die( "Save Error, Could not save lastrun");
+    return;
+  }
+  return true;
 
 }
 
@@ -414,21 +424,21 @@ function formatDate($edate, $format="%m/%d/%Y" ){
  }
 
 function formatAdminDate($edate,$year4=true){
-	if(function_exists("date_parse")){
-		$dateArr = date_parse($edate);
-		if ($year4) { 
-			$pdate = $dateArr['day']."-".$dateArr['month']."-".$dateArr['year'];
-   		} else {
-   			$pdate = $dateArr['day']."-".$dateArr['month']."-".substr($dateArr['year'], -2);
-   		}	
-	}else{
-		ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
-		if ($year4) { 
-			$pdate = $regs[3]."-".$regs[2]."-".$regs[1]; 
-		} else { 
-    	$pdate = $regs[3]."-".$regs[2]."-".substr($regs[1], -2);
-   	}	
-	}
+  if(function_exists("date_parse")){
+    $dateArr = date_parse($edate);
+    if ($year4) { 
+      $pdate = $dateArr['day']."-".$dateArr['month']."-".$dateArr['year'];
+       } else {
+         $pdate = $dateArr['day']."-".$dateArr['month']."-".substr($dateArr['year'], -2);
+       }  
+  }else{
+    ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
+    if ($year4) { 
+      $pdate = $regs[3]."-".$regs[2]."-".$regs[1]; 
+    } else { 
+      $pdate = $regs[3]."-".$regs[2]."-".substr($regs[1], -2);
+     }  
+  }
    return $pdate;
 }
 
@@ -437,22 +447,22 @@ function formatTime($time){
 
   if(strlen($h) or strlen($m)){
     //return strftime("%X",mktime($h,$m));
-		return $h."h".$m;
+    return $h."h".$m;
   }
 }
 
 function stringDatediff($datefrom, $dateto) {
-   $datefrom 	= strtotime($datefrom, 0);
-   $dateto 		= strtotime($dateto, 0);
+   $datefrom   = strtotime($datefrom, 0);
+   $dateto     = strtotime($dateto, 0);
 
    $difference = $dateto - $datefrom; // Difference in seconds
    return $difference;
 }
 
 function subtractDaysFromDate($date,$no_days) {
-	$time1  = strtotime($date);
-	$res = strtotime((date('Y-m-d', $time1)." -$no_days"."days"));
-	return date('Y-m-d', $res);
+  $time1  = strtotime($date);
+  $res = strtotime((date('Y-m-d', $time1)." -$no_days"."days"));
+  return date('Y-m-d', $res);
 }
 
  /**
@@ -477,10 +487,10 @@ function subtractDaysFromDate($date,$no_days) {
 
 
 function addDaysToDate($date,$no_days) {
-	$time1  = strtotime($date);
-	$res = strtotime((date('Y-m-d', $time1)." +$no_days"."days"));
+  $time1  = strtotime($date);
+  $res = strtotime((date('Y-m-d', $time1)." +$no_days"."days"));
 
-	return date('Y-m-d', $res);
+  return date('Y-m-d', $res);
 }
 
 function get_loc($lang){
@@ -546,7 +556,7 @@ function clean($string, $type='ALL') {
  *
  */
 function md5pass($user,$pass) {
-	return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
+  return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
 }
 
 
@@ -568,7 +578,7 @@ function orphanCheck(){
  *
  */
 function sha1pass($user, $pass) {
-	return '*'.sha1(md5($user.':'.AUTH_REALM.':'.$pass).'~'.$user);
+  return '*'.sha1(md5($user.':'.AUTH_REALM.':'.$pass).'~'.$user);
 }
 
 function is_base64_encoded($data){

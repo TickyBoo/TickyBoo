@@ -92,38 +92,6 @@ class Ticket {
     $this->save(true);
   }
   
-  function generate_code ($length){
-    $chars = "0123456789";
-     
-    $code = '' ;
 
-    for($i=0;$i <$length;$i++) {
-        $code.=$chars{rand()%10};
-    }
-
-    return $code;
-  }
-
-  //static functions for all
-  function reemit ($order_id,$seat_id,$code_length=8){
-    global $_SHOP;
-  
-    $new_code=Ticket::generate_code($code_length);
-
-    $query="update Seat 
-              set seat_code='$new_code'
-      	    where seat_id='$seat_id'
-            and seat_order_id='$order_id'
-	          LIMIT 1";
-  
-  
-    if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
-      echo "<div class=error> $seat_id : ".ticket_not_reemited."</div>";
-      return FALSE;
-    }
-
-    echo "<div class=success> $seat_id : ".ticket_reemited."</div>";
-    return TRUE;
-  }
 }
 ?>
