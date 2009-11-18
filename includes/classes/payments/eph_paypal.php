@@ -105,7 +105,7 @@ class EPH_paypal extends payment{
   }
   
   function on_notify(&$order){
-//    require_once('classes/Order.php');
+//    require_once('classes/order.php');
     global $_SHOP;
     if (!$this->pm_paypal_test) {
       $url= 'https://www.paypal.com/cgi-bin/webscr';

@@ -118,7 +118,7 @@ class MyCart_Smarty {
   }
   
   function order_to_cart($order_id,$mode='mode_web'){
-    require_once ("classes/Order.php");
+    require_once ("classes/order.php");
     require_once ("classes/Seat.php");
     if(is_numeric($order_id) && $order_id > 0){
       $order = Order::load($order_id);

@@ -35,7 +35,7 @@
  
 require_once("admin/AdminView.php");
 require_once("classes/OrphanCheck.php");
-require_once("classes/Order.php");
+require_once("classes/order.php");
 require_once("classes/Event.php");
 require_once("classes/User.php");
 

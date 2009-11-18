@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-require_once("classes/Order.php");
+require_once("classes/order.php");
 require_once("classes/Ticket.php");
 
 

@@ -34,7 +34,7 @@
 
 require_once("admin/AdminView.php");
 require_once("classes/Seat.php");
-require_once("classes/Order.php");
+require_once("classes/order.php");
 
 class OrderView extends AdminView{
   var $page_length=15;

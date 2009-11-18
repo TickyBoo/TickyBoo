@@ -33,7 +33,7 @@
  */
 
 require_once ( "classes/Time.php" );
-require_once ( 'classes/Order.php' );
+require_once ( 'classes/order.php' );
 
 class Update_Smarty {
 
