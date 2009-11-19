@@ -100,6 +100,26 @@ class ShopDB {
     }
     // just requires PHP5 and MySQLi And mysql >4.1
     
+    /**
+     * ShopDB::isTxn()
+     * 
+     * Shorthand of ShopDB::isTransaction();
+     * 
+     * @return bool, true if transaction has begun.
+     */
+    static function isTxn(){
+      return self::isTransaction();
+    }
+    
+    /**
+     * ShopDB::isTransaction()
+     * 
+     * @return bool, Is true if a transaction has started. 
+     */
+    static function isTransaction(){
+      return self::$db_trx_startedi >0;
+    }
+    
     function close(){
         global $_SHOP;
         
