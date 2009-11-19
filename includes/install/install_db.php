@@ -285,26 +285,26 @@ $tbls['Order']['key'] = array(
   "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
   "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)");
 $tbls['Order']['engine'] = 'InnoDB';
-$tbls['Order']['remove'] = array ('order_organizer_id')   ;
+$tbls['Order']['remove'] = array ('order_organizer_id');
 
 //$tbls['Order']['AUTO_INCREMENT'] = 1;
 
 $tbls['order_status']['fields'] = array(
-  'id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'order_id' => " int(11) NOT NULL",
-  'changed' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
-  'status_from' => "varchar(50) DEFAULT NULL",
-  'status_to' => "varchar(50) DEFAULT NULL",
-  'changed_by' => "int(11) DEFAULT NULL",
-  'action' => "varchar(50) DEFAULT NULL",
-  'description' => "text"
+  'os_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'os_order_id' => " int(11) NOT NULL",
+  'os_changed' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
+  'os_status_from' => "varchar(50) DEFAULT NULL",
+  'os_status_to' => "varchar(50) DEFAULT NULL",
+  'os_changed_by' => "int(11) DEFAULT NULL",
+  'os_action' => "varchar(50) DEFAULT NULL",
+  'os_description' => "text"
 );
 $tbls['order_status']['key'] = array(
-  "PRIMARY KEY (`id`)",
-  "KEY `order_id` (`order_id`)"
+  "PRIMARY KEY (`os_id`)",
+  "KEY `os_order_id` (`os_order_id`)"
 );
 $tbls['order_status']['engine'] = 'InnoDB';
-
+$tbls['order_status']['remove'] = array ('id','order_id','changed','status_from','status_to','changed_by','action','description');
 
 $tbls['Organizer']['fields'] = array(
   'organizer_nickname' => " varchar(10) NOT NULL DEFAULT ''",

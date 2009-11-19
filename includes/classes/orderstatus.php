@@ -19,15 +19,15 @@ class OrderStatus{
     if(is_numeric($orderId)){
       $sql = "SELECT * 
             FROM order_status
-            WHERE order_id = "._esc($orderId)."
-            ORDER BY changed DESC, id DESC 
+            WHERE os_order_id = "._esc($orderId)."
+            ORDER BY os_changed DESC, os_id DESC 
             LIMIT 0,1"; 
       $query = ShopDB::query_one_row($sql);
       
       if(is_null($query)){
         $oldStatus = "NULL";
       }else{
-        $oldStatus = _esc($query['status_to']);
+        $oldStatus = _esc($query['os_status_to']);
       }
       //Check for action
       if(empty($action)){
@@ -43,19 +43,19 @@ class OrderStatus{
       }
       //Check for passed newStatus
       if(empty($newStatus)){
-        $newStatus=$query['status_to'];
+        $newStatus=$query['os_status_to'];
       }
       
       
       $sql = "INSERT INTO order_status (
-                `id`,
-                `order_id`,
-                `changed`,
-                `status_from`,
-                `status_to`,
-                `changed_by`,
-                `action`,
-                `description`
+                `os_id`,
+                `os_order_id`,
+                `os_changed`,
+                `os_status_from`,
+                `os_status_to`,
+                `os_changed_by`,
+                `os_action`,
+                `os_description`
               ) VALUES (
                 null,
                 "._esc($orderId).",
