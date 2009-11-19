@@ -98,8 +98,8 @@
   $_SHOP->trace_on = true;
   
   // this selects the theme that you like to use.
-  $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS."default".DS;
-
+  $_SHOP->theme_name = "default";
+  $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
 	//default paper size and orientation for pdf files
 	//paper size: 'a4', 'legal', etc..or  array(x0,y0,x1,y1), in points
   //or  array(width,height), in centimeters

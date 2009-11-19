@@ -91,6 +91,7 @@
 
 // check the order system for outdated orders and reservations
   check_system();
+  
   if (isset($_REQUEST['action'])) {
     $action=$_REQUEST['action'];
   } elseif(!isset($action)){
@@ -121,80 +122,6 @@
      session_unset();
      session_destroy();
      die('Access Denied');
-  }
-
-
-  if(isset($_SHOP->auth_required)){
-  
-    if(!isset($_SHOP->auth_dsn)){
-      $_SHOP->auth_dsn="mysql://".$_SHOP->db_uname.":".$_SHOP->db_pass."@".$_SHOP->db_host."/".$_SHOP->db_name;
-    }
-
-    //authentication stuff
-    require_once "Auth/Auth.php";  
-  
-    //this function shows the login-password dialog
-    //languages stuff is loaded after, so it is not internationalized  
-    function loginFunction (){
-			echo "<html><head>
-      <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
-			</head>
-			<body>
-      <center><form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?login=1\">
-      <table style='border: #cccccc 1px solid;' cellpadding='5' cellespacing='0'>
-       <tr><td>User</td><td><input type=\"text\" name=\"username\"></td></tr>
-      <tr><td>Password</td><td><input type=\"password\" name=\"password\"></td></tr>
-      <tr><td>Language</td><td><select name='setlang'>";
-
-			global $_SHOP;
-			foreach($_SHOP->langs_names as $lang=>$name){
-				echo"<option value='$lang'>$name</option>";
-			}
-			echo "</select></td></tr>";
-      echo "<tr><td colspan='2' align='center'><input type=\"submit\" value='login'></td></tr></table>";
-      echo "</form></center></body></html>";
-    }  
- 
-    function loginCallback ($username,$auth){
-      global $_SHOP; 
-      $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`="._esc($username);
-      if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
-        unset($data[ $_SHOP->auth_password ]);
-        $_SESSION['_SHOP_AUTH_USER_DATA']=$data;
-      }	else {
-        session_destroy();
-	      exit;
-      }
-      
-      $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
-   }
-  
-    //authentication starts here
-    $params = array("dsn" => $_SHOP->auth_dsn,
-      'table' =>$_SHOP->auth_table,
-      'usernamecol' =>$_SHOP->auth_login,
-      'passwordcol' =>$_SHOP->auth_password);  
-     
-    $_auth = new Auth('DB',$params,'loginFunction');
-    $_auth ->setSessionName($_SHOP->session_name); 
-    $_auth ->setLoginCallback('loginCallback'); 
-    is($action,"");
-    if ($action == 'logout') {
-      $_auth->logout();
-      session_unset();
-      $_SESSION = array();
-      session_destroy();
-      $_auth->start();
-      exit;
-    } else {
-      $_auth->start();
-    }
-
-    if (!$_auth->getAuth()) {
-      exit;
-    }
-    
-    $_SHOP->auth = $_auth; 
   }
 
 
@@ -247,6 +174,93 @@
     $_SHOP->langfile = INC."lang".DS."site_en.inc";
   }
 
+  if(isset($_SHOP->auth_required)){
+  
+    if(!isset($_SHOP->auth_dsn)){
+      $_SHOP->auth_dsn="mysql://".$_SHOP->db_uname.":".$_SHOP->db_pass."@".$_SHOP->db_host."/".$_SHOP->db_name;
+    }
+
+    //authentication stuff
+    require_once "Auth/Auth.php";  
+  
+    //this function shows the login-password dialog
+    //languages stuff is loaded after, so it is not internationalized  
+    function loginFunction ($username, $status, $auth){
+			echo "<html><head>
+      <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
+			</head>
+			<body>
+      <center><form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?login=1\">
+      <table style='border: #cccccc 1px solid;' cellpadding='5' cellespacing='0'>
+       <tr><td>User</td><td><input type=\"text\" name=\"username\" value=\"{$username}\"></td></tr>
+      <tr><td>Password</td><td><input type=\"password\" name=\"password\"></td></tr>
+      <tr><td>Language</td><td><select name='setlang'>";
+
+			global $_SHOP;
+			foreach($_SHOP->langs_names as $lang=>$name){
+				echo"<option value='$lang'>$name</option>";
+			}
+			echo "</select></td></tr>";
+      echo "<tr><td colspan='2' align='center'><input type=\"submit\" value='login'></td></tr></table>";
+      if (empty($status)) {
+        echo '<i>Your session expired. Please login again!</i>'."\n";
+      } elseif ($status == AUTH_EXPIRED) {
+        echo '<i>Your session expired. Please login again!</i>'."\n";
+      } else if ($status == AUTH_IDLED) {
+        echo '<i>You have been idle for too long. Please login again!</i>'."\n";
+      } else if ($status == AUTH_WRONG_LOGIN) {
+        echo '<i>Wrong login data!</i>'."\n";
+      }
+      
+      echo "</form></center></body></html>";
+    }  
+ 
+    function loginCallback ($username,$auth){
+      global $_SHOP; 
+      $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`="._esc($username);
+      if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
+        unset($data[ $_SHOP->auth_password ]);
+        $_SESSION['_SHOP_AUTH_USER_DATA']=$data;
+      }	else {
+        session_destroy();
+	      exit;
+      }
+      
+      $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
+      echo ini_get("session.gc_maxlifetime");       
+   }
+  
+    //authentication starts here
+    $params = array("dsn" => $_SHOP->auth_dsn,
+      'table' =>$_SHOP->auth_table,
+      'usernamecol' =>$_SHOP->auth_login,
+      'passwordcol' =>$_SHOP->auth_password);  
+     
+    $_auth = new Auth('DB',$params,'loginFunction');
+    $_auth ->setSessionName($_SHOP->session_name); 
+    $_auth ->setLoginCallback('loginCallback'); 
+    is($action,"");
+    if ($action == 'logout') {
+      $_auth->logout();
+      session_unset();
+      $_SESSION = array();
+      session_destroy();
+      $_auth->start();
+      exit;
+    } else {
+      $_auth->start();
+    }
+
+    if (!$_auth->getAuth()) {
+      exit;
+    }
+    
+    $_SHOP->auth = $_auth; 
+  }
+
+  //ini_set("session.gc_maxlifetime", [timeinsec]); 
+  
+  
 //loading organizer attributes
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
     $query="SELECT * FROM Organizer LIMIT 1";

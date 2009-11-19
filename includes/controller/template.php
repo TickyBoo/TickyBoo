@@ -70,7 +70,8 @@ $update = new Update_Smarty($smarty);
 $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
 $smarty->assign('_SHOP_lang', $_SHOP->lang);
-$smarty->assign('_SHOP_theme', $_SHOP->theme_dir);
+$smarty->assign('_SHOP_theme', $_SHOP->tpl_dir . "theme".DS. $_SHOP->theme_name.DS );
+$smarty->assign('_SHOP_themeimages', $_SHOP->images_url . "theme".DS. $_SHOP->theme_name.DS );
 $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
 $smarty->assign("_SHOP_images", $_SHOP->images_url);
 
