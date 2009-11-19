@@ -34,13 +34,10 @@
 
 define("DB_DEADLOCK", 1213);
 
-
-
-
 class ShopDB {
     static $prefix = '';
     static $link;
-    static $db_trx_startedi = 0;
+    static $db_trx_started = 0;
     // /
     // new SQLi extenstions
     function init ()
@@ -117,7 +114,7 @@ class ShopDB {
      * @return bool, Is true if a transaction has started. 
      */
     static function isTransaction(){
-      return self::$db_trx_startedi >0;
+      return self::$db_trx_started >0;
     }
     
     function close(){
@@ -139,14 +136,14 @@ class ShopDB {
     function begin ($name='')
     {
         global $_SHOP;
-        if (self::$db_trx_startedi===0) {
+        if (self::$db_trx_started===0) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (!ShopDB::$link) {
                 self::init();
             }
             if (ShopDB::$link->autocommit(false)) {
-                self::$db_trx_startedi = 1;
+                self::$db_trx_started = 1;
                 self::dblogging("[Begin {$name}]");
                 trace("[Begin {$name}]");
                 return true;
@@ -157,9 +154,9 @@ class ShopDB {
                 return false;
             }
         } else {
-            self::$db_trx_startedi++;
-            self::dblogging("[Begin {$name}] {self::$db_trx_startedi}");
-            trace("[Begin {$name}] {self::$db_trx_startedi}");
+            self::$db_trx_started++;
+            self::dblogging("[Begin {$name}] ".self::$db_trx_started);
+            trace("[Begin {$name}] ".self::$db_trx_started);
             return true;
         }
     }
@@ -167,12 +164,12 @@ class ShopDB {
     function commit ($name='')
     {
         global $_SHOP;
-        if (self::$db_trx_startedi==1) {
+        if (self::$db_trx_started==1) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (ShopDB::$link->commit()) {
                 ShopDB::$link->autocommit(true);
-                self::$db_trx_startedi = 0;
+                self::$db_trx_started = 0;
                 self::dblogging("[Commit {$name}]");
                 trace("[Commit {$name}]");
                 return true;
@@ -182,8 +179,8 @@ class ShopDB {
                 trace("[Commit {$name}]Error: $_SHOP->db_error");
             }
         } elseif (self::$db_trx_startedi > 1) {
-            self::dblogging("[Commit {$name}] {self::$db_trx_startedi}");
-            trace("[Commit {$name}] {self::$db_trx_startedi}");
+            self::dblogging("[Commit {$name}] ".self::$db_trx_started);
+            trace("[Commit {$name}] ".self::$db_trx_started);
             self::$db_trx_startedi--;
             return true;
         } else {
@@ -194,14 +191,14 @@ class ShopDB {
     function rollback ($name='')
     {
         global $_SHOP;
-        if (self::$db_trx_startedi) {
+        if (self::$db_trx_started) {
             unset($_SHOP->db_errno);
             unset($_SHOP->db_error);
             if (ShopDB::$link->rollback()) {
                 ShopDB::$link->autocommit(true);
-                self::dblogging("[Rollback {$name}] {self::$db_trx_started}");
-                trace("[Rollback {$name}] {self::$db_trx_started}");
-                self::$db_trx_startedi= 0;
+                self::dblogging("[Rollback {$name}] ".self::$db_trx_started);
+                trace("[Rollback {$name}] ".self::$db_trx_started);
+                self::$db_trx_started= 0;
                 return true;
             } else {
                 user_error($_SHOP->db_error= ShopDB::$link->error);
@@ -263,7 +260,7 @@ class ShopDB {
     {
         global $_SHOP;
         if (!ShopDB::$link) {
-            self::init();
+          self::init();
         }
         return ShopDB::$link->insert_id;
     }
@@ -632,9 +629,9 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       $result = self::query_one_row('SHOW CREATE TABLE ' ."`$tablename`");
       $tables = ($result)? $result['Create Table']:'';
       unset($result);
+      $keys = array ( 'keys'=>array(),'fields'=>array(), 'engine'=>'');
       if ($tables) {
        // echo "<pre>$tables</pre><br>\n ";
-        $keys = array ( 'keys'=>array(),'fields'=>array(), 'engine'=>'');
         // Convert end of line chars to one that we want (note that MySQL doesn't return query it will accept in all cases)
         if (strpos($tables, "(\r\n ")) {
             $tables = str_replace("\r\n", "\n", $tables);

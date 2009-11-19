@@ -50,6 +50,7 @@
   //require_once("classes/sessions.php");
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
+  require_once("classes/model.php");
   
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');

@@ -196,8 +196,8 @@ class PlaceMapCategoryView extends AdminView {
             } else {
                 $category = new PlaceMapCategory;
                 $category->fillPost();
-                $category->category_event = $pm->pm_event_id;
-//                $category->category_data = $_POST['category_data'];
+                $category->category_event_id = $pm->pm_event_id;
+                $category->category_pm_id    = $_POST['pm_id'];
 
                 $category->save();
 

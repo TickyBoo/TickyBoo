@@ -33,6 +33,10 @@ class Model {
   * The name of this model
   * @var string 
   */
+  const MDL_NONE      = 0;
+  const MDL_MANDATORY = 1;
+  const MDL_IDENTIFY  = 2;
+  
   protected $_idName;
   protected $_tableName;
   protected $_columns = array();
@@ -40,7 +44,7 @@ class Model {
   protected $_errors = array();
 
   
-  function __construct()
+  function __construct($filldefs=true)
   {
     if (!$this->_columns) {
       $defs = & ShopDB::FieldListExt($this->tableName);
@@ -63,31 +67,27 @@ class Model {
     }
   }
 
-  function insert()
-  { 
+  function insert(){ 
   // $this->_idName 
   // unset($this->$this->_idName);
     $values  = join(",", $this->quoteColumnVals());
-
-    if (ShopDB::query("INSERT INTO `{$this->_tableName}` SET $values ")) {
+    echo $query = "INSERT INTO `{$this->_tableName}` SET $values ";
+    if (ShopDB::query($query)) {
       $this->{$this->_idName} = ShopDB::insert_id();
       return $this->id;
     } else
       return false;
   }
 
-  function update()
-  {
-
+  function update(){
     $values  = join(",", $this->quoteColumnVals());
 
     $id  = _esc($this->id);
-    $sql = "UPDATE `{$this->_tableName}` SET $values WHERE `{$this->_idName}` = $id "  ;
+    echo $sql = "UPDATE `{$this->_tableName}` SET $values WHERE `{$this->_idName}` = $id "  ;
     if (ShopDB::query($sql)) {
       return $this->id; // Not always correct due to mysql update bug/feature
     } else
       return false;
-    
   }
 
   function quoteColumnVals() {
@@ -100,19 +100,17 @@ class Model {
     return $vals;
    }
 
-  function _set ($key, $value='~~~',$mandatory=FALSE){
-    $type= substr($key,0,1);
-    if ($type == '#') {
-      $key = substr($key,1);
+  function _set ($key, $value='~~~', $mandatory=FALSE){
+    $type= self::getFieldtype($key);
+    if ($type == self::MDL_IDENTIFY) {
       $mandatory = true;
       if ($value === 0)
         $value = null;
-    } elseif ($type == '*') { 
-      $key = substr($key,1);
+    } elseif ($type  == self::MDL_MANDATORY) { 
       $mandatory = true;
     }
     if($value =='~~~'){
-      $value= $this->$key;
+      $value = $this->$key;
     }
     
     if($value or $mandatory){
@@ -129,11 +127,7 @@ class Model {
 
   Function CheckValues ($arr) { 
     foreach($this->_columns as $key){
-      $type= substr($key,0,1);
-      if ($type == '#') {
-        $key = substr($key,1);
-      } elseif ($type == '*') { 
-        $key = substr($key,1);
+      if (self::getFieldtype($key)== self::MDL_MANDATORY) { 
         if(empty($arr[$key])){$this->_errors[$key]=con('mandatory');}
       }
     }
@@ -164,18 +158,24 @@ class Model {
     return false;
   }
 
-   function values () {
-    $result = parent::values();
-    $result[$this->_idName] = $this->id;
-    return $result;
-  }
-
   function _abort ($str=''){
     if ($str) {
       echo "<div class=error>{$str}</div>";
     }
-    ShopDB::rollback($str);
+    if (ShopDB::isTxn()) ShopDB::rollback($str);
     return false; // exit;
+  }
+
+  static function getFieldtype(&$key){
+    $type= substr($key,0,1);
+    if ($type == '#') {
+      $key = substr($key,1);
+      return self::MDL_IDENTIFY;
+    } elseif ($type == '*') { 
+      $key = substr($key,1);
+      return MDL_MANDATORY;
+    }
+    return MDL_NONE;
   }
 
   /**
