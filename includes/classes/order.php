@@ -214,10 +214,15 @@ class Order Extends Model {
       $this->order_date_expire = "TIMESTAMPADD( MINUTE , ".$_SHOP->shopconfig_restime.", NOW())";
     }else{
       $this->order_status="ord";
-      If ($this->order_handling->handling_expires_min>10) {
+      if ($this->order_handling->handling_expires_min>10) {
         $this->order_date_expire = "TIMESTAMPADD( MINUTE , ".$this->order_handling->handling_expires_min.", NOW())";
       }
     }
+    
+    //Set Default fields
+    $this->order_tickets_nr = $this->size();
+    $this->order_shipment_status = "none";
+    $this->order_payment_status = "none";
   
     $this->order_date =date('d-m-Y');
     
@@ -232,13 +237,13 @@ class Order Extends Model {
       
       foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
-        $ticket->order_id($order_id);
+        $ticket->order_id($this->order_id);
         // Tickets are saved here if handled==1 tickets are reserved instead of ordered.
         if(!$ticket->save($this->order_handling->handling_id=='1')){
-          return self::_abort(con('Errors_commiting_order'));;
+          return self::_abort(con('Errors_commiting_order')."(1)");;
         }
-        $event_stat[$ticket->event_id]++;
-        $category_stat[$ticket->category_id]++;
+        $event_stat[$ticket->seat_event_id]++;
+        $category_stat[$ticket->seat_category_id]++;
       }
       
       require_once('classes/Event.php');
@@ -246,13 +251,13 @@ class Order Extends Model {
       
       foreach($event_stat as $event_id=>$count){
         if(!Event::dec_stat($event_id,$count)){
-          return self::_abort(con('Errors_commiting_order'));
+          return self::_abort(con('Errors_commiting_order')."(2)");
         }
       }
       
       foreach($category_stat as $cat_id=>$count){
-        if(!Category::dec_stat($cat_id,$count)){
-          return self::_abort(con('Errors_commiting_order'));
+        if(!PlaceMapCategory::dec_stat($cat_id,$count)){
+          return self::_abort(con('Errors_commiting_order')."(3)");
         }
       }
       if($this->order_handling->handling_id=='1'){
@@ -261,11 +266,12 @@ class Order Extends Model {
          $ok = $this->set_status('ord',TRUE);
       }
       if($ok and !ShopDB::commit('Order saved')){
-        return self::_abort(con('Errors_commiting_order'));}
-      return $order_id;
+        return self::_abort(con('Errors_commiting_order')."(4)");
+      }
+      return $this->order_id;
 
     }else{
-      return self::_abort(con('Errors_commiting_order'));
+      return self::_abort(con('Errors_commiting_order')."(5)");
     }
   }
 

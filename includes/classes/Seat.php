@@ -59,8 +59,8 @@ class Seat  Extends Model {
       $seat->seat_discount_id=$discount->discount_id;
     }else{
       $seat->seat_price=$cat_price;
-    } 
-    return $seat;    
+    }
+    return $seat;  
   }
   
   function load($seatId){

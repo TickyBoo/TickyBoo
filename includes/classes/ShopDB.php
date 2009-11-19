@@ -38,6 +38,7 @@ class ShopDB {
     static $prefix = '';
     static $link;
     static $db_trx_started = 0;
+    static $db_trx_startedi = 0;
     // /
     // new SQLi extenstions
     function init ()

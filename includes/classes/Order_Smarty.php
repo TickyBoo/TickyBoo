@@ -68,8 +68,6 @@ class Order_Smarty {
      //compile order (order and tickets) from the shopping cart in order_func.php
 
     $order = Order::create($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
-    
-    var_dump($order);
 
     //begin the transaction
     if(!ShopDB::begin('Make order')){
