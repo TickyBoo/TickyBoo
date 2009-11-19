@@ -39,13 +39,14 @@ class Seat  Extends Model {
   protected $_idName    = 'pm_id';
   protected $_tableName = 'Seat';
   protected $_columns   = array('#seat_id', '*seat_event_id', '*seat_category_id', '#seat_user_id', '#seat_order_id',
-                                '#seat_row_nr',c'#seat_zone_id', '#seat_pmp_id', 'seat_nr', 'seat_ts', 'seat_sid',
+                                '#seat_row_nr', '#seat_zone_id', '#seat_pmp_id', 'seat_nr', 'seat_ts', 'seat_sid',
                                 'seat_price', '#seat_discount_id', 'seat_code', '*seat_status', '#seat_old_order_id', 
                                 'seat_old_status');
    
 
-  function Ticket ($seat_id, $user_id, $sid, $cat_price, $discount=null) {
-    $seat = self::load($seat_id);
+  function ticket ($event_id,$category_id,$seat_id, $user_id, $sid, $cat_price, $discount=null) {
+    //$seat = self::load($seat_id);
+    $seat = new Seat();
     $seat->_columns   = array('#seat_id', '#seat_user_id', '#seat_order_id', 'seat_ts', 'seat_sid',
                               'seat_price', '#seat_discount_id', 'seat_code', '*seat_status');
     $seat->seat_event_id=$event_id;
@@ -59,6 +60,9 @@ class Seat  Extends Model {
     }else{
       $seat->seat_price=$cat_price;
     }  
+  }
+  
+  function load($seatId){
   }
   
   function load_pmp_all ($pmp_id){
@@ -84,8 +88,8 @@ class Seat  Extends Model {
   
   function save ($reservate= false){
     if(!$this->seat_order_id){ return FALSE; }
-    $this=seat_code=$this->generate_code(8);
-    $this=seat_status=($reservate)?'resp':'com';
+    $this->seat_code=$this->generate_code(8);
+    $this->seat_status=($reservate)?'resp':'com';
     return parent::save(); 
   }
     
@@ -407,7 +411,7 @@ class Seat  Extends Model {
     }
   }
 
-  function generate_code ($length){
+  static function generate_code ($length){
     $chars = "0123456789";
      
     $code = '' ;
@@ -418,12 +422,62 @@ class Seat  Extends Model {
 
     return $code;
   }
+  
+  static function reIssue ($order_id,$seat_id,$code_length=8){
+    global $_SHOP;
+    
+    if(!ShopDB::begin('Re-Issue Ticket')){
+      echo "<div class=error> $seat_id : ".ticket_not_reemited."(1)</div>";
+      ShopDB::rollback('failed to begin.');
+      return false;
+    }
+    
+    $query = "SELECT * 
+              FROM `Seat` 
+              WHERE 1=1 
+                AND seat_id="._esc($seat_id)." 
+                AND seat_order_id="._esc($order_id)." 
+              FOR UPDATE";
+    
+    $res = ShopDB::query($query);
+    if(!$res || ShopDB::affected_rows()<>1){
+      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."(2)</div>";
+      ShopDB::rollback('Failed to find the re-issue ticket');
+      return false;
+    }
+  
+    $new_code=self::generate_code($code_length);
 
-  //static functions for all
+    $query="UPDATE Seat 
+            SET seat_code='$new_code'
+      	    WHERE seat_id='$seat_id'
+            and seat_order_id='$order_id'
+	          LIMIT 1";
+  
+    if(!ShopDB::query($query) or ShopDB::affected_rows()!=1){
+      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."</div>";
+      ShopDB::rollback('Failed to update the re-issue ticket');
+      return FALSE;
+    }
+    
+    if(!OrderStatus::statusChange($order_id,false,null,'Seat::reIssue',"Seat ID: $seat_id, Old Ticket Invalid")){
+      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."(2)</div>";
+      return false;
+    }
+    
+    if(!ShopDB::commit("Commit Ticket Re-Issue")){
+      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."</div>";
+      return FALSE;
+    }
+    echo "<div class=success> Seat ID: $seat_id : ".ticket_reemited."</div>";
+    return TRUE;
+  }
+
+  //Depricated
   function reemit ($order_id,$seat_id,$code_length=8){
     global $_SHOP;
   
-    $new_code=Ticket::generate_code($code_length);
+    $new_code=self::generate_code($code_length);
 
     $query="update Seat 
               set seat_code='$new_code'

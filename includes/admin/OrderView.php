@@ -568,7 +568,7 @@ function draw($noTab=false){
   }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Order::delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
   }elseif($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-    Ticket::reemit($_GET["order_id1"], $_GET['seat_id']);
+    Seat::reIssue($_GET["order_id1"], $_GET['seat_id']);
   }
   
   if($_GET['action']=='list_type'){

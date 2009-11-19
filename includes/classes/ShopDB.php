@@ -181,7 +181,7 @@ class ShopDB {
                 ShopDB::$link->autocommit(true);
                 self::dblogging("[Rollback {$name}] {self::$db_trx_started}");
                 trace("[Rollback {$name}] {self::$db_trx_started}");
-                self::$b_trx_startedi= 0;
+                self::$db_trx_startedi= 0;
                 return true;
             } else {
                 user_error($_SHOP->db_error= ShopDB::$link->error);

@@ -50,10 +50,10 @@ class Order Extends Model {
   public $tickets = array();
   public $no_fee = false;
   public $no_cost = false;
-
+  public $order_handling;
   
-  function Create ($order_user_id, $sid, $handling_id, $dummy, $no_fee, $no_cost, $place='www'){
-    $order = new order;
+  function create ($order_user_id, $sid, $handling_id, $dummy, $no_fee, $no_cost, $place='www'){
+    $order = new Order;
     $order->order_user_id=$order_user_id;
     $order->order_session_id=$sid;
     $order->order_handling_id=$handling_id;
@@ -61,7 +61,7 @@ class Order Extends Model {
     $order->order_owner_id = ($place == 'pos')? $_SESSION['_SHOP_AUTH_USER_DATA']['user_id']: null;
     $order->no_fee=$no_fee;
     $order->no_cost=$no_cost;
-    $order->order_handling=& Handling::load($handling_id);
+    $order->order_handling = &Handling::load($handling_id);
     return $order;
   }
   
@@ -110,7 +110,7 @@ class Order Extends Model {
                 $order->handling= Handling::load($order->order_handling_id);
                 $order->order_handling= &$order->handling;
             }
-      //$order->places = Ticket::loadall($order_id);
+      //$order->places = Seat::loadall($order_id);
            }
           return $order;
       }  
@@ -157,7 +157,7 @@ class Order Extends Model {
       
   }
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
-    array_push($this->places, seat::ticket($event_id, $category_id, $place_id, $this->order_user_id, $this->order_session_id, $price, $discount));
+    array_push($this->places, Seat::ticket($event_id, $category_id, $place_id, $this->order_user_id, $this->order_session_id, $price, $discount));
   }
   
   function size (){
@@ -553,8 +553,8 @@ class Order Extends Model {
       return $this->_abort(con('order_cannot_reorder')."(load seats)");
     }
     //Runs through each seat and gives it a new seat_code and the new order_id.
-    while($seat = shopDB::fetch_assoc($res)){
-      $code=Ticket::generate_code(8);
+    while($seat = ShopDB::fetch_assoc($res)){
+      $code=Seat::generate_code(8);
       $query="UPDATE `Seat` set
                 seat_order_id='{$new_id}',
                 seat_code='{$code}'
@@ -613,7 +613,7 @@ class Order Extends Model {
     }
     //Runs through each seat and gives it a new seat_code and the new order_id.
     while($seat = ShopDB::fetch_assoc($res)){
-      $code=Ticket::generate_code(8);
+      $code=Seat::generate_code(8);
       $query="UPDATE `Seat` SET
                 seat_order_id="._esc($order['order_id']).",
                 seat_code='$code'
@@ -819,7 +819,7 @@ class Order Extends Model {
     }
   }
 
-  function purgeDeleted($order_handling_id){
+  function purgeDeleted($order_handling_id = 0){
     global $_SHOP;
     
     if(!ShopDB::begin("Purge Delete start")){
