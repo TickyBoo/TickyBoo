@@ -34,7 +34,13 @@
 
 require_once('classes/ShopDB.php');
 
-class Ort{
+class Ort Extends Model {
+  protected $_idName    = 'ort_id';
+  protected $_tableName = 'Ort';
+  protected $_columns   = array( '#ort_id',
+      '*ort_name', '*ort_address', 'ort_address1', '*ort_zip',
+      '*ort_city', '*ort_country', 'ort_state', 'ort_phone',         
+      '#ort_fax', 'ort_image', 'ort_url', 'ort_pm');
   
   function load ($ort_id){ 
     $query="select * from Ort where ort_id=$ort_id";
@@ -48,45 +54,27 @@ class Ort{
   }
   
   function save (){
-    global $_SHOP;
-    $query="SET ort_name=".ShopDB::quote($this->ort_name).",
-               ort_address=".ShopDB::quote($this->ort_address).",
-        	     ort_address1=".ShopDB::quote($this->ort_address1).",
-        	     ort_zip=".ShopDB::quote($this->ort_zip).",
-        	     ort_city=".ShopDB::quote($this->ort_city).",
-        	     ort_country=".ShopDB::quote($this->ort_country).",
-        	     ort_state=".ShopDB::quote($this->ort_state).",
-        	     ort_pm=".ShopDB::quote($this->ort_pm).",
-        	     ort_phone=".ShopDB::quote($this->ort_phone).",
-        	     ort_fax=".ShopDB::quote($this->ort_fax).",
-        	     ort_plan_nr=".ShopDB::quote($this->ort_plan_nr).",
-        	     ort_url=".ShopDB::quote($this->ort_url);
-
-    if($this->ort_id){
-      $query="update Ort $query where ort_id={$this->ort_id}";
-    }else{
-      $query="insert Ort $query";
-    }
-    if(ShopDB::query($query)){
-      if(!$this->ort_id){
-        $this->ort_id=shopDB::insert_id();
-      }
-      return $this->ort_id;
+     return parrent::save();
     }
   }
   
   function copy (){
-    $old_id=$this->ort_id;
-    unset($this->ort_id);
-    
-    $new_id=$this->save();
-    
-    require_once('classes/PlaceMap.php');
-    if($pms=PlaceMap::loadAll($old_id)){
-      foreach($pms as $pm){
-        $pm->pm_ort_id=$new_id;
-	      $pm->copy();
+    If (ShopDB::begin('Copy Ort') {
+      $old_id=$this->ort_id;
+      unset($this->ort_id);
+      
+      $new_id=$this->save();
+      
+      require_once('classes/PlaceMap.php');
+      if($pms=PlaceMap::loadAll($old_id)){
+        foreach($pms as $pm){
+          $pm->pm_ort_id=$new_id;
+          if (!$pm->copy()) {
+            return self::_abort(con('Cant copy Placemap'));
+          }
+        }
       }
+      return ShopDB:commit('Copied ort');
     }
   }
   

@@ -102,7 +102,9 @@ class Model {
 
   function _set ($key, $value='~~~', $mandatory=FALSE){
     $type= self::getFieldtype($key);
-    if ($type == self::MDL_IDENTIFY) {
+    if ($key == $this->idName) {
+      return null;
+    } elseif ($type == self::MDL_IDENTIFY) {
       $mandatory = true;
       if ($value === 0)
         $value = null;

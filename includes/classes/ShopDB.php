@@ -177,7 +177,8 @@ class ShopDB {
             } else {
                 user_error($_SHOP->db_error= ShopDB::$link->error);
                 self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
-                trace("[Commit {$name}]Error: $_SHOP->db_error");
+                trace("[Commit {$name}] Error: $_SHOP->db_error");
+                self::Rollback($name);
             }
         } elseif (self::$db_trx_startedi > 1) {
             self::dblogging("[Commit {$name}] ".self::$db_trx_started);
@@ -207,8 +208,8 @@ class ShopDB {
                 trace("[rollback {$name}]Error: $_SHOP->db_error");
             }
         }  else {
-            self::dblogging("[Rollback {$name}] no transaction");
-            trace("[Rollback {$name}] no transaction");
+//            self::dblogging("[Rollback {$name}] no transaction");
+//            trace("[Rollback {$name}] no transaction");
         }
     }
 

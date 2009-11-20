@@ -335,7 +335,7 @@ class orphans {
             }
           }
         }
-        $cats=PlaceMapCategory::loadAll_event($fix[2]);
+        $cats=PlaceMapCategory::loadAll($pm_id);
         if(!$cats){
           return $this->_abort('No Categories found');
         }

@@ -190,7 +190,7 @@ class EventPropsView extends EventViewCommon {
 
 			if ( $row['event_pm_id'] ) {
 				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$row['event_pm_id']}'>
-                         <img src='images/pm.png' border='0' alt='" . place_map .
+                         <img src='images/pm.png' border='0' alt='" . con('place_map') .
 					"' title='" . place_map . "'></a>\n";
 			}
 
@@ -205,8 +205,8 @@ class EventPropsView extends EventViewCommon {
                          <img src='images/archive.png' border='0' alt='" .
 					Archive . "' title='" . Archive . "'></a>\n";
 
-				echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-                        <img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
+				echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
+                        <img src='images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
 			}
 			echo "
       </td></tr>\n\n";
@@ -602,7 +602,7 @@ select SQL_CALC_FOUND_ROWS *
 
       if ($data['event_pm_id'] and ($data['event_rep'] == 'sub' or $data['event_rep'] == 'main,sub')) {
           require_once('classes/PlaceMapCategory.php');
-          if ($cats = PlaceMapCategory::loadAll_event($data['event_id'])) {
+          if ($cats = PlaceMapCategory::loadAll($data['event_pm_id'])) {
             foreach($cats as $category) {
               $cat_d = (array)$category;
               $err = $this->state_test($cat_d, $event_d, $stats, $pmps);
@@ -620,7 +620,7 @@ select SQL_CALC_FOUND_ROWS *
             }
           } else {
               $errs = true;
-              echo "<tr class='error'><td align='center'>" . con('category') . ' ' . con('undefined') . '<br></td></tr>';
+              echo "<tr class='error'><td align='center'>" . con('undefined_category') . '<br></td></tr>';
           }
       }
       echo "</table><br>\n";
@@ -707,7 +707,7 @@ select SQL_CALC_FOUND_ROWS *
 
     if ($oke){
       $log = "<div class='success'> <b>'$date'</b> " . con($result.'success') . "</div>\n";
-      if ($event->event_rep == 'main' and $_POST['also_sub_'.$event->event_id] and $subs = Event::load_all_sub($event->event_id)) {
+      if ($event->event_rep == 'main' and $_POST['also_sub_'.$event->event_id] and $subs = Event::loadAllSubs($event->event_id)) {
         foreach($subs as $sub) {
           if ($sub->event_status == $oldstate) {
             $log .= $this->state_change_event($state, $sub);

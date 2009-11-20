@@ -108,30 +108,6 @@ if($event['event_rep']=='main'){
         }else{
           echo "<div class='err'> <b>'{$event->event_name}'</b> " . con("delete_failure") . "</div>\n";
         }
-
-        /*if($event->event_rep=='main' and $_POST['also_sub'] and $subs=Event::load_all_sub($event->event_id)){
-        foreach($subs as $sub){
-	  $date=formatAdminDate($sub->event_date);
-
-          if($sub->event_status=='pub'){
-	    if($sub->stop_sales()){
-              echo "<div class='success'> <b>'$date'</b> ".con("stop_success")."</div>\n";
-            } else {
-              echo "<div class='err'> <b>'$date'</b> ".con("stop_failure")."</div>\n";
-            }
-	  }
-	}
-      }
-*/
-        if ($event->event_rep == 'sub'){
-          require_once('admin/EventSubPropsView.php');
-          $view = new EventSubPropsView;
-          $view->event_list($event->event_main_id);
-        }else{
-          require_once('admin/EventPropsView.php');
-          $view = new EventPropsView;
-          $view->event_list();
-        }
       }
     }else if ($_GET['event_id'] > 0){
       if (!$event = Event::load($_GET['event_id'], false)){
@@ -144,7 +120,7 @@ if($event['event_rep']=='main'){
       $this->event_view($event_d);
 
       require_once('classes/PlaceMapCategory.php');
-      if ($cats = PlaceMapCategory::loadAll_event($_GET['event_id'])){
+      if ($cats = PlaceMapCategory::loadAll($event_d['event_pm_id'])){
         foreach($cats as $category){
           $category_d = (array)$category;
           $err = $this->cat_view($category_d);

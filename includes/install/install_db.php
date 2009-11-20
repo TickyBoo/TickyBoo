@@ -129,7 +129,7 @@ $tbls['Category']['fields'] = array(
   'category_max' => " int(11) DEFAULT NULL",
   'category_min' => " int(11) DEFAULT NULL",
   'category_template' => " varchar(30) DEFAULT NULL",
-  'category_color' => " int(11) NOT NULL DEFAULT '0'",
+  'category_color' => " varchar(10) DEFAULT NULL",
   'category_data' => " tinytext");
 $tbls['Category']['key'] = array(
   "PRIMARY KEY (`category_id`)",

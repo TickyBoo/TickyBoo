@@ -54,10 +54,11 @@ class PlaceMapView2 extends AdminView {
 	function pm_view( $pm_id, $pm = null ) {
 		global $_SHOP;
 		
-		$query = "select * from PlaceMap2,Ort where pm_id=" . _esc( $pm_id ) .
-			" and pm_ort_id=ort_id";
+		$query = "select * 
+              from PlaceMap2 left join Ort On pm_ort_id=ort_id
+              where pm_id=" . _esc( $pm_id );
 		if ( $row = ShopDB::query_one_row($query) ) {
-			$this->pm_form( $row, $err, edit_pm );
+			$this->pm_form( $row, $err, con('edit_pm') );
 		}
 	}
 
@@ -251,85 +252,69 @@ class PlaceMapView2 extends AdminView {
 		} elseif ( $_GET['action'] == 'view_pm' and $_GET['pm_id'] > 0 ) {
 			$this->pm_view( $_GET['pm_id'] );
 
-		} else
-			if ( $_GET['action'] == 'add_pm' ) {
+		} elseif ( $_GET['action'] == 'add_pm' ) {
 				$this->pm_form( $_GET, $err, '' );
 
-			} else
-				if ( $_POST['action'] == 'insert_pm' ) {
-					if ( !$this->pm_check($_POST, $err) ) {
-						$this->pm_form( $_GET, $err, add_pm );
-					} else {
-						$pm = PlaceMap.create( $_POST['pm_ort_id'], $_POST['pm_name'] );
-						if ( $pm_id = $pm->save() ) {
-							if ( !$this->photo_post($_POST, $pm_id) ) {
-								echo "<div class=error>" . img_loading_problem . "</div>";
-							}
+		} elseif ( $_POST['action'] == 'insert_pm' ) {
+        if ( !$this->pm_check($_POST, $err) ) {
+          $this->pm_form( $_GET, $err, add_pm );
+        } else {
+          $pm = PlaceMap.create( $_POST['pm_ort_id'], $_POST['pm_name'] );
+          if ( $pm_id = $pm->save() ) {
+            if ( !$this->photo_post($_POST, $pm_id) ) {
+              echo "<div class=error>" . img_loading_problem . "</div>";
+            }
 
-							$this->pm_view( $pm_id );
-						} else {
-							echo '<div class=error>' . cannot_insert_pm . '</div>';
-							$this->pm_form( $_GET, $err, add_pm );
-						}
-					}
-				} else
-					if ( $_GET['action'] == 'copy_pm' and $_GET['pm_id'] > 0 ) {
-						if ( $pm = PlaceMap::load($_GET['pm_id']) ) {
-							$pm->copy();
-							return true;
-						}
-					} else
-						if ( $_GET['action'] == 'edit_pm' and $_GET['pm_id'] > 0 ) {
-							$query = "select * from PlaceMap2,Ort where pm_id=" . _esc( $_GET['pm_id'] ) .
-								" and pm_ort_id=ort_id";
-							if ( $row = ShopDB::query_one_row($query) ) {
-								$this->pm_form( $row, $err, edit_pm );
-							}
-						} else
-							if ( $_POST['action'] == 'update_pm' and $_POST['pm_id'] > 0 ) {
-								if ( !$this->pm_check($_POST, $err) ) {
-									$this->pm_form( $_POST['pm_id'], $err, edit_pm );
-								} else {
-									$pm = PlaceMap::load( $_POST['pm_id'] );
-									$pm->pm_name = $_POST['pm_name'];
-									$pm->save();
+            $this->pm_view( $pm_id );
+          } else {
+            echo '<div class=error>' . cannot_insert_pm . '</div>';
+            $this->pm_form( $_GET, $err, add_pm );
+          }
+        }
+      } elseif ( $_GET['action'] == 'copy_pm' and $_GET['pm_id'] > 0 ) {
+        if ( $pm = PlaceMap::load($_GET['pm_id']) ) {
+          $pm->copy();
+          return true;
+        }
+      } elseif ( $_GET['action'] == 'edit_pm' and $_GET['pm_id'] > 0 ) {
+        $query = "select * from PlaceMap2,Ort where pm_id=" . _esc( $_GET['pm_id'] ) .
+          " and pm_ort_id=ort_id";
+        if ( $row = ShopDB::query_one_row($query) ) {
+          $this->pm_form( $row, $err, edit_pm );
+        }
+      } elseif ( $_POST['action'] == 'update_pm' and $_POST['pm_id'] > 0 ) {
+        if ( !$this->pm_check($_POST, $err) ) {
+          $this->pm_form( $_POST['pm_id'], $err, edit_pm );
+        } else {
+          $pm = PlaceMap::load( $_POST['pm_id'] );
+          $pm->pm_name = $_POST['pm_name'];
+          $pm->save();
 
-									if ( !$this->photo_post($_POST, $pm->pm_id) ) {
-										echo "<div class=error>" . img_loading_problem . "</div>";
-									}
+          if ( !$this->photo_post($_POST, $pm->pm_id) ) {
+            echo "<div class=error>" . img_loading_problem . "</div>";
+          }
 
-									if ( $pm->pm_event_id ) {
-										$this->pm_view( $pm->pm_id );
-									} else {
-										//echo $_REQUEST['action']. '  '.$_REQUEST['pm_id'].' '.$_SERVER['PHP_SELF'];
-										return true;
-									}
-								}
-							} else
-								if ( $_GET['action'] == 'remove_pm' and $_GET['pm_id'] > 0 ) {
-									$pm = PlaceMap::load( $_GET['pm_id'] );
-									$pm->delete();
-									// }
-									return true;
-								} else
-									if ( $_GET['action'] == 'split_pm' and $_GET['pm_id'] > 0 ) {
-										$this->split_form( $_GET['pm_id'], $_GET['pmp_id'] );
-									} else
-										if ( $_POST['action'] == 'split_pm' and $_POST['pm_id'] > 0 ) {
-											if ( !$pm = PlaceMap::load($_POST['pm_id']) ) {
-												return;
-											}
-											// print_r($_POST);
-											$pm->split( $_POST['pm_parts'], $_POST['split_zones'] );
-											$this->pm_view( $_POST['pm_id'] );
-										} else
-											return false;
-		/*        if ($_GET['pm_ort_id']) {
-		* $this->pm_list($_GET['pm_ort_id']);
-		* } else{
-		* echo "<script>location.href='view_event.php';</script>";
-		* }
-		*/
+          if ( $pm->pm_event_id ) {
+            $this->pm_view( $pm->pm_id );
+          } else {
+            //echo $_REQUEST['action']. '  '.$_REQUEST['pm_id'].' '.$_SERVER['PHP_SELF'];
+            return true;
+          }
+        }
+      } elseif ( $_GET['action'] == 'remove_pm' and $_GET['pm_id'] > 0 ) {
+        $pm = PlaceMap::load( $_GET['pm_id'] );
+        $pm->delete();
+        return true;
+      } elseif ( $_GET['action'] == 'split_pm' and $_GET['pm_id'] > 0 ) {
+        $this->split_form( $_GET['pm_id'], $_GET['pmp_id'] );
+      } elseif ( $_POST['action'] == 'split_pm' and $_POST['pm_id'] > 0 ) {
+        if ($pm = PlaceMap::load($_POST['pm_id']) ) {
+          // print_r($_POST);
+          $pm->split( $_POST['pm_parts'], $_POST['split_zones'] );
+          $this->pm_view( $_POST['pm_id'] );
+        }
+      } else
+        return false;
 	}
 
 	function photo_post( $data, $pm_id ) {

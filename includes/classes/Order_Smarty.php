@@ -70,42 +70,42 @@ class Order_Smarty {
     $order = Order::create($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
 
     //begin the transaction
-    if(!ShopDB::begin('Make order')){
+    if(ShopDB::begin('Make order')){
+      $cart->iterate('_collect', $order);
+
+      //put the order into database     
+      if(!$order_id=$order->save()){
+        $this->error = con('save_failed');
+        ShopDB::rollback('save_failed');
+        $cart->iterate('_reset', $order);
+
+        return; 
+      }
+
+      $no_tickets=$order->size();
+      if($handling==1){
+        $set = "SET user_order_total=user_order_total+1,
+                    user_current_tickets=user_current_tickets+{$no_tickets},
+                    user_total_tickets=user_total_tickets+{$no_tickets} ";
+      }else{
+        $set = "SET user_order_total=user_order_total+1,
+                    user_total_tickets=user_total_tickets+{$no_tickets} ";
+      }
+        $query="UPDATE `User`
+            $set
+          WHERE user_id=".ShopDB::quote($user_id);
+      if(!$res=ShopDB::query($query)){
+        $this->error =con('user_failed');
+        ShopDB::rollback('user_failed');
+      }
+
+      //commit the transaction
+      return (ShopDB::commit('Order created'))? $order: false;
+    } else {
       $this->error = con('cant_start transaction');
       return; 
     }
-
-    $cart->iterate('_collect', $order);
-
-    //put the order into database     
-    if(!$order_id=$order->save()){
-      $this->error = con('save_failed');
-      ShopDB::rollback('save_failed');
-      $cart->iterate('_reset', $order);
-
-      return; 
-    }
-
-    $no_tickets=$order->size();
-    if($handling==1){
-      $set = "SET user_order_total=user_order_total+1,
-                  user_current_tickets=user_current_tickets+{$no_tickets},
-                  user_total_tickets=user_total_tickets+{$no_tickets} ";
-    }else{
-      $set = "SET user_order_total=user_order_total+1,
-                  user_total_tickets=user_total_tickets+{$no_tickets} ";
-    }
-      $query="UPDATE `User`
-          $set
-        WHERE user_id=".ShopDB::quote($user_id);
-    if(!$res=ShopDB::query($query)){
-      $this->error =con('user_failed');
-      ShopDB::rollback('user_failed');
-    }
-
-    //commit the transaction
-    ShopDB::commit('Order created');
-    return $order;
+      
   }
 
 
@@ -438,7 +438,6 @@ class Order_Smarty {
     global $_SHOP;
   return Order::set_send($order_id, 0, $this->user_auth_id);
   }
-  
   
   function set_reserved ($params,&$smarty){
     $this->set_reserved_f($params['order_id']);

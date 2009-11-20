@@ -68,7 +68,19 @@ class PlaceMapCategory Extends Model {
       $new->category_event_id=(int)$category_event_id;
     return $new;
   }
-
+  
+  function resetColor($color){
+    if (is_numeric($tcolor)) { 
+      if ShobDB::TableExists('Color') {
+        $row = ShopDB::query_one_row('select color_code from Color where color_id ='._esc($color), false);
+        $color = $row[0];
+      } else {
+        $color = null;
+      }
+    }
+    return $color;
+  }
+   
   function save (){
     if(!$this->category_id) { 
       if ($this->category_numbering<>'none') {
@@ -78,19 +90,20 @@ class PlaceMapCategory Extends Model {
         $this->category_ident=$this->_find_ident($this->category_pm_id);
       }
     }
+    $this->category_color = resetColor($this->category_color);
     return parent::save();
   }
 
   function load ($category_id){
     global $_SHOP;
     $query="select * 
-            from Category LEFT JOIN Color ON category_color=color_id 
+            from Category
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
       $new_category->_fill($res);
-
+      $this->category_color = resetColor($this->category_color);
       return $new_category;
     }
   }
@@ -99,18 +112,16 @@ class PlaceMapCategory Extends Model {
     global $_SHOP;
 
     $query="select * 
-           from Category LEFT JOIN Color ON category_color=color_id
-                         LEFT JOIN Event ON event_id=category_event_id
+           from Category LEFT JOIN Event ON event_id=category_event_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
       $new_category->_fill($res);
-
+      $new_category->category_color = resetColor($new_category->category_color);
       return $new_category;
     }
   }
-
 
   function loadAll ($pm_id){
     global $_SHOP;
@@ -120,23 +131,7 @@ class PlaceMapCategory Extends Model {
       while($data=shopDB::fetch_assoc($res)){
         $new_cat=new PlaceMapCategory;
         $new_cat->_fill($data);
-        $cats[$new_cat->category_ident]=$new_cat;
-      }
-    }
-
-    return $cats;
-  }
-
-  function loadAll_event ($event_id){
-    global $_SHOP;
-    $query="select * 
-            from Category LEFT JOIN Color ON category_color=color_id
-            where category_event_id=".esc($event_id);
-
-    if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_assoc($res)){
-        $new_cat=new PlaceMapCategory;
-        $new_cat->_fill($data);
+        $new_category->category_color = resetColor($new_category->category_color);
         $cats[$new_cat->category_ident]=$new_cat;
       }
     }
@@ -159,30 +154,26 @@ class PlaceMapCategory Extends Model {
     }
     
 
-    if(!ShopDB::begin('delete category: '.$category_id)){
-        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
-        return FALSE;
-    }
-
-    $query="DELETE c.*, cs.*
-            FROM Category c LEFT JOIN Category_stat cs
-            ON c.category_id = cs.cs_category_id
-            WHERE c.category_id={$category_id}";
-    if(!ShopDB::query($query)){
-      return placemap::_abort(con('Category_delete_failed'));
-    }
-    
-    require_once('classes/PlaceMapPart.php');
-    if($pmps=PlaceMapPart::loadAll($cat->category_pm_id) and is_array($pmps)){
-      foreach($pmps as $pmp){
-        if($pmp->delete_category($cat->category_ident)){
-          $pmp->save();
+    if(ShopDB::begin('delete category: '.$category_id)){
+      $query="DELETE c.*, cs.*
+              FROM Category c LEFT JOIN Category_stat cs
+              ON c.category_id = cs.cs_category_id
+              WHERE c.category_id={$category_id}";
+      if(!ShopDB::query($query)){
+        return placemap::_abort(con('Category_delete_failed'));
+      }
+      
+      require_once('classes/PlaceMapPart.php');
+      if($pmps=PlaceMapPart::loadAll($cat->category_pm_id) and is_array($pmps)){
+        foreach($pmps as $pmp){
+          if($pmp->delete_category($cat->category_ident)){
+            $pmp->save();
+          }
         }
       }
-    }
 
-    If (!ShopDB::commit('Category deleted')) {return false;}
-    return TRUE;
+      return ShopDB::commit('Category deleted');
+    }
   }
 
 
@@ -197,7 +188,7 @@ class PlaceMapCategory Extends Model {
       echo "#ERR-NOSIZEDIFF(1)";
       return FALSE;
     }
-      if($this->category_status!='nosal'){
+    if($this->category_status!='nosal'){
         echo "#ERR-NOTUNPUBCAT(2)";
       return FALSE;
     }
@@ -206,121 +197,101 @@ class PlaceMapCategory Extends Model {
       return FALSE;
     }
     $new_category_size=$this->category_size+$delta;
+    
     if($new_category_size<=0){
       echo "#ERR-CATSIZE<0(4)";
       return FALSE;
     }
 
-    if(!ShopDB::begin('resize category')){
-      echo "#ERR-TRSAXNOTSTRT(5)";
-      return FALSE;
-    }
-    $query="SELECT * FROM Category_stat
-    WHERE cs_category_id='{$this->category_id}'
-    FOR UPDATE";
+    if(ShopDB::begin('resize category')){
+      $query="SELECT * FROM Category_stat
+              WHERE cs_category_id='{$this->category_id}'
+              FOR UPDATE";
 
-    if(!$cs=ShopDB::query_one_row($query)){
-      ShopDB::rollback('cant lock Category_stat');
-      echo "#ERR-NOCATSTAT(6)";
-      return FALSE;
-    }
+      if(!$cs=ShopDB::query_one_row($query)){
+        return self::_about('cant lock Category_stat');
+      }
 
-    if(($delta+$cs['cs_free'])<0){
-      ShopDB::rollback('Size is to small category');
-      echo "#ERR-TOSMALL(8)";
-      return FALSE;
-    }
-    $new_cs_total=$new_category_size;
-    $new_cs_free=$delta+$cs['cs_free'];
+      if(($delta+$cs['cs_free'])<0){
+        return self::_about('Size is to small category');
+      }
+      
+      $new_cs_total=$new_category_size;
+      $new_cs_free=$delta+$cs['cs_free'];
 
-    $query="SELECT * FROM Event_stat
-    WHERE es_event_id='{$this->category_event_id}'
-    FOR UPDATE";
+      $query="SELECT * FROM Event_stat
+              WHERE es_event_id='{$this->category_event_id}'
+              FOR UPDATE";
+      if(!$es=ShopDB::query_one_row($query)){
+        return self::_about('cant lock event_stat');
+      }
+      
+      if(($delta+$es['es_free'])<0){
+        return self::_about('Size to small for event');
+      }
 
-    if(!$es=ShopDB::query_one_row($query)){
-      ShopDB::rollback('cant lock event_stat');
-      echo "#ERR-NOEVNTSTAT(7)";
-      return FALSE;
-    }
-    if(($delta+$es['es_free'])<0){
-      ShopDB::rollback('Size to small for event');
-      echo 9;return FALSE;;
-    }
-
-    $new_es_total=$delta+$es['es_total'];
-    $new_es_free=$delta+$es['es_free'];
+      $new_es_total=$delta+$es['es_total'];
+      $new_es_free=$delta+$es['es_free'];
 
 
-    if($delta>0){
-      require_once('classes/Seat.php');
-      for($i=0;$i<$delta;$i++){
-        if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id)){
-          ShopDB::rollback('Cant publish new seats');
-          echo 10;return FALSE;;
+      if($delta>0){
+        require_once('classes/Seat.php');
+        for($i=0;$i<$delta;$i++){
+          if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id)){
+            return self::_about('Cant publish new seats');
+          }
+        }
+      } else {
+        $limit=-$delta;
+
+        $query="DELETE FROM Seat
+                  where seat_category_id='{$this->category_id}'
+                  and seat_event_id='{$this->category_event_id}'
+                  and seat_status='free'
+                  LIMIT $limit";
+
+        if(!ShopDB::query($query)){
+          return self::_about('Cant delete old seats');
+        }
+        if(shopDB::affected_rows()!=$limit){
+          return self::_about('Different No off seats removed');
         }
       }
-    }else{
-      $limit=-$delta;
 
-      $query="DELETE FROM Seat
-                where seat_category_id='{$this->category_id}'
-                and seat_event_id='{$this->category_event_id}'
-                and seat_status='free'
-                LIMIT $limit";
+      $query="UPDATE Category_stat SET 
+                cs_free='$new_cs_free',
+                cs_total='$new_cs_total'
+              WHERE cs_category_id='{$this->category_id}'
+              LIMIT 1";
 
       if(!ShopDB::query($query)){
-        ShopDB::rollback('Cant delete old seats');
-        echo 11;return FALSE;;
+        return self::_about('cant update category_stat');
+      }
+      if(shopDB::affected_rows()!=1){
+        return self::_about('category_stat not changes');
       }
 
+      $query="UPDATE Event_stat SET 
+                es_free='$new_es_free',
+                es_total='$new_es_total'
+              WHERE es_event_id='{$this->category_event_id}'
+              LIMIT 1";
 
-      if(shopDB::affected_rows()!=$limit){
-        ShopDB::rollback('Different No off seats removed');
-        echo 12;return FALSE;;
+      if(!ShopDB::query($query)){
+        return self::_about('Cant update event_stat');
       }
+      if(shopDB::affected_rows()!=1){
+        return self::_about('event_stat not changes');
+      }
+
+      $this->category_size=$new_category_size;
+
+      if(!$this->save()){
+        return self::_about('cant save category');
+      }
+
+      return ShopDB::commit('Category resized');
     }
-
-    $query="UPDATE Category_stat SET 
-              cs_free='$new_cs_free',
-              cs_total='$new_cs_total'
-            WHERE cs_category_id='{$this->category_id}'
-            LIMIT 1";
-
-    if(!ShopDB::query($query)){
-      ShopDB::rollback('cant update category_stat');
-      echo 13;return FALSE;;
-    }
-
-    if(shopDB::affected_rows()!=1){
-      ShopDB::rollback('category_stat not changes');
-      echo 14;return FALSE;;
-    }
-
-    $query="UPDATE Event_stat SET 
-              es_free='$new_es_free',
-              es_total='$new_es_total'
-            WHERE es_event_id='{$this->category_event_id}'
-            LIMIT 1";
-
-    if(!ShopDB::query($query)){
-      ShopDB::rollback('Cant update event_stat');
-      echo 15;return FALSE;;
-    }
-
-    if(shopDB::affected_rows()!=1){
-      ShopDB::rollback('event_stat not changes');
-      echo 16;return FALSE;;
-    }
-
-    $this->category_size=$new_category_size;
-
-    if(!$this->save()){
-      ShopDB::rollback('cant save category');
-      echo 17;return FALSE;;
-    }
-
-    ShopDB::commit('Category resized');
-    return TRUE;
   }
   /* ??? this code need to be checked !!!! */
   function _find_ident ($pm_id){

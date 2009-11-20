@@ -66,6 +66,24 @@ class Seat  Extends Model {
   function load($seatId){
   }
   
+  function loadAllEvent ($event_id){
+    global $_SHOP;
+  
+    $query="select seat_id, seat_user_id, seat_order_id, seat_ts, seat_sid, seat_price, seat_discount_id, seat_code, seat_status
+            from Seat 
+            where seat_event_id="._esc($event_id);
+    if($res=ShopDB::query($query)){
+      while($rec=shopDB::fetch_assoc($res)){
+        $seat = new seay;
+        $seat->_columns   = array('#seat_id', '#seat_user_id', '#seat_order_id', 'seat_ts', 'seat_sid',
+                              'seat_price', '#seat_discount_id', 'seat_code', '*seat_status');
+        $seat->_fill($rec)
+        $pmp[$seat['seat_id']]=$seat;
+      }
+    }
+    return $pmp;
+  }
+
   function load_pmp_all ($pmp_id){
     global $_SHOP;
   
@@ -209,9 +227,9 @@ class Seat  Extends Model {
       
     //some strange thing happens
     }else{
-      user_error("unknown place_numbering $numbering category $category_id");
       ShopDB::rollback("unknown place_numbering $numbering category $category_id");
       $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:171');
+      user_error("unknown place_numbering $numbering category $category_id");
       return FALSE;
     }
     
@@ -331,59 +349,56 @@ class Seat  Extends Model {
   function free ($sid, $event_id, $category_id, $seats){
     global $_SHOP;   
      
-    if(!ShopDB::begin('free seats')){ return FALSE;}
+    if(ShopDB::begin('free seats')){ 
 
-    foreach($seats as $seat_id){
+      foreach($seats as $seat_id){
 
-      $query="select seat_pmp_id 
-              from `Seat` 
-	      where seat_id="._esc($seat_id)."
-	      and seat_sid='$sid' 
-	      and seat_status='res'
-        and seat_event_id="._esc($event_id)."
-	      and seat_category_id="._esc($category_id)."
-	      FOR UPDATE";
+        $query="select seat_pmp_id 
+                from `Seat` 
+          where seat_id="._esc($seat_id)."
+          and seat_sid='$sid' 
+          and seat_status='res'
+          and seat_event_id="._esc($event_id)."
+          and seat_category_id="._esc($category_id)."
+          FOR UPDATE";
 
-      if(!$row=ShopDB::query_one_row($query)){
-        ShopDB::rollback('cant lock seats');
-        return FALSE;          
-      }else{
-        $pmps_id[$row['seat_pmp_id']]=1;
-      }
-      
-      $query="UPDATE `Seat` 
-              set seat_status='free', 
-      	      seat_ts=NULL,
-      	      seat_sid=NULL
-      	      where seat_id="._esc($seat_id)."
-      	      and seat_sid='$sid'
-      	      and seat_status='res'
-              and seat_event_id="._esc($event_id)."
-      	      and seat_category_id="._esc($category_id);
+        if(!$row=ShopDB::query_one_row($query)){
+          ShopDB::rollback('cant lock seats');
+          return FALSE;          
+        }else{
+          $pmps_id[$row['seat_pmp_id']]=1;
+        }
+        
+        $query="UPDATE `Seat` 
+                set seat_status='free', 
+                seat_ts=NULL,
+                seat_sid=NULL
+                where seat_id="._esc($seat_id)."
+                and seat_sid='$sid'
+                and seat_status='res'
+                and seat_event_id="._esc($event_id)."
+                and seat_category_id="._esc($category_id);
 
-      if(!ShopDB::query($query)){
-        ShopDB::rollback('cant update seats');
-        return FALSE;          
+        if(!ShopDB::query($query)){
+          ShopDB::rollback('cant update seats');
+          return FALSE;          
 
-      }else{
-        if(shopDB::affected_rows()!=1){
-          ShopDB::rollback('seat not changed');
-          return FALSE;
+        }else{
+          if(shopDB::affected_rows()!=1){
+            ShopDB::rollback('seat not changed');
+            return FALSE;
+          }
         }
       }
-    }
-    
-    //invalidate cache
-    if(!empty($pmps_id)){
-      require_once('classes/PlaceMapPart.php');
-      foreach($pmps_id as $pmp_id=>$v){
-        PlaceMapPart::clear_cache($pmp_id);
+      
+      //invalidate cache
+      if(!empty($pmps_id)){
+        require_once('classes/PlaceMapPart.php');
+        foreach($pmps_id as $pmp_id=>$v){
+          PlaceMapPart::clear_cache($pmp_id);
+        }
       }
-    }
-    
-    if(!ShopDB::commit('Seats freeed')){
-      ShopDB::rollback();
-      return FALSE;
+      return ShopDB::commit('Seats freeed');
     }
 
     return TRUE; 
@@ -427,51 +442,47 @@ class Seat  Extends Model {
   static function reIssue ($order_id,$seat_id,$code_length=8){
     global $_SHOP;
     
-    if(!ShopDB::begin('Re-Issue Ticket')){
-      echo "<div class=error> $seat_id : ".ticket_not_reemited."(1)</div>";
-      ShopDB::rollback('failed to begin.');
-      return false;
-    }
+    if(ShopDB::begin('Re-Issue Ticket')){
+      
+      $query = "SELECT * 
+                FROM `Seat` 
+                WHERE 1=1 
+                  AND seat_id="._esc($seat_id)." 
+                  AND seat_order_id="._esc($order_id)." 
+                FOR UPDATE";
+      
+      $res = ShopDB::query($query);
+      if(!$res || ShopDB::affected_rows()<>1){
+        echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reemited')."(2)</div>";
+        ShopDB::rollback('Failed to find the re-issue ticket');
+        return false;
+      }
     
-    $query = "SELECT * 
-              FROM `Seat` 
-              WHERE 1=1 
-                AND seat_id="._esc($seat_id)." 
-                AND seat_order_id="._esc($order_id)." 
-              FOR UPDATE";
-    
-    $res = ShopDB::query($query);
-    if(!$res || ShopDB::affected_rows()<>1){
-      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."(2)</div>";
-      ShopDB::rollback('Failed to find the re-issue ticket');
-      return false;
-    }
-  
-    $new_code=self::generate_code($code_length);
+      $new_code=self::generate_code($code_length);
 
-    $query="UPDATE Seat 
-            SET seat_code='$new_code'
-      	    WHERE seat_id='$seat_id'
-            and seat_order_id='$order_id'
-	          LIMIT 1";
-  
-    if(!ShopDB::query($query) or ShopDB::affected_rows()!=1){
-      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."</div>";
-      ShopDB::rollback('Failed to update the re-issue ticket');
-      return FALSE;
-    }
+      $query="UPDATE Seat 
+              SET seat_code='$new_code'
+              WHERE seat_id='$seat_id'
+              and seat_order_id='$order_id'
+              LIMIT 1";
     
-    if(!OrderStatus::statusChange($order_id,false,null,'Seat::reIssue',"Seat ID: $seat_id, Old Ticket Invalid")){
-      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."(2)</div>";
-      return false;
+      if(!ShopDB::query($query) or ShopDB::affected_rows()!=1){
+        echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reemited')."</div>";
+        ShopDB::rollback('Failed to update the re-issue ticket');
+        return FALSE;
+      }
+      
+      if(!OrderStatus::statusChange($order_id,false,null,'Seat::reIssue',"Seat ID: $seat_id, Old Ticket Invalid")){
+        echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reemited')."(2)</div>";
+        return false;
+      }
+      
+    if(ShopDB::commit("Commit Ticket Re-Issue")){
+       echo "<div class=error> Seat ID: $seat_id : ".con('ticket_reemited')."</div>";
+       return True;
     }
-    
-    if(!ShopDB::commit("Commit Ticket Re-Issue")){
-      echo "<div class=error> Seat ID: $seat_id : ".ticket_not_reemited."</div>";
-      return FALSE;
-    }
-    echo "<div class=success> Seat ID: $seat_id : ".ticket_reemited."</div>";
-    return TRUE;
+    echo "<div class=success> Seat ID: $seat_id : ".con('ticket_not_reemited')."</div>";
+    return false;
   }
 
   //Depricated

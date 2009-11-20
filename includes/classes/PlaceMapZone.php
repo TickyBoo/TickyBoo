@@ -98,28 +98,21 @@ class PlaceMapZone Extends Model {
       echo '<div class=error>'.con('Zone_delete_failed_seats_exists').'</div>';
       return false;
     }
-    
 
-    if(!ShopDB::begin('delete zone: '.$zone_id)){
-        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
-        return FALSE;
-    }
-
-  
-    $query="delete from PlaceMapZone where pmz_id=$pmz_id limit 1";
-    ShopDB::query($query);
-    
-    require_once('classes/PlaceMapPart.php');
-    if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
-      foreach($pmps as $pmp){
-        if($pmp->delete_zone($zone->pmz_ident)){
-          $pmp->save();
+    if(ShopDB::begin('delete zone: '.$zone_id)){
+      $query="delete from PlaceMapZone where pmz_id=$pmz_id limit 1";
+      ShopDB::query($query);
+      
+      require_once('classes/PlaceMapPart.php');
+      if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
+        foreach($pmps as $pmp){
+          if($pmp->delete_zone($zone->pmz_ident)){
+            $pmp->save();
+          }
         }
       }
+      return ShopDB::commit('Zone deleted');
     }
-
-    if (ShopDB::commit('Zone deleted')) {return false;}
-    return TRUE;
   }
 
   /* ??? this code need to be checked !!!! */

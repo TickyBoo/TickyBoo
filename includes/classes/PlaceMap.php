@@ -131,44 +131,41 @@ class PlaceMap Extends Model {
     
     if ($pm_id== -1) $pm_id = $this->pm_id;
     
-    if(!ShopDB::begin('delete Placmap: '.$pm_id)){
-        echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
-        return FALSE;
-    }
-    $pm = shopDB::query_on_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
-    if ($pm and $pm['pm_event_id']){
-      $seats = shopDB::query_on_row("select count(*) from Seats 
-                                     where seat_event_id ={$pm['pm_event_id']}", false);
-      if ($seats[0]>0) {
-        return placemap::_abort(con('placemap_delete_failed_seats_exists'));
+    if(ShopDB::begin('delete Placmap: '.$pm_id)){
+      $pm = shopDB::query_on_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
+      if ($pm and $pm['pm_event_id']){
+        $seats = shopDB::query_on_row("select count(*) from Seats 
+                                       where seat_event_id ={$pm['pm_event_id']}", false);
+        if ($seats[0]>0) {
+          return placemap::_abort(con('placemap_delete_failed_seats_exists'));
+        }
       }
-    }
-    
-    $query="delete from PlaceMapZone where pmz_pm_id={$pm_id}";
-    if(!ShopDB::query($query)){
-      return  placemap::_abort(con('placemapzone_stat_delete_failed'));
-    }
+      
+      $query="delete from PlaceMapZone where pmz_pm_id={$pm_id}";
+      if(!ShopDB::query($query)){
+        return  placemap::_abort(con('placemapzone_stat_delete_failed'));
+      }
 
-    $query="DELETE c.*, cs.*
-            FROM Category c LEFT JOIN Category_stat cs
-            ON c.category_id = cs.cs_category_id
-            WHERE c.category_pm_id={$pm_id}";
-    if(!ShopDB::query($query)){
-      return placemap::_abort(con('Category_delete_failed'));
-    }
+      $query="DELETE c.*, cs.*
+              FROM Category c LEFT JOIN Category_stat cs
+              ON c.category_id = cs.cs_category_id
+              WHERE c.category_pm_id={$pm_id}";
+      if(!ShopDB::query($query)){
+        return placemap::_abort(con('Category_delete_failed'));
+      }
 
-    $query="delete from PlaceMapPart where pmp_pm_id={$pm_id} ";
-    if(!ShopDB::query($query)){
-      return placemap::_abort(con('PlaceMapPart_delete_failed'));
-    }
+      $query="delete from PlaceMapPart where pmp_pm_id={$pm_id} ";
+      if(!ShopDB::query($query)){
+        return placemap::_abort(con('PlaceMapPart_delete_failed'));
+      }
 
-    $query="delete from PlaceMap2 where pm_id={$pm_id} limit 1";
-    if(!ShopDB::query($query)){
-      return placemap::_abort(con('placemap_delete_failed'));;
-    }
+      $query="delete from PlaceMap2 where pm_id={$pm_id} limit 1";
+      if(!ShopDB::query($query)){
+        return placemap::_abort(con('placemap_delete_failed'));;
+      }
 
-    ShopDB::commit('PlaceMap deleted');
-    return TRUE;
+      RETURN ShopDB::commit('PlaceMap deleted');
+    }
   }
 
   function copy ($event_id=''){
@@ -179,69 +176,77 @@ class PlaceMap Extends Model {
       $this->pm_event_id=$event_id;
     }
     
-    if($new_id=$this->save()){
-      require_once('classes/PlaceMapZone.php');
-      require_once('classes/PlaceMapCategory.php');
-      require_once('classes/PlaceMapPart.php');	
+    if(ShopDB::begin('copy Placmap to event: '.$event_id)){
+      if($new_id=$this->save()){
+        require_once('classes/PlaceMapZone.php');
+        require_once('classes/PlaceMapCategory.php');
+        require_once('classes/PlaceMapPart.php');	
 
-      if($zones=PlaceMapZone::loadAll($old_id)){
-        foreach($zones as $zone){
-          unset($zone->pmz_id);
-          $zone->pmz_pm_id=$new_id;
-          $zone->pmz_event_id=$event_id;
-          $zone->save();
+        if($zones=PlaceMapZone::loadAll($old_id)){
+          foreach($zones as $zone){
+            unset($zone->pmz_id);
+            $zone->pmz_pm_id=$new_id;
+            $zone->pmz_event_id=$event_id;
+            $zone->save();
+          }
+        }
+
+        if($zones=PlaceMapCategory::loadAll($old_id)){
+          foreach($zones as $zone){
+            unset($zone->category_id);
+            $zone->category_pm_id=$new_id;
+            $zone->category_event_id=$event_id;
+            $zone->save();
+          }
+        }
+
+        if($zones=PlaceMapPart::loadAll($old_id)){
+          foreach($zones as $zone){
+            unset($zone->pmp_id);
+            $zone->pmp_pm_id=$new_id;
+            $zone->pmp_event_id=$event_id;
+            $zone->save();
+          }
         }
       }
-      if($zones=PlaceMapCategory::loadAll($old_id)){
-        foreach($zones as $zone){
-          unset($zone->category_id);
-          $zone->category_pm_id=$new_id;
-          $zone->category_event_id=$event_id;
-          $zone->save();
-        }
-      }
-
-      if($zones=PlaceMapPart::loadAll($old_id)){
-        foreach($zones as $zone){
-          unset($zone->pmp_id);
-          $zone->pmp_pm_id=$new_id;
-          $zone->pmp_event_id=$event_id;
-          $zone->save();
-        }
+      if (ShopDB::commit('copied Placmap to event: '.$event_id){
+        return $new_id;
       }
     }
-    
-    return $new_id;
   }  
   
   function split ($pm_parts=0,$split_zones=true){
     if(!is_array($pm_parts)) { return false; }
+    
     require_once('classes/PlaceMapCategory.php');
     require_once('classes/PlaceMapPart.php');
-
-    $index=PlaceMapCategory::_find_ident($this->pm_id);
-    $parts=PlaceMapPart::loadAll($this->pm_id);
-    
-    foreach($parts as $part_small){
-      if(!in_array($part_small->pmp_id, $pm_parts)){continue;}
-
-      $part=PlaceMapPart::loadFull($part_small->pmp_id);
-      if($part->split($index, $cats, $old_cats, $split_zones)){
-        $part->save();
-      }
-    }
-
-    if($cats){
-      foreach($cats as $cat){
-        $cat->save();
-      }
-    }
+  
+    if(ShopDB::begin('Split Placmap')){
+      $index=PlaceMapCategory::_find_ident($this->pm_id);
+      $parts=PlaceMapPart::loadAll($this->pm_id);
       
-    if($old_cats){
-      foreach($old_cats as $cat){
-        $cat->save();
+      foreach($parts as $part_small){
+        if(!in_array($part_small->pmp_id, $pm_parts)){continue;}
+
+        $part=PlaceMapPart::loadFull($part_small->pmp_id);
+        if($part->split($index, $cats, $old_cats, $split_zones)){
+          $part->save();
+        }
+      }
+
+      if($cats){
+        foreach($cats as $cat){
+          $cat->save();
+        }
+      }
+        
+      if($old_cats){
+        foreach($old_cats as $cat){
+          $cat->save();
+        }
       }
     }
+    retutn ShopDB::commit('copied Placmap to event:');
   }
 }
 ?>

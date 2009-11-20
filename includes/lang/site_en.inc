@@ -478,7 +478,8 @@ define("multi","Add Sub-Event");
 		define("theater","Theater");
 	define("event_image","Event Image");
 	define("event_mp3","MP3");
-
+  define("undefined_category","Category undefined");
+  
 //Discounts
 define("discount_title","All Discounts");
 define("discount_add_title","Add a Discount");
