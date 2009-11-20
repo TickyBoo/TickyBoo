@@ -70,8 +70,8 @@ class PlaceMapCategory Extends Model {
   }
   
   function resetColor($color){
-    if (is_numeric($tcolor)) { 
-      if ShobDB::TableExists('Color') {
+    if (is_numeric($tcolor)) {
+      if(ShobDB::TableExists('Color') ){
         $row = ShopDB::query_one_row('select color_code from Color where color_id ='._esc($color), false);
         $color = $row[0];
       } else {
