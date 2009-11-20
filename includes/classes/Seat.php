@@ -77,7 +77,7 @@ class Seat  Extends Model {
         $seat = new seay;
         $seat->_columns   = array('#seat_id', '#seat_user_id', '#seat_order_id', 'seat_ts', 'seat_sid',
                               'seat_price', '#seat_discount_id', 'seat_code', '*seat_status');
-        $seat->_fill($rec)
+        $seat->_fill($rec);
         $pmp[$seat['seat_id']]=$seat;
       }
     }
@@ -477,11 +477,12 @@ class Seat  Extends Model {
         return false;
       }
       
-    if(ShopDB::commit("Commit Ticket Re-Issue")){
-       echo "<div class=error> Seat ID: $seat_id : ".con('ticket_reemited')."</div>";
-       return True;
+      if(ShopDB::commit("Commit Ticket Re-Issue")){
+         echo "<div class=success> Seat ID: $seat_id : ".con('ticket_reemited')."</div>";
+         return True;
+      }
     }
-    echo "<div class=success> Seat ID: $seat_id : ".con('ticket_not_reemited')."</div>";
+    echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reemited')."</div>";
     return false;
   }
 

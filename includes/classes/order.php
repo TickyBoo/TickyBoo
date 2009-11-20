@@ -283,7 +283,7 @@ class Order Extends Model {
       if(!$res=ShopDB::query($sql)){
         return _abort("No such Order ID");
       }
-      return ShopDB::commit('order_note saved'))
+      return ShopDB::commit('order_note saved');
     }
   }
 
@@ -371,8 +371,7 @@ class Order Extends Model {
     }  
     echo "<div class=error>".con('cannot_begin_transaction')."</div>";
     return FALSE;
-    }
-      
+
   }
   /* static functions of common use */
 
@@ -579,12 +578,12 @@ class Order Extends Model {
     }
   }
 
-  static function reissue ($order_id){
+  function reissue ($order_id){
 
-      if(ShopDB::begin('reemit order: '.$order_id)){
+    if(ShopDB::begin('reemit order: '.$order_id)){
       //loads old order into var
       $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
-      if(!$order=ShopDB::query_one_row($query)){
+      if (!$order=ShopDB::query_one_row($query)){
         return Order::_abort(order_not_found);
       }
 
@@ -608,13 +607,13 @@ class Order Extends Model {
       $seats = Seat::loadAllEvent($order['order_id']);
       foreach($seats as $seat ){
         $seat->seat_code=Seat::generate_code(8);
-        if(!$seat->save()){
+        if (!$seat->save()){
           return Order::_abort(con('order_cannot_change_seat'));
         }
       }
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
-        return Order::_abort(order_cannot_reemit."(update status 2");
+        return Order::_abort(con('order_cannot_reemit')."(update status 2");
       }
       
       //Commit and finish
