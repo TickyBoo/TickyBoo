@@ -246,7 +246,7 @@ class PlaceMap Extends Model {
         }
       }
     }
-    retutn ShopDB::commit('copied Placmap to event:');
+    return ShopDB::commit('copied Placmap to event:');
   }
 }
 ?>
