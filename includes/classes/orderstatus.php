@@ -1,7 +1,6 @@
 <?php
 
-require_once("ShopDB.php");
-require_once("Order.php");
+require_once("order.php");
 
 class OrderStatus{
   
