@@ -73,7 +73,7 @@ class Ort Extends Model {
           }
         }
       }
-      return ShopDB:commit('Copied ort');
+      return ShopDB::commit('Copied ort');
     }
   }
   
