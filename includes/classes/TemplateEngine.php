@@ -88,7 +88,9 @@ class TemplateEngine {
       case 'systm':
       case 'email':
         require_once("classes/EmailTCompiler.php");
+        require_once("classes/email.swift.compiler.php");
         $comp = new EmailTCompiler;
+        $comp2 = new EmailSwiftCompiler;
         break;
       case 'pdf2':
         require_once("classes/PDF2TCompiler.php");
@@ -98,7 +100,8 @@ class TemplateEngine {
         user_error("unsupported template type: ".$data['template_type']);
     }
   
-    //trying to compile
+    //try to compile, pass template and name to compiler.
+    $code2 = $comp2->compile($data['template_text'],$t_class_name);
     if(!$code = $comp->compile($data['template_text'],$t_class_name)){
       //if failed to compile set error.
       $this->errors = $comp->errors;
@@ -107,8 +110,18 @@ class TemplateEngine {
       return FALSE;
     }
     
+    if(file_exists($_SHOP->templates_dir.$t_class_name.'_swift.php')){
+      unlink($_SHOP->templates_dir.$t_class_name.'_swift.php');
+    }
+        
     if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
       unlink($_SHOP->templates_dir.$t_class_name.'.php');
+    }
+    
+    $fileStream = fopen($_SHOP->templates_dir.$t_class_name.'_swift.php', 'w');
+    if($fileStream){
+      $res=fwrite($fileStream,utf8_encode("<?php \n".$code2."\n?>"));
+      $close=fclose($fileStream);
     }
 
     $fileStream = fopen($_SHOP->templates_dir.$t_class_name.'.php', 'w');
