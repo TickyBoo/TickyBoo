@@ -27,23 +27,23 @@
  * clear to you.
  */
 
- 
+
 class Model {
   /**
   * The name of this model
-  * @var string 
+  * @var string
   */
   const MDL_NONE      = 0;
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
-  
+
   protected $_idName;
   protected $_tableName;
   protected $_columns = array();
 
   protected $_errors = array();
 
-  
+
   function __construct($filldefs=true)
   {
     if (!$this->_columns) {
@@ -55,7 +55,7 @@ class Model {
           $this->_columns[]  = $key;
         }
       }
-    }  
+    }
   }
 
   function save ($id = null){
@@ -67,8 +67,8 @@ class Model {
     }
   }
 
-  function insert(){ 
-  // $this->_idName 
+  function insert(){
+  // $this->_idName
   // unset($this->$this->_idName);
     $values  = join(",", $this->quoteColumnVals());
     $query = "INSERT INTO `{$this->_tableName}` SET $values ";
@@ -82,16 +82,20 @@ class Model {
   function update(){
     $values  = join(",", $this->quoteColumnVals());
 
-    $id  = _esc($this->id);
-    $sql = "UPDATE `{$this->_tableName}` SET $values WHERE `{$this->_idName}` = $id "  ;
+    $sql = "UPDATE `{$this->_tableName}` SET $values";
+    if ($this->_idName){
+      $id  = _esc($this->id);
+      $sql .= " WHERE `{$this->_idName}` = $id "  ;
+    }
+    $sql .= " LIMIT 1";
     if (ShopDB::query($sql)) {
-      return $this->id; // Not always correct due to mysql update bug/feature
+      return ($this->_idName) ? $this->id : true; // Not always correct due to mysql update bug/feature
     } else
       return false;
   }
 
   function quoteColumnVals() {
-    $vals = array(); 
+    $vals = array();
     foreach($this->_columns as $key) {
       if ($val= $this->_set($key)) {
         $vals[] = $val;
@@ -108,18 +112,18 @@ class Model {
       $mandatory = true;
       if ($value === 0)
         $value = null;
-    } elseif ($type  == self::MDL_MANDATORY) { 
+    } elseif ($type  == self::MDL_MANDATORY) {
       $mandatory = true;
     }
     if($value =='~~~'){
       $value = $this->$key;
     }
-    
+
     if($value or $mandatory){
       return "`{$key}`="._esc($value);
     }
   }
-  
+
   function delete($id)  {
     if (!$id) $id = $this->id;
     $id = _esc($id);
@@ -127,9 +131,9 @@ class Model {
     return ShopDB::affected_rows();
   }
 
-  Function CheckValues ($arr) { 
+  Function CheckValues ($arr) {
     foreach($this->_columns as $key){
-      if (self::getFieldtype($key)== self::MDL_MANDATORY) { 
+      if (self::getFieldtype($key)== self::MDL_MANDATORY) {
         if(empty($arr[$key])){$this->_errors[$key]=con('mandatory');}
       }
     }
@@ -142,7 +146,7 @@ class Model {
 
   function _fill($arr , $nocheck=true)  {
     if(is_array($arr) and ($nocheck or $this->CheckValues ($arr)))
-    { 
+    {
       foreach($arr as $key => $val)
         $this->$key = $val;
       return true;
@@ -173,7 +177,7 @@ class Model {
     if ($type == '#') {
       $key = substr($key,1);
       return self::MDL_IDENTIFY;
-    } elseif ($type == '*') { 
+    } elseif ($type == '*') {
       $key = substr($key,1);
       return MDL_MANDATORY;
     }
@@ -183,11 +187,11 @@ class Model {
   /**
    * When a something is requested instead of talking directly to the var in the class
    * it is called via the __get method.
-   * 
+   *
    * @param $key : the parameters name.
    * Last Updated : 15/11/2008 01:30 CJ
-   */   
-  function __get($key) {    
+   */
+  function __get($key) {
     if ($key==='id') {
       $_idName = $this->_idName;
       return $this->$_idName;

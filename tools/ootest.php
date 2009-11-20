@@ -1,35 +1,32 @@
 <?php
 
-class a {
-  const MYCLASS =  __CLASS__;
+class albert {
+  static $MYCLASS =  __CLASS__;
+  protected static $_test = __CLASS__;
+
+
   var $ida;
-  
-  function echoId(){
-    print_r(self::MYCLASS)  ;
+
+  protected static function echoId(){
+    print_r(debug_backtrace())  ;echo __METHOD__;
+
   }
 }
 
 
-class b extends a {
-  
+class bert extends albert {
+  static $MYCLASS =  __CLASS__;
+  protected static $_test = __CLASS__;
+
   var $idb = 123;
-   
-  function echo2(){  
-    self::echoId();      echo ':';
-    print_r(self::MYCLASS)  ;
+
+  static function echo2(){
+    self::echoId();
+    echo ':';echo __METHOD__;
+
+    print_r(debug_backtrace())  ;
   }
-  
-}
-function test () {
-  print ($b);
-}
 
-$b = new b();
-$GLOBALS['b'] = $b;
-
-$b->echo2();
-echo '-';
-b::echo2();
-echo '-';
-test();
+}
+bert::echo2();
 ?>

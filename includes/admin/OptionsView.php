@@ -34,11 +34,10 @@
 
 
 require_once("admin/AdminView.php");
-//require_once("classes/Organizer.php");
 
 class OptionsView extends AdminView{
 
-	function draw () { 
+	function draw () {
 	global $_SHOP;
 		if($_POST['action']=='update'){
 			if(!$this->options_check($_POST,$err)){
@@ -46,7 +45,7 @@ class OptionsView extends AdminView{
 				exit;
 			}else{
 
-				$query="UPDATE `ShopConfig` SET 
+				$query="UPDATE `ShopConfig` SET
 	      		shopconfig_lastrun_int="._ESC($_POST['shopconfig_lastrun_int']).",
 	      		shopconfig_restime="._ESC($_POST['shopconfig_restime']).",
 	      		shopconfig_check_pos="._ESC($_POST['shopconfig_check_pos']).",
@@ -58,7 +57,7 @@ class OptionsView extends AdminView{
 	      		cart_delay="._ESC((int)$_POST['cart_delay']).",
 	      		shopconfig_maxres="._ESC($_POST['shopconfig_maxres'])."
 	      		limit 1";
-				
+
 				if(!ShopDB::query($query)){
           echo "<div class='error'>".con('update_error')."</div>";
 				}
@@ -81,7 +80,7 @@ function option_form (&$data, &$err){
 	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 //  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
 //	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
-	
+
 	$this->print_input('shopconfig_lastrun_int',$data, $err,5,10);
 	$this->print_input('shopconfig_restime',$data, $err,5,10);
 //	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
@@ -109,10 +108,10 @@ function option_form (&$data, &$err){
  	echo "</table>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   echo "<input type='hidden' name='action' value='update'>\n";
-	
+
 	echo "<tr><td align='center' class='admin_value' colspan='2'>
   	<input type='submit' name='save' value='".save."'> ";
-	
+
 	echo "<input type='reset' name='reset' value='".res."'></td></tr>";
 	echo "</form>\n";
  	echo "</table>\n";
@@ -120,7 +119,7 @@ function option_form (&$data, &$err){
 }
 function options_check (&$data, &$err){
 	global $_SHOP;
-	
+
 	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime', //'shopconfig_restime_remind',
                 'shopconfig_posttocollect') as $check) {
     if(empty($data[$check])){

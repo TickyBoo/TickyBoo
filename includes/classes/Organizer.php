@@ -33,12 +33,25 @@
  */
 
 
-class Organizer{
+class Organizer  Extends Model {
+  protected $_idName    = '';
+  protected $_tableName = 'Organizer';
+  protected $_columns   = array( '*organizer_name', '*organizer_address', '*organizer_plz', '*organizer_zip',
+                                 '*organizer_city', 'organizer_country', 'organizer_state', 'organizer_phone',
+                                 'organizer_fax', '*organizer_email', 'organizer_place', 'organizer_nickname',
+                                 '*organizer_currency', 'organizer_logo', '*organizer_nickname');
 
   function load ($dummy = 0){
     $query = "select * from Organizer limit 1";
-    
-    return ShopDB::query_one_row($query);
+    if ($row = ShopDB::query_one_row($query)){
+      $org = new Organizer();print_r($row);
+      $org->_fill($row);print_r($org);
+      return $org;
+    }
+  }
+
+  function save() {
+    return parent::update();
   }
 }
 ?>

@@ -33,26 +33,26 @@
  */
 
 require_once("classes/order.php");
-require_once("classes/Ticket.php");
+require_once("classes/Seat.php");
 
 
 class Order_Smarty {
 
   var $user_auth_id;
   var $error;
-  
+
   function Order_Smarty (&$smarty){
     global $_SHOP;
     $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
     $smarty->assign_by_ref("order",$this);
-   
+
     if(isset($_SESSION['_SHOP_USER_AUTH']['user_id'])) {
       $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];
     }
   }
 
   function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
-  
+
     global $_SHOP;
 
     if(!$user_id){
@@ -73,13 +73,13 @@ class Order_Smarty {
     if(ShopDB::begin('Make order')){
       $cart->iterate('_collect', $order);
 
-      //put the order into database     
+      //put the order into database
       if(!$order_id=$order->save()){
         $this->error = con('save_failed');
         ShopDB::rollback('save_failed');
         $cart->iterate('_reset', $order);
 
-        return; 
+        return;
       }
 
       $no_tickets=$order->size();
@@ -103,9 +103,9 @@ class Order_Smarty {
       return (ShopDB::commit('Order created'))? $order: false;
     } else {
       $this->error = con('cant_start transaction');
-      return; 
+      return;
     }
-      
+
   }
 
 
@@ -117,31 +117,31 @@ class Order_Smarty {
       if($params['no_cost']===true){$no_cost=true;}
       if($params['no_fee']===true){$no_fee=true;}
       if($params['place']!='pos'){$place='www';}else{$place='pos';}
-    
+
     $this->res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place);
-    
+
     $smarty->assign('order_success',true);
   }
-  
+
   function res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place){
     global $_SHOP;
     return Order::reserve_to_order($order_id,$handling_id,$no_fee,$no_cost,$place);
   }
-    
-    
+
+
   function cancel ($params,&$smarty){
     $this->cancel_f($params['order_id'],$params['reason']);
   }
-  
+
   function cancel_f ($order_id, $reason = null ){
     global $_SHOP;
     return Order::delete($order_id, is($reason,'order_canceled_by_user'), $this->user_auth_id);
   }
-  
+
   function delete_ticket ($params, &$smarty){
-    $this->delete_ticket_f($params['order_id'],$params['ticket_id']); 
+    $this->delete_ticket_f($params['order_id'],$params['ticket_id']);
   }
-  
+
   function delete_ticket_f ($order_id,$ticket_id){
     global $_SHOP;
     return Order::delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
@@ -150,31 +150,31 @@ class Order_Smarty {
 
   /**
    * Order_Smarty::order_list()
-   * 
+   *
    * @param mixed $params
    * @param mixed $content
    * @param mixed $smarty
    * @param mixed $repeat
    * #Passable Params:
-   * 	status = 
+   * 	status =
    * 	user = id
-   * 	place = 
+   * 	place =
    * 	not_sent = bool
    * 	not_status = status
    * 	order = comma delimied order by
    * 	order_id = id
    */
   function order_list ($params, $content, &$smarty,&$repeat){
-    
+
     if ($repeat) {
       $from='FROM `Order`';
-        
+
       if($params['user_id']){
         $user_id=$this->secure_url_param($params['user_id']);
         $where="where order_user_id='{$user_id}' AND Order.order_status!='trash'";
   /*    }else if($this->user_auth_id){
            $where="where order_user_id='{$this->user_auth_id}' AND Order.order_status!='trash'";
-  */         
+  */
       }else{
         if($params['status']) {
           $status=$this->secure_url_param(false,$params['status']);
@@ -185,11 +185,11 @@ class Order_Smarty {
           }else{
             $where .="WHERE Order.order_status='{$params['status']}'";
           }
-        }else{  
+        }else{
           $where="WHERE 1 AND Order.order_status!='trash'";
         }
       }
-      
+
       if($params['handling'] || $params['not_hand_payment'] || $params['not_hand_shipment'] || $params['hand_shipment'] || $params['hand_payment']){
       	$from.=',Handling ';
       	$where.=' AND handling_id = order_handling_id';
@@ -197,7 +197,7 @@ class Order_Smarty {
       		$types=explode(",",$params['not_hand_payment']);
       		foreach($types as $type){
       			if($in){$in .= ",'".$type."'";
-      			}else{$in = "'".$type."'";}      			
+      			}else{$in = "'".$type."'";}
       		}
       		$where.=" AND handling_payment NOT IN ({$in})";
       	}
@@ -236,11 +236,11 @@ class Order_Smarty {
       if($params['place']) {
         $where .=" and order_place='{$params['place']}'";
       }
-    
+
       if($params['not_sent']){
         $where .=" AND order_shipment_status != 'send' ";
       }
-    
+
       if($params['not_status']){
         $types=explode(",",$params['not_status']);
         if(count($types) <= 1){
@@ -257,15 +257,15 @@ class Order_Smarty {
             $type=_esc($type);
             if($first){
               $notIn .= $type;
-              $first = false;  
+              $first = false;
             }else{
               $notIn .= ",".$type;
             }
           }
           $where .= " AND order_status NOT IN ( {$notIn} )";
         }
-      }      
-        
+      }
+
       if($params['order']){
         $order_by="order by {$params['order']}";
       }
@@ -283,36 +283,36 @@ class Order_Smarty {
       }
 
       if($params['start_date']){
-        $where .= " and order_date>='{$params['start_date']}'";      
+        $where .= " and order_date>='{$params['start_date']}'";
       }
-    
+
       if($params['end_date']){
-        $where .= " and order_date<='{$params['end_date']}'";      
+        $where .= " and order_date<='{$params['end_date']}'";
       }
-    
+
       if($params['first']){
         $first=$this->secure_url_param($params['first']);
         $limit='limit '.$first;
-      
+
      	if($params['length']){
             $limit.=','.$params['length'];
         }
       }elseif($params['length']){
         $limit='limit 0,'.$params['length'];
       }
-      
-    
+
+
       $query="SELECT SQL_CALC_FOUND_ROWS * $from $where $order_by $limit";
       $res=ShopDB::query($query);
-    
+
       $part_count = ShopDb::query_one_row("Select FOUND_ROWS()", false);
       $part_count = $part_count[0];
       $res = array($res,$part_count);
       $order=shopDB::fetch_array($res[0]);
-    
+
     }else{
       $res=array_pop($smarty->_SHOP_db_res);
-      $part_count= $res[1];  
+      $part_count= $res[1];
       if(isset($res)){
         $order=shopDB::fetch_array($res[0]);
       }
@@ -323,23 +323,23 @@ class Order_Smarty {
         $orders[]=$order;
         while($order=shopDB::fetch_array($res)){
           $orders[]=$order;
-        } 
-        $smarty->assign("shop_orders",$orders);  
-        $smarty->assign("shop_orders_count",$part_count);  
+        }
+        $smarty->assign("shop_orders",$orders);
+        $smarty->assign("shop_orders_count",$part_count);
       }
-       
+
       $repeat=FALSE;
       return $content;
-      
+
     }else{
 
       $repeat=!empty($order);
 
       if($order){
-        $smarty->assign("shop_order",$order);  
-        $smarty->assign("shop_orders_count",$part_count);  
+        $smarty->assign("shop_order",$order);
+        $smarty->assign("shop_orders_count",$part_count);
         $smarty->_SHOP_db_res[]=$res;
-          
+
         $query="SELECT * FROM User WHERE user_id={$order['order_user_id']}";
         $res=ShopDB::query($query);
         $user=shopDB::fetch_array($res);
@@ -350,22 +350,22 @@ class Order_Smarty {
     }
     return $content;
   }
-  
+
 	function tickets ($params, $content, &$smarty,&$repeat){
-		
+
 		if ($repeat) {
       		if(!$params['order_id']){
         		$repeat=FALSE;
         		return;
       		}
       		$order_id=$this->secure_url_param($params['order_id']);
-        
-      		$from='FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id 
-            		LEFT JOIN Event ON seat_event_id=event_id 
+
+      		$from='FROM Seat LEFT JOIN Discount ON seat_discount_id=discount_id
+            		LEFT JOIN Event ON seat_event_id=event_id
            			LEFT JOIN Category ON seat_category_id= category_id
             		LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=pmz_id';
       		$where=" where seat_order_id='{$order_id}'";
-    
+
 	    	if($params['user_id']) {
 	    		$where.=" and seat_user_id='{$this->user_auth_id}'";
 	    	}
@@ -374,17 +374,17 @@ class Order_Smarty {
 	    	}
 	      	if($params['order']){
 		        $order_by="order by {$params['order']}";
-	    	} 
-	    
+	    	}
+
 	      	if($params['limit']){
 				$length=$this->secure_url_param($params['limit']);
 	        	$limit='limit '.$length;
 	      	}
-	    
+
 	      	$query="select * $from $where $order_by $limit";
-     		
+
 	      	$res=ShopDB::query($query);
-    	
+
 	      	$ticket=ShopDB::fetch_array($res);
     	}else{
       		$res=array_pop($smarty->_SHOP_db_res);
@@ -397,13 +397,13 @@ class Order_Smarty {
 		       $tickets[]=$ticket;
 		       while($ticket=ShopDB::fetch_array($res)){
 		         $tickets[]=$ticket;$c++;
-		       } 
-		       
-		       $smarty->assign("shop_tickets",$tickets);  
-		       $smarty->assign("shop_tickets_count",$c);  
+		       }
+
+		       $smarty->assign("shop_tickets",$tickets);
+		       $smarty->assign("shop_tickets_count",$c);
      		}
      		$repeat=FALSE;
-   			return $content;  
+   			return $content;
     	}elseif($params['min_date']){
     		//$repeat=!empty($ticket); //not required.
     		if($ticket){
@@ -421,49 +421,49 @@ class Order_Smarty {
     	}else{
       		$repeat=!empty($ticket);
       		if($ticket){
-	        	$smarty->assign("shop_ticket",$ticket);  
+	        	$smarty->assign("shop_ticket",$ticket);
 	        	//print_r($ticket);
-	    		$smarty->_SHOP_db_res[]=$res; 
+	    		$smarty->_SHOP_db_res[]=$res;
 			}
 	    }
     return $content;
-    
+
   }
   //Added v1.3.4 For Processing Menu PoS process.tpl
   function set_status_f($order_id,$status){
   return Order::set_status_order($order_id,$status);
   }
-  
+
   function set_send_f($order_id){
     global $_SHOP;
   return Order::set_send($order_id, 0, $this->user_auth_id);
   }
-  
+
   function set_reserved ($params,&$smarty){
     $this->set_reserved_f($params['order_id']);
   }
-  
+
   function set_reserved_f ($order_id){
     global $_SHOP;
     return Order::set_reserved($order_id, 0, $this->user_auth_id);
   }
-  
+
   // added for manual Pepper system - Legacy
 
-  function save_order_note($params,&$smarty){    
+  function save_order_note($params,&$smarty){
     $ret=Order::save_order_note($params['order_id'],$params['note']);
     $smarty->assign('order_note',$ret);
   }
-  
+
   function set_payed ($params,&$smarty){
     $this->set_payed_f($params['order_id']);
   }
-  
+
   function set_payed_f ($order_id){
     global $_SHOP;
     return Order::set_payed($order_id, 0, $this->user_auth_id);
   }
-  
+
   function order_print ($params, &$smarty){
 
     if($params['print_prefs']=='pdf'){
@@ -473,33 +473,33 @@ class Order_Smarty {
     }
     $mode = (int)$params['mode'];
     If (!$mode) $mode =3;
-    
+
    Order::print_order($params['order_id'],'', 'stream', $print, $mode);
   }
-  
-  function secure_url_param($num=FALSE, $nonum=FALSE) 
-  { 
+
+  function secure_url_param($num=FALSE, $nonum=FALSE)
+  {
   if ($num) {
-    $correct = is_numeric($num); 
-      if( $correct ) { return $num; } 
-      elseif(!$correct ){ 
+    $correct = is_numeric($num);
+      if( $correct ) { return $num; }
+      elseif(!$correct ){
         echo "No Such ID";
         //$num = cleanNUM($num);
         $num="1";
-        return $num; 
+        return $num;
       }
     }
     if ($nonum) {
     $correct = preg_match('/^[a-z0-9_]*$/i', $nonum);
-      //can also use ctype if you wish instead of preg_match 
-      //$correct = ctype_alnum($nonum);          
-      if($correct) { return $nonum; } 
-      elseif(!$correct) { 
+      //can also use ctype if you wish instead of preg_match
+      //$correct = ctype_alnum($nonum);
+      if($correct) { return $nonum; }
+      elseif(!$correct) {
       echo "No Such Varible";
         $nonum="This";
         return $nonum;
-    } 
-    } 
+    }
+    }
   }
   function EncodeSecureCode($order){
     return $order->EncodeSecureCode();

@@ -33,7 +33,6 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/Organizer.php");
 
 class OrganizerView extends AdminView{
 
@@ -68,52 +67,30 @@ class OrganizerView extends AdminView{
     echo "</form></table>\n";
   }
 
-
-
   function draw () {
   global $_SHOP;
-
+    $org = Organizer::load(); print_r($org);
     if($_POST['save']){
-
       if(!$this->organizer_check($_POST,$err)){
-        $this->organizer_form($_POST,$err,organizer_update_title,"update");
+        $this->organizer_form($_POST, $err, con('organizer_update_title'), "update");
       }else{
-
-        $query="UPDATE Organizer SET
-        organizer_name="._ESC($_POST['organizer_name']).",
-        organizer_address="._ESC($_POST['organizer_address']).",
-        organizer_plz="._ESC($_POST['organizer_plz']).",
-        organizer_ort="._ESC($_POST['organizer_ort']).",
-        organizer_email="._ESC($_POST['organizer_email']).",
-        organizer_fax="._ESC($_POST['organizer_fax']).",
-        organizer_phone="._ESC($_POST['organizer_phone']).",
-        organizer_currency="._ESC($_POST['organizer_currency']).",
-        organizer_state="._ESC($_POST['organizer_state']).",
-        organizer_country="._ESC($_POST['organizer_country'])."
-        limit 1";
-
-        if(!ShopDB::query($query)){
-
-          return 0;
-        }
+        $org->fillPost();
+        $org->save();
 
         if(!$this->logo_post($_POST, 0)){
           $err['organizer_logo'] = con('img_loading_problem');
         }
-
       }
     }
-    $query="SELECT * FROM Organizer limit 1";
-    $row=ShopDB::query_one_row($query);
+    $row=(ARRAY)$org;
     $_SESSION['_SHOP_ORGANIZER_DATA'] = $row;
-    $this->organizer_form($row,$err,organizer_update_title,"update");
+    $this->organizer_form($row, $err, con('organizer_update_title'), "update");
   }
 
   function logo_post ($data,$organizer_id){
     global $_SHOP;
   	return $this->file_post($data, 0, 'Organizer', 'organizer','_logo');
   }
-
 
   function organizer_check (&$data, &$err){
     global $_SHOP;
@@ -130,6 +107,5 @@ class OrganizerView extends AdminView{
     }
     return empty($err);
   }
-
 }
 ?>
