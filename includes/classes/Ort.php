@@ -55,11 +55,10 @@ class Ort Extends Model {
   
   function save (){
      return parrent::save();
-    }
   }
   
   function copy (){
-    If (ShopDB::begin('Copy Ort') {
+    If (ShopDB::begin('Copy Ort')) {
       $old_id=$this->ort_id;
       unset($this->ort_id);
       
