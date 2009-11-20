@@ -35,10 +35,10 @@
 class PlaceMapCategory Extends Model {
   protected $_idName    = 'category_id';
   protected $_tableName = 'Category';
-  protected $_columns   = array( '#category_id',
-  '#category_event_id', 'category_price', 'category_name', 'category_pm_id', '#category_pmp_id',
-  '*category_ident', '*category_numbering', 'category_size', 'category_max', 'category_min',
-  'category_template', '*category_color', 'category_data');
+  protected $_columns   = array( '#category_id', '#category_event_id', 'category_price', 'category_name', 
+                                 'category_pm_id', '#category_pmp_id', '*category_ident', '*category_numbering', 
+                                 'category_size', 'category_max', 'category_min', 'category_template', 
+                                 '*category_color', 'category_data');
 
   var $category_id;
   var $category_name;
@@ -95,7 +95,7 @@ class PlaceMapCategory Extends Model {
     }
   }
 
-  function load_full ($category_id){
+  function loadFull ($category_id){
     global $_SHOP;
 
     $query="select * 

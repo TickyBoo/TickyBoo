@@ -45,7 +45,7 @@ class PlaceMapPartView extends AdminView {
     {
         global $_SHOP;
 
-        if (!$pmp = PlaceMapPart::load_full($pmp_id)) {
+        if (!$pmp = PlaceMapPart::loadFull($pmp_id)) {
             return;
         }
 
@@ -157,7 +157,7 @@ class PlaceMapPartView extends AdminView {
         global $_SHOP;
 
         if (!isset($pmp)) {
-            $pmp = PlaceMapPart::load_full($pmp_id);
+            $pmp = PlaceMapPart::loadFull($pmp_id);
         }
 
         if ($pmp->event_id and $pmp->event_status != 'unpub') {
@@ -618,9 +618,8 @@ class PlaceMapPartView extends AdminView {
         echo '</table>';
     }
 
-    function pmp_short_list ($pm_id, $pmp_id = 0, $view_only = false)
-    {
-        if (!$pmps = PlaceMapPart::loadAll_names($pm_id) or count($pmps) < 2) {
+    function pmp_short_list ($pm_id, $pmp_id = 0, $view_only = false) {
+        if (!$pmps = PlaceMapPart::loadNames($pm_id) or count($pmps) < 2) {
             return;
         }
 

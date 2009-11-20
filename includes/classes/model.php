@@ -71,7 +71,7 @@ class Model {
   // $this->_idName 
   // unset($this->$this->_idName);
     $values  = join(",", $this->quoteColumnVals());
-    echo $query = "INSERT INTO `{$this->_tableName}` SET $values ";
+    $query = "INSERT INTO `{$this->_tableName}` SET $values ";
     if (ShopDB::query($query)) {
       $this->{$this->_idName} = ShopDB::insert_id();
       return $this->id;
@@ -83,7 +83,7 @@ class Model {
     $values  = join(",", $this->quoteColumnVals());
 
     $id  = _esc($this->id);
-    echo $sql = "UPDATE `{$this->_tableName}` SET $values WHERE `{$this->_idName}` = $id "  ;
+    $sql = "UPDATE `{$this->_tableName}` SET $values WHERE `{$this->_idName}` = $id "  ;
     if (ShopDB::query($sql)) {
       return $this->id; // Not always correct due to mysql update bug/feature
     } else

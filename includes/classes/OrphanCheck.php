@@ -303,7 +303,7 @@ class orphans {
           exit;
         } 
         $pm_id = $result[0];
-        $all = PlaceMapPart::loadAll_full( $pm_id);
+        $all = PlaceMapPart::loadAllFull( $pm_id);
         
         echo "<pre>";
         // PRint_r($all);

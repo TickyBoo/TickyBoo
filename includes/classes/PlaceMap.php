@@ -86,7 +86,7 @@ class PlaceMap Extends Model {
 
     if(!$dry_run){ShopDB::begin('Publish placemap');}
 
-    $parts=PlaceMapPart::loadAll_full($pm_id);
+    $parts=PlaceMapPart::loadAllFull($pm_id);
     if(!empty($parts)){
       foreach($parts as $part){
         if (! $part->publish($event_id, 0, $stats, $pmps, $dry_run)) {
@@ -225,7 +225,7 @@ class PlaceMap Extends Model {
     foreach($parts as $part_small){
       if(!in_array($part_small->pmp_id, $pm_parts)){continue;}
 
-      $part=PlaceMapPart::load_full($part_small->pmp_id);
+      $part=PlaceMapPart::loadFull($part_small->pmp_id);
       if($part->split($index, $cats, $old_cats, $split_zones)){
         $part->save();
       }

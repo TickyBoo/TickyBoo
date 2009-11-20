@@ -104,7 +104,7 @@ $tbls['User']['fields'] = array(
   'user_custom2' => " text",
   'user_custom3' => " int(11) DEFAULT '0'",
   'user_custom4' => " datetime DEFAULT '0000-00-00 00:00:00'",
-  'user_owner_id' => " int(11) NOT NULL DEFAULT '0'",
+  'user_owner_id' => " int(11) DEFAULT NULL",
   'user_lastlogin' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'user_order_total' => " int(11) NOT NULL DEFAULT '0'",
   'user_current_tickets' => " int(6) NOT NULL DEFAULT '0'",
@@ -168,7 +168,7 @@ $tbls['Color']['remove'] = array ();
 
 $tbls['Discount']['fields'] = array(
   'discount_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'discount_event_id' => " int(11) NOT NULL DEFAULT '0'",
+  'discount_event_id' => " int(11) DEFAULT NULL",
   'discount_name' => " varchar(50) NOT NULL DEFAULT ''",
   'discount_type' => " varchar(7) NOT NULL DEFAULT ''",
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'");
@@ -291,7 +291,7 @@ $tbls['Order']['remove'] = array ('order_organizer_id');
 
 $tbls['order_status']['fields'] = array(
   'os_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'os_order_id' => " int(11) NOT NULL",
+  'os_order_id' => " int(11) NOT NULL DEFAULT '0'",
   'os_changed' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'os_status_from' => "varchar(50) DEFAULT NULL",
   'os_status_to' => "varchar(50) DEFAULT NULL",

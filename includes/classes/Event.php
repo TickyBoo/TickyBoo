@@ -173,8 +173,6 @@ class Event Extends Model {
     global $_SHOP;
 
     require_once('classes/PlaceMap.php');
-    require_once('classes/Event_stat.php');
-
     if(!$dry_run){ShopDB::begin('Publish Event');}
 
     if($this->event_pm_id and ($this->event_rep=='sub' or $this->event_rep=='main,sub')){

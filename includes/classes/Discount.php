@@ -32,58 +32,66 @@
  * clear to you.
  */
 
-class Discount {
-  var $discount_id;
-  var $discount_type;
-  var $discount_value;
-  var $discount_name;
-  var $discount_event_id;
-
+class Discount  Extends Model {
+  protected $_idName    = 'discount_id';
+  protected $_tableName = 'Discount';
+  protected $_columns   = array( '#discount_id', '*discount_type', '*discount_value', '*discount_name', 
+                                 '#discount_event_id');
   
-  function Discount ($discount_id,$discount_type,$discount_value,$discount_name,$discount_event_id){
-     $this->discount_id=$discount_id;  
-     $this->discount_type=$discount_type;  
-     $this->discount_value=$discount_value;  
-     $this->discount_name=$discount_name;  
-     $this->discount_event_id=$discount_event_id;  
+  function create ($discount_id,$discount_type,$discount_value,$discount_name,$discount_event_id){
+    $new = new Discount;
+    $new->discount_id=$discount_id;  
+    $new->discount_type=$discount_type;  
+    $new->discount_value=$discount_value;  
+    $new->discount_name=$discount_name;  
+    $new->discount_event_id=$discount_event_id; 
+    return $new;     
   }
   
   //static
   function load ($id){
-    require_once "classes/ShopDB.php";
-    
-    $query="SELECT * FROM Discount WHERE discount_id="._esc($id);
-    if(!$row=ShopDB::query_one_row($query)){
-      user_error(shopDB::error());
-      return FALSE;
+    $query="SELECT * 
+            FROM Discount 
+            WHERE discount_id="._esc($id);
+    if($row=ShopDB::query_one_row($query)){
+      $new = new Discount;
+      $new->_fill($row);
+      return $new;
     }
-    
-    return new Discount (
-      $row['discount_id'],
-      $row['discount_type'],
-      $row['discount_value'],
-      $row['discount_name'],
-      $row['discount_event_id']
-    );
   }
 
-  function load_all (){
+  function loadAll (){
     $query="SELECT * FROM Discount";
     if($res=ShopDB::query($query)){
       $discounts = array();
       while($event_d=shopDB::fetch_assoc($res)){
-        $discounts[]=new Discount (
-          $row['discount_id'],
-          $row['discount_type'],
-          $row['discount_value'],
-          $row['discount_name'],
-          $row['discount_event_id']
-        );
+        $new = new Discount;
+        $new->_fill($row);
+        $discounts[]= $new;
       }
-      return $events;
+      return $discounts;
     }
   }
-  
+  function delete($discount_id){
+    $query = "SELECT count(*) count 
+              from Seat 
+              where seat_discount_id="._esc($discount_id);
+    if (!$count = ShopDB::query_one_row($query)) {
+        return;
+    }
+
+    if ($count['count'] != 0) {
+        echo "<div class=error>" . con('in_use') . "</div>";
+        return;
+    }
+
+    $query = "DELETE FROM Discount 
+              WHERE discount_id="._esc($_GET['discount_id'])." LIMIT 1";
+    if (ShopDB::query($query)) {
+      return true;
+    }
+  }
+ 
   function apply_to ($price){
     if($this->discount_type=='fixe'){
       return $price-$this->discount_value;

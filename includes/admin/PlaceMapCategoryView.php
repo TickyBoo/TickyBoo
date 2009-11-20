@@ -41,29 +41,6 @@ class PlaceMapCategoryView extends AdminView {
         $this->width = $width;
     }
 
-    function category_view ($cat) {
-        $this->form_head(category_view_title);
-
-        $data=(array)$cat;
-
-        $this->print_field('category_id',$data );
-        $this->print_field('category_name',$data);
-        $this->print_field_o('event_name',$data);
-        $this->print_field('category_ident',$data);
-        $this->print_field('category_price',$data);
-        $this->print_field('category_template',$data);
-        $this->print_color('category_color',$data);
-        $this->print_field('category_numbering',$data);
-        $this->print_field('category_size',$data);
-        $this->print_field('category_max',$data);
-        $this->print_field('category_actual',$data);
-        $this->print_field('category_data',$data);
-
-        echo "</table><br><center>";
-        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$cat->category_pm_id}'>".place_map."</a>";
-        echo "</center>";
-    }
-    
     function category_form (&$data, &$err)
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
@@ -74,20 +51,20 @@ class PlaceMapCategoryView extends AdminView {
         $this->print_field_o('event_name', $data);
 
         $this->print_input('category_name', $data, $err, 30, 100);
-        if (!$data['category_status'] or ($data['category_status'] == 'unpub')) {
+        if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
             $this->print_input('category_price', $data, $err, 6, 6);
         } else {
             $this->print_field('category_price', $data);
         }
         $this->print_select_tpl('category_template', $data, $err);
         $this->print_select_color('category_color', $data, $err);
-        if (!$data['category_status'] or ($data['category_status'] == 'unpub')) {
+        if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
             $this->print_select_num('category_numbering', $data, $err, array('both', 'rows', 'seat', 'none'));
         } else {
             $this->print_field('category_numbering', $data);
         }
 
-        if (!$data['category_status'] or ($data['category_status'] == 'unpub')) {
+        if ((!$data['event_status'] or ($data['event_status'] == 'unpub'))) {
             $this->print_input('category_size', $data, $err, 6, 6);
         } else {
             $this->print_field('category_size', $data);
@@ -175,9 +152,7 @@ class PlaceMapCategoryView extends AdminView {
     }
 
 
-    function draw ()
-    {
-        global $_SHOP;
+    function draw () {
         if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
             if (!$pm = PlaceMap::load($_GET['pm_id'])) {
@@ -185,8 +160,7 @@ class PlaceMapCategoryView extends AdminView {
             }
 
             $this->category_form($_GET, $err);
-        } else
-        if ($_POST['action'] == 'insert_category' and $_POST['pm_id'] > 0) {
+        } elseif ($_POST['action'] == 'insert_category' and $_POST['pm_id'] > 0) {
             require_once('classes/PlaceMap.php');
             if (!$pm = PlaceMap::load($_POST['pm_id'])) {
                 return;
@@ -203,8 +177,8 @@ class PlaceMapCategoryView extends AdminView {
 
                 return true;
             }
-        }elseif ($_GET['action'] == 'view_category' and $_GET['category_id'] > 0) {
-            $category = PlaceMapCategory::load_full($_GET['category_id']);
+        } elseif ($_GET['action'] == 'view_category' and $_GET['category_id'] > 0) {
+            $category = PlaceMapCategory::loadFull($_GET['category_id']);
             $this->category_view($category);
         } elseif ($_GET['action'] == 'edit_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load($_GET['category_id']);
@@ -212,26 +186,22 @@ class PlaceMapCategoryView extends AdminView {
             $data['pm_id'] = $category->category_pm_id;
 
             $this->category_form($data, $err);
-        } else if ($_POST['action'] == 'update_category' and $_POST['category_id'] > 0) {
+        } elseif ($_POST['action'] == 'update_category' and $_POST['category_id'] > 0) {
             if (!$this->category_check($_POST, $err)) {
                 $this->category_form($_POST, $err);
             } else {
                 $category = PlaceMapCategory::load($_POST['category_id']);
-                foreach($_POST as $k => $v) {
-                    $category->$k = $v;
-                }
-                $category->category_pm_id = $_POST['pm_id'];
+                $category->fillPost();
                 $category->save();
-
                 return true;
             }
-        }elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
+        } elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load($_GET['category_id']);
 
             PlaceMapCategory::delete($category->category_id);
 
             return true;
-        } else if ($_POST['action'] == 'resize_category' and $_POST['category_id'] > 0) {
+        } elseif ($_POST['action'] == 'resize_category' and $_POST['category_id'] > 0) {
             $category = PlaceMapCategory::load($_POST['category_id']);
 
             if (!$category->change_size((int)$_POST['category_new_size'])) {
@@ -248,8 +218,6 @@ class PlaceMapCategoryView extends AdminView {
     // ################# petits fonctions speciales ##################
     function print_select_tpl ($name, &$data, &$err)
     {
-        global $_SHOP;
-
         $query = "SELECT template_name FROM Template WHERE template_type='pdf2' ORDER BY template_name";
         if (!$res = ShopDB::query($query)) {
             user_error(shopDB::error());
