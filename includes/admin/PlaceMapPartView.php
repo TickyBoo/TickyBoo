@@ -248,7 +248,7 @@ class PlaceMapPartView extends AdminView {
         }
         echo "</table>";
         echo '</td></tr></table>';
-        
+
         if (!$view_only) {
             echo '<table border=0 cellpadding=0 cellspacing=0 width="100%">
               <tr><td width="50%" valign="top" align="left">';
@@ -587,7 +587,7 @@ class PlaceMapPartView extends AdminView {
 
         $alt = 0;
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='4' align='center'>" . pm_parts . "</td></tr>\n";
+        echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . pm_parts . "</td></tr>\n";
 
         $query = "select * from PlaceMapPart where pmp_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
@@ -613,7 +613,7 @@ class PlaceMapPartView extends AdminView {
         }
 
         if ($mine and !$live) {
-            echo "<tr><td colspan=6 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmp&pm_id=$pm_id'>" . add . "</a></td></tr>";
+            echo "<tr><td colspan=6 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmp&pm_id=$pm_id'>" . add . "</a></td></tr>";
         }
         echo '</table>';
     }

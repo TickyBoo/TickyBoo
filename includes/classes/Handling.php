@@ -32,7 +32,15 @@
  * clear to you.
  */
 
-class Handling {
+class Handling Extends model {
+
+  protected $_idName    = 'handling_id';
+  protected $_tableName = 'Handling';
+  protected $_columns   = array( '#event_id',
+      '*event_name', 'event_text', 'event_short_text', 'event_url',
+      'event_image', '*event_ort_id', '#event_pm_id', 'event_date', 'event_time',
+      'event_open', 'event_end', '*event_status', '*event_order_limit', 'event_template',
+      '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
 
   var $templates;
   protected $_pment = null;
@@ -43,7 +51,7 @@ class Handling {
         $t0[]="$state=$template";
       }
       return implode(',',$t0);
-    }  
+    }
   }
 
   function _unser_templates($handling_templates){
@@ -87,42 +95,31 @@ class Handling {
 		} else {
 			$this->extra= array();
 		}
-    	if ( $pm = $this->pment()) {
+  	if ( $pm = $this->pment()) {
 			foreach($this->extra as $key => $val){
 				if(in_array($key, $pm->extras)){
 					$this->$key = $val;
 				}
 			}
-    	}
+  	}
 
-//    echo $this->handling_sale_mode,'|';
-//		If (is_string($this->handling_sale_mode)) {
-      $keys  = explode(",", $this->handling_sale_mode);
-      if (count($keys)>0) {
-        $this->sale_mode = array_combine($keys,array_fill(0,count($keys),true));
-      } else {
-        $this->sale_mode = array();
-      }
-//      $this->sale_mode = array_fill_keys(explode(",", $this->handling_sale_mode),true);
-//      print_r($this->sale_mode);
-//    }
-//		}
+    $keys  = explode(",", $this->handling_sale_mode);
+    if (count($keys)>0) {
+      $this->sale_mode = array_combine($keys,array_fill(0,count($keys),true));
+    } else {
+      $this->sale_mode = array();
+    }
 	}
 
 	function _fill ($data, $nocheck=false){
-    	foreach($data as $k=>$v){
-      		$this->$k=$v;
-    	}
-    	if ( $pm = $this->pment()) {
-			foreach($pm->extras as $key)
-				$this->extra[$key] = is($data[$key], null);
-    	}
- //   	if (isset($data['sale_mode']))
-   		$this->sale_mode = $data['sale_mode'];
-	   //print_r($this);
-    	return ;
+	  parent::_fill($data,$nocheck);
+  	if ( $pm = $this->pment()) {
+    	foreach($pm->extras as $key)
+    		$this->extra[$key] = is($data[$key], null);
   	}
-  
+		$this->sale_mode = $data['sale_mode'];
+	}
+
 	function clear() {
 	  parent::clear();
     if (isset($this->_pment)){
@@ -133,14 +130,14 @@ class Handling {
       unset($this->_sment);
     }
 	}
-		
+
 	function load ($handling_id){
     	global $_SHOP;
-    
+
     	if(isset($_SHOP->_handling_cache[$handling_id])){
       		return $_SHOP->_handling_cache[$handling_id];
     	}
-		
+
 		$query="SELECT * FROM `Handling` WHERE handling_id=".ShopDB::quote($handling_id);
     	if($res=ShopDB::query_one_row($query)){
       		$hand=new Handling;
@@ -153,13 +150,13 @@ class Handling {
     	}
     	return null;
   	}
-	
+
   function load_all ($handling_sale_mode=''){
     global $_SHOP;
     if($handling_sale_mode){
       $sale="where handling_sale_mode=".ShopDB::quote($handling_sale_mode);
     }
-    
+
     $query="select * from Handling $sale";
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_assoc($res)){
@@ -169,18 +166,18 @@ class Handling {
 				$hand->_unser_extra();
 				$hand->_unser_pdf_format();
         $hands[]=$hand;
-      }	
+      }
     }
     return $hands;
   }
-  
+
   function save (){
     global $_SHOP;
-    
+
 		$this->_ser_extra();
 		$this->_ser_pdf_format();
     $this->handling_email_template = $this->_ser_templates($this->handling_email_template);
-		
+
     $query=
     $this->_set('handling_alt').
     $this->_set('handling_alt_only').
@@ -197,21 +194,21 @@ class Handling {
     $this->_set('handling_delunpaid').
     $this->_set('handling_expires_min').
 	  $this->_set('handling_extra');
-	
+
     if($query){
       $query=substr($query,0,-1);
     }
     if(!$this->handling_id){
-      $query="INSERT INTO `Handling` 
+      $query="INSERT INTO `Handling`
       SET handling_payment=".ShopDB::quote($this->handling_payment).",
       handling_shipment=".ShopDB::quote($this->handling_shipment).",
       $query";
     }else{
-     $query="update Handling 
-      set $query 
+     $query="update Handling
+      set $query
       where handling_id=".ShopDB::quote($this->handling_id);
-    }       
-    
+    }
+
     if(ShopDB::query($query)){
       if(!$this->handling_id){
         $this->handling_id=ShopDB::insert_id();
@@ -235,13 +232,13 @@ class Handling {
 		}else{
 		  echo "<div class=err>".in_use."</div>";
 			return;
-		} 			
+		}
   }
-  
+
 // Calculates fee for tickets
   function calculate_fee ($total){
     return round($this->handling_fee_fix+($total/100.00)*$this->handling_fee_percent,2);
-  } 
+  }
 
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
@@ -249,11 +246,11 @@ class Handling {
     include_once(INC.'classes'.DS.'htmlMimeMail.php');
 
     $ok=TRUE;
-	
+
     if($template_name=$this->templates[$new_state] and $order->user_email){
       $te=new TemplateEngine;
       $tpl=&$te->getTemplate($template_name);
-  
+
       $email = new htmlMimeMail();
       $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
@@ -277,7 +274,7 @@ class Handling {
 				$ok= $sm->on_handle($order,$new_state,$old_state,$field);
 			}
 		}
-		return ($ok);  
+		return ($ok);
   }
 
 	function on_order_delete($order_id){
@@ -294,7 +291,7 @@ class Handling {
     }
     return $ok;
 	}
-	
+
 	/**
 	 * @return true if the handling uses an extended payment handler (ie paypal, ideal)
 	 * @access public
@@ -302,7 +299,7 @@ class Handling {
 	public function is_eph() {
     	return ($this->pment())?true:false;
   	}
-  
+
   // Loads default extras for payment method eg."pm_paypal_View.php"
   function admin_init(){
   	if($pm=$this->pment()){
@@ -333,7 +330,7 @@ class Handling {
     }
   }
 
-	
+
 	function admin_view(){
 		if($pm=$this->pment()){
 	  		return $pm->admin_view();
@@ -345,7 +342,7 @@ class Handling {
 	    	return $pm->admin_form();
 		}
 	}
-	
+
 	function admin_check(&$data, &$errors){
 		if($pm = $this->pment()){
 			return $pm->admin_check($data, $errors);
@@ -353,48 +350,48 @@ class Handling {
 			return true;
 		}
 	}
-		
+
 	/**
 	 * Handling::isValidCallback()
-	 * 
+	 *
 	 * Will ask the eph to verify its details set in the encodeCallback method.
-	 * 
+	 *
 	 * @param string $code
 	 * @return boolean : true
-	 * @since 1.0b5 
+	 * @since 1.0b5
 	 */
 	public function isValidCallback($code){
 		if($pm=$this->pment()){
 			return $pm->decodeCallback($code);
-  		}	
+  		}
 	}
-	
+
 	/**
 	 * Handling::decodeEPHCallback()
-	 * 
+	 *
 	 * It will break down the callback hash, find which eph then check against its validation method
 	 * to check that the handling id matches the settings within the eph.
 	 * The handling object filled will then be returned on successfull decode and validation.
-	 * 
+	 *
 	 * @return handling Object or null.
 	 * @uses Handling
 	 * @since 1.0b5
 	 */
 	public function decodeEPHCallback($callbackCode){
-		
+
 		if (empty($callbackCode) and isset($_REQUEST['cbr'])) $callbackCode =$_REQUEST['cbr'];
-		
+
 		if(!empty($callbackCode)){
-			
+
 			$hand = null; //handling var
-			
+
   			$text = base64_decode($callbackCode);
       		$code = explode(':',$text);
     		//  print_r( $text );
       		$code[1] = base_convert($code[1],36,10);
-      		
+
       		if(is_numeric($code[1])){
-	  			$hand = Handling::load($code[1]);	  			
+	  			$hand = Handling::load($code[1]);
 	  		}
 	  		if($hand == null){
 	  			return null;
@@ -410,13 +407,13 @@ class Handling {
 	  		return null;
 		}
 	}
-	  
+
   	/**
   	 * @name OnConfirm
-  	 * 
+  	 *
   	 * The function is used to get the payment form/method from
   	 * the extended payment handler.
-  	 * 
+  	 *
   	 * @param order : the order object [Required]
   	 * @return Array or html
   	 * @access public
@@ -462,26 +459,26 @@ class Handling {
       return $pm->on_check($order);
   	}
   }
-  	
+
 	/**
 	 * @name PaymentMethod
-	 * 
+	 *
 	 * Will load the eph file and create the eph object
-	 * 
+	 *
 	 * @example : eph_paypal.php would be loaded and the eph object would be created like:
 	 *  EPH_paypal then added the to this handling object on _pment varible.
-	 * 
+	 *
 	 * @return EPH Object
 	 * @since 1.0
 	 * @author Niels
 	 * @uses EPH Object
 	 * @access private
-	 */  
+	 */
 	private function pment() {
 	    if (!isset($this->handling_payment) or (!$this->handling_payment)) return;
-    	
+
 		$file = INC."classes".DS."payments".DS."eph_".$this->handling_payment.".php";
-	    
+
 		if (file_exists($file)){
       		if (!isset($this->_pment)){
         		$name = "EPH_".$this->handling_payment;
@@ -528,12 +525,12 @@ class Handling {
 
   function get_handlings ($include =''){
 		$sqli="SELECT handling_id, handling_payment, handling_shipment FROM `Handling` WHERE handling_id!='1'";
-		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}	
+		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}
 		$options= array();
     if ($include)
 			$options["1"] = $include;
-		
-		while ($row=shopDB::fetch_assoc($result)) { 
+
+		while ($row=shopDB::fetch_assoc($result)) {
 			$id=$row["handling_id"];
 			$payment= $row["handling_payment"];
 			$shipping=$row["handling_shipment"];
@@ -551,26 +548,26 @@ class Handling {
       $val=$this->$name;
     }
     if($val or $mandatory){
-      return $name.'='.ShopDB::quote($val).',';   
+      return $name.'='.ShopDB::quote($val).',';
     }
   }
 
 
-	
+
 		function _myErrorHandler($errno, $errstr, $errfile, $errline) {
 			if($errno!=2){
 				echo "$errno $errstr $errfil $errline";
-			}	
+			}
 		}
 
 		function _dyn_load($name){
 
-	
+
 		set_error_handler(array(&$this,'_myErrorHandler'));
 		$res=include_once($name);
 		restore_error_handler();
-	
+
 		return $res;
-	}	
+	}
 }
 ?>

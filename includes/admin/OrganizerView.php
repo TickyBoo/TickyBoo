@@ -70,7 +70,7 @@ class OrganizerView extends AdminView{
 
   function draw () {
   global $_SHOP;
-    $org = Organizer::load(); print_r($org);
+    $org = Organizer::load();
     if($_POST['save']){
       if(!$this->organizer_check($_POST,$err)){
         $this->organizer_form($_POST, $err, con('organizer_update_title'), "update");

@@ -44,8 +44,8 @@ class Organizer  Extends Model {
   function load ($dummy = 0){
     $query = "select * from Organizer limit 1";
     if ($row = ShopDB::query_one_row($query)){
-      $org = new Organizer();print_r($row);
-      $org->_fill($row);print_r($org);
+      $org = new Organizer();
+      $org->_fill($row);
       return $org;
     }
   }

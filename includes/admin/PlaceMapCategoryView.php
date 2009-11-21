@@ -107,9 +107,9 @@ class PlaceMapCategoryView extends AdminView {
         $alt = 0;
 //        echo $live;
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='5' align='center'>" .con('categories'). "</td></tr>\n";
-        $cats = PlaceMapCategory::LoadAll($pm_id);
-        foreach($cats as  $category) {
+        echo "<tr><td class='admin_list_title' colspan='5' align='left'>" .con('categories'). "</td></tr>\n";
+        if ($cats = PlaceMapCategory::LoadAll($pm_id)){
+          foreach($cats as  $category) {
             echo "<tr class='admin_list_row_$alt'>";
             echo "<td class='admin_list_item' width=10 bgcolor='{$category->category_color}'>&nbsp;</td>\n";
             echo "<td class='admin_list_item' width='50%'>{$category->category_name} ({$category->category_status})</td>\n";
@@ -128,10 +128,10 @@ class PlaceMapCategoryView extends AdminView {
             }
             echo'</td></tr>';
             $alt = ($alt + 1) % 2;
+          }
         }
-
-        if ($mine and !$live) {
-            echo "<tr><td colspan=5 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>".con('add')."</a></td></tr>";
+        if (!$live) {
+            echo "<tr><td colspan=5 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>".con('add')."</a></td></tr>";
         }
 
         echo '</table>';

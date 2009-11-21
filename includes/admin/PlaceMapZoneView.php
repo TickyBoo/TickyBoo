@@ -96,7 +96,7 @@ class PlaceMapZoneView extends AdminView {
         if ($pm = PlaceMap::load($pm_id)) {
             $mine = true;
         }
-        
+
         $query = "select * from PlaceMapZone where pmz_pm_id="._esc($pm_id);
         if (!$res = ShopDB::query($query)) {
             return;
@@ -105,7 +105,7 @@ class PlaceMapZoneView extends AdminView {
         $alt = 0;
 
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='4' align='center'>" . pm_zones . "</td></tr>\n";
+        echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . con('pm_zones') . "</td></tr>\n";
 
         while ($zone = shopDB::fetch_object($res)) {
             $zone_ident = $zone->pmz_id;
@@ -131,7 +131,7 @@ class PlaceMapZoneView extends AdminView {
         }
 
         if (!$live and $mine) {
-            echo "<tr><td colspan=4 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>" . add . "</a></td></tr>";
+            echo "<tr><td colspan=4 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>" . add . "</a></td></tr>";
         }
         echo '</table>';
     }
