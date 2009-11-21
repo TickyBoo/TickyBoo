@@ -81,9 +81,9 @@
 
 	<body class='main_side'>   <center>
 		<div class="mainbody" align='left'>
-			<img class="spacer" src='images/dot.gif' height="1px" />
+			<img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" />
 			<br />
-			<img src="images/fusion.png" align="bottom" />
+			<img src="{$_SHOP_themeimages}fusion.png" align="bottom" />
 			<br />
 
 		<div id="navbar">

@@ -36,9 +36,9 @@
   	<td class="cart_title">
   	  {!shopcart!}&nbsp;
   	  {if $cart->is_empty_f() }
-  	  	<img src="images/caddie.gif">
+  	  	<img src="{$_SHOP_themeimages}caddie.gif">
   	  {else}
-    		<img src="images/caddie_full.png" border='0'>
+    		<img src="{$_SHOP_themeimages}caddie_full.png" border='0'>
   	  {/if}
   	</td>
   </tr>
@@ -52,14 +52,14 @@
       		<tr>
       		  <td class="cart_content">
         		  {if $cart_overview.valid }
-        		  	<img src='images/ticket-valid.png'> {!valid_tickets!} {$cart_overview.valid}<br><br>
+        		  	<img src='{$_SHOP_themeimages}ticket-valid.png'> {!valid_tickets!} {$cart_overview.valid}<br><br>
         		  {/if}
         		  {if $cart_overview.expired}
-        		  	<img src='images/ticket-expired.png'> {!expired_tickets!} {$cart_overview.expired}<br><br>
+        		  	<img src='{$_SHOP_themeimages}ticket-expired.png'> {!expired_tickets!} {$cart_overview.expired}<br><br>
         		  {/if}
         		  {if $cart_overview.valid }
                 {assign var=timetl value=$smarty.now+$cart_overview.secttl}
-          			<img src='images/clock.gif'> {!tick_exp_in!} <span id="countdown1">{$timetl|date_format:'%Y-%m-%d %H:%M:%S'} GMT+00:00</span>
+          			<img src='{$_SHOP_themeimages}clock.gif'> {!tick_exp_in!} <span id="countdown1">{$timetl|date_format:'%Y-%m-%d %H:%M:%S'} GMT+00:00</span>
         		  {/if}
       		  </td>
       		</tr>
@@ -80,7 +80,7 @@
           		  <td  width="45%" valign='top' class='cart_content' style='border-bottom:#cccccc 1px solid;padding-bottom:4px;padding-top:4 font-size:10px;'>
             			<b>{$seat_item->total_price($category_item->cat_price)|string_format:"%.2f"}</b> {$organizer_currency}
             			<br>
-            			<img src='images/clock.gif' valign='middle' align='middle'> {$seat_item->ttl()} min.
+            			<img src='{$_SHOP_themeimages}clock.gif' valign='middle' align='middle'> {$seat_item->ttl()} min.
           		  </td>
           		</tr>
             {/if}

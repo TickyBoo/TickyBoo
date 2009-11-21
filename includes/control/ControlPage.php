@@ -88,7 +88,7 @@ class ControlPage extends AUIComponent {
     </head><body onload='init();'>";
     echo "  		<div id='wrap'>\n";
         echo "<div  id='header'>
-               <img src='{$_SHOP->images_url}fusion.png'  border='0'/>
+        		<img src=\"".$_SHOP->root."control/images/logo.png\"  border='0'/>
                <h2>" . $this->getTitle() . "</h2>
                </div>";
         echo"<div id='navbar'>

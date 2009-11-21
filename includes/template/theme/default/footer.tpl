@@ -65,7 +65,7 @@ echo "<hr>";
 		<tr>
 		<!-- To comply with our GPL please keep the following link in the footer of your site -->
   		<td width='27'>
-	  		<img src="images/atom.png" height='20' width='23' />
+	  		<img src="{$_SHOP_themeimages}atom.png" height='20' width='23' />
 		  </td>
 		  <td  class="copy" valign="top">
         Copyright 2009<br />

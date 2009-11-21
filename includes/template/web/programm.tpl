@@ -52,7 +52,7 @@
               <a  href='index.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a>
               {if $shop_event.event_mp3}
                 <a href='files/{$shop_event.event_mp3}'>
-                  [<img src='images/audio-small.png' border='0' valign='bottom'>]</a>
+                  [<img src='{$_SHOP_themeimages}audio-small.png' border='0' valign='bottom'>]</a>
               {/if}
             </div>
             <div  align='left'>{$shop_event.event_short_text}</div><br>

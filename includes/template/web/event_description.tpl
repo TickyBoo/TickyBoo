@@ -42,15 +42,15 @@
       <td colspan='4' valign='top'>
         <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
           {if $shop_event.event_pm_id}
-            <img border='0' src='images/ticket.gif'>
+            <img border='0' src='{$_SHOP_themeimages}ticket.gif'>
           {else}
-            <img border='0' src='images/info.gif' />
+            <img border='0' src='{$_SHOP_themeimages}info.gif' />
           {/if}
           &nbsp;{$shop_event.event_name}
         </a>
         {if $shop_event.event_mp3}
           <a  href='files/{$shop_event.event_mp3}'>
-            <img src='images/audio-small.png' border='0' valign='bottom'>
+            <img src='{$_SHOP_themeimages}audio-small.png' border='0' valign='bottom'>
           </a>
         {/if}<br>
         <span class="date">{$shop_event.event_date|date_format:!shortdate_format!}
@@ -94,15 +94,15 @@
       <td>
         <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
           {if $shop_event.event_pm_id}
-            <img border='0' src='images/ticket.gif' align="middle">
+            <img border='0' src='{$_SHOP_themeimages}ticket.gif' align="middle">
           {else}
-            <img border='0' src='images/info.gif' align="middle">
+            <img border='0' src='{$_SHOP_themeimages}info.gif' align="middle">
           {/if}
           &nbsp;{$shop_event.event_name}
         </a>
         {if $shop_event.event_mp3}
           <a  href='files/{$shop_event.event_mp3}'>
-            [<img src='images/audio-small.png' border='0' valign='bottom'>]
+            [<img src='{$_SHOP_themeimages}audio-small.png' border='0' valign='bottom'>]
           </a>
         {/if}<br>
         {if $info_plus eq "on"}

@@ -142,7 +142,7 @@
 			  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
 			  <center>
 				<tr>
-				  <td rowspan='7'><img src='images/dot.gif' width='1' height='100'></td>
+				  <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
 				  <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
 				</tr>
 				{order->tickets order_id=$shop_order.order_id min_date='on' }

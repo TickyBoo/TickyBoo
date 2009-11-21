@@ -89,7 +89,7 @@
 		    {if $organizer->organizer_logo} 
            <img src='{$_SHOP_files}{$organizer->organizer_logo}' border="0" /> 
         {else}
-           <img src="{$_SHOP_images}fusion.png" border="0"/>
+       		<img src=\"".$_SHOP->root."pos/images/logo.png\"  border='0'/>
         {/if}
  				{!box_office!}
 			</div>

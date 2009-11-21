@@ -155,7 +155,7 @@ TABLE.mycal_table
 {
   background-color: #FFFFFF;
 
-	background-image: url('images/mid_navback.gif');
+	background-image: url('{$_SHOP_themeimages}mid_navback.gif');
 	BACKGROUND-POSITION: bottom;
 	BACKGROUND-REPEAT: repeat-x ;
   margin: 1px;
@@ -180,7 +180,7 @@ TABLE.mycal_table
 	position: relative;
     width: 1000;
 	height: 22px;
-	background: #ffffff url(images/mid_navback.gif) 0 100% repeat-x;
+	background: #ffffff url({$_SHOP_themeimages}mid_navback.gif) 0 100% repeat-x;
 	font: bold 12px Verdana, Helvetica, Arial, sans-serif;
 }
 
@@ -194,7 +194,7 @@ TABLE.mycal_table
 	padding: 0 2px 0 0;
 	margin: 0;
 	float: left;
-	background: url(images/back1.gif) 0 100% no-repeat;
+	background: url({$_SHOP_themeimages}back1.gif) 0 100% no-repeat;
 }
 
 #navbar ul li a:link, #navbar ul li a:active, #navbar ul li a:visited {
@@ -208,5 +208,5 @@ TABLE.mycal_table
 }
 
 #navbar ul li a:hover {
-	background: url(images/back1.gif) 0 100% repeat-x;
+	background: url({$_SHOP_themeimages}back1.gif) 0 100% repeat-x;
 }

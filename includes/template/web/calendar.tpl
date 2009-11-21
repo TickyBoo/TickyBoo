@@ -41,14 +41,14 @@
     {/if}
     <tr class='tr_{cycle values="0,1"}'>
       <td><a  href='index.php?event_id={$shop_event.event_id}'>
-            {if $shop_event.event_pm_id}<img src='images/ticket.gif' border="0">
-            {else}<img src='images/info.gif' border="0">{/if}
+            {if $shop_event.event_pm_id}<img src='{$_SHOP_themeimages}ticket.gif' border="0">
+            {else}<img src='{$_SHOP_themeimages}info.gif' border="0">{/if}
           </a>
       </td>
       <td ><a  href='index.php?event_id={$shop_event.event_id}'>{$shop_event.event_name}</a></td>
       <td>{$shop_event.event_date|date_format:!date_format!} - {$shop_event.event_time|date_format:!time_format!}</td>
       <td >{$shop_event.ort_name} {$shop_event.ort_city} {$shop_event.pm_name}</td>
-      <td width="20">{if $shop_event.event_mp3}<a href='files/{$shop_event.event_mp3}'><img src='images/audio-small.png' border='0'></a>{/if}</td>
+      <td width="20">{if $shop_event.event_mp3}<a href='files/{$shop_event.event_mp3}'><img src='{$_SHOP_themeimages}audio-small.png' border='0'></a>{/if}</td>
     </tr>
   {/event}
 </table>

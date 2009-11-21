@@ -75,6 +75,7 @@ $smarty->assign( "_SHOP_images", $_SHOP->images_url);
 $smarty->assign( '_SHOP_theme', $_SHOP->tpl_dir . "theme".DS. $_SHOP->theme_name.DS );
 $smarty->assign( '_SHOP_themeimages', $_SHOP->images_url . "theme".DS. $_SHOP->theme_name.DS );
 
+
 $smarty->assign( 'organizer_currency', $_SHOP->organizer_data->organizer_currency );
 $smarty->assign( 'organizer', $_SHOP->organizer_data );
 

@@ -593,7 +593,7 @@ class AdminView extends AUIComponent {
     }
   	foreach ($linkArray as $k => $v){
       $menuStyle=($tabCount==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
-      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."images/left_arc.gif\"></td>\n";
+      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."admin/images/left_arc.gif\"></td>\n";
       $str.= "<td nowrap=\"nowrap\" height=\"16\" align=\"center\" valign=\"middle\" class=\"$menuStyle\">\n";
 //      if($tabCount!=$activeTab)
         $str.= "<a class='$menuStyle' href='$v'>";
@@ -601,7 +601,7 @@ class AdminView extends AUIComponent {
 //      if($tabCount!=$activeTab)
         $str.= "</a>";
       $str.= "</td>\n";
-      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."images/right_arc.gif\"></td>\n";
+      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."admin/images/right_arc.gif\"></td>\n";
       $str.= "<td width=\"1pt\">&nbsp;</td>\n";
       $tabCount++;
     }

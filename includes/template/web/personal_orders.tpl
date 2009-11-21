@@ -79,7 +79,7 @@
     		{/if}</td>
     		<td class='admin_info'>
           <a href='?personal_page=orders&id={$shop_order.order_id}'>
-            <img border='0' src='images/view.png'> {!view_order!}
+            <img border='0' src='{$_SHOP_themeimages}view.png'> {!view_order!}
           </a>
     		</td>
       </tr>
