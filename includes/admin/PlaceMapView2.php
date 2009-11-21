@@ -41,20 +41,20 @@ require_once ( "classes/ShopDB.php" );
 require_once ( "classes/PlaceMap.php" );
 
 class PlaceMapView2 extends AdminView {
-	
+
 	/**
-	 * PlaceMapView2::pm_view 
-	 * 
+	 * PlaceMapView2::pm_view
+	 *
 	 * Displays the seating for the currently selected event.
-	 * 
+	 *
 	 * Form > Categories > Zones > Seating Parts > Discounts
-	 * 
-	 *  
+	 *
+	 *
 	 */
 	function pm_view( $pm_id, $pm = null ) {
 		global $_SHOP;
-		
-		$query = "select * 
+
+		$query = "select *
               from PlaceMap2 left join Ort On pm_ort_id=ort_id
               where pm_id=" . _esc( $pm_id );
 		if ( $row = ShopDB::query_one_row($query) ) {
@@ -64,7 +64,7 @@ class PlaceMapView2 extends AdminView {
 
 	function pm_form( &$data, &$err, $title ) {
 		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>";
-		
+
 		$this->form_head( $title );
 
 		$this->print_field_o( 'pm_id', $data );
@@ -259,7 +259,7 @@ class PlaceMapView2 extends AdminView {
         if ( !$this->pm_check($_POST, $err) ) {
           $this->pm_form( $_GET, $err, add_pm );
         } else {
-          $pm = PlaceMap.create( $_POST['pm_ort_id'], $_POST['pm_name'] );
+          $pm = PlaceMap::create( $_POST['pm_ort_id'], $_POST['pm_name'] );
           if ( $pm_id = $pm->save() ) {
             if ( !$this->photo_post($_POST, $pm_id) ) {
               echo "<div class=error>" . img_loading_problem . "</div>";
