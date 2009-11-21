@@ -33,7 +33,7 @@
  */
 
 require_once("admin/AdminView.php");
-require_once("classes/Orgenizer.php");
+require_once("classes/Organizer.php");
 
 class OrganizerView extends AdminView{
 
