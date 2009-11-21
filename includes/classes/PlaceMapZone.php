@@ -32,17 +32,17 @@
  * clear to you.
  */
 
-class PlaceMapZone Extends Model { 
+class PlaceMapZone Extends Model {
   protected $_idName    = 'pmx_id';
   protected $_tableName = 'PlaceMapZone';
-  protected $_columns   = array( '#pmz_id','*pmz_pm_id','#pmz_ident','*pmz_name', 'pm_color');
+  protected $_columns   = array( '#pmz_id','*pmz_pm_id','*pmz_ident','*pmz_name', 'pmz_color','pmz_short_name');
 
   var $pmz_id;
   var $pmz_pm_id;
   var $pmz_ident;
   var $pmz_name;
   var $pmz_color;
-    
+
   function create ($pmz_pm_id=null, $pmz_name=null, $pmz_short_name=null, $pmz_color=null){
     $new = new PlaceMapZone;
     if($pmz_pm_id){
@@ -53,26 +53,26 @@ class PlaceMapZone Extends Model {
     }
     return $new;
   }
-  
+
    function load ($pmz_id){
     global $_SHOP;
-    $query="select * 
-            from PlaceMapZone 
+    $query="select *
+            from PlaceMapZone
             where pmz_id="._esc($pmz_id);
 
     if($res=ShopDB::query_one_row($query)){
       $new_pmz=new PlaceMapZone;
-      $new_pmz->_fill($res);        
-    
+      $new_pmz->_fill($res);
+
       return $new_pmz;
     }
   }
 
   function loadAll ($pm_id){
     global $_SHOP;
-    
-    $query="select * 
-            from PlaceMapZone 
+
+    $query="select *
+            from PlaceMapZone
             where pmz_pm_id="._esc($pm_id);
 
     if($res=ShopDB::query($query)){
@@ -80,19 +80,24 @@ class PlaceMapZone Extends Model {
         $new_pmz=new PlaceMapZone;
         $new_pmz->_fill($data);
         $zones[$new_pmz->pmz_ident]=$new_pmz;
-      }        
-    }   
-   
+      }
+    }
+
     return $zones;
+  }
+
+  function save (){
+     if(!$this->pmz_ident){$this->_find_ident();}
+     return parent::save();
   }
 
   function delete ($pmz_id){
     global $_SHOP;
-		
+
 		if(!$zone=PlaceMapZone::load($pmz_id)){
 		  return;
 		}
-    $seats = shopDB::query_on_row("select count(*) from Seats 
+    $seats = shopDB::query_on_row("select count(*) from Seats
                                    where seat_zone_id ={$zone_id}", false);
     if ($seats[0]>0) {
       echo '<div class=error>'.con('Zone_delete_failed_seats_exists').'</div>';
@@ -102,7 +107,7 @@ class PlaceMapZone Extends Model {
     if(ShopDB::begin('delete zone: '.$zone_id)){
       $query="delete from PlaceMapZone where pmz_id=$pmz_id limit 1";
       ShopDB::query($query);
-      
+
       require_once('classes/PlaceMapPart.php');
       if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
         foreach($pmps as $pmp){
@@ -119,8 +124,8 @@ class PlaceMapZone Extends Model {
   function _find_ident (){
     global $_SHOP;
 
-    $query="select pmz_ident 
-            from PlaceMapZone 
+    $query="select pmz_ident
+            from PlaceMapZone
             where pmz_pm_id={$this->pmz_pm_id}";
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_array($res)){

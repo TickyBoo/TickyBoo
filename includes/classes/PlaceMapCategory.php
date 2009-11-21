@@ -90,7 +90,7 @@ class PlaceMapCategory Extends Model {
         $this->category_ident=$this->_find_ident($this->category_pm_id);
       }
     }
-    $this->category_color = resetColor($this->category_color);
+    $this->category_color = self::resetColor($this->category_color);
     return parent::save();
   }
 
@@ -103,7 +103,7 @@ class PlaceMapCategory Extends Model {
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
       $new_category->_fill($res);
-      $this->category_color = resetColor($this->category_color);
+      $this->category_color = self::resetColor($this->category_color);
       return $new_category;
     }
   }
@@ -118,7 +118,7 @@ class PlaceMapCategory Extends Model {
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
       $new_category->_fill($res);
-      $new_category->category_color = resetColor($new_category->category_color);
+      $new_category->category_color = self::resetColor($new_category->category_color);
       return $new_category;
     }
   }
@@ -146,7 +146,7 @@ class PlaceMapCategory Extends Model {
       echo  "remove_me not: 1";
       return;
     }
-    $seats = shopDB::query_on_row("select count(*) from Seats
+    $seats = shopDB::query_one_row("select count(*) from Seats
                                    where seat_category_id ={$category_id}", false);
     if ($seats[0]>0) {
       echo '<div class=error>'.con('Category_delete_failed_seats_exists').'</div>';

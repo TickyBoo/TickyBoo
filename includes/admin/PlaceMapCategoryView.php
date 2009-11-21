@@ -107,7 +107,11 @@ class PlaceMapCategoryView extends AdminView {
         $alt = 0;
 //        echo $live;
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='5' align='left'>" .con('categories'). "</td></tr>\n";
+        echo "<tr><td class='admin_list_title' colspan='4' align='left'>" .con('categories'). "</td>\n";
+        if (!$live) {
+          echo "<td colspan=5 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>".con('add')."</a></td>";
+        }
+        echo "</tr>";
         if ($cats = PlaceMapCategory::LoadAll($pm_id)){
           foreach($cats as  $category) {
             echo "<tr class='admin_list_row_$alt'>";
@@ -117,7 +121,7 @@ class PlaceMapCategoryView extends AdminView {
             echo "<td class='admin_list_item'>" . con($category->category_numbering) . " </td>\n";
 
             echo "<td class='admin_list_item' width=40 align=right>";
-            if ($mine) {
+            if (!$mine) {
                 echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
                 <img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
                 if (!$live) {
@@ -130,9 +134,6 @@ class PlaceMapCategoryView extends AdminView {
             $alt = ($alt + 1) % 2;
           }
         }
-        if (!$live) {
-            echo "<tr><td colspan=5 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>".con('add')."</a></td></tr>";
-        }
 
         echo '</table>';
     }
@@ -140,32 +141,22 @@ class PlaceMapCategoryView extends AdminView {
 
     function draw () {
         if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
-            require_once('classes/PlaceMap.php');
-            if (!$pm = PlaceMap::load($_GET['pm_id'])) {
-                return;
-            }
-
             $this->category_form($_GET, $err);
         } elseif ($_POST['action'] == 'insert_category' and $_POST['pm_id'] > 0) {
-            require_once('classes/PlaceMap.php');
-            if (!$pm = PlaceMap::load($_POST['pm_id'])) {
-                return;
-            }
             if (!$this->category_check($_POST, $err)) {
                 $this->category_form($_POST, $err);
             } else {
-                $category = new PlaceMapCategory;
-                $category->fillPost();
-                $category->category_event_id = $pm->pm_event_id;
-                $category->category_pm_id    = $_POST['pm_id'];
+              $category = new PlaceMapCategory;
+              $category->fillPost();
+              $category->category_event_id = $pm->pm_event_id;
+              $category->category_pm_id    = $_POST['pm_id'];
 
-                $category->save();
+              if (!$category->save()) {
+                print_r($category->errors());
+              }
 
-                return true;
+              return true;
             }
-        } elseif ($_GET['action'] == 'view_category' and $_GET['category_id'] > 0) {
-            $category = PlaceMapCategory::loadFull($_GET['category_id']);
-            $this->category_view($category);
         } elseif ($_GET['action'] == 'edit_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load($_GET['category_id']);
             $data = (array)$category;
@@ -183,9 +174,7 @@ class PlaceMapCategoryView extends AdminView {
             }
         } elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
             $category = PlaceMapCategory::load($_GET['category_id']);
-
             PlaceMapCategory::delete($category->category_id);
-
             return true;
         } elseif ($_POST['action'] == 'resize_category' and $_POST['category_id'] > 0) {
             $category = PlaceMapCategory::load($_POST['category_id']);

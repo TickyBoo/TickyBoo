@@ -61,26 +61,26 @@ class PlaceMapZoneView extends AdminView {
 
     function pmz_form (&$data, &$err)
     {
-        echo "<form action='{$_SERVER['PHP_SELF']}' method=post>";
+      echo "<form action='{$_SERVER['PHP_SELF']}' method=post>";
 
-        $this->form_head(pm_zone);
-        $this->print_field_o('pmz_id', $data, $err);
-        $this->print_field_o('pmz_ident', $data);
-        $this->print_field_o('pmz_pm_id', $data);
-        $this->print_color('pmz_color', $data, $err);
-        $this->print_input('pmz_name', $data, $err, 30, 50);
-        $this->print_input('pmz_short_name', $data, $err, 4, 10);
-        $this->form_foot();
+      $this->form_head(pm_zone);
+      $this->print_field_o('pmz_id', $data, $err);
+      $this->print_field_o('pmz_ident', $data);
+      $this->print_field_o('pmz_pm_id', $data);
+      $this->print_input('pmz_name', $data, $err, 30, 50);
+      $this->print_input('pmz_short_name', $data, $err, 4, 10);
+      $this->print_color('pmz_color', $data, $err);
+      $this->form_foot();
 
-        if ($data['pmz_id']) {
-            echo "<input type=hidden name=pmz_id value={$data['pmz_id']}>";
-            echo "<input type=hidden name=action value=update_pmz>";
-        } else {
-            echo "<input type=hidden name=action value=insert_pmz>";
-        }
-        echo "<input type=hidden name=pm_id value={$data['pmz_pm_id']}>";
-        echo "</form>";
-        echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$data['pmz_pm_id']}' class=link>" . place_map . "</a></center>";
+      if ($data['pmz_id']) {
+          echo "<input type=hidden name=pmz_id value={$data['pmz_id']}>";
+          echo "<input type=hidden name=action value=update_pmz>";
+      } else {
+          echo "<input type=hidden name=action value=insert_pmz>";
+      }
+      echo "<input type=hidden name=pm_id value={$data['pmz_pm_id']}>";
+      echo "</form>";
+      echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$data['pmz_pm_id']}' class=link>" . place_map . "</a></center>";
     }
 
     function pmz_check ($data)
@@ -105,8 +105,11 @@ class PlaceMapZoneView extends AdminView {
         $alt = 0;
 
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . con('pm_zones') . "</td></tr>\n";
-
+        echo "<tr><td class='admin_list_title' colspan='3' align='left'>" . con('pm_zones') . "</td>\n";
+        if (!$live and $mine) {
+          echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>" . add . "</a></td>";
+        }
+        echo "</tr>";
         while ($zone = shopDB::fetch_object($res)) {
             $zone_ident = $zone->pmz_id;
 
@@ -130,14 +133,10 @@ class PlaceMapZoneView extends AdminView {
             $alt = ($alt + 1) % 2;
         }
 
-        if (!$live and $mine) {
-            echo "<tr><td colspan=4 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>" . add . "</a></td></tr>";
-        }
         echo '</table>';
     }
 
-    function draw ()
-    {
+    function draw (){
         global $_SHOP;
 
         if ($_GET['action'] == 'add_pmz' and $_GET['pm_id'] > 0) {
@@ -157,10 +156,11 @@ class PlaceMapZoneView extends AdminView {
             if (!$this->pmz_check($_POST, $err)) {
                 $this->pmz_form($_POST, $err);
             } else {
-                $pmz = new PlaceMapZone($_POST['pm_id'], $_POST['pmz_name'], $_POST['pmz_short_name'], $_POST['pmz_color']);
-                $pmz->save();
-
-                return true;
+              $pmz = new PlaceMapZone;
+              $pmz->fillPost();
+              $pmz->pmz_pm_id    = $pm->pm_id;
+              $pmz->save();
+              return true;
             }
         }elseif ($_GET['action'] == 'view_pmz' and $_GET['pmz_id'] > 0) {
             $pmz = PlaceMapZone::load($_GET['pmz_id']);
