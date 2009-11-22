@@ -71,11 +71,9 @@ $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
 $smarty->assign('_SHOP_lang', $_SHOP->lang);
 $smarty->assign('_SHOP_theme', $_SHOP->tpl_dir . "theme".DS. $_SHOP->theme_name.DS );
-$smarty->assign('_SHOP_themeimages', $_SHOP->images_url . "theme".DS. $_SHOP->theme_name.DS );
+$smarty->assign('_SHOP_themeimages', $_SHOP->images_url . "theme/". $_SHOP->theme_name.'/' );
 $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
 $smarty->assign("_SHOP_images", $_SHOP->images_url);
-$smarty->assign( '_SHOP_theme', $_SHOP->tpl_dir . "theme".DS. $_SHOP->theme_name.DS );
-$smarty->assign( '_SHOP_themeimages', $_SHOP->images_url . "theme".DS. $_SHOP->theme_name.DS );
 
 $smarty->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
 $smarty->assign('organizer', $_SHOP->organizer_data);
@@ -93,6 +91,6 @@ If ($fond) {
   $smarty->display($fond . '.tpl');
   orphanCheck();
   trace("End of shop \n\n\r");
-}  
+}
 
 ?>

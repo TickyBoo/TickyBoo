@@ -32,12 +32,12 @@
 <style type="text/css">
 .pagination{
   background-color: #99d9ea;
-  TEXT-ALIGN: center;    
+  TEXT-ALIGN: center;
 }
 .done{
   background-color: #42729a;
   color: #FFFFFF;
-  TEXT-ALIGN: center;  
+  TEXT-ALIGN: center;
   border-left: 2px solid #5EA3DB;
 }
 .current{
@@ -58,7 +58,7 @@
     <tr>
       {if $name==!shop! and $shop_event.event_pm_id}
         <td class='current'> {!prg_order!} </td>
-        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25'><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
         <td class='next'>{!prg_review!}</td>
         {if !$user->logged}
           <td class='next'>
@@ -66,12 +66,12 @@
           </td>
         {/if}
         <td class='next'>{!prg_payment!}</td>
-        <td class="next">{!prg_complete!}</td>          
+        <td class="next">{!prg_complete!}</td>
       {elseif $name==!select_seat!}
         <td class='done'>{!prg_order!} </td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' width='11' height='20'></td>
         <td class='current'>{!prg_seat!} </td>
-        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25'><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
         <td class='next'>{!prg_review!}</td>
         {if !$user->logged}
           <td class='next'>
@@ -79,12 +79,12 @@
           </td>
         {/if}
         <td class='next'>{!prg_payment!}</td>
-        <td class="next">{!prg_complete!}</td>          
+        <td class="next">{!prg_complete!}</td>
       {elseif $name==!discounts!}
         <td class='done'>{!prg_order!} </td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' width='11' height='20'></td>
         <td class='current'>{!prg_discounts!}</td>
-        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25'><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
         <td class='next'>{!prg_review!}</td>
         {if !$user->logged}
           <td class='next'>
@@ -92,49 +92,49 @@
           </td>
         {/if}
         <td class='next'>{!prg_payment!}</td>
-        <td class="next">{!prg_complete!}</td>       
+        <td class="next">{!prg_complete!}</td>
       {elseif $name==!shopping_cart!}
         <td class='done'>{!prg_order!} </td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' width='11' height='20'></td>
         <td class='current'>{!prg_review!} </td>
-        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25'><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
         {if !$user->logged}
           <td class='next'>
             {!prg_signin!}
           </td>
         {/if}
         <td class='next'>{!prg_payment!}</td>
-        <td class="next">{!prg_complete!}</td>       
+        <td class="next">{!prg_complete!}</td>
       {elseif $name==!pers_info!}
         <td class='done'>{!prg_order!} </td>
         <td class='done'>{!prg_review!} </td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' width='11' height='20'></td>
         <td class='current'>{!prg_signin!} </td>
-        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25'><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
         <td class='next'>{!prg_payment!}</td>
-        <td class="next">{!prg_complete!}</td>       
+        <td class="next">{!prg_complete!}</td>
       {elseif $name==!shopping_cart_check_out!}
         <td class='done'>{!prg_order!} </td>
         <td class='done'>{!prg_review!} </td>
         <td class='done'>{!prg_signin!}</td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' width='11' height='20'></td>
         <td class='current'>{!prg_payment!} </td>
-        <td width='25'><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25'><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
         <td class="next">{!prg_complete!}</td>
       {elseif $name==!order_reg!}
         <td class='done'>{!prg_order!} </td>
         <td class='done'>{!prg_review!} </td>
         <td class='done'>{!prg_signin!}</td>
         <td class='done'>{!prg_payment!} </td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' width='11' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' width='11' height='20'></td>
         <td class="current">{!prg_complete!}</td>
-        <td width='25' ><img src='{$_SHOP_images}trans_12_11_r.png' height='20'></td>
+        <td width='25' ><img src='{$_SHOP_themeimages}trans_12_11_r.png' height='20'></td>
       {elseif $name==!pay_accept! or $name==!pay_refused!}
         <td class='done'>{!prg_order!} </td>
         <td class='done'>{!prg_review!} </td>
         <td class='done'>{!prg_signin!}</td>
         <td class='done'>{!prg_payment!} </td>
-        <td width='11'><img src='{$_SHOP_images}trans_12_11_b.png' height='20'></td>
+        <td width='11'><img src='{$_SHOP_themeimages}trans_12_11_b.png' height='20'></td>
         <td class="current">{!prg_complete!}</td>
       {/if}
     </tr>

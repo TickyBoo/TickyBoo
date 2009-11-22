@@ -407,10 +407,10 @@ class PlaceMapPartView extends AdminView {
                 $col = '';
                 $chk = '';
                 $sty = '';
-                if ($z = $pmp->pmp_data[$j][$k][PM_ZONE]) {
+                if ($z = $pmp->data[$j][$k][PM_ZONE]) {
                     if ($z == 'L') {
                         $sty = "border: 1px dashed #666666;background-color:#dddddd;";
-                        $label = $pmp->pmp_data[$j][$k];
+                        $label = $pmp->data[$j][$k];
                         if ($view_only) {
                             if ($label[PM_LABEL_TYPE] == 'T' and $label[PM_LABEL_SIZE] > 0) {
                                 $colspan = $label[PM_LABEL_SIZE];
@@ -433,23 +433,23 @@ class PlaceMapPartView extends AdminView {
 
                     $col = "bgcolor='{$zone->pmz_color}'";
 
-                    $cat_id = $pmp->pmp_data[$j][$k][PM_CATEGORY];
+                    $cat_id = $pmp->data[$j][$k][PM_CATEGORY];
                     $category = $pmp->categories[$cat_id];
 
                     if ($cat_id) {
-                        if ($pmp->pmp_data[$j - 1][$k][PM_CATEGORY] != $cat_id) {
+                        if ($pmp->data[$j - 1][$k][PM_CATEGORY] != $cat_id) {
                             $sty = "border-top:3px solid {$pmp->categories[$cat_id]->color_code};";
                         }
 
-                        if ($pmp->pmp_data[$j + 1][$k][PM_CATEGORY] != $cat_id) {
+                        if ($pmp->data[$j + 1][$k][PM_CATEGORY] != $cat_id) {
                             $sty .= "border-bottom:3px solid {$pmp->categories[$cat_id]->color_code};";
                         }
 
-                        if ($pmp->pmp_data[$j][$k - 1][PM_CATEGORY] != $cat_id) {
+                        if ($pmp->data[$j][$k - 1][PM_CATEGORY] != $cat_id) {
                             $sty .= "border-left:3px solid {$pmp->categories[$cat_id]->color_code};";
                         }
 
-                        if ($pmp->pmp_data[$j][$k + 1][PM_CATEGORY] != $cat_id) {
+                        if ($pmp->data[$j][$k + 1][PM_CATEGORY] != $cat_id) {
                             $sty .= "border-right:3px solid {$pmp->categories[$cat_id]->color_code};";
                         }
 
@@ -463,13 +463,13 @@ class PlaceMapPartView extends AdminView {
                     }
 
                     if ($view_only) {
-                        $row = $pmp->pmp_data[$j][$k][PM_ROW];
-                        $seat = $pmp->pmp_data[$j][$k][PM_SEAT];
+                        $row = $pmp->data[$j][$k][PM_ROW];
+                        $seat = $pmp->data[$j][$k][PM_SEAT];
 
-                        if ($row == ($pmp->pmp_data[$j][$k - 1][PM_ROW])) {
+                        if ($row == ($pmp->data[$j][$k - 1][PM_ROW])) {
                             $row = '&nbsp;';
                         }
-                        if ($seat == ($pmp->pmp_data[$j - 1][$k][PM_SEAT])) {
+                        if ($seat == ($pmp->data[$j - 1][$k][PM_SEAT])) {
                             $seat = '&nbsp;';
                         }
                         if ($row or $seat) {
@@ -480,7 +480,7 @@ class PlaceMapPartView extends AdminView {
 
                         echo "<td align=center $col $sty $cspan>$num</td>";
                     } else {
-                        echo "<td align=center $col $sty $cspan><input type='checkbox' name='seat[$j][$k]' value=1 $chk title=\"{$zone->pmz_name} {$pmp->pmp_data[$j][$k][PM_ROW]}/{$pmp->pmp_data[$j][$k][PM_SEAT]} {$category->category_name}\"  style='border:0px;background-color:{$zone->pmz_color}'></td>";
+                        echo "<td align=center $col $sty $cspan><input type='checkbox' name='seat[$j][$k]' value=1 $chk title=\"{$zone->pmz_name} {$pmp->data[$j][$k][PM_ROW]}/{$pmp->data[$j][$k][PM_SEAT]} {$category->category_name}\"  style='border:0px;background-color:{$zone->pmz_color}'></td>";
                     }
                 } else {
                     if ($view_only) {
@@ -658,16 +658,18 @@ class PlaceMapPartView extends AdminView {
           $this->pmp_form($_GET, $err);
       } elseif ($_POST['action'] == 'insert_pmp' and $_POST['pm_id'] > 0) {
           require_once('classes/PlaceMap.php');
+
           if ($pm = PlaceMap::load($_POST['pm_id'])) {
-            if (!$this->pmp_check($_POST, $err)) {
+           if (!$this->pmp_check($_POST, $err)) {
                 $this->pmp_form($_POST, $err);
             } else {
                 $pmp = new PlaceMapPart;
                 $pmp->fillPost();
                 $pmp->pmp_event_id = $pm->pm_event_id;
+                $pmp->pmp_pm_id    = $pm->pm_id;
                 $pmp->save();
                 $this->pmp_view($pmp->pmp_id,$err);
-                //return true;
+                return false;
             }
           }
       } else if ($_GET['action'] == 'edit_pmp' and $_GET['pmp_id'] > 0) {

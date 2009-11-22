@@ -37,12 +37,10 @@ class Model {
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
 
+  protected $_errors = array();
   protected $_idName;
   protected $_tableName;
   protected $_columns = array();
-
-  protected $_errors = array();
-
 
   function __construct($filldefs=true)
   {

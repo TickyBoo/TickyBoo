@@ -32,7 +32,7 @@
  * clear to you.
  */
 
- 
+
   global $_SHOP;
 
   require_once('defines.php');
@@ -66,7 +66,7 @@
 
   //the same value for the shopping cart, usually smaller
   $_SHOP->cart_delay=$_SHOP->res_delay-60;
-  
+
 
 //  $_SHOP->dir_mode=0755;
   $_SHOP->file_mode=0644;
@@ -85,18 +85,18 @@
   //temporary folder
   //should be writeable by php
   $_SHOP->tmp_dir=INC."temp".DS;
-  
+
   	//Where templates are stored..
 	$_SHOP->templates_dir=INC."temp".DS;
-	
+
   //where smarty templates and other tpl related stuff lives
   $_SHOP->tpl_dir=INC."template".DS;
-  
+
   //Trace File settings
   $_SHOP->trace_dir = INC."temp".DS;
   $_SHOP->trace_name = 'trace.log';
   $_SHOP->trace_on = true;
-  
+
   // this selects the theme that you like to use.
   $_SHOP->theme_name = "default";
   $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
@@ -112,23 +112,23 @@
 
   //external url connection settings, used by connect_func.php
   //choose one of settings:
-  
+
   //1.use libCurl (php should be compiled with libCurl)
   $_SHOP->url_post_method='libCurl';
-  
+
   //2.use php function fsocketopen():
   //$_SHOP->url_post_method='fso';
-  
+
   //3.use external curl command:
   //$_SHOP->url_post_method='curl';
   //$_SHOP->url_post_curl_location='/usr/bin/curl';
-  
+
   $_SHOP->input_time_type = 24; //12; //
   $_SHOP->input_date_type = 'dmy'; // 'mdy'
- 
+
   ini_set("magic_quotes_runtime",0);
   ini_set('allow_call_time_pass_reference',0);
-  
+
 	//emulates magic_quotes_gpc off
 	function stripslashes_deep($value){
 		$value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
@@ -154,7 +154,7 @@
 	$_SHOP->event_type_enum = array('','classics','jazz','blues','funk','pop','rock','folklore','theater','sacred','ballet',
                                   'opera','humour','music','other','cinema','party','exposition');
   $_SHOP->event_group_type_enum = array('','festival','tournee','theatre');
-  
+
   // 'mail', 'sendmail', 'smtp'
   $_SHOP->mail_mode      = 'mail';
   $_SHOP->mail_smtp_host = null;
@@ -163,7 +163,7 @@
   $_SHOP->mail_smtp_user = null;
   $_SHOP->mail_smtp_pass = null;
   $_SHOP->mail_smtp_helo = null;
-  
+
   $_SHOP->mail_sendmail  = null;
 
   $_SHOP->valutas  = array( 'EUR' => '&euro;',
@@ -181,16 +181,16 @@
   if (!defined('CURRENT_VERSION')) {
     define('CURRENT_VERSION','Unknown');
   }
-  
+
   if (CURRENT_VERSION <> INSTALL_VERSION){
     echo "<a href='{$_SHOP->root}inst/index.php'>Upgrade me now!</a>";
     exit;
   }
-  
-  
+
+
   $_SHOP->files_url=$_SHOP->root."files/";
   $_SHOP->images_url=$_SHOP->root."images/";
 
   include_once('classes/basics.php');
-  
+
 ?>

@@ -36,7 +36,7 @@ $orphancheck = array();
 /**/
 
 $orphancheck[]="
-	SELECT 'Event', event_id, 'cat_id', category_id, null, 
+	SELECT 'Event', event_id, 'cat_id', category_id, null,
                             category_numbering,  category_size -(SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id ) , null
 	FROM Event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
@@ -214,7 +214,7 @@ class orphans {
       unset($result);
       $result = ShopDB::query($query);
       while ($row = ShopDB::fetch_row($result)) {
-        
+
         $r = array ('_table' => $row[0], '_id' => $row[1]);
 
         for( $x=2;$x< count($row); $x+=3) {
@@ -226,15 +226,18 @@ class orphans {
             if ($z == "'0'") {
               $thisfix =  Orphans::$fixes["{$row[0]}~zeros"];
               $fixit = "{$row[0]}~zeros";
-            } else {  
+            } elseif(isset(Orphans::$fixes["{$row[0]}~{$row[$x]}"])) {
               $thisfix =  Orphans::$fixes["{$row[0]}~{$row[$x]}"];
               $fixit = "{$row[0]}~{$row[$x]}";
+            } else {
+              $thisfix = '';
+              $fixit = '';
             }
             $z = substr($z, 1,-1);
             if (!empty($thisfix) and $showlinks) {
-              $z = "<a title='{$thisfix}' 
+              $z = "<a title='{$thisfix}'
                        href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}'>".$z."</a>\n";
-            }   
+            }
             $r[$row[$x]] = $z;
           }
         }
@@ -251,7 +254,7 @@ class orphans {
     switch ($fixit) {
       //Fix category issues
       case 'Category_stat~cat_id':
-        ShopDB::Query("delete from Category_stat 
+        ShopDB::Query("delete from Category_stat
                        where (select category_id from Category where category_id = cs_category_id) is null") ;
         break;
       case 'Category~stat_id':
@@ -268,9 +271,9 @@ class orphans {
       case 'Category~pm_id':
         require_once('classes/PlaceMapCategory.php');
         PlaceMapCategory::delete($fix[2]) ;
-        break;        
+        break;
       case 'Category~pmp_id':
-        ShopDB::Query("update Category set 
+        ShopDB::Query("update Category set
                          category_pmp_id = null
                        where Category_id = {$fix[2]}") ;
         break;
@@ -283,7 +286,7 @@ class orphans {
                        where discount_event_id = '{$fix[4]}'") ;
         break;
       case'Event_stat~event_id':
-        ShopDB::Query("delete from Event_stat 
+        ShopDB::Query("delete from Event_stat
                        where (select Event_id from Event where event_id = es_event_id) is null") ;
         break;
       case'Event~cat_id':
@@ -298,13 +301,13 @@ class orphans {
 
         $sql = "SELECT event_pm_id FROM Event e WHERE e.event_id = "._esc($fix[2]);
         $result = ShopDB::Query_one_row($sql, false);
-        if (!$result) { 
+        if (!$result) {
           echo "cant find selected order placmap";
           exit;
-        } 
+        }
         $pm_id = $result[0];
         $all = PlaceMapPart::loadAllFull( $pm_id);
-        
+
         echo "<pre>";
         // PRint_r($all);
         if ($all) {
@@ -317,16 +320,16 @@ class orphans {
                 $category = $pmp->categories[$seat[PM_CATEGORY]];
                 if ($seat[PM_ZONE] > 0 && $seat[PM_CATEGORY] &&
                     $category->category_numbering != 'none'){
-                      
+
                   if (!in_array($seat[PM_ID], $seats[$category->category_id])){
-                    
+
                     if ($seat_id = Seat::publish($fix[2], $seat[PM_ROW], $seat[PM_SEAT],
                                                  $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
                       echo $x,' ',$y,' ',$pmp->pmp_data[$x][$y][PM_ID] = $seat_id,'|';
                       $changed = True;
-                    }  
+                    }
                   }
-                }     
+                }
               }
             }
             if ($changed) {
@@ -355,7 +358,7 @@ class orphans {
             }
           }
         }
-/*        
+/*
         if($stats){
           foreach($stats as $category_ident=>$cs_total){
             $cat=$cats[$category_ident];
@@ -363,20 +366,20 @@ class orphans {
             if(!$dry_run){$cs->save() or $this->_abort('publish5');}
           }
         }
-*/        
-        
+*/
+
         echo "</pre>";
         break;
 
-        
+
       case 'Event~group_id':
-        ShopDB::Query("update Event set 
+        ShopDB::Query("update Event set
                          event_group_id = null
                        where Event_id = {$fix[2]}") ;
         break;
-        
+
       case 'Event~pm_id':
-        ShopDB::Query("update Event set 
+        ShopDB::Query("update Event set
                          event_pm_id = null
                        where Event_id = {$fix[2]}") ;
         break;
@@ -398,7 +401,7 @@ class orphans {
       case 'Order~zeros':
         Orphans::clear_zeros('Order', array('order_owner_id'));
         break;
-        
+
       case 'PlaceMap~event_id':
         require_once('classes/PlaceMap.php');
         PlaceMap::delete($fix[2]);
@@ -407,7 +410,7 @@ class orphans {
       case 'PlaceMapPart~zeros':
         Orphans::clear_zeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
         break;
-        
+
       case 'Seat~event_id':
         ShopDB::Query("delete from Seat where seat_event_id = {$fix[4]}") ;
         break;
@@ -417,14 +420,14 @@ class orphans {
         break;
 
       case 'Seat~order_id':
-        ShopDB::Query("update Seat set 
+        ShopDB::Query("update Seat set
                          seat_order_id = null,
-                         seat_user_id = null, 
-                         seat_ts = null, 
-                         seat_sid = null, 
-                         seat_price = null, 
+                         seat_user_id = null,
+                         seat_ts = null,
+                         seat_sid = null,
+                         seat_price = null,
                          seat_discount_id = null,
-                         seat_code = null, 
+                         seat_code = null,
                          seat_sales_id = null,
                          seat_status = 'free'
                        where seat_order_id = {$fix[4]}") ;
@@ -447,7 +450,7 @@ class orphans {
                       ({$fix[4]}, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213', 'demo@fusionticket.test', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0, 0)") ;
         break;
 
-        
+
     }
   }
   function clear_zeros($table, $fields){
@@ -459,6 +462,6 @@ class orphans {
   //  echo $sql.substr($sets,2) ;
     ShopDB::Query($sql.substr($sets,2));
   }
-  
+
 }
 ?>

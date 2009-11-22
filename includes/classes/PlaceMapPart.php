@@ -35,19 +35,13 @@
 require_once('classes/PlaceMapZone.php');
 require_once('classes/PlaceMapCategory.php');
 
-class PlaceMapPart Extends Model { 
+class PlaceMapPart Extends Model {
   protected $_idName    = 'pmp_id';
   protected $_tableName = 'PlaceMapPart';
   protected $_columns   = array( '#pmp_id', '*pmp_pm_id', 'pmp_ident', '#pmp_ort_id',
-                                 '#pmp_event_id', '*pmp_name', '*pmp_width', '*pmp_height', 
+                                 '#pmp_event_id', '*pmp_name', '*pmp_width', '*pmp_height',
                                  '*pmp_scene', '*pmp_shift', '*pmp_data', 'pmp_data_orig', 'pmp_expires');
- 
-  var $pmp_id;
-  var $pmp_name;
-  var $pmp_pm_id;
-  var $pmp_width;
-  var $pmp_height;
-  var $pmp_data;
+  var $data =null;
 
   static function create ($pmp_pm_id = 0, $pmp_name = 0, $pmp_width = 0, $pmp_height = 0) {
     $new = new PlaceMapPart;
@@ -61,7 +55,7 @@ class PlaceMapPart Extends Model {
   }
 
   function _ser_data () {
-    return serialize($this->pmp_data);
+    return serialize($this->data);
   }
 
   function _unser_data ($pmp_data_s, $w, $h) {
@@ -80,28 +74,31 @@ class PlaceMapPart Extends Model {
   }
 
   function save (){
+    If (!$this->data) {
+      $this->data = array_fill(0, $this->pmp_height, array_fill(0, $this->pmp_width, array(0, 0, 0)));
+    }
     $this->pmp_data  = $this->_ser_data();
-    return $this->save();
+    return parent::save();
   }
 
   function load ($pmp_id) {
-    $query = "select * 
-              from PlaceMapPart 
+    $query = "select *
+              from PlaceMapPart
               where pmp_id="._esc($pmp_id);
 
     if ($res = ShopDB::query_one_row($query)) {
       $new_pmp = new PlaceMapPart;
       $new_pmp->_fill($res);
-      $new_pmp->pmp_data = self::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
+      $new_pmp->data = self::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
 
       return $new_pmp;
     }
   }
 
   function loadNames ($pm_id){
-    $query = "select pmp_id, pmp_name 
-              from PlaceMapPart 
-              where pmp_pm_id=".+esc($pm_id)."
+    $query = "select pmp_id, pmp_name
+              from PlaceMapPart
+              where pmp_pm_id=".+_esc($pm_id)."
               order by pmp_id";
     if ($res = ShopDB::query($query)) {
       while ($data = shopDB::fetch_object($res)) {
@@ -112,8 +109,8 @@ class PlaceMapPart Extends Model {
   }
 
   function loadAll ($pm_id) {
-    $query = "select * 
-              from PlaceMapPart 
+    $query = "select *
+              from PlaceMapPart
               where pmp_pm_id="._esc($pm_id)."
               order by pmp_id";
 
@@ -121,7 +118,7 @@ class PlaceMapPart Extends Model {
       while ($data = shopDB::fetch_assoc($res)) {
         $new_pmp = new PlaceMapPart;
         $new_pmp->_fill($data);
-        $new_pmp->pmp_data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
+        $new_pmp->data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
 
         $all[] = $new_pmp;
       }
@@ -130,15 +127,15 @@ class PlaceMapPart Extends Model {
   }
 
   function loadFull ($pmp_id){
-    $query = "select * from PlaceMapPart left join PlaceMap2 on pmp_pm_id=pm_id 
+    $query = "select * from PlaceMapPart left join PlaceMap2 on pmp_pm_id=pm_id
                                          left join Ort       on pm_ort_id=ort_id
-                                         LEFT JOIN Event     ON pm_event_id=event_id 
+                                         LEFT JOIN Event     ON pm_event_id=event_id
               where pmp_id= "._esc($pmp_id);
 
     if ($res = ShopDB::query_one_row($query)) {
       $new_pmp = new PlaceMapPart;
       $new_pmp->_fill($res);
-      $new_pmp->pmp_data = self::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
+      $new_pmp->data = self::_unser_data($res['pmp_data'], $res['pmp_width'], $res['pmp_height']);
 
       $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pm_id);
       $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pm_id);
@@ -148,15 +145,15 @@ class PlaceMapPart Extends Model {
   }
 
   function loadAllFull ($pm_id) {
-    $query = "select * from PlaceMap2 left join PlaceMapPart on pmp_pm_id=pm_id 
+    $query = "select * from PlaceMap2 left join PlaceMapPart on pmp_pm_id=pm_id
                                       left join Ort       on pm_ort_id=ort_id
-                                      LEFT JOIN Event     ON pm_event_id=event_id 
+                                      LEFT JOIN Event     ON pm_event_id=event_id
               where pm_id= "._esc($mp_id);
     if ($res = ShopDB::query($query)) {
       while ($data = shopDB::fetch_assoc($res)) {
         $new_pmp = new PlaceMapPart;
         $new_pmp->_fill($data);
-        $new_pmp->pmp_data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
+        $new_pmp->data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
 
         $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pm_id);
         $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pm_id);
@@ -168,14 +165,14 @@ class PlaceMapPart Extends Model {
   }
 
   function delete () {
-    $seats = shopDB::query_on_row("select count(*) from Seats 
+    $seats = shopDB::query_on_row("select count(*) from Seats
                                    where seat_pmp_id ={$this->pmp_id}", false);
     if ($seats[0]>0) {
       echo '<div class=error>'.con('PlaceMapPart_delete_failed_seats_exists').'</div>';
       return false;
     }
 
-    $query = "delete from PlaceMapPart 
+    $query = "delete from PlaceMapPart
               where pmp_id={$this->pmp_id} limit 1";
     ShopDB::query($query);
   }
@@ -184,24 +181,24 @@ class PlaceMapPart Extends Model {
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
         if ($zone_map[$j][$k]) {
-          if ($this->pmp_data[$j][$k][PM_ZONE] != $zone_id) {
-            $this->pmp_data[$j][$k] = array($zone_id, 0, 0);
+          if ($this->data[$j][$k][PM_ZONE] != $zone_id) {
+            $this->data[$j][$k] = array($zone_id, 0, 0);
           }
-        } elseif ($this->pmp_data[$j][$k][PM_ZONE] == $zone_id) {
-          $this->pmp_data[$j][$k] = array(0, 0, 0);
+        } elseif ($this->data[$j][$k][PM_ZONE] == $zone_id) {
+          $this->data[$j][$k] = array(0, 0, 0);
         }
       }
     }
   }
 
-  function set_category ($category_id, $map){ 
+  function set_category ($category_id, $map){
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        if ($this->pmp_data[$j][$k][PM_ZONE] > 0) {
+        if ($this->data[$j][$k][PM_ZONE] > 0) {
           if ($map[$j][$k]) {
-            $this->pmp_data[$j][$k][PM_CATEGORY] = $category_id;
-          } else if ($this->pmp_data[$j][$k][PM_CATEGORY] == $category_id) {
-            $this->pmp_data[$j][$k][PM_CATEGORY] = 0;
+            $this->data[$j][$k][PM_CATEGORY] = $category_id;
+          } else if ($this->data[$j][$k][PM_CATEGORY] == $category_id) {
+            $this->data[$j][$k][PM_CATEGORY] = 0;
           }
         }
       }
@@ -212,7 +209,7 @@ class PlaceMapPart Extends Model {
     foreach($map as $j => $row) {
       foreach($row as $k => $sel) {
         if ($sel) {
-          $this->pmp_data[$j][$k] = array(0);
+          $this->data[$j][$k] = array(0);
         }
       }
     }
@@ -240,24 +237,24 @@ class PlaceMapPart Extends Model {
     foreach($map as $j => $row) {
       foreach($row as $k => $sel) {
         if ($sel) {
-          $this->pmp_data[$j][$k][PM_LABEL] = 'L';
-          $this->pmp_data[$j][$k][PM_LABEL_TYPE] = $label_type;
+          $this->data[$j][$k][PM_LABEL] = 'L';
+          $this->data[$j][$k][PM_LABEL_TYPE] = $label_type;
           if ($label_type == 'T') {
             if (!$cont) {
               $cont->j = $j;
               $cont->k = $k;
               $cont->size = 1;
-              $this->pmp_data[$j][$k][PM_LABEL_TEXT] = $label_text;
+              $this->data[$j][$k][PM_LABEL_TEXT] = $label_text;
             } else {
               $cont->size++;
-              $this->pmp_data[$j][$k][PM_LABEL_SIZE] = 0;
+              $this->data[$j][$k][PM_LABEL_SIZE] = 0;
             }
           }
         }
       }
     }
     if ($cont) {
-      $this->pmp_data[$cont->j][$cont->k][PM_LABEL_SIZE] = $cont->size;
+      $this->data[$cont->j][$cont->k][PM_LABEL_SIZE] = $cont->size;
     }
   }
 
@@ -269,7 +266,7 @@ class PlaceMapPart Extends Model {
 
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        $seat = $this->pmp_data[$j][$k];
+        $seat = $this->data[$j][$k];
         if ($seat[PM_ZONE] > 0) {
           $zone[$seat[PM_ZONE]]++;
           $cat[$seat[PM_CATEGORY]]++;
@@ -295,28 +292,28 @@ class PlaceMapPart Extends Model {
         $j_0 = ($inv_row?$pmp_height - $j - 1:$j);
         $k_0 = ($inv_seat?$pmp_width - $k - 1:$k);
 
-        if ($this->pmp_data[$j_0][$k_0][PM_ZONE] == $zone_id) {
+        if ($this->data[$j_0][$k_0][PM_ZONE] == $zone_id) {
           if (!$flip) {
-            if ($keep and $this->pmp_data[$j_0][$k_0][PM_SEAT]) {
-              $seat = $this->pmp_data[$j_0][$k_0][PM_SEAT];
+            if ($keep and $this->data[$j_0][$k_0][PM_SEAT]) {
+              $seat = $this->data[$j_0][$k_0][PM_SEAT];
             } else {
-              $this->pmp_data[$j_0][$k_0][PM_SEAT] = strtr($seat, ',|', '..');
+              $this->data[$j_0][$k_0][PM_SEAT] = strtr($seat, ',|', '..');
             }
-            if ($keep and $this->pmp_data[$j_0][$k_0][PM_ROW]) {
-              $row = $this->pmp_data[$j_0][$k_0][PM_ROW];
+            if ($keep and $this->data[$j_0][$k_0][PM_ROW]) {
+              $row = $this->data[$j_0][$k_0][PM_ROW];
             } else {
-              $this->pmp_data[$j_0][$k_0][PM_ROW] = strtr($row, ',|', '..');
+              $this->data[$j_0][$k_0][PM_ROW] = strtr($row, ',|', '..');
             }
           } else {
-            if ($keep and $this->pmp_data[$j_0][$k_0][PM_SEAT]) {
-              $row = $this->pmp_data[$j_0][$k_0][PM_SEAT];
+            if ($keep and $this->data[$j_0][$k_0][PM_SEAT]) {
+              $row = $this->data[$j_0][$k_0][PM_SEAT];
             } else {
-              $this->pmp_data[$j_0][$k_0][PM_SEAT] = strtr($row, ',|', '..');
+              $this->data[$j_0][$k_0][PM_SEAT] = strtr($row, ',|', '..');
             }
-            if ($keep and $this->pmp_data[$j_0][$k_0][PM_ROW]) {
-              $seat = $this->pmp_data[$j_0][$k_0][PM_ROW];
+            if ($keep and $this->data[$j_0][$k_0][PM_ROW]) {
+              $seat = $this->data[$j_0][$k_0][PM_ROW];
             } else {
-              $this->pmp_data[$j_0][$k_0][PM_ROW] = strtr($seat, ',|', '..');
+              $this->data[$j_0][$k_0][PM_ROW] = strtr($seat, ',|', '..');
             }
           }
           if (is_numeric($seat)) {
@@ -340,7 +337,7 @@ class PlaceMapPart Extends Model {
     $new_pmp = array();
 
     for($i = 0;$i < $before_row;$i++) {
-        $new_pm[] = $this->pmp_data[$i];
+        $new_pm[] = $this->data[$i];
     }
 
     for($i = 0;$i < $count;$i++) {
@@ -348,10 +345,10 @@ class PlaceMapPart Extends Model {
     }
 
     for($i = $before_row;$i < $this->pmp_width;$i++) {
-        $new_pm[] = $this->pmp_data[$i];
+        $new_pm[] = $this->data[$i];
     }
 
-    $this->pmp_data = $new_pmp;
+    $this->data = $new_pmp;
     $thia->pm_heigth = $this->pmp_height + $count;
   }
 
@@ -363,7 +360,7 @@ class PlaceMapPart Extends Model {
 
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        if ($this->pmp_data[$j][$k][PM_ZONE] == $zone_id) {
+        if ($this->data[$j][$k][PM_ZONE] == $zone_id) {
           $l = min($l, $k);
           $r = max($r, $k);
           $t = min($t, $j);
@@ -373,11 +370,11 @@ class PlaceMapPart Extends Model {
     }
 
     if ($l <= $r and $b >= $t) {
-      return array('left' => $l, 
-                   'right' => $r, 
-                   'top' => $t, 
+      return array('left' => $l,
+                   'right' => $r,
+                   'top' => $t,
                    'bottom' => $b,
-                   'width' => $r - $l, 
+                   'width' => $r - $l,
                    'height' => $b - $t);
     } else {
       return false;
@@ -392,7 +389,7 @@ class PlaceMapPart Extends Model {
 
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        $seat = $this->pmp_data[$j][$k];
+        $seat = $this->data[$j][$k];
         if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY] == $cat_id) {
           $l = min($l, $k);
           $r = max($r, $k);
@@ -403,11 +400,11 @@ class PlaceMapPart Extends Model {
     }
 
     if ($l <= $r and $b >= $t) {
-      return array('left' => $l, 
-                   'right' => $r, 
-                   'top' => $t, 
+      return array('left' => $l,
+                   'right' => $r,
+                   'top' => $t,
                    'bottom' => $b,
-                   'width' => $r - $l, 
+                   'width' => $r - $l,
                    'height' => $b - $t);
     } else {
       return false;
@@ -420,7 +417,7 @@ class PlaceMapPart Extends Model {
       for($j = $box['top'];$j < $box['height'];$j++) {
         $zone[$j] = array();
         for($k = $box['left'];$k < $box['width'];$k++) {
-          $zone[$j][$k] = $this->pmp_data[$j][$k];
+          $zone[$j][$k] = $this->data[$j][$k];
         }
       }
       return $zone;
@@ -432,8 +429,8 @@ class PlaceMapPart Extends Model {
   function delete_zone ($zone_ident){
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        if ($this->pmp_data[$j][$k][PM_ZONE] == $zone_ident) {
-          $this->pmp_data[$j][$k] = array(0, 0, 0);
+        if ($this->data[$j][$k][PM_ZONE] == $zone_ident) {
+          $this->data[$j][$k] = array(0, 0, 0);
           $count++;
         }
       }
@@ -444,10 +441,10 @@ class PlaceMapPart Extends Model {
   function delete_category ($cat_ident){
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        if ($this->pmp_data[$j][$k][PM_ZONE] > 0 and $this->pmp_data[$j][$k][PM_CATEGORY] == $cat_ident) {
-          $tmp = $this->pmp_data[$j][$k];
+        if ($this->data[$j][$k][PM_ZONE] > 0 and $this->data[$j][$k][PM_CATEGORY] == $cat_ident) {
+          $tmp = $this->data[$j][$k];
           $tmp[PM_CATEGORY] = 0;
-          $this->pmp_data[$j][$k] = $tmp;
+          $this->data[$j][$k] = $tmp;
           $count++;
         }
       }
@@ -459,7 +456,7 @@ class PlaceMapPart Extends Model {
     $index_0 = $index + 0;
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        $seat = $this->pmp_data[$j][$k];
+        $seat = $this->data[$j][$k];
         if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
           if ($zones) {
             $key = $this->pmp_id . "-" . $seat[PM_ZONE] . "-" . $seat[PM_CATEGORY];
@@ -468,7 +465,7 @@ class PlaceMapPart Extends Model {
           }
 
           if ($cat = $cats[$key]) {
-            $this->pmp_data[$j][$k][PM_CATEGORY] = $cat->category_ident;
+            $this->data[$j][$k][PM_CATEGORY] = $cat->category_ident;
           } else {
             $category_ident = $index++;
 
@@ -483,15 +480,15 @@ class PlaceMapPart Extends Model {
 
             $cat = PlaceMapCategory.create($this->pmp_pm_id, $category_name,
                                             $old_cat->category_price,
-                                            $old_cat->category_template, 
+                                            $old_cat->category_template,
                                             $old_cat->category_color,
                                             $old_cat->category_numbering, 0,
                                             $old_cat->category_event_id);
 
             $cat->category_ident = $category_ident;
-            $this->pmp_data[$j][$k][PM_CATEGORY] = $cat->category_ident;
+            $this->data[$j][$k][PM_CATEGORY] = $cat->category_ident;
 
-            $cats[$key] = $cat; 
+            $cats[$key] = $cat;
             $old_cats[$old_cat->category_id] = $old_cat;
           }
         }
@@ -505,7 +502,7 @@ class PlaceMapPart Extends Model {
 
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
-        $seat = $this->pmp_data[$j][$k];
+        $seat = $this->data[$j][$k];
         if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
           $zone = $this->zones[$seat[PM_ZONE]];
           $category = $this->categories[$seat[PM_CATEGORY]];
@@ -517,7 +514,7 @@ class PlaceMapPart Extends Model {
           if ($dry_run or $seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
                                                    $zone->pmz_id, $this->pmp_id, $category->category_id)) {
             if (!$dry_run) {
-                $this->pmp_data[$j][$k][PM_ID] = $seat_id;
+                $this->data[$j][$k][PM_ID] = $seat_id;
             }
 
             $stats[$category->category_ident]++;
@@ -534,9 +531,9 @@ class PlaceMapPart Extends Model {
         $pmps[$cat_ident][] = $pmp_id;
       }
     }
-    
+
 //          Category::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pmp.publish5');
-    
+
     if(!$dry_run and !($part->save() and $part->save_original())) {
       return $this->_abort('pmp.publish2');}
     return true;
@@ -562,7 +559,7 @@ class PlaceMapPart Extends Model {
     }
   }
 
-  function rebuild_cache () { 
+  function rebuild_cache () {
     // echo rebuild_cache;
     require_once('classes/Seat.php');
     $seats_db = Seat::load_pmp_all($this->pmp_id);
@@ -571,7 +568,7 @@ class PlaceMapPart Extends Model {
     if ($seats_db) {
       for($j = 0;$j < $this->pmp_height;$j++) {
         for($k = 0;$k < $this->pmp_width;$k++) {
-          $seat_c = $this->pmp_data[$j][$k];
+          $seat_c = $this->data[$j][$k];
 
           if ($seat_c[PM_ZONE] > 0 and $seat_c[PM_CATEGORY]) {
             if ($seat_db = $seats_db[$seat_c[PM_ID]]) {
@@ -580,17 +577,17 @@ class PlaceMapPart Extends Model {
               }
 
               if ($seat_db['seat_status'] == 'free') {
-                  $this->pmp_data[$j][$k][PM_STATUS] = PM_STATUS_FREE;
+                  $this->data[$j][$k][PM_STATUS] = PM_STATUS_FREE;
               } elseif ($seat_db['seat_status'] == 'resp') {
-                  $this->pmp_data[$j][$k][PM_STATUS] = PM_STATUS_RESP;
+                  $this->data[$j][$k][PM_STATUS] = PM_STATUS_RESP;
               } else {
-                  $this->pmp_data[$j][$k][PM_STATUS] = PM_STATUS_OCC;
+                  $this->data[$j][$k][PM_STATUS] = PM_STATUS_OCC;
               }
             } elseif (!$error) {
-              user_error('seats cache error found, rebuilding cache... PLEASE RELOAD'); 
+              user_error('seats cache error found, rebuilding cache... PLEASE RELOAD');
               // user_error("seats cache error! seat id: {$seat_c[PM_ID]} ($k,$j) {$seat_c[PM_ZONE]} {$seat_c[PM_CATEGORY]}");
               // print_r($seat_c);
-              $this->pmp_data = PlaceMapPart::_unser_data($this->pmp_data_orig, $this->pmp_width, $this->pmp_height); 
+              $this->data = PlaceMapPart::_unser_data($this->pmp_data_orig, $this->pmp_width, $this->pmp_height);
               // echo("<pre>");print_r($pmp_data_orig);echo("</pre>");
               $error = true;
             }
@@ -610,7 +607,7 @@ class PlaceMapPart Extends Model {
     if ($this->zones) {
       for($j = 0;$j < $this->pmp_height;$j++) {
         for($k = 0;$k < $this->pmp_width;$k++) {
-          $seat = $this->pmp_data[$j][$k];
+          $seat = $this->data[$j][$k];
           if ($seat[PM_ZONE] > 0 and (!$pmz_ident or $seat[PM_ZONE] == $pmz_ident)) {
             if ($prev = $tmp[$seat[PM_ZONE]][$seat[PM_ROW]][$seat[PM_SEAT]]) {
               $doubles[$prev[0]][$prev[1]] = true;
