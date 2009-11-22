@@ -117,17 +117,17 @@ function event_group_list (){
      echo "<td  class='admin_list_item' width='100%'>{$row['event_group_name']}</td>";
      echo "<td class='admin_list_item' nowrap>\n";
      if($row['event_group_status']=='unpub'){
-       echo "<a class='link' href='javascript:if(confirm(\"".con('publish_event_group')."\")){location.href=\"view_event_group.php?action=publish&event_group_id={$row['event_group_id']}\";}'>
+       echo "<a class='link' href='javascript:if(confirm(\"".con('publish_event_group')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=publish&event_group_id={$row['event_group_id']}\";}'>
                <img src='images/publish.jpg' width=16 border='0' alt='".publish."' title='".publish."'></a>\n";
      }
      if($row['event_group_status']=='pub'){
-       echo "<a class='link' href='javascript:if(confirm(\"".con('unpublish_event_group')."\")){location.href=\"view_event_group.php?action=unpublish&event_group_id={$row['event_group_id']}\";}'>
+       echo "<a class='link' href='javascript:if(confirm(\"".con('unpublish_event_group')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=unpublish&event_group_id={$row['event_group_id']}\";}'>
              <img src='images/unpublish.jpg' width=16 border='0' alt='".unpublish."' title='".unpublish."'></a>\n";
      }
 
 //     echo "<a class='link' href='view_event_group.php?action=view&event_group_id={$row['event_group_id']}'><img src='images/view.png' border='0' alt='".view."' title='".view."'></a>\n";
-     echo "<a class='link' href='view_event_group.php?action=edit&event_group_id={$row['event_group_id']}'><img src='images/edit.gif' border='0' alt='".edit."' title='".edit."'></a>\n";
-     echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"view_event_group.php?action=remove&event_group_id={$row['event_group_id']}\";}'><img src='images/trash.png' border='0' alt='".remove."' title='".remove."'></a>";
+     echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&event_group_id={$row['event_group_id']}'><img src='images/edit.gif' border='0' alt='".edit."' title='".edit."'></a>\n";
+     echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_group_id={$row['event_group_id']}\";}'><img src='images/trash.png' border='0' alt='".remove."' title='".remove."'></a>";
      echo "</td></tr>";
      $alt=($alt+1)%2;
 
