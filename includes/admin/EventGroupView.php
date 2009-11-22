@@ -36,7 +36,7 @@ require_once("admin/AdminView.php");
 
 class EventGroupView extends AdminView{
 
-function event_group_form (&$data, &$err,$title){
+function event_group_form ($data, &$err,$title){
   global $_SHOP;
   echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -203,19 +203,19 @@ function photo_post ($data, $event_group_id){
       $this->event_group_form($row,$err,event_group_add_title);
 
     }elseif($_GET['action']=='remove' and $_GET['event_group_id']>0){
-      groupevent::delete($_GET['event_group_id']);
+      Eventgroup::delete($_GET['event_group_id']);
       $this->event_group_list();
 
     }elseif($_GET['action']=='publish'){
-      groupevent::setState($_GET['event_group_id'], true);
+      Eventgroup::setState($_GET['event_group_id'], true);
       $this->event_group_list();
 
     }elseif($_GET['action']=='unpublish'){
-      groupevent::setState($_GET['event_group_id'], false);
+      Eventgroup::setState($_GET['event_group_id'], false);
       $this->event_group_list();
 
     }elseif($_GET['event_group_id']){
-      $row = Groupevent::load($_GET['event_group_id']);
+      $row = Eventgroup::load($_GET['event_group_id']);
       $this->event_group_form((array)$row, $err, con('event_group_update_title'));
     }else {
       $this->event_group_list();

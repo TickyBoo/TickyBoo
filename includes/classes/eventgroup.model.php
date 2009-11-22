@@ -37,8 +37,8 @@ require_once('classes/ShopDB.php');
 class Eventgroup Extends Model {
   protected $_idName    = 'event_group_id';
   protected $_tableName = 'Event_group';
-  protected $_columns   = array( '#ort_id','*event_group_name', 'event_group_type', 'event_group_description',
-                                 '*event_group_state', 'event_group_start_date', 'event_group_end_date', 'event_group_image');
+  protected $_columns   = array( 'event_group_id','*event_group_name', 'event_group_type', 'event_group_description',
+                                 '*event_group_status', 'event_group_start_date', 'event_group_end_date', 'event_group_image');
 
   function load ($ort_id){
     $query="select * from Event_group where Event_group_id=$ort_id";
@@ -52,7 +52,7 @@ class Eventgroup Extends Model {
   }
 
   function save (){
-    if (!isset($this->event_group_state)) {$this->event_group_state ='unpub';}
+    if (!isset($this->event_group_status)) {$this->event_group_status ='unpub';}
     return parent::save();
   }
 

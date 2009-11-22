@@ -141,7 +141,7 @@ function FindClass(&$class_name) {
     return CLASSES ;
   }  elseIf (file_exists(CLASSES .  $class_name . '.model.php')) {
     $class_name .= '.model';
-    return CLASSES . 'payments' . DS;
+    return CLASSES;
   } elseIf (file_exists(CLASSES . 'payments' . DS . $class_name . '.php')) {
     return CLASSES . 'payments' . DS;
   }
