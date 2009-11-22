@@ -159,16 +159,19 @@ class PlaceMapView2 extends AdminView {
 			return;
 		}
 
-		$this->list_head( place_maps, 3 );
 		$alt = 0;
+	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='3'>\n";
+	  echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('place_maps') . "</td>\n";
+    echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pm&pm_ort_id=$ort_id'>" . add . "</a></td>";
+	  echo "</tr>";
 
 		while ( $pm = shopDB::fetch_assoc($res) ) {
 			echo "<tr class='admin_list_row_$alt'>";
 
-			echo "<td class='admin_list_item'>{$pm['pm_id']}</td>\n";
-			echo "<td class='admin_list_item' width='85%'>{$pm['pm_name']}</td>\n";
+			echo "<td class='admin_list_item' width='20'>{$pm['pm_id']}</td>\n";
+			echo "<td class='admin_list_item' >{$pm['pm_name']}</td>\n";
 
-			echo "<td class='admin_list_item' align=right>";
+			echo "<td class='admin_list_item' width=60 align=right>";
 			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}'><img src='images/edit.gif' border='0' alt='" .
 				edit . "' title='" . edit . "'></a>\n";
 			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}'><img src='images/copy.png' border='0' alt='" .
@@ -178,12 +181,6 @@ class PlaceMapView2 extends AdminView {
 			echo "</td></tr>";
 			$alt = ( $alt + 1 ) % 2;
 		}
-
-		if ( $mine ) {
-			echo "<tr><td colspan=6 align=center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pm&pm_ort_id=$ort_id'>" .
-				add . "</a></td></tr>";
-		}
-
 		echo "</table>";
 	}
 

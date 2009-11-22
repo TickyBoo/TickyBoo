@@ -33,7 +33,7 @@
  */
 
 class PlaceMapZone Extends Model {
-  protected $_idName    = 'pmx_id';
+  protected $_idName    = 'pmz_id';
   protected $_tableName = 'PlaceMapZone';
   protected $_columns   = array( '#pmz_id','*pmz_pm_id','*pmz_ident','*pmz_name', 'pmz_color','pmz_short_name');
 

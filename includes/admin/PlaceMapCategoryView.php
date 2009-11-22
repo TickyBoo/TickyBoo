@@ -120,7 +120,7 @@ class PlaceMapCategoryView extends AdminView {
             echo "<td class='admin_list_item'>{$category->category_size} ".con('cat_at')." {$category->category_price} </td>\n";
             echo "<td class='admin_list_item'>" . con($category->category_numbering) . " </td>\n";
 
-            echo "<td class='admin_list_item' width=40 align=right>";
+            echo "<td class='admin_list_item' width=60 align=right>";
             if (!$mine) {
                 echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
                 <img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";

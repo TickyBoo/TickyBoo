@@ -587,7 +587,7 @@ class PlaceMapPartView extends AdminView {
 
         $alt = 0;
         echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='5' align='left'>" . con('pm_parts') . "</td>";
+        echo "<tr><td class='admin_list_title' colspan='3' align='left'>" . con('pm_parts') . "</td>";
         if ($mine and !$live) {
           echo "<td colspan=1 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmp&pm_id=$pm_id'>" . add . "</a></td></tr>";
         }

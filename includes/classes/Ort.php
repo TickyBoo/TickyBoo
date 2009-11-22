@@ -39,10 +39,10 @@ class Ort Extends Model {
   protected $_tableName = 'Ort';
   protected $_columns   = array( '#ort_id',
       '*ort_name', '*ort_address', 'ort_address1', '*ort_zip',
-      '*ort_city', '*ort_country', 'ort_state', 'ort_phone',         
+      '*ort_city', '*ort_country', 'ort_state', 'ort_phone',
       '#ort_fax', 'ort_image', 'ort_url', 'ort_pm');
-  
-  function load ($ort_id){ 
+
+  function load ($ort_id){
     $query="select * from Ort where ort_id=$ort_id";
     if($res=ShopDB::query_one_row($query)){
 
@@ -52,18 +52,18 @@ class Ort Extends Model {
       return $ort;
     }
   }
-  
+
   function save (){
-     return parrent::save();
+     return parent::save();
   }
-  
+
   function copy (){
     If (ShopDB::begin('Copy Ort')) {
       $old_id=$this->ort_id;
       unset($this->ort_id);
-      
+
       $new_id=$this->save();
-      
+
       require_once('classes/PlaceMap.php');
       if($pms=PlaceMap::loadAll($old_id)){
         foreach($pms as $pm){
@@ -76,10 +76,10 @@ class Ort Extends Model {
       return ShopDB::commit('Copied ort');
     }
   }
-  
+
   function delete () {
     global $_SHOP;
-  
+
     require_once('classes/PlaceMap.php');
 
     if($pms=PlaceMap::loadAll($this->ort_id)){
@@ -87,7 +87,7 @@ class Ort Extends Model {
 	      $pm->delete();
       }
     }
-    
+
     $query="delete from Ort where ort_id='{$this->ort_id}' limit 1";
     ShopDB::query($query);
   }

@@ -104,8 +104,8 @@ class PlaceMapZoneView extends AdminView {
         // zones
         $alt = 0;
 
-        echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='3' align='left'>" . con('pm_zones') . "</td>\n";
+        echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='3'>\n";
+        echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('pm_zones') . "</td>\n";
         if (!$live and $mine) {
           echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>" . add . "</a></td>";
         }
@@ -115,10 +115,9 @@ class PlaceMapZoneView extends AdminView {
 
             echo "<tr class='admin_list_row_$alt'>";
             echo "<td class='admin_list_item' width=10 bgcolor='{$zone->pmz_color}'>&nbsp;</td>\n";
-            echo "<td class='admin_list_item'>{$zone->pmz_ident}</td>\n";
-            echo "<td class='admin_list_item' width='85%'>{$zone->pmz_name} ({$zone->pmz_short_name})</td>\n";
+             echo "<td class='admin_list_item'>{$zone->pmz_name} ({$zone->pmz_short_name})</td>\n";
 
-            echo "<td class='admin_list_item' align=right>\n";
+            echo "<td class='admin_list_item' width=60 align=right>\n";
 
             if ($mine) {
                 echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pmz&pm_id=$pm_id&pmz_id=$zone_ident'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
