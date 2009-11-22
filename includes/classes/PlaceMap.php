@@ -33,7 +33,7 @@
  */
  require_once ( "model.php" );
 
-class PlaceMap Extends Model { 
+class PlaceMap Extends Model {
   protected $_idName    = 'pm_id';
   protected $_tableName = 'PlaceMap2';
   protected $_columns   = array( '#pm_id','*pm_ort_id','#pm_event_id','*pm_name', 'pm_image');
@@ -46,12 +46,12 @@ class PlaceMap Extends Model {
     }
     return $pm;
   }
-  
+
   function load ($pm_id){
     global $_SHOP;
-  
-    $query="select * 
-           from PlaceMap2 left join Ort on pm_ort_id=ort_id 
+
+    $query="select *
+           from PlaceMap2 left join Ort on pm_ort_id=ort_id
            where pm_id="._esc($pm_id);
     if($res=ShopDB::query_one_row($query)){
 
@@ -63,15 +63,15 @@ class PlaceMap Extends Model {
   }
 
   function loadAll ($ort_id){
-    $query="select * 
-            from PlaceMap2 left join Ort on pm_ort_id=ort_id 
+    $query="select *
+            from PlaceMap2 left join Ort on pm_ort_id=ort_id
             where ort_id="._esc($ort_id);
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_array($res)){
         $new_pm=new PlaceMap;
         $new_pm->_fill($data);
-        $pms[]=$new_pm; 
-      }	 
+        $pms[]=$new_pm;
+      }
     }
     return $pms;
   }
@@ -125,22 +125,22 @@ class PlaceMap Extends Model {
   }
 
   function delete ($pm_id = -1){
-    global $_SHOP; 
-    
+    global $_SHOP;
+
     $pm_id = (int)$pm_id;
-    
+
     if ($pm_id== -1) $pm_id = $this->pm_id;
-    
+
     if(ShopDB::begin('delete Placmap: '.$pm_id)){
-      $pm = shopDB::query_on_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
+      $pm = shopDB::query_one_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
       if ($pm and $pm['pm_event_id']){
-        $seats = shopDB::query_on_row("select count(*) from Seats 
+        $seats = shopDB::query_one_row("select count(*) from Seats
                                        where seat_event_id ={$pm['pm_event_id']}", false);
         if ($seats[0]>0) {
           return placemap::_abort(con('placemap_delete_failed_seats_exists'));
         }
       }
-      
+
       $query="delete from PlaceMapZone where pmz_pm_id={$pm_id}";
       if(!ShopDB::query($query)){
         return  placemap::_abort(con('placemapzone_stat_delete_failed'));
@@ -171,16 +171,16 @@ class PlaceMap Extends Model {
   function copy ($event_id=''){
     $old_id=$this->pm_id;
     unset($this->pm_id);
-    
+
     if($event_id){
       $this->pm_event_id=$event_id;
     }
-    
+
     if(ShopDB::begin('copy Placmap to event: '.$event_id)){
       if($new_id=$this->save()){
         require_once('classes/PlaceMapZone.php');
         require_once('classes/PlaceMapCategory.php');
-        require_once('classes/PlaceMapPart.php');	
+        require_once('classes/PlaceMapPart.php');
 
         if($zones=PlaceMapZone::loadAll($old_id)){
           foreach($zones as $zone){
@@ -213,18 +213,18 @@ class PlaceMap Extends Model {
         return $new_id;
       }
     }
-  }  
-  
+  }
+
   function split ($pm_parts=0,$split_zones=true){
     if(!is_array($pm_parts)) { return false; }
-    
+
     require_once('classes/PlaceMapCategory.php');
     require_once('classes/PlaceMapPart.php');
-  
+
     if(ShopDB::begin('Split Placmap')){
       $index=PlaceMapCategory::_find_ident($this->pm_id);
       $parts=PlaceMapPart::loadAll($this->pm_id);
-      
+
       foreach($parts as $part_small){
         if(!in_array($part_small->pmp_id, $pm_parts)){continue;}
 
@@ -239,7 +239,7 @@ class PlaceMap Extends Model {
           $cat->save();
         }
       }
-        
+
       if($old_cats){
         foreach($old_cats as $cat){
           $cat->save();

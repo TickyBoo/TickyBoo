@@ -165,7 +165,7 @@ class PlaceMapPart Extends Model {
   }
 
   function delete () {
-    $seats = shopDB::query_on_row("select count(*) from Seats
+    $seats = shopDB::query_one_row("select count(*) from Seats
                                    where seat_pmp_id ={$this->pmp_id}", false);
     if ($seats[0]>0) {
       echo '<div class=error>'.con('PlaceMapPart_delete_failed_seats_exists').'</div>';
@@ -276,6 +276,22 @@ class PlaceMapPart Extends Model {
     $stats->zones = $zone;
     $stats->categories = $cat;
     return $stats;
+  }
+
+  function setNumbers ($zone_id, $numbers, $sep = '/')
+  {
+    foreach($numbers as $j => $row) {
+      foreach($row as $k => $seat_s) {
+        list($row, $seat) = explode($sep, $seat_s);
+        $row = strtr($row, ',|', '..');
+        $seat = strtr($seat, ',|', '..');
+
+        if ($this->data[$j][$k][PM_ZONE] == $zone_id) {
+          $this->data[$j][$k][PM_ROW] = $row;
+          $this->data[$j][$k][PM_SEAT] = $seat;
+        }
+      }
+    }
   }
 
   function auto_numbers ($zone_id, $first_row = 1, $step_row = 1, $inv_row = false,

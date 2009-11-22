@@ -97,7 +97,7 @@ class PlaceMapZone Extends Model {
 		if(!$zone=PlaceMapZone::load($pmz_id)){
 		  return;
 		}
-    $seats = shopDB::query_on_row("select count(*) from Seats
+    $seats = shopDB::query_one_row("select count(*) from Seats
                                    where seat_zone_id ={$zone_id}", false);
     if ($seats[0]>0) {
       echo '<div class=error>'.con('Zone_delete_failed_seats_exists').'</div>';

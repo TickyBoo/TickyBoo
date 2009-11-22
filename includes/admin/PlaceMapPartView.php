@@ -37,12 +37,11 @@ require_once("admin/AdminView.php");
 require_once("classes/PlaceMapPart.php");
 
 class PlaceMapPartView extends AdminView {
-    function __construct($width = 500)
-    {
+    function __construct($width = 500) {
         $this->width = $width;
     }
-    function zone_edit ($zone_ident, $pmp_id)
-    {
+
+    function zone_edit ($zone_ident, $pmp_id) {
         global $_SHOP;
 
         if (!$pmp = PlaceMapPart::loadFull($pmp_id)) {
@@ -78,7 +77,7 @@ class PlaceMapPartView extends AdminView {
         for($j = $zone_bounds['top'];$j <= $zone_bounds['bottom'];$j++) {
             echo "<tr>";;
             for($k = $zone_bounds['left'];$k <= $zone_bounds['right'];$k++) {
-                $seat = $pmp->pmp_data[$j][$k];
+                $seat = $pmp->data[$j][$k];
 
                 if ($z = $seat[PM_ZONE]) {
                     $zone = $zones[$z];
@@ -736,7 +735,7 @@ class PlaceMapPartView extends AdminView {
               return;
           }
 
-          $pmp->set_numbers($_POST['pmz_ident'], $_POST['seat']);
+          $pmp->setNumbers($_POST['pmz_ident'], $_POST['seat']);
           $pmp->save();
           $this->zone_edit($_POST['pmz_ident'], $_POST['pmp_id']);
       } else if ($_POST['action'] == 'pmz_auto_num_pmp' and $_POST['pmp_id'] and $_POST['pmz_ident']) {

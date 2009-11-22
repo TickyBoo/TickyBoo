@@ -49,7 +49,7 @@ define('MONTH', 30 * DAY);
 define('YEAR', 365 * DAY);
 
 /**
- * the two error-level constants 
+ * the two error-level constants
  */
 define('FT_DEBUG', 2);
 define('FT_ERROR', 1);
@@ -134,13 +134,16 @@ function uses()
   }
 }
 
-function FindClass($class_name) {
+function FindClass(&$class_name) {
   $class_name = strtolower($class_name);
 
   If (file_exists(CLASSES . $class_name . '.php')) {
-     return CLASSES ;
-  }  elseIf (file_exists(CLASSES . 'payments' . DS . $class_name . '.php')) {
-     return CLASSES . 'payments' . DS;
+    return CLASSES ;
+  }  elseIf (file_exists(CLASSES .  $class_name . '.model.php')) {
+    $class_name .= '.model';
+    return CLASSES . 'payments' . DS;
+  } elseIf (file_exists(CLASSES . 'payments' . DS . $class_name . '.php')) {
+    return CLASSES . 'payments' . DS;
   }
 }
 
@@ -348,13 +351,13 @@ function check_system() {
 
   // NS: I moved the current_db_time to the init.php so we have lesser sql calls.
   // also i have moved the error messages to the language file. so the can be translated.
-  
+
   if ($_SHOP->shopconfig_lastrun_int == 0) {
       return;
   } elseif ( $_SHOP->current_db_time <= $_SHOP->shopconfig_lastrun ) {
       return;
   }
-    
+
   //  print_r('run');
   //Checks to see if res time is enabled anything more than 9 will delete
   if ( $_SHOP->shopconfig_restime >= 1 ) {
@@ -396,11 +399,11 @@ function check_system() {
   }
 
   $time=time();
-  $query="UPDATE Seat SET 
-            seat_status='free', 
-            seat_ts=NULL, 
+  $query="UPDATE Seat SET
+            seat_status='free',
+            seat_ts=NULL,
             seat_sid=NULL
-         where seat_status='res' 
+         where seat_status='res'
          and seat_ts<"._esc($time);
   ShopDB::query($query);
 
@@ -426,18 +429,18 @@ function formatDate($edate, $format="%m/%d/%Y" ){
 function formatAdminDate($edate,$year4=true){
   if(function_exists("date_parse")){
     $dateArr = date_parse($edate);
-    if ($year4) { 
+    if ($year4) {
       $pdate = $dateArr['day']."-".$dateArr['month']."-".$dateArr['year'];
        } else {
          $pdate = $dateArr['day']."-".$dateArr['month']."-".substr($dateArr['year'], -2);
-       }  
+       }
   }else{
     ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
-    if ($year4) { 
-      $pdate = $regs[3]."-".$regs[2]."-".$regs[1]; 
-    } else { 
+    if ($year4) {
+      $pdate = $regs[3]."-".$regs[2]."-".$regs[1];
+    } else {
       $pdate = $regs[3]."-".$regs[2]."-".substr($regs[1], -2);
-     }  
+     }
   }
    return $pdate;
 }
@@ -467,22 +470,22 @@ function subtractDaysFromDate($date,$no_days) {
 
  /**
   * trace()
-  * 
+  *
   * Will print full traces to file when enabled in config_common.php
-  * 
-  * Tempted to remove dblogging and do both in trace function. 
-  * Like trace($content,$dblog=false){} 
-  * 
+  *
+  * Tempted to remove dblogging and do both in trace function.
+  * Like trace($content,$dblog=false){}
+  *
   * @param mixed $content
   * @return void
   */
   function trace($content){
     global $_SHOP;
-    
+
     if(is($_SHOP->trace_on,false)){
       $content = date('c',time()).' : '. $content."\n";
       file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content,FILE_APPEND);
-    }      
+    }
   }
 
 
@@ -568,8 +571,8 @@ function orphanCheck(){
     //Turn Off trace to run the Orphan check so we only get querys
     $_SHOP->trace_on=false;
     $data = Orphans::getlist($keys, false);
-    $_SHOP->trace_on=true; 
-    trace("Orphan Check Dump: ".var_export($data,true));  
+    $_SHOP->trace_on=true;
+    trace("Orphan Check Dump: ".var_export($data,true));
   }
 }
 
