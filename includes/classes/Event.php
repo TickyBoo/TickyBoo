@@ -175,7 +175,7 @@ class Event Extends Model {
     }
 
     if($this->event_pm_id and ($this->event_rep=='sub' or $this->event_rep=='main,sub')){
-      if (!PlaceMap::publish($this->event_pm_id, $this->event_id, 0, $stats, $pmps, $dry_run)) {
+      if (!PlaceMap::publish($this->event_pm_id, $this->event_id, $stats, $pmps, $dry_run)) {
         return $this->_abort('publish1');
       }
 
