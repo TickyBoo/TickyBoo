@@ -44,7 +44,7 @@ class Eventgroup Extends Model {
     $query="select * from Event_group where Event_group_id=$ort_id";
     if($res=ShopDB::query_one_row($query)){
 
-      $ort=new Ort;
+      $ort=new Eventgroup;
       $ort->_fill($res);
 
       return $ort;
