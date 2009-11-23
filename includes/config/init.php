@@ -39,19 +39,19 @@
  */
 
   global $_SHOP;
-  
+
  if(function_exists("date_default_timezone_set") and
     function_exists("date_default_timezone_get")) {
    @date_default_timezone_set(@date_default_timezone_get());
  }
 
-  
-//check if the site is online  
+
+//check if the site is online
   //require_once("classes/sessions.php");
   require_once("classes/ShopDB.php");
   require_once("classes/basics.php");
   require_once("classes/model.php");
-  
+
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
 
@@ -70,13 +70,13 @@
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){
       $_SHOP->system_status_off=TRUE;
-      
+
     }else{
       echo "<center>
             <h1>This service is temporarily unavailable</h1>
 	          <h3>Please return later</h3></center>";
       exit;
-    }   	  
+    }
   }
   foreach($res as $key => $value){
     if ($key != 'status') {
@@ -91,7 +91,7 @@
 
 // check the order system for outdated orders and reservations
   check_system();
-  
+
   if (isset($_REQUEST['action'])) {
     $action=$_REQUEST['action'];
   } elseif(!isset($action)){
@@ -126,7 +126,7 @@
 
 
 //loading language file
-  
+
   if(isset($_REQUEST['setlang']) ) {
 	  if ($lang=$_REQUEST['setlang'] and in_array($lang,$_SHOP->langs)){
   		//  setcookie("lang",$lang,time()+60*60*24*30);
@@ -142,16 +142,16 @@
   }else if($_SERVER["HTTP_ACCEPT_LANGUAGE"]){
 		$lpat=implode($_SHOP->langs,"|");
     if(preg_match("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res)){
-     $_SHOP->lang=$res[0]; 
+     $_SHOP->lang=$res[0];
     }else{
       $_SHOP->lang=$_SHOP->langs[0];
       $_SESSION['_SHOP_LANG']=$_SHOP->lang;
-    } 
+    }
   }else{
     $_SHOP->lang=$_SHOP->langs[0];
     $_SESSION['_SHOP_LANG']=$_SHOP->lang;
   }
-  
+
   $locale = get_loc($_SHOP->lang);
   $old = setlocale(LC_ALL, NULL);
 
@@ -175,16 +175,16 @@
   }
 
   if(isset($_SHOP->auth_required)){
-  
+
     if(!isset($_SHOP->auth_dsn)){
       $_SHOP->auth_dsn="mysql://".$_SHOP->db_uname.":".$_SHOP->db_pass."@".$_SHOP->db_host."/".$_SHOP->db_name;
     }
 
     //authentication stuff
-    require_once "Auth/Auth.php";  
-  
+    require_once "Auth/Auth.php";
+
     //this function shows the login-password dialog
-    //languages stuff is loaded after, so it is not internationalized  
+    //languages stuff is loaded after, so it is not internationalized
     function loginFunction ($username, $status, $auth){
 			echo "<html><head>
       <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
@@ -211,12 +211,12 @@
       } else if ($status == AUTH_WRONG_LOGIN) {
         echo '<i>Wrong login data!</i>'."\n";
       }
-      
+
       echo "</form></center></body></html>";
-    }  
- 
+    }
+
     function loginCallback ($username,$auth){
-      global $_SHOP; 
+      global $_SHOP;
       $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`="._esc($username);
       if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
         unset($data[ $_SHOP->auth_password ]);
@@ -225,20 +225,20 @@
         session_destroy();
 	      exit;
       }
-      
+
       $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
-      echo ini_get("session.gc_maxlifetime");       
+     // echo ini_get("session.gc_maxlifetime");
    }
-  
+
     //authentication starts here
     $params = array("dsn" => $_SHOP->auth_dsn,
       'table' =>$_SHOP->auth_table,
       'usernamecol' =>$_SHOP->auth_login,
-      'passwordcol' =>$_SHOP->auth_password);  
-     
+      'passwordcol' =>$_SHOP->auth_password);
+
     $_auth = new Auth('DB',$params,'loginFunction');
-    $_auth ->setSessionName($_SHOP->session_name); 
-    $_auth ->setLoginCallback('loginCallback'); 
+    $_auth ->setSessionName($_SHOP->session_name);
+    $_auth ->setLoginCallback('loginCallback');
     is($action,"");
     if ($action == 'logout') {
       $_auth->logout();
@@ -254,19 +254,19 @@
     if (!$_auth->getAuth()) {
       exit;
     }
-    
-    $_SHOP->auth = $_auth; 
+
+    $_SHOP->auth = $_auth;
   }
 
-  //ini_set("session.gc_maxlifetime", [timeinsec]); 
-  
-  
+  //ini_set("session.gc_maxlifetime", [timeinsec]);
+
+
 //loading organizer attributes
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
     $query="SELECT * FROM Organizer LIMIT 1";
-		
-    if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){ 
-    	// Some mysql settings WONT return objects and return an array instead. 
+
+    if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
+    	// Some mysql settings WONT return objects and return an array instead.
 		//Take this into consideration in the future.
       $_SESSION['_SHOP_ORGANIZER_DATA'] = (object)$data;
 	}
