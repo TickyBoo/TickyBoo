@@ -109,6 +109,9 @@ class AdminPage extends AUIComponent {
         <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
         <title>" . $this->getTitle() . "</title>
         <link rel='stylesheet' href='admin.css'>
+        <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.3.2.min.js\"></script>
+		    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
+        
 		<script><!--
 		function set_lang(box)
 		{
