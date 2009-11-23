@@ -167,14 +167,14 @@ class AdminView extends AUIComponent {
 
     function print_checkbox ($name, &$data, &$err, $size = '', $max = '')
     {
-      //       self::print_select_assoc ($name, $data, $err, array('0'=>'no', '1'=>'yes'));
-        if ($data[$name]) {
+      self::print_select_assoc ($name, $data, $err, array('0'=>'no', '1'=>'yes'));
+/*        if ($data[$name]) {
             $chk = 'checked';
         }
         echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
                 <td class='admin_value'><input type='checkbox' name='$name' value='1' $chk>
                 <span class='err'>{$err[$name]}</span>
-                </td></tr>\n";
+                </td></tr>\n";*/
     }
 
     function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '')

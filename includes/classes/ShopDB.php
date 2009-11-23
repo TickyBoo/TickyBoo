@@ -46,9 +46,9 @@ class ShopDB {
         global $_SHOP;
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-        
+
         trace("\n Database Init");
-        
+
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
             $DB_Hostname = $_SHOP->db_host;
@@ -79,14 +79,14 @@ class ShopDB {
             }
             ShopDB::$link = $link;
             ShopDB::checkdatabase(true, false);
-            
+
             //Set Session Time Zone.
             //This does not work:             ShopDB::query("SET time_zone = '-8'");
             //2009-10-24T13:17:46+02:00 [Error: 1298] SET time_zone = '-8'
             //2009-10-24T13:17:46+02:00 Unknown or incorrect time zone: '-8'
-            
+
             //Time Zone should be "SET time_zone = -8" or "SET time_zone = 'London/Europe' ";
-            
+
             return true;
           } else {
              echo 'db init - ';
@@ -97,30 +97,30 @@ class ShopDB {
         return true;
     }
     // just requires PHP5 and MySQLi And mysql >4.1
-    
+
     /**
      * ShopDB::isTxn()
-     * 
+     *
      * Shorthand of ShopDB::isTransaction();
-     * 
+     *
      * @return bool, true if transaction has begun.
      */
     static function isTxn(){
       return self::isTransaction();
     }
-    
+
     /**
      * ShopDB::isTransaction()
-     * 
-     * @return bool, Is true if a transaction has started. 
+     *
+     * @return bool, Is true if a transaction has started.
      */
     static function isTransaction(){
       return self::$db_trx_started >0;
     }
-    
+
     function close(){
         global $_SHOP;
-        
+
         if (isset(ShopDB::$link)) {
            ShopDB::$link->close();
         }
@@ -133,7 +133,7 @@ class ShopDB {
         }
         return mysqli_get_server_info(ShopDB::$link);
     }
-    
+
     function begin ($name='')
     {
         global $_SHOP;
@@ -161,7 +161,7 @@ class ShopDB {
             return true;
         }
     }
-    
+
     function commit ($name='')
     {
         global $_SHOP;
@@ -244,8 +244,8 @@ class ShopDB {
                            $traceArr[1]['class'].$traceArr[1]['type'].$traceArr[1]['function'].' ('.$traceArr[1]['line'].')';
               self::dblogging($errString);
               trace($errString);
-               
-              $err = ""; 
+
+              $err = "";
             }
             self::dblogging("$err".$_SHOP->db_error);
             trace("$err".$_SHOP->db_error);
@@ -334,7 +334,7 @@ class ShopDB {
       global $_SHOP;
       return $_SHOP->db_error;
     }
-    
+
     function errno(){
       global $_SHOP;
       return $_SHOP->db_errno;
@@ -376,7 +376,7 @@ class ShopDB {
         $result->close();
       }
     }
-    
+
     /**
      * This function replaces a string identifier <var>$prefix</var> with the
      * string held is the <var>_table_prefix</var> class variable.
@@ -549,7 +549,7 @@ class ShopDB {
         $result = self::Query("SHOW TABLE" . ((!empty($prefix))?" status where lower(name)=lower('$prefix')":"s"));
         if (!$result) {
             return false;
-        } 
+        }
         while ($row = self::fetch_row($result)) {
             $tables[] = $row[0];
         }
@@ -631,9 +631,10 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       $result = self::query_one_row('SHOW CREATE TABLE ' ."`$tablename`");
       $tables = ($result)? $result['Create Table']:'';
       unset($result);
-      $keys = array ( 'keys'=>array(),'fields'=>array(), 'engine'=>'');
+      $keys = null;
       if ($tables) {
-       // echo "<pre>$tables</pre><br>\n ";
+        $keys = array ( 'keys'=>array(),'fields'=>array(), 'engine'=>'');
+        // echo "<pre>$tables</pre><br>\n ";
         // Convert end of line chars to one that we want (note that MySQL doesn't return query it will accept in all cases)
         if (strpos($tables, "(\r\n ")) {
             $tables = str_replace("\r\n", "\n", $tables);
@@ -677,14 +678,14 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
             $datainfo .= "Rename table $tablename to $fields.\n";
             $update = true;
             // We have to change to a tmp table name as when changing case on the same table
-            //we cant actualy change from Admin to admin as the table name check performed 
+            //we cant actualy change from Admin to admin as the table name check performed
             //by MySQL thinks there the same thing and ERRORS.
             //So change the name to temp and back to the correct one.
-            $sql = "RENAME TABLE `$tablename` TO  `__tmp_$fields`, 
+            $sql = "RENAME TABLE `$tablename` TO  `__tmp_$fields`,
                                  `__tmp_$fields` TO `$fields`"; // The MySQL way.
             //$sql = "ALTER TABLE `$tablename` rename to `$fields`;";
           }
-        
+
         } elseif ($tblFields = self::TableCreateData($tablename)) {
           if (!isset($fields['engine'])) $fields['engine'] = $tblFields['engine'];
           $sql = "";
@@ -808,13 +809,13 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
         }
         return $error;
     }
-    
+
     function dblogging($debug) {
         global $_SHOP;
         $handle=fopen(INC."temp".DS."shopdb.log","a");
         fwrite($handle, date('c',time()).' '. $debug."\n");
         fclose($handle);
     }
-    
+
 }
 ?>

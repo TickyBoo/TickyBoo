@@ -42,8 +42,7 @@ class Model {
   protected $_tableName;
   protected $_columns = array();
 
-  function __construct($filldefs=true)
-  {
+  function __construct($filldefs=true){
     if (!$this->_columns) {
       $defs = & ShopDB::FieldListExt($this->tableName);
       foreach($defs as $key => $value) {
@@ -56,8 +55,19 @@ class Model {
     }
   }
 
+  function clear(){
+    $defs = & ShopDB::FieldListExt($this->tableName);
+    foreach($defs as $key => $value) {
+      If ($key != $this->_idName) {
+        $this->$key = $value->Default;
+      } else
+        $this->$key = null;
+    }
+  }
+
   function save ($id = null){
-    if(isset($id) and !$id) $this->id = $id;
+    $idKey = $this->idKey;
+    if(isset($id) and $id and $idKey) $this->$idKey = $id;
     if($this->id){
       return $this->update();
     }else{
@@ -102,25 +112,20 @@ class Model {
     return $vals;
    }
 
-  function _set ($key, $value='~~~', $mandatory=FALSE){
+  function _set ($key, $value='~~~'){
     $type= self::getFieldtype($key);
-    if($value =='~~~'){
-      $value = $this->$key;
-      $mandatory = true;
-    }
     if ($key == $this->idName) {
       return null;
+    } elseif($value =='~~~'){
+       If (isset($this->$key)) {
+         $value = $this->$key;
+       } else
+         return null;
     } elseif ($type == self::MDL_IDENTIFY) {
-      $mandatory = true;
       if ($value === 0)
         $value = null;
-    } elseif ($type  == self::MDL_MANDATORY) {
-      $mandatory = true;
     }
-
-    if($value or $mandatory){
-      return "`{$key}`="._esc($value);
-    }
+    return "`{$key}`="._esc($value);
   }
 
   function delete($id)  {
@@ -144,8 +149,7 @@ class Model {
   function fillRequest($nocheck=false) { return $this->_fill($_REQUEST ,$nocheck); }
 
   function _fill($arr , $nocheck=true)  {
-    if(is_array($arr) and ($nocheck or $this->CheckValues ($arr)))
-    {
+    if(is_array($arr) and ($nocheck or $this->CheckValues ($arr))) {
       foreach($arr as $key => $val)
         $this->$key = $val;
       return true;
