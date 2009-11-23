@@ -114,7 +114,7 @@ class PlaceMap Extends Model {
       } elseif ($cat->category_size ==0) {
          return self::_abort('pm.publish4.b');
       } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
-         return self::_abort('pm.publish4.b');
+         return self::_abort('pm.publish4.c');
       }
     }
 

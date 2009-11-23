@@ -229,10 +229,11 @@ class PlaceMapPartView extends AdminView {
         if (!empty($pmp->categories)) {
             foreach($pmp->categories as $ident => $category) {
                 if ($stats->categories[$ident]) {
+                    $category->category_color = placemapCategory::resetColor($category->category_color);
                     echo "<tr class='admin_list_row_$alt'>";
-                    echo "<td class='admin_list_item' width=10 bgcolor='{$category->color_code}'>&nbsp;</td>\n";
-                    echo "<td class='admin_list_item' >{$category->category_name}</td>\n";
-                    echo "<td class='admin_list_item'>{$category->category_price} {$_SHOP->currency}</td>\n";
+                    echo "<td class='admin_list_item' width=10 bgcolor='{$category->category_color}'>&nbsp;</td>\n";
+                    echo "<td class='admin_list_item' nobreak=nobreak>{$category->category_name}</td>\n";//
+//                    echo "<td class='admin_list_item'>{$category->category_price} {$_SHOP->currency}</td>\n";
                     echo "<td class='admin_list_item' align='right'>{$stats->categories[$ident]}</td>\n";
                     echo "<td class='admin_list_item'>{$category->category_numbering}</td>\n";
                     if (!$view_only) {
@@ -437,19 +438,19 @@ class PlaceMapPartView extends AdminView {
 
                     if ($cat_id) {
                         if ($pmp->data[$j - 1][$k][PM_CATEGORY] != $cat_id) {
-                            $sty = "border-top:3px solid {$pmp->categories[$cat_id]->color_code};";
+                            $sty = "border-top:3px solid {$pmp->categories[$cat_id]->category_color};";
                         }
 
                         if ($pmp->data[$j + 1][$k][PM_CATEGORY] != $cat_id) {
-                            $sty .= "border-bottom:3px solid {$pmp->categories[$cat_id]->color_code};";
+                            $sty .= "border-bottom:3px solid {$pmp->categories[$cat_id]->category_color};";
                         }
 
                         if ($pmp->data[$j][$k - 1][PM_CATEGORY] != $cat_id) {
-                            $sty .= "border-left:3px solid {$pmp->categories[$cat_id]->color_code};";
+                            $sty .= "border-left:3px solid {$pmp->categories[$cat_id]->category_color};";
                         }
 
                         if ($pmp->data[$j][$k + 1][PM_CATEGORY] != $cat_id) {
-                            $sty .= "border-right:3px solid {$pmp->categories[$cat_id]->color_code};";
+                            $sty .= "border-right:3px solid {$pmp->categories[$cat_id]->category_color};";
                         }
 
                         if ($sty) {

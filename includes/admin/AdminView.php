@@ -50,7 +50,7 @@ class AdminView extends AUIComponent {
     }
 
     function extramenus(&$menu){}
-       
+
     function drawall() {
 
         // width=200 for menu ...Change it to your preferd width;
@@ -64,11 +64,11 @@ class AdminView extends AUIComponent {
         }
         $page->setbody($this);
         $page->draw();
-        
+
         orphanCheck();
         trace("End of page \n\n\r");
     }
-    
+
     function print_field ($name, &$data, $prefix='') {
 
         echo "<tr><td class='admin_name' width='40%'>$prefix" , con($name) , "</td>
@@ -167,6 +167,7 @@ class AdminView extends AUIComponent {
 
     function print_checkbox ($name, &$data, &$err, $size = '', $max = '')
     {
+      //       self::print_select_assoc ($name, $data, $err, array('0'=>'no', '1'=>'yes'));
         if ($data[$name]) {
             $chk = 'checked';
         }
@@ -282,7 +283,7 @@ class AdminView extends AUIComponent {
           echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
           echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
           echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
-        } else { 
+        } else {
           if ($_SHOP->input_date_type == 'dmy') {
             echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
           }
@@ -312,7 +313,7 @@ class AdminView extends AUIComponent {
   		}
 
     }
-    
+
     function print_url ($name, &$data, $prefix = ''){
         echo "<tr><td class='admin_name' width='40%'>$prefix" . con($name) . "</td>
     <td class='admin_value'>
@@ -418,7 +419,7 @@ class AdminView extends AUIComponent {
 					} elseif ($height > 250) {
 						$attr = "height='250'";
 					}
-					echo "<img $attr src='$src'>";	
+					echo "<img $attr src='$src'>";
            		}else{
            			echo "<strong>File does not exsist</strong>";
            		}
@@ -470,11 +471,11 @@ class AdminView extends AUIComponent {
         } else {
           $id_field = 'Limit 1';
         }
-          
+
         if ($data['remove_' . $name . $suffix]==1) {
             $query = "UPDATE $table SET $img_field='' $id_field ";
 //            unlink( $_SHOP->files_dir . "/" .$data['remove_' . $name . $suffix]);
-            
+
         } else
         if (!empty($_FILES[$img_field]) and !empty($_FILES[$img_field]['name']) and !empty($_FILES[$img_field]['tmp_name'])) {
             if (!preg_match('/\.(\w+)$/', $_FILES[$img_field]['name'], $ext)) {
@@ -575,10 +576,10 @@ class AdminView extends AUIComponent {
         include_once("lang/countries_en.inc");
       }
     }
-    
+
     return $_COUNTRY_LIST[$val];
   }
-  
+
   // make tab menus using html tables
   // vedanta_dot_barooah_at_gmail_dot_com
 
