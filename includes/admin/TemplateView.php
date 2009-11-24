@@ -48,108 +48,107 @@ class TemplateView extends AdminView{
   }
   
   
-	function template_view ($data, $type) {
-  global $_SHOP,  $_COUNTRY_LIST;
+  function template_view ($data, $type) {
+    global $_SHOP,  $_COUNTRY_LIST;
     if (!isset($_COUNTRY_LIST)) {
-      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
+      if (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
         include_once("lang/countries_". $_SHOP->lang.".inc");
       }else {
         include_once("lang/countries_en.inc");
       }
     }
-    	$name = $data['template_name'];
-    	switch ($data['template_type']) {
-      		case 'systm':
-        		require_once('templatedata.php');
-      			$order['is_member']     = ($order['user_status']==2);
-        		$order['active']        = (empty($order['active']));
-        		$order['link']          = '{HTML-ActivationCode}';
-        		$order['activate_code'] = '{ActivationCode}';
-        		$order['new_password']  = '{NewPassword}' ;
-      		case 'email':
-        		require_once('templatedata.php');
-      			require_once('classes/htmlMimeMail.php');
-        		require_once("classes/TemplateEngine.php");
-        		if (!$tpl = TemplateEngine::getTemplate($name)) {
-          			return false;
-        		}
-
-        		$lang = is($_GET['lang'], $_SHOP->lang);
-            If (!in_array($lang, $tpl->langs )) {
-              $lang = $tpl->langs[0];
-            }
-            $_GET['lang'] = $lang; 
-            
-        		$email = &new htmlMimeMail();
-        		$tpl->build($email, $order, $lang);
-        		$email = $email->asarray() ;
-            $langs = array();
-            foreach($tpl->langs as $lng) {
-              $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
-            }
-
-            
-            
-        		echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
-        		echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        		echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
-        		$this->print_select_assoc ("lang", $_GET, $err, $langs, "onchange='javascript: document.frmEvents.submit();'");
-        		$this->print_field('email_from',htmlspecialchars($email['headers']['From']));
-        		$this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
-        		$this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
-        		$this->print_field_o('email_bcc',htmlspecialchars($email['headers']['Bcc']));
-        		$this->print_field_o('email_return',htmlspecialchars($email['return_path']));
-        		$this->print_field('email_subject',htmlspecialchars($email['headers']['Subject']));
-        		echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
-        		echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-					nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
+   	$name = $data['template_name'];
+    switch ($data['template_type']) {
+      case 'systm':
+        require_once('templatedata.php');
+      	$order['is_member']     = ($order['user_status']==2);
+        $order['active']        = (empty($order['active']));
+        $order['link']          = '{HTML-ActivationCode}';
+        $order['activate_code'] = '{ActivationCode}';
+        $order['new_password']  = '{NewPassword}' ;
+     	case 'email':
+        require_once('templatedata.php');
+      	require_once('classes/htmlMimeMail.php');
+        require_once("classes/TemplateEngine.php");
+        if (!$tpl = TemplateEngine::getTemplate($name)) {
+          return false;
+       	}
+        
+     		$lang = is($_GET['lang'], $_SHOP->lang);
+        
+        if (!in_array($lang, $tpl->langs )) {
+          $lang = $tpl->langs[0];
+        }
+        $_GET['lang'] = $lang; 
+           
+        $email = &new htmlMimeMail();
+        $tpl->build($email, $order, $lang);
+        $email = $email->asarray() ;
+        $langs = array();
+        foreach($tpl->langs as $lng) {
+          $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
+        }       
+    		
+        echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
+        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+        $this->print_select_assoc ("lang", $_GET, $err, $langs, "onchange='javascript: document.frmEvents.submit();'");
+    		$this->print_field('email_from',htmlspecialchars($email['headers']['From']));
+        $this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
+        $this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
+        $this->print_field_o('email_bcc',htmlspecialchars($email['headers']['Bcc']));
+        $this->print_field_o('email_return',htmlspecialchars($email['return_path']));
+        $this->print_field('email_subject',htmlspecialchars($email['headers']['Subject']));
+        echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+				nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
 				
-    			echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
-        		echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-        			nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
-        			
-        		echo "</table>\n";
-        		echo "<input type='hidden' name='action' id='action' value='view'>
-              		<input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
-              		</form>";
+ 			  echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+          nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
+        		
+       	echo "</table>\n";
+        echo "<input type='hidden' name='action' id='action' value='view'>
+          <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
+          </form>";
 
-        		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
-        		break;
+        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+          break;
       case 'swiftmail':
         break;
-			case 'pdf2':
-				require_once("classes/TemplateEngine.php");
-			    require_once("html2pdf/html2pdf.class.php");
-			    require_once('templatedata.php');
+      case 'pdf2':
+        require_once("classes/TemplateEngine.php");
+        require_once("html2pdf/html2pdf.class.php");
+        require_once('templatedata.php');
 			
-			    $paper_size=$_SHOP->pdf_paper_size;
-			    $paper_orientation=$_SHOP->pdf_paper_orientation;
-			    $_SHOP->lang = is($_SHOP->lang,'en');
-			    $te  = new TemplateEngine();
-			    $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+        $paper_size=$_SHOP->pdf_paper_size;
+			  $paper_orientation=$_SHOP->pdf_paper_orientation;
+			  $_SHOP->lang = is($_SHOP->lang,'en');
+			  $te  = new TemplateEngine();
+			  $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 			        
-			    // file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
-			    if($tpl =& $te->getTemplate($name)){
-		    		$tpl->write($pdf, $order, false); //
-		    	}else{
-			    	echo "<div class=err>".con('no_template')." : $name</div>";
-			    	return FALSE;
-		    	}
-			    $order_file_name = "pdf_".$data['template_name'].'.pdf';
-				$pdf->output($order_file_name, 'I');
-			    break;
-      		default:
-        	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        	echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+			  // file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
+			  if($tpl =& $te->getTemplate($name)){
+          $tpl->write($pdf, $order, false); //
+        }else{
+          echo "<div class=err>".con('no_template')." : $name</div>";
+		      return FALSE;
+		    }
+		    $order_file_name = "pdf_".$data['template_name'].'.pdf';
+        $pdf->output($order_file_name, 'I');
+		    break;
+      default:
+        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
 
-        	$this->print_field('template_ts', $data);
-        	$this->print_field('template_status', $data);
+        $this->print_field('template_ts', $data);
+        $this->print_field('template_status', $data);
 
-        	echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed; padding:10px;'>" .
-        		nl2br(htmlspecialchars($data["template_text"])) . "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed; padding:10px;'>" .
+          nl2br(htmlspecialchars($data["template_text"])) . "</td></tr>";
 
-        	echo "</table>\n";
-        	echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+        echo "</table>\n";
+        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
     	}
 	}
   
@@ -171,26 +170,18 @@ class TemplateView extends AdminView{
     $this->print_input("email_to_email", $data['template_array'], $err, 30, 100);
     $this->print_input("email_from_name", $data['template_array'], $err, 30, 100);
     $this->print_input("email_from_email", $data['template_array'], $err, 30, 100);
-    $this->print_field('emails_cc', $data );
-    $i=0;
-    foreach($data['template_array']['email_cc'] as $address=>$name){
-      echo "<tr>
-              <td class='admin_name'  width='40%'>$suffix".con('name')." / ".con('email')." </td>
-              <td class='admin_value'>
-                <input type='text' name='email_cc[$i]['name']' value='" . htmlspecialchars($name, ENT_QUOTES) . "'>
-                <input type='text' name='email_cc[$i]['email']' value='" . htmlspecialchars($address, ENT_QUOTES) . "'>
-                <span class='err'>{$err[$name]}</span>
-              </td>
-            </tr>\n";
-    }
     
+    $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true);
+    
+    
+    $data['template_array']['templates'] = is($data['template_array']['templates'],array());
     foreach($data['template_array']['templates'] as $lang=>$types){
       foreach($types as $type){
         echo "input";
       }
     }
     
-    $this->print_input("email_", $data['template_array'], $err, 30, 100);
+    $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5);
     
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
     

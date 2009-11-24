@@ -41,6 +41,7 @@ class AdminView extends AUIComponent {
     var $title = "Administration";
     var $ShowMenu = true;
     var $page_length = 15;
+    private $jScript = "";
 
     function AdminView ($width=0)
     {
@@ -48,26 +49,159 @@ class AdminView extends AUIComponent {
          $this->width = $width;
        }
     }
+    
+  protected function addJQuery($script){
+    $this->jScript .= "\n".$script;
+  }
 
     function extramenus(&$menu){}
-
-    function drawall() {
-
-        // width=200 for menu ...Change it to your preferd width;
-        // 700 total table
-        $page = new AdminPage($this->page_width, $this->title);
-        if ($this->ShowMenu) {
-          require_once ("admin/adminmenu.php");
-          $menu[] = new MenuAdmin();
-          $this->extramenus($menu);
-          $page->setmenu($menu);
-        }
-        $page->setbody($this);
-        $page->draw();
-
-        orphanCheck();
-        trace("End of page \n\n\r");
+    
+    
+  function drawall() {
+    // width=200 for menu ...Change it to your preferd width;
+    // 700 total table
+    $page = new AdminPage($this->page_width, $this->title);
+    if ($this->ShowMenu) {
+      require_once ("admin/adminmenu.php");
+      $menu[] = new MenuAdmin();
+      $this->extramenus($menu);
+      $page->setmenu($menu);
     }
+    $page->setbody($this);
+    $page->draw();
+    
+    orphanCheck();
+    trace("End of page \n\n\r");
+  }
+  
+  /**
+   * AdminView::print_multiRowField()
+   * 
+   * This function will create a multirow of fields.
+   * Prime example is Multiple Email Address and Names 
+   * 
+   * @param mixed $name array field name
+   * @param mixed $data location of array will use $data[$name][$i]
+   * @param mixed $err 
+   * @param integer $size field size
+   * @param integer $max max field size
+   * @param bool $multiArr to fields Key / Value or just Text/Field
+   * @return void
+   */
+  protected function print_multiRowField($name, &$data , &$err, $size = 30, $max = 100, $multiArr=false ){
+    //$this->addJQuery("console.log('Hello');");
+    
+    echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
+              <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
+              
+    $data[$name] = is($data[$name],array()); $i=0;
+    foreach($data[$name] as $key=>$val){
+      if(!$multiArr){
+        echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
+                <td class='admin_value'>
+                  <input type='text' name='{$name}[$i][value]' value='" . htmlspecialchars($value, ENT_QUOTES) . "'>
+                  <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
+                  <span class='err'>{$err[$name]}</span>
+                </td></tr>\n";
+      }else{
+        echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_value' style='width:100%;' colspan='2'>
+                <input type='text' name='{$name}[$i][key]' value='" . htmlspecialchars($key, ENT_QUOTES) . "'>
+                <input type='text' name='{$name}[$i][value]' value='" . htmlspecialchars($value, ENT_QUOTES) . "'>
+                <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
+                <span class='err'>{$err[$name]}</span>
+              </td></tr>\n";
+      }
+      $i++;
+    }
+    if($multiArr){
+      $script = "var {$name}Count = {$i};
+          $('#{$name}-add').click(function(){
+            $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' >\"+
+                \"<td class='admin_value' style='width:100%;' colspan='2'>\"+
+                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
+                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][value]' value='' />\"+
+                  \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
+                \"</td>\"+
+              \"</tr>\");
+            
+            {$name}Count++;
+          });";
+    }else{
+      $script = "var {$name}Count = {$i};
+          $('#{$name}-add').click(function(){
+            $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
+                \"<td class='admin_value'>\"+
+                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
+                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][value]' value='' />\"+
+                  \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
+                \"</td>\"+
+              \"</tr>\");
+            
+            {$name}Count++;
+          });";
+    }
+    $this->addJQuery($script);
+    
+    $script = "$('.{$name}-row-delete').live(\"click\",function(){
+          $(this).parent().parent().remove();
+          return false;
+        });";
+    $this->addJQuery($script);
+    
+  }
+  
+  protected function print_multiRowGroup($name, &$data , &$err, $fields, $size = 30, $max = 100){
+    
+    if(!is_array($fields)){
+      return false;
+    }
+    
+     echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
+              <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
+              
+    
+       
+   
+    $data[$name] = is($data[$name],array()); 
+    foreach($data[$name] as $group=>$values){
+      foreach($values as $key=>$value){
+        //Fill Field type and values else add blanks.
+        foreach($fields as $field=>$arr){
+          if($key==$field){
+            echo "<tr id='{$name}-row-{$group}' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
+                <td class='admin_value'>
+                  <input type='text' name='{$name}[$i][$key]' value='" . htmlspecialchars($value, ENT_QUOTES) . "'>
+                  <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
+                  <span class='err'>{$err[$name]}</span>
+              </td></tr>\n";  
+          }else{
+            
+          }
+        }         
+      }
+    }
+
+    $script = "var {$name}Count = {$i};
+        $('#{$name}-add').click(function(){
+          $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
+              \"<td class='admin_value'>\"+
+                \"<input type='text' name='{$name}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
+                \"<input type='text' name='{$name}[\"+{$name}Count+\"][value]' value='' />\"+
+                \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
+              \"</td>\"+
+            \"</tr>\");
+          
+          {$name}Count++;
+        });";
+    $this->addJQuery($script);
+    
+    $script = "$('.{$name}-row-delete').live(\"click\",function(){
+          $(this).parent().parent().remove();
+          return false;
+        });";
+    $this->addJQuery($script);
+    
+  }
 
     function print_field ($name, &$data, $prefix='') {
 
@@ -578,6 +712,10 @@ class AdminView extends AUIComponent {
     }
 
     return $_COUNTRY_LIST[$val];
+  }
+  
+  public function getJQuery(){
+    return $this->jScript;
   }
 
   // make tab menus using html tables

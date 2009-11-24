@@ -46,12 +46,12 @@ class AUIComponent {
         array_push($this->items, $item);
     }
 
-    function set($index, $item)
+    function set($index, &$item)
     {
         $this->items[$index] = $item;
     }
 
-    function drawChild($obj)
+    function drawChild(&$obj)
     {
         if ($obj) {
             if (is_string($obj)) {

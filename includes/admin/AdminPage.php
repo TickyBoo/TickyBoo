@@ -51,6 +51,10 @@ class AdminPage extends AUIComponent {
     {
         array_push($this->key, $kk);
     }
+    
+  public function setJQuery($script){
+    $this->set('jquery',$script);
+  }
 
     function setmenu($menu)
     {
@@ -58,7 +62,7 @@ class AdminPage extends AUIComponent {
         if (is_object($menu)) {$menu->setWidth($this->menu_width-10);}
     }
 
-    function setbody($body)
+    function setbody(&$body)
     {
         $this->set("body",$body);
     }
@@ -83,6 +87,10 @@ class AdminPage extends AUIComponent {
         }
         $this->drawChild($body);
         echo"</td></tr></table>\n";
+        
+        if(is_object($body)){
+          $this->setJQuery($body->getJQuery());
+        }
     }
 
     function draw()
@@ -94,79 +102,87 @@ class AdminPage extends AUIComponent {
         $this->drawFoot();
     }
 
-    function drawHead()
-    {
-        global $_SHOP;
-        if (!isset($_SERVER["INTERFACE_LANG"]) or !$_SERVER["INTERFACE_LANG"]) {
-            $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
-        }
-        if (isset($_SHOP->system_status_off) and $_SHOP->system_status_off) {
-            $this->errmsg = "<div class=error>".con('system_halted')."</div>";
-        }
-         //+'&href={$_SERVER["REQUEST_URI"]}'
-        echo "<head>
-        <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
-        <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
-        <title>" . $this->getTitle() . "</title>
-        <link rel='stylesheet' href='admin.css'>
-        <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.3.2.min.js\"></script>
-		    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
-        
-		<script><!--
-		function set_lang(box)
-		{
-			lang = box.options[box.selectedIndex].value;
-			if (lang) location.href = '?setlang='+lang;
-		}
-    // Author: Matt Kruse <matt@mattkruse.com>
-    // WWW: http://www.mattkruse.com/
-    TabNext();
-    // Function to auto-tab field
-    // Arguments:
-    // obj :  The input object (this)
-    // event: Either 'up' or 'down' depending on the keypress event
-    // len  : Max length of field - tab when input reaches this length
-    // next_field: input object to get focus after this one
-    var field_length=0;
-    function TabNext(obj, event, len, next_field) {
-      if (event == \"down\") {
-        field_length=obj.value.length;
+  function drawHead()
+  {
+    global $_SHOP;
+    if (!isset($_SERVER["INTERFACE_LANG"]) or !$_SERVER["INTERFACE_LANG"]) {
+        $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
+    }
+    if (isset($_SHOP->system_status_off) and $_SHOP->system_status_off) {
+        $this->errmsg = "<div class=error>".con('system_halted')."</div>";
+    }
+     //+'&href={$_SERVER["REQUEST_URI"]}'
+    echo "<head>
+    <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
+    <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
+    <title>" . $this->getTitle() . "</title>
+    <link rel='stylesheet' href='admin.css'>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.3.2.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
+    <script><!--
+      function set_lang(box)
+      {
+      	lang = box.options[box.selectedIndex].value;
+      	if (lang) location.href = '?setlang='+lang;
       }
-      else if (event == \"up\") {
-        if (obj.value.length != field_length) {
+      // Author: Matt Kruse <matt@mattkruse.com>
+      // WWW: http://www.mattkruse.com/
+      TabNext();
+      // Function to auto-tab field
+      // Arguments:
+      // obj :  The input object (this)
+      // event: Either 'up' or 'down' depending on the keypress event
+      // len  : Max length of field - tab when input reaches this length
+      // next_field: input object to get focus after this one
+      var field_length=0;
+      function TabNext(obj, event, len, next_field) {
+        if (event == \"down\") {
           field_length=obj.value.length;
-          if (field_length == len) {
-            next_field.focus();
+        }
+        else if (event == \"up\") {
+          if (obj.value.length != field_length) {
+            field_length=obj.value.length;
+            if (field_length == len) {
+              next_field.focus();
+            }
           }
         }
       }
-    }
-        -->
-		</script>
+          -->
+    </script>
   </head>
   <body >
-  		<div id='wrap'>\n";
-        echo "<div  id='header'>
-               <img src=\"".$_SHOP->root."admin/images/logo.png\"  border='0'/>
-               <h2>".administration."</h2>
-               </div>";
-        echo"<div id='navbar'><table width='100%'>
-            <tr><td>&nbsp;";
-        $this->drawOrganizer();
-        echo "</td><td  align='right'>&nbsp;";
-//        echo "<select name='setlang' onChange='set_lang(this)'>";
-
-//        $sel[$_SHOP->lang] = "selected";
-//        foreach($_SHOP->langs_names as $lang => $name) {
-//            echo"<option value='$lang' {$sel[$lang]}>$name</option>";
-//        }
-//        echo "</select>";
-        echo"</td></tr></table></div><br>";
-        if (isset($this->errmsg)) echo "<div class='error'>$this->errmsg</div><br>";
-    }
+  	<div id='wrap'>\n";
+      echo "<div  id='header'>
+             <img src=\"".$_SHOP->root."admin/images/logo.png\"  border='0'/>
+             <h2>".administration."</h2>
+             </div>";
+      echo"<div id='navbar'><table width='100%'>
+          <tr><td>&nbsp;";
+      $this->drawOrganizer();
+      echo "</td><td  align='right'>&nbsp;";
+  //        echo "<select name='setlang' onChange='set_lang(this)'>";
+  
+  //        $sel[$_SHOP->lang] = "selected";
+  //        foreach($_SHOP->langs_names as $lang => $name) {
+  //            echo"<option value='$lang' {$sel[$lang]}>$name</option>";
+  //        }
+  //        echo "</select>";
+      echo"</td></tr></table></div><br>";
+      if (isset($this->errmsg)) echo "<div class='error'>$this->errmsg</div><br>";
+  }
 
     function drawFoot() {
+      /*$body = $this->items['body'];
+      if(is_object($body)){
+        $this->setJQuery($body->getJQuery());
+      }*/
       echo "<br><br>";
+      echo "<script type=\"text/javascript\">
+        $(document).ready(function(){
+          ". is($this->items['jquery'],'') ."
+        });
+        </script>";
       echo "<div id='footer'>
 				Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
 			</div>
