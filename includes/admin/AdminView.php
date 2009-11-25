@@ -164,20 +164,18 @@ class AdminView extends AUIComponent {
    
     $data[$name] = is($data[$name],array()); 
     foreach($data[$name] as $group=>$values){
-      foreach($values as $key=>$value){
         //Fill Field type and values else add blanks.
-        foreach($fields as $field=>$arr){
-          if($key==$field){
-            echo "<tr id='{$name}-row-{$group}' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
-                <td class='admin_value'>
-                  <input type='text' name='{$name}[$i][$key]' value='" . htmlspecialchars($value, ENT_QUOTES) . "'>
-                  <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
-                  <span class='err'>{$err[$name]}</span>
-              </td></tr>\n";  
-          }else{
-            
-          }
-        }         
+      foreach($fields as $field=>$arr){
+        $type = is($arr['type'],'text');
+        $value = is($values[$field],'');
+        if($type=='text'){
+          $input = "<input type='text' name='{$name}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."'>";
+        }elseif($type=='textarea'){
+          $input = "<textarea rows='20' cols='96' name='template_text'>".$value."</textarea>";
+        }
+        echo "<tr id='{$name}-row-{$group}' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
+                <td class='admin_value'>".$input."
+              </td></tr>\n";
       }
     }
 

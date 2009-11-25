@@ -180,15 +180,15 @@ class TemplateView extends AdminView{
         echo "input";
       }
     }
-    
+    $testData['email_def_lang'] = array('template_lang'=>array('type'=>'text'));
     $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5);
     
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
     
-    echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
+    /*echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
     <textarea rows='20' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
 
-    </td></tr>";
+    </td></tr>";*/
 
     if ($data['template_id']){
       echo "<input type='hidden' name='template_id' value='{$data['template_id']}'/>\n";
