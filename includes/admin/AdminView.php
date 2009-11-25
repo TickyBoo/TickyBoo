@@ -151,30 +151,34 @@ class AdminView extends AUIComponent {
     
   }
   
-  protected function print_multiRowGroup($name, &$data , &$err, $fields, $size = 30, $max = 100){
+  protected function print_multiRowGroup($name, &$data , &$err, $fields=array(), $size = 30, $max = 100){
     
     if(!is_array($fields)){
+      return false;
+    }elseif(empty($fields)){
       return false;
     }
     
      echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
               <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
-              
-    
        
-   
+    
     $data[$name] = is($data[$name],array()); 
     foreach($data[$name] as $group=>$values){
-        //Fill Field type and values else add blanks.
+      //Fill Field type and values else add blanks.
       foreach($fields as $field=>$arr){
         $type = is($arr['type'],'text');
         $value = is($values[$field],'');
         if($type=='text'){
-          $input = "<input type='text' name='{$name}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."'>";
+          $size=is($arr['size'],40);
+          $max=is($arr['max'],100);
+          $input = "<input type='text' name='{$name}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."' size='{$size}' maxlength='{$max}'>";
         }elseif($type=='textarea'){
-          $input = "<textarea rows='20' cols='96' name='template_text'>".$value."</textarea>";
+          $rows=is($arr['rows'],10);
+          $cols=is($arr['cols'],70);
+          $input = "<textarea rows='{$rows}' cols='{$cols}' name='template_text'>".$value."</textarea>";
         }
-        echo "<tr id='{$name}-row-{$group}' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
+        echo "<tr id='{$name}-row-{$group}-{$field}' class='{$name}-row {$name}-row-{$group}'><td class='admin_name' width='40%'>".con($field)."</td>
                 <td class='admin_value'>".$input."
               </td></tr>\n";
       }

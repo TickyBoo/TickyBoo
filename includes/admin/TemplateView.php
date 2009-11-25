@@ -174,15 +174,17 @@ class TemplateView extends AdminView{
     
     $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true);
     
-    
-    $data['template_array']['templates'] = is($data['template_array']['templates'],array());
-    foreach($data['template_array']['templates'] as $lang=>$types){
-      foreach($types as $type){
-        echo "input";
-      }
-    }
-    $testData['email_def_lang'] = array('template_lang'=>array('type'=>'text'));
     $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5);
+    
+    $fields = array('template_lang'=>array('type'=>'text','size'=>'5','max'=>'10'),
+      'template_subject'=>array('type'=>'text','size'=>'60','max'=>'150'),
+      'template_text'=>array('type'=>'textarea','cols'=>'70','rows'=>'10'),
+      'template_html'=>array('type'=>'textarea','cols'=>'70','rows'=>'10')
+    );
+    $data['template_array']['email_templates'] = array(array('template_lang'=>'en','template_text'=>'hello email body'));
+    
+    $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields);
+    
     
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
     
