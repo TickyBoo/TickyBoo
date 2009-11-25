@@ -410,7 +410,7 @@ class PlaceMapPartView extends AdminView {
                 $sty = '';
                 if ($z = $pmp->data[$j][$k][PM_ZONE]) {
                     if ($z == 'L') {
-                        $sty = "border: 1px dashed #666666;background-color:#dddddd;";
+                        $sty = "border: 2px dashed #666666;background-color:#dddddd;";
                         $label = $pmp->data[$j][$k];
                         if ($view_only) {
                             if ($label[PM_LABEL_TYPE] == 'T' and $label[PM_LABEL_SIZE] > 0) {
@@ -437,27 +437,26 @@ class PlaceMapPartView extends AdminView {
                     $cat_id = $pmp->data[$j][$k][PM_CATEGORY];
                     $category = $pmp->categories[$cat_id];
 
-                    if ($cat_id) {
+                  //  if ($cat_id) {
+                        $sty = "border-top:2px solid";
                         if ($pmp->data[$j - 1][$k][PM_CATEGORY] != $cat_id) {
-                            $sty = "border-top:3px solid {$pmp->categories[$cat_id]->category_color};";
-                        }
-
+                            $sty .= " {$pmp->categories[$cat_id]->category_color}";
+                        } else $sty .= " {$zone->pmz_color}";
+                        $sty .= ";border-bottom:2px solid";
                         if ($pmp->data[$j + 1][$k][PM_CATEGORY] != $cat_id) {
-                            $sty .= "border-bottom:3px solid {$pmp->categories[$cat_id]->category_color};";
-                        }
-
+                            $sty .= " {$pmp->categories[$cat_id]->category_color}";
+                        } else $sty .= " {$zone->pmz_color}";
+                        $sty .= ";border-left:2px solid";
                         if ($pmp->data[$j][$k - 1][PM_CATEGORY] != $cat_id) {
-                            $sty .= "border-left:3px solid {$pmp->categories[$cat_id]->category_color};";
-                        }
-
+                            $sty .= " {$pmp->categories[$cat_id]->category_color}";
+                        } else $sty .= " {$zone->pmz_color}";
+                        $sty .= ";border-right:2px solid";
                         if ($pmp->data[$j][$k + 1][PM_CATEGORY] != $cat_id) {
-                            $sty .= "border-right:3px solid {$pmp->categories[$cat_id]->category_color};";
-                        }
+                            $sty .= " {$pmp->categories[$cat_id]->category_color}";
+                        } else $sty .= " {$zone->pmz_color}";
 
-                        if ($sty) {
-                            $sty = "style='$sty nowrap'";
-                        }
-                    }
+                        $sty = "style='$sty; nowrap'";
+                    //}
 
                     if (($cat_id and $sel_cat == $cat_id) or ($z and $sel_pmz == $z)) {
                         $chk = 'checked';
@@ -481,13 +480,15 @@ class PlaceMapPartView extends AdminView {
 
                         echo "<td align=center $col $sty $cspan>$num</td>";
                     } else {
-                        echo "<td align=center $col $sty $cspan><input type='checkbox' name='seat[$j][$k]' value=1 $chk title=\"{$zone->pmz_name} {$pmp->data[$j][$k][PM_ROW]}/{$pmp->data[$j][$k][PM_SEAT]} {$category->category_name}\"  style='border:0px;background-color:{$zone->pmz_color}'></td>";
+                        echo "<td align=center $col $sty $cspan>
+                                <input type='checkbox' name='seat[$j][$k]' value=1 $chk title=\"{$zone->pmz_name} {$pmp->data[$j][$k][PM_ROW]}/{$pmp->data[$j][$k][PM_SEAT]} {$category->category_name}\"  style='border:0px;background-color:{$zone->pmz_color}'></td>"; //background-color:{$zone->pmz_color}
                     }
                 } else {
-                    if ($view_only) {
-                        echo "<td $cspan></td>";
+                  $sty = "border: 2px solid #ffffff;";
+                  if ($view_only) {
+                        echo "<td style='$sty'  $cspan></td>";
                     } else {
-                        echo "<td $cspan><input type='checkbox' name='seat[$j][$k]' value=1  style='border:0px;'></td>";
+                        echo "<td style='$sty' $cspan><input type='checkbox' name='seat[$j][$k]' value=1  style='border:0px;'></td>";
                     }
                 }
             }

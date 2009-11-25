@@ -42,6 +42,23 @@ class PlaceMapCategoryView extends AdminView {
     }
 
     function category_form (&$data, &$err) {
+      echo "
+  <script  type='text/javascript'>
+      function getElement(id){
+        if(document.all) {return document.all(id);}
+        if(document.getElementById) {return document.getElementById(id);}
+  		}
+      function ShowSize(a){
+        if(tr1=getElement('category_size')){
+          if (a) {
+            tr1.style.display='';
+          } else {
+            tr1.style.display='none';
+          }
+        }
+      }
+  </script>";
+
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
 
         $this->form_head(categories);
@@ -56,16 +73,18 @@ class PlaceMapCategoryView extends AdminView {
         $this->print_select_tpl('category_template', $data, $err);
         $this->print_color('category_color', $data, $err);
         if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
-            $this->print_select_num('category_numbering', $data, $err, array('both', 'rows', 'seat', 'none'));
+          $this->print_select_num('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
+          if ($data['category_numbering'] == 'none') {
+            $this->print_input('category_size', $data, $err, 6, 6);
+          } else {
+            $this->print_field('category_size', $data);
+          }
+
         } else {
-            $this->print_field('category_numbering', $data);
+          $this->print_field('category_numbering', $data);
+          $this->print_field('category_size', $data);
         }
 
-        if ((!$data['event_status'] or ($data['event_status'] == 'unpub'))) {
-            $this->print_input('category_size', $data, $err, 6, 6);
-        } else {
-            $this->print_field('category_size', $data);
-        }
         if ($data['category_id']) {
             $sold = $this->Cat_Stat($data['category_id']);
             $this->print_field('number_taken', $sold);
@@ -117,7 +136,7 @@ class PlaceMapCategoryView extends AdminView {
           foreach($cats as  $category) {
             echo "<tr class='admin_list_row_$alt'>";
             echo "<td class='admin_list_item' width=10 bgcolor='{$category->category_color}'>&nbsp;</td>\n";
-            echo "<td class='admin_list_item' width='50%'>{$category->category_name} ({$category->category_status})</td>\n";
+            echo "<td class='admin_list_item' width='50%'>{$category->category_name}</td>\n";
             echo "<td class='admin_list_item'>{$category->category_size} ".con('cat_at')." {$category->category_price} </td>\n";
             echo "<td class='admin_list_item'>" . con($category->category_numbering) . " </td>\n";
 
@@ -223,12 +242,12 @@ class PlaceMapCategoryView extends AdminView {
         if ($data[$name]) {
             $sel[$data[$name]] = " selected ";
         } else {
-            $sel['both'] = " selected ";
+            $sel['none'] = " selected ";
         }
 
         echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
   <td class='admin_value'>
-   <select name='$name'>\n";
+   <select name='$name' >\n";
 
         foreach($opt as $v) {
             echo "<option value='$v'{$sel[$v]}>" . con($name . "_" . $v) . "</option>\n";

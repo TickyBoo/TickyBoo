@@ -526,32 +526,19 @@ class PlaceMapPart Extends Model {
 
           if ($category->category_numbering == 'none') {
             continue;
-          }
-
-          if ($dry_run or $seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
-                                                   $zone->pmz_id, $this->pmp_id, $category->category_id)) {
-            if (!$dry_run) {
-                $this->data[$j][$k][PM_ID] = $seat_id;
+          } elseif(!$dry_run) {
+            if ($seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
+                                         $zone->pmz_id, $this->pmp_id, $category->category_id)) {
+              $this->data[$j][$k][PM_ID] = $seat_id;
             }
-
             $stats[$category->category_ident]++;
-            $pmps_n[$category->category_ident] = $this->pmp_id;
-          } else {
-              return false;
+            $pmps[$category->category_ident] = $this->pmp_id;
           }
         }
       }
     }
 
-    if ($pmps_n) {
-      foreach($pmps_n as $cat_ident => $pmp_id) {
-        $pmps[$cat_ident][] = $pmp_id;
-      }
-    }
-
-//          Category::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pmp.publish5');
-
-    if(!$dry_run and !($part->save() and $part->save_original())) {
+    if(!$dry_run and !($this->save() and $this->save_original())) {
       return $this->_abort('pmp.publish2');}
     return true;
   }

@@ -112,9 +112,9 @@ class PlaceMap Extends Model {
         }
         $stats[$cat->category_ident]+= $cat->category_size;
       } elseif ($cat->category_size ==0) {
-         return self::_abort('pm.publish4.b');
+         return self::_abort(con('cant_publish_event_cat_no_size'));
       } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
-         return self::_abort('pm.publish4.c');
+         return self::_abort(con('cant_publish_event_cat_not_connect'));
       }
     }
 
