@@ -1,6 +1,6 @@
 <?php
 //These defines are located at the beginning of this file and are used throughout Fusion Ticket.
-//Use caution when changing and try not to be page specific with the definition.   
+//Use caution when changing and try not to be page specific with the definition.
 	//Date & Time Formats, Buttons & Links, Navigation, Passwords, Globals, and Warnings.
 
 //These defines are next and mostly page specific.
@@ -25,6 +25,7 @@ define("dd_mm_yyyy","(dd-mm-yyyy)");
 define("yyyy_mm_dd","(yyyy-mm-dd)");
 define("date_from","Date From");
 define("date_to","Date To");
+define("dts_day_arr", "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday");
 
 
 //BUTTONS & LINKS
@@ -63,7 +64,7 @@ define("icon_publish_alt","New Event");
 define("icon_nosal","Click to RePublish");
 define("icon_nosal_alt","UnPublished");
 
-//NAVIGATION  
+//NAVIGATION
 //should remain the same throughout all pages.
 define("nav_first","First");
 define("nav_prev"," < ");
@@ -73,7 +74,7 @@ define("nav_last","Last");
 //PASSWORDS
 define("password","Password");
 define("password1", "Choose Password");
-define("password2","Repeat Password"); 
+define("password2","Repeat Password");
 define("new_password","New Password");
 define("old_password","Old Password");
 define("confirmpassword","Confirm Password");
@@ -194,20 +195,20 @@ define("undefined","Undefined!");
 
 //------------------------------------------------------
 //ADMIN
-//these defines are seperated by page and are page specific. 
+//these defines are seperated by page and are page specific.
 //indents indicate the define is a sub-page or a drop down list.
 
 //Administration Menu - the menu on the left side
-define("index_admin","Home"); 
+define("index_admin","Home");
 define("administration","Administration");
-define("users_admin","System Managers"); 
-define("event_admin","Events"); 
-define("stats","Statistics"); 
-define("order_admin","Order Overview");  
-define("template_admin","Templates"); 
-define("payment_admin","Order Handlings"); 
-define("search_order","Search"); 
-define("imp_export_admin", "Import /Export"); 
+define("users_admin","System Managers");
+define("event_admin","Events");
+define("stats","Statistics");
+define("order_admin","Order Overview");
+define("template_admin","Templates");
+define("payment_admin","Order Handlings");
+define("search_order","Search");
+define("imp_export_admin", "Import /Export");
 define("garbage","Garbage");
 
 //Home
@@ -303,10 +304,10 @@ define("control_title","All Ticket Takers");
 	define("control_update_title","Modify Ticket Taker");
 		define("control_login","Login Name");
 		define("control_event_ids","Authorized Events");
-		
+
 //Event Section
 define("event_status","Event Status");
-		
+
 //Venues
 define("ort_admin_tab","Venues");
 define("ort_admin","Venues");
@@ -350,9 +351,9 @@ define("categories","Categories");
 			define("category_numbering_seat","Only Seats Numbered (No Rows)");
 			define("category_numbering_none","Seats w/o Numbers (Open Seating)");
 		define("category_size","Category Size");
-		define("number_taken","Seats Sold");	 
+		define("number_taken","Seats Sold");
 		define("category_data","Category Data");
-		define("category_new_size_title","Change Category Size"); 
+		define("category_new_size_title","Change Category Size");
 		define("category_new_size","New Size");
 
 	define("pm_zones","Zones");
@@ -378,7 +379,7 @@ define("pm_parts","Seat Chart Parts");
 			define("pmp_scene_south","South");
 			define("pmp_scene_west","West");
 		define("pmp_shift","Shift Rows");
-			//do not edit.  Places stage image 
+			//do not edit.  Places stage image
 				define("scene_h","images/scene_h_en.png");
 				define("scene_v","images/scene_v_en.png");
 
@@ -452,7 +453,6 @@ define("multi","Add Sub-Event");
 			define("recure_daily","Daily");
 				define("event_recur_end","Event Stops");
 				define("recure_days_selection","Days to Exclude");
-				define("dts_day_arr", "Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday");
 	define("event_time","Event Begins");
 	define("event_open","Doors Open");
 	define("event_end","Event Ends");
@@ -479,7 +479,7 @@ define("multi","Add Sub-Event");
 	define("event_image","Event Image");
 	define("event_mp3","MP3");
   define("undefined_category","Category undefined");
-  
+
 //Discounts
 define("discount_title","All Discounts");
 define("discount_add_title","Add a Discount");
@@ -601,7 +601,7 @@ define("payment_update_title","Modify the Payment Type");
 	define("handling_alt","Alt Handling Method");
 		define("handling_no_alt","None");
 	define("handling_alt_only","Only Alt Handling Method");
-	define("handling_expires_min","Minutes until Handling Expires"); 
+	define("handling_expires_min","Minutes until Handling Expires");
 	define("handling_fee_fix","Fee Fixed");
 	define("handling_fee_percent","Fee Percent");
 	define("handling_email_template_ord","Email Template for Order");
@@ -612,34 +612,34 @@ define("payment_update_title","Modify the Payment Type");
 	define("handling_text_payment","Payment Label");
 	define("handling_text_shipment","Shipment Label");
 	define("handling_html_template","HTML Template for Explanations");
-	
+
 	//paypal
-	define("pm_paypal_business","PayPal Account"); 
-	define("pm_paypal_test","PayPal Sandbox"); 
+	define("pm_paypal_business","PayPal Account");
+	define("pm_paypal_test","PayPal Sandbox");
 	//ideal
-	define("pm_ideal_merchantid","Merchant ID"); 
-	define("pm_ideal_subid","Sub ID"); 
-	define("pm_ideal_issuer","Issuing Bank "); 
-	define("pm_ideal_test","Ideal Sandbox"); 
-	define("pm_ideal_key","Key"); 
-	define("pm_ideal_keypass","Key Password"); 
-	define("pm_ideal_pcert","Pcert"); 
-	define("pm_ideal_certficate","Certificate"); 
+	define("pm_ideal_merchantid","Merchant ID");
+	define("pm_ideal_subid","Sub ID");
+	define("pm_ideal_issuer","Issuing Bank ");
+	define("pm_ideal_test","Ideal Sandbox");
+	define("pm_ideal_key","Key");
+	define("pm_ideal_keypass","Key Password");
+	define("pm_ideal_pcert","Pcert");
+	define("pm_ideal_certficate","Certificate");
 	//Google
-	define("pm_google_merchant_id","Merchant ID"); 
-	define("pm_google_merchant_key","Key"); 
-	define("pm_google_sandbox","Sandbox"); 
-	define("pm_google_callback_link","Call Back Link"); 
-	define("pm_on_google_cancel_cancel_order","Google Cancellation"); 
-	define("pm_on_user_cancel_cancel_order","User Cancellation"); 
-	define("pm_on_refund_cancel_order","Refund"); 
+	define("pm_google_merchant_id","Merchant ID");
+	define("pm_google_merchant_key","Key");
+	define("pm_google_sandbox","Sandbox");
+	define("pm_google_callback_link","Call Back Link");
+	define("pm_on_google_cancel_cancel_order","Google Cancellation");
+	define("pm_on_user_cancel_cancel_order","User Cancellation");
+	define("pm_on_refund_cancel_order","Refund");
 
 //Search
 define("patron_tab","Patron");
 define("search_title_user","Search for Patron");
 	define("sale_point","POS");
 	define("guest","Guest");
-	
+
 define("search_result","Search Result");
 define("seat_tab","Seat");
 	define("search_title_place","Search Seats");
@@ -668,8 +668,8 @@ define("export_xml_event_file","Filename");
 		define("export_xml_calendar_event","Calendar");
 	define("export_templates","Templates");
 		define("export_template_id","Choose Template ");
-		define("export_template_file","Filename");	
-		define("export_submit","Export It!");	
+		define("export_template_file","Filename");
+		define("export_submit","Export It!");
 	define("export_xml_event","Event in XML");
 		define("export_xml_event_event","Choose an Event");
 	define("export_xl","Sales Data");
@@ -681,8 +681,8 @@ define("export_xml_event_file","Filename");
 		define("export_cc_title","Export Credit Card Numbers");
 		define("export_cc_count","Credit Card Count");
 	define("export_entrant","Orders");
-		define("export_entrant_title","Export Attendees");	
-		define("export_entrant_event","Choose Event");	
+		define("export_entrant_title","Export Attendees");
+		define("export_entrant_event","Choose Event");
 		define("export_entrant_NotSended","'Not Sent' Orders only");
 
 //Import
@@ -728,7 +728,7 @@ define("no_event_sets","No Events Scheduled");
 //WEB TEMPLATES (tpl)
 //these defines are seperated by tpl file.
 //if you can't find the define you are looking for check in Globals.
-//if a define is followed by //file.tpl it is also used in that file. 
+//if a define is followed by //file.tpl it is also used in that file.
 
 //user_activate.tpl - resend_activation.tpl - user_registred.tpl
 define("act_name","Activate Account"); //checkout_preview
@@ -776,7 +776,7 @@ define("minutes","min.");
 
 //cart_view.tpl
 define("shopping_cart","Your shopping cart");
-define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved tickets are released back to sale. Please, either order more tickets or continue with your order. 
+define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved tickets are released back to sale. Please, either order more tickets or continue with your order.
 	<br><br>To change your tickets 'Remove' the ones you have reserved and click 'Order More Tickets'.");
 
 //cat_description.tpl
@@ -800,7 +800,7 @@ define("only_rows_numbered","Only rows numbered");
 define("order_reg","Order Registered");
 define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your order follow the proccess below.
 	<br><br>To view your order click ");
-        
+
 //checkout_preview.tpl
 define("shopping_cart_check_out","Select Payment Method");
 define("Handling_cont_mess"," ");
@@ -827,7 +827,7 @@ define("place_nr","Seat nr");
 define("shop","Order Tickets");
 define("shop_info","Select the desired number of tickets. Click on 'Next', to check and confirm your order.");
 define("shop_condition","<br>Conditions: Information collected will only be stored to handle shipping and payment.");
-        
+
 //event_description.tpl
 define("doors_open","Doors Open");
 define("dates_localities","Dates and Locations");
@@ -900,7 +900,7 @@ define("pers_res","Reserved");
 define("pers_send","Sent & Paid");
 define("pers_unknown","Unknown Status - Contact Admin");
 
-//personal_page.tpl 
+//personal_page.tpl
 define("personal","Personal Details");
 define("pers_mess","To change your details please click <a href='index.php?personal_page=details'>Here</a>");
 define("pers_mess2","To change or see your orders in more detail please click <a href='index.php?personal_page=orders'>Here</a><br><br>Only the last 6 orders are shown here.");
@@ -1097,8 +1097,8 @@ define("tmp_type","Type: ");
 define("tmp_discount","Discount: ");
 
 define("tmp_conditions","<b>NOTE TO PURCHASER: TREAT THESE TICKETS AS YOU WOULD ANY OTHER VALUABLE OR CASH.</b>
-Unauthorized duplication, alteration, or sale of this ticket may prevent admittance to the event. 
-Present this page at the time of admission to be scanned. 
+Unauthorized duplication, alteration, or sale of this ticket may prevent admittance to the event.
+Present this page at the time of admission to be scanned.
 The unique bar code on this ticket allows only one entry per ticket.");
 
 ?>

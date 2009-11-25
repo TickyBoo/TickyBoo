@@ -60,7 +60,7 @@ class EventViewCommon extends AdminView {
             echo "<option value='no_pm' {$sel['no_pm']}></option>";
         } elseif ($main == 'has_def') {
             echo "<option value='copy_main_pm' {$sel['no_pm']}>(" . copy_main_pm . ")</option>";
-        } 
+        }
         while ($row = shopDB::fetch_assoc($res)) {
             if ($row['ort_id'] != $ort_id) {
                 $ort_id = $row['ort_id'];
@@ -193,7 +193,7 @@ class EventViewCommon extends AdminView {
         }
         echo "</select><span class='err'>{$err[$name]}</span></td></tr>\n";
     }
-    
+
     function print_type ($name, &$data)
     {
         echo "<tr><td class='admin_name' width='40%'>" . con($name) . "</td>
@@ -245,11 +245,11 @@ class EventViewCommon extends AdminView {
 
     function print_days_selection(&$data,&$err) {
       GLOBAL $_SHOP;
-      $days           = array(0, 1,2,3,4,5,6);
+      $days           = array( 1,2,3,4,5,6, 0);
    	  $exclusion_days = is($data['recurse_days_selection'],array());
-    	
-      If (!isset($_SHOP->month_arr) or empty($_SHOP->days_arr)) {
-    		$_SHOP->month_arr  = explode('|',con('dts_day_arr'));
+
+      If (!isset($_SHOP->days_arr) or empty($_SHOP->days_arr)) {
+    		$_SHOP->days_arr  = explode('|',con('dts_day_arr'));
       }
 
     	echo "
@@ -264,7 +264,7 @@ class EventViewCommon extends AdminView {
         echo "		<td class='admin_name'>
   			    				<input type='checkbox' name='recurse_days_selection[]' value='{$myday}' ".
   			    				((in_array($myday, $exclusion_days))?'checked':'').
-                    " >&nbsp;".$_SHOP->month_arr[$myday]."&nbsp;
+                    " >&nbsp;".$_SHOP->days_arr[$myday]."&nbsp;
 	  		    			</td>\n";
 	  		if ($cnt == 4) {
           echo "  </tr>
@@ -278,7 +278,7 @@ class EventViewCommon extends AdminView {
      		  	</td>
 			   </tr>\n";
     }
-    
+
   function getEventRecurDates($data, $invert= true) {
   	$event_dates	= array();
   	$rep_days     = is($data['recurse_days_selection'], array());
@@ -308,7 +308,7 @@ class EventViewCommon extends AdminView {
 			   </td>
 	    </tr>\n";
     }
-    
+
     function printRecurChangeScript() {
     	echo "<script type='text/javascript'>
     			changeRecurType();
@@ -349,14 +349,14 @@ class EventViewCommon extends AdminView {
         echo "</select><span class='err'>{$err[$name]}</span>
               </td></tr>\n";
     }
-    
+
    function print_input_num ($name, &$data, &$err, $size = 30, $max = 100, $num='', $suffix = '')
     {
     	echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) ."</td>
               <td class='admin_value'><input type='text' name='".$name."[".$num."][value]' value='"; if(isset($data[$name][$num])) echo htmlspecialchars($data[$name][$num]['value'], ENT_QUOTES); echo "' size='$size' maxlength='$max'>
               <span class='err'>{$err[$name]}</span>
               </td></tr>\n";
-			  
+
     }
 }
 
