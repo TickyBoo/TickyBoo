@@ -32,6 +32,8 @@
  * clear to you.
  */
  
+if (!defined('ft_check')) {die('System intrusion ');}
+
 class install_adminuser {
   function precheck($Install) {
     return  (!$_SESSION['DatabaseExist'] or $_SESSION['radio']=='NORMAL');

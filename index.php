@@ -32,6 +32,7 @@
  * clear to you.
  */
 error_reporting(E_ALL);
+define('ft_check','shop');
 $fond='shop';
 require_once('includes/controller/template.php');
 ?>

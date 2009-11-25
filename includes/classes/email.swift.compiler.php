@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-//require_once "libs/swift/swift_required.php";
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once "classes/xml2php.php";
 
 class EmailSwiftCompiler {

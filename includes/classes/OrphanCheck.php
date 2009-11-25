@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 $orphancheck = array();
 /**/
 
@@ -42,7 +43,6 @@ $orphancheck[]="
 	WHERE e.event_id > 0
 		AND lower(e.event_status) <> 'unpub'
 		AND lower(e.event_rep) LIKE ('%sub%')
-    AND category_status != 'unpub'
 		AND category_size <> (SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id )
 ";
 
@@ -57,14 +57,15 @@ from Category left join Event         on category_event_id = event_id
               left join Category_stat on category_id       = cs_category_id
 where  (category_event_id is not null and event_id is null)
 or     (pm_id is null)
-or     (cs_category_id is null and category_status != 'unpub')
+or     (cs_category_id is null and event_status != 'unpub')
 or     (category_pmp_id is not null and pmp_id is null)
 ";
 /**/
 $orphancheck[]="
 select 'Category_stat', cs_category_id, 'cat_id' l1 , cs_category_id, category_id
 from Category_stat left join Category on category_id = cs_category_id
-where  (category_id is null and category_status != 'unpub')
+                   left join Event    on category_event_id = event_id
+where  (category_id is null and event_status != 'unpub')
 ";
 /**/
 $orphancheck[]="
@@ -344,7 +345,7 @@ class orphans {
         }
         //print_r($cats);
         foreach($cats as $cat_ident=>$cat){
-          if($cat->category_status != 'unpub' and $cat->category_numbering=='none' ){//and $cat->category_size>0
+          if($cat->event_status !== 'unpub' and $cat->category_numbering =='none' ){//and $cat->category_size>0
             $stats[$cat->category_ident] = count($seats[$cat->category_id]);
             for($i=count($seats[$cat->category_id]);$i<$cat->category_size;$i++){
               if($seat_id = Seat::publish($fix[2],null,null,null,null,$cat->category_id)) {

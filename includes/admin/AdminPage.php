@@ -33,6 +33,7 @@
  */
 
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("classes/AUIComponent.php");
 
 class AdminPage extends AUIComponent {

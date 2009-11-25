@@ -31,6 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 
 define('SQL2XML_OUT_RETURN',0);
 define('SQL2XML_OUT_ECHO',1);

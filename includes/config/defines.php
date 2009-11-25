@@ -31,6 +31,7 @@
  * @author Chris Jenkins
  * @copyright 2008
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 
 /**
  * This define is used to store the passwords, pleace do not change this after

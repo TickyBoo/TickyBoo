@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class Event Extends Model {
   protected $_idName    = 'event_id';
   protected $_tableName = 'Event';

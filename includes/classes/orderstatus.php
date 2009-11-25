@@ -1,5 +1,6 @@
 <?php
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("order.php");
 
 class OrderStatus{

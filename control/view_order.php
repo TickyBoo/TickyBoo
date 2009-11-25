@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','control');
 session_cache_limiter("must-revalidate");
 
 require_once("../includes/config/init_control.php");

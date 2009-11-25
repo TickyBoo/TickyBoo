@@ -31,6 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 
 global $_SHOP;
 require_once("init_common.php");

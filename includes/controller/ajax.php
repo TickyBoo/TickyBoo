@@ -44,6 +44,7 @@
  * 
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 $fond = 0;
 
 if($_REQUEST['pos']) {

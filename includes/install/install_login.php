@@ -32,6 +32,8 @@
  * clear to you.
  */
  
+if (!defined('ft_check')) {die('System intrusion ');}
+
 class install_login {
   function precheck($Install) {
     If ($_SESSION['ConfigExist']){ 

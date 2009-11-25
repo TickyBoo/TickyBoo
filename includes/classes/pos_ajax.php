@@ -33,6 +33,7 @@
  */
 
 //Load File
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("shop_plugins".DS."function.placemap.php");
 
 class PosAjax { 

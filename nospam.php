@@ -33,6 +33,7 @@
  */
 
 // het random nr. aanmaken en gecodeerd opslaan in php sessie
+define('ft_check','shop');
 require_once('includes/classes/basics.php');
 
 $randomnr = '';

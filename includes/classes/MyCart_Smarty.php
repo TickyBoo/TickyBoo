@@ -33,6 +33,7 @@
  */
 
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("classes/MyCart.php");
 
 class MyCart_Smarty {
@@ -359,9 +360,6 @@ class MyCart_Smarty {
    // print_r($places);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved, $force)){
-      print_r("reseve place");
-      
-
 	  //if cart empty create new cart
       if(!isset($cart)){
         $cart = new Cart();

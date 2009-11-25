@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','shop');
 $action='cancel';
 require_once('includes/controller/checkout.php');
 ?>

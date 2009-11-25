@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-
+define('ft_check','shop');
 $fond='resend_activation';
 require_once('includes/controller/template.php');
 ?>

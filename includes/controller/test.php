@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
    function findinside( $filestring) {
         $string = file_get_contents($filestring);
         preg_match_all('/define\(["\']([a-zA-Z0-9_]+)["\'],[ ]*(.*?)\);/si',  $string, $m); //.'/i'

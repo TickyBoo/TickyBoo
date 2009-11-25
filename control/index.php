@@ -32,5 +32,6 @@
  * clear to you.
  */
 
-  require_once('control.php');
+
+require_once('control.php');
 ?>

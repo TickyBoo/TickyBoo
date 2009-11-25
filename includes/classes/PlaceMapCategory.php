@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class PlaceMapCategory Extends Model {
   protected $_idName    = 'category_id';
   protected $_tableName = 'Category';

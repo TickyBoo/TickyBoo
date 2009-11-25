@@ -37,6 +37,7 @@
  * @copyright 2008
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class Gui_smarty {
 
 	/**

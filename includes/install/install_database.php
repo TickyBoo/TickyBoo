@@ -32,6 +32,8 @@
  * clear to you.
  */
  
+if (!defined('ft_check')) {die('System intrusion ');}
+
 class install_database {
   function precheck($Install) {
     return true; //(!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error']) or ($_SESSION['radio'] == 'NORMAL');

@@ -32,6 +32,8 @@
  * clear to you.
  */
  
+if (!defined('ft_check')) {die('System intrusion ');}
+
 class install_execute {
   function precheck($Install) {
     global $_SHOP;

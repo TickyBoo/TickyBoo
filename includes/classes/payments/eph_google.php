@@ -33,6 +33,7 @@
  */
 
 // Include all the required files
+if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once('google/library/googlecart.php');
 require_once('google/library/googleitem.php');

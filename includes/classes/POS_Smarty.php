@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once('classes/User.php');
 
 class POS_Smarty {

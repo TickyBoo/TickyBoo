@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class Discount  Extends Model {
   protected $_idName    = 'discount_id';
   protected $_tableName = 'Discount';

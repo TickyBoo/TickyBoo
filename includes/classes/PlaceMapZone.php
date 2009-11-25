@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class PlaceMapZone Extends Model {
   protected $_idName    = 'pmz_id';
   protected $_tableName = 'PlaceMapZone';

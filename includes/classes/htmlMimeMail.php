@@ -33,6 +33,7 @@
  */
 
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once(dirname(__FILE__) . '/RMail.php');
 
 class HtmlMimemail extends RMail{

@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 define("DB_DEADLOCK", 1213);
 
 class ShopDB {

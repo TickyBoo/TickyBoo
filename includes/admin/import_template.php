@@ -31,6 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
 class import_template extends AdminView {

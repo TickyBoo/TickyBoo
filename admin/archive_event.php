@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','admin');
 session_cache_limiter("must-revalidate");
 
 require_once("../includes/config/init_admin.php");
@@ -46,7 +47,7 @@ global $_SHOP;
              FROM (Event,Ort,Event_stat) 
              WHERE Event.event_id='$event_id' 
              AND Event.event_ort_id=Ort.ort_id 
-             AND Event_stat.es_event_id=Event.event_id';
+             AND Event_stat.es_event_id=Event.event_id";
 		 
    if(!$res=ShopDB::query($query) or !$event=ShopDB::fetch_assoc($res)){
      //user_error(mysql_error());

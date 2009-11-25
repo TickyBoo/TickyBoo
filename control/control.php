@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','control');
 session_cache_limiter("nocache");
 //session_cache_expire(0);
 

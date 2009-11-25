@@ -33,6 +33,7 @@
  */
 
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class Organizer  Extends Model {
   protected $_idName    = '';
   protected $_tableName = 'Organizer';

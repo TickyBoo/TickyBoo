@@ -32,6 +32,8 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
+
 $tbls = array();
 
 /* */

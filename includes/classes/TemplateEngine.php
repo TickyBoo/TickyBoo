@@ -37,6 +37,7 @@
 //$engine = new TemplateEngine();
 //$template = $engine->getTemplate('ticket',$_SHOP->organizer_id);
 //$res=$template->write($data);
+if (!defined('ft_check')) {die('System intrusion ');}
 class TemplateEngine {
   
   function TemplateEngine (){}

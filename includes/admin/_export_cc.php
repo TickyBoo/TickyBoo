@@ -33,6 +33,7 @@
  */
 
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
 class export_cc extends AdminView {

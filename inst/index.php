@@ -31,7 +31,6 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-
-  include "../includes/install/install.php";
-  exit;
+define('ft_check','install');
+include "../includes/install/install.php";
 ?>

@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once('classes/PlaceMapZone.php');
 require_once('classes/PlaceMapCategory.php');
 

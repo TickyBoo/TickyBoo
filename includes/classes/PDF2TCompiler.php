@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class PDF2TCompiler {
 
   function PDF2TCompiler ($font_dir=''){

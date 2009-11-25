@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-require_once('classes/ShopDB.php');
+if (!defined('ft_check')) {die('System intrusion ');}
 
 class Eventgroup Extends Model {
   protected $_idName    = 'event_group_id';

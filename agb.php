@@ -31,7 +31,9 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 
+define('ft_check','shop');
 $fond='agb';//salut les francais!!!
 require_once('includes/controller/template.php');
 ?>

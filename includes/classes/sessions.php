@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 session_set_save_handler(array('session',"_open"),
                          array('session',"_close"),
                          array('session',"_read"),

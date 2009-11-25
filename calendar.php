@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','shop');
 $fond='calendar';
 require_once('includes/controller/template.php');
 ?>

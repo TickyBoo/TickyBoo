@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class EmailTCompiler {
 
   var $res=array(); //result of execution, indexed by language

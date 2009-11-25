@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/EventViewCommon.php");
 require_once("classes/Event.php");
 

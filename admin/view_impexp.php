@@ -34,6 +34,7 @@
 
 
 
+define('ft_check','admin');
 session_cache_limiter("must-revalidate");
 
 require_once("../includes/config/init_admin.php");

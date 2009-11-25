@@ -32,13 +32,13 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once ( "admin/AdminView.php" );
+require_once ( "classes/PlaceMap.php" );
 require_once ( "admin/PlaceMapZoneView.php" );
 require_once ( "admin/PlaceMapPartView.php" );
 require_once ( "admin/PlaceMapCategoryView.php" );
 
-require_once ( "classes/ShopDB.php" );
-require_once ( "classes/PlaceMap.php" );
 
 class PlaceMapView2 extends AdminView {
 

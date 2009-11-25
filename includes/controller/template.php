@@ -32,6 +32,8 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
+ 
 require_once("includes/config/init_shop.php");
 
 /*/Check page is secure

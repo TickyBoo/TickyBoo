@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','shop');
 global $action;
 $action =(isset($_REQUEST['action']) and $_REQUEST['action'])?$_REQUEST['action']:'index';
 require_once('includes/controller/checkout.php');

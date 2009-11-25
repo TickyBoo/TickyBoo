@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
 class import_xml extends AdminView {

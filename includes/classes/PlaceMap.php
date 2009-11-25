@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- require_once ( "model.php" );
+if (!defined('ft_check')) {die('System intrusion ');}
 
 class PlaceMap Extends Model {
   protected $_idName    = 'pm_id';

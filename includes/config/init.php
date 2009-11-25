@@ -37,6 +37,7 @@
  * there are uses registrated to the system.
  * This this will invalided all given passwords in the system.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 
   global $_SHOP;
 

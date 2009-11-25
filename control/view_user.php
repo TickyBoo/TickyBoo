@@ -32,6 +32,7 @@
  * clear to you.
  */
 
+define('ft_check','control');
 require_once ("../includes/config/init_control.php");
 require_once ("control/ControlPage.php");
 require_once ("control/UserView.php");

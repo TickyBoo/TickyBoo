@@ -32,6 +32,8 @@
  * clear to you.
  */
  
+if (!defined('ft_check')) {die('System intrusion ');}
+
 class install_license {
   function precheck($Install) {
     if (!file_exists(ROOT."includes/config/init_config.php")) {

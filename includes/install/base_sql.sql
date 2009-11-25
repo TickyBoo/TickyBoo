@@ -1,8 +1,8 @@
 INSERT INTO `Admin` (`admin_id`,`admin_login`, `admin_password`,`admin_status`) VALUES
 ('1','demo','c514c91e4ed341f263e458d44b3bb0a7','organizer');
 
-INSERT INTO `Organizer` (`organizer_nickname`, `organizer_name`, `organizer_address`, `organizer_plz`, `organizer_ort`, `organizer_state`, `organizer_country`, `organizer_email`, `organizer_fax`, `organizer_phone`, `organizer_password`, `organizer_place`, `organizer_currency`, `organizer_logo`) VALUES
-('demo', 'Demo Owner', '5678 Demo St', '11001', 'Demo Town', 'DT', 'US', 'info@fusionticket.test', '(555) 555-1215', '(555) 555-1214', '', '', 'USD', 'organizer_logo_3.png');
+INSERT INTO `Organizer` (`organizer_nickname`, `organizer_name`, `organizer_address`, `organizer_plz`, `organizer_ort`, `organizer_state`, `organizer_country`, `organizer_email`, `organizer_fax`, `organizer_phone`, `organizer_place`, `organizer_currency`, `organizer_logo`) VALUES
+('demo', 'Demo Owner', '5678 Demo St', '11001', 'Demo Town', 'DT', 'US', 'info@fusionticket.test', '(555) 555-1215', '(555) 555-1214', '', 'USD', 'organizer_logo_3.png');
 
 INSERT INTO `ShopConfig` (`shopconfig_lastrun`, `shopconfig_lastrun_int`, `shopconfig_restime`, `shopconfig_restime_remind`, `shopconfig_check_pos`, `shopconfig_delunpaid`, `shopconfig_posttocollect`, `shopconfig_user_activate`, `shopconfig_maxres`, `status`, `res_delay`, `cart_delay`, `shopconfig_run_as_demo`) VALUES
 ( 0,  10, 7200, 1440, 'No', 'Yes', '2880', 1, 10, 'ON', 660, 600, 0);

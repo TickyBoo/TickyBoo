@@ -34,6 +34,7 @@
 
 //corbeil system v0.1beta
 
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once("classes/Discount.php");
 
 class Cart {

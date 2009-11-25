@@ -104,7 +104,7 @@ a:hover{text-decoration:underline;color:#000000;}
 	position: relative;
     width: 100%;
 	height: 28px;
-	background: #ffffff url(../images/theme/default/back2.gif) 0 100% repeat-x;
+	background: #ffffff url('images/theme/default/back2.gif') 0 100% repeat-x;
 	font: bold 12px Verdana, Helvetica, Arial, sans-serif;
 }
 
@@ -118,7 +118,7 @@ a:hover{text-decoration:underline;color:#000000;}
 	padding: 0 2px 0 0;
 	margin: 0;
 	float: left;
-	background: url(../images/theme/default/back1.gif) 0 100% no-repeat;
+	background: url('images/theme/default/back1.gif') 0 100% no-repeat;
 }
 
 #navbar ul li a:link, #navbar ul li a:active, #navbar ul li a:visited {
@@ -132,7 +132,7 @@ a:hover{text-decoration:underline;color:#000000;}
 }
 
 #navbar ul li a:hover {
-	background: url(../images/theme/default/back1.gif) 0 100% repeat-x;
+	background: url('images/theme/default/back1.gif') 0 100% repeat-x;
 }
 
 .TblLower { text-align: left;}
@@ -196,12 +196,12 @@ _input.checkbox_dark{margin:0px;border:0px;padding:0px;background-color:#333333;
 input { margin-left: .5em; float: left; margin-bottom: .5em;  }
 input.form-error { border: 1px solid red; width: auto; }
 label.form-error {
-	background: url('../images/theme/default/unchecked.gif') no-repeat;
+	background: url('images/theme/default/unchecked.gif') no-repeat;
 	padding-left: 16px;
 	margin-left: .3em;
 	}
 label.form-valid {
-	background: url('../images/theme/default/checked.gif') no-repeat;
+	background: url('images/theme/default/checked.gif') no-repeat;
 	display: block;
 	width: 16px;
 	height: 16px;

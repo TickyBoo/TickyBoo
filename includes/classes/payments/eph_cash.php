@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once('classes/Payment.php');
 class EPH_cash extends payment{
   public $extras = array();

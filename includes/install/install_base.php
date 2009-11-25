@@ -31,6 +31,8 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
+
 function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true){
   global $states; //{$states[$target_pg]} 
 

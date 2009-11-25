@@ -28,6 +28,7 @@
  */
 
 
+if (!defined('ft_check')) {die('System intrusion ');}
 class Model {
   /**
   * The name of this model
