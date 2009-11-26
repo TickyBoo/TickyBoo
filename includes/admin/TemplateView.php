@@ -173,6 +173,7 @@ class TemplateView extends AdminView{
     $this->print_input("email_from_email", $data['template_array'], $err, 30, 100);
     
     $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true);
+    $this->print_multiRowField('emails_bcc',$data['template_array'], $err, 30, 100, true);
     
     $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5);
     
@@ -180,8 +181,7 @@ class TemplateView extends AdminView{
       'template_text'=>array('type'=>'textarea','cols'=>'70','rows'=>'10'),
       'template_html'=>array('type'=>'textarea','cols'=>'70','rows'=>'10')
     );
-    $data['template_array']['email_templates'] = array('en'=>array('template_group'=>'en','template_text'=>'hello email body'));
-    
+    //$data['template_array']['email_templates'] = array('en'=>array('template_group'=>'en','template_text'=>'hello email body'));
     $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields);
     
     
