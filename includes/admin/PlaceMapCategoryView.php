@@ -77,13 +77,7 @@ class PlaceMapCategoryView extends AdminView {
 
 ";
           $this->addJQuery($script);
-
-          if ($data['category_numbering'] == 'none') {
-            $this->print_input('category_size', $data, $err, 6, 6);
-          } else {
-            $this->print_field('category_size', $data);
-          }
-
+          $this->print_input('category_size', $data, $err, 6, 6);
         } else {
           $this->print_field('category_numbering', $data);
           $this->print_field('category_size', $data);
