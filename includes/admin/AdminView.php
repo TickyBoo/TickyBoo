@@ -50,14 +50,14 @@ class AdminView extends AUIComponent {
          $this->width = $width;
        }
     }
-    
+
   protected function addJQuery($script){
     $this->jScript .= "\n".$script;
   }
 
     function extramenus(&$menu){}
-    
-    
+
+
   function drawall() {
     // width=200 for menu ...Change it to your preferd width;
     // 700 total table
@@ -70,20 +70,20 @@ class AdminView extends AUIComponent {
     }
     $page->setbody($this);
     $page->draw();
-    
+
     orphanCheck();
     trace("End of page \n\n\r");
   }
-  
+
   /**
    * AdminView::print_multiRowField()
-   * 
+   *
    * This function will create a multirow of fields.
-   * Prime example is Multiple Email Address and Names 
-   * 
+   * Prime example is Multiple Email Address and Names
+   *
    * @param mixed $name array field name
    * @param mixed $data location of array will use $data[$name][$i]
-   * @param mixed $err 
+   * @param mixed $err
    * @param integer $size field size
    * @param integer $max max field size
    * @param bool $multiArr to fields Key / Value or just Text/Field
@@ -91,10 +91,10 @@ class AdminView extends AUIComponent {
    */
   protected function print_multiRowField($name, &$data , &$err, $size = 30, $max = 100, $multiArr=false ){
     //$this->addJQuery("console.log('Hello');");
-    
+
     echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
               <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
-              
+
     $data[$name] = is($data[$name],array()); $i=0;
     foreach($data[$name] as $key=>$val){
       if(!$multiArr){
@@ -115,7 +115,8 @@ class AdminView extends AUIComponent {
       $i++;
     }
     if($multiArr){
-      $script = "var {$name}Count = {$i};
+      $script = "
+          var {$name}Count = {$i};
           $('#{$name}-add').click(function(){
             $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' >\"+
                 \"<td class='admin_value' style='width:100%;' colspan='2'>\"+
@@ -124,11 +125,12 @@ class AdminView extends AUIComponent {
                   \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
                 \"</td>\"+
               \"</tr>\");
-            
+
             {$name}Count++;
           });";
     }else{
-      $script = "var {$name}Count = {$i};
+      $script = "
+          var {$name}Count = {$i};
           $('#{$name}-add').click(function(){
             $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
                 \"<td class='admin_value'>\"+
@@ -137,39 +139,39 @@ class AdminView extends AUIComponent {
                   \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
                 \"</td>\"+
               \"</tr>\");
-            
+
             {$name}Count++;
           });";
     }
     $this->addJQuery($script);
-    
+
     $script = "$('.{$name}-row-delete').live(\"click\",function(){
           $(this).parent().parent().remove();
           return false;
         });";
     $this->addJQuery($script);
-    
+
   }
-  
+
   /**
    * @unfinished
    */
   protected function print_multiRowGroup($name, &$data , &$err, $fields=array(), $size = 30, $max = 100){
-    
+
     if(!is_array($fields)){
       return false;
     }elseif(empty($fields)){
       return false;
     }
-    
+
      echo "<tr id='{$name}-group-add-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
               <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> 
               <input type='text' name='{$name}_group_add' id='{$name}-group-add' size='15' maxlength='100'>
               </td>
             </tr>\n";
-       
-    
-    $data[$name] = is($data[$name],array()); 
+
+
+    $data[$name] = is($data[$name],array());
     foreach($data[$name] as $group=>$values){
       //Fill Field type and values else add blanks.
       foreach($fields as $field=>$arr){
@@ -200,17 +202,17 @@ class AdminView extends AUIComponent {
                 \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
               \"</td>\"+
             \"</tr>\");
-          
+
           {$name}Count++;
         });";
     $this->addJQuery($script);
-    
+
     $script = "$('.{$name}-row-delete').live(\"click\",function(){
           $(this).parent().parent().remove();
           return false;
         });";
     $this->addJQuery($script);
-    
+
     //onChange Select hide other lang and show new.
     $script = "$('.email_templates-en-row').each(function(){$(this).show();});";
     $script = "$('.email_templates-en-row').each(function(){$(this).hide();});";
@@ -219,7 +221,7 @@ class AdminView extends AUIComponent {
 
     function print_field ($name, &$data, $prefix='') {
 
-        echo "<tr><td class='admin_name' width='40%'>$prefix" , con($name) , "</td>
+        echo "<tr><td id='{$name}-tr' class='admin_name' width='40%'>$prefix" , con($name) , "</td>
               <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
     }
 
@@ -232,7 +234,7 @@ class AdminView extends AUIComponent {
 
     function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '')
     {
-        echo "<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+        echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
               <td class='admin_value'><input type='text' name='$name' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
               <span class='err'>{$err[$name]}</span>
               </td></tr>\n";
@@ -259,7 +261,7 @@ class AdminView extends AUIComponent {
     {
         $papers = array('A4', 'LETTER', 'LEGAL' , '4A0', '2A0', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'RA0', 'RA1', 'RA2', 'RA3', 'RA4', 'SRA0', 'SRA1', 'SRA2', 'SRA3', 'SRA4', 'LETTER', 'LEGAL', 'EXECUTIVE', 'FOLIO');
 
-        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
+        echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>" . con($name) . "</td>
             <td class='admin_value'>
         		<table>";
 
@@ -327,7 +329,7 @@ class AdminView extends AUIComponent {
 
     function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '')
     {
-        echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
+        echo "<tr><td id='{$name}-tr' class='admin_name'>$suffix" . con($name) . "</td>
                 <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
                 <span class='err'>{$err[$name]}</span>
                 </td></tr>\n";
@@ -335,7 +337,7 @@ class AdminView extends AUIComponent {
 
     function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='')
     {
-        echo "<tr><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; <span class='err'>{$err[$name]}</span></td></tr>
+        echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; <span class='err'>{$err[$name]}</span></td></tr>
                 <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
 
                 </td></tr>\n";
@@ -356,7 +358,7 @@ class AdminView extends AUIComponent {
                 array_push($set, $row);
             }
         }
-        echo "<tr><td class='admin_name'>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'>" . con($name) . "</td>
     <td class='admin_value'>";
         if (!empty($set)) {
             foreach ($set as $value) {
@@ -380,7 +382,7 @@ class AdminView extends AUIComponent {
             $h = $data["$name-h"];
             $m = $data["$name-m"];
         }
-        echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
              <td class='admin_value'>
              <input type='text' name='$name-h' value='$h' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-m'])\"> :
              <input type='text' name='$name-m' value='$m' size='2' maxlength='2'>";
@@ -425,7 +427,7 @@ class AdminView extends AUIComponent {
             $d = $data["$name-d"];
         }
         $nm = $name . "-m";
-        echo "<tr><td class='admin_name'>$suffix" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
               <td class='admin_value'>";
         if ($_SHOP->input_date_type == 'iso') {
           echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
@@ -463,7 +465,7 @@ class AdminView extends AUIComponent {
     }
 
     function print_url ($name, &$data, $prefix = ''){
-        echo "<tr><td class='admin_name' width='40%'>$prefix" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name' width='40%'>$prefix" . con($name) . "</td>
     <td class='admin_value'>
     <a href='{$data[$name]}' target='blank'>{$data[$name]}</a>
     </td></tr>\n";
@@ -474,7 +476,7 @@ class AdminView extends AUIComponent {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
 
-        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>" . con($name) . "</td>
               <td class='admin_value'>
                <select name='$name' $actions>\n";
 
@@ -494,7 +496,7 @@ class AdminView extends AUIComponent {
             $mu = 'multiple';
         }
 
-        echo "<tr><td class='admin_name'  width='40%' $mu>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%' $mu>" . con($name) . "</td>
   <td class='admin_value'>
    <select name='$name'  $actions>\n";
 
@@ -508,7 +510,7 @@ class AdminView extends AUIComponent {
 
     function print_color ($name, &$data, &$err)
     {
-        echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>" . con($name) . "</td>
         <td class='admin_value'>
         <select name='$name'>\n";
 
@@ -536,7 +538,7 @@ class AdminView extends AUIComponent {
 
         if ($data[$name]) {
             $src = $this->user_url($data[$name]);
-            echo "<tr><td class='admin_name'  width='40%'>$prefix" . con($name) . "</td>";
+            echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$prefix" . con($name) . "</td>";
             if ($type == 'img') {
                 echo "<td class='admin_value'><img width=300 src='$src'>";
             } else {
@@ -551,23 +553,23 @@ class AdminView extends AUIComponent {
         global $_SHOP;
 
         if (!$data[$name]) {
-            echo "\n<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+            echo "\n<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input type='file' name='$name'><span class='err'>{$err[$name]}</span></td></tr>\n";
         } else {
             $src = $this->user_url($data[$name]);
 
-            echo "<tr><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+            echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'>";
 
             if ($type == 'img') {
            		if(file_exists(ROOT.'files'.DS.$data[$name])){
            			list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$data[$name]);
-					if (($width>$height) and ($width > 300)) {
-						$attr = "width='300'";
-					} elseif ($height > 250) {
-						$attr = "height='250'";
-					}
-					echo "<img $attr src='$src'>";
+      					if (($width>$height) and ($width > 300)) {
+      						$attr = "width='300'";
+      					} elseif ($height > 250) {
+      						$attr = "height='250'";
+      					}
+      					echo "<img $attr src='$src'>";
            		}else{
            			echo "<strong>File does not exsist</strong>";
            		}
@@ -727,7 +729,7 @@ class AdminView extends AUIComponent {
 
     return $_COUNTRY_LIST[$val];
   }
-  
+
   public function getJQuery(){
     return $this->jScript;
   }

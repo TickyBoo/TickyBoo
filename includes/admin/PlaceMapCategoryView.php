@@ -73,6 +73,11 @@ class PlaceMapCategoryView extends AdminView {
         $this->print_color('category_color', $data, $err);
         if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
           $this->print_select_num('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
+          $script = "
+
+";
+          $this->addJQuery($script);
+
           if ($data['category_numbering'] == 'none') {
             $this->print_input('category_size', $data, $err, 6, 6);
           } else {
