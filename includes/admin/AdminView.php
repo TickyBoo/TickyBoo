@@ -164,15 +164,28 @@ class AdminView extends AUIComponent {
       return false;
     }
 
-     echo "<tr id='{$name}-group-add-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
-              <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> 
-              <input type='text' name='{$name}_group_add' id='{$name}-group-add' size='15' maxlength='100'>
+     echo "<tr id='{$name}-group-add-tr' >
+              <td class='admin_name' width='40%'>" , con($name) , "</td>
+              <td class='admin_value' >
+                <button id='{$name}-group-add-button' type='button'>".con($name)." ".con('add_row')."</button> 
+                <input type='text' name='{$name}_group_add' id='{$name}-group-add-field' size='15' maxlength='100'>
+                <span id='{$name}-error' style='display:none;'>".con('err_blank_or_allready')."</span>                
               </td>
             </tr>\n";
-
-
-    $data[$name] = is($data[$name],array());
+            
+      echo "<tr id='{$name}-group-select-tr'>
+              <td class='admin_name'  width='40%'>".con($name)." ".con('select')."</td>
+              <td class='admin_value'>
+               <select id='{$name}-group-select' name='{$name}_group_select'>\n</select> 
+               <a class='link' href='#' id='{$name}-group-delete'><img src='images/trash.png' border='0' alt='".con('remove_group')."' title='".con('remove_group')."'></a>
+              </td>
+            </tr>\n";       
+    
+    $data[$name] = is($data[$name],array()); 
     foreach($data[$name] as $group=>$values){
+      //for each group add the option list.
+      $opts .= "<option value='{$group}'>".con($group)."</option>";
+      
       //Fill Field type and values else add blanks.
       foreach($fields as $field=>$arr){
         $type = is($arr['type'],'text');
@@ -186,37 +199,72 @@ class AdminView extends AUIComponent {
           $cols=is($arr['cols'],70);
           $input = "<textarea rows='{$rows}' cols='{$cols}' name='template_text'>".$value."</textarea>";
         }
-        echo "<tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-{$group}-row'>
+        echo "<tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-group-row {$name}-{$group}-row'>
                 <td class='admin_name' width='40%'>".con($field)."</td>
                 <td class='admin_value'>".$input."</td>
               </tr>\n";
       }
     }
-    /*
-    $script = "var {$name}Count = {$i};
-        $('#{$name}-add').click(function(){
-          $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
-              \"<td class='admin_value'>\"+
-                \"<input type='text' name='{$name}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
-                \"<input type='text' name='{$name}[\"+{$name}Count+\"][value]' value='' />\"+
-                \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
-              \"</td>\"+
-            \"</tr>\");
+    //This add the exsisting options to the select
+    $addOptsScript = "$('#{$name}-group-select').html(\"{$opts}\");";
+    $this->addJQuery($addOptsScript);
+    //This will let you delete a group
+    $deleteScript = "$('#{$name}-group-delete').click(function(){
+      var group = $('#{$name}-group-select').val();
+      $('.{$name}-'+group+'-row').each(function(){
+        $(this).remove();
+      });
+      $('#{$name}-group-select option[value=\"'+group+'\"]').remove();
+      $('#{$name}-group-select').change();
+    });";
+    $this->addJQuery($deleteScript);
 
-          {$name}Count++;
-        });";
-    $this->addJQuery($script);
+    //This is the add section, We build the fields first then chuck them into jquery;
+    unset($input);
+    foreach($fields as $field=>$arr){
+      $type = is($arr['type'],'text');
+      $value = is($values[$field],'');
+      if($type=='text'){
+        $size=is($arr['size'],40);
+        $max=is($arr['max'],100);
+        $input = "<input type='text' name='{$name}[\"+newGroup+\"][$field]' value='' size='{$size}' maxlength='{$max}'>";
+      }elseif($type=='textarea'){
+        $rows=is($arr['rows'],10);
+        $cols=is($arr['cols'],70);
+        $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$name}[\"+newGroup+\"][$field]'></textarea>";
+      }
+      $inputs .= "\"<tr id='{$name}-'+newGroup+'-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row'>\"+
+              \"<td class='admin_name' width='40%'>".con($field)."</td>\"+
+              \"<td class='admin_value'>".$input."</td>\"+
+            \"</tr>\"+";
+    }
+    $addScript = "$('#{$name}-group-add-button').click(function(){
+      var newGroup = $('#{$name}-group-add-field').val();
+      newGroup = jQuery.trim(newGroup);
+      
+      if($('#{$name}-group-select option[value=\"'+newGroup+'\"]').val()!=newGroup && newGroup!=''){
+        $('#{$name}-group-select-tr').after({$inputs}\"\");
+        $('#{$name}-group-select').append(\"<option value='\"+newGroup+\"'>\"+newGroup+\"</option>\").val(newGroup);
+        $('#{$name}-group-select').change();
+      }else{
+        $('#{$name}-error').show();
+      }
+    });";
+    $this->addJQuery($addScript);
 
-    $script = "$('.{$name}-row-delete').live(\"click\",function(){
-          $(this).parent().parent().remove();
-          return false;
-        });";
-    $this->addJQuery($script);
+    //Add the change script which will run when the select box value changes.
+    $changeScript = "$('#{$name}-group-select').change(function(){
+      var group = $(this).val();
+      $('.{$name}-group-row').each(function(){
+        $(this).hide();
+      });
+      $(\".{$name}-\"+group+\"-row\").each(function(){
+        $(this).show();
+      });
+      $('#{$name}-error').hide();
+    });";
+    $this->addJQuery($changeScript);
 
-    //onChange Select hide other lang and show new.
-    $script = "$('.email_templates-en-row').each(function(){$(this).show();});";
-    $script = "$('.email_templates-en-row').each(function(){$(this).hide();});";
-    */
   }
 
     function print_field ($name, &$data, $prefix='') {
