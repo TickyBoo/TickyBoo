@@ -34,7 +34,7 @@
 
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once(dirname(__FILE__) . '..'.DS.'libs'.DS.'rmail'.DS.'RMail.php');
+require_once(LIBS.'rmail'.DS.'RMail.php');
 
 class HtmlMimemail extends RMail{
 

@@ -151,6 +151,9 @@ class AdminView extends AUIComponent {
     
   }
   
+  /**
+   * @unfinished
+   */
   protected function print_multiRowGroup($name, &$data , &$err, $fields=array(), $size = 30, $max = 100){
     
     if(!is_array($fields)){
@@ -159,8 +162,11 @@ class AdminView extends AUIComponent {
       return false;
     }
     
-     echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
-              <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
+     echo "<tr id='{$name}-group-add-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
+              <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> 
+              <input type='text' name='{$name}_group_add' id='{$name}-group-add' size='15' maxlength='100'>
+              </td>
+            </tr>\n";
        
     
     $data[$name] = is($data[$name],array()); 
@@ -178,12 +184,13 @@ class AdminView extends AUIComponent {
           $cols=is($arr['cols'],70);
           $input = "<textarea rows='{$rows}' cols='{$cols}' name='template_text'>".$value."</textarea>";
         }
-        echo "<tr id='{$name}-row-{$group}-{$field}' class='{$name}-row {$name}-row-{$group}'><td class='admin_name' width='40%'>".con($field)."</td>
-                <td class='admin_value'>".$input."
-              </td></tr>\n";
+        echo "<tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-{$group}-row'>
+                <td class='admin_name' width='40%'>".con($field)."</td>
+                <td class='admin_value'>".$input."</td>
+              </tr>\n";
       }
     }
-
+    /*
     $script = "var {$name}Count = {$i};
         $('#{$name}-add').click(function(){
           $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
@@ -204,6 +211,10 @@ class AdminView extends AUIComponent {
         });";
     $this->addJQuery($script);
     
+    //onChange Select hide other lang and show new.
+    $script = "$('.email_templates-en-row').each(function(){$(this).show();});";
+    $script = "$('.email_templates-en-row').each(function(){$(this).hide();});";
+    */
   }
 
     function print_field ($name, &$data, $prefix='') {

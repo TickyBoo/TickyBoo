@@ -66,6 +66,14 @@ if (!defined('INC')) {
 	 define('INC',ROOT.'includes'.DS);
 }
 
+if (!defined('LIBS')) {
+
+	/**
+	 * includes dir
+	 */
+	 define('LIBS',INC.'libs'.DS);
+}
+
 if (!defined('CLASSES')) {
 	/**
 	 * absolute filesystem path to the lib-directory of this framework
