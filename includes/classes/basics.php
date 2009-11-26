@@ -140,8 +140,8 @@ function FindClass(&$class_name) {
 
   If (file_exists(CLASSES . $class_name . '.php')) {
     return CLASSES ;
-  }  elseIf (file_exists(CLASSES .  $class_name . '.model.php')) {
-    $class_name .= '.model';
+  }  elseIf (file_exists(CLASSES . 'model.'. $class_name . '.php')) {
+    $class_name = 'model.'. $class_name;
     return CLASSES;
   } elseIf (file_exists(CLASSES . 'payments' . DS . $class_name . '.php')) {
     return CLASSES . 'payments' . DS;
@@ -348,7 +348,6 @@ function check_event($event_date){
 function check_system() {
   global $_SHOP;
   require_once("classes/Time.php");
-  require_once("classes/order.php");
 
   // NS: I moved the current_db_time to the init.php so we have lesser sql calls.
   // also i have moved the error messages to the language file. so the can be translated.

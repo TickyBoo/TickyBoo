@@ -32,8 +32,6 @@
  * clear to you.
  */
 
-require_once "classes/Discount.php";
-
 function smarty_block_discount ($params, $content, &$smarty, &$repeat)
 {
     if ($repeat) {
@@ -43,7 +41,7 @@ function smarty_block_discount ($params, $content, &$smarty, &$repeat)
         if ($params['order']) {
             $order_by = "order by {$params['order']}";
         }
-        
+
         if($params['category_id']){
         	$from .=",Event,Category ";
         	$where .= " AND discount_event_id=event_id ";
@@ -115,7 +113,7 @@ function smarty_block_discount ($params, $content, &$smarty, &$repeat)
       		if($params['category_id']){
       			$params['cat_price'] = $discount['category_price'];
       		}
-      			
+
              if ($params['cat_price']) {
                   if($discount['discount_type']=='fixe'){
                     $discount['discount_price'] = $params['cat_price']-$discount['discount_value'];

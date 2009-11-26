@@ -93,13 +93,13 @@ die();
   	//  echo $return;
     	return $return;
   	}
-  	
+
   	/**
   	 * @name SetOrderValues
-  	 * 
+  	 *
   	 * Used to set the order values using the smarty assign methods, which can then be used
   	 * by the plugable payments.
-  	 * 
+  	 *
   	 * @author Niels
   	 * @since 1.0
   	 * @uses Smarty, Smarty_Order
@@ -125,10 +125,10 @@ die();
 	    $smarty->assign('order_tickets_nr',$aorder->size());
 	    $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
 	    $smarty->assign('order_payment_mode',$aorder->order_payment_mode);
-	
+
 	    $smarty->assign('shop_handling', (array)$aorder->order_handling);
 	    $smarty->assign('shop_order', (array)$aorder);
-	
+
 	    $smarty->assign('order_seats_id',$seats);
 	}
 
@@ -195,7 +195,7 @@ die();
       return "checkout_result";
     }
   }
-  
+
   function posConfirmAction($smarty) {
   	global $order, $cart, $user;
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected
@@ -223,7 +223,7 @@ die();
        $user_id = $_POST['user_id'];
     }
     $no_fee = is($_POST['no_fee'], 0);
-    
+
     ob_start();
     //print_r($_SESSION['_SHOP_AUTH_USER_DATA']);
     unset($_SESSION['_SHOP_order']) ;
@@ -242,7 +242,7 @@ die();
       return $return;
     }
   }
-  
+
   function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
   	global $order, $cart;
   	if (!isset($_SESSION['_SHOP_order'])) {
@@ -257,7 +257,7 @@ die();
     		setordervalues($myorder, $smarty); //assign order vars
     		$cart->destroy_f(); // destroy cart
     		$hand = $myorder->order_handling; // get the payment handling object
-    		$confirmtext = $hand->on_confirm($myorder); // get the payment button/method... 
+    		$confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
 
     		if (is_array($confirmtext)) {
 
@@ -344,7 +344,7 @@ die();
     If (!$pm_return['approved']) {
        $myorder->order_delete($myorder->order_id,'payment_not_approved' );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
-       
+
     }
     unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
@@ -359,7 +359,7 @@ die();
        $myorder->order_delete($myorder->order_id,'pos_manual_canceled' );
     }
   }
-  
+
   function  cancelaction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
@@ -392,7 +392,6 @@ die();
 			$hand=$myorder->order_handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
-			require_once('classes/Handling.php');
 			$hand = Handling::decodeEPHCallback(getsecurecode($type), true);
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);
@@ -403,7 +402,7 @@ die();
 			$hand->on_notify($order);
 		}
   	}
-    
+
   orphanCheck();
   trace("End of checkout \n\n\r");
 //session_write_close();

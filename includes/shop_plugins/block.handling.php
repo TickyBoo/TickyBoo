@@ -32,17 +32,14 @@
  * clear to you.
  */
 
-
-require_once('classes/Handling.php');
-
 function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 
 	global $_SHOP;
-	
+
   if ($repeat) {
     $from='FROM Handling';
     $where="WHERE 1=1 ";
-    
+
   	if($params['event_date']){
   		$use_alt=check_event($params['event_date']);
   	}
@@ -54,11 +51,11 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
   			$where .= " AND handling_alt <= 3";
   		}
   	}
-	
+
     if($params['order']){
       $order_by="order by {$params['order']}";
-    } 
-    
+    }
+
     if($params['handling_id']){
      $where .= " and handling_id="._esc((int)$params['handling_id']);
     }
@@ -70,43 +67,43 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
     if($params['www']){
      $where .= " and handling_sale_mode LIKE '%www%'";
     }
-    
+
     if($_SHOP->shopconfig_restime > 0){
       $where .= " OR handling_id = 1";
     }
-    
+
     $limit= ($params['limit'])?'limit '.$params['limit']:'';
-  
+
     $query="select * $from $where $order_by $limit";
-    
+
     $res=ShopDB::query($query);
-    
+
     $pay=shopDB::fetch_array($res);
-    
+
   }else{
     $res=array_pop($smarty->_SHOP_db_res);
     $pay=shopDB::fetch_array($res);
   }
 
-	
+
   $repeat=!empty($pay);
 
 // Loads the payment file from class's which defines the extra parmiters when someone pays or goes to pay.
   if($pay){
-	  	
+
 		// if handling_extra exsists unserialize it...
 	  	if($pay['handling_extra']){
 			  $pay['extra'] = unserialize($pay['handling_extra']);
-			  
+
 		  }
-	
+
 	    $smarty->assign("shop_handling",$pay);
-			
+
 	    $smarty->_SHOP_db_res[]=$res;
 	  }
-	  
-	  
-  
+
+
+
   return $content;
 }
 

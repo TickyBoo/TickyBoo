@@ -34,7 +34,7 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
-require_once("classes/Discount.php");
+
 class DiscountView extends AdminView {
 
     function discount_form (&$data, &$err, $title)

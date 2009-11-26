@@ -32,10 +32,8 @@
  * clear to you.
  */
 
-require_once ("classes/PlaceMapPart.php");
-
 function smarty_function_placemap($params, &$smarty){
-	
+
     $pz = preg_match(strtolower('/no|0|false/'), $params['print_zone']);
     return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area']);
 
@@ -66,7 +64,7 @@ function placeMapMargins($shift)
     }
     return $res;
 }
-    
+
 function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
 {
     global $_SHOP;

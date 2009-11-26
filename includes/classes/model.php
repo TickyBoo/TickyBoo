@@ -207,6 +207,22 @@ class Model {
       return parent::__get($key);
     }*/
   }
+
+  function _myErrorHandler($errno, $errstr, $errfile, $errline) {
+    if($errno!=2){
+      echo "$errno $errstr $errfil $errline";
+    }
+  }
+
+  function _dyn_load($name){
+    set_error_handler(array(&$this,'_myErrorHandler'));
+    $res=include_once($name);
+    restore_error_handler();
+
+    return $res;
+  }
+
+
 }
 
 ?>

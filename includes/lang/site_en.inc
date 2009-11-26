@@ -118,7 +118,7 @@ define("act_err", "User Not Found or Already Activated!");
 define("act_error","Account Could Not be Activated! Please re-check the link or contact the system administrator.");
 define("act_uselink", "Please use the link that has been sent to your email address.");
 define("already_exist","This Name Already Exists. Choose Another!");
-define("alreadyexist","This E-mail is Already Registered in the Database!");
+define("useralreadyexist","This E-mail is Already Registered in the Database!");
 define("AutoCancel_order","Auto Cancel: Failed to Order!");
 define("AutoCancel_paying","Auto Cancel: Failed to Pay for Order!");
 define("cannot_find_seat","Cannot Find Seat!");

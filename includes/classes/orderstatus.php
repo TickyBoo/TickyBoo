@@ -1,10 +1,9 @@
 <?php
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("order.php");
 
 class OrderStatus{
-  
+
   /* Params should be auto geneated when calling from db */
   public $id;
   public $order_id;
@@ -12,18 +11,18 @@ class OrderStatus{
   public $status_from;
   public $status_to;
   public $updated_by;
-  
-  
+
+
   public function statusChange($orderId, $newStatus=false, $updatedBy=NULL, $action=false, $description=false){
-    
+
     if(is_numeric($orderId)){
-      $sql = "SELECT * 
+      $sql = "SELECT *
             FROM order_status
             WHERE os_order_id = "._esc($orderId)."
-            ORDER BY os_changed DESC, os_id DESC 
-            LIMIT 0,1"; 
+            ORDER BY os_changed DESC, os_id DESC
+            LIMIT 0,1";
       $query = ShopDB::query_one_row($sql);
-      
+
       if(is_null($query)){
         $oldStatus = "NULL";
       }else{
@@ -45,8 +44,8 @@ class OrderStatus{
       if(empty($newStatus)){
         $newStatus=$query['os_status_to'];
       }
-      
-      
+
+
       $sql = "INSERT INTO order_status (
                 `os_id`,
                 `os_order_id`,
@@ -76,14 +75,14 @@ class OrderStatus{
       return false;
     }
   }
-  
+
   public function massStatusChange($orderFields,$newStatus=false,$updatedBy=NULL,$action=false,$description=false){
-    
+
     if(empty($orderFields)){
       ShopDB::rollback("Failed to pass massStatusChange fields");
       return false;
     }
-    
+
     if(!is_array($orderFields)){
       ShopDB::rollback("Failed to pass massStatusChange fields 2");
       return false;
@@ -92,26 +91,26 @@ class OrderStatus{
     foreach($orderFields as $field=>$value){
       $where .= " $field = "._esc($value)." \n";
     }
-    
-    $query="SELECT DISTINCT order_id 
-            FROM `Order` 
-            WHERE 1=1 
+
+    $query="SELECT DISTINCT order_id
+            FROM `Order`
+            WHERE 1=1
             $where";
     $res = ShopDB::query($query);
-    
+
     if(ShopDB::num_rows($res)<0){
       ShopDB::rollback("Failed massStatusChange 3");
       return false;
     }
-    
+
     while($row = ShopDB::fetch_assoc($res)){
       if(!OrderStatus::statusChange($row['order_id'],$newStatus,$updatedBy,$action,$description)){
         return false;
       }
     }
-    
+
     return true;
   }
-  
+
 }
 ?>

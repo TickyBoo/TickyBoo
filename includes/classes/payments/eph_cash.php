@@ -39,19 +39,19 @@ class EPH_cash extends payment{
  	function admin_view (){
 
 	}
-	
+
   function admin_form (){
 	}
 
 	function admin_init (){
     global $_SHOP;
-				
+
 	}
 
-	
+
   function on_confirm(&$order) {
     if (!isset($_POST['cc_name'])) {
-      $user = User::load_user($_SESSION['_SHOP_USER']);  //'user'
+      $user = User::load($_SESSION['_SHOP_USER']);  //'user'
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;

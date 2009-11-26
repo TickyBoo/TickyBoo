@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
-require_once("classes/PlaceMapCategory.php");
 
 class PlaceMapCategoryView extends AdminView {
     function __construct($width = 50) {

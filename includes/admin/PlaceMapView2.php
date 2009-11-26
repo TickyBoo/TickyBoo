@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once ( "admin/AdminView.php" );
-require_once ( "classes/PlaceMap.php" );
 require_once ( "admin/PlaceMapZoneView.php" );
 require_once ( "admin/PlaceMapPartView.php" );
 require_once ( "admin/PlaceMapCategoryView.php" );
@@ -73,7 +72,6 @@ class PlaceMapView2 extends AdminView {
 
 		$pm = PlaceMap::load( $pm_id );
 		if ( $pm->pm_event_id ) {
-			require_once ( 'classes/Event.php' );
 			$event = Event::load( $pm->pm_event_id, false );
 		}
 		$this->print_field( 'ort_name', $data );
@@ -227,7 +225,6 @@ class PlaceMapView2 extends AdminView {
 			require_once ( "admin/DiscountView.php" );
 			$pmp_view = new DiscountView( $this->width );
 			if ( $pmp_view->draw() ) {
-				require_once ( 'classes/Event.php' );
 				$event = Event::load( $_REQUEST['discount_event_id'], false );
 				$this->pm_view( $event->event_pm_id );
 			}

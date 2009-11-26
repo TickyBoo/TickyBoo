@@ -35,19 +35,18 @@
 //corbeil system v0.1beta
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("classes/Discount.php");
 
 class Cart {
-	
+
 	// sessions.docx for cart layout
   var $event_items; //array, indexed by event_id
-  
+
   function add_place ($event_id, $cat_id, $place_id){
     if(!isset($this->event_items[$event_id])){
       $this->event_items[$event_id]=new EventItem($event_id);
       $newitem=1;
     }
-    
+
     $event =& $this->event_items[$event_id];
     if($res=$event->add_place($cat_id, $place_id)){
       return $res;
@@ -55,10 +54,10 @@ class Cart {
       if($newitem){
         unset($this->event_items[$event_id]);
       }
-      return FALSE;    
+      return FALSE;
     }
   }
-  
+
   function remove_place ($event_id, $cat_id, $place_id){
 
     if(!$event_id){
@@ -70,7 +69,7 @@ class Cart {
     }elseif(isset($this->event_items[$event_id])){
       $event =& $this->event_items[$event_id];
       $res = $event->remove_place($cat_id, $place_id);
-      
+
       if($event->is_empty()){
         unset($this->event_items[$event_id]);
       }
@@ -98,14 +97,14 @@ class Cart {
     }else{
    		return false;
   	}
-	
+
   }
   function min_date (){
     $min_date=true;
     foreach($this->event_items as $event){
       $min_date=min($event->event_date,$min_date);
     }
-  return $min_date;	
+  return $min_date;
   }
 
   function total_places ($event_id=0,$cat_id=0,$only_valid=TRUE){
@@ -125,16 +124,16 @@ class Cart {
 
   function load_info (){
     if($this->invalid){return FALSE;}
-   
+
     foreach(array_keys($this->event_items) as $event_id){
       $event =& $this->event_items[$event_id];
       if(!$event->load_info()){
         $this->invalid=TRUE;
 	      return FALSE;
       }
-    }    
+    }
     return TRUE;
-  } 
+  }
 
   function is_empty (){
     return count($this->event_items)==0;
@@ -163,7 +162,7 @@ class Cart {
 
   function overview (){
     global $_SHOP;
-  
+
     $data=array('valid'=>0,
                 'expired'=>0,
                 'minttl'=>$_SHOP->cart_delay,
@@ -174,7 +173,7 @@ class Cart {
   }
 
 
-  function _overview ($event_item,$cat_item,$place_item,&$data){  
+  function _overview ($event_item,$cat_item,$place_item,&$data){
     if($place_item->is_expired()){
       $data['expired']++;
     }else{
@@ -184,13 +183,13 @@ class Cart {
     }
     return TRUE;
   }
-  
+
   function set_discounts ($event_id,$cat_id,$item_id,$disc){
     if($event=&$this->event_items[$event_id]){
       return $event->set_discounts($event_id,$cat_id,$item_id,$disc);
     }else{
       return FALSE;
-    }  
+    }
   }
 }
 
@@ -203,12 +202,12 @@ class EventItem {
   var $event_date;
   var $event_use_alt;
   var $not_load=1;
-  
+
   function EventItem ($id){
     $this->event_id=$id;
   }
-  
-  function add_place ($cat_id, $place_id){ 
+
+  function add_place ($cat_id, $place_id){
   	// if catagory doenst exsist create new..
     if(!isset($this->cat_items[$cat_id])){
       $this->cat_items[$cat_id]=new CatItem($this->event_id,$cat_id);
@@ -241,7 +240,7 @@ class EventItem {
       return $res;
     }else{
       return 0;
-    }   
+    }
   }
 
   function total_price (){
@@ -251,7 +250,7 @@ class EventItem {
     }
     return $total_price;
   }
-  
+
   function use_alt (){
     $alt_event=0;
     return $this->event_use_alt;
@@ -290,13 +289,13 @@ class EventItem {
 	        // Loads event checker.
 	  		  $this->event_use_alt= check_event($this->event_date);
       	}else{
-		//echo shopDB::error();      
+		//echo shopDB::error();
         	$this->invalid = TRUE;
 			    return FALSE;
         }
-      	$this->not_load=0;	
+      	$this->not_load=0;
     }
-     
+
     foreach(array_keys($this->cat_items) as $cat_id){
       $cat =& $this->cat_items[$cat_id];
       if(!$cat->load_info()){
@@ -304,15 +303,15 @@ class EventItem {
 	      return FALSE;
       }
     }
-    
-    return TRUE;    
-  } 
+
+    return TRUE;
+  }
 
   function is_empty (){
     return count($this->cat_items)==0;
   }
- 
- 
+
+
   function can_checkout (){
     foreach($this->cat_items as $item){
       if($item->can_checkout()){
@@ -328,7 +327,7 @@ class EventItem {
       return $cat->set_discounts($event_id,$cat_id,$item_id,$disc);
     }else{
       return FALSE;
-    }  
+    }
   }
 
 }
@@ -339,46 +338,46 @@ class CatItem {
   var $cat_price;
   var $cat_name;
   var $not_load=1;
-  
+
   function CatItem ($event_id,$id){
     global $_SHOP;
     $this->cat_id=$id;
     $this->event_id=$event_id;
   }
-  
+
 
   function add_place ($places_id){
 	// if no places create place array.
     if(!$this->place_items){
       $this->place_items=array();
     }
-    
+
     foreach($this->place_items as $k=>$v){
       if($v->is_expired()){ unset($this->place_items[$k]); }
     }
 
-    if(is_array($places_id) and !empty($places_id)){     
+    if(is_array($places_id) and !empty($places_id)){
       array_push($this->place_items,new PlaceItem($this->event_id,$this->cat_id,$places_id));
     }else{
       return FALSE;
     }
-     
+
     $id=end(array_keys($this->place_items));
     $item =& $this->place_items[$id];
     $item->id=$id;
-    
+
     return $item;
   }
-  
+
   function remove_place ($place_item_id){
-  
+
     if(!isset($place_item_id)){
       $res=array();
       foreach($this->place_items as $item_id=>$item){
         $res=array_merge($res,$this->remove_place($item_id));
       }
       $this->place_items=array();
-      return $res; 
+      return $res;
     }else
     if(isset($this->place_items[$place_item_id])){
       $place=$this->place_items[$place_item_id];
@@ -396,22 +395,22 @@ class CatItem {
   function total_price (){
     foreach($this->place_items as $item){
       $total+=$item->total_price($this->cat_price);
-    } 
+    }
     return $total;
-    
+
   }
 
   function total_places ($event_id=0,$cat_id=0,$only_valid=TRUE){
     $total=0;
     foreach($this->place_items as $item){
       $total+=$item->total_places($event_id,$cat_id,$only_valid);
-    } 
+    }
     return $total;
   }
 
   function load_info (){
     if($this->invalid){return FALSE;}
-  
+
     global $_SHOP;
 
     if($this->not_load){
@@ -426,18 +425,18 @@ class CatItem {
 	      return FALSE;
       }
 
-      $this->not_load=0;	
+      $this->not_load=0;
     }
-     
+
     foreach(array_keys($this->place_items) as $place_id){
       $place =& $this->place_items[$place_id];
       if(!$place->load_info()){
         $this->invalid=TRUE;
 	      return FALSE;
       }
-    }    
+    }
     return TRUE;
-  } 
+  }
 
   function is_empty (){
     return count($this->place_items)==0;
@@ -457,33 +456,33 @@ class CatItem {
       return $item->set_discounts($event_id,$cat_id,$item_id,$disc);
     }else{
       return FALSE;
-    }  
+    }
   }
 
 }
 
 class PlaceItem {
-  var $places_nr; 
-  var $places_id; 
+  var $places_nr;
+  var $places_id;
   var $not_load=1;
   var $ts;
-  
-  function PlaceItem ($event_id,$category_id,$places_id){    
+
+  function PlaceItem ($event_id,$category_id,$places_id){
     global $_SHOP;
     $this->places_id=$places_id;
     $this->ts=time()+$_SHOP->cart_delay;
     $this->event_id=$event_id;
     $this->category_id=$category_id;
   }
-  
+
   function count (){
     return count($this->places_id);
   }
-  
+
   function is_expired (){
     return time()>$this->ts;
   }
-  
+
   function ttl (){
     return intval(floor(($this->ts-time())/60));
   }
@@ -500,7 +499,7 @@ class PlaceItem {
         foreach($discs as $discount){
 	  if($discount){
             $res-=$discount->total_value($price,1);
-	  }  
+	  }
 	}
       }
       return $res;
@@ -514,7 +513,7 @@ class PlaceItem {
       return 0;
     }
   }
-  
+
   function load_info (){
     if($this->invalid){return FALSE;}
 
@@ -531,16 +530,16 @@ class PlaceItem {
         if($result=ShopDB::query($qry) and $obj=shopDB::fetch_object($result)){
           array_push($this->places_nr,array($obj->seat_row_nr,$obj->seat_nr));
         }else{
-//echo shopDB::error(); 
+//echo shopDB::error();
       	  $this->invalid=TRUE;
       	  return FALSE;
       	}
       }
-      $this->not_load=0;	
+      $this->not_load=0;
     }
     return TRUE;
-  } 
-  
+  }
+
   //disc[]=array(object Discount,null,null,object Discount ...
   function set_discounts ($event_id,$cat_id,$item_id,$disc){
     if(is_array($disc) and count($disc)==$this->count()){
@@ -549,6 +548,6 @@ class PlaceItem {
     }else{
       return FALSE;
     }
-  } 
+  }
 }
 ?>

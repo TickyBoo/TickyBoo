@@ -34,8 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
-require_once("classes/Seat.php");
-require_once("classes/order.php");
 
 class OrderView extends AdminView{
   var $page_length=15;
@@ -50,7 +48,6 @@ function order_prepare_delete ($order_id){
 }
 
 function order_details ($order_id){
-  global $_SHOP;
   $query="select * from `Order`,User where order_id='$order_id' and order_user_id=user_id";
   if(!$order=ShopDB::query_one_row($query)){
     echo "<div class='error'>".order_not_found." $order_id</div>";
@@ -242,7 +239,6 @@ function order_details ($order_id){
 
 
 function order_list (){
-  global $_SHOP;
   $query="SELECT order_handling_id id, order_shipment_status, order_payment_status, order_status, count( * ) as count,
                  handling_id, handling_shipment, handling_payment, handling_sale_mode
           FROM `Order` left join Handling on order_handling_id=handling_id
@@ -315,7 +311,6 @@ function order_list (){
   }
 }
 function order_event_list (){
-  global $_SHOP;
   $query="SELECT distinct seat_event_id, seat_order_id, order_shipment_status, order_payment_status, order_status,
                  event_id, event_name, event_status, event_date, event_time
           FROM  Seat left join (Event CROSS JOIN `Order`) on (seat_order_id=order_id AND seat_event_id= event_id)
@@ -389,8 +384,6 @@ function order_event_list (){
 }
 
 function order_sub_list ($order_handling_id,$order_status,$order_shipment_status,$order_payment_status,$page){
-  global $_SHOP;
-  require_once('classes/Handling.php');
 
   $where= "order_handling_id='$order_handling_id'";
 
@@ -455,9 +448,6 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 }
 
 function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$order_payment_status,$page){
-  global $_SHOP;
-  require_once('classes/Event.php');
-
   $tr['ord']     = con('order_type_ordered');
   $tr['send']    = con('order_type_sended');
   $tr['cancel']  = con('order_type_canceled');
@@ -472,7 +462,7 @@ function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$o
   if($order_status){
     $where.=" and order_status='$order_status'";
     $info .= $tr[$order_status];
-    
+
   }
 
   if($order_shipment_status){
@@ -539,8 +529,6 @@ function _order_status_color($row){
 }
 
 function draw($noTab=false){
-  global $_SHOP;
-  
   if(!$noTab){
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
@@ -548,11 +536,11 @@ function draw($noTab=false){
     $menu = array( con("orders_handlings_tab")=>"?tab=0", con("orders_event_tab")=>'?tab=1');
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
   }
-  
+
   if(!isset($_REQUEST['order_id'])){
     $_REQUEST['order_id']=$_REQUEST['order_id1'];
   }
-  
+
   if(preg_match('/^set_status_/',$_GET['action1']) and $_GET['order_id1']>0){
     if(!$order=Order::load($_GET['order_id1'])){return;}
     switch($_GET['action1']){
@@ -571,20 +559,20 @@ function draw($noTab=false){
   }elseif($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Seat::reIssue($_GET["order_id1"], $_GET['seat_id']);
   }
-  
+
   if($_GET['action']=='list_type'){
     $this->order_bytype($_GET["order_status"],$_GET["order_type"],$_GET["page"]);
-    
+
   }elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
     $this->order_details($_REQUEST["order_id"]);
-    
+
   }elseif($_GET['action']=='delete'){
     $this->order_prepare_delete($_GET["order_id"]);
-    
+
   }elseif($_GET['action']=='cancel'){
     Order::order_delete($_GET["order_id"], 'order_deleted_manual');
     $this->order_details($_GET["order_id"]);
-    
+
   } elseif($_GET['action']=='list_all'){
     $this->order_sub_list($_GET["order_handling_id"],
                           $_GET["order_status"],
@@ -602,14 +590,14 @@ function draw($noTab=false){
 	} else if($_GET['action']=='purge_deleted'){
 		Order::purgeDeleted((int)$_GET['order_handling_id']);
     $this->order_list();
-    
+
 	} else if($_GET['action']=='purge_reemited'){
 		Order::purgeReemited((int)$_GET['order_handling_id']);
     $this->order_list();
-    
+
   } elseif($_SESSION['_overview_tab']==1) {
      $this->order_event_list();
-     
+
   } else {
      $this->order_list();
   }

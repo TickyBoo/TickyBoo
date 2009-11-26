@@ -33,7 +33,6 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once('classes/User.php');
 
 class User_Smarty {
 
@@ -57,7 +56,7 @@ class User_Smarty {
   }
 
   function load_f($user_id){
-    $user = User::load_user($user_id);
+    $user = User::load($user_id);
     $this->_fill($user);
     $this->logged=($user)?true:false;
   }
@@ -95,7 +94,7 @@ class User_Smarty {
     return (array)$this;
   }
 
- /* User data gets subbmitted to here */ 
+ /* User data gets subbmitted to here */
   function register ($params, &$smarty){
     if(!$this->register_f($params['ismember'], $params['data'], $err, $params['mandatory'], $params['secure'],$params['short'] )){
       $smarty->assign('user_errors',$err);
@@ -115,10 +114,10 @@ class User_Smarty {
       $this->load_f($res);
       $this->new_member = $ismember;
       return $res;
-    }  
+    }
     $this->new_member = false;
     $_SESSION['_NEW_MEMBER']= false;
-    
+
 
     return false;
 //    echo "error";
@@ -132,15 +131,15 @@ class User_Smarty {
   		$smarty->assign('user_errors',$err);
 	  }
   }
-  
+
   	function update_f (&$member, &$err, $mandatory_l=0, $short=0){
   		if ($this->user_id <> $member['user_id']) {
       		die('System error while changing user data');
     	}
     	$mandatory = convMandatory($mandatory_l);
-    	
+
 		if (User::Update($member, $err, $mandatory_l=0, $short)) {
-      		$user = User::load_user($this->user_id);
+      		$user = User::load($this->user_id);
       		$this->_fill($user);
       		$this->logged=true;
       		return true;
@@ -150,7 +149,7 @@ class User_Smarty {
   	}
 
 /////////////////
-/////////////////  
+/////////////////
   function forgot_password ($params,&$smarty){
     $this->forgot_password_f($params['email']);
   }
@@ -158,15 +157,15 @@ class User_Smarty {
   function forgot_password_f ($email){
     return User::forgot_password($email);
   }
-  
+
   	function resend_activation($params,&$smarty){
   		$this->resend_activation_f($params['email']);
 	}
-	
+
 	function resend_activation_f($email){
     	return User::resend_activation($email,$err);
 	}
-  
+
   function _fill ($user){ ///????
     $this->_clean();
     if (is_array($user)) {
@@ -184,7 +183,7 @@ class User_Smarty {
       unset($this->$k);
     }
   }
-  
+
 
   function activate(){
     global $smarty;

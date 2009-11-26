@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/EventViewCommon.php");
-require_once("classes/Event.php");
 
 class EventSubPropsView extends EventViewCommon {
 
@@ -171,7 +170,7 @@ function draw (){
         $data['event_pm_id']=$event_pm_id;
         $data['event_ort_id']=$event_ort_id;
       }
-        
+
       if (!$data['event_pm_id']){
         $err['event_pm_ort_id']=con('mandatory');
       }
@@ -193,15 +192,13 @@ function draw (){
   function insert_event (&$data){
     global $_SHOP;
 
-    require_once('classes/Event.php');
-
     $event=Event::new_from_main($data['event_main_id'], FALSE);
     if(empty($event)){return;}
 
     if($data['event_time']){$event->event_time=$data['event_time'];}
     if($data['event_open']){$event->event_open=$data['event_open'];}
     if($data['event_end']) {$event->event_open=$data['event_end'];}
-    
+
     $event->event_date=$data['event_date'];
     $event->event_pm_id=$data['event_pm_id'];
     $event->event_ort_id=$data['event_ort_id'];

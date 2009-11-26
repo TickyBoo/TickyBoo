@@ -33,9 +33,6 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("classes/order.php");
-require_once("classes/Seat.php");
-
 
 class Order_Smarty {
 

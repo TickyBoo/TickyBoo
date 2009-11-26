@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
-require_once("classes/Handling.php");
 
 class HandlingView extends AdminView{
   function print_select_tpl ($name,$type,&$data,&$err){
@@ -97,7 +96,7 @@ class HandlingView extends AdminView{
         $h = new Handling();
   			echo "<tr><td class='admin_name'  width='40%'>".con('handling_payment')."</td>
      	  <td class='admin_value'> <select name='handling_payment'>";
-  			$paylist=$h->get_payment();
+  			$paylist=Handling::getPayment();
 
     		$sel = array($data["handling_payment"]=>" selected ");
   			foreach($paylist as $k=>$v){
@@ -110,7 +109,7 @@ class HandlingView extends AdminView{
 
   			echo "<tr><td class='admin_name'  width='40%'>".con(handling_shipment)."</td>
   			<td class='admin_value'><select name='handling_shipment'>";
-  			$sendlist=$h->get_shipment();
+  			$sendlist=Handling::getShipment();
    	  	$sel = array($data["handling_shipment"]=>" selected ");
   			foreach($sendlist as $k=>$v){
   				echo "<option value='$v' ".$sel[$v].">".con($v)."</option>\n";
@@ -132,7 +131,7 @@ class HandlingView extends AdminView{
 
   		//This is for the alt payments if nothing is slected alt wont be used when close to event.
       $this->print_select_assoc('handling_alt',$data,$err,
-             $h->get_handlings(con('handling_no_alt')));
+             Handling::getHandlings(con('handling_no_alt')));
 
   		//This to ask if the handling is alturnative only this could be an auto proccess but then you would only be
   		//able to use the handling when close to the event.
@@ -163,7 +162,7 @@ class HandlingView extends AdminView{
   		if($data['handling_id']){
   			$this->print_large_area('handling_text_payment',$data,$err,3,92,'');
   			$this->print_large_area('handling_text_shipment',$data,$err,3,92,'');
-  			$this->print_large_area('handling_html_template',$data,$err,10,95,'',"class='codepress html'");
+  			$this->print_large_area('handling_html_template',$data,$err,10,95,'');
   		  $this->extra_form($h, $data, $err);
   		}
 
@@ -192,7 +191,7 @@ class HandlingView extends AdminView{
   		$alt=1;
   		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
   		echo "<tr><td class='admin_list_title' colspan='8' align='center'>".handling_title."</td></tr>\n";
-  		if($hands=Handling::load_all()){
+  		if($hands=Handling::loadAll()){
   			foreach($hands as $hand){
 
   				$handling_sale_mode=str_replace('sp','pos',$hand->handling_sale_mode);

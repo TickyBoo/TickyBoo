@@ -33,7 +33,6 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("classes/User.php");
 //require_once("classes/AUIComponent.php");
 require_once("admin/AdminView.php");
 class UserView extends AdminView{
@@ -41,14 +40,14 @@ class UserView extends AdminView{
   function UserView ($id){
     $this->user_id=$id;
   }
-  
+
   function print_user ($user){
     $user["user_country_name"]=$this->getCountry($user["user_country"]);
     $status=$this->print_status($user["user_status"]);
     $user["user_status"]=$status;
     echo "<table class='admin_form' width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-    echo "<tr><td class='admin_list_title' colspan='3'>{$user["user_lastname"]} 
-    {$user["user_firstname"]}</td></tr>";   
+    echo "<tr><td class='admin_list_title' colspan='3'>{$user["user_lastname"]}
+    {$user["user_firstname"]}</td></tr>";
     echo "<tr><td class='admin_value' colspan='3' >{$user["user_address"]}";
     if($user["user_address1"]){
       echo " {$user["user_address1"]} </td></tr>";
@@ -60,11 +59,11 @@ class UserView extends AdminView{
     echo "<td class='admin_value'><b>".user_fax."</b> {$user["user_fax"]}</td>";
     echo "<td class='admin_value'><b>".user_email."</b> {$user["user_email"]}</td></tr>";
     echo "<td class='admin_value' colspan='3'><b>".user_status."</b> {$user["user_status"]}</td></tr>";
-     
+
     /*$this->print_field('user_lastname',$user );
     $this->print_field('user_firstname',$user );
     $this->print_field('user_address',$user );
-    $this->print_field('user_address1',$user );    
+    $this->print_field('user_address1',$user );
     $this->print_field('user_zip',$user );
     $this->print_field('user_city',$user );
     $this->print_field('user_country_name',$user );
@@ -72,13 +71,13 @@ class UserView extends AdminView{
     $this->print_field('user_fax',$user );
     $this->print_field('user_email',$user );
     $this->print_field('user_status',$user );*/
-    
+
     echo "</table>\n";
    }
   function draw (){
    global $_SHOP;
    $currency=$_SHOP->currency;
-   $user= User::load_user($this->user_id);
+   $user= User::load($this->user_id);
    $this->print_user($user);
    $query="select * from `Order` where order_user_id ="._esc($this->user_id);
    if(!$res=ShopDB::query($query)){
@@ -105,13 +104,13 @@ class UserView extends AdminView{
         if((!$ticket["category_numbering"]) or $ticket["category_numbering"]=='both'){
   	  $place=$ticket["seat_row_nr"]."-".$ticket["seat_nr"];
 	}else if($ticket["category_numbering"]=='rows'){
-  	  $place=place_row." ".$ticket["seat_row_nr"]; 
+  	  $place=place_row." ".$ticket["seat_row_nr"];
 	}else if($ticket["category_numbering"]=='seat'){
-  	  $place=place_seat." ".$ticket["seat_nr"]; 
+  	  $place=place_seat." ".$ticket["seat_nr"];
 	}else{
 	  $place='---';
 	}
-      
+
        echo "<tr><td class='ticket_item_1'>&nbsp;</td>
 	       <td class='ticket_item'>".$ticket["seat_id"]."</td>
 	       <td class='ticket_item'>".$ticket["event_name"]."</td>
@@ -122,10 +121,10 @@ class UserView extends AdminView{
 	       <td class='ticket_item' align='right'>".
 	        $this->print_place_status($ticket["seat_status"])."</td>
 	       <tr>";
-      }	       
+      }
    }
    echo "</table>";
-   
+
   }
 function print_status ($user_status){
   if($user_status=='1'){
@@ -146,14 +145,14 @@ function print_order_status ($order_status){
     return "<font color='green'>".payed."</font>";
   }else if($order_status=='cancel'){
     return "<font color='#787878'>".canceled."</font>";
- }  
+ }
 }
   function print_field ($name, &$data){
     echo "<tr><td class='admin_name' width='20%'>".con($name)."</td>
     <td class='admin_value'>
     {$data[$name]}
     </td></tr>\n";
-  } 
+  }
 
 
   function print_input ($name, &$data, &$err){
@@ -161,7 +160,7 @@ function print_order_status ($order_status){
     <td class='admin_value'><input type='text' name='$name' value='".htmlentities($data[$name],ENT_QUOTES)."' size='$size' maxlength='$max'>
     <span class='admin_err'>{$err[$name]}</span>
     </td></tr>\n";
-  } 
+  }
    function con($name){
     if(defined($name)){
       return constant($name);
@@ -175,7 +174,7 @@ function print_place_status ($place_status){
     case 'res':  return "<font color='orange'>".reserved."</font>";
     case 'com': return "<font color='red'>".com."</font>";
     case 'check':return "<font color='blue'>".checked."</font>";
-   }    
+   }
 }
 
 }

@@ -35,8 +35,6 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
-require_once("classes/PlaceMapZone.php");
-
 class PlaceMapZoneView extends AdminView {
     function __construct($width=500)
     {
@@ -93,7 +91,6 @@ class PlaceMapZoneView extends AdminView {
     {
         global $_SHOP;
 
-        require_once('classes/PlaceMap.php');
         if ($pm = PlaceMap::load($pm_id)) {
             $mine = true;
         }
@@ -140,7 +137,6 @@ class PlaceMapZoneView extends AdminView {
         global $_SHOP;
 
         if ($_GET['action'] == 'add_pmz' and $_GET['pm_id'] > 0) {
-            require_once('classes/PlaceMap.php');
             if (!$pm = PlaceMap::load($_GET['pm_id'])) {
                 return;
             }
@@ -148,7 +144,6 @@ class PlaceMapZoneView extends AdminView {
             $_GET['pmz_pm_id'] = $_GET['pm_id'];
             $this->pmz_form($_GET, $err);
         } else if ($_POST['action'] == 'insert_pmz' and $_POST['pm_id'] > 0) {
-            require_once('classes/PlaceMap.php');
             if (!$pm = PlaceMap::load($_POST['pm_id'])) {
                 return;
             }

@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once ( "classes/Time.php" );
-require_once ( 'classes/order.php' );
 
 class Update_Smarty {
 
@@ -75,7 +74,7 @@ class Update_Smarty {
 				}
 			}
 			if ( $_SHOP->shopconfig_maxres > 1 ) {
-				if ( isset($_SESSION['_SHOP_USER']) and $user = User::load_user($_SESSION['_SHOP_USER'])) {
+				if ( isset($_SESSION['_SHOP_USER']) and $user = User::load($_SESSION['_SHOP_USER'])) {
 					require_once ( 'classes/MyCart_Smarty.php' );
 					$cart = MyCart_Smarty::overview_f();
 					$res_total = $user['user_current_tickets'] + $cart['valid'];
@@ -97,13 +96,13 @@ class Update_Smarty {
 	 * Countdown now used the order_date_expire.
 	 * Could be simplified down as there shouldnt be the need for the two
 	 * seperate methods.
-	 * 
+	 *
 	 * @name countdown
 	 * @uses Time, ShopDB
 	 * @author Christopher Jenkins
 	 * @access Public
 	 * @todo Clean and remove unnessary method and both use the same field to calc remaining time.
-	 * @version BETA4 	 
+	 * @version BETA4
 	 * @since 1.3.4
 	 */
 	function countdown( $params, &$smarty ) {

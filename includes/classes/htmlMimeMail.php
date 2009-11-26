@@ -34,13 +34,13 @@
 
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once(dirname(__FILE__) . '/RMail.php');
+require_once(dirname(__FILE__) . '..'.DS.'libs'.DS.'rmail'.DS.'RMail.php');
 
 class HtmlMimemail extends RMail{
 
     public function send($recipients, $type = null) {
       global $_SHOP;
-      
+
       if(empty($type)) $type = is($_SHOP->mail_mode,'mail');
       If(empty($type)) {
         user_error(con('email_badconfig'));

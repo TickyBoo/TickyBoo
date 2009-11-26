@@ -44,7 +44,7 @@ class EPH_paypal extends payment{
     return "{gui->view name='pm_paypal_business'}".
            "{gui->view name='pm_paypal_test'}";
 	}
-	
+
   function admin_form (){
     return "{gui->input name='pm_paypal_business'}".
            "{gui->checkbox name='pm_paypal_test'}";
@@ -104,9 +104,8 @@ class EPH_paypal extends payment{
                    'response'=> '');
     }
   }
-  
+
   function on_notify(&$order){
-//    require_once('classes/order.php');
     global $_SHOP;
     if (!$this->pm_paypal_test) {
       $url= 'https://www.paypal.com/cgi-bin/webscr';
@@ -127,7 +126,7 @@ class EPH_paypal extends payment{
 
     $debug.="Order_id : $order_id\n";
     $debug.="Amount   : $order_total\n";
-    
+
     $_POST["cmd"]="_notify-validate";
 
     $result=$this->url_post($url,$_POST);

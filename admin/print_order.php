@@ -37,7 +37,6 @@
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
-require_once("classes/order.php");
 
 if($_GET['order_id']>0){
   Order::print_order($_GET['order_id'],'','stream');

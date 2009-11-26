@@ -259,18 +259,15 @@ class orphans {
                        where (select category_id from Category where category_id = cs_category_id) is null") ;
         break;
       case 'Category~stat_id':
-        require_once('classes/PlaceMapCategory.php');
         $cat = PlaceMapCategory::load($fix[2]);
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_category_id = {$cat->category_id} and seat_status = 'free'";
         $result = ShopDB::Query_one_row($sql, false);
         PlaceMapCategory::create_stat($cat->category_id,$cat->category_size, $result[0]);
         break;
       case 'Category~event_id':
-        require_once('classes/PlaceMapCategory.php');
         PlaceMapCategory::delete($fix[2]);
         break;
       case 'Category~pm_id':
-        require_once('classes/PlaceMapCategory.php');
         PlaceMapCategory::delete($fix[2]) ;
         break;
       case 'Category~pmp_id':
@@ -291,8 +288,6 @@ class orphans {
                        where (select Event_id from Event where event_id = es_event_id) is null") ;
         break;
       case'Event~cat_id':
-        require_once('classes/PlaceMapPart.php');
-
         $sql = "SELECT seat_id, seat_category_id FROM Seat WHERE seat_event_id = {$fix[2]}";
         $result = ShopDB::Query($sql);
         $seats  = array();
@@ -385,7 +380,6 @@ class orphans {
                        where Event_id = {$fix[2]}") ;
         break;
      case 'Event~stat_id':
-        require_once('classes/Event.php');
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = {$fix[2]}";
         $resulty = ShopDB::Query_one_row($sql, false);
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = {$fix[2]} and seat_status = 'free'";
@@ -404,7 +398,6 @@ class orphans {
         break;
 
       case 'PlaceMap~event_id':
-        require_once('classes/PlaceMap.php');
         PlaceMap::delete($fix[2]);
         break;
 

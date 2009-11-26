@@ -38,13 +38,13 @@ require_once("classes/MyCart.php");
 
 class MyCart_Smarty {
   var $error='';
-  
+
   function MyCart_Smarty (&$smarty){
     $smarty->register_object("cart",$this,null,true,array("items"));
     $smarty->assign_by_ref("cart",$this);
   }
-  
-  
+
+
   function is_empty_f () {
     $cart=$_SESSION['_SMART_cart'];
     return !isset($cart) or $cart->is_empty();
@@ -58,7 +58,7 @@ class MyCart_Smarty {
 
   function total_seats_f ($event_id,$category_id,$only_valid){
     $cart=$_SESSION['_SMART_cart'];
-    
+
     if($cart){
       return $cart->total_places($event_id,$category_id,$only_valid);
     }else{
@@ -76,12 +76,12 @@ class MyCart_Smarty {
       $smarty->assign("cart_error",$this->error);
     }
   }
-  
+
 	/**
-	* @name add item function 
-	* 
+	* @name add item function
+	*
 	* Used to add seats to the cart. Will check if the selected seats are free.
-	* 
+	*
 	* @param event_id : required
 	* @param category_id : required
 	* @param seats : int[] (array) or int : required
@@ -110,17 +110,14 @@ class MyCart_Smarty {
     if($cart=$_SESSION['_SMART_cart']){
 
       if($places=$cart->remove_place($event_id,$cat_id,$item_id)){
-        require_once('classes/Seat.php');
         Seat::free(session_id(),$event_id,$cat_id,$places);
       }
-      
+
       $_SESSION['_SMART_cart']=$cart;
-    }  
+    }
   }
-  
+
   function order_to_cart($order_id,$mode='mode_web'){
-    require_once ("classes/order.php");
-    require_once ("classes/Seat.php");
     if(is_numeric($order_id) && $order_id > 0){
       $order = Order::load($order_id);
       $tickets = $order->loadTickets();
@@ -137,9 +134,9 @@ class MyCart_Smarty {
       }
       print_r($res);
     }
-    
+
   }
-  
+
   function total_price ($params, &$smarty){
     return $this->total_price_f();
   }
@@ -149,7 +146,7 @@ class MyCart_Smarty {
       return $cart->total_price();
     }
   }
-  
+
   	function use_alt ($params, &$smarty){
     	return $this->use_alt_f();
   	}
@@ -164,7 +161,7 @@ class MyCart_Smarty {
       		return $cart->min_date();
     	}
   	}
-  
+
   function can_checkout ($params, &$smarty){
     return $this->can_checkout_f();
   }
@@ -195,22 +192,22 @@ class MyCart_Smarty {
       }else{
         $cart->load_info();
       }
-      
+
       $this->cart_list=array();
-      $this->cart_index=0;  
+      $this->cart_index=0;
 
       $cart->iterate(array(&$this,'_pre_items'),$this->cart_list);
 
     }
-    
+
     if($cart_row=&$this->cart_list[$this->cart_index++]){
       $smarty->assign_by_ref("event_item",$cart_row[0]);
-      
-      
+
+
       $smarty->assign_by_ref("category_item",$cart_row[1]);
-      
-      
-      
+
+
+
       $seat_item=$cart_row[2];
 
       $smarty->assign_by_ref("seat_item",$seat_item);
@@ -226,13 +223,13 @@ class MyCart_Smarty {
 	}
         $smarty->assign("seat_item_rows_count",$rcount);
       }
-      
+
       $repeat=TRUE;
-      
+
     }else{
       $repeat=FALSE;
     }
-    
+
     return $content;
   }
 
@@ -253,12 +250,10 @@ class MyCart_Smarty {
 
     $this->set_discounts_f($params['event_id'],$params['category_id'],$params['item_id'],$params['discounts']);
   }
-  
+
   function set_discounts_f ($event_id,$category_id,$item_id,$discounts){
     if(!$cart=$_SESSION['_SMART_cart']){return;}
 
-    require_once("classes/Discount.php");
-        
     foreach($discounts as $disc_id){
       if($disc_id>0){
         if(!isset($dcache[$disc_id])){
@@ -268,22 +263,22 @@ class MyCart_Smarty {
 	      $has=1;
       }else{
         $discs[]=0;
-      } 	
+      }
     }
-  
-    if($has){ 
+
+    if($has){
       if($cart->set_discounts($event_id,$category_id,$item_id,$discs)){
         $_SESSION['_SMART_cart']=$cart;
 	      return TRUE;
       }
-    }  
+    }
 
   }
 
-  
+
   /**
    * MyCart_Smarty::CartCheck()
-   * 
+   *
    * @param mixed $event_id
    * @param mixed $category_id
    * @param mixed $places
@@ -294,11 +289,6 @@ class MyCart_Smarty {
    * @return
    */
   function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved,$discount_id = 0, $force=false){
-
-    require_once ("classes/Seat.php");
-    require_once ("classes/Event.php");
-    require_once ("classes/PlaceMapCategory.php");
-
   	// Loads event details
     if(!$event=Event::load($event_id)){
       $this->error = con('event_order_limit_exceeded');
@@ -337,7 +327,7 @@ class MyCart_Smarty {
       $this->error="unknown: category_numbering '{$category_numbering}' category_id '{$category_id}'";
       return FALSE;
     }
-    
+
 
     $max=$event->event_order_limit;
 
@@ -356,7 +346,7 @@ class MyCart_Smarty {
         return FALSE;
       }
     }
-    
+
    // print_r($places);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved, $force)){

@@ -40,15 +40,15 @@ class EPH_cc extends payment{
  	function admin_view (){
     return "{gui->view name='pm_cc_pubkey'}";
 	}
-	
+
   function admin_form (){
     return "{gui->area name='pm_cc_pubkey'}";
 	}
 
 	function admin_init (){
     global $_SHOP;
-				
-		$form1= 
+
+		$form1=
       "
       <div class='cc_div'>
       To validate your order please introduce your payment information and
@@ -58,15 +58,15 @@ class EPH_cc extends payment{
       <br><br>
       ";
     $this->handling_html_template .= $form1;
-    		
+
 		$this->handling_text_payment = 'Credit Card';
 		$this->handling_text_payment_alt = 'Credit Card';
 	}
 
-	
+
   function on_confirm(&$order) {
     if (!isset($_POST['cc_name'])) {
-      $user = User::load_user($_SESSION['_SHOP_USER']);  //'user'
+      $user = User::load($_SESSION['_SHOP_USER']);  //'user'
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;
@@ -297,7 +297,7 @@ class EPH_cc extends payment{
 
 		return _openssl_error();
 	}
-	
+
   private function CCVal($Num, $Name = "n/a", $Exp = "") {
 
 //  Check the expiration date first

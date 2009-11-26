@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
-require_once('classes/Ort.php');
 
 class OrtView extends AdminView {
 
@@ -173,7 +172,7 @@ class OrtView extends AdminView {
     {
         global $_SHOP;
       //  echo $_POST['action'];
-        
+
         if (preg_match('/_pm$/', $_REQUEST['action']) or preg_match('/_pmz$/', $_REQUEST['action']) or
             preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
             require_once('admin/PlaceMapView2.php');

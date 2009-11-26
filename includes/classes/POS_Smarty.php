@@ -33,7 +33,6 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once('classes/User.php');
 
 class POS_Smarty {
 
@@ -61,7 +60,7 @@ class POS_Smarty {
   function _load (){
     $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
     $query="select *
-            from User 
+            from User
 	    where user_id="._esc($auth['user_id']) ." limit 1";
 
     if($result=ShopDB::query($query) and $user=shopDB::fetch_assoc($result)){
@@ -104,25 +103,25 @@ class POS_Smarty {
   function set_prefs ($params,&$smarty){
     $this->set_prefs_f($params['prefs']);
   }
-  
+
   function set_prefs_f ($prefs){
 
     if (!$this->logged) { return FALSE;}
-    
+
     $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
     $this->user_prefs=$prefs;
-  
-    
+
+
     $query="update User set user_prefs="._esc($this->user_prefs)."
             where user_id="._esc($auth['user_id'])." limit 1";
-	    
+
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
        //print_r($_SESSION['_SHOP_USER_AUTH']);
        $_SESSION['_SHOP_USER_AUTH']['user_prefs']=$this->user_prefs;
        return TRUE;
     }
     return FALSE;
-    	     
+
   }
 
 

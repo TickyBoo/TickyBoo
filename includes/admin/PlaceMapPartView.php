@@ -35,8 +35,6 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
-require_once("classes/PlaceMapPart.php");
-
 class PlaceMapPartView extends AdminView {
     function __construct($width = 500) {
         $this->width = $width;
@@ -582,7 +580,6 @@ class PlaceMapPartView extends AdminView {
     {
         global $_SHOP;
 
-        require_once('classes/PlaceMap.php');
         if ($pm = PlaceMap::load($pm_id)) {
             $mine = true;
         }
@@ -659,7 +656,6 @@ class PlaceMapPartView extends AdminView {
       } elseif ($_GET['action'] == 'add_pmp' and $_GET['pm_id'] > 0) {
           $this->pmp_form($_GET, $err);
       } elseif ($_POST['action'] == 'insert_pmp' and $_POST['pm_id'] > 0) {
-          require_once('classes/PlaceMap.php');
 
           if ($pm = PlaceMap::load($_POST['pm_id'])) {
            if (!$this->pmp_check($_POST, $err)) {

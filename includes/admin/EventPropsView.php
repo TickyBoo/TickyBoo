@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once ( "admin/EventViewCommon.php" );
-require_once ( 'classes/Event.php' );
 require_once ( 'admin/EventSubPropsView.php' );
 
 function showstr( $Text, $len = 20 ) {
@@ -108,20 +107,20 @@ class EventPropsView extends EventViewCommon {
 	}
 
 	function fill_images() {
-		$img_pub['pub'] = array( 
+		$img_pub['pub'] = array(
             "src" => 'images/grun.png',
             'title' => con('icon_unpublish'),
             'alt' => con('icon_unpublish_alt'),
             'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
 
-		$img_pub['unpub'] = array( 
-            "src" => 'images/rot.png', 
-            'title' => con('icon_publish'), 
-            'alt' => con('icon_publish_alt'), 
+		$img_pub['unpub'] = array(
+            "src" => 'images/rot.png',
+            'title' => con('icon_publish'),
+            'alt' => con('icon_publish_alt'),
             'link' => "view_event.php?action=publish&cbxEvents[]=" );
 
-		$img_pub['nosal'] = array( 
-            "src" => 'images/grey.png', 
+		$img_pub['nosal'] = array(
+            "src" => 'images/grey.png',
             "title" => con(icon_nosal),
             "alt" => con('icon_nosal_alt'),
             "link" => "view_event.php?action=publish&cbxEvents[]=" );
@@ -167,7 +166,7 @@ class EventPropsView extends EventViewCommon {
 
 
       }
-      
+
       echo "&nbsp;</nobr></td>
                 <td class='admin_list_item'>$edate $etime</td>
                 <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
@@ -244,7 +243,7 @@ class EventPropsView extends EventViewCommon {
         if (nameObj != null) nameObj.style.background=nColor;
       }
 		</script>\n";
-		
+
 /*
 select SQL_CALC_FOUND_ROWS *
               from Event LEFT JOIN Ort ON event_ort_id=ort_id
@@ -257,7 +256,7 @@ select SQL_CALC_FOUND_ROWS *
                                                and  (event_status='pub' or  event_date >= NOW() ))) > 0)
               order by event_date
               limit 0,15
-              
+
  select SQL_CALC_FOUND_ROWS *
               from Event LEFT JOIN Ort ON event_ort_id=ort_id
               WHERE event_rep!='sub'
@@ -602,7 +601,6 @@ select SQL_CALC_FOUND_ROWS *
       }
 
       if ($data['event_pm_id'] and ($data['event_rep'] == 'sub' or $data['event_rep'] == 'main,sub')) {
-          require_once('classes/PlaceMapCategory.php');
           if ($cats = PlaceMapCategory::loadAll($data['event_pm_id'])) {
             foreach($cats as $category) {
               $cat_d = (array)$category;
@@ -632,7 +630,7 @@ select SQL_CALC_FOUND_ROWS *
 
   function state_test(&$data, $event, $stats, $pmps) {
     if (empty($stats)) return false;
-    $err = false; 
+    $err = false;
 
     if (!$data['category_template'] and !$event['event_template']) {
         $data['category_template'] = '<div class=warning>' . con('undefined') . '</div>';
@@ -743,7 +741,7 @@ select SQL_CALC_FOUND_ROWS *
           }
         }
         echo $log;
-        
+
         if($varNum!==0) {
           if ($errs) {
             echo "<br><div class=error align=center>" . con('correct_errors_first') . "<br></div>";
