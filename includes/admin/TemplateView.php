@@ -115,7 +115,7 @@ class TemplateView extends AdminView{
 
         echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
           break;
-      case 'swiftmail':
+      case 'swift':
         break;
       case 'pdf2':
         require_once("classes/TemplateEngine.php");
@@ -463,6 +463,7 @@ class TemplateView extends AdminView{
       $tempArr['emails_cc'][$array['key']]=$array['value'];
       unset($tempArr['emails_cc'][$key]);
     }
+    $tempArr['emails_bcc'] = is($tempArr['emails_cc'],array());
     foreach($tempArr['emails_bcc'] as $key=>$array){
       $tempArr['emails_bcc'][$array['key']]=$array['value'];
       unset($tempArr['emails_bcc'][$key]);
