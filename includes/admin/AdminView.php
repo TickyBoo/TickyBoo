@@ -89,9 +89,13 @@ class AdminView extends AUIComponent {
    * @param bool $multiArr to fields Key / Value or just Text/Field
    * @return void
    */
-  protected function print_multiRowField($name, &$data , &$err, $size = 30, $max = 100, $multiArr=false ){
-    //$this->addJQuery("console.log('Hello');");
-
+  protected function print_multiRowField($name, &$data , &$err, $size = 30, $max = 100, $multiArr=false, $arrayPrefix=''){
+    if($arrayPrefix <> ''){
+      $prefix = $arrayPrefix."[$name]";
+    }else{
+      $prefix = "{$name}";
+    }
+    
     echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
               <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
 
@@ -100,14 +104,14 @@ class AdminView extends AUIComponent {
       if(!$multiArr){
         echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
                 <td class='admin_value'>
-                  <input type='text' name='{$name}[$i][value]' value='" . htmlspecialchars($value, ENT_QUOTES) . "'>
+                  <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
                   <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
                   <span class='err'>{$err[$name]}</span>
                 </td></tr>\n";
       }else{
         echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_value' style='width:100%;' colspan='2'>
-                <input type='text' name='{$name}[$i][key]' value='" . htmlspecialchars($key, ENT_QUOTES) . "'>
-                <input type='text' name='{$name}[$i][value]' value='" . htmlspecialchars($value, ENT_QUOTES) . "'>
+                <input type='text' name='{$prefix}[$i][key]' value='" . htmlspecialchars($key, ENT_QUOTES) . "'>
+                <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
                 <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
                 <span class='err'>{$err[$name]}</span>
               </td></tr>\n";
@@ -120,8 +124,8 @@ class AdminView extends AUIComponent {
           $('#{$name}-add').click(function(){
             $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' >\"+
                 \"<td class='admin_value' style='width:100%;' colspan='2'>\"+
-                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
-                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][value]' value='' />\"+
+                  \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
+                  \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][value]' value='' />\"+
                   \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
                 \"</td>\"+
               \"</tr>\");
@@ -134,8 +138,7 @@ class AdminView extends AUIComponent {
           $('#{$name}-add').click(function(){
             $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
                 \"<td class='admin_value'>\"+
-                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
-                  \"<input type='text' name='{$name}[\"+{$name}Count+\"][value]' value='' />\"+
+                  \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][value]' value='' />\"+
                   \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
                 \"</td>\"+
               \"</tr>\");
@@ -156,12 +159,17 @@ class AdminView extends AUIComponent {
   /**
    * @unfinished
    */
-  protected function print_multiRowGroup($name, &$data , &$err, $fields=array(), $size = 30, $max = 100){
-
+  protected function print_multiRowGroup($name, &$data , &$err, $fields=array(),$arrayPrefix=''){
     if(!is_array($fields)){
       return false;
     }elseif(empty($fields)){
       return false;
+    }
+    
+    if($arrayPrefix <> ''){
+      $prefix = $arrayPrefix."[$name]";
+    }else{
+      $prefix = "{$name}";
     }
 
      echo "<tr id='{$name}-group-add-tr' >
@@ -193,13 +201,13 @@ class AdminView extends AUIComponent {
         if($type=='text'){
           $size=is($arr['size'],40);
           $max=is($arr['max'],100);
-          $input = "<input type='text' name='{$name}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."' size='{$size}' maxlength='{$max}'>";
+          $input = "<input type='text' name='{$prefix}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."' size='{$size}' maxlength='{$max}'>";
         }elseif($type=='textarea'){
           $rows=is($arr['rows'],10);
           $cols=is($arr['cols'],70);
-          $input = "<textarea rows='{$rows}' cols='{$cols}' name='template_text'>".$value."</textarea>";
+          $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[$group][$field]'>".$value."</textarea>";
         }
-        echo "<tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-group-row {$name}-{$group}-row'>
+        echo "<tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-group-row {$name}-{$group}-row' style='display:none;'>
                 <td class='admin_name' width='40%'>".con($field)."</td>
                 <td class='admin_value'>".$input."</td>
               </tr>\n";
@@ -227,11 +235,11 @@ class AdminView extends AUIComponent {
       if($type=='text'){
         $size=is($arr['size'],40);
         $max=is($arr['max'],100);
-        $input = "<input type='text' name='{$name}[\"+newGroup+\"][$field]' value='' size='{$size}' maxlength='{$max}'>";
+        $input = "<input type='text' name='{$prefix}[\"+newGroup+\"][$field]' value='' size='{$size}' maxlength='{$max}'>";
       }elseif($type=='textarea'){
         $rows=is($arr['rows'],10);
         $cols=is($arr['cols'],70);
-        $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$name}[\"+newGroup+\"][$field]'></textarea>";
+        $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[\"+newGroup+\"][$field]'></textarea>";
       }
       $inputs .= "\"<tr id='{$name}-'+newGroup+'-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row'>\"+
               \"<td class='admin_name' width='40%'>".con($field)."</td>\"+
@@ -262,7 +270,7 @@ class AdminView extends AUIComponent {
         $(this).show();
       });
       $('#{$name}-error').hide();
-    });";
+    }).change();";
     $this->addJQuery($changeScript);
 
   }
@@ -280,10 +288,15 @@ class AdminView extends AUIComponent {
         }
     }
 
-    function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '')
+    function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='')
     {
+      if($arrPrefix <> ''){
+        $prefix = $arrPrefix."[$name]";
+      }else{
+        $prefix = "{$name}";
+      }
         echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
-              <td class='admin_value'><input type='text' name='$name' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
+              <td class='admin_value'><input type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
               <span class='err'>{$err[$name]}</span>
               </td></tr>\n";
     }

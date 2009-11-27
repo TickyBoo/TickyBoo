@@ -167,30 +167,22 @@ class TemplateView extends AdminView{
     $this->print_field('template_type', $type );
     
     $this->print_input('template_name', $data, $err, 30, 100);
-    $this->print_input("email_to_name", $data['template_array'], $err, 30, 100);
-    $this->print_input("email_to_email", $data['template_array'], $err, 30, 100);
-    $this->print_input("email_from_name", $data['template_array'], $err, 30, 100);
-    $this->print_input("email_from_email", $data['template_array'], $err, 30, 100);
+    $this->print_input("email_to_name", $data['template_array'], $err, 30, 100,"",'template_array');
+    $this->print_input("email_to_email", $data['template_array'], $err, 30, 100,"",'template_array');
+    $this->print_input("email_from_name", $data['template_array'], $err, 30, 100,"",'template_array');
+    $this->print_input("email_from_email", $data['template_array'], $err, 30, 100,"",'template_array');
     
-    $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true);
-    $this->print_multiRowField('emails_bcc',$data['template_array'], $err, 30, 100, true);
+    $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true,'template_array');
+    $this->print_multiRowField('emails_bcc',$data['template_array'], $err, 30, 100, true,'template_array');
     
-    $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5);
+    $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5,"",'template_array');
     
     $fields = array('template_subject'=>array('type'=>'text','size'=>'60','max'=>'150'),
       'template_text'=>array('type'=>'textarea','cols'=>'70','rows'=>'10'),
       'template_html'=>array('type'=>'textarea','cols'=>'70','rows'=>'10')
     );
     //$data['template_array']['email_templates'] = array('en'=>array('template_group'=>'en','template_text'=>'hello email body'));
-    $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields);
-    
-    
-//    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
-    
-    /*echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
-    <textarea rows='20' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
-
-    </td></tr>";*/
+    $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields,'template_array');
 
     if ($data['template_id']){
       echo "<input type='hidden' name='template_id' value='{$data['template_id']}'/>\n";
@@ -343,7 +335,7 @@ class TemplateView extends AdminView{
 
   function draw (){
     global $_SHOP;
-    $types = array('systm','email','pdf2','swiftm','pdf');
+    $types = array('systm','email','pdf2','swift','pdf');
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
    	}
@@ -355,7 +347,7 @@ class TemplateView extends AdminView{
       con("templ_System")=>"?tab=0", 
       con("templ_email")=>'?tab=1',
       con("templ_pdf2")=>"?tab=2",
-      con("templ_swiftm")=>'?tab=3'
+      con("templ_swift")=>'?tab=3'
     );
     
     if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
@@ -366,28 +358,42 @@ class TemplateView extends AdminView{
 
     $type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
 
+    
 		if ($_POST['action'] == 'insert'){
-		  if (!$this->template_check($_POST, $err)){
-        		//if (get_magic_quotes_gpc ()) Shouldnt need to be done as this is done in init_common.
-           		//	$_POST['template_text'] = stripslashes (  $_POST['template_text']);
-           			$this->template_form($_POST, $err, template_add_title, $type);
+      $this->preInsertEmailTemp();
+      if (!$this->template_check($_POST, $err)){
+        //if (get_magic_quotes_gpc ()) Shouldnt need to be done as this is done in init_common.
+        //	$_POST['template_text'] = stripslashes (  $_POST['template_text']);
+        if($type == "swift" ){
+          $this->template_form_swift($_POST, $err, template_add_title,$type);
+        }else{
+       	  $this->template_form($_POST, $err, template_add_title, $type);
+        }
 			}else{
-        		$query = "INSERT Template (template_name,template_type,template_text,template_status)
-     					VALUES (" . _esc($_POST['template_name']) . "," . _esc($type) . ",
-       					"._esc($_POST['template_text']).",'new')";
-        		if (!ShopDB::query($query)){
-          			return 0;
-        		}
+        $query = "INSERT Template 
+                 (template_name,template_type,template_text,template_status)
+     					    VALUES ("._esc($_POST['template_name']) . ",
+                  "._esc($type).",
+   					      "._esc($_POST['template_text']).",
+                  'new')";
+ 		    if (!ShopDB::query($query)){
+          return 0;
+        }
         		
-        		if ($this->compile_template($_POST['template_name'])){
-          			$this->template_list($type);
-        		}else{
-          			$this->template_form($_POST, $err, template_add_title, $type);
-        		}
+        if ($this->compile_template($_POST['template_name'])){
+          $this->template_list($type);
+       	}else{
+          $this->template_form($_POST, $err, template_add_title, $type);
+       	}
 			}
   	}elseif ($_POST['action'] == 'update'){
+      $this->preInsertEmailTemp();
       		if (!$this->template_check($_POST, $err)){
-        		$this->template_form($_POST, $err, template_update_title, $type);
+        		if($type == "swift" ){
+              $this->template_form_swift($_POST, $err, template_add_title,$type);
+            }else{
+           	  $this->template_form($_POST, $err, template_add_title, $type);
+            }
       		}else{
         		$query = "UPDATE Template SET
     					template_name=" . _esc($_POST['template_name']) . ",
@@ -403,23 +409,31 @@ class TemplateView extends AdminView{
         		if ($this->compile_template($_POST['template_name'])){
           			$this->template_list($type);
         		}else{
-          			//if (get_magic_quotes_gpc ()) this is done automaticaly by init_common now
-             		//$_POST['template_text'] = stripslashes (  $_POST['template_text']);
-          			$this->template_form($_POST, $err, template_update_title, $type);
+        			//if (get_magic_quotes_gpc ()) this is done automaticaly by init_common now
+           		//$_POST['template_text'] = stripslashes (  $_POST['template_text']);
+        			if($type == "swift" ){
+                $this->template_form_swift($_POST, $err, template_add_title,$type);
+              }else{
+             	  $this->template_form($_POST, $err, template_add_title, $type);
+              }
         		}
       		}
   	}elseif ($_GET['action'] == 'add'){
- 	      if($type=='swiftm'){
+ 	      if($type=='swift'){
  	        $this->template_form_swift($row, $err, template_add_title, $type);
         }else{
   	      $this->template_form($row, $err, template_add_title, $type);
         }
     }elseif ($_GET['action'] == 'edit'){
-      		$query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
-      		if (!$row = ShopDB::query_one_row($query)){
-        		return 0;
-      		}
-     		$this->template_form($row, $err, template_update_title, $type);
+      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
+      if (!$row = ShopDB::query_one_row($query)){
+        return 0;
+     	}
+     	if($type=='swift'){
+ 	      $this->template_form_swift($row, $err, template_add_title, $type);
+      }else{
+ 	      $this->template_form($row, $err, template_add_title, $type);
+      }
     }elseif ($_GET['action'] == 'view'){
       		$query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
       		if (!$row = ShopDB::query_one_row($query)){
@@ -439,6 +453,23 @@ class TemplateView extends AdminView{
       		$this->template_list($type);
     }
   }
+  
+  
+  private function preInsertEmailTemp(){
+    $tempArr = $_POST['template_array'];
+    
+    $tempArr['emails_cc'] = is($tempArr['emails_cc'],array());
+    foreach($tempArr['emails_cc'] as $key=>$array){
+      $tempArr['emails_cc'][$array['key']]=$array['value'];
+      unset($tempArr['emails_cc'][$key]); 
+    }
+    foreach($tempArr['emails_bcc'] as $key=>$array){
+      $tempArr['emails_bcc'][$array['key']]=$array['value'];
+      unset($tempArr['emails_bcc'][$key]); 
+    }
+    
+    $_POST['template_array'] = $tempArr;
+    $_POST['template_text']=serialize($_POST['template_array']);
+  }
 }
-
 ?>

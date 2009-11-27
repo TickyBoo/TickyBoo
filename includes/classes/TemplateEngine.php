@@ -89,20 +89,21 @@ class TemplateEngine {
       case 'systm':
       case 'email':
         require_once("classes/EmailTCompiler.php");
-        require_once("classes/email.swift.compiler.php");
         $comp = new EmailTCompiler;
-        $comp2 = new EmailSwiftCompiler;
         break;
       case 'pdf2':
         require_once("classes/PDF2TCompiler.php");
         $comp = new PDF2TCompiler;
+        break;
+      case 'swift':
+        require_once("classes/email.swift.compiler.php");
+        $comp = new EmailSwiftCompiler;
         break;
       default:
         user_error("unsupported template type: ".$data['template_type']);
     }
   
     //try to compile, pass template and name to compiler.
-    $code2 = $comp2->compile($data['template_text'],$t_class_name);
     if(!$code = $comp->compile($data['template_text'],$t_class_name)){
       //if failed to compile set error.
       $this->errors = $comp->errors;
