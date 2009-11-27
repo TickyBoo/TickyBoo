@@ -272,5 +272,5 @@ if (!defined('ft_check')) {die('System intrusion ');}
       $_SESSION['_SHOP_ORGANIZER_DATA'] = (object)$data;
 	}
 	}
-  $_SHOP->organizer_data=$_SESSION['_SHOP_ORGANIZER_DATA'];
+  $_SHOP->organizer_data=(object)$_SESSION['_SHOP_ORGANIZER_DATA'];
 ?>

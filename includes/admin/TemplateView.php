@@ -116,6 +116,46 @@ class TemplateView extends AdminView{
         echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
           break;
       case 'swift':
+        include('templatedata.php');
+      	require_once('classes/htmlMimeMail.php');
+        require_once("classes/TemplateEngine.php");
+        if (!$tpl = TemplateEngine::getTemplate($name)) {
+          return false;
+       	}
+     		$lang = is($_GET['lang'], $_SHOP->lang);
+        
+        $swift = Swift_Message::newInstance();
+        $tpl->write($swift, $order, $lang);
+        //$email = $email->asarray() ;
+        $langs = $tpl->getEmailLangs();
+        foreach($langs as $lng) {
+          $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
+        }
+
+        echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
+        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
+        //$this->print_select_assoc ("lang", $_GET, $err, $langs, "onchange='javascript: document.frmEvents.submit();'");
+    		//$this->print_field('email_header',htmlspecialchars());
+        //$this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
+        //$this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
+        //$this->print_field_o('email_bcc',htmlspecialchars($email['headers']['Bcc']));
+        //$this->print_field_o('email_return',htmlspecialchars($email['return_path']));
+        //$this->print_field('email_subject',htmlspecialchars($email['headers']['Subject']));
+        //echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+				nl2br(htmlspecialchars($swift->getHeaders()->toString())) . "</td></tr>";
+
+ 			  echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
+        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
+          nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
+
+       	echo "</table>\n";
+        echo "<input type='hidden' name='action' id='action' value='view'>
+          <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
+          </form>";
+
+        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
         break;
       case 'pdf2':
         require_once("classes/TemplateEngine.php");
@@ -311,6 +351,10 @@ class TemplateView extends AdminView{
 
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>" . add . "</a></center>";
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=compile_all'>" . compile_all . "</a></center>";
+    if($type=="swift"){
+      echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=sendtest'>" . send_test . "</a></center>";  
+    }
+     
   }
 
 	function compile_template ($name){

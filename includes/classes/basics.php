@@ -239,6 +239,15 @@ function is(&$arg, $default = null)
    return $default;
 }
 
+function empt(&$arg , $default=null){
+  if(is_string($arg)){
+    if(trim($arg)<>''){
+      return $arg;
+    }
+  }
+  return $default;
+}
+
 function con($name) {
    global $_SHOP;
    if (defined($name)) {

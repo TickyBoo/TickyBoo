@@ -33,6 +33,8 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
+
+require_once (LIBS.'swift'.DS.'swift_required.php');
 class EmailSwiftCompiler {
 
   var $mode=0; //0 normal 1 text
@@ -51,26 +53,39 @@ class EmailSwiftCompiler {
   private $emailBCC = null;
   private $emailFrom = null; //$email => $firstname $lastname
   private $emailDefLang = 0;
-  private $emailLangs = null;
+  protected $emailLangs = null;
   private $emailTemplates = null;
 
   function EmailSwiftCompiler (){
   }
   
-  function build ($swiftInstance, $data, $lang=0, $testme=false){
+  protected function build ($swiftInstance, $data, $lang=0, $testme=false){
     $emailArray = $this->sourcetext;
     $this->data = $data;
     //Build vars
-    $this->buildVars();
-    $this->emailVarsToValues();
-    require_once (LIBS.'swift'.DS.'swift_required.php');
+    $this->buildVars($emailArray);
+    
     if(!is_object($swiftInstance)){
       $swiftInstance = Swift_Message::newInstance();
     }
     $swift = &$swiftInstance;
+    $swift->setFrom($this->emailFrom);
+    $swift->setTo($this->emailTo);
+    $swift->setCc($this->emailCC);
+    $swift->setBcc($this->emailBCC);
     
-    $swift->setFrom();
+    //No Lang passed pull the default lang
+    if($lang===0){
+      $lang=$this->emailDefLang;
+    }
+    //No deflang pull the first lang
+    if($lang===0){
+      $lang = $this->emailLangs[0];
+    }
     
+    $swift->setSubject($this->emailTemplates[$lang]['template_text']);
+    $swift->setBody($this->emailTemplates[$lang]['template_html'],'text/html');
+    $swift->addPart($this->emailTemplates[$lang]['template_text'],'text/plain');
     
     return $swift;  
   }
@@ -82,27 +97,28 @@ class EmailSwiftCompiler {
     }
     $this->emailArray = &$emailArray;
     //To
+    
     $this->emailTo = array(
-      is($emailArray['email_to_email'],'$user_email')=>
-      is($emailArray['email_to_name'],'$user_firstname $user_lastname'));
+      $this->varsToValues(empt($emailArray['email_to_email'],'$user_email'))=>
+      $this->varsToValues(empt($emailArray['email_to_name'],'$user_firstname $user_lastname')));
     //From
     $this->emailFrom = array(
-      is($emailArray['email_from_email'],$_SHOP->organizer_data->organizer_email)=>
-      is($emailArray['email_from_name'],''));
+      $this->varsToValues(empt($emailArray['email_from_email'],$_SHOP->organizer_data->organizer_email))=>
+      $this->varsToValues(empt($emailArray['email_from_name'],$_SHOP->organizer_data->organizer_name)));
     //CC
     foreach($emailArray['emails_cc'] as $email=>$name){
       if(trim($email)<>'' && trim($name)<>''){
-        $this->emailCC[$email]=$name;
+        $this->emailCC[$this->varsToValues($email)]=$this->varsToValues($name);
       }elseif(trim($email)<>''){
-        $this->emailCC[]=$email;
+        $this->emailCC[]=$this->varsToValues($email);
       }
     } unset($email,$name);
     //BCC
     foreach($emailArray['emails_bcc'] as $email=>$name){
       if(trim($email)<>'' && trim($name)<>''){
-        $this->emailBCC[$email]=$name;
+        $this->emailBCC[$this->varsToValues($email)]=$this->varsToValues($name);
       }elseif(trim($email)<>''){
-        $this->emailBCC[]=$email;
+        $this->emailBCC[]=$this->varsToValues($email);
       }
     }
     //Default Lang
@@ -114,14 +130,13 @@ class EmailSwiftCompiler {
     if(is($emailArray['email_templates'],false)){
       foreach($emailArray['email_templates'] as $lang=>$fields){
         $this->emailLangs[] = $lang;
-        $this->emailTemplates[$lang]=$fields;
+        $this->emailTemplates[$lang]=array_walk($fields,array(&$this,'recVarToVals'));
       }
     }
     $this->varsBuilt = true;
   }
   
   public function compile ($emailArray, $newClassName){
-    $this->buildVars($emailArray);
     $ret=
     '/*this is a generated file. do not edit!
     produced '.date("l dS of F Y h:i:s A").'  
@@ -134,19 +149,28 @@ class EmailSwiftCompiler {
       }
     }';
     //  echo "<pre>$ret</pre>";
-    //return $ret;
-    return false;
+    return $ret;
   }
   
-  private function emailVarsToValues(){
-    array_walk($this->emailTo,array(&$this,'recVarToVals'));
-    array_walk($this->emailFrom,array(&$this,'recVarToVals'));
-    array_walk($this->emailCC,array(&$this,'recVarToVals'));
-    array_walk($this->emailBCC,array(&$this,'recVarToVals'));
-  }
-  
-  public function test($emailArray){
+  public function getEmailLangs(){
+    if(is_string($this->sourcetext) || is_string($this->emailArray)){
+      $emailArray = unserialize($this->sourcetext);
+      $this->emailArray = &$emailArray;
+    }
+    //check templates
+    if(is_array($this->emailLangs)){
+      return $this->emailLangs;
+    }
     
+    if(is($emailArray['email_templates'],array())){
+      foreach($emailArray['email_templates'] as $lang=>$fields){
+        $this->emailLangs[] = $lang;
+      }
+    }else{
+      $this->emailLangs = array();
+    }
+    print_r($this->emailLangs);
+    return $this->emailLangs;
   }
   
   public function generate($emailArray){
@@ -155,14 +179,17 @@ class EmailSwiftCompiler {
     
   }
   
+  
+  public function test($emailArray){
+    
+  }
   private function varToArg ($val){
     return; //"\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
   }
   
   
-  private function recVarToVals(&$value,&$key){
+  private function recVarToVals(&$value,$key){
     $value = $this->varsToValues($value);
-    $key = $this->varsToValues($key);
   }
   
   /**
@@ -173,7 +200,7 @@ class EmailSwiftCompiler {
    * @return String with $varbles converted to values.
    */
   private function varsToValues($string){
-    return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceVar'),str_replace('"','\"',$string));
+    return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceVar'),$string);
       
   }
   
@@ -186,9 +213,9 @@ class EmailSwiftCompiler {
    * @return
    */
   private function replaceVar($matches){
-    array_push($this->vars,$matches[1]);
+    //array_push($this->vars,$matches[1]);
     $value = is($this->data[$matches[1]],$matches[0]);
-    return ''.$value.'';
+    return $value;
   }
 }
 ?>
