@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-
+  define('ft_check','langcheck');
   include_once('includes/config/init_common.php');
 
   function load() {
@@ -195,3 +195,11 @@
     </table>
   </body>
 </html>
+<?Php
+    print "<pre>";
+    print_r( $du);
+    print_r( $en);
+    print_r( $diff1= array_diff_key($en, $du));
+    print_r( $diff2= array_diff_key($du, $en));
+    print "</pre>";
+?>

@@ -95,7 +95,7 @@ class AdminView extends AUIComponent {
     }else{
       $prefix = "{$name}";
     }
-    
+
     echo "<tr id='{$name}-tr' ><td class='admin_name' width='40%'>" , con($name) , "</td>
               <td class='admin_value' ><button id='{$name}-add' type='button'>".con($name)." ".con('add_row')."</button> </td></tr>\n";
 
@@ -165,7 +165,7 @@ class AdminView extends AUIComponent {
     }elseif(empty($fields)){
       return false;
     }
-    
+
     if($arrayPrefix <> ''){
       $prefix = $arrayPrefix."[$name]";
     }else{
@@ -175,25 +175,25 @@ class AdminView extends AUIComponent {
      echo "<tr id='{$name}-group-add-tr' >
               <td class='admin_name' width='40%'>" , con($name) , "</td>
               <td class='admin_value' >
-                <button id='{$name}-group-add-button' type='button'>".con($name)." ".con('add_row')."</button> 
+                <button id='{$name}-group-add-button' type='button'>".con($name)." ".con('add_row')."</button>
                 <input type='text' name='{$name}_group_add' id='{$name}-group-add-field' size='15' maxlength='100'>
-                <span id='{$name}-error' style='display:none;'>".con('err_blank_or_allready')."</span>                
+                <span id='{$name}-error' style='display:none;'>".con('err_blank_or_allready')."</span>
               </td>
             </tr>\n";
-            
+
       echo "<tr id='{$name}-group-select-tr'>
               <td class='admin_name'  width='40%'>".con($name)." ".con('select')."</td>
               <td class='admin_value'>
-               <select id='{$name}-group-select' name='{$name}_group_select'>\n</select> 
+               <select id='{$name}-group-select' name='{$name}_group_select'>\n</select>
                <a class='link' href='#' id='{$name}-group-delete'><img src='images/trash.png' border='0' alt='".con('remove_group')."' title='".con('remove_group')."'></a>
               </td>
-            </tr>\n";       
-    
-    $data[$name] = is($data[$name],array()); 
+            </tr>\n";
+
+    $data[$name] = is($data[$name],array());
     foreach($data[$name] as $group=>$values){
       //for each group add the option list.
       $opts .= "<option value='{$group}'>".con($group)."</option>";
-      
+
       //Fill Field type and values else add blanks.
       foreach($fields as $field=>$arr){
         $type = is($arr['type'],'text');
@@ -249,7 +249,7 @@ class AdminView extends AUIComponent {
     $addScript = "$('#{$name}-group-add-button').click(function(){
       var newGroup = $('#{$name}-group-add-field').val();
       newGroup = jQuery.trim(newGroup);
-      
+
       if($('#{$name}-group-select option[value=\"'+newGroup+'\"]').val()!=newGroup && newGroup!=''){
         $('#{$name}-group-select-tr').after({$inputs}\"\");
         $('#{$name}-group-select').append(\"<option value='\"+newGroup+\"'>\"+newGroup+\"</option>\").val(newGroup);
@@ -809,7 +809,7 @@ class AdminView extends AUIComponent {
     }
   	foreach ($linkArray as $k => $v){
       $menuStyle=($tabCount==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
-      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."admin/images/left_arc.gif\"></td>\n";
+      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->images_url."left_arc.gif\"></td>\n";
       $str.= "<td nowrap=\"nowrap\" height=\"16\" align=\"center\" valign=\"middle\" class=\"$menuStyle\">\n";
 //      if($tabCount!=$activeTab)
         $str.= "<a class='$menuStyle' href='$v'>";
@@ -817,7 +817,7 @@ class AdminView extends AUIComponent {
 //      if($tabCount!=$activeTab)
         $str.= "</a>";
       $str.= "</td>\n";
-      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->root."admin/images/right_arc.gif\"></td>\n";
+      $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->images_url."right_arc.gif\"></td>\n";
       $str.= "<td width=\"1pt\">&nbsp;</td>\n";
       $tabCount++;
     }

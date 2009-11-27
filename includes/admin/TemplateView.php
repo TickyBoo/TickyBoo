@@ -479,12 +479,30 @@ class TemplateView extends AdminView{
       <tr><td  style='padding-right: 0px;'>
          <select name='choicefield'  multiple='multiple' size='15'class='menu_admin' style='border: none; width:100% '>";
     require_once('templatedata.php');
-  	$order['is_member']     = ($order['user_status']==2);
-    $order['active']        = (empty($order['active']));
-    $order['link']          = '{HTML-ActivationCode}';
-    $order['activate_code'] = '{ActivationCode}';
-    $order['new_password']  = '{NewPassword}' ;
+    $select ='';
     foreach($order as $key => $value) {
+      if ($key == 'bill') {
+        $include .= "<OPTGROUP LABEL='".con('Bill')."'/>";
+        print_r($value);
+        $value = reset($value);
+        foreach($value as $key => $valuex) {
+           $include .= "<option value='bill[].{$key}'>bill[].{$key}</option>\n";
+        }
+        continue;
+      } elseif ($select <> strstr ($key,'_',true)) {
+        $select = strstr ($key,'_',true);
+        $include .= "<OPTGROUP LABEL='".con($select)."'/>";
+      }
+      $include .= "<option value='{$key}'>{$key}</option>\n";
+    }
+  	$orderx['is_member']     = ($order['user_status']==2);
+    $orderx['active']        = (empty($order['active']));
+    $orderx['link']          = '{HTML-ActivationCode}';
+    $orderx['activate_code'] = '{ActivationCode}';
+    $orderx['new_password']  = '{NewPassword}' ;
+    $select ='';
+    $include .= "<OPTGROUP LABEL='".con('Others')."'/>";
+    foreach($orderx as $key => $value) {
       $include .= "<option value='{$key}'>{$key}</option>\n";
     }
     $include .= "

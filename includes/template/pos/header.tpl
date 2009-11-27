@@ -24,13 +24,13 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@fusionticket.com if any conditions of this licencing isn't 
+ * Contact info@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  * Please goto fusionticket.org for more info and help.
  */
  *}
 <html>
-	
+
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -42,7 +42,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
 
 
-		
+
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 
@@ -73,23 +73,23 @@
 						success:function(data, status){
 							console.log("Status: "+status);
 							console.log(data.status);
-						}	
+						}
 					});*/
 	 			});
 			</script>
 		{/literal}
 	</head>
-	
+
 	<body>
 		<div id="wrap">
 			<div id="header">
 				<div class="loading">
 					<img src="images/LoadingImageSmall.gif" width="16" height="16" alt="Loading data, please wait" />
 				</div>
-		    {if $organizer->organizer_logo} 
-           <img src='{$_SHOP_files}{$organizer->organizer_logo}' border="0" /> 
+		    {if $organizer->organizer_logo}
+           <img src='{$_SHOP_files}{$organizer->organizer_logo}' border="0" />
         {else}
-       		<img src=\"".$_SHOP->root."pos/images/logo.png\"  border='0'/>
+       		<img src='{$_SHOP_themeimages}logo.png'  border='0'/>
         {/if}
  				{!box_office!}
 			</div>
