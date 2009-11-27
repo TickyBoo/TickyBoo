@@ -1,10 +1,10 @@
 *{font-size:12px;font-family:Verdana,Arial, Helvetica, san-serif; }
 
-body { 
-	font: .8em Arial, Sans-Serif; 
-	line-height: 1.0em; 
-	background: #375AAA none repeat scroll 0 0; 
-	color: #444;  
+body {
+	font: .8em Arial, Sans-Serif;
+	line-height: 1.0em;
+	background: #375AAA none repeat scroll 0 0;
+	color: #444;
 		text-align: center;
 }
 #wrap {
@@ -109,10 +109,11 @@ BACKGROUND-COLOR:#ededed;
 .menu_admin{border: #cccccc 1px solid;}
 .menu_admin_x{border-right:#cccccc 1px solid; border-bottom:#cccccc 1px solid;border-top:#cccccc 1px solid;}
 
-.menu_admin_title{color:#555555; background-color:#ffffff;font-weight:bold;
-
-                  padding-left: 25px;
-
+.menu_admin_title{
+      color:#555555;
+      background-color:#ffffff;
+      font-weight:bold;
+      padding-left: 25px;
 		  padding-top: 4px;
 
 		  padding-bottom: 4px;
@@ -153,7 +154,7 @@ BACKGROUND-COLOR:#ededed;
 
 		  }
 
-		  
+
 
 .menu_admin_item{background:#ededed;}
 
@@ -191,7 +192,7 @@ BACKGROUND-COLOR:#ededed;
 
 
 
-.stats_cat_item{background-color:#ededed; 
+.stats_cat_item{background-color:#ededed;
 
              border-bottom: #ffffff 2px solid; color:#999999}
 
@@ -199,7 +200,7 @@ BACKGROUND-COLOR:#ededed;
 
 .order_item{background-color:#bbbbbb ; color:#ffffff;}
 
-.ticket_item{background-color:#ededed; 
+.ticket_item{background-color:#ededed;
 
              border-bottom: #ffffff 2px solid; color:#a0a0a0}
 
@@ -251,7 +252,7 @@ BACKGROUND-COLOR:#ededed;
 
       text-align: center;}
 
-      
+
 
 .error{color:red;padding-left:25px;padding-bottom:3px; padding-top:3px;font-weight:bold;font-family:Georgia;
 
@@ -264,7 +265,7 @@ BACKGROUND-COLOR:#ededed;
 .mysql_error{font-weight:bold;}
 
 table.UITabMenuNav{
- border-bottom: 3px solid #375AAA ; 
+ border-bottom: 3px solid #375AAA ;
 }
 
 td.UITabMenuNavOff{

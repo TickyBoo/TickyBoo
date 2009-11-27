@@ -14,7 +14,7 @@ Please feel free to update this document if you feel it to be inacurrate or inco
 		
 		No Spaces, No Special Chars and No Underscores
 	
-		:-D		-> 	Order, EmailController, SwiftEmailCompiler
+		:-D	-> 	Order, EmailController, SwiftEmailCompiler
 		:'-( 	-> 	order, emailController, Swift_Email_Compiler
 	
 	1.2: Function names: functions should use a cammelcaps style naming,
@@ -23,7 +23,7 @@ Please feel free to update this document if you feel it to be inacurrate or inco
 		First word lower case, Every subsiquent word has uppercase first letter,
 		No Spaces, No special Chars and No underscores.
 		
-		:-D		->	save(), deleteOrder(), isValid(), doThisFunctionNow()
+		:-D	->	save(), deleteOrder(), isValid(), doThisFunctionNow()
 		:'-(	->	Save(), DeleteOrder(), is_Valid(), do_this_function_now()
 		
 		There may be exceptions to these rules, such as: __construct.

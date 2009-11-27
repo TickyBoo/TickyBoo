@@ -47,8 +47,8 @@ class TemplateView extends AdminView{
     }
     return 0;
   }
-  
-  
+
+
   function template_view ($data, $type) {
     global $_SHOP,  $_COUNTRY_LIST;
     if (!isset($_COUNTRY_LIST)) {
@@ -74,22 +74,22 @@ class TemplateView extends AdminView{
         if (!$tpl = TemplateEngine::getTemplate($name)) {
           return false;
        	}
-        
+
      		$lang = is($_GET['lang'], $_SHOP->lang);
-        
+
         if (!in_array($lang, $tpl->langs )) {
           $lang = $tpl->langs[0];
         }
-        $_GET['lang'] = $lang; 
-           
+        $_GET['lang'] = $lang;
+
         $email = &new htmlMimeMail();
         $tpl->build($email, $order, $lang);
         $email = $email->asarray() ;
         $langs = array();
         foreach($tpl->langs as $lng) {
           $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
-        }       
-    		
+        }
+
         echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
         echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
@@ -103,11 +103,11 @@ class TemplateView extends AdminView{
         echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
 				nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
-				
+
  			  echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
           nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
-        		
+
        	echo "</table>\n";
         echo "<input type='hidden' name='action' id='action' value='view'>
           <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
@@ -121,13 +121,13 @@ class TemplateView extends AdminView{
         require_once("classes/TemplateEngine.php");
         require_once("html2pdf/html2pdf.class.php");
         require_once('templatedata.php');
-			
+
         $paper_size=$_SHOP->pdf_paper_size;
 			  $paper_orientation=$_SHOP->pdf_paper_orientation;
 			  $_SHOP->lang = is($_SHOP->lang,'en');
 			  $te  = new TemplateEngine();
 			  $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
-			        
+
 			  // file_put_contents  ( 'test.txt'  , print_r(array($order, $seat),true));
 			  if($tpl =& $te->getTemplate($name)){
           $tpl->write($pdf, $order, false); //
@@ -152,31 +152,31 @@ class TemplateView extends AdminView{
         echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
     	}
 	}
-  
+
   function template_form_swift(&$data, &$err, $title, $type) {
     global $_SHOP;
-    
+
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
-    
+
     $data['template_array'] = unserialize($data['template_text']);
     //$data['template_text'] = htmlspecialchars($data['template_text'], ENT_QUOTES);
 
     $this->print_field_o('template_id', $data);
     $this->print_field('template_type', $type );
-    
+
     $this->print_input('template_name', $data, $err, 30, 100);
     $this->print_input("email_to_name", $data['template_array'], $err, 30, 100,"",'template_array');
     $this->print_input("email_to_email", $data['template_array'], $err, 30, 100,"",'template_array');
     $this->print_input("email_from_name", $data['template_array'], $err, 30, 100,"",'template_array');
     $this->print_input("email_from_email", $data['template_array'], $err, 30, 100,"",'template_array');
-    
+
     $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true,'template_array');
     $this->print_multiRowField('emails_bcc',$data['template_array'], $err, 30, 100, true,'template_array');
-    
+
     $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5,"",'template_array');
-    
+
     $fields = array('template_subject'=>array('type'=>'text','size'=>'60','max'=>'150'),
       'template_text'=>array('type'=>'textarea','cols'=>'70','rows'=>'10'),
       'template_html'=>array('type'=>'textarea','cols'=>'70','rows'=>'10')
@@ -219,7 +219,7 @@ class TemplateView extends AdminView{
       $this->print_input('template_name', $data, $err, 30, 100);
     }
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
-    
+
     echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
     <textarea rows='20' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
 
@@ -264,7 +264,7 @@ class TemplateView extends AdminView{
     $query = "SELECT template_name FROM Template where template_type <> 'PDF' order by template_name ";
     if (!$res = ShopDB::query($query)){
       return;
-    } while ($row = shopDB::fetch_assoc($res)){ 
+    } while ($row = shopDB::fetch_assoc($res)){
     //echo "compile: {$row['template_name']}<br>\n";
       $this->compile_template($row['template_name']);
     }
@@ -302,7 +302,7 @@ class TemplateView extends AdminView{
       }
       if ($row['template_type'] !=='systm') {
         echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>";
-      }          
+      }
       echo "</td>\n";
       echo "</tr>";
       $alt = ($alt + 1) % 2;
@@ -339,17 +339,17 @@ class TemplateView extends AdminView{
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
    	}
-    
+
     $query = "SELECT count(*) FROM Template
               where template_type = 'pdf'";
 
     $menu = array(
-      con("templ_System")=>"?tab=0", 
+      con("templ_System")=>"?tab=0",
       con("templ_email")=>'?tab=1',
       con("templ_pdf2")=>"?tab=2",
       con("templ_swift")=>'?tab=3'
     );
-    
+
     if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
       $menu[con("templ_pdf")]= "?tab=3";
    	}
@@ -358,7 +358,7 @@ class TemplateView extends AdminView{
 
     $type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
 
-    
+
 		if ($_POST['action'] == 'insert'){
       $this->preInsertEmailTemp();
       if (!$this->template_check($_POST, $err)){
@@ -370,7 +370,7 @@ class TemplateView extends AdminView{
        	  $this->template_form($_POST, $err, template_add_title, $type);
         }
 			}else{
-        $query = "INSERT Template 
+        $query = "INSERT Template
                  (template_name,template_type,template_text,template_status)
      					    VALUES ("._esc($_POST['template_name']) . ",
                   "._esc($type).",
@@ -379,7 +379,7 @@ class TemplateView extends AdminView{
  		    if (!ShopDB::query($query)){
           return 0;
         }
-        		
+
         if ($this->compile_template($_POST['template_name'])){
           $this->template_list($type);
        	}else{
@@ -405,7 +405,7 @@ class TemplateView extends AdminView{
         		if (!ShopDB::query($query)){
           			return 0;
         		}
-        		
+
         		if ($this->compile_template($_POST['template_name'])){
           			$this->template_list($type);
         		}else{
@@ -453,23 +453,45 @@ class TemplateView extends AdminView{
       		$this->template_list($type);
     }
   }
-  
-  
+
+
   private function preInsertEmailTemp(){
     $tempArr = $_POST['template_array'];
-    
+
     $tempArr['emails_cc'] = is($tempArr['emails_cc'],array());
     foreach($tempArr['emails_cc'] as $key=>$array){
       $tempArr['emails_cc'][$array['key']]=$array['value'];
-      unset($tempArr['emails_cc'][$key]); 
+      unset($tempArr['emails_cc'][$key]);
     }
     foreach($tempArr['emails_bcc'] as $key=>$array){
       $tempArr['emails_bcc'][$array['key']]=$array['value'];
-      unset($tempArr['emails_bcc'][$key]); 
+      unset($tempArr['emails_bcc'][$key]);
     }
-    
+
     $_POST['template_array'] = $tempArr;
     $_POST['template_text']=serialize($_POST['template_array']);
+  }
+  function extramenus(&$menu) {
+    global $order;
+    $include="
+    <table width='190' class='menu_admin' cellspacing='2' style='padding-left: 0px;'>
+      <tr><td class='menu_admin_title'>".con('legende')."</td></tr>
+      <tr><td  style='padding-right: 0px;'>
+         <select name='choicefield'  multiple='multiple' size='15'class='menu_admin' style='border: none; width:100% '>";
+    require_once('templatedata.php');
+  	$order['is_member']     = ($order['user_status']==2);
+    $order['active']        = (empty($order['active']));
+    $order['link']          = '{HTML-ActivationCode}';
+    $order['activate_code'] = '{ActivationCode}';
+    $order['new_password']  = '{NewPassword}' ;
+    foreach($order as $key => $value) {
+      $include .= "<option value='{$key}'>{$key}</option>\n";
+    }
+    $include .= "
+        </select>
+      </td></tr>
+    </table><br>";
+    $menu[] = $include;
   }
 }
 ?>
