@@ -159,7 +159,7 @@ class TemplateView extends AdminView{
         break;
       case 'pdf2':
         require_once("classes/TemplateEngine.php");
-        require_once("html2pdf/html2pdf.class.php");
+        require_once(LIBS."html2pdf/html2pdf.class.php");
         require_once('templatedata.php');
 
         $paper_size=$_SHOP->pdf_paper_size;
@@ -518,6 +518,7 @@ class TemplateView extends AdminView{
   }
   function extramenus(&$menu) {
     global $order;
+    if ($_REQUEST['action']!=='edit') {return;}
     $include="
     <table width='190' class='menu_admin' cellspacing='2' style='padding-left: 0px;'>
       <tr><td class='menu_admin_title'>".con('legende')."</td></tr>
@@ -528,7 +529,6 @@ class TemplateView extends AdminView{
     foreach($order as $key => $value) {
       if ($key == 'bill') {
         $include .= "<OPTGROUP LABEL='".con('Bill')."'/>";
-        print_r($value);
         $value = reset($value);
         foreach($value as $key => $valuex) {
            $include .= "<option value='bill[].{$key}'>bill[].{$key}</option>\n";

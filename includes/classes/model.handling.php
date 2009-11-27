@@ -109,7 +109,7 @@ class Handling Extends Model {
 
   function CheckValues($arr) {
     $ok = parent::CheckValues($arr);
-    return $this->extra_check($arr) and $ok;
+    return  $ok; //$this->extra_Check($arr) and
   }
 
   function delete (){
@@ -119,7 +119,7 @@ class Handling Extends Model {
 		if($res=ShopDB::query_one_row($query, false) and $res['count']==0){
 		  return parent::delete();
 		}else{
-		  echo "<div class=err>".in_use."</div>";
+		  echo "<div class=err>".con('in_use')."</div>";
 			return;
 		}
   }
@@ -463,9 +463,8 @@ class Handling Extends Model {
     }
   }
 
-  function _fill ($data, $nocheck=false){
-    parent::_fill($data,$nocheck);
-    if ( $pm = $this->pment()) {
+  function _fill ($data, $nocheck=true){
+    if (parent::_fill($data, $nocheck) and ( $pm = $this->pment())) {
       foreach($pm->extras as $key)
         $this->extra[$key] = is($data[$key], null);
     }

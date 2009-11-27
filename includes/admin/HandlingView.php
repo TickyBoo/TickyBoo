@@ -186,11 +186,11 @@ class HandlingView extends AdminView{
 
     function handling_list (){
   		global $_SHOP;
-  		$pay=Handling::get_payment ();
-  		$send=Handling::get_shipment();
+  		$pay=Handling::getPayment ();
+  		$send=Handling::getShipment();
   		$alt=1;
   		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  		echo "<tr><td class='admin_list_title' colspan='8' align='center'>".handling_title."</td></tr>\n";
+  		echo "<tr><td class='admin_list_title' colspan='8' align='center'>".con('handling_title')."</td></tr>\n";
   		if($hands=Handling::loadAll()){
   			foreach($hands as $hand){
 
@@ -223,7 +223,7 @@ class HandlingView extends AdminView{
                     <a class='link' href='view_handling.php?action=edit&handling_id={$hand->handling_id}'><img src='images/edit.gif' border='0' alt='".edit."' title='".edit."'></a>\n
     				        <a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"view_handling.php?action=remove&handling_id={$hand->handling_id}\";}'><img src='images/trash.png' border='0' alt='".remove."' title='".remove."'></a></td>";
   			 	}
-  				echo "</tr>" . test;
+  				echo "</tr>";
   				$alt=($alt+1)%2;
   			 }
   		 }

@@ -276,7 +276,7 @@ function order_list (){
            <td>
             <a href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand' class='UITabMenuNavOff'>
               ".con($obj['handling_payment'])." / ".con($obj['handling_shipment'])."
-            </a> (<a href='view_handling.php?action=view&handling_id={$hand}' class='UITabMenuNavOff'>
+            </a> (<a href='view_handling.php?action=edit&handling_id={$hand}' class='UITabMenuNavOff'>
                #{$obj['handling_id']} {$obj['handling_sale_mode']}
             </a>)
            </td>\n";
@@ -423,7 +423,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 
   echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
   echo "<tr><td class='admin_list_title' colspan='5' align='center'>".
-  "<a href='view_handling.php?action=view&handling_id={$hand->handling_id}' class=link>#{$hand->handling_id} ({$hand->handling_sale_mode})</a> ".con($hand->handling_shipment).' / '.
+  "<a href='view_handling.php?action=edit&handling_id={$hand->handling_id}' class=link>#{$hand->handling_id} ({$hand->handling_sale_mode})</a> ".con($hand->handling_shipment).' / '.
                    con($hand->handling_payment).
 		   " ({$tr[$order_shipment_status]}/{$tr[$order_payment_status]})
   </td></tr>\n";

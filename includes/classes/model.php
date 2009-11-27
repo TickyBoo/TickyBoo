@@ -183,9 +183,9 @@ class Model {
       return self::MDL_IDENTIFY;
     } elseif ($type == '*') {
       $key = substr($key,1);
-      return MDL_MANDATORY;
+      return self::MDL_MANDATORY;
     }
-    return MDL_NONE;
+    return self::MDL_NONE;
   }
 
   /**

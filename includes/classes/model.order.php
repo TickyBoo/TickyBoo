@@ -868,7 +868,7 @@ class Order Extends Model {
 
   function print_order ($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
     require_once("classes/TemplateEngine.php");
-    require_once("html2pdf/html2pdf.class.php");
+    require_once(LIBS."html2pdf/html2pdf.class.php");
     require_once('classes/gui_smarty.php');
 
     global $_SHOP;
@@ -898,7 +898,7 @@ class Order Extends Model {
       echo 'error: cant load ticket data';
       return FALSE;
     }
-
+    $order['bill'] = array();
     while($data=shopDB::fetch_assoc($res)){
       if($data['category_numbering']=='none'){
         $data['seat_nr']='0';
@@ -911,7 +911,10 @@ class Order Extends Model {
       //compute  barcode
       $data['barcode_text']= sprintf("%08d%s", $data['seat_id'], $data['seat_code']);
       //save the data for the bill
-      $key = "({$data['category_id']},{$data['discount_id']})";
+      $key = "{$data['category_id']}";
+      if ($data['discount_id']) {
+        $key .= "_{$data['discount_id']}";
+      }
 
       if(!isset($order['bill'][$key])){
         $order['bill'][$key]=array(
