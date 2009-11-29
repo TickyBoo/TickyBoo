@@ -59,7 +59,7 @@ class EmailSwiftCompiler {
   function EmailSwiftCompiler (){
   }
   
-  protected function build ($swiftInstance, $data, $lang=0, $testme=false){
+  protected function build (&$swiftInstance, &$data, $lang=0, $testme=false){
     $emailArray = $this->sourcetext;
     $this->data = $data;
     //Build vars
@@ -75,14 +75,13 @@ class EmailSwiftCompiler {
     $swift->setBcc($this->emailBCC);
     
     //No Lang passed pull the default lang
-    if($lang===0){
+    if($lang==0){
       $lang=$this->emailDefLang;
     }
     //No deflang pull the first lang
-    if($lang===0){
+    if($lang==0){
       $lang = $this->emailLangs[0];
     }
-    
     $swift->setSubject($this->emailTemplates[$lang]['template_text']);
     $swift->setBody($this->emailTemplates[$lang]['template_html'],'text/html');
     $swift->addPart($this->emailTemplates[$lang]['template_text'],'text/plain');
@@ -130,7 +129,8 @@ class EmailSwiftCompiler {
     if(is($emailArray['email_templates'],false)){
       foreach($emailArray['email_templates'] as $lang=>$fields){
         $this->emailLangs[] = $lang;
-        $this->emailTemplates[$lang]=array_walk($fields,array(&$this,'recVarToVals'));
+        array_walk($fields,array(&$this,'recVarToVals'));
+        $this->emailTemplates[$lang]=$fields;
       }
     }
     $this->varsBuilt = true;
@@ -144,7 +144,7 @@ class EmailSwiftCompiler {
     require_once("classes/email.swift.compiler.php");
     
     class '.$newClassName.' extends EmailSwiftCompiler {
-      function write($swiftInstance, $data, $lang=0, $testAddress=""){
+      function write(&$swiftInstance, &$data, $lang=0, $testAddress=""){
         $this->build($swiftInstance, $data, $lang, $testAddress);
       }
     }';

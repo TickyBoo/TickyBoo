@@ -94,7 +94,9 @@ class User extends Model{
 
 
   function register ($status, $data, &$err, $mandatory=0, $secure=0, $short=0){
-    $user = new user();
+    $user = new User();
+    //ANNOYING PARENT CHECKS!! :-P
+    $data['user_status']=$status;
     if ($user->CheckValues($data, $status, $mandatory, $secure, $short)){
       if ($status == 2) {
         $query="SELECT count(*) as count
@@ -118,10 +120,11 @@ class User extends Model{
             $query="insert into auth (username, password, user_id, active) VALUES (".
                     _esc($data['user_email']).",".
                     _esc(md5($data['password1'])).",".
-                    _esc($this->user_id).",".
+                    _esc($user->user_id).",".
                     _esc($active).")";
 
             if(!ShopDB::query($query)){
+              $err = con('cant_save_auth');
             	return self::_abort('cant store auth');
             }
             $data['user_id'] = $user->user_id;
@@ -261,24 +264,24 @@ class User extends Model{
    	}
 	}
 
-  private function SendActivatieCode($row, $active, &$errors){
+  public function SendActivatieCode($row, $active, &$errors){
   	require_once('classes/TemplateEngine.php');
-  	require_once('classes/htmlMimeMail.php');
+    require_once('classes/email.sender.php');
     global $_USER_ERROR, $_SHOP;
     // new part
     $email = $data['user_email'] ;
     if (!$tpl = TemplateEngine::getTemplate('Signup_email')) {
       return false;
     }
-    $email= new htmlMimeMail();
     $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
     $row['link']=$_SHOP->root."activation.php?uar=".urlencode($activation);
     $row['activate_code'] = $activation;
-    $tpl->build($email,$row);
-    if($email->send($tpl->to)){
-    	return true;
+    //New Mailer
+    
+    if(EmailSender::send($tpl,$row)){
+      return true;
     } else {
-  		$errors = con("log_err_mailnotsend");
+      $errors = con("log_err_mailnotsend");
     }
   }
 
@@ -299,7 +302,7 @@ class User extends Model{
     }
 
     User::check_NoSpam($secure, $data);
-
+    
     if (!$short and $status==2) {
 
       if(empty($data['password1'])) {

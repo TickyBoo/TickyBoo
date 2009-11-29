@@ -51,6 +51,7 @@ class TemplateEngine {
       if(class_exists($t_class_name)){
         $tpl = new $t_class_name;
         $tpl->sourcetext = $code['template_text'];
+        $tpl->template_type = $code['template_type'];
         $_SHOP->templates[$name]=&$tpl;
         return $tpl;
       }
