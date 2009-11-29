@@ -91,7 +91,7 @@ set_include_path(INC. PATH_SEPARATOR.
                  INC.'pear'.PATH_SEPARATOR.
                  get_include_path());
 // system defines
-                 
+
 define('PM_ZONE', 0);
 define('PM_ROW', 1);
 define('PM_SEAT', 2);
@@ -107,7 +107,7 @@ define('PM_LABEL_TEXT', 3);
 define('PM_STATUS_FREE', 0);
 define('PM_STATUS_OCC', 1);
 define('PM_STATUS_RESP', 2);
-define('PM_STATUS_HOLD', 3);  
+define('PM_STATUS_HOLD', 3);
 
 
 define("SEAT_ERR_INTERNAL",1);

@@ -33,8 +33,8 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
- 
-require_once("includes/config/init_shop.php");
+
+require_once ('includes/config/init_shop.php');
 
 /*/Check page is secure
 if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
@@ -54,7 +54,7 @@ require_once ( 'classes/User_Smarty.php');
 require_once ( 'classes/Order_Smarty.php');
 require_once ( 'classes/gui_smarty.php');
 require_once ( 'classes/Update_Smarty.php');
-require_once("config/init.php");
+require_once ( 'config/init.php');
 
 
 global $_SHOP;

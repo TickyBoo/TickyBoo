@@ -248,55 +248,20 @@ function empt(&$arg , $default=null){
   return $default;
 }
 
-function con($name) {
-   global $_SHOP;
-   if (defined($name)) {
+  function con($name) {
+    global $_SHOP;
+    if (defined($name)) {
       return constant($name);
-   } else {
+    } else {
 /*      if (is_writable($_SHOP->langfile)){
 
         $addcon = "<?php\ndefine('$name','$name');\n?>\n";
         file_put_contents($_SHOP->langfile, $addcon,FILE_APPEND);
       } */
       return $name;
-   }
-}
-
-
-function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
-  Global $_SHOP;
-
-  $mod  = (!empty($mod)) ?$mod:$_REQUEST['mod'];
-  $ctrl = (!empty($ctrl))?$ctrl:$_REQUEST['ctlr'];
-
-  $mod  = (!empty($mod)) ?$mod:'shop';
-  $ctrl = (!empty($ctrl))?$ctrl:'main';
-
-  If ($_SHOP->UseRewriteURL) {
-    $result = $_SHOP->user_root.$mod;
-    if ($ctrl) {
-      $result .= '/'.$ctrl;
-      if ($action) {
-        $result .= '/'.$action;
-      }
-    }
-    IF ($params) {
-      $result .= '?'.$params;
-    }
-  } else {
-    $result = $_SHOP->user_root.'?mod='.$mod;
-    if ($ctrl) {
-      $result .= '&ctrl='.$ctrl;
-      if ($action) {
-        $result .= '&action='.$action;
-      }
-    }
-    IF ($params) {
-      $result .= '&'.$params;
     }
   }
-  return $result;
-}
+
   /**
    * redirect to the given url. if relative the base-url to the framework is added.
    * @param string url to redirect to

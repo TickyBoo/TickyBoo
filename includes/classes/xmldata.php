@@ -55,7 +55,7 @@ class XMLData {
   				}
   			}
   			$names[$i]=shopDB::field_name($res,$i);
-  			$tables[$i]=(strcasecmp($table,shopDB::field_table($res,$i))==0);
+  			$tables[$i]=(strcasecmp($table,shopDB::fieldTable($res,$i))==0);
 
   			if($names[$i]==$pk){
   			  $pc=$i;
@@ -135,7 +135,7 @@ class XMLData {
   	xml_parser_free($xml_parser);
   	return TRUE;
   }
-  
+
   function sql2xml_new($query,$table,$out=SQL2XML_OUT_RETURN,$pk=''){
     Global $_SHOP;
   	if(empty($query)){user_error('cannot export "'.$table.'": empty query');return;}
@@ -152,13 +152,13 @@ class XMLData {
   		$pc=-1;
   		for($i=0;$i<$nf;$i++){
   			if(!$pk){
-  				if(strpos(shopDB::field_flags($res,$i),'primary_key')!==false){
+  				if(strpos(shopDB::fieldFlags($res,$i),'primary_key')!==false){
   					$pc=$i;
   				}
   			}
-  			$names[$i]	= shopDB::alias_field_name($res,$i);
+  			$names[$i]	= shopDB::aliasFieldname($res,$i);
 
-  			$tables[$i]	= (strcasecmp($table,shopDB::field_table($res,$i))==0);
+  			$tables[$i]	= (strcasecmp($table,shopDB::fieldTable($res,$i))==0);
 
   			if($names[$i]==$pk){
   			  $pc=$i;
@@ -245,7 +245,7 @@ class _xmltmp{
 
 	var $inserted=0;
 	var $updated=0;
-	
+
 	function startElement($parser, $name, $attrs){
 		$this->depth++;
 		//row starts
@@ -263,16 +263,16 @@ class _xmltmp{
 	}
 
 	function endElement($parser, $name){
-	
+
 		//field ends
 		if($this->depth==3){
 			$this->query[$name]=$this->value;
-    
+
 		//row ends
 		}elseif($this->depth==2){
-			$this->write();	
+			$this->write();
 		}
-		
+
 		$this->depth--;
 	}
 
@@ -282,17 +282,17 @@ class _xmltmp{
 			$this->value.=$data;
 		}
 	}
-	
+
 	function write(){
 	  require_once('classes/ShopDB.php');
 		global $_SHOP;
 		$query='select count(*) from `'.$this->table.
 		'` where `'.$this->pk.'`='.ShopDB::quote($this->query[$this->pk]);
-		
+
 		if($res = ShopDB::query_one_row($query, false)){
 		  $count=$res[0];
 		}
-		
+
 		if($count){
 			//update
 			$query='update `'.$this->table.'` set ';
@@ -304,17 +304,17 @@ class _xmltmp{
 			  $query.='`'.$field.'`='.ShopDB::quote($value);
 				$next=false;
 			}
-			
+
 			$query.=' where `'.$this->pk.'`='.ShopDB::quote($this->query[$this->pk]);
-			
+
 			//echo $query."<br>\n";
 			ShopDB::query($query);
-			
+
 			$this->updated+=shopDB::affected_rows();
-					
+
 		}else{
 			//insert
-		
+
 			$query='insert into `'.$this->table.'` set ';
 			$next=true;
 			foreach($this->query as $field=>$value){
@@ -327,7 +327,7 @@ class _xmltmp{
 			  $query.='`'.$field.'`='.ShopDB::quote($value);
 				$next=false;
 			}
-			
+
 			//echo $query."<br>\n";
 			ShopDB::query($query);
 

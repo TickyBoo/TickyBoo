@@ -37,17 +37,16 @@ define("DB_DEADLOCK", 1213);
 
 class ShopDB {
     static $prefix = '';
-    static $link;
+    static $link = null;
     static $db_trx_started = 0;
     // /
     // new SQLi extenstions
-    function init ()
-    {
+    static function init ($canDie=true) {
         global $_SHOP;
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
 
-        trace("\n Database Init");
+//        trace("\n Database Init");
 
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
@@ -59,24 +58,29 @@ class ShopDB {
             } else {
               $port = 3306;
             }
-            $link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, $_SHOP->db_name, $port);
+            $link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, '', $port);
+
+            $link->select_db($_SHOP->db_name);
             /*
              * This is the "official" OO way to do it,
              * BUT $connect_error was broken until PHP 5.2.9 and 5.3.0.
              */
             if ($link->connect_error) {
-                die('Connect Error (' . $link->connect_errno . ') '
-                        . $link->connect_error);
+              $_SHOP->db_errno = $link->connect_errno;
+              $_SHOP->db_error = 'Connect Error (' . $link->connect_errno . ') ' . $link->connect_error;
+            } elseif (mysqli_connect_error()) {
+              // Use this instead of $connect_error if you need to ensure
+              // compatibility with PHP versions prior to 5.2.9 and 5.3.0.
+              $_SHOP->db_errno =  mysqli_connect_errno();
+              $_SHOP->db_error = 'Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error();
             }
+            if (isset($_SHOP->db_error))
+              if ($canDie){
+                die($_SHOP->db_error);
+              } else {
+                return false;
+              }
 
-            /*
-             * Use this instead of $connect_error if you need to ensure
-             * compatibility with PHP versions prior to 5.2.9 and 5.3.0.
-             */
-            if (mysqli_connect_error()) {
-                die('Connect Error (' . mysqli_connect_errno() . ') '
-                        . mysqli_connect_error());
-            }
             ShopDB::$link = $link;
             ShopDB::checkdatabase(true, false);
 
@@ -96,7 +100,106 @@ class ShopDB {
         }
         return true;
     }
-    // just requires PHP5 and MySQLi And mysql >4.1
+
+    static function close(){
+      if (isset(ShopDB::$link)) {
+        if ( ShopDB::$link->close()){
+          ShopDB::$link = null;
+          return true;
+        }
+      }
+      return false;
+    }
+
+    static function GetServerInfo () {
+      if (!ShopDB::$link) {
+         self::init();
+      }
+      return mysqli_get_server_info(ShopDB::$link);
+    }
+
+    static function begin ($name='') {
+        global $_SHOP;
+        unset($_SHOP->db_errno);
+        unset($_SHOP->db_error);
+        if (self::$db_trx_started===0) {
+            if (!ShopDB::$link) {
+                self::init();
+            }
+            if (ShopDB::$link->autocommit(false)) {
+                self::$db_trx_started = 1;
+                self::dblogging("[Begin {$name}]");
+//                trace("[Begin {$name}]");
+                return true;
+            } else {
+                $_SHOP->db_error= mysqli_error(ShopDB::$link);
+                self::dblogging("[Begin {$name}]Error: $_SHOP->db_error");
+                trace("[Begin {$name}]Error: $_SHOP->db_error");
+                user_error($_SHOP->db_error);
+                return false;
+            }
+        } else {
+            self::$db_trx_started++;
+            self::dblogging("[Begin {$name}] ".self::$db_trx_started);
+//            trace("[Begin {$name}] ".self::$db_trx_started);
+            return true;
+        }
+    }
+
+    static function commit ($name='', $retaining = false)
+    {
+        global $_SHOP;
+        if (($retaining && self::isTxn()) || self::$db_trx_started==1) {
+            unset($_SHOP->db_errno);
+            unset($_SHOP->db_error);
+            if (ShopDB::$link->commit()) {
+              if (!$retaining){
+                ShopDB::$link->autocommit(true);
+                self::$db_trx_started = 0;
+                self::dblogging("[Commit {$name}]");
+              } else
+                self::dblogging("[Commitremaining {$name}]");
+              return true;
+            } else {
+              user_error($_SHOP->db_error= ShopDB::$link->error);
+              self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
+//                trace("[Commit {$name}] Error: $_SHOP->db_error");
+              self::Rollback($name);
+              return false;
+            }
+        } elseif (self::$db_trx_started > 1) {
+            self::dblogging("[Commit {$name}] ".self::$db_trx_started);
+//            trace("[Commit {$name}] ".self::$db_trx_started);
+            self::$db_trx_started--;
+            return true;
+        } else {
+            self::dblogging("[Commit {$name}] - no transaction");
+             return false;
+//            trace("[Commit {$name}] - no transaction");
+        }
+    }
+    static function rollback ($name='')
+    {
+        global $_SHOP;
+        if (self::$db_trx_started) {
+            unset($_SHOP->db_errno);
+            unset($_SHOP->db_error);
+            if (ShopDB::$link->rollback()) {
+                ShopDB::$link->autocommit(true);
+                self::dblogging("[Rollback {$name}] ".self::$db_trx_started);
+//                trace("[Rollback {$name}] ".self::$db_trx_started);
+                self::$db_trx_started= 0;
+                return true;
+            } else {
+                user_error($_SHOP->db_error= ShopDB::$link->error);
+                self::dblogging("[rollback {$name}]Error: $_SHOP->db_error");
+//                trace("[rollback {$name}]Error: $_SHOP->db_error");
+            }
+        }  else {
+//            self::dblogging("[Rollback {$name}] no transaction");
+//            trace("[Rollback {$name}] no transaction");
+        }
+    }
 
     /**
      * ShopDB::isTxn()
@@ -118,102 +221,8 @@ class ShopDB {
       return self::$db_trx_started >0;
     }
 
-    function close(){
-        global $_SHOP;
 
-        if (isset(ShopDB::$link)) {
-           ShopDB::$link->close();
-        }
-    }
-
-    function GetServerInfo () {
-        global $_SHOP;
-        if (!ShopDB::$link) {
-           self::init();
-        }
-        return mysqli_get_server_info(ShopDB::$link);
-    }
-
-    function begin ($name='')
-    {
-        global $_SHOP;
-        if (self::$db_trx_started===0) {
-            unset($_SHOP->db_errno);
-            unset($_SHOP->db_error);
-            if (!ShopDB::$link) {
-                self::init();
-            }
-            if (ShopDB::$link->autocommit(false)) {
-                self::$db_trx_started = 1;
-                self::dblogging("[Begin {$name}]");
-                trace("[Begin {$name}]");
-                return true;
-            } else {
-                user_error($_SHOP->db_error= mysqli_error(ShopDB::$link));
-                self::dblogging("[Begin {$name}]Error: $_SHOP->db_error");
-                trace("[Begin {$name}]Error: $_SHOP->db_error");
-                return false;
-            }
-        } else {
-            self::$db_trx_started++;
-            self::dblogging("[Begin {$name}] ".self::$db_trx_started);
-            trace("[Begin {$name}] ".self::$db_trx_started);
-            return true;
-        }
-    }
-
-    function commit ($name='')
-    {
-        global $_SHOP;
-        if (self::$db_trx_started==1) {
-            unset($_SHOP->db_errno);
-            unset($_SHOP->db_error);
-            if (ShopDB::$link->commit()) {
-                ShopDB::$link->autocommit(true);
-                self::$db_trx_started = 0;
-                self::dblogging("[Commit {$name}]");
-                trace("[Commit {$name}]");
-                return true;
-            } else {
-                user_error($_SHOP->db_error= ShopDB::$link->error);
-                self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
-                trace("[Commit {$name}] Error: $_SHOP->db_error");
-                self::Rollback($name);
-            }
-        } elseif (self::$db_trx_started > 1) {
-            self::dblogging("[Commit {$name}] ".self::$db_trx_started);
-            trace("[Commit {$name}] ".self::$db_trx_started);
-            self::$db_trx_started--;
-            return true;
-        } else {
-            self::dblogging("[Commit {$name}] - no transaction");
-            trace("[Commit {$name}] - no transaction");
-        }
-    }
-    function rollback ($name='')
-    {
-        global $_SHOP;
-        if (self::$db_trx_started) {
-            unset($_SHOP->db_errno);
-            unset($_SHOP->db_error);
-            if (ShopDB::$link->rollback()) {
-                ShopDB::$link->autocommit(true);
-                self::dblogging("[Rollback {$name}] ".self::$db_trx_started);
-                trace("[Rollback {$name}] ".self::$db_trx_started);
-                self::$db_trx_started= 0;
-                return true;
-            } else {
-                user_error($_SHOP->db_error= ShopDB::$link->error);
-                self::dblogging("[rollback {$name}]Error: $_SHOP->db_error");
-                trace("[rollback {$name}]Error: $_SHOP->db_error");
-            }
-        }  else {
-//            self::dblogging("[Rollback {$name}] no transaction");
-//            trace("[Rollback {$name}] no transaction");
-        }
-    }
-
-    function query($query)
+    static function query($query)
     {
         global $_SHOP;
         // echo  "QUERY: $query <br>";
@@ -221,8 +230,7 @@ class ShopDB {
             self::init();
         }
 		// Optionally allow extra args which are escaped and inserted in place of ?
-  			if(func_num_args() > 1)
-  			{
+  			if(func_num_args() > 1) {
   				$args = func_get_args();
   				foreach($args as &$item)
   					$item = ShopDB::quote($item);
@@ -254,12 +262,13 @@ class ShopDB {
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 self::$db_trx_started = 0;
             }
+        } else {
+          $res->query = $query;
         }
         return $res;
     }
 
-    function insert_id()
-    {
+    static function insert_id() {
         global $_SHOP;
         if (!ShopDB::$link) {
           self::init();
@@ -267,31 +276,26 @@ class ShopDB {
         return ShopDB::$link->insert_id;
     }
 
-    function query_one_row ($query, $assoc = true){
+    static function query_one_row ($query, $assoc = true) {
        $assoc = ($assoc)? MYSQLI_ASSOC:MYSQLI_NUM;
         if ($result = self::query($query) and $row = $result->fetch_array($assoc)) {
             return $row;
         }
     }
 
-    function lock ($name, $time = 30)
-    {
+    static function lock ($name, $time = 30) {
         $query_lock = "SELECT GET_LOCK('SHOP_$name','$time')";
-        trace(" Database Lock: ".$query_lock."\n");
         if ($res = self::query($query_lock) and $row = $res->fetch_array()) {
             return $row[0];
         }
     }
 
-    function unlock ($name)
-    {
+    static function unlock ($name) {
         $query_lock = "SELECT RELEASE_LOCK('SHOP_$name')";
-        trace(" Database Unlock: ".$query_lock."\n");
         self::query($query_lock);
     }
 
-    function affected_rows()
-    {
+    static function affected_rows() {
       global $_SHOP;
         if (!isset(ShopDB::$link)) {
             self::init();
@@ -299,58 +303,50 @@ class ShopDB {
         return ShopDB::$link->affected_rows;
     }
 
-    function fetch_array($result)
-    {
-      global $_SHOP;
+    static function fetch_array($result) {
       if ($result)
         return $result->fetch_array();
     }
 
-    function fetch_assoc($result)
-    {
+    static function fetch_assoc($result) {
       if ($result)
         return $result->fetch_assoc();
     }
 
-    function fetch_object($result)
-    {
+    static function fetch_object($result) {
       if ($result)
         return $result->fetch_object();
     }
 
-    function fetch_row($result)
-    {
+    static function fetch_row($result) {
       if ($result)
         return $result->fetch_row()  ;
     }
 
-    function num_rows($result)
-    {
+    static function num_rows($result) {
       if ($result)
         return $result->num_rows ;
     }
 
-    function error() {
+    static function error() {
       global $_SHOP;
       return $_SHOP->db_error;
     }
 
-    function errno(){
+    static function errno() {
       global $_SHOP;
       return $_SHOP->db_errno;
     }
 
-    function quote ($s, $quote=true)
-    {
+    static function quote ($s, $quote=true) {
       $str = self::escape_string($s);
       return (!isset($s) or is_null($s)) ? 'NULL' : (($quote)?"'".$str."'":$str);
     }
 
 
-		function quoteParam($var) { return self::quote($_REQUEST[$var]); }
+		static function quoteParam($var) { return self::quote($_REQUEST[$var]); }
 
-    function escape_string($escapestr ){
-      global $_SHOP;
+    static function escape_string($escapestr) {
       // magic_quotes will be checked in the init.php procedure.
 //      if (!get_magic_quotes_gpc ()) {
         if (!isset(ShopDB::$link)) {
@@ -365,13 +361,13 @@ class ShopDB {
 //      }
     }
 
-    function freeResult($result) {
+    static function freeResult($result) {
       if (isset(ShopDB::$link) and isset($result)) {
         ShopDB::$link->free;
       }
     }
 
-    function tblclose($result) {
+    static function tblclose($result) {
       if (isset(ShopDB::$link) and isset($result)) {
         $result->close();
       }
@@ -385,8 +381,7 @@ class ShopDB {
      * @param string The SQL query
      * @param string The common table prefix
      */
-    function replacePrefix( $sql, $prefix='#__' )
-    {
+    static function replacePrefix( $sql, $prefix='#__' ) {
       $sql = trim( $sql );
 
       $escaped = false;
@@ -456,12 +451,12 @@ class ShopDB {
     }
 
   	//function to find the number of fields in a recordSet
-  	function num_fields($result) {
+  	static function fieldCount($result) {
   		return $result->field_count;
   	}
 
   	//function to find the field flags in a recordSet
-  	function field_flags($result,$i) {
+  	static function fieldFlags($result,$i) {
   		$fld_array = $result->fetch_field_direct($i);
   		if($fld_array->flags & 2)
   			return "primary_key";
@@ -470,19 +465,19 @@ class ShopDB {
   	}
 
   	//function to find the field name from recordSet
-  	function field_name($result,$i) {
+  	static function fieldName($result,$i) {
   		$fld_array = $result->fetch_field_direct($i);
   		return $fld_array->orgname;
   	}
 
   	//function to find the alias field name from recordSet
-  	function alias_field_name($result,$i) {
+  	static function aliasFieldname($result,$i) {
   		$fld_array = $result->fetch_field_direct($i);
   		return $fld_array->name;
   	}
 
   	//function to find the table of a field name from recordSet
-  	function field_table($result,$i) {
+  	static function fieldTable($result,$i) {
   		$fld_array = $result->fetch_field_direct($i);
   		return $fld_array->orgtable;
   	}
@@ -496,8 +491,7 @@ class ShopDB {
     * @param string $tablename The table name to check for
     **/
 
-    function FieldList ($TableName, $prefix = '')
-    {
+    static function FieldList ($TableName, $prefix = '') {
         $Fields = Array ();
 
         $result = self::Query("SHOW COLUMNS FROM `$TableName`" . ((!empty($prefix))?" LIKE '$prefix%'":""));
@@ -513,8 +507,7 @@ class ShopDB {
         Return $Fields;
     }
 
-    function FieldListExt ($TableName, $prefix = '')
-    {
+    static function FieldListExt ($TableName, $prefix = '') {
         $Fields = Array ();
 
         $result = self::Query("SHOW COLUMNS FROM `$TableName`" . ((!empty($prefix))?" LIKE '$prefix%'":""));
@@ -533,8 +526,7 @@ class ShopDB {
         Return $Fields;
     }
 
-    function FieldExists ($tablename, $Fieldname)
-    {
+    static function FieldExists ($tablename, $Fieldname) {
         $Fields = self::FieldList ($tablename);
 
         if (($tables) && in_array($Fieldname, $Fields)) {
@@ -544,7 +536,7 @@ class ShopDB {
         }
     }
 
-    function TableList ($prefix = ''){
+    static function TableList ($prefix = ''){
         $tables = Array ();
         $result = self::Query("SHOW TABLE" . ((!empty($prefix))?" status where lower(name)=lower('$prefix')":"s"));
         if (!$result) {
@@ -558,18 +550,23 @@ class ShopDB {
         Return $tables;
     }
 
-    function TableExists ($tablename)
-    {
+    static function TableExists ($tablename) {
         $tables = self::TableList ();
-
-        if (($tables) && in_array($tablename, $tables)) {
+        if (($tables) && (in_array($tablename, $tables)) || in_array( strtolower($tablename), $tables)) {
             return true;
         }else {
             return false;
         }
     }
 
-    function checkdatabase($update=false, $viewonly=false){
+    static function dblogging($debug) {
+        global $_SHOP;
+        $handle=@fopen(INC."temp".DS."shopdb.log","a");
+        @fwrite($handle, date('c',time()).' '. $debug."\n");
+        @fclose($handle);
+    }
+
+    static function checkdatabase($update=false, $viewonly=false){
       global $_SHOP;
       $trace = $_SHOP->trace_on;
       $_SHOP->trace_on=false;
@@ -582,7 +579,7 @@ class ShopDB {
       }
 
       if ($update) {
-        require_once($dbstructfile);
+        require($dbstructfile);
         if ($errors = ShopDB::DatabaseUpgrade($tbls, true, $viewonly)) {
           $handle=fopen($logfile,"a");
           fwrite($handle, date('c',time()).": \n". print_r($errors,true). "\n");
@@ -669,7 +666,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       Return $keys;
     }
 
-    function DatabaseUpgrade($Struction, $logall =false, $viewonly=false, $collation='utf8_general_ci') {
+    static function DatabaseUpgrade($Struction, $logall =false, $viewonly=false, $collation='utf8_general_ci') {
       $error = '';  $returning = array();
       foreach ($Struction as $tablename => $fields) {
         $update = false; $datainfo = ''; $error='';
@@ -796,7 +793,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
       return $returning;
     }
 
-    function Upgrade_Autoincrements(){
+    static function Upgrade_Autoincrements(){
         $error = '';
         $Struction = self::TableList();
 
@@ -809,13 +806,5 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
         }
         return $error;
     }
-
-    function dblogging($debug) {
-        global $_SHOP;
-        $handle=fopen(INC."temp".DS."shopdb.log","a");
-        fwrite($handle, date('c',time()).' '. $debug."\n");
-        fclose($handle);
-    }
-
 }
 ?>
