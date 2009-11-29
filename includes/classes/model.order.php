@@ -768,7 +768,7 @@ class Order Extends Model {
       $query="DELETE o.*, os.*
               FROM `Order` o
                 LEFT JOIN Seat ON o.order_id=seat_order_id
-                LEFT JOIN `order_status` os ON o.order_id = os.order_id
+                LEFT JOIN `order_status` os ON order_id = os_order_id
               WHERE o.order_status='trash'
                 AND seat_id is NULL";
 

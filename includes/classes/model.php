@@ -142,6 +142,9 @@ class Model {
         if(empty($arr[$key])){$this->_errors[$key]=con('mandatory');}
       }
     }
+    if (count($this->_errors)!==0) {
+      trace($this->_tableName.": \n".print_r($this->_errors));
+    }
     return (count($this->_errors)==0);
   }
 

@@ -400,9 +400,8 @@ class Seat  Extends Model {
     return TRUE;
   }
 
-  function publish ($seat_event_id,
-                    $seat_row_nr,$seat_nr,
-		                $seat_zone_id,$seat_pmp_id,$seat_category_id){
+  function publish ($seat_event_id, $seat_row_nr, $seat_nr,
+		                $seat_zone_id, $seat_pmp_id, $seat_category_id){
     global $_SHOP;
     $seat_zone_id  =($seat_zone_id===0)?null:$seat_zone_id;
     $seat_event_id =($seat_event_id===0)?null:$seat_event_id;

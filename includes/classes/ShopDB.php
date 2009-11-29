@@ -39,7 +39,6 @@ class ShopDB {
     static $prefix = '';
     static $link;
     static $db_trx_started = 0;
-    static $db_trx_startedi = 0;
     // /
     // new SQLi extenstions
     function init ()
@@ -181,10 +180,10 @@ class ShopDB {
                 trace("[Commit {$name}] Error: $_SHOP->db_error");
                 self::Rollback($name);
             }
-        } elseif (self::$db_trx_startedi > 1) {
+        } elseif (self::$db_trx_started > 1) {
             self::dblogging("[Commit {$name}] ".self::$db_trx_started);
             trace("[Commit {$name}] ".self::$db_trx_started);
-            self::$db_trx_startedi--;
+            self::$db_trx_started--;
             return true;
         } else {
             self::dblogging("[Commit {$name}] - no transaction");
@@ -253,7 +252,7 @@ class ShopDB {
             self::dblogging($query);
             trace($query);
             if ($_SHOP->db_errno == DB_DEADLOCK) {
-                $_SHOP->db_trx_started = false;
+                self::$db_trx_started = 0;
             }
         }
         return $res;

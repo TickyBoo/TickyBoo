@@ -38,12 +38,18 @@ $orphancheck = array();
 
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null,
-                            category_numbering,  category_size -(SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id ) , null
+                            category_numbering,  category_size -(SELECT count(seat_id)
+                                                                 FROM Seat s
+                                                                 WHERE s.seat_event_id = e.event_id
+                                                                 and s.seat_category_id = category_id ) , null
 	FROM Event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
 		AND lower(e.event_status) <> 'unpub'
 		AND lower(e.event_rep) LIKE ('%sub%')
-		AND category_size <> (SELECT count(seat_id) FROM Seat s WHERE s.seat_event_id = e.event_id and s.seat_category_id = category_id )
+		AND category_size <> (SELECT count(seat_id)
+                          FROM Seat s
+                          WHERE s.seat_event_id = e.event_id
+                          and s.seat_category_id = category_id )
 ";
 
 $orphancheck[]="
@@ -305,7 +311,7 @@ class orphans {
         $all = PlaceMapPart::loadAllFull( $pm_id);
 
         echo "<pre>";
-        // PRint_r($all);
+         PRint_r($seats);
         if ($all) {
           foreach($all as $pmp) {
            // print_r($pmp->categories);
@@ -338,12 +344,14 @@ class orphans {
         if(!$cats){
           return $this->_abort('No Categories found');
         }
-        //print_r($cats);
         foreach($cats as $cat_ident=>$cat){
-          if($cat->event_status !== 'unpub' and $cat->category_numbering =='none' ){//and $cat->category_size>0
+          if($cat->event_status !== 'unpub' && $cat->category_numbering =='none' &&
+             count($seats[$cat->category_id]) <> $cat->category_size ){//and $cat->category_size>0
             $stats[$cat->category_ident] = count($seats[$cat->category_id]);
+            print_r(count($seats[$cat->category_id]));
+            print_r($cat);
             for($i=count($seats[$cat->category_id]);$i<$cat->category_size;$i++){
-              if($seat_id = Seat::publish($fix[2],null,null,null,null,$cat->category_id)) {
+              if($seat_id = Seat::publish($fix[2],null,0,null,null,$cat->category_id)) {
                 echo $seat_id,'|';
               }
               $stats[$cat->category_ident]++;

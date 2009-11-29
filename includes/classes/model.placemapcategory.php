@@ -41,13 +41,6 @@ class PlaceMapCategory Extends Model {
                                  'category_size', 'category_max', 'category_min', 'category_template',
                                  '*category_color', 'category_data');
 
-  var $category_id;
-  var $category_name;
-  var $category_price;
-  var $category_template;
-  var $category_color;
-  var $category_size;
-
   function create($category_pm_id=0,
                   $category_name=0,
                   $category_price=0,
@@ -112,8 +105,8 @@ class PlaceMapCategory Extends Model {
   function loadFull ($category_id){
     global $_SHOP;
 
-    $query="select *
-           from Category LEFT JOIN Event ON event_id=category_event_id
+    $query="select c.*, e.event_status
+            from Category c LEFT JOIN Event e ON event_id=category_event_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
@@ -126,7 +119,9 @@ class PlaceMapCategory Extends Model {
 
   function loadAll ($pm_id){
     global $_SHOP;
-    $query="select * from Category LEFT JOIN Color ON category_color=color_id where category_pm_id=$pm_id";
+    $query="select c.*, e.event_status
+            from Category c LEFT JOIN Event e ON event_id=category_event_id
+            where category_pm_id=$pm_id";
 
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_assoc($res)){

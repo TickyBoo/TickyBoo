@@ -580,8 +580,18 @@ function orphanCheck(){
     //Turn Off trace to run the Orphan check so we only get querys
     $_SHOP->trace_on=false;
     $data = Orphans::getlist($keys, false);
+    $keys =array_merge(array('_table            ','_id     ' ),$keys);
+    $text = implode('|',$keys)."\n";
+    foreach($data as $row) {
+      $send = array();
+      foreach($keys as $key) {
+        $send[] = str_pad ( (isset($row[trim($key)]))?$row[trim($key)]:'',strlen($key));
+      }
+      $text .= implode('|',$send)."\n";
+
+    }
     $_SHOP->trace_on=true;
-    trace("Orphan Check Dump: ".var_export($data,true));
+    trace("Orphan Check Dump: \n".$text);
   }
 }
 
