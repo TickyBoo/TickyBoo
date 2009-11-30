@@ -309,11 +309,10 @@ $tbls['order_status']['engine'] = 'InnoDB';
 $tbls['order_status']['remove'] = array ('id','order_id','changed','status_from','status_to','changed_by','action','description');
 
 $tbls['Organizer']['fields'] = array(
-  'organizer_nickname' => " varchar(10) NOT NULL DEFAULT ''",
   'organizer_name' => " varchar(100) NOT NULL DEFAULT ''" ,
   'organizer_address' => " varchar(100) NOT NULL DEFAULT ''" ,
-  'organizer_plz' => " varchar(100) NOT NULL DEFAULT ''",
-  'organizer_ort' => " varchar(100) NOT NULL DEFAULT ''" ,
+  'organizer_plz' => " varchar(100) NOT NULL DEFAULT ''", // = zip
+  'organizer_ort' => " varchar(100) NOT NULL DEFAULT ''" , // = city
   'organizer_state' => " varchar(50) DEFAULT NULL",
   'organizer_country' => " varchar(50) DEFAULT NULL",
   'organizer_email' => " varchar(100) NOT NULL DEFAULT ''" ,

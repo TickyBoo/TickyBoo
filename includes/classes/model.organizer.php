@@ -37,10 +37,10 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class Organizer  Extends Model {
   protected $_idName    = '';
   protected $_tableName = 'Organizer';
-  protected $_columns   = array( '*organizer_name', '*organizer_address', '*organizer_plz', '*organizer_zip',
-                                 '*organizer_city', 'organizer_country', 'organizer_state', 'organizer_phone',
-                                 'organizer_fax', '*organizer_email', 'organizer_place', 'organizer_nickname',
-                                 '*organizer_currency', 'organizer_logo', '*organizer_nickname');
+  protected $_columns   = array( '*organizer_name', '*organizer_address', '*organizer_ort',
+                                 '*organizer_plz', 'organizer_country', 'organizer_state',
+                                 'organizer_fax', '*organizer_email', 'organizer_place',
+                                 'organizer_phone','*organizer_currency', 'organizer_logo');
 
   function load ($dummy = 0){
     $query = "select * from Organizer limit 1";
@@ -53,6 +53,24 @@ class Organizer  Extends Model {
 
   function save() {
     return parent::update();
+  }
+
+  function checkValues($arr){
+   //if(empty($data['user_email'])){$err['user_email']=mandatory;}
+    if($email=$arr['organizer_email']){
+      $check_mail = preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email );
+      if(!$check_mail){$this->seterror(con('not_valid_email'),'organizer_email');}
+    }
+    return parent::checkValues($arr);
+  }
+
+  function _fill($arr, $nocheck=true){
+    if (parent::_fill($arr, $nocheck)){
+      if (!$this->fillFilename('organizer_logo')){
+        $this->seterror(con('img_loading_problem'), 'organizer_logo');
+      } else return true;
+    }
+    return false;
   }
 }
 ?>

@@ -93,8 +93,7 @@ class Model {
 
     $sql = "UPDATE `{$this->_tableName}` SET $values";
     if ($this->_idName){
-      $id  = _esc($this->id);
-      $sql .= " WHERE `{$this->_idName}` = $id "  ;
+      $sql .= " WHERE `{$this->_idName}` = "._esc($this->id)  ;
     }
     $sql .= " LIMIT 1";
     if (ShopDB::query($sql)) {
@@ -210,6 +209,38 @@ class Model {
       return parent::__get($key);
     }*/
   }
+
+    function fillFilename ($name, $removefile= false) {
+      global $_SHOP;
+      $remove = 'remove_' . $name;
+      if (isset($this->$remove)) {
+        if ($removefile) {
+          unlink( $_SHOP->files_dir . DS  .$this->$name);
+        }
+        $this->$name = '';
+       // print_r($this);
+      } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
+        if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) { echo 'match';
+            return false;
+        }
+
+        $ext = strtolower($ext[1]);
+        if (!in_array($ext, $_SHOP->allowed_uploads)) { echo 'ext';
+            return false;
+        }
+
+        $doc_name = strtolower($this->_tableName) . '_' . $this->id . '.' . $ext;
+
+        if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir . DS . $doc_name)) { echo 'move';
+            return false;
+        }
+
+        chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
+        $this->$name = $doc_name;
+       // print_r($this);
+      }
+      return true;
+    }
 
   function _myErrorHandler($errno, $errstr, $errfile, $errline) {
     if($errno!=2){

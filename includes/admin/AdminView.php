@@ -295,10 +295,11 @@ class AdminView extends AUIComponent {
       }else{
         $prefix = "{$name}";
       }
-        echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
-              <td class='admin_value'><input type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
-              <span class='err'>{$err[$name]}</span>
-              </td></tr>\n";
+      $err =(isset($err[$name]))?$err[$name]:'';
+      echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+            <td class='admin_value'><input type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
+            <span class='err'>{$err}</span>
+            </td></tr>\n";
     }
 
     function save_paper_format ($name, &$data, &$err)

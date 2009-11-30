@@ -264,13 +264,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 //loading organizer attributes
   if(empty($_SESSION['_SHOP_ORGANIZER_DATA'])){
-    $query="SELECT * FROM Organizer LIMIT 1";
+     $_SESSION['_SHOP_ORGANIZER_DATA'] = Organizer::load();
+	}
 
-    if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
-    	// Some mysql settings WONT return objects and return an array instead.
-		//Take this into consideration in the future.
-      $_SESSION['_SHOP_ORGANIZER_DATA'] = (object)$data;
-	}
-	}
   $_SHOP->organizer_data=(object)$_SESSION['_SHOP_ORGANIZER_DATA'];
 ?>

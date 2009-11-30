@@ -37,7 +37,7 @@ require_once("admin/AdminView.php");
 
 class OrganizerView extends AdminView{
 
-  function organizer_form (&$data, &$err,$title,$mode){
+  function organizer_form ($data, $err,$title){
     global $_SHOP;
 
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -49,7 +49,7 @@ class OrganizerView extends AdminView{
     $this->print_input('organizer_plz',$data, $err,25,100);
     $this->print_input('organizer_ort',$data, $err,25,100);
     $this->print_input('organizer_state',$data, $err,25,100);
-    echo "<tr><td class='admin_name'>" . organizer_country . "</td><td class='admin_value'>";
+    echo "<tr><td class='admin_name'>" . con('organizer_country') . "</td><td class='admin_value'>";
     $this->print_countrylist('organizer_country', $data['organizer_country'], $err);
     echo "</td></tr>";
 
@@ -60,10 +60,13 @@ class OrganizerView extends AdminView{
 
     $this->print_file('organizer_logo',$data,$err);
 
-    echo "<tr><td align='center' class='admin_value' colspan='2'>
-           <input type='submit' name='save' value='".save."'> &nbsp;";
-
-    echo "<input type='reset' name='reset' value='".res."'></td></tr>";
+    echo "
+          <tr>
+            <td align='center' class='admin_value' colspan='2'>
+              <input type='submit' name='save' value='".con('save')."'> &nbsp;
+              <input type='reset' name='reset' value='".con('res')."'>
+            </td>
+          </tr>";
 
     echo "</form></table>\n";
   }
@@ -71,42 +74,17 @@ class OrganizerView extends AdminView{
   function draw () {
   global $_SHOP;
     $org = Organizer::load();
-    if($_POST['save']){
-      if(!$this->organizer_check($_POST,$err)){
-        $this->organizer_form($_POST, $err, con('organizer_update_title'), "update");
-      }else{
-        $org->fillPost();
-        $org->save();
-
-        if(!$this->logo_post($_POST, 0)){
-          $err['organizer_logo'] = con('img_loading_problem');
-        }
+    if(isset($_POST['save'])){
+      if($org->fillPost() && $org->save()) {
+        $_SESSION['_SHOP_ORGANIZER_DATA'] = $org;
       }
     }
-    $row=(ARRAY)$org;
-    $_SESSION['_SHOP_ORGANIZER_DATA'] = $row;
-    $this->organizer_form($row, $err, con('organizer_update_title'), "update");
+    $this->organizer_form((ARRAY)$org, $org->errors(), con('organizer_update_title'));
   }
 
-  function logo_post ($data,$organizer_id){
-    global $_SHOP;
-  	return $this->file_post($data, 0, 'Organizer', 'organizer','_logo');
+  function logo_post ($data){
+  	return $this->file_post($data, null, 'Organizer', 'organizer','_logo');
   }
 
-  function organizer_check (&$data, &$err){
-    global $_SHOP;
-    if(empty($data['organizer_name'])){$err['organizer_name']=mandatory;}
-    if(empty($data['organizer_currency'])){$err['organizer_currency']=mandatory;}
-    if(empty($data['organizer_address'])){$err['organizer_address']=mandatory;}
-    if(empty($data['organizer_plz'])){$err['organizer_plz']=mandatory;}
-    if(empty($data['organizer_ort'])){$err['organizer_ort']=mandatory;}
-
-    //if(empty($data['user_email'])){$err['user_email']=mandatory;}
-    if($email=$data['organizer_email']){
-      $check_mail = preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email );
-      if(!$check_mail){$err['organizer_email']=not_valid_email;}
-    }
-    return empty($err);
-  }
 }
 ?>

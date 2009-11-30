@@ -690,6 +690,16 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
           $oldkey = '';
           $primary ='';
           $txt = '';
+          if (isset($fields['renamefield'])) {
+            foreach ($fields['renamefield'] as $key => $info) {
+              if (stripos($info,'AUTO_INCREMENT') !== false) $primary = $key;
+              if (array_key_exists($key, $tblFields['fields'])) {
+                  $datainfo .= "Change $tablename.$key into $info\n";
+                  $update = true;
+                  $sql .= ", CHANGE `{$key}` `{$info}` {$tblFields['fields'][$key]}";
+              }
+            }
+          }
           foreach ($fields['fields'] as $key => $info) {
             if (stripos($info,'AUTO_INCREMENT') !== false) $primary = $key;
             if (!array_key_exists($key, $tblFields['fields'])) {
