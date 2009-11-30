@@ -24,10 +24,10 @@ class TestOfBasic extends UnitTestCase {
     }
 
     function testBasicFormatDate() {
-       $this->assertIdentical('01 05 2009', formatdate('2009-05-01',"%d %m %Y"),'%s 2009-05-01');
-       $this->assertIdentical('01 05 2009', formatdate('01-05-2009',"%d %m %Y"),'%s 01-05-2009');
-       $this->assertIdentical('01 05 2009', formatdate('05/01/2009',"%d %m %Y"),'%s 05/01/2009');
-       $this->assertIdentical('01 05 2009', formatdate('01.05.2009',"%d %m %Y"),'%s 01.05.2009');
+       $this->assertIdentical('01 05 2009', formatdate('2009-05-01',"%d %m %Y"),'2009-05-01');
+       $this->assertIdentical('01 05 2009', formatdate('01-05-2009',"%d %m %Y"),'01-05-2009');
+       $this->assertIdentical('01 05 2009', formatdate('05/01/2009',"%d %m %Y"),'05/01/2009');
+       $this->assertIdentical('01 05 2009', formatdate('01.05.2009',"%d %m %Y"),'01.05.2009');
     }
 
     /**

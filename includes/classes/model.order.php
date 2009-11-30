@@ -44,7 +44,7 @@ class Order Extends Model {
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '#order_date_expire', 'order_responce', 'order_responce_date',
                                 'order_note', 'order_lock', 'order_lock_time', '#order_lock_admin_id');
-  var $places=array();
+  public $places=array();
   public $tickets = array();
   public $no_fee = false;
   public $no_cost = false;
@@ -57,7 +57,7 @@ class Order Extends Model {
     $order->order_handling_id=$handling_id;
     $order->order_place=$place;
     $order->order_owner_id = ($place == 'pos')? $_SESSION['_SHOP_AUTH_USER_DATA']['user_id']: null;
-    $order->no_fee=$no_fee;
+    $order->no_fee =$no_fee;
     $order->no_cost=$no_cost;
     $order->order_handling = &Handling::load($handling_id);
     return $order;
@@ -255,6 +255,23 @@ class Order Extends Model {
           return self::_abort(con('Errors_commiting_order')."(3)");
         }
       }
+
+      $no_tickets=$this->size();
+      if($this->order_handling==1){
+        $set = "SET user_order_total=user_order_total+1,
+                    user_current_tickets=user_current_tickets+{$no_tickets},
+                    user_total_tickets=user_total_tickets+{$no_tickets} ";
+      }else{
+        $set = "SET user_order_total=user_order_total+1,
+                    user_total_tickets=user_total_tickets+{$no_tickets} ";
+      }
+      $query="UPDATE `User`
+                $set
+              WHERE user_id="._esc($this->order_user_id);
+      if(!$res=ShopDB::query($query)){
+        return self::_abort(con('user_failed')."(3)");;
+      }
+
       if($this->order_handling->handling_id=='1'){
          $ok = $this->set_status('res',TRUE);
       }else{
@@ -338,8 +355,8 @@ class Order Extends Model {
       }
 
       if(count($places)!=0){
-        if(!Seat::cancel($places,$user_id,TRUE)){
-          return self::_abort(con('cant_cancel_ordered_seat'));
+        if(!Seat::cancel($places,$user_id)){
+          return false;
         }
       }
 
@@ -418,7 +435,7 @@ class Order Extends Model {
                      'pmp_id'=>$seat['seat_pmp_id']);
 
         if(!Seat::cancel(array($place),$seat['seat_user_id'])){
-          return self::_abort(con('cannot_delete_ticket'));
+          return false;
         }
 
         if(!OrderStatus::statusChange($order_id,false,null,'Order::delete_ticket',var_export($place,true))){
@@ -750,6 +767,29 @@ class Order Extends Model {
       while($data=shopDB::fetch_assoc($res)){
         //print_r($data);
         if($data['order_tickets_nr']==$data['count']){
+          $query="update `Order` set
+                    order_status='trash'
+                  where order_id='{$data['order_id']}'";
+          if(!ShopDB::query($query)){
+            return self::_abort(con('cant_change_order_to_trash'));;
+          }
+        }
+      }
+      // trash orders without seats.
+      $query="SELECT order_id, count(seat_id) as count
+              FROM `Order` left join Seat on seat_order_id=order_id
+              WHERE order_status !='trash'
+              GROUP BY order_id
+              having count = 0
+              FOR UPDATE";
+
+      if(!$res=ShopDB::query($query)){
+        return Order::_abort(con('cant_lock_order'));;
+      }
+
+      while($data=shopDB::fetch_assoc($res)){
+        //print_r($data);
+        if((int)$data['count'] == 0){
           $query="update `Order` set
                     order_status='trash'
                   where order_id='{$data['order_id']}'";

@@ -599,8 +599,8 @@ class PlaceMapPart Extends Model {
   }
 
   function clear_cache ($pmp_id) {
-    $query = "update PlaceMapPart set pmp_expires=1 where pmp_id=$pmp_id";
-    ShopDB::query($query);
+    $query = "update PlaceMapPart set pmp_expires=1 where pmp_id="._esc($pmp_id);
+    return ShopDB::query($query);
   }
 
   function find_doubles ($pmz_ident = 0){

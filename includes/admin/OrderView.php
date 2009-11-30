@@ -40,17 +40,17 @@ class OrderView extends AdminView{
 
 function order_prepare_delete ($order_id){
   echo "<center><form action='".$_SERVER["PHP_SELF"]."?action=cancel&order_id=$order_id' method='post'>
-        <input type='submit' name='cancel' value='".cancel."'></form></center><br>";
+        <input type='submit' name='cancel' value='".con('cancel')."'></form></center><br>";
   $this->order_details ($order_id);
   echo "<br><center><form action='".$_SERVER["PHP_SELF"]."?action=cancel&order_id=$order_id' method='post'>
-        <input type='submit' name='cancel' value='".cancel."'></form></center><br>";
+        <input type='submit' name='cancel' value='".con('cancel')."'></form></center><br>";
 
 }
 
 function order_details ($order_id){
   $query="select * from `Order`,User where order_id='$order_id' and order_user_id=user_id";
   if(!$order=ShopDB::query_one_row($query)){
-    echo "<div class='error'>".order_not_found." $order_id</div>";
+    echo "<div class='error'>".con('order_not_found')." $order_id</div>";
     return;
   }
 
@@ -61,7 +61,7 @@ function order_details ($order_id){
   $order['order_responce_date'] =($order['order_responce_date']== '0000-00-00 00:00:00')?'':$order['order_responce_date'];
 
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title'>".order_nr."  ".$order_id."</td>
+  echo "<tr><td class='admin_list_title'>".con('order_nr')."  ".$order_id."</td>
   <td align='right'><table width='100' style='border:#cccccc 1px solid;'><tr><td align='center'>
   $com
   </td></tr></table></td></tr>";
@@ -97,26 +97,26 @@ function order_details ($order_id){
 */
 
 	$query="select * from Seat LEFT JOIN Discount ON Seat.seat_discount_id=Discount.discount_id
-			LEFT JOIN Event ON Seat.seat_event_id=Event.event_id
-			LEFT JOIN Category ON Seat.seat_category_id=Category.category_id
-			LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=PlaceMapZone.pmz_id
-			WHERE Seat.seat_order_id='".$order_id."'";
+                        		 LEFT JOIN Event ON Seat.seat_event_id=Event.event_id
+                        		 LEFT JOIN Category ON Seat.seat_category_id=Category.category_id
+                        		 LEFT JOIN PlaceMapZone ON Seat.seat_zone_id=PlaceMapZone.pmz_id
+    			WHERE Seat.seat_order_id="._esc($order_id);
 
   if(!$res=ShopDB::query($query)){
      user_error(shopDB::error());
      return;
   }
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<tr><td class='admin_list_title' colspan='8'>".tickets."</td></tr>";
+  echo "<tr><td class='admin_list_title' colspan='8'>".con('tickets')."</td></tr>";
   $alt=0;
 
   while($ticket=shopDB::fetch_assoc($res)){
     if((!$ticket["category_numbering"]) or $ticket["category_numbering"]=='both'){
       $place=$ticket["seat_row_nr"]."-".$ticket["seat_nr"];
     }else if($ticket["category_numbering"]=='rows'){
-      $place=place_row." ".$ticket["seat_row_nr"];
+      $place=con('place_row')." ".$ticket["seat_row_nr"];
     }else if($ticket["category_numbering"]=='seat'){
-      $place=place_seat." ".$ticket["seat_nr"];
+      $place=con('place_seat')." ".$ticket["seat_nr"];
      }else{
        $place='---';
      }
@@ -124,10 +124,10 @@ function order_details ($order_id){
     $t_com = implode('&nbsp;',$this->ticket_commands($order_id,$ticket['seat_id']));;
 
     echo "<tr class='admin_list_row_$alt'>
-     	   <td class='admin_list_item'>".$ticket["seat_id"]."</td>
      	   <td class='admin_list_item'>".$ticket["event_name"]."</td>
+     	   <td class='admin_list_item'>".formatAdminDate($ticket["event_date"], false).' '.
+                                   	   formatTime($ticket["event_time"])."</td>
      	   <td class='admin_list_item'>".$ticket["category_name"]."</td>
-     	   <td class='admin_list_item'>".$ticket["pmz_name"]."</td>
 
      	   <td class='admin_list_item'>$place</td>
     	   <td class='admin_list_item'>".$ticket["discount_name"]."</td>
@@ -146,7 +146,7 @@ function order_details ($order_id){
    $order["user_status"]=$status;
 
    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-   echo "<tr><td class='admin_list_title' colspan='2'>".user_id." ".$order["user_id"]."</td></tr>";
+   echo "<tr><td class='admin_list_title' colspan='2'>".con('user_id')." ".$order["user_id"]."</td></tr>";
 
    $this->print_field('user_lastname',$order);
    $this->print_field('user_firstname',$order);
@@ -193,8 +193,8 @@ function order_details ($order_id){
  function ticket_commands ($order_id,$ticket_id){
    $params=$_GET;
    $params['seat_id']=$ticket_id;
-   $com["reemit"]=$this->link("reemit_ticket",$order_id,"remis.png",TRUE,reemit_ticket." $ticket_id",$params);
-   $com["delete"]=$this->link("delete_ticket",$order_id,"trash.png",TRUE,delete_ticket." $ticket_id",$params);
+   $com["reemit"]=$this->link("reemit_ticket",$order_id,"remis.png",TRUE,con('reemit_ticket')." $ticket_id",$params);
+   $com["delete"]=$this->link("delete_ticket",$order_id,"trash.png",TRUE,con('delete_ticket')." $ticket_id",$params);
    return $com;
  }
 
@@ -209,27 +209,27 @@ function order_details ($order_id){
      $com["print"]=$this->link("print",$order["order_id"],"printer.gif",false,'',null, 'target="pdfdoc"');
 
      if(!$list){
-       $com["ord"]=$this->link("set_status_ord",$order["order_id"],"ord.png",TRUE,change_status_to_ord,$_GET);
+       $com["ord"]=$this->link("set_status_ord",$order["order_id"],"ord.png",TRUE,con('change_status_to_ord'),$_GET);
      }
 
      if(!$list or $order['order_shipment_status']=='none'){
-       $com["send"]=$this->link("set_status_shipment_send",$order["order_id"],"mail.png",TRUE,change_status_to_send,$_GET);
+       $com["send"]=$this->link("set_status_shipment_send",$order["order_id"],"mail.png",TRUE,con('change_status_to_send'),$_GET);
      }
 
      if(!$list){
-       $com["no_send"]=$this->link("set_status_shipment_none",$order["order_id"],"no_mail.png",TRUE,change_status_to_no_send,$_GET);
+       $com["no_send"]=$this->link("set_status_shipment_none",$order["order_id"],"no_mail.png",TRUE,con('change_status_to_no_send'),$_GET);
      }
 
      if(!$list or $order['order_payment_status']=='none'){
-       $com["payed"]=$this->link("set_status_payment_payed",$order["order_id"],"pig.png",TRUE,change_status_to_payed,$_GET);
+       $com["payed"]=$this->link("set_status_payment_payed",$order["order_id"],"pig.png",TRUE,con('change_status_to_payed'),$_GET);
      }
 
      if(!$list){
-       $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,change_status_to_no_payed,$_GET);
+       $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_payed'),$_GET);
      }
 
      if(!$list){
-       $com["reemit"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,reemit_order,$_GET);
+       $com["reemit"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,con('reemit_order'),$_GET);
        $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png");
      }
      if(empty($com)){$com[]='';}
@@ -290,9 +290,9 @@ function order_list (){
                                                                         "&order_shipment_status={$obj['order_shipment_status']}".
                                                                         "&order_payment_status={$obj['order_payment_status']}'>";
   		if($obj['order_status']=='cancel'){
-  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&order_handling_id=$hand'>".purge."</a>)";
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&order_handling_id=$hand'>".con('purge')."</a>)";
   		}elseif($obj['order_status']=='reemit'){
-  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".purge."</a>)";
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".con('purge')."</a>)";
   		}else{
   			$purge='';
   		}
@@ -313,7 +313,9 @@ function order_list (){
 function order_event_list (){
   $query="SELECT distinct seat_event_id, seat_order_id, order_shipment_status, order_payment_status, order_status,
                  event_id, event_name, event_status, event_date, event_time
-          FROM  Seat left join (Event CROSS JOIN `Order`) on (seat_order_id=order_id AND seat_event_id= event_id)
+          FROM  Seat left join  Event  on seat_event_id= event_id
+                     left JOIN `Order` on seat_order_id=order_id
+
           WHERE Order.order_status!='trash'
           ORDER BY seat_event_id, order_status, order_shipment_status, order_payment_status ";
 
@@ -403,9 +405,9 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 
  $query='SELECT SQL_CALC_FOUND_ROWS * '.
          'FROM `Order` '.
-	 "WHERE $where ".
-	 'ORDER BY order_date DESC '.
-	 "LIMIT {$limit['start']},{$limit['end']}";
+      	 "WHERE $where ".
+      	 'ORDER BY order_date DESC '.
+      	 "LIMIT {$limit['start']},{$limit['end']}";
 
 
   if(!$res=ShopDB::query($query)){return;}
@@ -419,7 +421,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
   $tr['pending'] = con('order_type_pending');
   $tr['payed']   = con('order_type_payed');
   $tr['res']     = con('order_type_reserved');
-  $tr['none']='-';
+  $tr['none']    = '-';
 
   echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
   echo "<tr><td class='admin_list_title' colspan='5' align='center'>".
@@ -478,7 +480,8 @@ function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$o
    $limit=$this->get_limit($page);
 
   $query="SELECT SQL_CALC_FOUND_ROWS distinct seat_order_id, `Order`.*
-          FROM  Seat left join (Event CROSS JOIN `Order`) on (seat_order_id=order_id AND seat_event_id= event_id)
+          FROM  Seat left join Event   on seat_event_id= event_id
+                     left JOIN `Order` on seat_order_id=order_id
           WHERE $where
           ORDER BY order_date DESC
           LIMIT {$limit['start']},{$limit['end']}";
@@ -569,8 +572,8 @@ function draw($noTab=false){
   }elseif($_GET['action']=='delete'){
     $this->order_prepare_delete($_GET["order_id"]);
 
-  }elseif($_GET['action']=='cancel'){
-    Order::order_delete($_GET["order_id"], 'order_deleted_manual');
+  }elseif($_GET['action']=='cancel'){ 
+    Order::delete($_GET["order_id"], 'order_deleted_manual');
     $this->order_details($_GET["order_id"]);
 
   } elseif($_GET['action']=='list_all'){
@@ -605,21 +608,21 @@ function draw($noTab=false){
 
 function print_status ($user_status){
   if($user_status=='1'){
-    return sale_point;
+    return con('sale_point');
   }else if ($user_status=='2'){
-    return member;
+    return con('member');
   }else if($user_status=='3'){
-    return guest;
+    return con('guest');
   }
 }
 
 function print_order_status ($order){
   switch($order['order_status']){
-    case 'ord':   return "<font color='blue'>".ordered."</font>";
-    case 'send':  return "<font color='red'>".sended."</font>";
-    case 'payed': return "<font color='green'>".payed."</font>";
-    case 'cancel':return "<font color='#787878'>".canceled."</font>";
-    case 'reemit':return "<font color='#787878'>".reemited."</font> (
+    case 'ord':   return "<font color='blue'>".con('ordered')."</font>";
+    case 'send':  return "<font color='red'>".con('sended')."</font>";
+    case 'payed': return "<font color='green'>".con('payed')."</font>";
+    case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
+    case 'reemit':return "<font color='#787878'>".con('reemited')."</font> (
     <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reemited_id']}'>
     {$order['order_reemited_id']}</a> )";
   }

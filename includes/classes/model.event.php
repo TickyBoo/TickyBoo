@@ -80,10 +80,11 @@ class Event Extends Model {
       if (parent::save()){
 
         if(!$new){
-          if($this->event_rep=='main'){
-            $this->update_subs();
+          if($this->event_rep=='main' && !$this->update_subs()) {
+            return false;
+          } elseif (ShopDB::commit('event Saved ')){
+            return $this->event_id;
           }
-          return $this->event_id;
         }else{
           if($this->event_pm_id){
             $pm=PlaceMap::load($this->event_pm_id);
@@ -97,8 +98,9 @@ class Event Extends Model {
               return self::_abort(con('Cant find selected placemap.'));
             }
           }
-          return $this->event_id;
-        }
+          if (ShopDB::commit('event Saved ')){
+            return $this->event_id;
+          }        }
       } else {
         return self::_abort(con('Cant_save_event'));
       }
@@ -116,7 +118,10 @@ class Event Extends Model {
     }
 
     if($this->event_rep=='main'){
-      $query="select count(*) from Event where event_status!='trash' and event_main_id={$this->event_id}";
+      $query="select count(*)
+              from Event
+              where event_status!='trash'
+              and   event_main_id={$this->event_id}";
       if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
         echo '<div class=error>'.con('delete_subs_first').'</div>';
         return FALSE;
@@ -130,13 +135,19 @@ class Event Extends Model {
 
       if($this->event_status!='trash'){
         //check if there are non-free seats
-        $query="select count(*) from Seat where seat_event_id={$this->event_id} and seat_status!='free' FOR UPDATE";
+        $query="select count(*)
+                from Seat
+                where seat_event_id="._esc($this->event_id)."
+                and seat_status!='free'
+                and seat_status!='trash'
+                FOR UPDATE";
         if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
           return $this->_abort(con('seats_not_free'));
         }
       }
 
-      $query="delete from Seat where seat_event_id={$this->event_id}";
+      $query="delete from Seat
+              where seat_event_id={$this->event_id}";
       if(!ShopDB::query($query)){
         return $this->_abort(con('seats_delete_failed'));
       }
@@ -155,11 +166,14 @@ class Event Extends Model {
       $query="DELETE e.*, es.*
               FROM Event e LEFT JOIN Event_stat es
               ON e.event_id = es.es_event_id
-              WHERE e.event_id={$this->event_id}";
+              WHERE e.event_id="._esc($this->event_id);
       if(!ShopDB::query($query)){
         return $this->_abort(con('event_delete_failed'));
       }
 
+      if (!Order::toTrash()) {
+        return false;
+      }
       return ShopDB::commit('Event deleted');
     } else {
       echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
@@ -205,7 +219,7 @@ class Event Extends Model {
     return $this->_change_state('nosal','pub');
   }
 
-  function _change_state ($old_s,$new_s){
+  function _change_state ($old_s, $new_s){
 
     if($this->event_status!=$old_s){
        echo "<div class=error>".con('oldstate_not_correct')."</div>";
@@ -238,37 +252,42 @@ class Event Extends Model {
 
   function update_subs (){
     global $_SHOP;
+    if(ShopDB::begin('update subevents')){
+      $old=Event::load($this->event_id,FALSE);
 
-    $old=Event::load($this->event_id,FALSE);
-
-    $names[]='event_text';
-    $names[]='event_short_text';
-    $names[]='event_url';
-    $names[]='event_image';
-    $names[]='event_name';
-    //$names[]='event_ort_id';
-    //$names[]='event_categories_nr';
-    //$names[]='event_date';
-    $names[]='event_time';
-    $names[]='event_open';
-    $names[]='event_order_limit';
-    $names[]='event_payment';
-    $names[]='event_template';
-    $names[]='event_type';
-    $names[]='event_group_id';
-    $names[]='event_mp3';
-    //$names[]='event_rep';
+      $names[]='event_text';
+      $names[]='event_short_text';
+      $names[]='event_url';
+      $names[]='event_image';
+      $names[]='event_name';
+      //$names[]='event_ort_id';
+      //$names[]='event_categories_nr';
+      //$names[]='event_date';
+      $names[]='event_time';
+      $names[]='event_open';
+      $names[]='event_order_limit';
+      $names[]='event_payment';
+      $names[]='event_template';
+      $names[]='event_type';
+      $names[]='event_group_id';
+      $names[]='event_mp3';
+      //$names[]='event_rep';
 
 
-    foreach($names as $name){
-      if($this->$name != $old->$name){
-        $query="update Event set
-                  {$name}="._esc($this->$name)."
-                where $name="._esc($old->$name)."
-                and event_rep='sub'
-                and event_main_id='{$this->event_id}'";
-        ShopDB::query($query);
+      foreach($names as $name){
+        if($this->$name != $old->$name){
+          $query="update Event set
+                    {$name}="._esc($this->$name)."
+                  where {$name}="._esc($old->$name)."
+                  and event_rep='sub'
+                  and event_main_id="._esc($this->event_id);
+          if (!ShopDB::query($query)) {
+            return  $this->_abort(con('cant_update_sub_events'));
+          }
+
+        }
       }
+      return ShopDB::commit('Updated subevents');
     }
   }
 
@@ -293,7 +312,7 @@ class Event Extends Model {
 
       $query="update Event set
                 event_status='trash'
-              where event_id='{$this->event_id}'";
+              where event_id="._esc($this->event_id);
 
       if(!ShopDB::query($query)){
         return  $this->_abort(con('cant_trash_event'));
@@ -301,9 +320,13 @@ class Event Extends Model {
 
       $query="update Seat set
                 seat_status='trash'
-              where seat_event_id='".$this->event_id."'";
+              where seat_event_id="._esc($this->event_id);
       if(!ShopDB::query($query)){
         return $this->_abort(con('cant_trash_seats'));
+      }
+
+      if (!Order::toTrash()) {
+        return false;
       }
 
       return ShopDB::commit('Event_trashed');

@@ -279,7 +279,7 @@ class Seat  Extends Model {
   //the order is cancelled -> moves places to 'free' status and
   //updates stats
   //$seats = array(array('seat_id'=>,'event_id'=>,category_id=>,pmp_id=>))
-  function cancel ($seats,$user_id,$nocommit=FALSE){
+  function cancel ($seats, $user_id, $nocommit=FALSE){
     global $_SHOP;
     if(!ShopDB::begin('cancel seats')){
       return FALSE;
@@ -326,17 +326,18 @@ class Seat  Extends Model {
       $query="UPDATE `Event_stat` SET es_free=es_free+$count
               WHERE es_event_id='$event'";
       if(!ShopDB::query($query)){
-        ShopDB::rollback('cant_cancel_seat_4');//echo d;
-        return FALSE;
+        return self::_abort('cant_cancel_seat_4');//echo d;;
       }
     }
 
-    if(!empty($pmp_check)){
+    if(!empty($pmp_check)){print_r($pmp_check);
       foreach($pmp_check as $pmp_id=>$v){
-        PlaceMapPart::clear_cache($pmp_id);
+        if ($pmp_id and !PlaceMapPart::clear_cache($pmp_id)) {
+          return self::_abort('cant_cancel_seat_5');//echo d;;
+        }
       }
     }
-    if($commit and !ShopDB::commit('Canceled_cancel_seats')){ //echo e;
+    if(!$nocommit and !ShopDB::commit('Canceled_cancel_seats')){ //echo e;
     	return FALSE;
     }
     return TRUE;

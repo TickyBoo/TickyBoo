@@ -124,7 +124,7 @@ class PlaceMap Extends Model {
     if(ShopDB::begin('delete Placmap: '.$pm_id)){
       $pm = shopDB::query_one_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
       if ($pm and $pm['pm_event_id']){
-        $seats = shopDB::query_one_row("select count(*) from Seats
+        $seats = shopDB::query_one_row("select count(*) from Seat
                                        where seat_event_id ={$pm['pm_event_id']}", false);
         if ($seats[0]>0) {
           return placemap::_abort(con('placemap_delete_failed_seats_exists'));

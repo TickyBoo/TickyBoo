@@ -73,34 +73,17 @@ class Order_Smarty {
 
       //put the order into database
       if(!$order_id=$order->save()){
-        $this->error = con('save_failed');
-        ShopDB::rollback('save_failed');
+        $this->error = con('create_order_failed');
+        ShopDB::rollback('create_order_failed');
         $cart->iterate('_reset', $order);
-
         return;
       }
 
-      $no_tickets=$order->size();
-      if($handling==1){
-        $set = "SET user_order_total=user_order_total+1,
-                    user_current_tickets=user_current_tickets+{$no_tickets},
-                    user_total_tickets=user_total_tickets+{$no_tickets} ";
-      }else{
-        $set = "SET user_order_total=user_order_total+1,
-                    user_total_tickets=user_total_tickets+{$no_tickets} ";
-      }
-        $query="UPDATE `User`
-            $set
-          WHERE user_id=".ShopDB::quote($user_id);
-      if(!$res=ShopDB::query($query)){
-        $this->error =con('user_failed');
-        ShopDB::rollback('user_failed');
-      }
 
       //commit the transaction
       return (ShopDB::commit('Order created'))? $order: false;
     } else {
-      $this->error = con('cant_start transaction');
+      $this->error = con('cant_start_transaction');
       return;
     }
 
@@ -518,7 +501,7 @@ function _collect(&$event_item,&$cat_item,&$place_item,&$order){
       $i++;
     }
     $place_item->ordered =  $order;
-
+    // cant find any
     if(!isset($order->place_items)){
       $order->place_items=array();
     }

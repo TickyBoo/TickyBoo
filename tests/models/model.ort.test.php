@@ -23,20 +23,7 @@ class TestOfOrtModel extends TestOfModels {
   }
 
   function testortload() {
-/*    if ($this->model) {
-      $this->assertNotIdentical($this->model->$_tableName, '' );
-      $this->assertTrue(Shopdb::TableExists($this->model->_tableName));
 
-      $this->defs = & ShopDB::FieldListExt($this->model->tableName);
-      $cols = $this->model->$_columns;
-
-      foreach($cols as $key) {
-        $type = model::getFieldtype($key);
-        $this->assertTrue(array_key_exists($key, $this->defs), $key);
-        if ($value->Null == 'YES')
-          $this->assertEqual($type, model::MDL_MANDATORY, "Mandatory for $key missing. %s");
-      }
-    }*/
   }
 }
 

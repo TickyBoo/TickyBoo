@@ -262,7 +262,7 @@ class ShopDB {
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 self::$db_trx_started = 0;
             }
-        } else {
+        } elseif (is_object($res)) {
           $res->query = $query;
         }
         return $res;

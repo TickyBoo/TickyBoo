@@ -432,11 +432,12 @@ select SQL_CALC_FOUND_ROWS *
           $this->event_list($history);
         }
 		} elseif ( $_REQUEST['action'] == 'add' ) {
-			$this->event_form( $row, $err, event_add_title );
+			$this->event_form( $row, $err, con('event_add_title') );
 
     }elseif ( $_REQUEST['action'] == 'insert' ) {
 			if ( !$this->event_check($_POST, $err) ) {
-				$this->event_form( $_POST, $err, event_add_title );
+				$this->event_form( $_POST, $err, con('event_add_title') );
+        return;
 			} elseif($_POST['event_recur_type'] == "nothing"){
 		    $id = $this->save_event( $_POST, true );
         if ($_POST['event_rep'] == 'main') {
@@ -458,7 +459,7 @@ select SQL_CALC_FOUND_ROWS *
 			$this->event_form( $row, $err );
 		} elseif ( $_POST['action'] == 'update' ) {
 			if ( !$this->event_check($_POST, $err) ) {
-				$this->event_form( $_POST, $err, event_add_title );
+				$this->event_form( $_POST, $err, con('event_add_title') );
 			} else {
 				$this->save_event( $_POST, false );
 				$this->event_list($history);

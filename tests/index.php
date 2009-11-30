@@ -37,7 +37,8 @@
 	require_once(SIMPLE_TEST . 'unit_tester.php');
 	require_once(SIMPLE_TEST . 'mock_objects.php');
 	require_once(SIMPLE_TEST . 'reporter.php');
-	require_once(TEST_PATH.    'ftreport.php');
+//	require_once(SIMPLE_TEST . 'extensions/webunit_reporter.php');
+//	require_once(TEST_PATH.    'ftreport.php');
 
   function getFiles(&$rdi, $test) {
     if (!is_object($rdi)) return;
@@ -61,6 +62,6 @@
 //echo "<pre>";
 	$test = new TestSuite('FusionTicket tests');
 	collect_tests(dirname(__FILE__), $test);
-	$reporter = new htmlReporter();
+	$reporter = new HtmlReporter();
 	$test->run($reporter);
 //echo "</pre>";

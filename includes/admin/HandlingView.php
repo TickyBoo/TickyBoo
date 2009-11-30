@@ -243,12 +243,12 @@ class HandlingView extends AdminView{
   		    $this->handling_list();
     		}elseif($_GET['action']=='edit'){
       		$hand=Handling::load($_GET["handling_id"]);
-      		$this->handling_form((array)$hand, $err, payment_update_title);
+      		$this->handling_form((array)$hand, $err, con('payment_update_title'));
     		}elseif($_POST['action']=='update'){
     			$hand=Handling::load($_POST["handling_id"]);
 
     			if(!$this->handling_check($hand, $_POST, $err)){
-        			$this->handling_form($_POST, $err, handling_update_title);
+        			$this->handling_form($_POST, $err, con('handling_update_title'));
         			return 0;
     			}
 
@@ -263,9 +263,10 @@ class HandlingView extends AdminView{
     		}elseif($_POST['action']=='insert'){
       		$hand=new Handling();
       		if(!$this->handling_check($hand, $_POST, $err)){
-        			$this->handling_form($_POST,$err,handling_add_title);
+        			$this->handling_form($_POST, $err, con('handling_add_title'));
       		}else{
   		      $hand->_fill($_POST);
+           // print_r($hand);
   		      $hand->templates['ord']=$_POST['handling_email_template_ord'];
   		      $hand->templates['send']=$_POST['handling_email_template_send'];
   		      $hand->templates['payed']=$_POST['handling_email_template_payed'];
@@ -274,12 +275,12 @@ class HandlingView extends AdminView{
   	  		  $this->extra_init($hand);
   	  		  $hand->admin_init();
     			// The new handling method is saved
-    			  $id=$hand->save();
+    			  echo $id=$hand->save();
     			  $hand_a=(array)$hand;
-    			  $this->handling_form($hand_a, $err, handling_add_title);
+    			  $this->handling_form($hand_a, $err, con('handling_add_title'));
      			}
   		}elseif($_GET['action']=='add'){
-  			$this->handling_form(array(), $err, handling_add_title);
+  			$this->handling_form(array(), $err, con('handling_add_title'));
   		}else{
     		$this->handling_list();
   		}

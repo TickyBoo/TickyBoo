@@ -36,20 +36,20 @@ class TreemapReporter extends SimpleReporterDecorator {
 		$css .= "h1 {font:normal 1.8em Arial;color:black;margin:0 0 0.3em 0.1em;}";
 		$css .= ".clear { clear:both; }";
 		return $css;
-	}	
-	
+	}
+
 	/**
 	 * paints the HTML header and sets up results
 	 */
 	function paintResultsHeader() {
-		$title = $this->_reporter->getTitle();
+		$title = $this->reporter->getTitle();
 		echo "<html><head>";
 		echo "<title>{$title}</title>";
 		echo "<style type=\"text/css\">" . $this->_getCss() . "</style>";
 		echo "</head><body>";
 		echo "<h1>{$title}</h1>";
-	}	
-	
+	}
+
 	/**
 	 * places a clearing break below the end of the test nodes
 	 */
@@ -57,7 +57,7 @@ class TreemapReporter extends SimpleReporterDecorator {
 		echo "<br clear=\"all\">";
 		echo "</body></html>";
 	}
-	 
+
 	/**
 	 * paints start tag for div representing a test node
 	 */
@@ -67,14 +67,14 @@ class TreemapReporter extends SimpleReporterDecorator {
 		$status = $node->getStatus();
 		echo "<div title=\"$name: $description\" class=\"$status\" style=\"width:{$horiz}%;height:{$vert}%\">";
 	}
-	
+
 	/**
 	 * paints end tag for test node div
 	 */
 	function paintRectangleEnd() {
 		echo "</div>";
-	}	
-	
+	}
+
 	/**
 	 * paints wrapping treemap divs
 	 * @todo how to configure aspect and other parameters?
@@ -82,16 +82,16 @@ class TreemapReporter extends SimpleReporterDecorator {
 	function paintFooter($group) {
 		$aspect = 1;
 		$this->paintResultsHeader();
-		$this->paintRectangleStart($this->_reporter->getGraph(), 100, 100);
-		$this->divideMapNodes($this->_reporter->getGraph(), $aspect);
+		$this->paintRectangleStart($this->reporter->getGraph(), 100, 100);
+		$this->divideMapNodes($this->reporter->getGraph(), $aspect);
 		$this->paintRectangleEnd();
 		$this->paintResultsFooter();
 	}
-	
+
 	/**
 	 * divides the test results based on a slice and dice algorithm
 	 *
-	 * @param TreemapNode $map sorted 
+	 * @param TreemapNode $map sorted
 	 * @param boolean $aspect flips the aspect between horizontal and vertical
 	 * @private
 	 */
@@ -117,14 +117,14 @@ class TreemapReporter extends SimpleReporterDecorator {
 			$this->paintRectangleEnd();
 		}
 	}
-	
+
 	function paintGroupEnd($group) {
-		$this->_reporter->paintGroupEnd($group);
-		if ($this->_reporter->isComplete()) {
+		$this->reporter->paintGroupEnd($group);
+		if ($this->reporter->isComplete()) {
 			$this->paintFooter($group);
 		}
 	}
-	
+
 }
 
 ?>
