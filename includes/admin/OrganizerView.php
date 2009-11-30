@@ -37,25 +37,23 @@ require_once("admin/AdminView.php");
 
 class OrganizerView extends AdminView{
 
-  function organizer_form ($data, $err,$title){
+  function organizer_form ($data, $err, $title){
     global $_SHOP;
 
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>";
   	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 
-    $this->print_input('organizer_name',$data, $err,25,100);
+    $this->print_input('organizer_name'   ,$data, $err,25,100);
     $this->print_input('organizer_address',$data, $err,25,100);
-    $this->print_input('organizer_plz',$data, $err,25,100);
-    $this->print_input('organizer_ort',$data, $err,25,100);
-    $this->print_input('organizer_state',$data, $err,25,100);
-    echo "<tr><td class='admin_name'>" . con('organizer_country') . "</td><td class='admin_value'>";
+    $this->print_input('organizer_plz'    ,$data, $err,25,100);
+    $this->print_input('organizer_ort'    ,$data, $err,25,100);
+    $this->print_input('organizer_state'  ,$data, $err,25,100);
     $this->print_countrylist('organizer_country', $data['organizer_country'], $err);
-    echo "</td></tr>";
 
-    $this->print_input('organizer_phone',$data, $err,25,100 );
-    $this->print_input('organizer_fax',$data, $err,25,100 );
-    $this->print_input('organizer_email',$data, $err,25,100 );
+    $this->print_input('organizer_phone'  ,$data, $err,25,100 );
+    $this->print_input('organizer_fax'    ,$data, $err,25,100 );
+    $this->print_input('organizer_email'  ,$data, $err,25,100 );
     $this->print_input('organizer_currency',$data, $err,4,3 );
 
     $this->print_file('organizer_logo',$data,$err);
@@ -72,19 +70,19 @@ class OrganizerView extends AdminView{
   }
 
   function draw () {
-  global $_SHOP;
+
     $org = Organizer::load();
     if(isset($_POST['save'])){
+
+      addWarning('test me niet');
+
       if($org->fillPost() && $org->save()) {
         $_SESSION['_SHOP_ORGANIZER_DATA'] = $org;
       }
-    }
-    $this->organizer_form((ARRAY)$org, $org->errors(), con('organizer_update_title'));
-  }
+      $this->organizer_form($_POST, null, con('organizer_update_title'));
 
-  function logo_post ($data){
-  	return $this->file_post($data, null, 'Organizer', 'organizer','_logo');
+    } else
+      $this->organizer_form((ARRAY)$org, null, con('organizer_update_title'));
   }
-
 }
 ?>

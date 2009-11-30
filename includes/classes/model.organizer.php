@@ -59,7 +59,9 @@ class Organizer  Extends Model {
    //if(empty($data['user_email'])){$err['user_email']=mandatory;}
     if($email=$arr['organizer_email']){
       $check_mail = preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email );
-      if(!$check_mail){$this->seterror(con('not_valid_email'),'organizer_email');}
+      if(!$check_mail){
+        addError('organizer_email','not_valid_email');
+      }
     }
     return parent::checkValues($arr);
   }
@@ -67,7 +69,7 @@ class Organizer  Extends Model {
   function _fill($arr, $nocheck=true){
     if (parent::_fill($arr, $nocheck)){
       if (!$this->fillFilename('organizer_logo')){
-        $this->seterror(con('img_loading_problem'), 'organizer_logo');
+        addError('organizer_logo','img_loading_problem');
       } else return true;
     }
     return false;

@@ -88,9 +88,7 @@ class OrtView extends AdminView {
         $this->print_input('ort_zip', $data, $err, 10, 20);
         $this->print_input('ort_city', $data, $err, 25, 50);
         $this->print_input('ort_state', $data, $err, 25, 50);
-        echo "<tr><td class='admin_name'>" . ort_country . "</td><td class='admin_value'>";
         $this->print_countrylist('ort_country', $data['ort_country'], $err);
-        echo "</td></tr>";
         $this->print_input('ort_phone', $data, $err, 25, 50);
         $this->print_input('ort_fax', $data, $err, 25, 50);
         // $this->print_input('ort_plan_nr',$data, $err,6,100);

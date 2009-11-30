@@ -51,7 +51,6 @@ class Gui_smarty {
 	var $gui_name   = 'gui_name';
 	var $gui_value  = 'gui_value';
 	var $gui_name_width  = '30%';
-  var $errors     = array();
   public $guidata = array();
 
   function __construct  (&$smarty){
@@ -62,8 +61,13 @@ class Gui_smarty {
     $smarty->register_function('ShowFormToken', array($this,'showFormToken'));
     $smarty->register_function('valuta', array($this,'valuta'));
     $smarty->register_function('print_r', array($this,'print_r'));
+    $smarty->register_function('printMsg', array($this,'printMsg'));
     $smarty->register_modifier('clean', 'smarty_modifier_clean');
 
+  }
+
+  function printMsg($params, &$smarty) {
+    return printMsg($params['key']);
   }
 
   function url($params, $smarty, $skipnames)
@@ -90,7 +94,7 @@ class Gui_smarty {
   function print_r ($params,&$smarty) {
     return '<pre>'.print_r($params['var'],true).'</pre>';
   }
-  
+
   function fillarr ($params,&$smarty)
   {
       if (!isset($params['var'])) {
@@ -141,7 +145,7 @@ class Gui_smarty {
  * @param string an optional message that asks if you are really shure if you click on the link and aborts navigation if user clicks cancel, ignored if false
  * @param boolean $escapeTitle if we should run htmlspecialchars over the links title
  */
- 
+
 	/**
      * escape string stuitable for javascript or php output
      * @param string $s string to escape
@@ -150,17 +154,14 @@ class Gui_smarty {
 	private function escape($s,$singleQuotes=true) {
 		if ($singleQuotes) {
 		  return str_replace(array("'","\n","\r"),array('\\\'',"\\n",""), $s);
-		} 
+		}
     return str_replace(array('"',"\n","\r"),array('\\"',"\\n",""), $s);
 	}
-	
+
    function setdata($params, &$smarty) //($name, $width = 0, $colspan = 2)
   {
     If( isset($params['data'])) {
       $this->guidata = $params['data'];
-    }
-    If( isset($params['errors'])) {
-      $this->errors = $params['errors'];
     }
     If( isset($params['nameclass'])) {
       $this->gui_name = $params['nameclass'];
@@ -228,9 +229,7 @@ class Gui_smarty {
     if ($this->_ShowLabel and !$nolabel) {
       $return = "<tr><td class='{$this->gui_name}' width='{$this->gui_name_width}'>" . con($name) . "</td>".
                 "    <td class='{$this->gui_value}'>{$value}";
-      if (isset($this->errors[$name])) {
-        $return .= "<span class='error'>{$this->errors[$name]}</span>";
-      }
+      $return .= printMsg($name);
       return $return."</td></tr>\n";
     } else {
       return $value;
@@ -390,7 +389,7 @@ class Gui_smarty {
       }
     }
   }
-  
+
   function viewState($params, &$smarty){
     global $_SHOP, $_STATE_LIST;
     $this->LoadStates();
@@ -401,7 +400,7 @@ class Gui_smarty {
     } else {
       $params['value'] = $this->guidata[$name];
     }
-    
+
     return $this->view($params, $smarty);
   }
 
@@ -470,7 +469,7 @@ class Gui_smarty {
 
       if ($type == 'img') {
          list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$this->guidata[$name]);
-         
+
          if (($width>$height) and ($width > 300)) {
            $attr = "width='300'";
          } elseif ($height > 250) {
@@ -485,7 +484,7 @@ class Gui_smarty {
                        "<input type='checkbox'  name='remove_$name' value='1'>" . con("remove_image")."<br>");
     }
   }
-  
+
   function Navigation($params, &$smarty) { //($offset, $matches, $url, $stepsize=10)
     $name     = is($params['name'],'offset');
     $offset   = is($params['offset'],0);
@@ -595,7 +594,7 @@ class Gui_smarty {
            "  </td></tr>\n".
            "</table>\n");
   }
-    
+
   function delayedLocation($params, &$smarty) { //($url){
       $url = $this->view->_URL($params);
       return "<SCRIPT LANGUAGE='JavaScript'>

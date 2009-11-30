@@ -188,6 +188,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     exit;
   }
 
+  $_SHOP->Messages = array();
 
   $_SHOP->files_url=$_SHOP->root."files/";
   $_SHOP->images_url=$_SHOP->root."images/";

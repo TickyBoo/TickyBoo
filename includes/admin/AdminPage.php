@@ -37,80 +37,76 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("classes/AUIComponent.php");
 
 class AdminPage extends AUIComponent {
-    var $menu_width = 200;
-    var $key = array();
-    var $description = array();
-    var $title = '';
+  var $menu_width = 200;
+  var $key = array();
+  var $description = array();
+  var $title = '';
 
-    function AdminPage($width = 800, $title = '')
-    {
-        $this->width = $width;
-        $this->title = $title;
-    }
+  function AdminPage($width = 800, $title = '') {
+      $this->width = $width;
+      $this->title = $title;
+  }
 
-    function addKey($kk)
-    {
-        array_push($this->key, $kk);
-    }
-    
+  function addKey($kk) {
+      array_push($this->key, $kk);
+  }
+
   public function setJQuery($script){
     $this->set('jquery',$script);
   }
 
-    function setmenu($menu)
-    {
-        $this->set("menu",$menu);
-        if (is_object($menu)) {$menu->setWidth($this->menu_width-10);}
+  function setMenu($menu) {
+    $this->set("menu",$menu);
+    if (is_object($menu)) {$menu->setWidth($this->menu_width-10);}
+  }
+
+  function setBody(&$body) {
+    $this->set("body",$body);
+  }
+
+  function drawContent() {
+    echo "<table border=0 width='" . $this->width . "' class='aui_bico'><tr>";
+    if ($menu = $this->items["menu"]) {
+      echo "<td class='aui_bico_menu' width='" . $this->menu_width . "' valign=top>\n";
+      $this->drawChild($menu);
+      echo "</td>";
     }
+    echo "<td class=aui_bico_body valign=top>";
 
-    function setbody(&$body)
-    {
-        $this->set("body",$body);
+    $body = $this->items["body"];
+    if (is_object($body)) {
+      If ($menu) {
+        $body->setWidth($this->width - $this->menu_width);
+      } else {
+        $body->setWidth($this->width);
+      }
     }
+    $this->drawChild($body);
+    echo"</td></tr></table>\n";
 
-    function drawcontent()
-    {
-        echo "<table border=0 width='" . $this->width . "' class='aui_bico'><tr>";
-        if ($menu = $this->items["menu"]) {
-          echo "<td class='aui_bico_menu' width='" . $this->menu_width . "' valign=top>\n";
-          $this->drawChild($menu);
-          echo "</td>";
-        }
-        echo "<td class=aui_bico_body valign=top>";
-
-        $body = $this->items["body"];
-        if (is_object($body)) {
-          If ($menu) {
-            $body->setWidth($this->width - $this->menu_width);
-          } else {
-            $body->setWidth($this->width);
-          }
-        }
-        $this->drawChild($body);
-        echo"</td></tr></table>\n";
-        
-        if(is_object($body)){
-          $this->setJQuery($body->getJQuery());
-        }
+    if(is_object($body)){
+      $this->setJQuery($body->getJQuery());
     }
+  }
 
-    function draw()
-    {
-        global $_SHOP;
+  function draw() {
+    ob_start();
+    $this->drawcontent();
+    $content = ob_get_contents();
+    ob_end_clean();
 
-        $this->drawHead();
-        $this->drawcontent();
-        $this->drawFoot();
-    }
+    $this->drawHead();
+    echo $content;
+    $this->drawFoot();
+  }
 
-  function drawHead()
-  {
+  function drawHead(){
     global $_SHOP;
     if (!isset($_SERVER["INTERFACE_LANG"]) or !$_SERVER["INTERFACE_LANG"]) {
         $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
     }
     if (isset($_SHOP->system_status_off) and $_SHOP->system_status_off) {
-        $this->errmsg = "<div class=error>".con('system_halted')."</div>";
+        AddWarning('system_halted');
     }
      //+'&href={$_SERVER["REQUEST_URI"]}'
     echo "<head>
@@ -156,59 +152,61 @@ class AdminPage extends AUIComponent {
   	<div id='wrap'>\n";
       echo "<div  id='header'>
              <img src=\"".$_SHOP->root."admin/images/logo.png\"  border='0'/>
-             <h2>".administration."</h2>
+             <h2>".con('administration')."</h2>
              </div>";
       echo"<div id='navbar'><table width='100%'>
           <tr><td>&nbsp;";
       $this->drawOrganizer();
       echo "</td><td  align='right'>&nbsp;";
   //        echo "<select name='setlang' onChange='set_lang(this)'>";
-  
+
   //        $sel[$_SHOP->lang] = "selected";
   //        foreach($_SHOP->langs_names as $lang => $name) {
   //            echo"<option value='$lang' {$sel[$lang]}>$name</option>";
   //        }
   //        echo "</select>";
       echo"</td></tr></table></div><br>";
-      if (isset($this->errmsg)) echo "<div class='error'>$this->errmsg</div><br>";
+      echo printMsg('__Warning__');
+      echo printMsg('__Notice__');
   }
 
     function drawFoot() {
+      global $_SHOP;
       /*$body = $this->items['body'];
       if(is_object($body)){
         $this->setJQuery($body->getJQuery());
       }*/
-      echo "<br><br>";
-      echo "<script type=\"text/javascript\">
-        $(document).ready(function(){
-          ". is($this->items['jquery'],'') ."
-        });
-        </script>";
-      echo "<div id='footer'>
-				Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
+      print_r($_SHOP->Messages);
+      echo "
+      <br><br>
+      <script type=\"text/javascript\">
+         $(document).ready(function(){
+            ". is($this->items['jquery'],'') ."
+         });
+      </script>
+      <div id='footer'>
+     		 <!-- To comply with our GPL please keep the following link in the footer of your site -->
+				 Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
 			</div>
 		</div>
 	</body>
 </html>";
-    }
+  }
 
-    function setTitle($tags)
-    {
-        $this->title = $tags;
-    }
+  function setTitle($tags){
+      $this->title = $tags;
+  }
 
-    function getTitle()
-    {
-        return $this->title;
-    }
+  function getTitle(){
+      return $this->title;
+  }
 
-    function drawOrganizer ()
-    {
-        global $_SHOP;                                                         //   print_r($_SHOP);
-        echo "<font color='#555555'><b>" . con('welcome') . " " .
-          ((is_object($_SHOP->organizer_data))?
-            $_SHOP->organizer_data->organizer_name:
-            $_SHOP->organizer_data['organizer_name']) . "</b></font>";
-    }
+  function drawOrganizer () {
+      global $_SHOP;
+      echo "<font color='#555555'><b>" . con('welcome') . " " .
+        ((is_object($_SHOP->organizer_data))?
+          $_SHOP->organizer_data->organizer_name:
+          $_SHOP->organizer_data['organizer_name']) . "</b></font>";
+  }
 }
 ?>

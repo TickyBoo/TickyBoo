@@ -106,14 +106,14 @@ class AdminView extends AUIComponent {
                 <td class='admin_value'>
                   <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
                   <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
-                  <span class='err'>{$err[$name]}</span>
+                  ".printMsg($name, $err)."
                 </td></tr>\n";
       }else{
         echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_value' style='width:100%;' colspan='2'>
                 <input type='text' name='{$prefix}[$i][key]' value='" . htmlspecialchars($key, ENT_QUOTES) . "'>
                 <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
                 <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
-                <span class='err'>{$err[$name]}</span>
+                ".printMsg($name, $err)."
               </td></tr>\n";
       }
       $i++;
@@ -295,85 +295,9 @@ class AdminView extends AUIComponent {
       }else{
         $prefix = "{$name}";
       }
-      $err =(isset($err[$name]))?$err[$name]:'';
       echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
-            <span class='err'>{$err}</span>
-            </td></tr>\n";
-    }
-
-    function save_paper_format ($name, &$data, &$err)
-    {
-        if ($data[$name . '_option'] == 1) {
-            $data[$name . '_size'] = '';
-            $data[$name . '_orientation'] = '';
-        } else if ($data[$name . '_option'] == 2) {
-            $data[$name . '_size'] = $data[$name . '_size_std'];
-        } else {
-            $ns = $name . '_size';
-            $nsc = $name . '_size_cst';
-            $data[$ns][0] = (float)$data[$nsc][0];
-            $data[$ns][1] = (float)$data[$nsc][1];
-            $data[$ns][2] = (float)$data[$nsc][2];
-            $data[$ns][3] = (float)$data[$nsc][3];
-        }
-    }
-
-    function print_paper_format ($name, &$data, &$err)
-    {
-        $papers = array('A4', 'LETTER', 'LEGAL' , '4A0', '2A0', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'RA0', 'RA1', 'RA2', 'RA3', 'RA4', 'SRA0', 'SRA1', 'SRA2', 'SRA3', 'SRA4', 'LETTER', 'LEGAL', 'EXECUTIVE', 'FOLIO');
-
-        echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>" . con($name) . "</td>
-            <td class='admin_value'>
-        		<table>";
-
-                if (empty($data[$name . '_size'])) {
-                    $sel_opt[1] = 'checked="checked"';
-                } else if (!is_array($data[$name . '_size'])) {
-                    $sel_opt[2] = 'checked="checked"';
-                    $sel_size[$data[$name . '_size']] = 'selected';
-                    $sel_ort[$data[$name . '_orientation']] = 'selected';
-                } else {
-                    $sel_opt[3] = 'checked="checked"';
-                    $nsc = $data[$name . '_size'];
-                }
-
-                echo "<tr>
-        		<td><label><input type=radio name='" . $name . "_option' value=1 {$sel_opt[1]}>" . con("page_format_default") . "</label></td>
-        		<td>&nbsp;</td>
-        		</label>
-        		</tr>";
-
-                echo "<tr>
-        		<td><label><input type=radio name='" . $name . "_option' value=2 {$sel_opt[2]}>" . con("page_format_std") . " : </label></td>
-        		<td><select name='" . $name . "_size_std'>";
-
-                foreach($papers as $paper) {
-                    echo "<option value='$paper' {$sel_size[$paper]}>$paper</option>";
-                }
-
-                echo "</select>
-
-        		<select name='" . $name . "_orientation'>
-        		<option value='portrait' " . $sel_ort['portrait'] . ">" . con("page_orientation_portrait") . "</option>
-        		<option value='landscape' " . $sel_ort['landscape'] . ">" . con("page_orientation_landscape") . "</option>
-        		</select>
-        		</td>
-        		</tr>";
-
-                echo "<tr>
-        		<td><label><input type=radio name='" . $name . "_option' value=3 {$sel_opt[3]}>" . con("page_format_custom") . "(pt) : </label></td>
-        		<td>
-        		x1<input name='" . $name . "_size_cst[0]' size=3 value='" . $nsc[0] . "'>
-        		y1<input name='" . $name . "_size_cst[1]' size=3 value='" . $nsc[1] . "'>
-        		x2<input name='" . $name . "_size_cst[2]' size=3 value='" . $nsc[2] . "'>
-        		y2<input name='" . $name . "_size_cst[3]' size=3 value='" . $nsc[3] . "'>
-        		</td>
-        		</tr>
-
-        		</table>
-
-            <span class='err'>{$err[$name]}</span>
+            ".printMsg($name, $err)."
             </td></tr>\n";
     }
 
@@ -385,7 +309,7 @@ class AdminView extends AUIComponent {
         }
         echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
                 <td class='admin_value'><input type='checkbox' name='$name' value='1' $chk>
-                <span class='err'>{$err[$name]}</span>
+                ".printMsg($name, $err)."
                 </td></tr>\n";*/
     }
 
@@ -393,13 +317,13 @@ class AdminView extends AUIComponent {
     {
         echo "<tr><td id='{$name}-tr' class='admin_name'>$suffix" . con($name) . "</td>
                 <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
-                <span class='err'>{$err[$name]}</span>
+                ".printMsg($name, $err)."
                 </td></tr>\n";
     }
 
     function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='')
     {
-        echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; <span class='err'>{$err[$name]}</span></td></tr>
+        echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
                 <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
 
                 </td></tr>\n";
@@ -456,7 +380,7 @@ class AdminView extends AUIComponent {
                }
                echo "</select>";
              }
-        echo "<span class='err'>{$err[$name]}</span>
+        echo "".printMsg($name, $err)."
              </td></tr>\n";
     }
     function Set_time($name, & $data, & $err) {
@@ -505,7 +429,7 @@ class AdminView extends AUIComponent {
           }
           echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
         }
-        echo "<span class='err'>{$err[$name]}</span>
+        echo "".printMsg($name, $err)."
               </td></tr>\n";
     }
 
@@ -546,7 +470,7 @@ class AdminView extends AUIComponent {
             echo "<option value='$v'{$sel[$v]}>" . con($name . "_" . $v) . "</option>\n";
         }
 
-        echo "</select><span class='err'>{$err[$name]}</span>
+        echo "</select>".printMsg($name, $err)."
               </td></tr>\n";
     }
 
@@ -566,7 +490,7 @@ class AdminView extends AUIComponent {
             echo "<option value='$k'{$sel[$k]}>".con($v)."</option>\n";
         }
 
-        echo "</select><span class='err'>{$err[$name]}</span>
+        echo "</select>".printMsg($name, $err)."
   </td></tr>\n";
     }
 
@@ -610,13 +534,12 @@ class AdminView extends AUIComponent {
         }
     }
 
-    function print_file ($name, &$data, &$err, $type = 'img', $suffix = '')
-    {
+    function print_file ($name, &$data, &$err, $type = 'img', $suffix = ''){
         global $_SHOP;
 
-        if (!$data[$name]) {
+        if (isset($data[$name]) || empty($data[$name])) {
             echo "\n<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
-            <td class='admin_value'><input type='file' name='$name'><span class='err'>{$err[$name]}</span></td></tr>\n";
+            <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td></tr>\n";
         } else {
             $src = $this->user_url($data[$name]);
 
@@ -640,11 +563,53 @@ class AdminView extends AUIComponent {
             }
 
             echo "</td></tr><tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
-            <td class='admin_value'><input type='file' name='$name'><span class='err'>{$err[$name]}</span></td></tr>";
+            <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td></tr>";
             echo "<tr><td class='admin_name'  width='40%'>" . con("remove_image") . "</td>
-            <td class='admin_value'><input type='checkbox'  name='remove_$name' value='1'>" . yes . "</td></tr>\n";
+            <td class='admin_value'><input type='checkbox'  name='remove_$name' value='1'>" . con('yes') . "</td></tr>\n";
         }
     }
+
+  function print_countrylist($name, $selected, &$err){
+  global $_SHOP,  $_COUNTRY_LIST;
+    if (!isset($_COUNTRY_LIST)) {
+      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
+        include_once("lang/countries_". $_SHOP->lang.".inc");
+      }else {
+        include_once("lang/countries_en.inc");
+      }
+    }
+    if($_SHOP->lang=='de'){
+  	  if(empty($selected)){$selected='CH';}
+    }else{
+   	  if(empty($selected)){$selected='US';}
+    }
+
+    echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>" . con($name) . "</td>
+            <td class='admin_value'><select name='$name'>";
+    $si[$selected]=' selected';
+    foreach ($_COUNTRY_LIST as $key=>$value){
+      $si[$key] = (isset($si[$key]))?$si[$key]:'';
+      echo "<option value='$key' {$si[$key]}>$value</option>";
+    }
+    echo "</select>". printMsg($name, $err). "</td></tr>\n";;
+  }
+
+  function getCountry($val){
+    global $_SHOP, $_COUNTRY_LIST;
+    $val=strtoupper($val);
+
+    if (!isset($_COUNTRY_LIST)) {
+      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
+        include_once("lang/countries_". $_SHOP->lang.".inc");
+      }else {
+        include_once("lang/countries_en.inc");
+      }
+    }
+
+    return $_COUNTRY_LIST[$val];
+  }
+
+
 
     function form_head ($name, $width = 0, $colspan = 2)
     {
@@ -722,22 +687,6 @@ class AdminView extends AUIComponent {
         return $_SHOP->files_dir . $path;
     }
 
-    function _myErrorHandler($errno, $errstr, $errfile, $errline)
-    {
-        if ($errno != 2) {
-            echo "$errno $errstr $errfil $errline";
-        }
-    }
-
-    function dyn_load($name)
-    {
-        set_error_handler(array(&$this, '_myErrorHandler'));
-        $res = include_once($name);
-        restore_error_handler();
-
-        return $res;
-    }
-
     function delayedLocation($url){
         echo "<SCRIPT LANGUAGE='JavaScript'>
               <!-- Begin
@@ -748,45 +697,6 @@ class AdminView extends AUIComponent {
               // End -->\n";
         echo "</SCRIPT>\n";
     }
-
-  function print_countrylist($sel_name, $selected, &$err){
-  global $_SHOP,  $_COUNTRY_LIST;
-    if (!isset($_COUNTRY_LIST)) {
-      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
-        include_once("lang/countries_". $_SHOP->lang.".inc");
-      }else {
-        include_once("lang/countries_en.inc");
-      }
-    }
-    if($_SHOP->lang=='de'){
-  	  if(empty($selected)){$selected='CH';}
-    }else{
-   	  if(empty($selected)){$selected='US';}
-    }
-
-    echo "<select name='$sel_name'>";
-    $si[$selected]=' selected';
-    foreach ($_COUNTRY_LIST as $key=>$value){
-      echo "<option value='$key' {$si[$key]}>$value</option>";
-    }
-    echo "</option>";
-    echo "<div class='error'>{$err[$sel_name]}</div>";
-  }
-
-  function getCountry($val){
-    global $_SHOP, $_COUNTRY_LIST;
-    $val=strtoupper($val);
-
-    if (!isset($_COUNTRY_LIST)) {
-      If (file_exists($_SHOP->includes_dir."/lang/countries_". $_SHOP->lang.".inc")){
-        include_once("lang/countries_". $_SHOP->lang.".inc");
-      }else {
-        include_once("lang/countries_en.inc");
-      }
-    }
-
-    return $_COUNTRY_LIST[$val];
-  }
 
   public function getJQuery(){
     return $this->jScript;

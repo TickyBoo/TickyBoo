@@ -38,7 +38,6 @@ class Model {
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
 
-  protected $_errors = array();
   protected $_idName;
   protected $_tableName;
   protected $_columns = array();
@@ -136,15 +135,16 @@ class Model {
   }
 
   Function CheckValues ($arr) {
+    $ok = true;
     foreach($this->_columns as $key){
       if (self::getFieldtype($key)== self::MDL_MANDATORY) {
-        if(empty($arr[$key])){$this->_errors[$key]=con('mandatory');}
+        if(empty($arr[$key])){
+          $ok = false;
+          addError($key, 'mandatory');
+        }
       }
     }
-    if (count($this->_errors)!==0) {
-      trace($this->_tableName.": \n".print_r($this->_errors));
-    }
-    return (count($this->_errors)==0);
+    return ($ok);
   }
 
   function fillPost($nocheck=false)    { return $this->_fill($_POST,$nocheck); }
@@ -160,20 +160,8 @@ class Model {
     return false;
    }
 
-  function errors() {
-    return $this->_errors;
-  }
-
-   function SetError($mess, $key='_system') {
-  //      ShopDB::Rollback();
-    $this->_errors[$key] .= con($mess);
-    return false;
-  }
-
   function _abort ($str=''){
-    if ($str) {
-      echo "<div class=error>{$str}</div>";
-    }
+    if ($str)  addWarning ($str);
     if (ShopDB::isTxn()) ShopDB::rollback($str);
     return false; // exit;
   }
@@ -252,7 +240,7 @@ class Model {
   			$d = $data["$name-d"];
 
   			if ( !checkdate($m, $d, $y) ) {
-          $this->seterror(con('invalid'), $name);
+          addError($name, 'invalid');
   			} else {
   				$this->$name = "$y-$m-$d";
   			}
@@ -268,9 +256,9 @@ class Model {
   			$h = $data[$name.'-h'];
   			$m = $data[$name.'-m'];
   			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
-          $this->seterror(con('invalid'), $name);
+          addError($name, 'invalid');
   			} elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
-          $this->seterror(con('invalid'), $name);
+          addError($name, 'invalid');
   			} else {
           if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
             $h = $h + 12;
@@ -285,7 +273,7 @@ class Model {
 
   function _myErrorHandler($errno, $errstr, $errfile, $errline) {
     if($errno!=2){
-      echo "$errno $errstr $errfil $errline";
+      addWarning("$errno $errstr $errfil $errline");
     }
   }
 
@@ -293,14 +281,12 @@ class Model {
     set_error_handler(array(&$this,'_myErrorHandler'));
     $res=include_once($name);
     restore_error_handler();
-
     return $res;
   }
 
   function _test() {
     return array($this->_tableName, $this->_idName, $this->_columns);
   }
-
 }
 
 ?>

@@ -572,4 +572,62 @@ function is_base64_encoded($data){
   return preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $data);
 }
 
+
+
+/**
+ * addError()
+ *
+ * @param mixed $key
+ * @param mixed $const
+ * @return
+ */
+function addError($key, $const) {
+  Global $_SHOP;
+  $_SHOP->Messages[$key][] = con($const);
+}
+
+/**
+ * addNotice()
+ *
+ * @return
+ */
+function addNotice($const) {
+  addError('__Notice__', $const);
+}
+
+/**
+ * addWarning()
+ *
+ * @return
+ */
+function addWarning($const) {
+  addError('__Warning__', $const);
+}
+
+function printMsg($key, $err = null) {
+  Global $_SHOP;
+  $output ='';
+  if (!is_array($err)){
+     $err = $_SHOP->Messages;
+  }
+  if (isset($err[$key])) {
+    foreach($err[$key] as $value){
+      $output .= $value. "</br>\n";
+    }
+    If ($output) {
+      switch ($key) {
+        case '__Warning__':
+          $output = "<h4 class='error'>".$output. "</h4>";
+          break;
+        case '__Notice__':
+          $output = "<h4 class='error'>".$output. "</h4>";
+          break;
+        default:
+          $output = "<span class='err'>".$output. "</span>";
+      }
+    }
+  }
+  return $output;
+}
+
 ?>
