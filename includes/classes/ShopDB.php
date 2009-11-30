@@ -263,6 +263,7 @@ class ShopDB {
                 self::$db_trx_started = 0;
             }
         } elseif (is_object($res)) {
+          //TODO: Check this line - Warning: Attempt to assign property of non-object classes\ShopDB.php
           $res->query = $query;
         }
         return $res;

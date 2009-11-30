@@ -44,6 +44,7 @@ class EmailSwiftCompiler {
   
   var $errors=array();
   
+  private $data = null;
   private $varsBuilt = false;
   
   //Email Vars.
@@ -55,6 +56,9 @@ class EmailSwiftCompiler {
   private $emailDefLang = 0;
   protected $emailLangs = null;
   private $emailTemplates = null;
+  private $emailAttachments = null;
+  private $emailOrderPDF = null;
+  private $emailOrderSent = false;
 
   function EmailSwiftCompiler (){
   }
@@ -85,6 +89,14 @@ class EmailSwiftCompiler {
     $swift->setSubject($this->emailTemplates[$lang]['template_text']);
     $swift->setBody($this->emailTemplates[$lang]['template_html'],'text/html');
     $swift->addPart($this->emailTemplates[$lang]['template_text'],'text/plain');
+    
+    if($this->emailOrderSent){
+      require_once("classes/model.order.php");
+      $order = Order::load($this->data['order_id']);
+      if($order){
+        $order->set_shipment_status('send');
+      }
+    }
     
     return $swift;  
   }
