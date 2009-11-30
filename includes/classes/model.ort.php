@@ -54,8 +54,13 @@ class Ort Extends Model {
     }
   }
 
-  function save (){
-     return parent::save();
+  function _fill($arr, $nocheck=true){
+    if (parent::_fill($arr, $nocheck)){
+      if (!$this->fillFilename('ort_image')){
+        addError('ort_image','img_loading_problem');
+      } else return true;
+    }
+    return false;
   }
 
   function copy (){
@@ -78,8 +83,17 @@ class Ort Extends Model {
   }
 
   function delete () {
-    If (ShopDB::begin('Delete Ort')) {
+    $query = "SELECT count(event_name)
+              FROM Event
+              Where event_ort_id="._esc($this->ort_id);
+    if (!$res = ShopDB::query_one_record($query, false)) {
+      if ($res[0]) {
+         addWarning('in_use');
+         return false;
+      }
+    }
 
+    If (ShopDB::begin('Delete Ort')) {
       if($pms=PlaceMap::loadAll($this->ort_id)){
         foreach($pms as $pm){
           if (!$pm->delete()) {return false;}
@@ -88,7 +102,7 @@ class Ort Extends Model {
       if (!parent::delete()) {
         return self::_abort(con('cant delete venue'));
       }
-      return ShopDB::commit('Copied ort');
+      return ShopDB::commit('Ort deleted');
     }
   }
 

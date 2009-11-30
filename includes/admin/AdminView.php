@@ -483,15 +483,13 @@ class AdminView extends AUIComponent {
         }
 
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%' $mu>" . con($name) . "</td>
-  <td class='admin_value'>
-   <select name='$name'  $actions>\n";
+                <td class='admin_value'> <select name='$name'  $actions>\n";
 
         foreach($opt as $k => $v) {
             echo "<option value='$k'{$sel[$k]}>".con($v)."</option>\n";
         }
 
-        echo "</select>".printMsg($name, $err)."
-  </td></tr>\n";
+        echo "</select>".printMsg($name, $err)."</td></tr>\n";
     }
 
     function print_color ($name, &$data, &$err)
@@ -578,6 +576,8 @@ class AdminView extends AUIComponent {
         include_once("lang/countries_en.inc");
       }
     }
+    if (is_array($selected)) $selected = $selected[$name];
+
     if($_SHOP->lang=='de'){
   	  if(empty($selected)){$selected='CH';}
     }else{
@@ -624,7 +624,7 @@ class AdminView extends AUIComponent {
         echo "<tr><td align='center' class='admin_value' colspan='$colspan'>
           <input type='submit' name='submit' value='" . con("save") . "'>
           <input type='reset' name='reset' value='" . con("res") . "'></td></tr>";
-        echo "</table>\n";
+        echo "</form></table>\n";
     }
 
     function list_head ($name, $colspan, $width = 0)

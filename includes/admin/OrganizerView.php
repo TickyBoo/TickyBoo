@@ -49,32 +49,20 @@ class OrganizerView extends AdminView{
     $this->print_input('organizer_plz'    ,$data, $err,25,100);
     $this->print_input('organizer_ort'    ,$data, $err,25,100);
     $this->print_input('organizer_state'  ,$data, $err,25,100);
-    $this->print_countrylist('organizer_country', $data['organizer_country'], $err);
-
+    $this->print_countrylist('organizer_country', $data, $err);
     $this->print_input('organizer_phone'  ,$data, $err,25,100 );
     $this->print_input('organizer_fax'    ,$data, $err,25,100 );
     $this->print_input('organizer_email'  ,$data, $err,25,100 );
     $this->print_input('organizer_currency',$data, $err,4,3 );
 
-    $this->print_file('organizer_logo',$data,$err);
-
-    echo "
-          <tr>
-            <td align='center' class='admin_value' colspan='2'>
-              <input type='submit' name='save' value='".con('save')."'> &nbsp;
-              <input type='reset' name='reset' value='".con('res')."'>
-            </td>
-          </tr>";
-
-    echo "</form></table>\n";
+    $this->print_file('organizer_logo'     ,$data, $err);
+    $this->form_foot();
   }
 
   function draw () {
 
     $org = Organizer::load();
     if(isset($_POST['save'])){
-
-      addWarning('test me niet');
 
       if($org->fillPost() && $org->save()) {
         $_SESSION['_SHOP_ORGANIZER_DATA'] = $org;
