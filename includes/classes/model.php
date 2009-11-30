@@ -242,6 +242,47 @@ class Model {
       return true;
     }
 
+    function fillDate($name) {
+      $data = (array)$this;
+  		if ( (isset($data["$name-y"]) and strlen($data["$name-y"]) > 0) or
+           (isset($data["$name-m"]) and strlen($data["$name-m"]) > 0) or
+           (isset($data["$name-d"]) and strlen($data["$name-d"]) > 0) ) {
+  			$y = $data["$name-y"];
+  			$m = $data["$name-m"];
+  			$d = $data["$name-d"];
+
+  			if ( !checkdate($m, $d, $y) ) {
+          $this->seterror(con('invalid'), $name);
+  			} else {
+  				$this->$name = "$y-$m-$d";
+  			}
+  		}
+      return true;
+    }
+
+    function fillTime($name) {
+      global $_SHOP;
+      $data = (array)$this;
+  		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
+           (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
+  			$h = $data[$name.'-h'];
+  			$m = $data[$name.'-m'];
+  			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
+          $this->seterror(con('invalid'), $name);
+  			} elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
+          $this->seterror(con('invalid'), $name);
+  			} else {
+          if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
+            $h = $h + 12;
+          }
+  			  $this->$name = "$h:$m";
+          return true;
+  			}
+        return false;
+  		}
+      return true;
+    }
+
   function _myErrorHandler($errno, $errstr, $errfile, $errline) {
     if($errno!=2){
       echo "$errno $errstr $errfil $errline";

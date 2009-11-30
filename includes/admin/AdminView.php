@@ -668,11 +668,6 @@ class AdminView extends AUIComponent {
         echo "<tr><td class='admin_list_title' colspan='$colspan' align='center'>$name</td></tr>\n";
     }
 
-    function q ($val)
-    {
-        return shopDB::escape_string($val);
-    }
-
     function file_post ($data, $id, $table, $name, $suffix = '_image')
     {
         global $_SHOP;
@@ -742,6 +737,7 @@ class AdminView extends AUIComponent {
 
         return $res;
     }
+
     function delayedLocation($url){
         echo "<SCRIPT LANGUAGE='JavaScript'>
               <!-- Begin
