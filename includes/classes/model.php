@@ -66,20 +66,20 @@ class Model {
     }
   }
 
-  function save ($id = null){
+  function save ($id = null, $exclude=null){
     $idKey = $this->idKey;
     if(isset($id) and $id and $idKey) $this->$idKey = $id;
     if($this->id){
-      return $this->update();
+      return $this->update($exclude);
     }else{
-     return  $this->insert();
+     return  $this->insert($exclude);
     }
   }
 
-  function insert(){
+  function insert($exclude=null){
   // $this->_idName
   // unset($this->$this->_idName);
-    $values  = join(",", $this->quoteColumnVals());
+    $values  = join(",", $this->quoteColumnVals($exclude));
     $query = "INSERT INTO `{$this->_tableName}` SET $values ";
     if (ShopDB::query($query)) {
       $this->{$this->_idName} = ShopDB::insert_id();
@@ -88,8 +88,8 @@ class Model {
       return false;
   }
 
-  function update(){
-    $values  = join(",", $this->quoteColumnVals());
+  function update($exclude=null){
+    $values  = join(",", $this->quoteColumnVals($exclude));
 
     $sql = "UPDATE `{$this->_tableName}` SET $values";
     if ($this->_idName){

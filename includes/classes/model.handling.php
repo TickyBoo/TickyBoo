@@ -37,11 +37,12 @@ class Handling Extends Model {
 
   protected $_idName    = 'handling_id';
   protected $_tableName = 'Handling';
-  protected $_columns   = array( '#event_id',
-      '*event_name', 'event_text', 'event_short_text', 'event_url',
-      'event_image', '*event_ort_id', '#event_pm_id', 'event_date', 'event_time',
-      'event_open', 'event_end', '*event_status', '*event_order_limit', 'event_template',
-      '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
+  protected $_columns   = array('#handling_id', 'handling_payment', 'handling_shipment', 'handling_fee_fix',
+                                'handling_fee_percent', 'handling_email_template', 'handling_pdf_template',
+                                'handling_pdf_ticket_template', 'handling_pdf_format', 'handling_html_template',
+                                'handling_sale_mode', 'handling_extra', 'handling_text_shipment', 'handling_text_payment',
+                                'handling_expires_min', '#handling_alt', 'handling_alt_only' );
+//  'handling_delunpaid' => " enum('Yes','No') NOT NULL DEFAULT 'No'",
 
   var $templates;
   protected $_pment = null;
@@ -104,7 +105,7 @@ class Handling Extends Model {
     $this->handling_email_template = $this->_ser_templates($this->handling_email_template);
     $exclude = ($this->handling_id)? array('handling_payment','handling_shipment'): null;
 
-    return parent::save($exclude);
+    return parent::save(null, $exclude);
   }
 
   function CheckValues($arr) {
