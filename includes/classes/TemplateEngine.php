@@ -107,7 +107,9 @@ class TemplateEngine {
     }
   
     //try to compile, pass template and name to compiler.
-    $code2 = $comp2->compile($data['template_text'],$t_class_name);
+    if(is_object($comp2)){
+      $code2 = $comp2->compile($data['template_text'],$t_class_name);  
+    }
     if(!$code = $comp->compile($data['template_text'],$t_class_name)){
       //if failed to compile set error.
       $this->errors = $comp->errors;

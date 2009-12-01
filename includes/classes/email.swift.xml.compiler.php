@@ -81,14 +81,20 @@ class EmailSwiftXMLCompiler {
   private function emailToParam($val){
     preg_match_all("/(.*?)(<)([^>]+)(>)/",$val,$matches);
     if(is($matches[3][0])){
-      $email = $this->replace_vars($matches[3][0],1);
+      $email = $this->replace_vars(str_replace('"','\"',$matches[3][0]),0);
       if(is($matches[1][0])){
-        $names = "\"".$this->replace_vars(str_replace('"','\"',$matches[1][0]),1)."\"";
-        $ret[$email] = $names;
+        $names = $this->replace_vars(str_replace('"','\"',$matches[1][0]),1);
+        $ret = $email." => \"".$names."\"";
+        print_r($ret);
         return $ret;
+      }else{
+        $ret = "\"".$email."\"";
+        print_r($ret);
       }
     }
-    return "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
+    $ret = "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
+    print_r($ret);
+    return $ret;
   }
 
   function error ($message){
@@ -96,21 +102,21 @@ class EmailSwiftXMLCompiler {
   }
 
 
-  function replace_vars ($val,$quot=0){
+  private function replace_vars ($val,$quot=0){
     if($quot){
-      $return = preg_replace_callback('/\$(\w+)/',array(&$this,'_rep_q_cbk'),$val);
+      $return = preg_replace_callback('/\$(\w+)/',array(&$this,'replaceCallbackQuote'),$val);
       return $return;
     }else{
-      return preg_replace_callback('/\$(\w+)/',array(&$this,'_rep_cbk'),$val);
+      return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceCallback'),$val);
     }
   }
 
-  function _rep_cbk ($matches){
+  private function replaceCallback ($matches){
     array_push($this->vars,$matches[1]);
     return '$'.$this->args.'["'.$matches[1].'"]';
   }
 
-  function _rep_q_cbk ($matches){
+  private function replaceCallbackQuote ($matches){
     array_push($this->vars,$matches[1]);
     return '".$'.$this->args.'["'.$matches[1].'"]."';
   }
@@ -149,7 +155,7 @@ class EmailSwiftXMLCompiler {
         break;
   
       case "from" :
-        $this->addParam('from',$this->attribToParamString($a['EMAIL']),$a['LANG']);
+        $this->addParam('from',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
   
       case "to" :
@@ -158,11 +164,11 @@ class EmailSwiftXMLCompiler {
         break;
         
       case "cc" :
-        $this->addToParam('cc',$this->attribToParamString($a['EMAIL']),$a['LANG']);
+        $this->addToParam('cc',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
   
   		case "bcc" :
-        $this->addToParam('bcc',$this->attribToParamString($a['EMAIL']),$a['LANG']);
+        $this->addToParam('bcc',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
   
   		case "header" :
@@ -266,62 +272,43 @@ class EmailSwiftXMLCompiler {
     $pre='      ';
     $post=";\n";
     if(isset($data['from'])){
-   		$res.=$pre.'$mail->setFrom('.$data['from'].')'.$post;
-    } else if ($lang===0){
-    	$res.=$pre.'$mail->setFrom("'.$_SHOP->organizer_data->organizer_name.' <'.$_SHOP->organizer_data->organizer_email.'>" )'.$post;
+   		$res.=$pre.'$message->setFrom(array('.$data['from'].'))'.$post;
+    }else if ($lang===0){
+    	$res.=$pre.'$message->setFrom(array("'.$_SHOP->organizer_data->organizer_email.'"=>"'.$_SHOP->organizer_data->organizer_name.'" ))'.$post;
     }
 
     if(isset($data['cc'])){
-			$cc=implode('.",".',$data['cc']);
-     	$res.=$pre.'$mail->setCc('. $cc .')'.$post;
+			$cc=implode(',',$data['cc']);
+     	$res.=$pre.'$message->setCc(array('. $cc .'))'.$post;
     }
 
     if(isset($data['bcc'])){
-			$bcc=implode('.",".',$data['bcc']);
-     	$res.=$pre.'$mail->setBcc('. $bcc .')'.$post;
+			$bcc=implode(',',$data['bcc']);
+     	$res.=$pre.'$message->setBcc(array('. $bcc .'))'.$post;
     }
 
     if(isset($data['to'])){
-      $res.=$pre.'$this->setTo('.$data['to'].')'.$post;
+      $res.=$pre.'$message->setTo(array('.$data['to'].'))'.$post;
     }
 
     if(isset($data['subject'])){
-      $res.=$pre.'$mail->setSubject('. $data['subject'] .')'.$post;
+      $res.=$pre.'$message->setSubject('. $data['subject'] .')'.$post;
     }
 
     if(isset($data['return'])){
-      $res.=$pre.'$mail->setReturnPath('. $data['return'] .')'.$post;
+      $res.=$pre.'$message->setReturnPath('. $data['return'] .')'.$post;
     }
 
-    if(isset($data['text_charset'])){
-      $res.=$pre.'$mail->setTextCharset('. $data['text_charset'] .')'.$post;
-    }else{
-      $res.=$pre.'$mail->setTextCharset("UTF-8")'.$post;
-		}
-
-    if(isset($data['html_charset'])){
-      $res.=$pre.'$mail->setHtmlCharset('. $data['html_charset'] .')'.$post;
-    }else{
-      $res.=$pre.'$mail->setHtmlCharset("UTF-8")'.$post;
-		}
-
+    //defaults to UTF
     if(isset($data['head_charset'])){
-      $res.=$pre.'$mail->setHeadCharset('. $data['head_charset'] .')'.$post;
-    }else{
-      $res.=$pre.'$mail->setHeadCharset("UTF-8")'.$post;
-		}
-
-    if(isset($data['header'])){
-			foreach($data['header'] as $header){
-				$res.=$pre.'$mail->setHeader('. $header['name'] .','.$header['value'].')'.$post;
-			}
-		}
+      $res.=$pre.'$message->->setCharset('. $data['head_charset'] .')'.$post;
+    }
 
     if(isset($data['html'])){
-      $res.=$pre.'$mail->setHtml('.$data['html'].")".$post;
+      $res.=$pre.'$message->setHtml('.$data['html'].",'text/html',".is($data['html_charset'],"null").")".$post;
     }
     if(isset($data['text'])){
-      $res.=$pre.'$mail->setText('.$data['text'].")".$post;
+      $res.=$pre.'$message->addPart('.$data['text'].",'text/plain',".is($data['text_charset'],"null").")".$post;
     }
 
     if(isset($data['order_pdf'])){
@@ -335,10 +322,8 @@ class EmailSwiftXMLCompiler {
 				}else{
 					$mode=3;
 				}
-
-
-       $res.=$pre.'$mail->addAttachment( new Attachment( Order::print_order('.$order_id.",'".
-             $order_pdf['summary']."', 'data', FALSE, $mode), ".$order_pdf['name'].", 'application/pdf', new Base64Encoding()))".$post;
+        
+        $res .= $pre.'$message->attach(Swift_Attachment::newInstance(Order::print_order('.$order_id.",'".$order_pdf['summary']."', 'data', FALSE, $mode), ".$order_pdf['name'].", 'application/pdf'))".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $res.=$pre.'$order=Order::load('.$order_id.')'.$post;
