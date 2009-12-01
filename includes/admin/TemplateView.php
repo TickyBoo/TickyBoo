@@ -492,21 +492,25 @@ class TemplateView extends AdminView{
 
 
   private function preInsertEmailTemp(){
-    $tempArr = $_POST['template_array'];
-
-    $tempArr['emails_cc'] = is($tempArr['emails_cc'],array());
-    foreach($tempArr['emails_cc'] as $key=>$array){
-      $tempArr['emails_cc'][$array['key']]=$array['value'];
-      unset($tempArr['emails_cc'][$key]);
+    if(is($_POST['template_array'],false)){
+      $tempArr = $_POST['template_array'];
+      
+      $tempArr['emails_cc'] = is($tempArr['emails_cc'],array());
+      foreach($tempArr['emails_cc'] as $key=>$array){
+        $tempArr['emails_cc'][$array['key']]=$array['value'];
+        unset($tempArr['emails_cc'][$key]);
+      }
+    
+      $tempArr['emails_bcc'] = is($tempArr['emails_bcc'],array());
+      foreach($tempArr['emails_bcc'] as $key=>$array){
+        $tempArr['emails_bcc'][$array['key']]=$array['value'];
+        unset($tempArr['emails_bcc'][$key]);
+      }
+    
+  
+      $_POST['template_array'] = $tempArr;
+      $_POST['template_text']=serialize($_POST['template_array']);
     }
-    $tempArr['emails_bcc'] = is($tempArr['emails_bcc'],array());
-    foreach($tempArr['emails_bcc'] as $key=>$array){
-      $tempArr['emails_bcc'][$array['key']]=$array['value'];
-      unset($tempArr['emails_bcc'][$key]);
-    }
-
-    $_POST['template_array'] = $tempArr;
-    $_POST['template_text']=serialize($_POST['template_array']);
   }
   function extramenus(&$menu) {
     global $order;

@@ -190,7 +190,7 @@ class User_Smarty {
     if (!isset($_REQUEST['uar'])) {
       return false;
     }
-    if (!User::Activate($_REQUEST['uar'], $errors)) {
+    if (!User::activate($_REQUEST['uar'], $errors)) {
       $smarty->assign('errors',$errors);
       return false ;
     }

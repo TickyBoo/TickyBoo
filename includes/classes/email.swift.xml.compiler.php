@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once "classes/xml2php.php";
 
-class EmailSwiftCompiler {
+class EmailSwiftXMLCompiler {
 
   var $res=array(); //result of execution, indexed by language
 
@@ -50,10 +50,11 @@ class EmailSwiftCompiler {
   var $deflang=0;
   var $errors=array();
 
-  function EmailSwiftCompiler (){
+  function EmailSwiftXMLCompiler (){
   }
-
-  function emit ($key,$val,$lang=0){
+  
+  
+  private function addParam ($key,$val,$lang=0){
     if(!$lang){
       $lang=0; //insure that this is '0' and not other 'null' values
     }
@@ -61,7 +62,7 @@ class EmailSwiftCompiler {
     $this->res[$lang][$key]=$val;
   }
 
-  function add ($key,$val,$lang=0){
+  private function addToParam ($key,$val,$lang=0){
     if(!$lang){
       $lang=0; //insure that this is '0' and not other 'null' values
     }
@@ -69,14 +70,25 @@ class EmailSwiftCompiler {
     $this->res[$lang][$key][]=$val;
   }
 
-  function a2p ($val){
+  private function attribToParam ($val){
     return $this->replace_vars($val);
   }
 
-
-
-  function a2ps ($val){
+  private function attribToParamString ($val){
     return "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\""; 
+  }
+  
+  private function emailToParam($val){
+    preg_match_all("/(.*?)(<)([^>]+)(>)/",$val,$matches);
+    if(is($matches[3][0])){
+      $email = $this->replace_vars($matches[3][0],1);
+      if(is($matches[1][0])){
+        $names = "\"".$this->replace_vars(str_replace('"','\"',$matches[1][0]),1)."\"";
+        $ret[$email] = $names;
+        return $ret;
+      }
+    }
+    return "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
   }
 
   function error ($message){
@@ -137,64 +149,65 @@ class EmailSwiftCompiler {
         break;
   
       case "from" :
-        $this->emit('from',$this->a2ps($a['EMAIL']),$a['LANG']);
+        $this->addParam('from',$this->attribToParamString($a['EMAIL']),$a['LANG']);
         break;
   
       case "to" :
-        $this->emit('to',$this->a2ps($a['EMAIL']),$a['LANG']);
+        //$this->addParam('to',$this->attribToParamString($a['EMAIL']),$a['LANG']);
+        $this->addParam('to',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
-  
+        
       case "cc" :
-        $this->add('cc',$this->a2ps($a['EMAIL']),$a['LANG']);
+        $this->addToParam('cc',$this->attribToParamString($a['EMAIL']),$a['LANG']);
         break;
   
   		case "bcc" :
-        $this->add('bcc',$this->a2ps($a['EMAIL']),$a['LANG']);
+        $this->addToParam('bcc',$this->attribToParamString($a['EMAIL']),$a['LANG']);
         break;
   
   		case "header" :
-        $this->add('header',array(
-  					'name'=>$this->a2ps($a['NAME']),
-  					'value'=>$this->a2ps($a['VALUE']),
+        $this->addToParam('header',array(
+  					'name'=>$this->attribToParamString($a['NAME']),
+  					'value'=>$this->attribToParamString($a['VALUE']),
   				),$a['LANG']);
         break;
   
   		case "return" :
-        $this->emit('return',$this->a2ps($a['EMAIL']),$a['LANG']);
+        $this->addParam('return',$this->attribToParamString($a['EMAIL']),$a['LANG']);
         break;
   
   		case "text_charset" :
-        $this->emit('text_charset',$this->a2ps($a['VALUE']),$a['LANG']);
+        $this->addParam('text_charset',$this->attribToParamString($a['VALUE']),$a['LANG']);
         break;
   
   		case "html_charset" :
-        $this->emit('html_charset',$this->a2ps($a['VALUE']),$a['LANG']);
+        $this->addParam('html_charset',$this->attribToParamString($a['VALUE']),$a['LANG']);
         break;
   
   		case "head_charset" :
-        $this->emit('head_charset',$this->a2ps($a['VALUE']),$a['LANG']);
+        $this->addParam('head_charset',$this->attribToParamString($a['VALUE']),$a['LANG']);
         break;
   
   		case "subject" :
-        $this->emit('subject',$this->a2ps($a['VALUE']),$a['LANG']);
+        $this->addParam('subject',$this->attribToParamString($a['VALUE']),$a['LANG']);
         break;
   
       case "attachment":
-        $this->add('attachment',array(
-          'file'=>$this->a2ps($a['FILE']),
-          'name'=>$this->a2ps($a['NAME']),
-          'type'=>$this->a2ps($a['TYPE']),
-          'data'=>$this->a2ps($a['DATA'])
+        $this->addToParam('attachment',array(
+          'file'=>$this->attribToParamString($a['FILE']),
+          'name'=>$this->attribToParamString($a['NAME']),
+          'type'=>$this->attribToParamString($a['TYPE']),
+          'data'=>$this->attribToParamString($a['DATA'])
         ),$a['LANG']);
         break;
   
       case "order_pdf" :
-        $this->add('order_pdf',array(
-          'name'=>$this->a2ps($a['NAME']),
-          'order_id'=>$this->a2p($a['ORDER_ID']),
-          'mark_send'=>$this->a2p($a['MARK_SEND']),
-  				'summary'=>$this->a2p($a['SUMMARY']),
-  				'mode'=>$this->a2p($a['MODE'])
+        $this->addToParam('order_pdf',array(
+          'name'=>$this->attribToParamString($a['NAME']),
+          'order_id'=>$this->attribToParam($a['ORDER_ID']),
+          'mark_send'=>$this->attribToParam($a['MARK_SEND']),
+  				'summary'=>$this->attribToParam($a['SUMMARY']),
+  				'mode'=>$this->attribToParam($a['MODE'])
         ),$a['LANG']);
         break;
     }
@@ -213,7 +226,7 @@ class EmailSwiftCompiler {
       $lang=array_pop($this->stack);
       $this->mode=array_pop($this->stack);
 
-      $this->emit('text',$this->a2ps($this->text),$lang);
+      $this->addParam('text',$this->attribToParamString($this->text),$lang);
 
       $this->text='';
       break;
@@ -222,7 +235,7 @@ class EmailSwiftCompiler {
       $lang=array_pop($this->stack);
       $this->mode=array_pop($this->stack);
 
-      $this->emit('html',$this->a2ps($this->text),$lang);
+      $this->addParam('html',$this->attribToParamString($this->text),$lang);
 
       $this->text='';
       break;
@@ -269,7 +282,7 @@ class EmailSwiftCompiler {
     }
 
     if(isset($data['to'])){
-      $res.=$pre.'$this->to[]='.$data['to'].$post;
+      $res.=$pre.'$this->setTo('.$data['to'].')'.$post;
     }
 
     if(isset($data['subject'])){

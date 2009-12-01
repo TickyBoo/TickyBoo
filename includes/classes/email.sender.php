@@ -36,7 +36,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 class EmailSender {
   
-  public function send(&$template,&$data,$testMail=''){
+  public function send(&$template,&$data,$testMail='',$lang=''){
     
     //Get $template Type
     if(!is_object($template)){
@@ -45,7 +45,7 @@ class EmailSender {
     $type = is($template->template_type,'swift');
     if($type=='swift'){
       require_once('classes/email.swift.sender.php');
-      $template->write($message,$data);
+      $template->write($message,$data,$lang);
       if(EmailSwiftSender::send($message)){
         return true;
       }
@@ -53,7 +53,7 @@ class EmailSender {
     }else{//either system or old mailer
       require_once('classes/htmlMimeMail.php');
       $email= new htmlMimeMail();
-      $template->build($email,$data);
+      $template->build($email,$data,$lang);
       if($email->send($template->to)){
         return true;
       } 

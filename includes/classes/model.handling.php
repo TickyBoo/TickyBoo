@@ -133,21 +133,19 @@ class Handling Extends Model {
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
     include_once(INC.'classes'.DS.'TemplateEngine.php');
-    include_once(INC.'classes'.DS.'htmlMimeMail.php');
+    require_once(INC.'classes'.DS.'email.sender.php');
 
     $ok=TRUE;
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
       $te=new TemplateEngine;
       $tpl=&$te->getTemplate($template_name);
-
-      $email = new htmlMimeMail();
+      
       $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
-      $tpl->build($email,$order_d,$_SHOP->lang);
-
-      if(!$email->send($tpl->to)){
+      
+      if(!EmailSender::send($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;
       }

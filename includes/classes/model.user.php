@@ -129,7 +129,7 @@ class User extends Model{
             }
             $data['user_id'] = $user->user_id;
 
-            if (!User::SendActivatieCode($data, $active, $myerror)) {
+            if (!User::sendActivationCode($data, $active, $myerror)) {
                $err = $myerror;
                return self::_abort('cant send activation code');
             }
@@ -206,7 +206,7 @@ class User extends Model{
     	}
   	}
 
-  function Activate($userdata, &$errors){
+  function activate($userdata, &$errors){
     //echo $userdata, "<br>\n";
     if (strpos($userdata,'%')!==false) {
       $userdata = urldecode($userdata);
@@ -256,7 +256,7 @@ class User extends Model{
        	unset($row['active']);
 
    		if(ShopDB::query($query) and ShopDB::affected_rows()==1){
-         	User::SendActivatieCode($row, $active, $errors);
+         	User::sendActivationCode($row, $active, $errors);
          	return true;
    		} else {
    		    $errors = con("log_err_wrong_usr");
@@ -264,9 +264,9 @@ class User extends Model{
    	}
 	}
 
-  public function SendActivatieCode($row, $active, &$errors){
+  public function sendActivationCode($row, $active, &$errors){
   	require_once('classes/TemplateEngine.php');
-    require_once('classes/email.sender.php');
+    require_once('classes'.DS.'email.sender.php');
     global $_USER_ERROR, $_SHOP;
     // new part
     $email = $data['user_email'] ;
@@ -361,8 +361,9 @@ class User extends Model{
 
   function forgot_password($email){
     global $_SHOP;
-	require_once('classes/TemplateEngine.php');
-	require_once('classes/htmlMimeMail.php');
+    require_once('classes/TemplateEngine.php');
+    require_once('classes'.DS.'email.sender.php');
+    
 
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
@@ -372,28 +373,24 @@ class User extends Model{
 
     $pwd = substr( base_convert(md5(uniqid(rand())),15,36),0,8);
     $pwd_md5=md5($pwd);
-
+    
     $query="UPDATE auth SET password="._esc($pwd_md5)." WHERE user_id="._esc($row['user_id'])." limit 1";
-
-    if(shopDB::query($query) and shopDB::affected_rows()==1){
-
-      $email = new htmlMimeMail();
+    
+    if(ShopDB::query($query) and ShopDB::affected_rows()==1){
 
       $tpl=TemplateEngine::getTemplate('forgot_passwd');
 //      $row = $this->values;
       $row['new_password']=$pwd;
-      $tpl->build($email, $row);
-      if($email->send($tpl->to)){
+      
+      if(EmailSender::send($tpl,$row,"",$_SHOP->lang)){
         return true;
       } else {
         echo 'cant send email:';
-        print_r($email->errors);
       }
-    } else
+    } else {
         echo 'cant set new password';
-
+    }
   }
-
 }
 
 function convMandatory($mandatory_l){
