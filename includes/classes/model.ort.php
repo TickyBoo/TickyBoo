@@ -55,12 +55,8 @@ class Ort Extends Model {
   }
 
   function _fill($arr, $nocheck=true){
-    if (parent::_fill($arr, $nocheck)){
-      if (!$this->fillFilename('ort_image')){
-        addError('ort_image','img_loading_problem');
-      } else return true;
-    }
-    return false;
+    $this->fillFilename($arr, 'ort_image');
+    return parent::_fill($arr, $nocheck);
   }
 
   function copy (){
@@ -82,15 +78,13 @@ class Ort Extends Model {
     }
   }
 
-  function delete () {
+  function delete ($id) {
+
     $query = "SELECT count(event_name)
               FROM Event
               Where event_ort_id="._esc($this->ort_id);
-    if (!$res = ShopDB::query_one_record($query, false)) {
-      if ($res[0]) {
-         addWarning('in_use');
-         return false;
-      }
+    if ($res = ShopDB::query_one_record($query, false) && $res[0]) {
+      return addWarning('in_use');;
     }
 
     If (ShopDB::begin('Delete Ort')) {

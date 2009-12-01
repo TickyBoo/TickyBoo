@@ -40,20 +40,29 @@ class Eventgroup Extends Model {
   protected $_columns   = array( 'event_group_id','*event_group_name', 'event_group_type', 'event_group_description',
                                  '*event_group_status', 'event_group_start_date', 'event_group_end_date', 'event_group_image');
 
-  function load ($ort_id){
-    $query="select * from Event_group where Event_group_id=$ort_id";
-    if($res=ShopDB::query_one_row($query)){
-
-      $ort=new Eventgroup;
-      $ort->_fill($res);
-
-      return $ort;
+  function load ($id=0){
+    $eg=new Eventgroup;
+    if ($id) {
+      $query="select *
+              from Event_group
+              where Event_group_id="._esc($id);
+      if($res=ShopDB::query_one_row($query)){
+        $eg->_fill($res);
+      }
     }
+    if (!isset($eg->event_group_status)) {$eg->event_group_status ='unpub';}
+    return $eg;
   }
 
   function save (){
-    if (!isset($this->event_group_status)) {$this->event_group_status ='unpub';}
     return parent::save();
+  }
+
+  function _fill($arr, $nocheck=true){
+    $this->fillFilename($arr, 'event_group_image');
+    $this->fillDate($arr, 'event_group_start_date');
+    $this->fillDate($arr, 'event_group_end_date');
+    return parent::_fill($arr, $nocheck);
   }
 
   static function setState($eg_id, $state) {
@@ -61,10 +70,18 @@ class Eventgroup Extends Model {
     $query="UPDATE Event_group SET
               event_group_status='{$state}'
             WHERE event_group_id="._esc((int)$eg_id);
-    if(!ShopDB::query($query)){
-      echo shopDB::error();
-      return 0;
-    }
+    return ShopDB::query($query);
   }
+
+  function delete($id) {
+    $query = "SELECT count(event_name)
+              FROM Event
+              Where event_group_id="._esc($id);
+    if ($res = ShopDB::query_one_record($query, false) && $res[0]) {
+      return addWarning('in_use');
+    }
+    return parent::delete($id);
+  }
+
 }
 ?>

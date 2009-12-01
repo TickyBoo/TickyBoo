@@ -583,7 +583,8 @@ function is_base64_encoded($data){
  */
 function addError($key, $const) {
   Global $_SHOP;
-  $_SHOP->Messages[$key][] = con($const);
+  $_SHOP->Messages['__Errors__'][$key][] = con($const);
+  return false;
 }
 
 /**
@@ -592,7 +593,9 @@ function addError($key, $const) {
  * @return
  */
 function addNotice($const) {
-  addError('__Notice__', $const);
+  Global $_SHOP;
+  $_SHOP->Messages['__Notice__'][] = con($const);
+  return false;
 }
 
 /**
@@ -601,14 +604,26 @@ function addNotice($const) {
  * @return
  */
 function addWarning($const) {
-  addError('__Warning__', $const);
+  Global $_SHOP;
+  $_SHOP->Messages['__Warning__'][] = con($const);
+  return false;
+}
+
+function hasErrors(){
+  Global $_SHOP;
+  return (isset($_SHOP->Messages['__Errors__']) && count($_SHOP->Messages['__Errors__'])>0);
 }
 
 function printMsg($key, $err = null) {
   Global $_SHOP;
   $output ='';
   if (!is_array($err)){
-     $err = $_SHOP->Messages;
+    if (substr($key,1,1)=='_') {
+      $err = $_SHOP->Messages;
+    } else {
+      $err = $_SHOP->Messages['__Errors__'];
+    }
+
   }
   if (isset($err[$key])) {
     foreach($err[$key] as $value){

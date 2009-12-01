@@ -128,9 +128,9 @@ class Model {
   }
 
   function delete($id)  {
-    if (!$id) $id = $this->id;
-    $id = _esc($id);
-    ShopDB::query("DELETE FROM `{$this->_tableName}` WHERE `{$this->_idName}` = $id ");
+    if (!$id) return addWarning('Cant_delete_without_id');
+    ShopDB::query("DELETE FROM `{$this->_tableName}`
+                  WHERE `{$this->_idName}` = "._esc($id));
     return ShopDB::affected_rows();
   }
 
@@ -138,7 +138,7 @@ class Model {
     $ok = true;
     foreach($this->_columns as $key){
       if (self::getFieldtype($key)== self::MDL_MANDATORY) {
-        if(empty($arr[$key])){
+        if (empty($arr[$key]) && (!isset($arr[$key]) && empty($this->$key) )) {
           $ok = false;
           addError($key, 'mandatory');
         }
@@ -146,19 +146,6 @@ class Model {
     }
     return ($ok);
   }
-
-  function fillPost($nocheck=false)    { return $this->_fill($_POST,$nocheck); }
-  function fillGet($nocheck=false)     { return $this->_fill($_GET ,$nocheck); }
-  function fillRequest($nocheck=false) { return $this->_fill($_REQUEST ,$nocheck); }
-
-  function _fill($arr , $nocheck=true)  {
-    if(is_array($arr) and ($nocheck or $this->CheckValues ($arr))) {
-      foreach($arr as $key => $val)
-        $this->$key = $val;
-      return true;
-    }
-    return false;
-   }
 
   function _abort ($str=''){
     if ($str)  addWarning ($str);
@@ -176,6 +163,93 @@ class Model {
       return self::MDL_MANDATORY;
     }
     return self::MDL_NONE;
+  }
+
+  function fillPost($nocheck=false)    { return $this->_fill($_POST,$nocheck); }
+  function fillGet($nocheck=false)     { return $this->_fill($_GET ,$nocheck); }
+  function fillRequest($nocheck=false) { return $this->_fill($_REQUEST ,$nocheck); }
+
+  function _fill($arr , $nocheck=true)  {
+    if(is_array($arr) and ($nocheck or $this->CheckValues ($arr))) {
+      foreach($arr as $key => $val)
+        $this->$key = $val;
+      return true;
+    }
+    return false;
+   }
+
+  function fillFilename (&$array, $name, $removefile= false) {
+    global $_SHOP;
+    $remove = 'remove_' . $name;
+    if (isset($this->$remove)) {
+      if ($removefile) {
+        unlink( $_SHOP->files_dir . DS  .$this->$name);
+      }
+      $array[$name] = '';
+    } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
+      if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) { echo 'match';
+          addError($name,'img_loading_problem');
+          return false;
+      }
+
+      $ext = strtolower($ext[1]);
+      if (!in_array($ext, $_SHOP->allowed_uploads)) { echo 'ext';
+          addError($name,'img_loading_problem');
+          return false;
+      }
+      $doc_name = strtolower($name) . '_' . uniqid (). '.' . $ext;
+
+      if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir . DS . $doc_name)) {
+          addError($name,'img_loading_problem');
+          return false;
+      }
+
+      chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
+      $array[$name] = $doc_name;
+//      print_r($this);
+    }
+    return true;
+  }
+
+  function fillDate(&$array, $name) {
+    $data = (array)$this;
+		if ( (isset($array["$name-y"]) and strlen($array["$name-y"]) > 0) or
+         (isset($array["$name-m"]) and strlen($array["$name-m"]) > 0) or
+         (isset($array["$name-d"]) and strlen($array["$name-d"]) > 0) ) {
+			$y = $array["$name-y"];
+			$m = $array["$name-m"];
+			$d = $array["$name-d"];
+
+			if ( !checkdate($m, $d, $y) ) {
+        addError($name, 'invalid');
+			} else {
+				$array[$name] = "$y-$m-$d";
+			}
+		}
+    return true;
+  }
+
+  function fillTime(&$data, $name) {
+    global $_SHOP;
+    $data = (array)$this;
+		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
+         (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
+			$h = $data[$name.'-h'];
+			$m = $data[$name.'-m'];
+			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
+        addError($name, 'invalid');
+			} elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
+        addError($name, 'invalid');
+			} else {
+        if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
+          $h = $h + 12;
+        }
+			  $data[$name] = "$h:$m";
+        return true;
+			}
+      return false;
+		}
+    return true;
   }
 
   /**
@@ -197,79 +271,6 @@ class Model {
       return parent::__get($key);
     }*/
   }
-
-    function fillFilename ($name, $removefile= false) {
-      global $_SHOP;
-      $remove = 'remove_' . $name;
-      if (isset($this->$remove)) {
-        if ($removefile) {
-          unlink( $_SHOP->files_dir . DS  .$this->$name);
-        }
-        $this->$name = '';
-       // print_r($this);
-      } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
-        if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) { echo 'match';
-            return false;
-        }
-
-        $ext = strtolower($ext[1]);
-        if (!in_array($ext, $_SHOP->allowed_uploads)) { echo 'ext';
-            return false;
-        }
-
-        $doc_name = strtolower($this->_tableName) . '_' . $this->id . '.' . $ext;
-
-        if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir . DS . $doc_name)) { echo 'move';
-            return false;
-        }
-
-        chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
-        $this->$name = $doc_name;
-       // print_r($this);
-      }
-      return true;
-    }
-
-    function fillDate($name) {
-      $data = (array)$this;
-  		if ( (isset($data["$name-y"]) and strlen($data["$name-y"]) > 0) or
-           (isset($data["$name-m"]) and strlen($data["$name-m"]) > 0) or
-           (isset($data["$name-d"]) and strlen($data["$name-d"]) > 0) ) {
-  			$y = $data["$name-y"];
-  			$m = $data["$name-m"];
-  			$d = $data["$name-d"];
-
-  			if ( !checkdate($m, $d, $y) ) {
-          addError($name, 'invalid');
-  			} else {
-  				$this->$name = "$y-$m-$d";
-  			}
-  		}
-      return true;
-    }
-
-    function fillTime($name) {
-      global $_SHOP;
-      $data = (array)$this;
-  		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
-           (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
-  			$h = $data[$name.'-h'];
-  			$m = $data[$name.'-m'];
-  			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
-          addError($name, 'invalid');
-  			} elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
-          addError($name, 'invalid');
-  			} else {
-          if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
-            $h = $h + 12;
-          }
-  			  $this->$name = "$h:$m";
-          return true;
-  			}
-        return false;
-  		}
-      return true;
-    }
 
   function _myErrorHandler($errno, $errstr, $errfile, $errline) {
     if($errno!=2){

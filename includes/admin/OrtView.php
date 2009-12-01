@@ -106,11 +106,11 @@ class OrtView extends AdminView {
                 }
             }
         } elseif ($_POST['action'] == 'save') {
-          $ort = new ort;
+          $ort = ort::load($_POST['ort_id']);
           if ($ort->fillPost() && $ort->save()) {
             $this->table();
           } else {
-            $this->form($_POST, null, con((isset($data['ort_id']))?ort_update_title:ort_insert_title));
+            $this->form($_POST, null, con((isset($_POST['ort_id']))?'ort_update_title':'ort_insert_title'));
           }
         } elseif ($_GET['action'] == 'add') {
            $this->ort_form($row, $err, con('ort_add_title'));

@@ -67,12 +67,12 @@ class Organizer  Extends Model {
   }
 
   function _fill($arr, $nocheck=true){
-    if (parent::_fill($arr, $nocheck)){
-      if (!$this->fillFilename('organizer_logo')){
-        addError('organizer_logo','img_loading_problem');
-      } else return true;
-    }
-    return false;
+    $this->fillFilename($arr, 'organizer_logo');
+    return parent::_fill($arr, $nocheck);
+  }
+
+  function delete(){
+    return addWarning('cant_delete_organizer');
   }
 }
 ?>

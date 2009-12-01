@@ -535,7 +535,7 @@ class AdminView extends AUIComponent {
     function print_file ($name, &$data, &$err, $type = 'img', $suffix = ''){
         global $_SHOP;
 
-        if (isset($data[$name]) || empty($data[$name])) {
+        if (!isset($data[$name]) || empty($data[$name])) {
             echo "\n<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td></tr>\n";
         } else {
