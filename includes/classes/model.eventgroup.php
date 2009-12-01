@@ -73,7 +73,7 @@ class Eventgroup Extends Model {
     return ShopDB::query($query);
   }
 
-  function delete($id) {
+  static function delete($id) {
     $query = "SELECT count(event_name)
               FROM Event
               Where event_group_id="._esc($id);

@@ -78,12 +78,12 @@ class Ort Extends Model {
     }
   }
 
-  function delete ($id) {
+  static function delete ($id) {
 
     $query = "SELECT count(event_name)
               FROM Event
               Where event_ort_id="._esc($this->ort_id);
-    if ($res = ShopDB::query_one_record($query, false) && $res[0]) {
+    if (!$res = ShopDB::query_one_record($query, false) || $res[0]) {
       return addWarning('in_use');;
     }
 

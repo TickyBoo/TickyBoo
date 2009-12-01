@@ -127,24 +127,23 @@ class Model {
     return "`{$key}`="._esc($value);
   }
 
-  function delete($id)  {
+  static function delete($id)  {
     if (!$id) return addWarning('Cant_delete_without_id');
+
     ShopDB::query("DELETE FROM `{$this->_tableName}`
-                  WHERE `{$this->_idName}` = "._esc($id));
+                   WHERE `{$this->_idName}` = "._esc($id));
     return ShopDB::affected_rows();
   }
 
   Function CheckValues ($arr) {
-    $ok = true;
     foreach($this->_columns as $key){
       if (self::getFieldtype($key)== self::MDL_MANDATORY) {
-        if (empty($arr[$key]) && (!isset($arr[$key]) && empty($this->$key) )) {
-          $ok = false;
+        if ((!isset($arr[$key]) || empty($arr[$key])) && ( (!isset($this->$key) || empty($this->$key)))) {
           addError($key, 'mandatory');
         }
       }
     }
-    return ($ok);
+    return (!hasErrors());
   }
 
   function _abort ($str=''){

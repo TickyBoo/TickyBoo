@@ -620,9 +620,10 @@ function printMsg($key, $err = null) {
   if (!is_array($err)){
     if (substr($key,1,1)=='_') {
       $err = $_SHOP->Messages;
-    } else {
+    } elseif (isset($_SHOP->Messages['__Errors__'])) {
       $err = $_SHOP->Messages['__Errors__'];
-    }
+    } else
+       return '';
 
   }
   if (isset($err[$key])) {

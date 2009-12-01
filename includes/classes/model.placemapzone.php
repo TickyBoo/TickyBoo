@@ -92,29 +92,27 @@ class PlaceMapZone Extends Model {
      return parent::save();
   }
 
-  function delete ($pmz_id){
-    global $_SHOP;
-
-		if(!$zone=PlaceMapZone::load($pmz_id)){
-		  return;
-		}
-    $seats = shopDB::query_one_row("select count(*) from Seats
-                                   where seat_zone_id ={$zone_id}", false);
-    if ($seats[0]>0) {
-      echo '<div class=error>'.con('Zone_delete_failed_seats_exists').'</div>';
-      return false;
+  static function delete ($pmz_id){
+    if 	(!$zone=PlaceMapZone::load($pmz_id)){
+      return true;
     }
 
-    if(ShopDB::begin('delete zone: '.$zone_id)){
-      $query="delete from PlaceMapZone where pmz_id=$pmz_id limit 1";
-      ShopDB::query($query);
+    $seats = shopDB::query_one_row("select count(*) from Seat
+                                   where seat_zone_id ="._esc($pmz_id), false);
+    if (empty($seats) || $seats[0]>0 ) {
+      return addWarning('Zone_delete_failed_seats_exists');
+    }
 
+    if(ShopDB::begin('delete zone: '.$pmz_id)){
       if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
         foreach($pmps as $pmp){
-          if($pmp->delete_zone($zone->pmz_ident)){
-            $pmp->save();
+          if ($pmp->delete_zone($zone->pmz_ident) && !$pmp->save()){
+            return self::_abort('Zone_delete_failed_on_pmps');
           }
         }
+      }
+      if (!parent::delete($pmz_id)) {
+         return self::_abort('Zone_delete_failed');
       }
       return ShopDB::commit('Zone deleted');
     }

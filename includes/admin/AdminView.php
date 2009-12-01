@@ -283,7 +283,7 @@ class AdminView extends AUIComponent {
 
     function print_field_o ($name, &$data)
     {
-        if ($data[$name]) {
+        if (!empty($data[$name])) {
             $this->print_field($name, $data);
         }
     }

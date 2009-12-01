@@ -54,7 +54,7 @@ class PlaceMapZoneView extends AdminView {
         $this->print_field('pmz_short_name', $data);
 
         echo "</table><br><center>
-              <a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$pmz->pmz_pm_id}'>" . place_map . "</a>
+              <a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$pmz->pmz_pm_id}'>" . con('place_map') . "</a>
               </center>";
     }
 

@@ -37,7 +37,7 @@ class PlaceMapCategory Extends Model {
   protected $_idName    = 'category_id';
   protected $_tableName = 'Category';
   protected $_columns   = array( '#category_id', '#category_event_id', 'category_price', 'category_name',
-                                 'category_pm_id', '#category_pmp_id', '*category_ident', '*category_numbering',
+                                 '*category_pm_id', '#category_pmp_id', '*category_ident', '*category_numbering',
                                  'category_size', 'category_max', 'category_min', 'category_template',
                                  '*category_color', 'category_data');
 
@@ -63,50 +63,24 @@ class PlaceMapCategory Extends Model {
     return $new;
   }
 
-  function resetColor($color){
-    if (is_numeric($tcolor)) {
-      if(ShobDB::TableExists('Color') ){
-        $row = ShopDB::query_one_row('select color_code from Color where color_id ='._esc($color), false);
-        $color = $row[0];
-      } else {
-        $color = null;
-      }
-    }
-    return $color;
-  }
-
-  function save (){
-    if(!$this->category_id) {
-      if ($this->category_numbering<>'none') {
-        $this->category_size = 0;
-      }
-      if(!$this->category_ident){
-        $this->category_ident=$this->_find_ident($this->category_pm_id);
-      }
-    }
-    $this->category_color = self::resetColor($this->category_color);
-    return parent::save();
-  }
-
   function load ($category_id){
-    global $_SHOP;
-    $query="select *
-            from Category
-            where category_id="._esc($category_id);
+    $new_category=new PlaceMapCategory;
+    If ($category_id) {
+      $query="select *
+              from Category left join Category_stat on cs_category_id=category_id
+              where category_id="._esc($category_id);
 
-    if($res=ShopDB::query_one_row($query)){
-      $new_category=new PlaceMapCategory;
-      $new_category->_fill($res);
-      $this->category_color = self::resetColor($this->category_color);
-      return $new_category;
+      if($res=ShopDB::query_one_row($query)){
+        $new_category->_fill($res);
+      }
     }
+    return $new_category;
   }
 
   function loadFull ($category_id){
-    global $_SHOP;
-
     $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
+                            left join Category_stat on cs_category_id=category_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
@@ -118,11 +92,11 @@ class PlaceMapCategory Extends Model {
   }
 
   function loadAll ($pm_id){
-    global $_SHOP;
-    $query="select c.*, e.event_status
+    $query="select c.*, cs.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
+                            left join Category_stat cs on cs_category_id=category_id
             where category_pm_id=$pm_id";
-
+    $cats = array();
     if($res=ShopDB::query($query)){
       while($data=shopDB::fetch_assoc($res)){
         $new_cat=new PlaceMapCategory;
@@ -135,38 +109,32 @@ class PlaceMapCategory Extends Model {
     return $cats;
   }
 
-  function delete ($category_id=0){
-    global $_SHOP;
-
+  static function delete ($category_id=0){
     if(!$cat=PlaceMapCategory::load($category_id)){
-      echo  "remove_me not: 1";
-      return;
+      return true;
     }
-    $seats = shopDB::query_one_row("select count(*) from Seats
-                                   where seat_category_id ={$category_id}", false);
-    if ($seats[0]>0) {
-      echo '<div class=error>'.con('Category_delete_failed_seats_exists').'</div>';
-      return false;
+    $seats = shopDB::query_one_row("select count(*) from Seat
+                                    where seat_category_id ="._esc($category_id), false);
+    if (empty($seats) || $seats[0]>0 ) {
+      return  self::_abort('Category_delete_failed_seats_exists');
     }
-
 
     if(ShopDB::begin('delete category: '.$category_id)){
       $query="DELETE c.*, cs.*
               FROM Category c LEFT JOIN Category_stat cs
               ON c.category_id = cs.cs_category_id
-              WHERE c.category_id={$category_id}";
+              WHERE c.category_id="._esc($category_id);
       if(!ShopDB::query($query)){
-        return placemap::_abort(con('Category_delete_failed'));
+        return self::_abort(con('Category_delete_failed'));
       }
 
       if($pmps=PlaceMapPart::loadAll($cat->category_pm_id) and is_array($pmps)){
         foreach($pmps as $pmp){
-          if($pmp->delete_category($cat->category_ident)){
-            $pmp->save();
+          if($pmp->delete_category($cat->category_ident) && !$pmp->save()) {
+            return self::_abort('Category_delete_failed_on_pmps');
           }
         }
       }
-
       return ShopDB::commit('Category deleted');
     }
   }
@@ -177,8 +145,6 @@ class PlaceMapCategory Extends Model {
   }
 
   function increment_size($delta){
-    global $_SHOP;
-
     if($delta==0){
       echo "#ERR-NOSIZEDIFF(1)";
       return FALSE;
@@ -287,9 +253,22 @@ class PlaceMapCategory Extends Model {
       return ShopDB::commit('Category resized');
     }
   }
+
+  function _fill(&$arr,$nocheck= true){
+    if(!$this->category_id) {
+      if ($this->category_numbering<>'none' && !$this->category_pmp_id) {
+        $this->category_size = 0;
+      }
+      if(!$this->category_ident){
+        $this->category_ident=$this->_find_ident($this->category_pm_id);
+      }
+    }
+    $this->category_color = self::resetColor($this->category_color);
+    return parent::_fill($arr, $nocheck);
+  }
+
   /* ??? this code need to be checked !!!! */
   function _find_ident ($pm_id){
-    global $_SHOP;
     $query="select category_ident
             from Category
             where category_pm_id="._esc($pm_id);
@@ -313,6 +292,18 @@ class PlaceMapCategory Extends Model {
       if(!$res=ShopDB::query_one_row($query)){return;}
       return $res['category_numbering'];
     }
+  }
+
+  static function resetColor($color){
+    if (is_numeric($tcolor)) {
+      if(ShobDB::TableExists('Color') ){
+        $row = ShopDB::query_one_row('select color_code from Color where color_id ='._esc($color), false);
+        $color = $row[0];
+      } else {
+        $color = null;
+      }
+    }
+    return $color;
   }
 
   static function create_stat($cs_category_id,$cs_total,$cs_free=-1) {

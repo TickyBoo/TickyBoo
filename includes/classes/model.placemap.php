@@ -48,16 +48,16 @@ class PlaceMap Extends Model {
   }
 
   function load ($pm_id){
-    $query="select *
-           from PlaceMap2 left join Ort on pm_ort_id=ort_id
-           where pm_id="._esc($pm_id);
-    if($res=ShopDB::query_one_row($query)){
-
-      $new_pm=new PlaceMap;
-      $new_pm->_fill($res);
-
-      return $new_pm;
+    $new_pm=new PlaceMap;
+    If ($pm_id) {
+      $query="select *
+             from PlaceMap2 left join Ort on pm_ort_id=ort_id
+             where pm_id="._esc($pm_id);
+      if($res=ShopDB::query_one_row($query)){
+        $new_pm->_fill($res);
+      }
     }
+    return $new_pm;
   }
 
   function loadAll ($ort_id){
@@ -116,10 +116,9 @@ class PlaceMap Extends Model {
 
   }
 
-  function delete ($pm_id = -1){
+  static function delete ($pm_id = -1){
     $pm_id = (int)$pm_id;
-
-    if ($pm_id== -1) $pm_id = $this->pm_id;
+    if (!$pm_id) return addWarning('Cant_delete_without_id');
 
     if(ShopDB::begin('delete Placmap: '.$pm_id)){
       $pm = shopDB::query_one_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
@@ -231,5 +230,12 @@ class PlaceMap Extends Model {
     }
     return ShopDB::commit('copied Placmap to event:');
   }
+
+  function _fill($arr, $nocheck=true){
+    $this->fillFilename($arr, 'pm_image');
+    return parent::_fill($arr, $nocheck);
+  }
+
+
 }
 ?>

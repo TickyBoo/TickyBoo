@@ -39,7 +39,7 @@ class PlaceMapPart Extends Model {
   protected $_tableName = 'PlaceMapPart';
   protected $_columns   = array( '#pmp_id', '*pmp_pm_id', 'pmp_ident', '#pmp_ort_id',
                                  '#pmp_event_id', '*pmp_name', '*pmp_width', '*pmp_height',
-                                 '*pmp_scene', '*pmp_shift', '*pmp_data', 'pmp_data_orig', 'pmp_expires');
+                                 '*pmp_scene', '*pmp_shift', 'pmp_data', 'pmp_data_orig', 'pmp_expires');
   var $data =null;
 
   static function create ($pmp_pm_id = 0, $pmp_name = 0, $pmp_width = 0, $pmp_height = 0) {
@@ -127,8 +127,8 @@ class PlaceMapPart Extends Model {
 
   function loadFull ($pmp_id){
     $query = "select * from PlaceMapPart left join PlaceMap2 on pmp_pm_id=pm_id
-                                         left join Ort       on pm_ort_id=ort_id
-                                         LEFT JOIN Event     ON pm_event_id=event_id
+                                         left join Ort       on pmp_ort_id=ort_id
+                                         LEFT JOIN Event     ON pmp_event_id=event_id
               where pmp_id= "._esc($pmp_id);
 
     if ($res = ShopDB::query_one_row($query)) {
@@ -145,8 +145,8 @@ class PlaceMapPart Extends Model {
 
   function loadAllFull ($pm_id) {
     $query = "select * from PlaceMap2 left join PlaceMapPart on pmp_pm_id=pm_id
-                                      left join Ort       on pm_ort_id=ort_id
-                                      LEFT JOIN Event     ON pm_event_id=event_id
+                                      left join Ort       on pmp_ort_id=ort_id
+                                      LEFT JOIN Event     ON pmp_event_id=event_id
               where pm_id= "._esc($mp_id);
     if ($res = ShopDB::query($query)) {
       while ($data = shopDB::fetch_assoc($res)) {
@@ -163,17 +163,13 @@ class PlaceMapPart Extends Model {
     return $pmps;
   }
 
-  function delete () {
-    $seats = shopDB::query_one_row("select count(*) from Seats
-                                   where seat_pmp_id ={$this->pmp_id}", false);
+  static function delete ($id) {
+    $seats = shopDB::query_one_row("select count(*) from Seat
+                                   where seat_pmp_id ="._esc($id), false);
     if ($seats[0]>0) {
-      echo '<div class=error>'.con('PlaceMapPart_delete_failed_seats_exists').'</div>';
-      return false;
+      return addWarning('PlaceMapPart_delete_failed_seats_exists');
     }
-
-    $query = "delete from PlaceMapPart
-              where pmp_id={$this->pmp_id} limit 1";
-    ShopDB::query($query);
+    return parent::delete($id);
   }
 
   function set_zone ($zone_id, $zone_map) {
@@ -257,7 +253,7 @@ class PlaceMapPart Extends Model {
     }
   }
 
-  function get_stats ($stats = null){
+  function getStats ($stats = null){
     if ($stats) {
       $zone = $stats->zones;
       $cat = $stats->categories;
