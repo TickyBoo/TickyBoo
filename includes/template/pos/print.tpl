@@ -37,7 +37,7 @@
   <iframe height='0' width='0' style='border  border=0 src='print.php?layer=true&order_id={$smarty.request.order_id}&mode={$smarty.request.mode}'></iframe>
   <center><br>
     <div class='printer'>
-      <img src='images/printing.gif' /><br/>
+      <img src='{$_SHOP_themeimages}printer.png' /><br/>
       {!tickets_printing!}
     </div><br>
     <a href='print.php?layer=true&order_id={$smarty.request.order_id}&mode={$smarty.request.mode}'  class='shop_link' target='printer'>

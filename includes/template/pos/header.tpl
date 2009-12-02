@@ -84,13 +84,9 @@
 		<div id="wrap">
 			<div id="header">
 				<div class="loading">
-					<img src="images/LoadingImageSmall.gif" width="16" height="16" alt="Loading data, please wait" />
+					<img src="{$_SHOP_themeimages}LoadingImageSmall.gif" width="16" height="16" alt="Loading data, please wait" />
 				</div>
-		    {if $organizer->organizer_logo}
-           <img src='{$_SHOP_files}{$organizer->organizer_logo}' border="0" />
-        {else}
        		<img src='{$_SHOP_themeimages}logo.png'  border='0'/>
-        {/if}
  				{!box_office!}
 			</div>
 			<div id="navbar">

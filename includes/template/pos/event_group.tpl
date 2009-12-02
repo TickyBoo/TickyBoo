@@ -48,17 +48,17 @@
   <td class='festival' >{$shop_event.ort_city}</td>
   <td class='festival' >{if $shop_event.es_free gt 0}
     {if $shop_event.es_free/$shop_event.es_total ge 0.2}
-      <img src='images/green.png'> {$shop_event.es_free}/{$shop_event.es_total}
+      <img src='{$_SHOP_themeimages}green.png'> {$shop_event.es_free}/{$shop_event.es_total}
     {else}
-      <img src='images/orange.png'> {$shop_event.es_free}/{$shop_event.es_total}
+      <img src='{$_SHOP_themeimages}orange.png'> {$shop_event.es_free}/{$shop_event.es_total}
     {/if}
   {else}
-    <img src='images/red.png'> {!event_sold!}
+    <img src='{$_SHOP_themeimages}red.png'> {!event_sold!}
   {/if}
   </td>
   <td class='festival' >
   {if $shop_event.event_mp3}<a href='{$shop_event.event_mp3}'>
-  <img src='images/audio-small.png' border='0'></a>{else} &nbsp;{/if}</td>
+  <img src='{$_SHOP_themeimages}audio-small.png' border='0'></a>{else} &nbsp;{/if}</td>
   </tr>
   {assign var='old_id' value=$shop_event.event_id}
 {/if}
@@ -74,12 +74,12 @@
 <td class='calendar'>{$shop_event.category_price}</td>
 <td class='calendar'>{if $shop_event.cs_free gt 0}
   {if $shop_event.es_free/$shop_event.cs_total ge 0.2}
-    <img src='images/green.png'> {$shop_event.cs_free}/{$shop_event.cs_total}
+    <img src='{$_SHOP_themeimages}green.png'> {$shop_event.cs_free}/{$shop_event.cs_total}
   {else}
-    <img src='images/orange.png'> {$shop_event.cs_free}/{$shop_event.cs_total}
+    <img src='{$_SHOP_themeimages}orange.png'> {$shop_event.cs_free}/{$shop_event.cs_total}
   {/if}
 {else}
-  <img src='images/red.png'> {!category_sold!}
+  <img src='{$_SHOP_themeimages}red.png'> {!category_sold!}
 {/if}
 </td>
 <td colspan='2'>&nbsp;</td>

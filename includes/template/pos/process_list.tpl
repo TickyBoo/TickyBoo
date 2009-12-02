@@ -116,15 +116,15 @@
               <td class='admin_info'>{$shop_order.order_date}</td>
               <td class='admin_info' align="right">
                 <a href='view.php?order_id={$shop_order.order_id}'>
-                  <img src='images/view.png' border='0'>
+                  <img src='{$_SHOP_themeimages}view.png' border='0'>
                 </a>
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
                   <a href='print.php?order_id={$shop_order.order_id}'>
-                    <img border='0' src='images/printer.gif'>
+                    <img border='0' src='{$_SHOP_themeimages}printer.gif'>
                   </a>
                   {if $shop_order.payment_status eq 'none'}
                   <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
-                    <img border='0' src='images/trash.png'>
+                    <img border='0' src='{$_SHOP_themeimages}trash.png'>
                   </a>
                   {/if}
                 {/if}

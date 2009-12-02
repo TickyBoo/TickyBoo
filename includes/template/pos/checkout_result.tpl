@@ -80,7 +80,7 @@
           {if $shop_order.order_handling->handling_shipment eq "sp"}
             <a id='printticket' href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}&mode=1' style='display:none;' target='_blank'>{!printtickets!}</a>
             <div id="waiting">
-              <img src="images/LoadingImageSmall.gif" width="16" height="16" alt="Waiting for payment, please wait" />
+              <img src="{$_SHOP_themeimages}LoadingImageSmall.gif" width="16" height="16" alt="Waiting for payment, please wait" />
             </div>
           {/if}
         </td>
