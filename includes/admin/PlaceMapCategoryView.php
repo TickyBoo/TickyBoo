@@ -41,11 +41,11 @@ class PlaceMapCategoryView extends AdminView {
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" .con('categories'). "</td>\n";
-    if (!$live) {
-      echo "<td colspan=5 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>
-              <img src='images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
+    if (!$live) {//
+      echo "<td colspan=5 align='right' valign='middle' ><a title='".con('add')."' class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>
+              <img src='images/add.png' border='0' alt='".con('add')."' title='".con('add')."' /></a></td>\n";// ".con('add')."
     }
-    echo "</tr>";
+    echo "</tr>\n";
     if ($cats = PlaceMapCategory::LoadAll($pm_id)){
       foreach($cats as  $category) {
         echo "<tr class='admin_list_row_$alt'>";
@@ -55,10 +55,10 @@ class PlaceMapCategoryView extends AdminView {
         echo "<td class='admin_list_item'>" . con($category->category_numbering) . " </td>\n";
 
         echo "<td class='admin_list_item' width=60 align=right>";
-        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
+        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&category_id={$category->category_id}'>
         <img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
         if (!$live) {
-            echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id=$pm_id&category_id={$category->category_id}\";}'>
+            echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&category_id={$category->category_id}\";}'>
                     <img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\n";
         }
         echo'</td></tr>';
@@ -74,9 +74,10 @@ class PlaceMapCategoryView extends AdminView {
     if ($data['category_id']) {
        echo "<input type=hidden name=category_id value={$data['category_id']}>";
     }
-    echo "<input type=hidden name=pm_id value={$_REQUEST['pm_id']}>";
+    $data['category_pm_id'] =(isset($data['category_pm_id']))?$data['category_pm_id']:$_REQUEST['pm_id'];
+    echo "<input type=hidden name=category_pm_id value={$data['category_pm_id']}>";
 
-    $this->form_head(categories);
+    $this->form_head(con('categories'));
 
     $this->print_field_o('category_id', $data);
     $this->print_input('category_name', $data, $err, 30, 100);
@@ -111,28 +112,28 @@ class PlaceMapCategoryView extends AdminView {
       $this->form_head(category_new_size_title);
       $this->print_input('category_new_size', $data, $err, 6, 6);
       $this->form_foot();
-      echo "<input type=hidden name=pm_id value={$data['pm_id']}>";
+      echo "<input type=hidden name=pm_id value={$data['category_pm_id']}>";
       echo "<input type=hidden name=category_id value={$data['category_id']}>";
       echo "<input type=hidden name=action value=resize_category>";
       echo "</form>";
     }
 
-    echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['pm_id']}' class=link>".con('place_map')."</a></center>";
+    echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['category_pm_id']}' class=link>".con('place_map')."</a></center>";
   }
 
 
   function draw () {
     if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
-      $pmc = PlaceMapCategory::load(0);
+      $pmc = new PlaceMapCategory(true);
       $this->form((Array)$pmc, null);
     } elseif ($_GET['action'] == 'edit_category' and $_GET['category_id'] > 0) {
       $category = PlaceMapCategory::load((int)$_GET['category_id']);
       $data = (array)$category;
-      $data['pm_id'] = $category->category_pm_id;
       $this->form($data, null);
-    } elseif ($_POST['action'] == 'save_category' and $_POST['pm_id'] > 0) {
-      $pmc = PlaceMapCategory::load((int)$_POST['category_id']);
-      $_POST['category_pm_id'] =$_POST['pm_id'];
+    } elseif ($_POST['action'] == 'save_category' and $_POST['category_pm_id'] > 0) {
+      if (!$pmc = PlaceMapCategory::load((int)$_POST['category_id'])) {
+         $pmc = new PlaceMapCategory(true);
+      }
       if (!$pmc->fillPost() || !$pmc->save()) {
         $this->form($_POST, null);
       } else {

@@ -53,33 +53,6 @@ class PlaceMapPart Extends Model {
     return $new;
   }
 
-  function _ser_data () {
-    return serialize($this->data);
-  }
-
-  function _unser_data ($pmp_data_s, $w, $h) {
-    if (substr($pmp_data_s,0,2)=='a:'){
-       return unserialize($pmp_data_s);
-    } else {
-      $pmp_data_0 = explode('|', $pmp_data_s);
-      $c = 0;
-      for($j = 0;$j < $h;$j++) {
-        for($k = 0;$k < $w;$k++) {
-            $pmp_data_a[$j][$k] = explode(',', $pmp_data_0[$c++]);
-        }
-      }
-      return $pmp_data_a;
-    }
-  }
-
-  function save (){
-    If (!$this->data) {
-      $this->data = array_fill(0, $this->pmp_height, array_fill(0, $this->pmp_width, array(0, 0, 0)));
-    }
-    $this->pmp_data  = $this->_ser_data();
-    return parent::save();
-  }
-
   function load ($pmp_id) {
     $query = "select *
               from PlaceMapPart
@@ -161,6 +134,14 @@ class PlaceMapPart Extends Model {
       }
     }
     return $pmps;
+  }
+
+  function save (){
+    If (!$this->data) {
+      $this->data = array_fill(0, $this->pmp_height, array_fill(0, $this->pmp_width, array(0, 0, 0)));
+    }
+    $this->pmp_data  = $this->_ser_data();
+    return parent::save();
   }
 
   static function delete ($id) {
@@ -616,6 +597,25 @@ class PlaceMapPart Extends Model {
       }
     }
     return $doubles;
+  }
+
+  function _ser_data () {
+    return serialize($this->data);
+  }
+
+  function _unser_data ($pmp_data_s, $w, $h) {
+    if (substr($pmp_data_s,0,2)=='a:'){
+       return unserialize($pmp_data_s);
+    } else {
+      $pmp_data_0 = explode('|', $pmp_data_s);
+      $c = 0;
+      for($j = 0;$j < $h;$j++) {
+        for($k = 0;$k < $w;$k++) {
+            $pmp_data_a[$j][$k] = explode(',', $pmp_data_0[$c++]);
+        }
+      }
+      return $pmp_data_a;
+    }
   }
 }
 

@@ -41,27 +41,22 @@ class Eventgroup Extends Model {
                                  '*event_group_status', 'event_group_start_date', 'event_group_end_date', 'event_group_image');
 
   function load ($id=0){
-    $eg=new Eventgroup;
-    if ($id) {
-      $query="select *
-              from Event_group
-              where Event_group_id="._esc($id);
-      if($res=ShopDB::query_one_row($query)){
-        $eg->_fill($res);
-      }
+    $query="select *
+            from Event_group
+            where Event_group_id="._esc($id);
+    if($res=ShopDB::query_one_row($query)){
+      $eg=new Eventgroup;
+      $eg->_fill($res);
+      return $eg;
     }
-    if (!isset($eg->event_group_status)) {$eg->event_group_status ='unpub';}
-    return $eg;
-  }
-
-  function save (){
-    return parent::save();
   }
 
   function _fill($arr, $nocheck=true){
     $this->fillFilename($arr, 'event_group_image');
     $this->fillDate($arr, 'event_group_start_date');
     $this->fillDate($arr, 'event_group_end_date');
+    if (!isset($arr['event_group_status'])) {$arr['event_group_status'] ='unpub';}
+
     return parent::_fill($arr, $nocheck);
   }
 

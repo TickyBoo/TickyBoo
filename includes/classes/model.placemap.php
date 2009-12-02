@@ -40,24 +40,20 @@ class PlaceMap Extends Model {
 
   static function create ($pm_ort_id, $pm_name){
     $pm = new PlaceMap;
-    if($pm_ort_id){
-      $pm->pm_ort_id=$pm_ort_id;
-      $pm->pm_name=$pm_name;
-    }
+    $pm->pm_ort_id=$pm_ort_id;
+    $pm->pm_name=$pm_name;
     return $pm;
   }
 
   function load ($pm_id){
-    $new_pm=new PlaceMap;
-    If ($pm_id) {
-      $query="select *
-             from PlaceMap2 left join Ort on pm_ort_id=ort_id
-             where pm_id="._esc($pm_id);
-      if($res=ShopDB::query_one_row($query)){
-        $new_pm->_fill($res);
-      }
+    $query="select *
+           from PlaceMap2 left join Ort on pm_ort_id=ort_id
+           where pm_id="._esc($pm_id);
+    if($res=ShopDB::query_one_row($query)){
+      $new_pm=new PlaceMap;
+      $new_pm->_fill($res);
+      return $new_pm;
     }
-    return $new_pm;
   }
 
   function loadAll ($ort_id){

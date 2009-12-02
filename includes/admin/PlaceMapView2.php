@@ -83,10 +83,10 @@ class PlaceMapView extends AdminView {
     if (is_numeric($data)) {
       $data = (array)Placemap::Load($data);
     }
-
+    $data['pm_ort_id'] =(!isset($data['pm_ort_id']))?$_REQUEST['pm_ort_id']:$data['pm_ort_id'];
 		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>";
-  	echo "<input type=hidden name=action value=save_pm>
-          <input type=hidden name=pm_ort_id value='{$_REQUEST['pm_ort_id']}'>";
+  	echo "<input type=hidden name=action value=save_pm>{$data['pm_ort_id']}
+          <input type=hidden name=pm_ort_id value='{$data['pm_ort_id']}'>";
 
 		if ( $data['pm_id'] ) {
       echo "<input type=hidden name=pm_id value='{$data['pm_id']}'>";
@@ -120,7 +120,7 @@ class PlaceMapView extends AdminView {
 			$pmp_view->table( $data['pm_id'], $live );
 			echo "<br>";
 			$pmz_view = new PlaceMapZoneView( $this->width );
-			$pmz_view->pmz_list( $data['pm_id'], $live );
+			$pmz_view->table( $data['pm_id'], $live );
 			echo "<br>";
 			$pmp_view = new PlaceMapPartView( $this->width );
 			$pmp_view->table( $data['pm_id'], $live );
@@ -163,13 +163,15 @@ class PlaceMapView extends AdminView {
 			}
 
 		} elseif ( $_GET['action'] == 'add_pm' ) {
-      $pm = PlaceMap::load(0);
+      $pm = new PlaceMap(true);
 			$this->form( (array)$pm, null, con('add_pm') );
     } elseif ( $_GET['action'] == 'edit_pm' and (int)$_GET['pm_id'] > 0 ) {
       $pm = PlaceMap::load($_GET['pm_id']);
       $this->form((array)$pm, null, con('edit_pm'));
 		} elseif ( $_POST['action'] == 'save_pm' ) {
-      $pm = PlaceMap::load((int)$_POST['pm_id']);
+      if (!$pmc = PlaceMap::load((int)$_POST['pm_id'])) {
+         $pmc = new PlaceMap(true);
+      }
       if ( !$pm->fillPost() || !$pm->save() ) {
         $this->form( $_POST, null , con((isset($_POST['ort_id']))?'edit_pm':'add_pm') );
       } else {

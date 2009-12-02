@@ -64,17 +64,15 @@ class PlaceMapCategory Extends Model {
   }
 
   function load ($category_id){
-    $new_category=new PlaceMapCategory;
-    If ($category_id) {
-      $query="select *
-              from Category left join Category_stat on cs_category_id=category_id
-              where category_id="._esc($category_id);
+    $query="select *
+            from Category left join Category_stat on cs_category_id=category_id
+            where category_id="._esc($category_id);
 
-      if($res=ShopDB::query_one_row($query)){
-        $new_category->_fill($res);
-      }
+    if($res=ShopDB::query_one_row($query)){
+      $new_category=new PlaceMapCategory;
+      $new_category->_fill($res);
+      return $new_category;
     }
-    return $new_category;
   }
 
   function loadFull ($category_id){
@@ -255,15 +253,15 @@ class PlaceMapCategory Extends Model {
   }
 
   function _fill(&$arr,$nocheck= true){
-    if(!$this->category_id) {
-      if ($this->category_numbering<>'none' && !$this->category_pmp_id) {
-        $this->category_size = 0;
+    if(!$arr['category_id']) {
+      if ($arr['category_numbering']<>'none' && !$arr['category_pmp_id']) {
+        $arr['category_size'] = 0;
       }
-      if(!$this->category_ident){
-        $this->category_ident=$this->_find_ident($this->category_pm_id);
+      if(!$arr['category_ident']){
+        $arr['category_ident']=$this->_find_ident($arr['category_pm_id']);
       }
     }
-    $this->category_color = self::resetColor($this->category_color);
+    $arr['category_color'] = self::resetColor($arr['category_color']);
     return parent::_fill($arr, $nocheck);
   }
 
@@ -295,12 +293,12 @@ class PlaceMapCategory Extends Model {
   }
 
   static function resetColor($color){
-    if (is_numeric($tcolor)) {
-      if(ShobDB::TableExists('Color') ){
+    if (is_numeric($color)) {
+      if(ShopDB::TableExists('Color') ){
         $row = ShopDB::query_one_row('select color_code from Color where color_id ='._esc($color), false);
         $color = $row[0];
       } else {
-        $color = null;
+        $color = '';
       }
     }
     return $color;

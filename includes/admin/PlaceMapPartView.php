@@ -78,9 +78,10 @@ class PlaceMapPartView extends AdminView {
   }
 
   function form ($data, $err, $view_only = false) {
+    $data['pm_id'] =(isset($data['pm_id']))?$data['pm_id']:$_REQUEST['pm_id'];
     echo "<form action='{$_SERVER['PHP_SELF']}' method=post>\n";
     echo "<input type=hidden name=action value=save_pmp>\n";
-    echo "<input type=hidden name=pm_id value={$_REQUEST['pm_id']}>\n";
+    echo "<input type=hidden name=pm_id value={$data['pm_id']}>\n";
     if ($data['pmp_id']) {
        echo "<input type=hidden name=pmp_id value={$data['pmp_id']}>\n";
     }

@@ -42,14 +42,22 @@ class Model {
   protected $_tableName;
   protected $_columns = array();
 
-  function __construct($filldefs=true){
-    if (!$this->_columns and $_tableName) {
+  function __construct($filldefs= false){
+    if ((!$this->_columns || $filldefs) && $_tableName) {
       $defs = & ShopDB::FieldListExt($this->tableName);
-      foreach($defs as $key => $value) {
-        If ($key != $this->_idName) {
-          $this->$key = $value->Default;
-          if ($value->Null == 'NO') $key = '*'.$key;
-          $this->_columns[]  = $key;
+      if (!$this->_columns) {
+        foreach($defs as $key => $value) {
+          If ($key != $this->_idName) {
+            if ($value->Null == 'NO') $key = '*'.$key;
+            $this->_columns[]  = $key;
+          }
+        }
+      }
+      if ($filldefs) {
+        foreach($defs as $key => $value) {
+          If ($key != $this->_idName) {
+            $this->$key = $value->Default;
+          }
         }
       }
     }
