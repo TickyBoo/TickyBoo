@@ -30,7 +30,7 @@ table.datagrid th  {
 }
 
 .grid-loading {
-	background: #E3E3E3 url('../images/load-bg.png');
+	background: #E3E3E3 url('../images/theme/default/load-bg.png');
 	display: block;
 	opacity:.50;	
 	-moz-opacity:.50;
@@ -41,10 +41,10 @@ table.datagrid th  {
 	width: 100%;
 	height: 100%;
 	display: block;
-	background: url('images/indicator_web20_working.gif') no-repeat center center;
+	background: url('images/theme/default/indicator_web20_working.gif') no-repeat center center;
 }
 .grid-header-bg {
-	background: #E3E3E3 url('../images/grid-hrow.gif') repeat-x bottom;
+	background: #E3E3E3 url('../images/theme/default/grid-hrow.gif') repeat-x bottom;
 }
 
 
@@ -69,7 +69,7 @@ table.datagrid td.grid-custom-col {
 }
 
 table.datagrid th div.grid-col-resize {
-	background: url('../images/grid-split.gif') no-repeat center;
+	background: url('../images/theme/default/grid-split.gif') no-repeat center;
 	cursor:col-resize;
 	width: 6px;
 	height:16px;
@@ -91,21 +91,21 @@ table.datagrid thead {
 Column Sorting Styles
 */
 .grid-sort-asc {
-	background: url('../images/sort-asc.png') no-repeat center left;
+	background: url('../images/theme/default/sort-asc.png') no-repeat center left;
 	display: block;
 	height: 18px;
 	padding: 3px 0 0 16px;
 	cursor: pointer;
 }
 .grid-sort-desc {
-	background: url('../images/sort-desc.png') no-repeat center left;
+	background: url('../images/theme/default/sort-desc.png') no-repeat center left;
 	display: block;
 	height: 18px;
 	padding: 3px 0 0 16px;
 	cursor: pointer;
 }
 .grid-sort-none {
-	background: url('../images/sort-none.png') no-repeat center left;
+	background: url('../images/theme/default/sort-none.png') no-repeat center left;
 	display: block;
 	height: 18px;
 	padding: 3px 0 0 16px;
@@ -119,7 +119,7 @@ Paging Control Styles
 
 /* paging control footer toolbar */
 .grid-page-toolbar {
-	background: url('../images/page-bg.gif') repeat-x;
+	background: url('../images/theme/default/page-bg.gif') repeat-x;
 	font: 11px Tahoma;
 	padding-top: 7px;	
 	border-bottom: 1px solid #77ABF2;
@@ -130,7 +130,7 @@ Paging Control Styles
 }
 /* first page button (pb1) */
 .grid-page-start {
-	background: url('images/page-first.png') no-repeat center;
+	background: url('images/theme/default/page-first.png') no-repeat center;
 	display: block;
 	float:left;
 	margin:3px;	
@@ -142,7 +142,7 @@ Paging Control Styles
 }
 /* previous page button (pb2) */
 .grid-page-prev {
-	background: url('../images/page-prev.png') no-repeat center;
+	background: url('../images/theme/default/page-prev.png') no-repeat center;
 	display: block;
 	float:left;
 	margin:3px;
@@ -153,7 +153,7 @@ Paging Control Styles
 }
 /* next page button (pb3) */
 .grid-page-next {
-	background: url('../images/page-next.png') no-repeat center;
+	background: url('../images/theme/default/page-next.png') no-repeat center;
 	display: block;
 	float:left;
 	margin:3px;
@@ -164,7 +164,7 @@ Paging Control Styles
 }
 /* last page button (pb4) */
 .grid-page-end {
-	background: url('../images/page-last.png') no-repeat center;
+	background: url('../images/theme/default/page-last.png') no-repeat center;
 	display: block;
 	float:left;
 	margin:3px;
@@ -175,7 +175,7 @@ Paging Control Styles
 }
 /* loading indicator graphic (pload) */
 .grid-page-loading {
-	background: url('../images/grid-loading.gif') no-repeat center;
+	background: url('../images/theme/default/grid-loading.gif') no-repeat center;
 	display: block;
 	float:left;
 	margin:3px;
@@ -186,7 +186,7 @@ Paging Control Styles
 }
 /* loading done indicator graphic (pload) */
 .grid-page-loading-done {
-	background: url('../images/grid-loading-done.gif') no-repeat center;
+	background: url('../images/theme/default/grid-loading-done.gif') no-repeat center;
 }
 /* page info text around textbox (pinfo) */
 .grid-page-info {
