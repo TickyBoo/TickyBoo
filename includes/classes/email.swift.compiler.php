@@ -78,12 +78,13 @@ class EmailSwiftCompiler {
     $swift->setCc($this->emailCC);
     $swift->setBcc($this->emailBCC);
     
+    $lang = trim($lang);
     //No Lang passed pull the default lang
-    if($lang==0){
+    if($lang===0 || empty($lang)){
       $lang=$this->emailDefLang;
     }
     //No deflang pull the first lang
-    if($lang==0){
+    if($lang===0 || empty($lang)){
       $lang = $this->emailLangs[0];
     }
     $swift->setSubject($this->emailTemplates[$lang]['template_text']);
@@ -148,57 +149,73 @@ class EmailSwiftCompiler {
     $this->varsBuilt = true;
   }
   
+  private function buildSmarty ($code, $data, $testme=false){
+    global $_SHOP;
+    require_once("smarty/Smarty.class.php");
+    require_once("classes/gui_smarty.php");
+
+    $smarty = new Smarty;
+    $gui = new gui_smarty($smarty);
+    
+    $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+    $smarty->cache_dir    = $_SHOP->tmp_dir;
+    $smarty->compile_dir  = $_SHOP->tmp_dir;
+    $smarty->compile_id   = "smail_".$_SHOP->lang;
+    $smarty->assign("_SHOP_lang", $_SHOP->lang);
+    $smarty->assign((array)$_SHOP->organizer_data);
+    $smarty->assign($data);
+    $smarty->assign("OrderData",$data);
+    $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
+    $smarty->assign("_SHOP_images", $_SHOP->images_url);
+
+    $smarty->my_template_source = $code;
+    $compiledCode = $smarty->fetch("text:".get_class($this));
+    unset($smarty);
+    unset($gui);
+    return $compileCode;
+  }
+  
   public function compile ($emailArray, $newClassName){
     $ret=
-    '/*this is a generated file. do not edit!
-    produced '.date("l dS of F Y h:i:s A").'  
-    */    
-    require_once("classes/email.swift.compiler.php");
-    
-    class '.$newClassName.' extends EmailSwiftCompiler {
-      function write(&$swiftInstance, &$data, $lang=0, $testAddress=""){
-        $this->build($swiftInstance, $data, $lang, $testAddress);
-      }
-    }';
-    //  echo "<pre>$ret</pre>";
+'/*this is a generated file. do not edit!
+  produced '.date("l dS of F Y h:i:s A").'  
+*/    
+require_once("classes/email.swift.compiler.php");
+  
+class '.$newClassName.' extends EmailSwiftCompiler {
+  public $emailLangs = array('.$this->getEmailLangs($emailArray).');
+  
+  function write(&$swiftInstance, &$data, $lang=0, $testAddress=""){
+    $this->build($swiftInstance, $data, $lang, $testAddress);
+  }
+}';
+
     return $ret;
   }
   
-  public function getEmailLangs(){
-    if(is_string($this->sourcetext) || is_string($this->emailArray)){
-      $emailArray = unserialize($this->sourcetext);
-      $this->emailArray = &$emailArray;
-    }
-    //check templates
-    if(is_array($this->emailLangs)){
-      return $this->emailLangs;
+  private function getEmailLangs($emailArray){
+    if(is_string($emailArray)){
+      $emailArray = unserialize($emailArray);
     }
     
     if(is($emailArray['email_templates'],array())){
       foreach($emailArray['email_templates'] as $lang=>$fields){
+        if(!empt($lang,false)){
+          continue;
+        }
         $this->emailLangs[] = $lang;
+        $langs[] = "'".$lang."'";
       }
     }else{
       $this->emailLangs = array();
+      $langs = array();
     }
-    print_r($this->emailLangs);
-    return $this->emailLangs;
-  }
-  
-  public function generate($emailArray){
-    $this->buildVars($emailArray);
-    require_once (LIBS.'swift'.DS.'swift_required.php');
     
-  }
-  
-  
-  public function test($emailArray){
+    $langs = implode(',',$langs);
     
+    
+    return $langs;
   }
-  private function varToArg ($val){
-    return; //"\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
-  }
-  
   
   private function recVarToVals(&$value,$key){
     $value = $this->varsToValues($value);

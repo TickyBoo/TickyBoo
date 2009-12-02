@@ -82,9 +82,9 @@ class TemplateView extends AdminView{
         }
         $_GET['lang'] = $lang;
 
-        $email = &new htmlMimeMail();
-        $tpl->build($email, $order, $lang);
-        $email = $email->asarray() ;
+        //$email = &new htmlMimeMail();
+        //$tpl->build($email, $order, $lang);
+        //$email = $email->asarray() ;
         $langs = array();
         foreach($tpl->langs as $lng) {
           $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
@@ -121,15 +121,20 @@ class TemplateView extends AdminView{
         if (!$tpl = TemplateEngine::getTemplate($name)) {
           return false;
        	}
-     		$lang = is($_GET['lang'], $_SHOP->lang);
+     		
+        $lang = is($_GET['lang'], $_SHOP->lang);
+        if (!in_array($lang, $tpl->emailLangs )) {
+          $lang = $tpl->emailLangs[0];
+        }
+        $_GET['lang'] = $lang;
         
         $tpl->write($swift, $order, $lang);
-        //$email = $email->asarray() ;
-        $langs = $tpl->getEmailLangs();
-        foreach($langs as $lng) {
+        
+        $langs = array();
+        foreach($tpl->emailLangs as $lng) {
           $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
         }
-
+        
         echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
         echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
