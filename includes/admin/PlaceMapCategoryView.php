@@ -76,6 +76,7 @@ class PlaceMapCategoryView extends AdminView {
     }
     $data['category_pm_id'] =(isset($data['category_pm_id']))?$data['category_pm_id']:$_REQUEST['pm_id'];
     echo "<input type=hidden name=category_pm_id value={$data['category_pm_id']}>";
+    echo "<input type=hidden name=pm_id value={$data['category_pm_id']}>";
 
     $this->form_head(con('categories'));
 
@@ -141,7 +142,8 @@ class PlaceMapCategoryView extends AdminView {
       }
 
     } elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
-      PlaceMapCategory::delete($_GET['category_id']);
+      if($pmc = PlaceMapCategory::load($_POST['category_id']))
+        $pmc->delete();
       return true;
     } elseif ($_POST['action'] == 'resize_category' and $_POST['category_id'] > 0) {
       $category = PlaceMapCategory::load((int)$_POST['category_id']);

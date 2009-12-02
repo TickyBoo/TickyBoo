@@ -78,7 +78,7 @@ class Ort Extends Model {
     }
   }
 
-  static function delete ($id) {
+  function delete () {
 
     $query = "SELECT count(event_name)
               FROM Event

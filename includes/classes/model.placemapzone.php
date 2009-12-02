@@ -81,31 +81,22 @@ class PlaceMapZone Extends Model {
     return $zones;
   }
 
-  function save (){
-     if(!$this->pmz_ident){$this->_find_ident();}
-     return parent::save();
-  }
-
-  static function delete ($pmz_id){
-    if 	(!$zone=PlaceMapZone::load($pmz_id)){
-      return true;
-    }
-
+  function delete (){
     $seats = shopDB::query_one_row("select count(*) from Seat
-                                   where seat_zone_id ="._esc($pmz_id), false);
+                                   where seat_zone_id ="._esc($this->id), false);
     if (empty($seats) || $seats[0]>0 ) {
       return addWarning('Zone_delete_failed_seats_exists');
     }
 
-    if(ShopDB::begin('delete zone: '.$pmz_id)){
-      if($pmps=PlaceMapPart::loadAll($zone->pmz_pm_id) and is_array($pmps)){
+    if(ShopDB::begin('delete zone: '.$this->id)){
+      if($pmps=PlaceMapPart::loadAll($this->pmz_pm_id) and is_array($pmps)){
         foreach($pmps as $pmp){
-          if ($pmp->delete_zone($zone->pmz_ident) && !$pmp->save()){
+          if ($pmp->delete_zone($this->pmz_ident) && !$pmp->save()){
             return self::_abort('Zone_delete_failed_on_pmps');
           }
         }
       }
-      if (!parent::delete($pmz_id)) {
+      if (!parent::delete()) {
          return self::_abort('Zone_delete_failed');
       }
       return ShopDB::commit('Zone deleted');
@@ -113,12 +104,12 @@ class PlaceMapZone Extends Model {
   }
 
   /* ??? this code need to be checked !!!! */
-  function _find_ident (){
+  function _find_ident ($pmz_pm_id){
     global $_SHOP;
 
     $query="select pmz_ident
             from PlaceMapZone
-            where pmz_pm_id={$this->pmz_pm_id}";
+            where pmz_pm_id="._esc($pmz_pm_id);
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_array($res)){
       $ident[$i['pmz_ident']]=1;
@@ -128,6 +119,16 @@ class PlaceMapZone Extends Model {
     while($ident[$pmz_ident]){$pmz_ident++;}
     $this->pmz_ident=$pmz_ident;
   }
+
+  function _fill(&$arr,$nocheck= true){
+    if(!$arr['pmz_id']) {
+      if(!$arr['pmz_ident']){
+        $arr['pmz_ident']=$this->_find_ident($arr['pmz_pm_id']);
+      }
+    }
+    return parent::_fill($arr, $nocheck);
+  }
+
 }
 
 ?>

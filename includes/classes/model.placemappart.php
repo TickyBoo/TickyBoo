@@ -144,13 +144,13 @@ class PlaceMapPart Extends Model {
     return parent::save();
   }
 
-  static function delete ($id) {
+  function delete () {
     $seats = shopDB::query_one_row("select count(*) from Seat
-                                   where seat_pmp_id ="._esc($id), false);
+                                   where seat_pmp_id ="._esc($this->id), false);
     if ($seats[0]>0) {
       return addWarning('PlaceMapPart_delete_failed_seats_exists');
     }
-    return parent::delete($id);
+    return parent::delete();
   }
 
   function set_zone ($zone_id, $zone_map) {

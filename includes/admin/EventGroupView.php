@@ -116,7 +116,8 @@ class EventGroupView extends AdminView{
       $this->form(array(),null,event_group_add_title);
 
     }elseif($_GET['action']=='remove' and $_GET['event_group_id']>0){
-      Eventgroup::delete($_GET['event_group_id']);
+      $eg = Eventgroup::load($_POST['event_group_id']);
+      $eg->delete($_GET['event_group_id']);
       $this->table();
 
     }elseif($_GET['action']=='publish'){

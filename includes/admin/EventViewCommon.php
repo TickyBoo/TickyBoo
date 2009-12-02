@@ -350,14 +350,6 @@ class EventViewCommon extends AdminView {
               </td></tr>\n";
     }
 
-   function print_input_num ($name, &$data, &$err, $size = 30, $max = 100, $num='', $suffix = '')
-    {
-    	echo "<tr><td class='admin_name'  width='40%'>$suffix" . $this->con($name) ."</td>
-              <td class='admin_value'><input type='text' name='".$name."[".$num."][value]' value='"; if(isset($data[$name][$num])) echo htmlspecialchars($data[$name][$num]['value'], ENT_QUOTES); echo "' size='$size' maxlength='$max'>
-              <span class='err'>{$err[$name]}</span>
-              </td></tr>\n";
-
-    }
 }
 
 ?>

@@ -107,28 +107,25 @@ class PlaceMapCategory Extends Model {
     return $cats;
   }
 
-  static function delete ($category_id=0){
-    if(!$cat=PlaceMapCategory::load($category_id)){
-      return true;
-    }
+  function delete (){
     $seats = shopDB::query_one_row("select count(*) from Seat
-                                    where seat_category_id ="._esc($category_id), false);
+                                    where seat_category_id ="._esc($this->id), false);
     if (empty($seats) || $seats[0]>0 ) {
       return  self::_abort('Category_delete_failed_seats_exists');
     }
 
-    if(ShopDB::begin('delete category: '.$category_id)){
+    if(ShopDB::begin('delete category: '.$this->id)){
       $query="DELETE c.*, cs.*
               FROM Category c LEFT JOIN Category_stat cs
               ON c.category_id = cs.cs_category_id
-              WHERE c.category_id="._esc($category_id);
+              WHERE c.category_id="._esc($this->id);
       if(!ShopDB::query($query)){
         return self::_abort(con('Category_delete_failed'));
       }
 
-      if($pmps=PlaceMapPart::loadAll($cat->category_pm_id) and is_array($pmps)){
+      if($pmps=PlaceMapPart::loadAll($this->category_pm_id) and is_array($pmps)){
         foreach($pmps as $pmp){
-          if($pmp->delete_category($cat->category_ident) && !$pmp->save()) {
+          if($pmp->delete_category($this->category_ident) && !$pmp->save()) {
             return self::_abort('Category_delete_failed_on_pmps');
           }
         }

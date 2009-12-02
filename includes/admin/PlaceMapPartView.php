@@ -65,7 +65,7 @@ class PlaceMapPartView extends AdminView {
               echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
               echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=split_pmp&pm_id=$pm_id&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id'><img src='images/copy_to_folder16.gif' border='0' alt='" . split_pm . "' title='" . split_pm . "'></a>\n";
               if (!$live) {
-                  echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
+                  echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
               }
           } else {
             echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
@@ -110,11 +110,7 @@ class PlaceMapPartView extends AdminView {
     }
   }
 
-  function pmp_view_only ($pmp_id){
-      $this->pmp_view($pmp_id, null, 0, 0, true);
-  }
-
-  function pmp_view ($pmp_id, $err = null, $sel_cat = 0, $sel_pmz = 0, $view_only = false) {
+  function view ($pmp_id, $err = null, $sel_cat = 0, $sel_pmz = 0, $view_only = false) {
       global $_SHOP;
       $pmp = PlaceMapPart::loadFull($pmp_id);
       if ($pmp->event_id and $pmp->event_status != 'unpub') {
@@ -683,18 +679,19 @@ class PlaceMapPartView extends AdminView {
         if ((!$pmp->fillPost() or !$pmp->save()) && !$_POST['pmp_id'] ) {
           $this->form($_POST, null);
         } else {
-          $this->pmp_view($pmp->pmp_id,null);
+          $this->view($pmp->pmp_id,null);
         }
       } else
         return true;
     } elseif ($_GET['action'] == 'view_pmp' and $_GET['pmp_id'] > 0) {
-        $this->pmp_view($_GET['pmp_id'], $err, $_GET['category_id'], $_GET['pmz_ident'], $err);
+        $this->view($_GET['pmp_id'], $err, $_GET['category_id'], $_GET['pmz_ident'], $err);
     } elseif ($_GET['action'] == 'view_only_pmp' and $_GET['pmp_id'] > 0) {
-        $this->pmp_view_only($_GET['pmp_id']);
+        $this->view($_GET['pmp_id'], null, 0, 0, true);
 
     } elseif ($_GET['action'] == 'remove_pmp' and $_GET['pmp_id'] > 0) {
-        PlaceMapPart::delete($_GET['pmp_id']);
-        return true;
+      if($pmp = PlaceMapPart::load($_POST['pmp_id']))
+        $pmp->delete();
+      return true;
 
     } else if ($_POST['action'] == 'def_cat_pmp' and $_POST['pmp_id'] > 0 and $_POST['category_id'] > 0) {
       if (empty($_POST['seat']) or is_array($_POST['seat'])) {
@@ -703,7 +700,7 @@ class PlaceMapPartView extends AdminView {
           $pmp->save();
         }
       }
-      $this->pmp_view($_POST['pmp_id']);
+      $this->view($_POST['pmp_id']);
     } else if ($_POST['action'] == 'def_pmz_pmp' and $_POST['pmp_id'] > 0 and $_POST['zone_id'] > 0) {
       if (is_array($_POST['seat'])) {
         if ($pmp = PlaceMapPart::load($_POST['pmp_id']) ) {
@@ -711,7 +708,7 @@ class PlaceMapPartView extends AdminView {
           $pmp->save();
         }
       }
-      $this->pmp_view($_POST['pmp_id'], $err);
+      $this->view($_POST['pmp_id'], $err);
     } else if ($_POST['action'] == 'def_label_pmp' and $_POST['pmp_id'] > 0 and $_POST['label_type']) {
       if (is_array($_POST['seat'])) {
         if ($pmp = PlaceMapPart::load($_POST['pmp_id'])) {
@@ -719,7 +716,7 @@ class PlaceMapPartView extends AdminView {
           $pmp->save();
         }
       }
-      $this->pmp_view($_POST['pmp_id']);
+      $this->view($_POST['pmp_id']);
     } else if ($_POST['action'] == 'def_clear_pmp' and $_POST['pmp_id'] > 0) {
       if (is_array($_POST['seat'])) {
         if ($pmp = PlaceMapPart::load($_POST['pmp_id'])) {
@@ -727,7 +724,7 @@ class PlaceMapPartView extends AdminView {
           $pmp->save();
         }
       }
-      $this->pmp_view($_POST['pmp_id']);
+      $this->view($_POST['pmp_id']);
 
     } else if ($_GET['action'] == 'pmz_edit_num_pmp' and $_GET['pmp_id'] and $_GET['pmz_ident']) {
         $this->zone_edit($_GET['pmz_ident'], $_GET['pmp_id']);
@@ -754,7 +751,7 @@ class PlaceMapPartView extends AdminView {
     } elseif ( $_POST['action'] == 'split_pmp' and $_POST['pm_id'] > 0 ) {
       if ($pm = PlaceMap::load($_POST['pm_id']) ) {
         $pm->split( $_POST['pm_parts'], $_POST['split_zones'] );
-        $this->pm_view( $_POST['pm_id'] );
+        $this->view( $_POST['pm_id'] );
       }
     }
   }

@@ -112,14 +112,16 @@ class Handling Extends Model {
     $ok = parent::CheckValues($arr);
     return  $ok; //$this->extra_Check($arr) and
   }
-  
+
   /* Remember when concreting that you cant change the parent access! */
-  static function delete (){
+  function delete (){
     global $_SHOP;
     if (!$id) $id = $this->handling_id;
-		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quote($id);
+		$query="SELECT count(order_id) AS count
+            FROM `Order`
+            WHERE order_handling_id="._esc($this->id);
 		if($res=ShopDB::query_one_row($query, false) and $res['count']==0){
-		  return parent::delete($id);
+		  return parent::delete();
 		}else{
 		  echo "<div class=err>".con('in_use')."</div>";
 			return;
@@ -141,11 +143,11 @@ class Handling Extends Model {
     if($template_name=$this->templates[$new_state] and $order->user_email){
       $te=new TemplateEngine;
       $tpl=&$te->getTemplate($template_name);
-      
+
       $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
-      
+
       if(!EmailSender::send($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;

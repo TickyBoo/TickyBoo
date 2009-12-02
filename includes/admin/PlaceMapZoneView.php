@@ -87,9 +87,11 @@ class PlaceMapZoneView extends AdminView {
 
   function form ($data, $err) {
     $data['pmz_pm_id'] =(isset($data['pmz_pm_id']))?$data['pmz_pm_id']:$_REQUEST['pm_id'];
-    echo "<form action='{$_SERVER['PHP_SELF']}' method=post>/n";
-    echo "<input type=hidden name=pm_id value={$data['pmz_pm_id']}>/n";
-    echo "<input type=hidden name=action value=save_pmz>";
+    echo "<form action='{$_SERVER['PHP_SELF']}' method=post>\n";
+    echo "<input type=hidden name=action value=save_pmz>\n";
+    echo "<input type=hidden name=pmz_pm_id value={$data['pmz_pm_id']}>\n";
+    echo "<input type=hidden name=pm_id value={$data['pmz_pm_id']}>\n";
+
     if ($data['pmz_id']) {
       echo "<input type=hidden name=pmz_id value={$data['pmz_id']}>";
     }
@@ -147,7 +149,8 @@ class PlaceMapZoneView extends AdminView {
       $this->pmz_view($pmz);
 
     }elseif ($_GET['action'] == 'remove_pmz' and $_GET['pmz_id'] > 0) {
-      PlaceMapZone::delete($_GET['pmz_id']);
+      if ( $pmz = PlaceMapZone::load($_POST['pmz_id']))
+        $pmz->delete();
       return true;
     }
   }

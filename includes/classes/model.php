@@ -135,11 +135,11 @@ class Model {
     return "`{$key}`="._esc($value);
   }
 
-  static function delete($id)  {
-    if (!$id) return addWarning('Cant_delete_without_id');
+  function delete()  {
+    if (!$this->id) return addWarning('Cant_delete_without_id');
 
     ShopDB::query("DELETE FROM `{$this->_tableName}`
-                   WHERE `{$this->_idName}` = "._esc($id));
+                   WHERE `{$this->_idName}` = "._esc($this->id));
     return ShopDB::affected_rows();
   }
 

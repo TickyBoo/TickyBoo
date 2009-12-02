@@ -112,21 +112,19 @@ class PlaceMap Extends Model {
 
   }
 
-  static function delete ($pm_id = -1){
-    $pm_id = (int)$pm_id;
-    if (!$pm_id) return addWarning('Cant_delete_without_id');
+  function delete (){
+    if (!$this->pm_id) return addWarning('Cant_delete_without_id');
 
-    if(ShopDB::begin('delete Placmap: '.$pm_id)){
-      $pm = shopDB::query_one_row("select pm_event_id from PlaceMap2 where pm_id ={$pm_id}");
-      if ($pm and $pm['pm_event_id']){
+    if(ShopDB::begin('delete Placmap: '.$this->pm_id)){
+      if ($this->pm_event_id){
         $seats = shopDB::query_one_row("select count(*) from Seat
-                                       where seat_event_id ={$pm['pm_event_id']}", false);
+                                       where seat_event_id ={$this->pm_event_id}", false);
         if ($seats[0]>0) {
           return placemap::_abort(con('placemap_delete_failed_seats_exists'));
         }
       }
 
-      $query="delete from PlaceMapZone where pmz_pm_id={$pm_id}";
+      $query="delete from PlaceMapZone where pmz_pm_id={$this->pm_id}";
       if(!ShopDB::query($query)){
         return  placemap::_abort(con('placemapzone_stat_delete_failed'));
       }
@@ -134,17 +132,17 @@ class PlaceMap Extends Model {
       $query="DELETE c.*, cs.*
               FROM Category c LEFT JOIN Category_stat cs
               ON c.category_id = cs.cs_category_id
-              WHERE c.category_pm_id={$pm_id}";
+              WHERE c.category_pm_id={$this->pm_id}";
       if(!ShopDB::query($query)){
         return placemap::_abort(con('Category_delete_failed'));
       }
 
-      $query="delete from PlaceMapPart where pmp_pm_id={$pm_id} ";
+      $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} ";
       if(!ShopDB::query($query)){
         return placemap::_abort(con('PlaceMapPart_delete_failed'));
       }
 
-      $query="delete from PlaceMap2 where pm_id={$pm_id} limit 1";
+      $query="delete from PlaceMap2 where pm_id={$this->pm_id} limit 1";
       if(!ShopDB::query($query)){
         return placemap::_abort(con('placemap_delete_failed'));;
       }

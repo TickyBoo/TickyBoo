@@ -68,14 +68,14 @@ class Eventgroup Extends Model {
     return ShopDB::query($query);
   }
 
-  static function delete($id) {
+  function delete() {
     $query = "SELECT count(event_name)
               FROM Event
-              Where event_group_id="._esc($id);
-    if ($res = ShopDB::query_one_record($query, false) && $res[0]) {
+              Where event_group_id="._esc($this->id);
+    if (!$res = ShopDB::query_one_record($query, false) || $res[0]>0) {
       return addWarning('in_use');
     }
-    return parent::delete($id);
+    return parent::delete();
   }
 
 }

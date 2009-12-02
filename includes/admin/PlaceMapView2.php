@@ -54,7 +54,7 @@ class PlaceMapView extends AdminView {
 		}
 
 		$alt = 0;
-	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
+	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 	  echo "<tr><td class='admin_list_title' colspan='1' align='left'>" . con('place_maps') . "</td>\n";
     echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pm&pm_ort_id=$ort_id'>
             <img src='images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
@@ -85,7 +85,7 @@ class PlaceMapView extends AdminView {
     }
     $data['pm_ort_id'] =(!isset($data['pm_ort_id']))?$_REQUEST['pm_ort_id']:$data['pm_ort_id'];
 		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>";
-  	echo "<input type=hidden name=action value=save_pm>{$data['pm_ort_id']}
+  	echo "<input type=hidden name=action value=save_pm>
           <input type=hidden name=pm_ort_id value='{$data['pm_ort_id']}'>";
 
 		if ( $data['pm_id'] ) {
@@ -169,8 +169,8 @@ class PlaceMapView extends AdminView {
       $pm = PlaceMap::load($_GET['pm_id']);
       $this->form((array)$pm, null, con('edit_pm'));
 		} elseif ( $_POST['action'] == 'save_pm' ) {
-      if (!$pmc = PlaceMap::load((int)$_POST['pm_id'])) {
-         $pmc = new PlaceMap(true);
+      if (!$pm = PlaceMap::load((int)$_POST['pm_id'])) {
+         $pm = new PlaceMap(true);
       }
       if ( !$pm->fillPost() || !$pm->save() ) {
         $this->form( $_POST, null , con((isset($_POST['ort_id']))?'edit_pm':'add_pm') );
@@ -181,10 +181,12 @@ class PlaceMapView extends AdminView {
     } elseif ( $_GET['action'] == 'copy_pm' and (int)$_GET['pm_id'] > 0 ) {
       if ( $pm = PlaceMap::load($_GET['pm_id']) ) {
         $pm->copy();
-        return true;
       }
+      return true;
     } elseif ( $_GET['action'] == 'remove_pm' and $_GET['pm_id'] > 0 ) {
-      PlaceMap::delete($_GET['pm_id'] );
+      if ( $pm = PlaceMap::load($_GET['pm_id']) ) {
+        $pm->delete();
+      }
       return true;
 
     } else

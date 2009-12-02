@@ -71,7 +71,7 @@ class Organizer  Extends Model {
     return parent::_fill($arr, $nocheck);
   }
 
-  static function delete(){
+  function delete(){
     return addWarning('cant_delete_organizer');
   }
 }
