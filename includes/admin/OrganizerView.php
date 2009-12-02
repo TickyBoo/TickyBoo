@@ -60,10 +60,8 @@ class OrganizerView extends AdminView{
   }
 
   function draw () {
-
     $org = Organizer::load();
-    if(isset($_POST['save'])){
-
+    if(isset($_POST['submit'])){
       if($org->fillPost() && $org->save()) {
         $_SESSION['_SHOP_ORGANIZER_DATA'] = $org;
       }

@@ -312,7 +312,7 @@ class Order Extends Model {
       return true;
   }
 
-  function delete ($order_id, $reason = null){
+  public static function delete ($order_id, $reason = null){
     global $_SHOP;
 
     if(ShopDB::begin('delete orders:'.$order_id)){

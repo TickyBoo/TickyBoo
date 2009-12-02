@@ -68,7 +68,7 @@ class HandlingView extends AdminView{
   			$data['handling_sale_mode']=implode(',',$data['handling_sale_mode_a']);
   	 	}
 
-  	 	$this->save_paper_format('pdf_paper',$data,$err);
+  	 	//$this->save_paper_format('pdf_paper',$data,$err);
   	 	$hand->admin_check($data, $err);
       if ($data['handling_id']) {
    	  	if(empty($data['handling_text_payment'])){$err['handling_text_payment']=mandatory;}
@@ -87,7 +87,7 @@ class HandlingView extends AdminView{
   		echo "<tr><td class='admin_list_title' colspan='2'>".$title."</td></tr>";
 
   		if($data['handling_id']){
-        $h = handling::load($data['handling_id']);
+        $h = Handling::load($data['handling_id']);
   			echo "<tr><td class='admin_name'>".con('handling_payment')."</td>
   			<td class='admin_value'>".con($data['handling_payment'])."</td></tr>";
   			echo "<tr><td class='admin_name'>".con('handling_shipment')."</td>
@@ -152,8 +152,8 @@ class HandlingView extends AdminView{
   		}
 
   		$this->print_select_tpl('handling_email_template_ord','email',$data,$err);
-  		$this->print_select_tpl('handling_email_template_send','email',$data,$err);
   		$this->print_select_tpl('handling_email_template_payed','email',$data,$err);
+      $this->print_select_tpl('handling_email_template_send','email',$data,$err);
 
   		$this->print_select_tpl('handling_pdf_template','pdf2',$data,$err);
   		$this->print_select_tpl('handling_pdf_ticket_template','pdf2',$data,$err);

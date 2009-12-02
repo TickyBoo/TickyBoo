@@ -102,7 +102,7 @@ class Handling Extends Model {
     global $_SHOP;
 
 		$this->_ser_extra();
-    $this->handling_email_template = $this->_ser_templates($this->handling_email_template);
+    $this->handling_email_template = $this->_ser_templates($this->templates);
     $exclude = ($this->handling_id)? array('handling_payment','handling_shipment'): null;
 
     return parent::save(null, $exclude);
@@ -112,13 +112,14 @@ class Handling Extends Model {
     $ok = parent::CheckValues($arr);
     return  $ok; //$this->extra_Check($arr) and
   }
-
-  function delete (){
+  
+  /* Remember when concreting that you cant change the parent access! */
+  static function delete (){
     global $_SHOP;
     if (!$id) $id = $this->handling_id;
 		$query="SELECT count(order_id) AS count FROM `Order` WHERE order_handling_id=".ShopDB::quote($id);
 		if($res=ShopDB::query_one_row($query, false) and $res['count']==0){
-		  return parent::delete();
+		  return parent::delete($id);
 		}else{
 		  echo "<div class=err>".con('in_use')."</div>";
 			return;

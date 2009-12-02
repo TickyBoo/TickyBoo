@@ -43,13 +43,18 @@ class EmailSender {
       return false;
     }
     $type = is($template->template_type,'swift');
-    if($type=='swift'){
+    //if($type=='swift'){
       require_once('classes/email.swift.sender.php');
       $template->write($message,$data,$lang);
-      if(EmailSwiftSender::send($message)){
-        return true;
+      try{
+        if(EmailSwiftSender::send($message)){
+          return true;
+        }
+        return false;
+      }catch(Exception $e){
+        return false;
       }
-      return false;
+    /*
     }else{//either system or old mailer
       require_once('classes/htmlMimeMail.php');
       $email= new htmlMimeMail();
@@ -58,7 +63,7 @@ class EmailSender {
         return true;
       } 
       return false;
-    }
+    }*/
   }
 }
 ?>

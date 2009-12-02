@@ -45,7 +45,7 @@ class EmailSwiftXMLCompiler {
   var $stack=array(); // local stack for various purposes
   var $vars=array(); //variables are collected for informative purposes
   var $args='data'; //name of the parameter array where variables are stored
-  var $langs = array();
+  protected $langs = array();
 
   var $deflang=0;
   var $errors=array();
@@ -78,6 +78,11 @@ class EmailSwiftXMLCompiler {
     return "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\""; 
   }
   
+  /**
+   * EmailSwiftXMLCompiler::emailToParam()
+   * Will try to turn email xml into an array format.
+   * @return $email or [$email] => "$names"
+   */
   private function emailToParam($val){
     preg_match_all("/(.*?)(<)([^>]+)(>)/",$val,$matches);
     if(is($matches[3][0])){
@@ -85,15 +90,12 @@ class EmailSwiftXMLCompiler {
       if(is($matches[1][0])){
         $names = $this->replace_vars(str_replace('"','\"',$matches[1][0]),1);
         $ret = $email." => \"".$names."\"";
-        print_r($ret);
         return $ret;
       }else{
         $ret = "\"".$email."\"";
-        print_r($ret);
       }
     }
     $ret = "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
-    print_r($ret);
     return $ret;
   }
 
@@ -248,7 +250,7 @@ class EmailSwiftXMLCompiler {
 
     case "template":
 
-      $code='  function build(&$mail,&$data,$lang="'.$this->deflang.'"){'."\n";
+      $code='  function build(&$message,&$data,$lang="'.$this->deflang.'"){'."\n";
 
       foreach($this->res as $lang=>$data){
         if($lang){
@@ -305,7 +307,7 @@ class EmailSwiftXMLCompiler {
     }
 
     if(isset($data['html'])){
-      $res.=$pre.'$message->setHtml('.$data['html'].",'text/html',".is($data['html_charset'],"null").")".$post;
+      $res.=$pre.'$message->setBody('.$data['html'].",'text/html',".is($data['html_charset'],"null").")".$post;
     }
     if(isset($data['text'])){
       $res.=$pre.'$message->addPart('.$data['text'].",'text/plain',".is($data['text_charset'],"null").")".$post;
@@ -343,7 +345,7 @@ class EmailSwiftXMLCompiler {
 
         if(isset($data1)){
           $res.=$pre.'if(isset('.$r_data.")){\n";
-          $res.=$pre.'  $mail->addAttachment(new Attachment( '.$r_data.", ".$attach['name'].", ".$attach['type'].",new Base64Encoding()))$post";
+          $res.=$pre.'  $message->attach(Swift_Attachment::newInstance( '.$r_data.", ".$attach['name'].", ".$attach['type']."))".$post;
           $res.=$pre."}\n";
         }
 
@@ -352,7 +354,7 @@ class EmailSwiftXMLCompiler {
         }
 
         if(isset($file)){
-          $res.=$pre.'$mail->addAttachment(new FileAttachment('.$attach['file'].', '.$attach['type']."))$post";
+          $res.=$pre.'$message->attach(Swift_Attachment::fromPath('.$attach['file'].', '.$attach['type']."))".$post;
         }
 
         if(isset($data1) and isset($file)){
@@ -369,61 +371,6 @@ class EmailSwiftXMLCompiler {
     }
   }
 
-  function PIHandler($parser, $target, $data) {
-  /*  switch (strtolower($target)) {
-        case "php":
-            global $parser_file;
-            // If the parsed document is "trusted", we say it is safe
-            // to execute PHP code inside it.  If not, display the code
-            // instead.
-            if (trustedFile($parser_file[$parser])) {
-                eval($data);
-            } else {
-                printf("Untrusted PHP code: <i>%s</i>",
-                        htmlspecialchars($data));
-            }
-            break;
-    }
-  */
-  }
-
-  function defaultHandler($parser, $data) {
-  /*
-    if (substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";") {
-        printf('<font color="#aa00aa">%s</font>',
-                htmlspecialchars($data));
-    } else {
-        printf('<font size="-1">%s</font>',
-                htmlspecialchars($data));
-    }
-  */
-  }
-
-  function externalEntityRefHandler($parser, $openEntityNames, $base, $systemId,
-                                  $publicId) {
-  /*
-    if ($systemId) {
-        if (!list($parser, $fp) = new_xml_parser($systemId)) {
-            printf("Could not open entity %s at %s\n", $openEntityNames,
-                   $systemId);
-            return false;
-        }
-        while ($data = fread($fp, 4096)) {
-            if (!xml_parse($parser, $data, feof($fp))) {
-                printf("XML error: %s at line %d while parsing entity %s\n",
-                       xml_error_string(xml_get_error_code($parser)),
-                       xml_get_current_line_number($parser), $openEntityNames);
-                xml_parser_free($parser);
-                return false;
-            }
-        }
-        xml_parser_free($parser);
-        return true;
-    }
-    return false;
-  */
-  }
-
   function new_xml_parser () {
 
     $xml_parser = xml_parser_create();
@@ -431,9 +378,6 @@ class EmailSwiftXMLCompiler {
     xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 1);
     xml_set_element_handler($xml_parser, "startElement", "endElement");
     xml_set_character_data_handler($xml_parser, "characterData");
-    //xml_set_processing_instruction_handler($xml_parser, "PIHandler");
-    //xml_set_default_handler($xml_parser, "defaultHandler");
-    //xml_set_external_entity_ref_handler($xml_parser, "externalEntityRefHandler");
 
     return $xml_parser;
   }
@@ -459,7 +403,7 @@ class EmailSwiftXMLCompiler {
     return "$res)";
   }
 
-  function compile ($input, $out_class_name){
+  function compile ($xml, $className){
     $this->res=array();
 
     $this->mode=0;
@@ -471,38 +415,41 @@ class EmailSwiftXMLCompiler {
 
     $this->deflang=0;
     $this->errors=array();
-    
-    //Use new xml parser.
-    //$xmlArray = Xml2php::xml2array($input);
-    
-    //$xml = simplexml_load_string($input); 
 
     $this->xml_parser=$this->new_xml_parser();
-    if (!xml_parse($this->xml_parser, $input, TRUE)) {
+    if (!xml_parse($this->xml_parser, $xml, TRUE)) {
       $this->error(xml_error_string(xml_get_error_code($this->xml_parser)));
     }
     xml_parser_free($this->xml_parser);
-    
-    print_r($this->text);
 
     if (!$this->errors) {    	
     	$langs = implode(",",$this->langs);
     	$langs = str_replace('\'', '"', $langs);
-    $xyz =
-'/*this is a generated code. do not edit!
-produced '.date("C").'
-*/
+      $xyz =
+'/*this is a generated code. do not edit! produced '.date("C").' */
 
-class '.$out_class_name.'_swift {
-  var $object_id;
-  var $engine;
-  var $langs = array('.$langs.');
+require_once (LIBS."swift".DS."swift_required.php");
+
+class '.$className.' {
+  public $object_id;
+  public $engine;
+  public $langs = array('.$langs.');
+  protected $deflang = "'.$this->deflang.'";
   
-  function '.$out_class_name.'_swift(){}
-
+  function '.$className.'(){}
+  
+  function write(&$message,&$data,$lang="'.$this->deflang.'",$testEmail=""){
+    if(!is_object($message)){
+      $message = Swift_Message::newInstance();
+    }
+    if(!in_array($lang,$this->langs)){
+      $lang = $this->deflang;
+    }
+    $this->build($message,$data,$lang);
+  }
+  
   '.$this->build.'
-}
-';
+}';
 //    echo ($xyz);
     return $xyz;
   }else{

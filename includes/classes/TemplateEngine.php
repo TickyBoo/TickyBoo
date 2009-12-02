@@ -89,10 +89,10 @@ class TemplateEngine {
     switch ($data['template_type']) {
       case 'systm':
       case 'email':
-        require_once("classes/EmailTCompiler.php");
+        //require_once("classes/EmailTCompiler.php");
         require_once("classes/email.swift.xml.compiler.php");
-        $comp = new EmailTCompiler;
-        $comp2 = new EmailSwiftXMLCompiler; //For testing only
+        //$comp = new EmailTCompiler;
+        $comp = new EmailSwiftXMLCompiler; //For testing only
         break;
       case 'pdf2':
         require_once("classes/PDF2TCompiler.php");
@@ -126,11 +126,11 @@ class TemplateEngine {
       unlink($_SHOP->templates_dir.$t_class_name.'.php');
     }
     
-    $fileStream = fopen($_SHOP->templates_dir.$t_class_name.'_swift.php', 'w');
+    /*$fileStream = fopen($_SHOP->templates_dir.$t_class_name.'_swift.php', 'w');
     if($fileStream){
       $res=fwrite($fileStream,utf8_encode("<?php \n".$code2."\n?>"));
       $close=fclose($fileStream);
-    }
+    }*/
 
     $fileStream = fopen($_SHOP->templates_dir.$t_class_name.'.php', 'w');
     if($fileStream){
