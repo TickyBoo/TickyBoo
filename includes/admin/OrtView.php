@@ -114,7 +114,7 @@ class OrtView extends AdminView {
         $this->form($_POST, null, con((isset($_POST['ort_id']))?'ort_update_title':'ort_insert_title'));
       }
     } elseif ($_GET['action'] == 'add') {
-       $this->ort_form($row, $err, con('ort_add_title'));
+       $this->form($row, $err, con('ort_add_title'));
     } elseif ($_GET['action'] == 'remove' and $_GET['ort_id'] > 0) {
       $ort = ort::load($_GET['ort_id']);
       $ort->delete();

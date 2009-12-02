@@ -404,7 +404,7 @@ select SQL_CALC_FOUND_ROWS *
 			preg_match('/_pmz$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action']) or
 			preg_match('/_pm$/', $_REQUEST['action']) ) {
 			require_once ( "admin/PlaceMapView2.php" );
-			$pmp_view = new PlaceMapView2( $this->width );
+			$pmp_view = new PlaceMapView( $this->width );
 			if ( $pmp_view->draw($history) ) {
 				$this->event_list($history);
 			}
