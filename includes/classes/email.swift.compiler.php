@@ -54,7 +54,7 @@ class EmailSwiftCompiler {
   private $emailBCC = null;
   private $emailFrom = null; //$email => $firstname $lastname
   private $emailDefLang = 0;
-  protected $emailLangs = null;
+  public $emailLangs = null;
   private $emailTemplates = null;
   private $emailAttachments = null;
   private $emailOrderPDF = null;
@@ -87,9 +87,11 @@ class EmailSwiftCompiler {
     if($lang===0 || empty($lang)){
       $lang = $this->emailLangs[0];
     }
-    $swift->setSubject($this->emailTemplates[$lang]['template_text']);
-    $swift->setBody($this->emailTemplates[$lang]['template_html'],'text/html');
-    $swift->addPart($this->emailTemplates[$lang]['template_text'],'text/plain');
+    $swift->setSubject($this->emailTemplates[$lang]['template_subject']);
+    print_r($this->emailTemplates[$lang]['template_text']);
+    print_r($this->buildSmarty($this->emailTemplates[$lang]['template_text'],$this->data,'text'));
+    $swift->setBody($this->buildSmarty($this->emailTemplates[$lang]['template_html'],$this->data,'html'),'text/html');
+    $swift->addPart($this->buildSmarty($this->emailTemplates[$lang]['template_text'],$this->data,'text'),'text/plain');
     
     if($this->emailOrderSent){
       require_once("classes/model.order.php");
@@ -149,7 +151,7 @@ class EmailSwiftCompiler {
     $this->varsBuilt = true;
   }
   
-  private function buildSmarty ($code, $data, $testme=false){
+  private function buildSmarty ($code, $data, $name='', $testme=false){
     global $_SHOP;
     require_once("smarty/Smarty.class.php");
     require_once("classes/gui_smarty.php");
@@ -169,10 +171,10 @@ class EmailSwiftCompiler {
     $smarty->assign("_SHOP_images", $_SHOP->images_url);
 
     $smarty->my_template_source = $code;
-    $compiledCode = $smarty->fetch("text:".get_class($this));
+    $compiledCode = $smarty->fetch("text:".get_class($this).$name);
     unset($smarty);
     unset($gui);
-    return $compileCode;
+    return $compiledCode;
   }
   
   public function compile ($emailArray, $newClassName){
