@@ -38,12 +38,6 @@ class PlaceMapZone Extends Model {
   protected $_tableName = 'PlaceMapZone';
   protected $_columns   = array( '#pmz_id','*pmz_pm_id','*pmz_ident','*pmz_name', 'pmz_color','pmz_short_name');
 
-  var $pmz_id;
-  var $pmz_pm_id;
-  var $pmz_ident;
-  var $pmz_name;
-  var $pmz_color;
-
   function create ($pmz_pm_id=null, $pmz_name=null, $pmz_short_name=null, $pmz_color=null){
     $new = new PlaceMapZone;
     if($pmz_pm_id){

@@ -73,25 +73,18 @@ class Discount  Extends Model {
       return $discounts;
     }
   }
-  function delete($discount_id){
+  static function delete($discount_id){
     if (ShopDB::begin('Delete discount')) {
-
-    }
-    $query = "SELECT count(*) count
-              from Seat
-              where seat_discount_id="._esc($discount_id);
-    if (!$count = ShopDB::query_one_row($query)) {
-        return;
-    }
-
-    if ($count['count'] != 0) {
-        echo "<div class=error>" . con('in_use') . "</div>";
-        return;
-    }
-    if (!parent::delete()){
-      return self::_abort(con('cant delete discount'));
-    } else
-      return ShopDB::commit('Deleted discount');
+      $query = "SELECT count(*) count
+                from Seat
+                where seat_discount_id="._esc((int)$discount_id);
+      if (!$count = ShopDB::query_one_row($query) || $count['count'] != 0) {
+        return addWarning('in_use');
+      }
+      if (!parent::delete($discount_id)){
+        return self::_abort(con('cant delete discount'));
+      } else
+        return ShopDB::commit('Deleted discount');
   }
 
   function apply_to ($price){

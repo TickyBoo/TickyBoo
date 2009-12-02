@@ -109,35 +109,41 @@ class Event Extends Model {
 
 
   //LA FONCTION DELETE EST PUISSANTE!
-  function delete (){
+  static function delete ($id){
     global $_SHOP;
+    $query= 'select event_status, event_pm_id, event_rep
+             from  event
+             where event_id = '._esc((int)$id);
+    if (!$event = ShopDB::Query_One_row($query)){
+      return false;
+    }
 
-    if($this->event_status=='pub' ){
+    if($event['event_status']=='pub' ){
         echo '<div class=error>'.con('Status_is_pub').'</div>';
         return FALSE;
     }
 
-    if($this->event_rep=='main'){
+    if($event['event_rep']=='main'){
       $query="select count(*)
               from Event
               where event_status!='trash'
-              and   event_main_id={$this->event_id}";
+              and   event_main_id="._esc((int)$id);
       if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
         echo '<div class=error>'.con('delete_subs_first').'</div>';
         return FALSE;
       }
-    } elseif($this->event_status=='nosal' and $this->event_pm_id){
+    } elseif($event['event_status']=='nosal' and $event['event_pm_id']){
       echo '<div class=error>'.con('To_Trash').'</div>';
       return $this->toTrash();
     }
 
-    if(ShopDB::begin('Delete event: '.$this->event_id )){
+    if(ShopDB::begin('Delete event: '.$id )){
 
       if($this->event_status!='trash'){
         //check if there are non-free seats
         $query="select count(*)
                 from Seat
-                where seat_event_id="._esc($this->event_id)."
+                where seat_event_id="._esc($id)."
                 and seat_status!='free'
                 and seat_status!='trash'
                 FOR UPDATE";
@@ -147,7 +153,7 @@ class Event Extends Model {
       }
 
       $query="delete from Seat
-              where seat_event_id={$this->event_id}";
+              where seat_event_id="._esc((int)$id);
       if(!ShopDB::query($query)){
         return $this->_abort(con('seats_delete_failed'));
       }
@@ -158,7 +164,8 @@ class Event Extends Model {
         }
       }
 
-      $query="delete from Discount where discount_event_id={$this->event_id}";
+      $query="delete from Discount
+              where discount_event_id="._esc((int)$id);
       if(!ShopDB::query($query)){
         return $this->_abort(con('discount_delete_failed'));
       }
@@ -166,7 +173,7 @@ class Event Extends Model {
       $query="DELETE e.*, es.*
               FROM Event e LEFT JOIN Event_stat es
               ON e.event_id = es.es_event_id
-              WHERE e.event_id="._esc($this->event_id);
+              WHERE e.event_id="._esc((int)$id);
       if(!ShopDB::query($query)){
         return $this->_abort(con('event_delete_failed'));
       }
@@ -176,8 +183,7 @@ class Event Extends Model {
       }
       return ShopDB::commit('Event deleted');
     } else {
-      echo '<div class=error>'.con('Cant_Start_transaction').'</div>';
-      return FALSE;
+      return addWarning('Cant_Start_transaction');
     }
 
   }
