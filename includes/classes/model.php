@@ -188,32 +188,29 @@ class Model {
   function fillFilename (&$array, $name, $removefile= false) {
     global $_SHOP;
     $remove = 'remove_' . $name;
-    if (isset($this->$remove)) {
+    if (isset($array[$remove])) {
       if ($removefile) {
         unlink( $_SHOP->files_dir . DS  .$this->$name);
       }
       $array[$name] = '';
     } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
-      if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) { echo 'match';
-          addError($name,'img_loading_problem');
-          return false;
+      if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) {
+        return addError($name,'img_loading_problem_match');
       }
 
       $ext = strtolower($ext[1]);
-      if (!in_array($ext, $_SHOP->allowed_uploads)) { echo 'ext';
-          addError($name,'img_loading_problem');
-          return false;
+      if (!in_array($ext, $_SHOP->allowed_uploads)) {
+        return addError($name,'img_loading_problem_ext');
       }
-      $doc_name = strtolower($name) . '_' . uniqid (). '.' . $ext;
+      echo  $_FILES[$name]['tmp_name'],  $_SHOP->files_dir . DS, $doc_name = strtolower($name) . '_' . 'zzz'. '.' . $ext, ' <br> ';
 
-      if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir . DS . $doc_name)) {
-          addError($name,'img_loading_problem');
-          return false;
+      if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir .DS. $doc_name)) {
+        return addError($name,'img_loading_problem_copy');
       }
 
       chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
       $array[$name] = $doc_name;
-//      print_r($this);
+//
     }
     return true;
   }
