@@ -97,7 +97,7 @@ class OrtView extends AdminView {
   }
 
   function draw () {
-    addNotice("Action: {$_REQUEST['action']} pm_id {$_REQUEST['pm_id']}");
+   // addNotice("Action: {$_REQUEST['action']} pm_id {$_REQUEST['pm_id']}");
     if (preg_match('/_pm$/', $_REQUEST['action']) or preg_match('/_pmz$/', $_REQUEST['action']) or
         preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
         require_once('admin/PlaceMapView2.php');
@@ -109,26 +109,31 @@ class OrtView extends AdminView {
             $this->table();
           }
         }
+
+    } elseif ($_GET['action'] == 'add') {
+       $this->form($row, $err, con('ort_add_title'));
+    } elseif ($_GET['action'] == 'edit' && $_GET['ort_id']){
+        if ($ort = ort::load($_REQUEST['ort_id'])) {
+           $row = (array)$ort;
+           $this->form($row, null, con('ort_update_title'));
+        }
     } elseif ($_POST['action'] == 'save') {
-      $ort = ort::load($_POST['ort_id']);
+      if (!$ort = ort::load($_POST['ort_id'])) {
+         $ort = new ort(true);
+      }
       if ($ort->fillPost() && $ort->save()) {
         $this->table();
       } else {
         $this->form($_POST, null, con((isset($_POST['ort_id']))?'ort_update_title':'ort_insert_title'));
       }
-    } elseif ($_GET['action'] == 'add') {
-       $this->form($row, $err, con('ort_add_title'));
+
     } elseif ($_GET['action'] == 'remove' and $_GET['ort_id'] > 0) {
       if($ort = ort::load($_GET['ort_id']))
         $ort->delete();
       $this->table();
     } elseif ($_GET['action'] == 'import') {
         $this->shared_ort_list();
-    } elseif ($_GET['ort_id']){
-        if ($ort = ort::load($_REQUEST['ort_id'])) {
-           $row = (array)$ort;
-           $this->form($row, null, con('ort_update_title'));
-        }
+
     } else {
       $this->table();
     }

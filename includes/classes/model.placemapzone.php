@@ -103,13 +103,18 @@ class PlaceMapZone Extends Model {
     }
   }
 
-  /* ??? this code need to be checked !!!! */
-  function _find_ident ($pmz_pm_id){
-    global $_SHOP;
 
+  /**
+   * PlaceMapZone::_find_ident()
+   * Search the first not used ident value in the table within the given placemap
+   * @param mixed $pmz_pm_id
+   * @return Integer the new value
+   */
+  function _find_ident ($pmz_pm_id){
     $query="select pmz_ident
             from PlaceMapZone
-            where pmz_pm_id="._esc($pmz_pm_id);
+            where pmz_pm_id="._esc($pmz_pm_id)."
+            order by pmz_ident";
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_array($res)){
       $ident[$i['pmz_ident']]=1;
@@ -117,7 +122,7 @@ class PlaceMapZone Extends Model {
 
     $pmz_ident=1;
     while($ident[$pmz_ident]){$pmz_ident++;}
-    $this->pmz_ident=$pmz_ident;
+    return $pmz_ident;
   }
 
   function _fill(&$arr,$nocheck= true){

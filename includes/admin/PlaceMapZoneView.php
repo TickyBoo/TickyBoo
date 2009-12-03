@@ -62,7 +62,7 @@ class PlaceMapZoneView extends AdminView {
 
           echo "<tr class='admin_list_row_$alt'>";
           echo "<td class='admin_list_item' width=10 bgcolor='{$zone->pmz_color}'>&nbsp;</td>\n";
-          echo "<td class='admin_list_item'>{$zone->pmz_name} ({$zone->pmz_short_name})</td>\n";
+          echo "<td class='admin_list_item'>{$zone->pmz_ident} {$zone->pmz_name} ({$zone->pmz_short_name})</td>\n";
 
           echo "<td class='admin_list_item' width=60 align=right>\n";
 
@@ -134,7 +134,7 @@ class PlaceMapZoneView extends AdminView {
       $this->form((Array)$pmz, null);
     } elseif ($_GET['action'] == 'edit_pmz' and $_GET['pmz_id'] > 0) {
       $pmz = PlaceMapZone::load($_GET['pmz_id']);
-      $this->pmz_form((array)$pmz, null);
+      $this->form((array)$pmz, null);
     } else if ($_POST['action'] == 'save_pmz' and $_POST['pmz_pm_id'] > 0) {
       if (!$pmc = PlaceMapZone::load((int)$_POST['pmz_id'])) {
          $pmc = new PlaceMapZone(true);
@@ -149,7 +149,7 @@ class PlaceMapZoneView extends AdminView {
       $this->pmz_view($pmz);
 
     }elseif ($_GET['action'] == 'remove_pmz' and $_GET['pmz_id'] > 0) {
-      if ( $pmz = PlaceMapZone::load($_POST['pmz_id']))
+      if ( $pmz = PlaceMapZone::load($_GET['pmz_id']))
         $pmz->delete();
       return true;
     }

@@ -47,7 +47,9 @@ class EventGroupView extends AdminView{
 
     $alt=0;
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-    echo "<tr><td class='admin_list_title' colspan='8' align='center'>".con('event_group_title')."</td></tr>\n";
+    echo "<tr><td class='admin_list_title' colspan='1' align='left'>".con('event_group_title')."</td>\n";
+    echo "<td  align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>
+             <img src='images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td></tr>";
 
     while($row=shopDB::fetch_assoc($res)){
 
@@ -75,7 +77,6 @@ class EventGroupView extends AdminView{
 
     echo "</table>\n";
 
-    echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".con('add')."</a></center>";
   }
 
   function form ($data, $err, $title){
@@ -104,16 +105,22 @@ class EventGroupView extends AdminView{
   }
 
   function draw (){
-    if($_POST['action']=='save'){
-      $eg = Eventgroup::load($_POST['event_group_id']);
+    if($_GET['action']=='add'){
+      $eg = new Eventgroup(true);
+      $this->form((array)$eg,null,event_group_add_title);
+    }elseif($_GET['action']=='edit'){
+      $row = Eventgroup::load($_GET['event_group_id']);
+      $this->form((array)$row, null, con('event_group_update_title'));
+
+    }elseif($_POST['action']=='save'){
+      if (!$eg = Eventgroup::load($_POST['event_group_id'])) {
+         $eg = new Eventgroup(true);
+      }
       if ($eg->fillPost() && $eg->save()) {
         $this->table();
       } else {
         $this->form($_POST, null, con((isset($_POST['$event_group_id']))?'ort_update_title':'ort_insert_title'));
       }
-
-    }elseif($_GET['action']=='add'){
-      $this->form(array(),null,event_group_add_title);
 
     }elseif($_GET['action']=='remove' and $_GET['event_group_id']>0){
       $eg = Eventgroup::load($_POST['event_group_id']);
@@ -128,9 +135,6 @@ class EventGroupView extends AdminView{
       Eventgroup::setState($_GET['event_group_id'], false);
       $this->table();
 
-    }elseif($_GET['event_group_id']){
-      $row = Eventgroup::load($_GET['event_group_id']);
-      $this->form((array)$row, null, con('event_group_update_title'));
     }else {
       $this->table();
     }

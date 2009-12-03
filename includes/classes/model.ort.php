@@ -53,9 +53,12 @@ class Ort Extends Model {
       return $ort;
     }
   }
+  function CheckValues(&$arr) {
+    $this->fillFilename($arr, 'ort_image');
+    return parent::CheckValues($arr);
+  }
 
   function _fill($arr, $nocheck=true){
-    $this->fillFilename($arr, 'ort_image');
     return parent::_fill($arr, $nocheck);
   }
 

@@ -73,7 +73,7 @@ class Model {
     }
   }
 
-  function save ($id = null, $exclude=null){
+  function save($id = null, $exclude=null){
     $idKey = $this->idKey;
     if(isset($id) and $id and $idKey) $this->$idKey = $id;
     if($this->id){
@@ -143,10 +143,10 @@ class Model {
     return ShopDB::affected_rows();
   }
 
-  Function CheckValues ($arr) {
+  Function CheckValues (&$arr) {
     foreach($this->_columns as $key){
       if (self::getFieldtype($key)== self::MDL_MANDATORY) {
-        if ((!isset($arr[$key]) || empty($arr[$key])) && ( (!isset($this->$key) || empty($this->$key)))) {
+        if ((!isset($arr[$key]) || $arr[$key]=='') && ( (!isset($this->$key) || ($this->$key=='')))) {
           addError($key, 'mandatory');
         }
       }
@@ -185,8 +185,9 @@ class Model {
     return false;
    }
 
-  function fillFilename (&$array, $name, $removefile= false) {
+  function fillFilename (&$array, $name, $removefile= true) {
     global $_SHOP;
+
     $remove = 'remove_' . $name;
     if (isset($array[$remove])) {
       if ($removefile) {
@@ -198,11 +199,17 @@ class Model {
         return addError($name,'img_loading_problem_match');
       }
 
+      if (($_FILES[$name]['error'] !== UPLOAD_ERR_OK)){
+         addwarning(file_upload_error_message($_FILES[$name]['error']));
+         return addError($name,'img_loading_problem_error');
+      }
+
       $ext = strtolower($ext[1]);
       if (!in_array($ext, $_SHOP->allowed_uploads)) {
         return addError($name,'img_loading_problem_ext');
       }
-      echo  $_FILES[$name]['tmp_name'],  $_SHOP->files_dir . DS, $doc_name = strtolower($name) . '_' . 'zzz'. '.' . $ext, ' <br> ';
+
+      $doc_name =  ($this->$name)?$this->$name:uniqid(strtolower($name)). '.' . $ext;
 
       if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir .DS. $doc_name)) {
         return addError($name,'img_loading_problem_copy');
@@ -292,6 +299,27 @@ class Model {
   function _test() {
     return array($this->_tableName, $this->_idName, $this->_columns);
   }
+}
+
+function file_upload_error_message($error_code) {
+    switch ($error_code) {
+        case UPLOAD_ERR_INI_SIZE:
+            return 'The uploaded file exceeds the upload_max_filesize directive in php.ini';
+        case UPLOAD_ERR_FORM_SIZE:
+            return 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
+        case UPLOAD_ERR_PARTIAL:
+            return 'The uploaded file was only partially uploaded';
+        case UPLOAD_ERR_NO_FILE:
+            return 'No file was uploaded';
+        case UPLOAD_ERR_NO_TMP_DIR:
+            return 'Missing a temporary folder';
+        case UPLOAD_ERR_CANT_WRITE:
+            return 'Failed to write file to disk';
+        case UPLOAD_ERR_EXTENSION:
+            return 'File upload stopped by extension';
+        default:
+            return 'Unknown upload error:'.$error_code ;
+    }
 }
 
 ?>

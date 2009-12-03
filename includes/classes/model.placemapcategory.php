@@ -262,11 +262,17 @@ class PlaceMapCategory Extends Model {
     return parent::_fill($arr, $nocheck);
   }
 
-  /* ??? this code need to be checked !!!! */
+  /**
+   * PlaceMapZone::_find_ident()
+   * Search the first not used ident value in the table within the given placemap
+   * @param mixed $pmz_pm_id
+   * @return Integer the new value
+   */
   function _find_ident ($pm_id){
     $query="select category_ident
             from Category
-            where category_pm_id="._esc($pm_id);
+            where category_pm_id="._esc($pm_id) ."
+            order by category_ident";
     if(!$res=ShopDB::query($query)){return;}
     while($i=shopDB::fetch_assoc($res)){
       $ident[$i['category_ident']]=1;

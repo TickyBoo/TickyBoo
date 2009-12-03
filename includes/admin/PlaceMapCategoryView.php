@@ -55,10 +55,10 @@ class PlaceMapCategoryView extends AdminView {
         echo "<td class='admin_list_item'>" . con($category->category_numbering) . " </td>\n";
 
         echo "<td class='admin_list_item' width=60 align=right>";
-        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&category_id={$category->category_id}'>
+        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
         <img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
         if (!$live) {
-            echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&category_id={$category->category_id}\";}'>
+            echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id=$pm_id&category_id={$category->category_id}\";}'>
                     <img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\n";
         }
         echo'</td></tr>';
@@ -142,7 +142,7 @@ class PlaceMapCategoryView extends AdminView {
       }
 
     } elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
-      if($pmc = PlaceMapCategory::load($_POST['category_id']))
+      if($pmc = PlaceMapCategory::load($_GET['category_id']))
         $pmc->delete();
       return true;
     } elseif ($_POST['action'] == 'resize_category' and $_POST['category_id'] > 0) {

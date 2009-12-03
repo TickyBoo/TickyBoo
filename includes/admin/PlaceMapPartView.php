@@ -689,7 +689,7 @@ class PlaceMapPartView extends AdminView {
         $this->view($_GET['pmp_id'], null, 0, 0, true);
 
     } elseif ($_GET['action'] == 'remove_pmp' and $_GET['pmp_id'] > 0) {
-      if($pmp = PlaceMapPart::load($_POST['pmp_id']))
+      if($pmp = PlaceMapPart::load($_GET['pmp_id']))
         $pmp->delete();
       return true;
 
