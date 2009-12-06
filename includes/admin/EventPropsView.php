@@ -45,89 +45,168 @@ function showstr( $Text, $len = 20 ) {
 
 class EventPropsView extends EventViewCommon {
 
-	function event_form( &$data, &$err ) {
+	function table($history=false) {
 		global $_SHOP;
 
-		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
-		if ( !$data['event_id'] ) {
-  		$this->form_head(con('event_add_title'));
-		} else {
-  		$this->form_head(con('event_edit_title'));
-    }
-
-
-		$this->print_field_o('event_id', $data);
-		$this->print_input('event_name', $data, $err, 30, 100 );
-		if ( !$data['event_id'] ) {
-			$this->print_select_group( 'event_group_id', $data, $err );
-			$this->print_select_pm( 'event_pm_ort_id', $data, $err );
-			$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
-			echo "<input type='hidden' name='action' value='insert'/>\n";
-		} else {
-			$this->print_field_o( 'event_group_name', $data, $err );
-			$this->print_field( 'event_ort_name', $data );
-			$this->print_field( 'event_rep', $data );
-
-			echo "<input type='hidden' name='event_id' value='{$data['event_id']}'/>\n";
-			echo "<input type='hidden' name='action' value='update'/>\n";
+		echo "<script>";
+		echo "var val=1;";
+		echo "function checkall()	{
+				for(i=0;i<document.getElementsByTagName('input').length;i++){
+					if(document.getElementsByTagName('input')[i].type == 'checkbox'){
+    			  if(document.getElementsByTagName('input')[i].checked == false && val==1)	{
+              document.getElementsByTagName('input')[i].checked=true;
+       			}
+						if(document.getElementsByTagName('input')[i].checked == true && val==0)	{
+							 document.getElementsByTagName('input')[i].checked=false;
+						}
+          }
+				}
+				val=(val==1)?0:1;
+	  	}
 		}
-		$this->print_area( 'event_short_text', $data, $err, 3,55 );
-		$this->print_large_area( 'event_text', $data, $err,6,95 );
-		$this->print_input( 'event_url', $data, $err, 30, 100 );
+  </script>\n";
 
-		$this->print_date( 'event_date', $data, $err );
-    if($_REQUEST['action'] == "add" || $_REQUEST['action'] == "insert") {
-   		$this->print_select_recurtype("event_recur_type",$data);
-  		$this->print_date('event_recur_end', $data, $err);
-  		$this->print_days_selection($data,$err);
-  		$this->Print_Recure_end();
+/*
+select SQL_CALC_FOUND_ROWS *
+              from Event LEFT JOIN Ort ON event_ort_id=ort_id
+              WHERE event_rep!='sub'
+              and event_status!='trash'
+              and ((event_rep!='main' and  (event_status='pub' or  event_date >= NOW()))
+                   or (event_rep='main' and  (select count(*)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id
+                                               and  (event_status='pub' or  event_date >= NOW() ))) > 0)
+              order by event_date
+              limit 0,15
 
-  		$this->printRecurChangeScript();
+ select SQL_CALC_FOUND_ROWS *
+              from Event LEFT JOIN Ort ON event_ort_id=ort_id
+              WHERE event_rep!='sub'
+              and event_status!='trash'
+              and ((event_rep!='main' and  (event_status='pub' or  event_date >= NOW() )
+                   or (event_rep='main' and  (select count(*)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id
+                                               and  (event_status='pub' or  event_date >= NOW() ))) > 0)
+              order by event_date
+              limit 0,15
+*/
+    $wherex = (!$history)?"event_status='pub' or ":"event_status !='pub' AND ";
+    $where  = "and ((event_rep!='main' and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
+    $where .= "     or (event_rep='main' and  (select COALESCE(count(*),0)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id
+                                               and event_status!='trash'
+                                               and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)";
+    $_REQUEST['page'] = is($_REQUEST['page'],1);
+  //  $this->page_length = 2;
+    $recstart = ($_REQUEST['page']-1)* $this->page_length;
+		//echo $history,' => ',
+    $query = "select SQL_CALC_FOUND_ROWS `event_id`, `event_name`, `event_text`, `event_short_text`, `event_url`, `event_image`, `event_ort_id`, `event_pm_id`, `event_date`, event_time event_time, `event_open`, `event_end`, `event_status`, `event_order_limit`, `event_template`, `event_group_id`, `event_mp3`, `event_rep`, `event_main_id`, `event_type`, `ort_id`, `ort_name`, `ort_phone`, `ort_plan_nr`, `ort_url`, `ort_image`, `ort_address`, `ort_address1`, `ort_zip`, `ort_city`, `ort_state`, `ort_country`, `ort_pm`, `ort_fax`
+              from Event LEFT JOIN Ort ON event_ort_id=ort_id
+              WHERE event_rep!='sub'
+              and event_status!='trash'
+              $where
+              order by event_date, event_time
+              limit {$recstart},{$this->page_length} ";
+
+		if ( !$res = ShopDB::query($query) ) {
+			return;
+		}
+    if(!$rowcount=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
+		$alt = 0;
+    echo "<form action='{$_SERVER['PHP_SELF']}' method='POST' name='frmEvents'>";
+    echo "<table class='admin_list' border='0' width='$this->width' cellspacing='2' cellpadding='2'>\n";
+    echo "<tr><td class='admin_list_title' colspan='8' align='left'>" . con(($history)?'event_history_title':'event_title') . "</td></tr>\n";
+    if (!$history) {
+       echo "<tr><td class='admin_list_title' colspan='8' align='left'><input type='checkbox'  onclick=\"checkall();\">&nbsp;Check/Uncheck All</td></tr>\n";
     }
+		$img_pub = $this->fill_images();
 
-		$this->print_time( 'event_time', $data, $err );
-		$this->print_time( 'event_open', $data, $err );
-		$this->print_time( 'event_end', $data, $err );
+		$alt = 0;
 
-		$this->print_input( 'event_order_limit', $data, $err, 3, 4 );
-		$this->print_select_tpl( 'event_template', $data, $err );
+		while ( $row = shopDB::fetch_assoc($res) ) {
+			$edate = formatAdminDate( $row["event_date"], false );
+			$etime = formatTime( $row["event_time"] );
 
-		$this->select_types( 'event_type', $data, $err );
+      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
+      echo "<td colspan=2 class='admin_list_item' width=150 NOWRAP><nobr> ";
+      if (!$history) {
+   		  echo "<input type='checkbox' name='cbxEvents[]'
+                 id='main_event_".$row['event_main_id']."'
+                 value='".$row['event_id']."'>";
+      }
+      echo  '&nbsp;'. showstr( $row['event_name'], 30 ) . "</nobr></td>\n";
 
-		$this->print_file( 'event_image', $data, $err, 'img' );
-		// $this->print_file('event_ort_image',$data,$err,'img');
-		$this->print_file( 'event_mp3', $data, $err, 'mp3' );
-        //recurrence
+			if ( $row['event_rep'] == 'main') {
+        if (!$history) {
+  				echo "<td colspan=2 class='admin_list_item'><a class='link' title='" . con('add') .
+  			    		"' alt='" . con('add') . "' href='view_event.php?action=add_sub&event_main_id={$row['event_id']}'>" .
+  					   con('multi') . "</a></td>\n";
+		  	} else {
+				  echo "<td colspan=2 class='admin_list_item'>&nbsp;</td>\n";
+        }
+			} else {
+				echo "<td width=120 class='admin_list_item'>$edate $etime</td>\n";
+				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"] ) . "</td> ";
+			}
 
+			echo "<td width=100 class='admin_list_item' nowrap='nowrap'>";
+			if (!$history) {
+        echo "  <a class='link' alt='{$img_pub[$row['event_status']]['alt']}'
+                    title='{$img_pub[$row['event_status']]['title']}'
+                    href='{$img_pub[$row['event_status']]['link']}{$row['event_id']}'>
+               <img border='0' src='{$img_pub[$row['event_status']]['src']}'>
+            </a>";
+      } else {
+         echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
+      }
 
-		$this->form_foot();
+      echo"      <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
+              <img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'>
+            </a>\n";
 
-		echo "</form>\n";
-		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') ."</a></center>";
+			if ( $row['event_pm_id'] ) {
+				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$row['event_pm_id']}'>
+                <img src='images/pm.png' border='0' alt='" .	con('place_map') . "' title='" . con('place_map') . "'>
+              </a>\n";
+			}
+
+			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or
+           (!$row['event_pm_id'] and $row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') ) {
+				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
+                <img src='images/archive.png' border='0' alt='" .	con('Archive') . "' title='" . con('Archive') . "'></a>\n";
+				echo "<a class='link' title='" . con('delete_item') . "' href='javascript:if(confirm(\"" .
+    					  con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
+               <img src='images/trash.png' border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'>
+            </a>\n";
+			}
+			echo "</td></tr>\n\n";
+
+			$alt = ( $alt + 1 ) % 2;
+			if ( $row['event_rep'] == 'main' ) {
+				$this->event_sub_list( $row['event_id'], $alt,$row['event_name'], $history);
+			}
+		}
+		if (!$history){
+      echo "
+          <tr>
+          	<td colspan='3'>
+          		<input type='hidden' name='action' id='action' value=''>
+           		<button name='publish' value  ='".con('publish').  "' onclick='javascript: document.frmEvents.action.value=\"" . "publish" . "\";document.frmEvents.submit();'>".con('publish').  "</button>
+           		<button name='unpublish' value='".con('unpublish')."' onclick='javascript: document.frmEvents.action.value=\"" . "unpublish" . "\";document.frmEvents.submit();'>".con('unpublish')."</button>
+           		<button name='publish' value  ='".con('delete').   "' onclick='javascript:if(confirm(\"" . con('delete_item') . "\")){document.frmEvents.action.value=\"" . "remove_events" . "\";document.frmEvents.submit();}'>".con('delete').   "</button>
+          	</td>
+          	<td colspan='7'  align='right'>
+           		<button name='add' value='".con('add')."' onclick='javascript: document.frmEvents.action.value=\"add\" ;document.frmEvents.submit();' >".con('add')."</button>
+          	</td>
+          </tr>\n";
+    }
+//        		<a class='link' href='view_event.php?action=add'>Add</a>
+		echo "</table>\n</form>\n";
+  $this->get_nav( $_REQUEST[page], $rowcount[0]);
+//		echo "<br><center><a class='link' href='view_event.php?action=add'>" . con('add') .	"</a></center>";
 	}
-
-	function fill_images() {
-		$img_pub['pub'] = array(
-            "src" => 'images/grun.png',
-            'title' => con('icon_unpublish'),
-            'alt' => con('icon_unpublish_alt'),
-            'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
-
-		$img_pub['unpub'] = array(
-            "src" => 'images/rot.png',
-            'title' => con('icon_publish'),
-            'alt' => con('icon_publish_alt'),
-            'link' => "view_event.php?action=publish&cbxEvents[]=" );
-
-		$img_pub['nosal'] = array(
-            "src" => 'images/grey.png',
-            "title" => con(icon_nosal),
-            "alt" => con('icon_nosal_alt'),
-            "link" => "view_event.php?action=publish&cbxEvents[]=" );
-
-		return $img_pub;
-	}
-
 
 	function event_sub_list( $event_main_id, &$alt, $main_name, $history= false ) {
 		global $_SHOP;
@@ -189,9 +268,9 @@ class EventPropsView extends EventViewCommon {
               </a>\n";
 
 			if ( $row['event_pm_id'] ) {
-				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$row['event_pm_id']}'>
+				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$row['event_pm_id']}'>
                          <img src='images/pm.png' border='0' alt='" . con('place_map') .
-					"' title='" . place_map . "'></a>\n";
+					"' title='" . con('place_map') . "'></a>\n";
 			}
 
 			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or (!$row['event_pm_id'] and
@@ -202,8 +281,7 @@ class EventPropsView extends EventViewCommon {
 				 * $link = "archive_event.php?event_id=$event_id";*/
 
 				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
-                         <img src='images/archive.png' border='0' alt='" .
-					Archive . "' title='" . Archive . "'></a>\n";
+                         <img src='images/archive.png' border='0' alt='".con('Archive') . "' title='" . con('Archive') . "'></a>\n";
 
 				echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
                         <img src='images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
@@ -214,205 +292,105 @@ class EventPropsView extends EventViewCommon {
 		}
 	}
 
-	function event_list($history=false) {
+	function form( &$data, &$err ) {
 		global $_SHOP;
 
-		echo "<script>";
-		echo "var val=1;";
-		echo "function checkall()	{
-				for(i=0;i<document.getElementsByTagName('input').length;i++){
-					if(document.getElementsByTagName('input')[i].type == 'checkbox'){
-    			  if(document.getElementsByTagName('input')[i].checked == false && val==1)	{
-              document.getElementsByTagName('input')[i].checked=true;
-       			}
-						if(document.getElementsByTagName('input')[i].checked == true && val==0)	{
-							 document.getElementsByTagName('input')[i].checked=false;
-						}
-          }
-				}
-				if(val==1){
-					 val=0;
-				}	else {
-					 val=1;
-				}
-
-  		}
-      function rowOver(i, nColor) {
-        var nameObj = (document.getElementById) ? document.getElementById('name' + i) : eval(\"document.all['name\" + i + \"']\");
-        if (nameObj != null) nameObj.className = nColor;
-        if (nameObj != null) nameObj.style.background=nColor;
-      }
-		</script>\n";
-
-/*
-select SQL_CALC_FOUND_ROWS *
-              from Event LEFT JOIN Ort ON event_ort_id=ort_id
-              WHERE event_rep!='sub'
-              and event_status!='trash'
-              and ((event_rep!='main' and  (event_status='pub' or  event_date >= NOW()))
-                   or (event_rep='main' and  (select count(*)
-                                               from Event main
-                                               where main.event_main_id = Event.event_id
-                                               and  (event_status='pub' or  event_date >= NOW() ))) > 0)
-              order by event_date
-              limit 0,15
-
- select SQL_CALC_FOUND_ROWS *
-              from Event LEFT JOIN Ort ON event_ort_id=ort_id
-              WHERE event_rep!='sub'
-              and event_status!='trash'
-              and ((event_rep!='main' and  (event_status='pub' or  event_date >= NOW() )
-                   or (event_rep='main' and  (select count(*)
-                                               from Event main
-                                               where main.event_main_id = Event.event_id
-                                               and  (event_status='pub' or  event_date >= NOW() ))) > 0)
-              order by event_date
-              limit 0,15
-*/
-    $wherex = (!$history)?"event_status='pub' or ":"event_status !='pub' AND ";
-    $where  = "and ((event_rep!='main' and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
-    $where .= "     or (event_rep='main' and  (select COALESCE(count(*),0)
-                                               from Event main
-                                               where main.event_main_id = Event.event_id
-                                               and event_status!='trash'
-                                               and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)";
-    $_REQUEST['page'] = is($_REQUEST['page'],1);
-  //  $this->page_length = 2;
-    $recstart = ($_REQUEST['page']-1)* $this->page_length;
-		//echo $history,' => ',
-    $query = "select SQL_CALC_FOUND_ROWS `event_id`, `event_name`, `event_text`, `event_short_text`, `event_url`, `event_image`, `event_ort_id`, `event_pm_id`, `event_date`, event_time event_time, `event_open`, `event_end`, `event_status`, `event_order_limit`, `event_template`, `event_group_id`, `event_mp3`, `event_rep`, `event_main_id`, `event_type`, `ort_id`, `ort_name`, `ort_phone`, `ort_plan_nr`, `ort_url`, `ort_image`, `ort_address`, `ort_address1`, `ort_zip`, `ort_city`, `ort_state`, `ort_country`, `ort_pm`, `ort_fax`
-              from Event LEFT JOIN Ort ON event_ort_id=ort_id
-              WHERE event_rep!='sub'
-              and event_status!='trash'
-              $where
-              order by event_date, event_time
-              limit {$recstart},{$this->page_length} ";
-
-		if ( !$res = ShopDB::query($query) ) {
-			return;
-		}
-    if(!$rowcount=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
-		$alt = 0;
-    echo "<form action='{$_SERVER['PHP_SELF']}' method='POST' name='frmEvents'>";
-   // $this->printFindSubEventsScript(); // javascript function
-//		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-//		echo "<tr><td class='admin_list_title' colspan='8' align='center'>" .	con('event_title') . "</td></tr></table>\n";
-
-    echo "<table class='admin_list' border='0' width='$this->width' cellspacing='2' cellpadding='2'>\n";
-    echo "<tr><td class='admin_list_title' colspan='8' align='center'>" . con('event_title') . "</td></tr>\n";
-    if (!$history) {
-       echo "<tr><td class='admin_list_title' colspan='8' align='left'><input type='checkbox'  onclick=\"checkall();\">&nbsp;Check/Uncheck All</td></tr>\n";
+		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+		if ( !$data['event_id'] ) {
+  		$this->form_head(con('event_add_title'));
+		} else {
+  		$this->form_head(con('event_edit_title'));
     }
-		$img_pub = $this->fill_images();
 
-		$alt = 0;
+		$this->print_field_o('event_id', $data);
+		$this->print_input('event_name', $data, $err, 30, 100 );
+		if ( !$data['event_id'] ) {
+			$this->print_select_group( 'event_group_id', $data, $err );
+			$this->print_select_pm( 'event_pm_ort_id', $data, $err );
+			$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
+			echo "<input type='hidden' name='action' value='insert'/>\n";
+		} else {
+			$this->print_field_o( 'event_group_name', $data, $err );
+			$this->print_field( 'event_ort_name', $data );
+			$this->print_field( 'event_rep', $data );
 
-		while ( $row = shopDB::fetch_assoc($res) ) {
-			$edate = formatAdminDate( $row["event_date"], false );
-			$etime = formatTime( $row["event_time"] );
-
-//      echo "<tr class='admin_list_row_$alt'><td colspan='8' ><pre>";
-//      print_r($row);
-//			echo "</td></tr>\n\n";
-//                                  onClick=\"window.location='view_event.php?action=edit&event_id={$row['event_id']}'\"
-
-      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
-      echo "<td colspan=2 class='admin_list_item' width=150 NOWRAP><nobr> ";
-      if (!$history) {
-   		  echo "<input type='checkbox' name='cbxEvents[]'
-                 id='main_event_".$row['event_main_id']."'
-                 class='".$row['event_main_id']."'
-                 value='".$row['event_id']."'>";
-       }
-       echo  '&nbsp;'. showstr( $row['event_name'], 30 ) . "</nobr></td>\n";
-
-			if ( $row['event_rep'] == 'main') {
-        if (!$history) {
-  				echo "<td colspan=2 class='admin_list_item'><a class='link' title='" . con('add') .
-  			    		"' alt='" . con('add') . "' href='view_event.php?action=add_sub&event_main_id={$row['event_id']}'>" .
-  					   con('multi') . "</a></td>\n";
-		  	} else {
-				  echo "<td colspan=2 class='admin_list_item'>&nbsp;</td>\n";
-        }
-			} else {
-				echo "<td width=120 class='admin_list_item'>$edate $etime</td>\n";
-				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"] ) . "</td> ";
-			}
-
-			echo "<td width=100 class='admin_list_item' nowrap='nowrap'>";
-			if (!$history) {
-        echo "  <a class='link' alt='{$img_pub[$row['event_status']]['alt']}'
-                    title='{$img_pub[$row['event_status']]['title']}'
-                    href='{$img_pub[$row['event_status']]['link']}{$row['event_id']}'>
-               <img border='0' src='{$img_pub[$row['event_status']]['src']}'>
-            </a>";
-      } else {
-         echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
-      }
-
-      echo"      <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
-              <img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'>
-            </a>\n";
-
-			if ( $row['event_pm_id'] ) {
-				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pm&pm_id={$row['event_pm_id']}'>
-                <img src='images/pm.png' border='0' alt='" .	con('place_map') . "' title='" . con('place_map') . "'>
-              </a>\n";
-			}
-
-			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or
-           (!$row['event_pm_id'] and $row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') ) {
-				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
-                <img src='images/archive.png' border='0' alt='" .	con('Archive') . "' title='" . con('Archive') . "'></a>\n";
-				echo "<a class='link' title='" . con('delete_item') . "' href='javascript:if(confirm(\"" .
-    					  con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-               <img src='images/trash.png' border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'>
-            </a>\n";
-			}
-			echo "</td></tr>\n\n";
-
-			$alt = ( $alt + 1 ) % 2;
-			if ( $row['event_rep'] == 'main' ) {
-				$this->event_sub_list( $row['event_id'], $alt,$row['event_name'], $history);
-			}
+			echo "<input type='hidden' name='event_id' value='{$data['event_id']}'/>\n";
+			echo "<input type='hidden' name='action' value='update'/>\n";
 		}
-		if (!$history){
-      echo "
-          <tr>
-          	<td colspan='3'>
-          		<input type='hidden' name='action' id='action' value=''>
-           		<input type='button' name='publish' value='".con('publish')."' onclick='javascript: document.frmEvents.action.value=\"" . "publish" . "\";document.frmEvents.submit();'>
-           		<input type='button' name='unpublish' value='".con('unpublish')."' onclick='javascript: document.frmEvents.action.value=\"" . "unpublish" . "\";document.frmEvents.submit();'>
-           		<input type='button' name='publish' value='".con('delete')."' onclick='javascript:if(confirm(\"" . con('delete_item') . "\")){document.frmEvents.action.value=\"" . "remove_events" . "\";document.frmEvents.submit();}'>
-          	</td>
-          	<td colspan='7'  align='right'>
-           		<input type='button' name='add' value='".con('add')."' onclick='javascript: document.frmEvents.action.value=\"add\" ;document.frmEvents.submit();'>
-          	</td>
-          </tr>\n";
+		$this->print_area( 'event_short_text', $data, $err, 3,55 );
+		$this->print_large_area( 'event_text', $data, $err,6,95 );
+		$this->print_input( 'event_url', $data, $err, 30, 100 );
+
+		$this->print_date( 'event_date', $data, $err );
+    if($_REQUEST['action'] == "add" || $_REQUEST['action'] == "insert") {
+   		$this->print_select_recurtype("event_recur_type",$data);
+  		$this->print_date('event_recur_end', $data, $err);
+  		$this->print_days_selection($data,$err);
+  		$this->Print_Recure_end();
+
+  		$this->printRecurChangeScript();
     }
-//        		<a class='link' href='view_event.php?action=add'>Add</a>
-		echo "</table>\n</form>\n";
-  $this->get_nav( $_REQUEST[page], $rowcount[0]);
-//		echo "<br><center><a class='link' href='view_event.php?action=add'>" . con('add') .	"</a></center>";
+
+		$this->print_time( 'event_time', $data, $err );
+		$this->print_time( 'event_open', $data, $err );
+		$this->print_time( 'event_end', $data, $err );
+
+		$this->print_input( 'event_order_limit', $data, $err, 3, 4 );
+		$this->print_select_tpl( 'event_template', $data, $err );
+
+		$this->select_types( 'event_type', $data, $err );
+
+		$this->print_file( 'event_image', $data, $err, 'img' );
+		$this->print_file( 'event_mp3', $data, $err, 'mp3' );
+        //recurrence
+
+
+		$this->form_foot();
+
+		echo "</form>\n";
+		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') ."</a></center>";
 	}
+
+	function fill_images() {
+		$img_pub['pub'] = array(
+            "src" => 'images/grun.png',
+            'title' => con('icon_unpublish'),
+            'alt' => con('icon_unpublish_alt'),
+            'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
+
+		$img_pub['unpub'] = array(
+            "src" => 'images/rot.png',
+            'title' => con('icon_publish'),
+            'alt' => con('icon_publish_alt'),
+            'link' => "view_event.php?action=publish&cbxEvents[]=" );
+
+		$img_pub['nosal'] = array(
+            "src" => 'images/grey.png',
+            "title" => con('icon_nosal'),
+            "alt" => con('icon_nosal_alt'),
+            "link" => "view_event.php?action=publish&cbxEvents[]=" );
+
+		return $img_pub;
+	}
+
 	// #######################################################
 	// #######################################################
 	// #######################################################
 	function draw($history = false) {
 		global $_SHOP;
 		if ( preg_match('/_disc$/', $_REQUEST['action']) or preg_match('/_pmp$/', $_REQUEST['action']) or
-			preg_match('/_pmz$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action']) or
-			preg_match('/_pm$/', $_REQUEST['action']) ) {
+    		 preg_match('/_pmz$/' , $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action']) or
+  			 preg_match('/_pm$/'  , $_REQUEST['action']) ) {
 			require_once ( "admin/PlaceMapView2.php" );
 			$pmp_view = new PlaceMapView( $this->width );
 			if ( $pmp_view->draw($history) ) {
-				$this->event_list($history);
+				$this->table($history);
 			}
 		} elseif ( preg_match('/_sub$/', $_REQUEST['action']) ) {
 			require_once ( "admin/EventSubPropsView.php" );
 			$pmp_view = new EventSubPropsView( $this->width );
 			if ( $pmp_view->draw($history) ) {
-				$this->event_list($history);
+				$this->table($history);
 			}
 		} elseif($_POST['action'] == 'remove_events') {
 		  if(count($_REQUEST['cbxEvents']) > 0)
@@ -422,21 +400,21 @@ select SQL_CALC_FOUND_ROWS *
                 $event->delete();
           }
 			}
-			$this->event_list($history);
+			$this->table($history);
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
     	  if (!$this->state_change(1)) {
-          $this->event_list($history);
+          $this->table($history);
         }
 		} elseif ( $_REQUEST['action'] == 'unpublish' ) {
     	  if (!$this->state_change(2)) {
-          $this->event_list($history);
+          $this->table($history);
         }
 		} elseif ( $_REQUEST['action'] == 'add' ) {
-			$this->event_form( $row, $err, con('event_add_title') );
+			$this->form( $row, $err, con('event_add_title') );
 
-    }elseif ( $_REQUEST['action'] == 'insert' ) {
+    } elseif ( $_REQUEST['action'] == 'insert' ) {
 			if ( !$this->event_check($_POST, $err) ) {
-				$this->event_form( $_POST, $err, con('event_add_title') );
+				$this->form( $_POST, $err, con('event_add_title') );
         return;
 			} elseif($_POST['event_recur_type'] == "nothing"){
 		    $id = $this->save_event( $_POST, true );
@@ -449,27 +427,27 @@ select SQL_CALC_FOUND_ROWS *
 			} else {
         $this->save_recur_event($_POST, true);
       }
-			$this->event_list($history);
+			$this->table($history);
 		} elseif ( $_GET['action'] == 'edit' and $_GET['event_id'] ) {
 			$event = Event::load( $_GET['event_id'], false );
 			$row = ( array )$event;
 			if ( !$row ) {
-				return $this->event_list($history);
+				return $this->table($history);
 			}
-			$this->event_form( $row, $err );
+			$this->form( $row, $err );
 		} elseif ( $_POST['action'] == 'update' ) {
 			if ( !$this->event_check($_POST, $err) ) {
-				$this->event_form( $_POST, $err, con('event_add_title') );
+				$this->form( $_POST, $err, con('event_add_title') );
 			} else {
 				$this->save_event( $_POST, false );
-				$this->event_list($history);
+				$this->table($history);
 			}
 		} elseif ( $_GET['action'] == 'remove' and $_GET['event_id'] ) {
 			$event = Event::load( $_GET['event_id'], false );
 			$event->delete();
-			$this->event_list($history);
+			$this->table($history);
 		} else {
-			$this->event_list($history);
+			$this->table($history);
 		}
 	}
 	// #######################################################

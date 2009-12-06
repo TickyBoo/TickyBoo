@@ -191,7 +191,7 @@ class Model {
     $remove = 'remove_' . $name;
     if (isset($array[$remove])) {
       if ($removefile) {
-        unlink( $_SHOP->files_dir . DS  .$this->$name);
+        @ unlink( $_SHOP->files_dir . DS  .$this->$name);
       }
       $array[$name] = '';
     } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {

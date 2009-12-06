@@ -82,7 +82,7 @@ class Discount  Extends Model {
         return addWarning('in_use');
       }
       if (!parent::delete()){
-        return self::_abort(con('cant delete discount'));
+        return self::_abort('cant delete discount');
       } else
         return ShopDB::commit('Deleted discount');
   }

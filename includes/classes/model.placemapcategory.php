@@ -120,7 +120,7 @@ class PlaceMapCategory Extends Model {
               ON c.category_id = cs.cs_category_id
               WHERE c.category_id="._esc($this->id);
       if(!ShopDB::query($query)){
-        return self::_abort(con('Category_delete_failed'));
+        return self::_abort('Category_delete_failed');
       }
 
       if($pmps=PlaceMapPart::loadAll($this->category_pm_id) and is_array($pmps)){

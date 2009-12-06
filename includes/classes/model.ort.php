@@ -73,7 +73,7 @@ class Ort Extends Model {
         foreach($pms as $pm){
           $pm->pm_ort_id=$new_id;
           if (!$pm->copy()) {
-            return self::_abort(con('Cant copy Placemap'));
+            return self::_abort('Cant copy Placemap');
           }
         }
       }
@@ -97,7 +97,7 @@ class Ort Extends Model {
         }
       }
       if (!parent::delete()) {
-        return self::_abort(con('cant delete venue'));
+        return self::_abort('cant delete venue');
       }
       return ShopDB::commit('Ort deleted');
     }

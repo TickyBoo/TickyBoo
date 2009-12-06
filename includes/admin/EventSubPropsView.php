@@ -109,7 +109,17 @@ function subevent_form (&$data, &$err, $title){
 ########################################################
 function draw (){
   global $_SHOP;
-  if($_POST['action']=='insert_sub'){
+  if($_GET['action']=='add_sub' and $_GET['event_main_id']){
+      return !$this->subevent_form($_GET,$err,event_add_title);
+  }
+
+  elseif($_GET['action']=='edit_sub' and $_GET['event_id']){
+    $main = Event::load($_GET['event_id'],FALSE);
+    $main = (array)$main;
+    return !$this->subevent_form($main, $err, event_update_title);
+  }
+
+  elseif($_POST['action']=='insert_sub'){
     if($this->event_check($_POST, $err)){
       if($_POST['event_recur_type'] == "nothing")
       $this->insert_event($_POST);
@@ -127,17 +137,7 @@ function draw (){
       $this->update_event($_POST);
       return true;
     }
-  }elseif($_GET['action']=='add_sub' and $_GET['event_main_id']){
-      return !$this->subevent_form($_GET,$err,event_add_title);
-  }
-
-  elseif($_GET['action']=='edit_sub' and $_GET['event_id']){
-    $main = Event::load($_GET['event_id'],FALSE);
-    $main = (array)$main;
-    return !$this->subevent_form($main, $err, event_update_title);
-  }
-
-  else{
+  }else{
     return true;
   }
 

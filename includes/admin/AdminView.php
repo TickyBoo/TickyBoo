@@ -75,6 +75,26 @@ class AdminView extends AUIComponent {
     trace("End of page \n\n\r");
   }
 
+  function list_head ($name, $colspan, $width = 0) {
+      echo "<table class='admin_list' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
+      echo "<tr><td class='admin_list_title' colspan='$colspan' align='left'>$name</td></tr>\n";
+  }
+
+  function form_head ($name, $width = 0, $colspan = 2) {
+      echo "<table class='admin_form' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
+      if ($name) {
+        echo "<tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr>";
+      }
+  }
+
+  function form_foot($colspan = 2) {
+      echo "<tr><td align='right' class='admin_value' colspan='$colspan'>
+        <button type='submit' name='submit' value='" . con("save") . "'>" . con("save") . "</button>
+        <button type='reset' name='reset' value='" . con("res") . "'>" . con("res") . "</button></td></tr>";
+      echo "</table></form>\n";
+  }
+
+
   /**
    * AdminView::print_multiRowField()
    *
@@ -609,94 +629,70 @@ class AdminView extends AUIComponent {
     return $_COUNTRY_LIST[$val];
   }
 
+  function file_post ($data, $id, $table, $name, $suffix = '_image')
+  {
+      global $_SHOP;
 
+      $img_field = $name . $suffix;
+      if ($id) {
+        $id_field = "WHERE {$name}_id="._esc($id);
+      } else {
+        $id_field = 'Limit 1';
+      }
 
-    function form_head ($name, $width = 0, $colspan = 2)
-    {
-        echo "<table class='admin_form' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
-        if ($name) {
-          echo "<tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr>";
-        }
-    }
-
-    function form_foot($colspan = 2)
-    {
-        echo "<tr><td align='center' class='admin_value' colspan='$colspan'>
-          <input type='submit' name='submit' value='" . con("save") . "'>
-          <input type='reset' name='reset' value='" . con("res") . "'></td></tr>";
-        echo "</form></table>\n";
-    }
-
-    function list_head ($name, $colspan, $width = 0)
-    {
-        echo "<table class='admin_list' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td class='admin_list_title' colspan='$colspan' align='center'>$name</td></tr>\n";
-    }
-
-    function file_post ($data, $id, $table, $name, $suffix = '_image')
-    {
-        global $_SHOP;
-
-        $img_field = $name . $suffix;
-        if ($id) {
-          $id_field = "WHERE {$name}_id="._esc($id);
-        } else {
-          $id_field = 'Limit 1';
-        }
-
-        if ($data['remove_' . $name . $suffix]==1) {
-            $query = "UPDATE $table SET $img_field='' $id_field ";
+      if ($data['remove_' . $name . $suffix]==1) {
+          $query = "UPDATE $table SET $img_field='' $id_field ";
 //            unlink( $_SHOP->files_dir . "/" .$data['remove_' . $name . $suffix]);
 
-        } else
-        if (!empty($_FILES[$img_field]) and !empty($_FILES[$img_field]['name']) and !empty($_FILES[$img_field]['tmp_name'])) {
-            if (!preg_match('/\.(\w+)$/', $_FILES[$img_field]['name'], $ext)) {
-                return false;
-            }
+      } else
+      if (!empty($_FILES[$img_field]) and !empty($_FILES[$img_field]['name']) and !empty($_FILES[$img_field]['tmp_name'])) {
+          if (!preg_match('/\.(\w+)$/', $_FILES[$img_field]['name'], $ext)) {
+              return false;
+          }
 
-            $ext = strtolower($ext[1]);
-            if (!in_array($ext, $_SHOP->allowed_uploads)) {
-                return false;
-            }
+          $ext = strtolower($ext[1]);
+          if (!in_array($ext, $_SHOP->allowed_uploads)) {
+              return false;
+          }
 
-            $doc_name = $img_field . '_' . $id . '.' . $ext;
+          $doc_name = $img_field . '_' . $id . '.' . $ext;
 
-            if (!move_uploaded_file ($_FILES[$img_field]['tmp_name'], $_SHOP->files_dir . "/" . $doc_name)) {
-                return false;
-            }
+          if (!move_uploaded_file ($_FILES[$img_field]['tmp_name'], $_SHOP->files_dir . "/" . $doc_name)) {
+              return false;
+          }
 
-            chmod($_SHOP->files_dir . "/" . $doc_name, $_SHOP->file_mode);
-            $query = "UPDATE $table SET $img_field='$doc_name' $id_field";
-        }
+          chmod($_SHOP->files_dir . "/" . $doc_name, $_SHOP->file_mode);
+          $query = "UPDATE $table SET $img_field='$doc_name' $id_field";
+      }
 
-        if (!$query or ShopDB::query($query)) {
-           return true;
-        }
-        return false;
-    }
+      if (!$query or ShopDB::query($query)) {
+         return true;
+      }
+      return false;
+  }
 
-    function user_url($data)
-    {
-        global $_SHOP;
-        return $_SHOP->files_url . $data;
-    }
+  function user_url($data)
+  {
+      global $_SHOP;
+      return $_SHOP->files_url . $data;
+  }
 
-    function user_file ($path)
-    {
-        global $_SHOP;
-        return $_SHOP->files_dir . $path;
-    }
+  function user_file ($path)
+  {
+      global $_SHOP;
+      return $_SHOP->files_dir . $path;
+  }
 
-    function delayedLocation($url){
-        echo "<SCRIPT LANGUAGE='JavaScript'>
-              <!-- Begin
-                   function runLocation() {
-                     location.href='{$url}';
-                   }
-                   window.setTimeout('runLocation()', 1500);
-              // End -->\n";
-        echo "</SCRIPT>\n";
-    }
+  function delayedLocation($url){
+      echo "<SCRIPT LANGUAGE='JavaScript'>
+            <!-- Begin
+                 function runLocation() {
+                   location.href='{$url}';
+                 }
+                 window.setTimeout('runLocation()', 1500);
+            // End -->\n";
+      echo "</SCRIPT>\n";
+  }
 
   public function getJQuery(){
     return $this->jScript;
@@ -736,43 +732,45 @@ class AdminView extends AUIComponent {
 	  return $str;
   }
 
- function get_nav ($page,$count,$condition=''){
-   if(!isset($page)){ $page=1; }
-   if (!empty( $condition)) {
-     $condition .= '&';
-     }
-   echo "<table border='0' width='$this->width'><tr><td align='center'>";
+  function get_nav ($page,$count,$condition=''){
+    if(!isset($page)){ $page=1; }
+    if (!empty( $condition)) {
+      $condition .= '&';
+    }
+    echo "<table border='0' width='$this->width'><tr><td align='center'>";
 
-   if($page>1){
-     echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=1'>".con('nav_first')."</a>";
-     $prev=$page-1;
-     echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page={$prev}'>".con('nav_prev')."</a>";
-   } else {
-     echo con('nav_first');
-     echo con('nav_prev');
-   }
+    if($page>1){
+      echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=1'>".con('nav_first')."</a>";
+      $prev=$page-1;
+      echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page={$prev}'>".con('nav_prev')."</a>";
+    } else {
+      echo con('nav_first');
+      echo con('nav_prev');
+    }
 
-   $num_pages=ceil($count/$this->page_length);
-   echo "";
-   for ($i=floor(($page-1)/10)*10+1;$i<=min(ceil($page/10)*10,$num_pages);$i++){
-     if($i==$page){
-       echo "&nbsp;<b>[$i]</b>";
-     }else{
-       echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$i'>$i</a>";
-     }
-   }
-   echo "&nbsp;";
-   if($page<$num_pages){
-       $next=$page+1;
-       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$next'>".con('nav_next')."</a>";
-       echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$num_pages'>". con('nav_last')."</a>";
-   }  else {
-     echo con('nav_next')."\n";
-     echo con('nav_last')."\n";
-   }
+    $num_pages=ceil($count/$this->page_length);
+    for ($i=floor(($page-1)/10)*10+1;$i<=min(ceil($page/10)*10,$num_pages);$i++){
+      if($i==$page){
+        echo "&nbsp;<b>[$i]</b>";
+      }else{
+        echo "&nbsp;<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$i'>$i</a>";
+      }
+    }
+    echo "&nbsp;";
+    if($page<$num_pages){
+      $next=$page+1;
+      echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$next'>".con('nav_next')."</a>";
+      echo "<a class='link' href='".$_SERVER["PHP_SELF"]."?{$condition}page=$num_pages'>". con('nav_last')."</a>";
+    }  else {
+      echo con('nav_next')."\n";
+      echo con('nav_last')."\n";
+    }
+    echo "</td></tr></table>";
+  }
 
-   echo "</td></tr></table>";
- }
+  function print_hidden ($name, $data=''){
+    echo "<input type='hidden' id='$name' name='$name' value='" . (is_array($data))?$data[$name]:$data . "'>\n";
+  }
 }
 
 ?>

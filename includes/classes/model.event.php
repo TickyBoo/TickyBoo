@@ -73,7 +73,7 @@ class Event Extends Model {
     }
   }
 
-  function save (){
+  function save(){
     $new = $this->id;
     if (!$this->event_status) $this->event_status='unpub';
     if (ShopDB::begin('Save event')) {
@@ -95,14 +95,14 @@ class Event Extends Model {
                       where event_id={$this->event_id}";
               ShopDB::query($query);
             } else {
-              return self::_abort(con('Cant find selected placemap.'));
+              return self::_abort('Cant find selected placemap.');
             }
           }
           if (ShopDB::commit('event Saved ')){
             return $this->event_id;
           }        }
       } else {
-        return self::_abort(con('Cant_save_event'));
+        return self::_abort('Cant_save_event');
       }
     }
   }
@@ -141,7 +141,7 @@ class Event Extends Model {
                 and seat_status!='trash'
                 FOR UPDATE";
         if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
-          return $this->_abort(con('seats_not_free'));
+          return $this->_abort('seats_not_free');
         }
       }
 
@@ -153,14 +153,14 @@ class Event Extends Model {
 
       if($this->event_pm_id and $pm=PlaceMap::load($this->event_pm_id)){
         if (!$pm->delete()){
-          return $this->_abort(con('Cant_delete_PlaceMap'));
+          return $this->_abort('Cant_delete_PlaceMap');
         }
       }
 
       $query="delete from Discount
               where discount_event_id="._esc($this->id);
       if(!ShopDB::query($query)){
-        return $this->_abort(con('discount_delete_failed'));
+        return $this->_abort('discount_delete_failed');
       }
 
       $query="DELETE e.*, es.*
@@ -168,7 +168,7 @@ class Event Extends Model {
               ON e.event_id = es.es_event_id
               WHERE e.event_id="._esc($this->id);
       if(!ShopDB::query($query)){
-        return $this->_abort(con('event_delete_failed'));
+        return $this->_abort('event_delete_failed');
       }
 
       if (!Order::toTrash()) {
@@ -181,16 +181,16 @@ class Event Extends Model {
 
   }
 
-  function publish (&$stats, &$pmps, $dry_run=FALSE){
+  function publish(&$stats, &$pmps, $dry_run=FALSE){
     global $_SHOP;
 
-    if(!$dry_run && ShopDB::begin('Publish Event')){
+    if(!$dry_run && !ShopDB::begin('Publish Event')){
       return false;
     }
 
     if($this->event_pm_id and ($this->event_rep=='sub' or $this->event_rep=='main,sub')){
       if (!PlaceMap::publish($this->event_pm_id, $this->event_id, $stats, $pmps, $dry_run)) {
-        return $this->_abort('publish1');
+        return false;
       }
 
       if($stats){
@@ -228,7 +228,7 @@ class Event Extends Model {
       $this->event_status=$new_s;
 
       if(!$this->save()){
-        return $this->_abort(con('error_event_save_changes'));
+        return $this->_abort('error_event_save_changes');
       }
       return ShopDB::commit('Event_state changed');
     } else {
@@ -281,7 +281,7 @@ class Event Extends Model {
                   and event_rep='sub'
                   and event_main_id="._esc($this->event_id);
           if (!ShopDB::query($query)) {
-            return  $this->_abort(con('cant_update_sub_events'));
+            return  $this->_abort('cant_update_sub_events');
           }
 
         }
@@ -314,14 +314,14 @@ class Event Extends Model {
               where event_id="._esc($this->event_id);
 
       if(!ShopDB::query($query)){
-        return  $this->_abort(con('cant_trash_event'));
+        return  $this->_abort('cant_trash_event');
       }
 
       $query="update Seat set
                 seat_status='trash'
               where seat_event_id="._esc($this->event_id);
       if(!ShopDB::query($query)){
-        return $this->_abort(con('cant_trash_seats'));
+        return $this->_abort('cant_trash_seats');
       }
 
       if (!Order::toTrash()) {

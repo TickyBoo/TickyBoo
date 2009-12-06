@@ -70,7 +70,7 @@ class PlaceMapPart Extends Model {
   function loadNames ($pm_id){
     $query = "select pmp_id, pmp_name
               from PlaceMapPart
-              where pmp_pm_id=".+_esc($pm_id)."
+              where pmp_pm_id="._esc($pm_id)."
               order by pmp_id";
     if ($res = ShopDB::query($query)) {
       while ($data = shopDB::fetch_object($res)) {

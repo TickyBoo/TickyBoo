@@ -129,7 +129,7 @@ class PlaceMapView extends AdminView {
 		if ( $event ) {
 			require_once ( "DiscountView.php" );
 			$dist_view = new DiscountView( $this->width );
-			$dist_view->discount_list( $event->event_id, $live );
+			$dist_view->table( $event->event_id, $live );
 
 			echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}'>" . con('admin_list') .	"</a></center>";
 		} else {

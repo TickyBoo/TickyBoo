@@ -238,7 +238,7 @@ class Order Extends Model {
         $ticket->order_id($this->order_id);
         // Tickets are saved here if handled==1 tickets are reserved instead of ordered.
         if(!$ticket->save($this->order_handling->handling_id=='1')){
-          return self::_abort(con('Errors_commiting_order')."(1)");;
+          return self::_abort('Errors_commiting_ticket_save');
         }
         $event_stat[$ticket->seat_event_id]++;
         $category_stat[$ticket->seat_category_id]++;
@@ -246,13 +246,13 @@ class Order Extends Model {
 
       foreach($event_stat as $event_id=>$count){
         if(!Event::dec_stat($event_id,$count)){
-          return self::_abort(con('Errors_commiting_order')."(2)");
+          return self::_abort('Errors_commiting_order_stat');
         }
       }
 
       foreach($category_stat as $cat_id=>$count){
         if(!PlaceMapCategory::dec_stat($cat_id,$count)){
-          return self::_abort(con('Errors_commiting_order')."(3)");
+          return self::_abort('Errors_commiting_cat_stat');
         }
       }
 
@@ -269,7 +269,7 @@ class Order Extends Model {
                 $set
               WHERE user_id="._esc($this->order_user_id);
       if(!$res=ShopDB::query($query)){
-        return self::_abort(con('user_failed')."(3)");;
+        return self::_abort('user_failed_not found');
       }
 
       if($this->order_handling->handling_id=='1'){
@@ -278,12 +278,12 @@ class Order Extends Model {
          $ok = $this->set_status('ord',TRUE);
       }
       if($ok and !ShopDB::commit('Order saved')){
-        return false;// self::_abort(con('Errors_commiting_order')."(4)");
+        return false;// self::_abort('Errors_commiting_order4');
       }
       return $this->order_id;
 
     }else{
-      return false; //self::_abort(con('Errors_commiting_order')."(5)");
+      return false; //self::_abort('Errors_commiting_order5');
     }
   }
 
@@ -321,18 +321,18 @@ class Order Extends Model {
               FROM `Seat`
               WHERE seat_order_id="._esc($order_id)." FOR UPDATE";
       if(!$res=ShopDB::query($query)){
-        return self::_abort(con('Cant_lock_seat'));
+        return self::_abort('Cant_lock_seat');
       }
 
       $query="SELECT *
               FROM `Order`
               WHERE order_id="._esc($order_id)." FOR UPDATE";
       if(!$order=ShopDB::query_one_row($query)){
-        return self::_abort(con('cannot_find_order'));
+        return self::_abort('cannot_find_order');
       }
       // Added v1.3.4 Checks to see if the order has allready been canceled.
       if($order['order_status']=='cancel'){
-        return self::_abort(con('order_allready_cancelled'));
+        return self::_abort('order_allready_cancelled');
       }
 
       //Added v1.3.4 - If deleteing a reserved ticket
@@ -341,7 +341,7 @@ class Order Extends Model {
                   user_current_tickets=user_current_tickets-".$order['order_tickets_nr']."
                 WHERE user_id=".$order['order_user_id'];
         if(!ShopDB::query($query)){
-          return self::_abort(con('no_such_user'));
+          return self::_abort('no_such_user');
         }
       }
 
@@ -367,7 +367,7 @@ class Order Extends Model {
               where order_id="._esc($order_id);
 
       if(!$res=ShopDB::query($query)){
-        return self::_abort(con('cant_set_order_to_cancel'));
+        return self::_abort('cant_set_order_to_cancel');
       }
 
       if(!OrderStatus::statusChange($order_id,'cancel',null,'Order::delete',$reason)){
@@ -376,13 +376,12 @@ class Order Extends Model {
 
       if($order_handling=Handling::load($order['order_handling_id']) and
         !$order_handling->on_order_delete($order_id)){
-         return self::_abort(con('eph_not_allowed_to_cancel'));
+         return self::_abort('eph_not_allowed_to_cancel');
       }
 
       return ShopDB::commit('order_deleted');
     }
-    echo "<div class=error>".con('cannot_begin_transaction')."</div>";
-    return FALSE;
+    return addWarning('cannot_begin_transaction');
 
   }
   /* static functions of common use */
@@ -396,14 +395,14 @@ class Order Extends Model {
               WHERE seat_id="._esc($seat_id)."
               AND seat_order_id="._esc($order_id)." FOR UPDATE";
       if(!$seat=ShopDB::query_one_row($query)){
-        return self::_abort(con('cannot_find_seat'));
+        return self::_abort('cannot_find_seat');
       }
 
       $query="SELECT *
               FROM `Order`
               WHERE order_id="._esc($order_id)." FOR UPDATE";
        if(!$order=ShopDB::query_one_row($query)){
-        return self::_abort(con('cannot_find_order').': '.$order_id);
+        return self::_abort('cannot_find_order');
       }
 
       // Added v1.3.4 Checks to see if the order has allready been canceled.
@@ -415,7 +414,7 @@ class Order Extends Model {
       if($order['order_tickets_nr']==1){
         ShopDB::rollback('order_delete_ticket');
         if (!Order::delete($order_id, 'deleted_all_tickets')){
-          return self::_abort(con('cant_deleted_all_tickets'));
+          return self::_abort('cant_deleted_all_tickets');
         }
       } else {
 
@@ -425,7 +424,7 @@ class Order Extends Model {
                     user_current_tickets=user_current_tickets-1
                   WHERE user_id=".$order['order_user_id'];
           if(!ShopDB::query($query)){
-            return self::_abort(con('no_such_user'));
+            return self::_abort('no_such_user');
           }
         }
 
@@ -439,14 +438,14 @@ class Order Extends Model {
         }
 
         if(!OrderStatus::statusChange($order_id,false,null,'Order::delete_ticket',var_export($place,true))){
-          return self::_abort(con('cannot_delete_ticket')."(1.5)");
+          return self::_abort('cannot_delete_ticket_1.5');
         }
         //returns cost of seats Adds up the seats with the same order id.
         $query="SELECT SUM(seat_price) AS total
                 FROM `Seat`
                 WHERE seat_order_id="._esc($order_id);
         if(!$res=ShopDB::query_one_row($query)){
-          return self::_abort(con('cannot_delete_ticket')."(2)");
+          return self::_abort('cannot_delete_ticket_2');
         }
         $total=$res['total'];
 
@@ -463,12 +462,12 @@ class Order Extends Model {
                 where order_id="._esc($order_id)." LIMIT 1";
 
         if(!ShopDB::query($query) or shopDB::affected_rows() !=1){
-          return self::_abort(con('cannot_delete_ticket')."(3)");
+          return self::_abort('cannot_delete_ticket_3');
         }
       }
       return ShopDB::commit('order_delete_ticket');
     }
-    echo "<div class=success>".con('cannot_delete_ticket')."</div>";
+    addWarning('cannot_delete_ticket');
     return false;
   }
 
@@ -481,12 +480,12 @@ class Order Extends Model {
               AND order_status='res'
               FOR UPDATE";
       if(!$order_old=ShopDB::query_one_row($query)){
-        return self::_abort(con('order_not_found'));
+        return self::_abort('order_not_found');
       }
     //checks to see if its an remitted or canceled order!
       if($order_old['order_status']=='cancel' or
           $order_old['order_status']=='reemit'){
-        return self::_abort(con('order_cannot_reorder'));
+        return self::_abort('order_cannot_reorder');
       }
 
     // If deleteing a reserved ticket
@@ -495,14 +494,14 @@ class Order Extends Model {
                   user_current_tickets=user_current_tickets-".$order_old['order_tickets_nr']."
                 WHERE user_id=".$order_old['order_user_id'];
         if(!ShopDB::query($query)){
-          return self::_abort(con('no_such_user'));
+          return self::_abort('no_such_user');
         }
       }
 
       //returns cost of seats Adds up the seats with the same order id.
       $query="SELECT SUM(seat_price) AS total FROM `Seat` WHERE seat_order_id='$order_id'";
       if(!$res=ShopDB::query_one_row($query)){
-        return self::_abort(con('order_cannot_reorder')."(add up seats)");
+        return self::_abort('order_cannot_reorder_add_up_seats');
       }
       $total=$res['total'];
 
@@ -554,7 +553,7 @@ class Order Extends Model {
       //Selects Seats from old order using passed order_id from 'params'
       $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
       if(!$res=ShopDB::query($query)){
-        return $this->_abort(con('order_cannot_reorder')."(load seats)");
+        return $this->_abort('order_cannot_reorder_load_seats');
       }
       //Runs through each seat and gives it a new seat_code and the new order_id.
       while($seat = ShopDB::fetch_assoc($res)){
@@ -564,7 +563,7 @@ class Order Extends Model {
                   seat_code='{$code}'
                 WHERE seat_id='{$seat['seat_id']}' ";
         if(!ShopDB::query($query)){
-          return order::_abort(con('order_cannot_reorder')."(update seats)");
+          return order::_abort('order_cannot_reorder_update_seats');
         }
       }
 
@@ -574,7 +573,7 @@ class Order Extends Model {
             order_reason='reserve_to_order'
           WHERE order_id='$order_id'";
       if(!$res=ShopDB::query($query)){
-        return order::_abort(con('order_cannot_reorder')."(cant up old ord)");
+        return order::_abort('order_cannot_reorder_cant_up_old_ord');
       }
       //Commit and finish
       if(!ShopDB::commit('order reordered')){
@@ -596,7 +595,7 @@ class Order Extends Model {
       //loads old order into var
       $query="SELECT * FROM `Order` WHERE order_id='$order_id' FOR UPDATE";
       if (!$order=ShopDB::query_one_row($query)){
-        return Order::_abort(order_not_found);
+        return Order::_abort('order_not_found');
       }
 
       //checks to see if its an remitted or canceled order!
@@ -607,7 +606,7 @@ class Order Extends Model {
 
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],'reemit',null,'Order::reissue','Order Reissue')){
-        return Order::_abort(order_cannot_reemit."(update status 1");
+        return Order::_abort('order_cannot_reemit_update_status_1');
       }
 
       //Selects Seats from old order using passed order_id from 'params'
@@ -620,26 +619,24 @@ class Order Extends Model {
       foreach($seats as $seat ){
         $seat->seat_code=Seat::generate_code(8);
         if (!$seat->save()){
-          return Order::_abort(con('order_cannot_change_seat'));
+          return Order::_abort('order_cannot_change_seat');
         }
       }
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
-        return Order::_abort(con('order_cannot_reemit')."(update status 2");
+        return Order::_abort('order_cannot_reemit_update_status');
       }
 
       //Commit and finish
       if(!ShopDB::commit('order reemited')){
-        echo "<div class=error>$order_id ".order_cannot_reemit."(commit)</div>";
-        return false;
+        return addWarning('order_cannot_reemit');
       }
 
-      echo "<div class=success>$order_id ".order_type_reemited."(Success)</div>";
+      addNotice('order_type_reemited_Success');
 
       return $order['order_id'];
     }
-    echo "<div class=error>".cannot_begin_transaction."</div>";
-    return FALSE;
+    return addWarning('cannot_begin_transaction');
   }
 
   function set_send ($order_id){
@@ -761,7 +758,7 @@ class Order Extends Model {
               FOR UPDATE";
 
       if(!$res=ShopDB::query($query)){
-        return Order::_abort(con('cant_lock_order'));;
+        return Order::_abort('cant_lock_order');
       }
 
       while($data=shopDB::fetch_assoc($res)){
@@ -771,7 +768,7 @@ class Order Extends Model {
                     order_status='trash'
                   where order_id='{$data['order_id']}'";
           if(!ShopDB::query($query)){
-            return self::_abort(con('cant_change_order_to_trash'));;
+            return self::_abort('cant_change_order_to_trash');
           }
         }
       }
@@ -784,7 +781,7 @@ class Order Extends Model {
               FOR UPDATE";
 
       if(!$res=ShopDB::query($query)){
-        return Order::_abort(con('cant_lock_order'));;
+        return Order::_abort('cant_lock_order');
       }
 
       while($data=shopDB::fetch_assoc($res)){
@@ -794,7 +791,7 @@ class Order Extends Model {
                     order_status='trash'
                   where order_id='{$data['order_id']}'";
           if(!ShopDB::query($query)){
-            return self::_abort(con('cant_change_order_to_trash'));;
+            return self::_abort('cant_change_order_to_trash');
           }
         }
       }
@@ -813,7 +810,7 @@ class Order Extends Model {
                 AND seat_id is NULL";
 
       if(!ShopDB::query($query)){
-        return self::_abort(con('cant_delete_trashed_orders'));
+        return self::_abort('cant_delete_trashed_orders');
       }
 
       return ShopDB::commit('trashed order emptyed');

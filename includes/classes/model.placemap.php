@@ -78,14 +78,14 @@ class PlaceMap Extends Model {
     if(!empty($parts)){
       foreach($parts as $part){
         if (! $part->publish($event_id, 0, $stats, $pmps, $dry_run)) {
-          return $this->_abort('pm.publish1');
+          return self::_abort('pm.publish1');
         }
       }
     }
 
     $cats=PlaceMapCategory::loadAll($pm_id);
     if(!$cats){
-      return $this->_abort('No Categories found');
+      return self::_abort('No Categories found');
     }
 
     foreach($cats as $cat_ident=>$cat){
@@ -96,13 +96,13 @@ class PlaceMap Extends Model {
                return self::_abort('pm.publish4.a');
             }
           }
-          Category::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pm.publish5');
+          PlaceMapCategory::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pm.publish5');
         }
         $stats[$cat->category_ident]+= $cat->category_size;
-      } elseif ($cat->category_size ==0) {
-         return self::_abort(con('cant_publish_event_cat_no_size'));
-      } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
-         return self::_abort(con('cant_publish_event_cat_not_connect'));
+//      } elseif ($cat->category_size ==0) {
+//         return self::_abort('cant_publish_event_cat_no_size');
+//      } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
+//         return self::_abort('cant_publish_event_cat_not_connect');
       }
     }
 
@@ -120,13 +120,13 @@ class PlaceMap Extends Model {
         $seats = shopDB::query_one_row("select count(*) from Seat
                                        where seat_event_id ={$this->pm_event_id}", false);
         if ($seats[0]>0) {
-          return placemap::_abort(con('placemap_delete_failed_seats_exists'));
+          return placemap::_abort('placemap_delete_failed_seats_exists');
         }
       }
 
       $query="delete from PlaceMapZone where pmz_pm_id={$this->pm_id}";
       if(!ShopDB::query($query)){
-        return  placemap::_abort(con('placemapzone_stat_delete_failed'));
+        return  placemap::_abort('placemapzone_stat_delete_failed');
       }
 
       $query="DELETE c.*, cs.*
@@ -134,17 +134,17 @@ class PlaceMap Extends Model {
               ON c.category_id = cs.cs_category_id
               WHERE c.category_pm_id={$this->pm_id}";
       if(!ShopDB::query($query)){
-        return placemap::_abort(con('Category_delete_failed'));
+        return placemap::_abort('Category_delete_failed');
       }
 
       $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} ";
       if(!ShopDB::query($query)){
-        return placemap::_abort(con('PlaceMapPart_delete_failed'));
+        return placemap::_abort('PlaceMapPart_delete_failed');
       }
 
       $query="delete from PlaceMap2 where pm_id={$this->pm_id} limit 1";
       if(!ShopDB::query($query)){
-        return placemap::_abort(con('placemap_delete_failed'));;
+        return placemap::_abort('placemap_delete_failed');
       }
 
       RETURN ShopDB::commit('PlaceMap deleted');
