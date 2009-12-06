@@ -73,6 +73,7 @@ class Discount  Extends Model {
       return $discounts;
     }
   }
+
   function delete(){
     if (ShopDB::begin('Delete discount')) {
       $query = "SELECT count(*) count
@@ -85,6 +86,7 @@ class Discount  Extends Model {
         return self::_abort('cant delete discount');
       } else
         return ShopDB::commit('Deleted discount');
+    }
   }
 
   function apply_to ($price){
