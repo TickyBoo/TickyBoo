@@ -446,7 +446,7 @@ $tbls['Template']['fields'] = array(
   'template_status' => " varchar(5) NOT NULL DEFAULT 'new'");
 $tbls['Template']['key'] = array(
   "PRIMARY KEY (`template_id`)",
-  "KEY `template_name` (`template_name`)");
+  "UNIQUE KEY `template_name` (`template_name`)");
 $tbls['Template']['engine'] = 'InnoDB';
 $tbls['Template']['remove'] = array ('template_organizer_id')   ;
 //$tbls['Template']['AUTO_INCREMENT'] = 21;

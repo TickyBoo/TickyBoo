@@ -214,9 +214,12 @@ class orphans {
   );
 
   function getlist(& $keys, $showlinks= true) {
-    global $orphancheck;
+    global $orphancheck, $_SHOP;
     $data = array();
     $keys = array();
+    $trace = $_SHOP->trace_on;
+    $_SHOP->trace_on=false;
+
     foreach( $orphancheck as $query) {
       unset($result);
       $result = ShopDB::query($query);
@@ -251,6 +254,8 @@ class orphans {
         $data[] = $r;
       }
     }
+    $_SHOP->trace_on= $trace;
+
     return $data;
   }
 

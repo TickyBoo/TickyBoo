@@ -69,6 +69,7 @@ class PlaceMapCategoryView extends AdminView {
   }
 
   function form ($data, $err) {
+    //print_r($data);
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<input type=hidden name=action value=save_category>";
     if ($data['category_id']) {
@@ -91,26 +92,24 @@ class PlaceMapCategoryView extends AdminView {
     $this->print_color('category_color', $data, $err);
     if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
       $this->print_select('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
+      //TODO : add script to disable the category_size when category_numbering <> none
       $script = " ";
       $this->addJQuery($script);
       $this->print_input('category_size', $data, $err, 6, 6);
     } else {
       $this->print_field('category_numbering', $data);
       $this->print_field('category_size', $data);
-    }
-
-    if ($data['category_id']) {
       $taken = $data['cs_total'] - $data['cs_free'];
       $this->print_field('number_taken', $taken);
     }
+
     $this->print_area('category_data', $data, $err, 3, 40);
 
     $this->form_foot();
-
-    if ($data['category_status'] == 'nosal' and $data['category_numbering'] == 'none') {
+    if ($data['event_status'] == 'nosal' and $data['category_numbering'] == 'none') {
       echo "<br>";
       echo "<form action='{$_SERVER['PHP_SELF']}' method=post>";
-      $this->form_head(category_new_size_title);
+      $this->form_head(con('category_new_size_title'));
       $this->print_input('category_new_size', $data, $err, 6, 6);
       $this->form_foot();
       echo "<input type=hidden name=pm_id value={$data['category_pm_id']}>";

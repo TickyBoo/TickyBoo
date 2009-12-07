@@ -120,7 +120,7 @@ class PlaceMapPart Extends Model {
     $query = "select * from PlaceMap2 left join PlaceMapPart on pmp_pm_id=pm_id
                                       left join Ort       on pmp_ort_id=ort_id
                                       LEFT JOIN Event     ON pmp_event_id=event_id
-              where pm_id= "._esc($mp_id);
+              where pm_id= "._esc($pm_id);
     if ($res = ShopDB::query($query)) {
       while ($data = shopDB::fetch_assoc($res)) {
         $new_pmp = new PlaceMapPart;

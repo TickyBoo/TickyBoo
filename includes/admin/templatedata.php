@@ -120,7 +120,6 @@ $order['category_name'] = 'Sample Category';
 $order['category_pm_id'] = '149';
 $order['category_pmp_id'] = '134';
 $order['category_ident'] = '1';
-$order['category_status'] = 'pub';
 $order['category_numbering'] = 'both';
 $order['category_size'] = '210';
 $order['category_max'] = '';

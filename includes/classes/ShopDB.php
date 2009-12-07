@@ -46,7 +46,7 @@ class ShopDB {
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
 
-//        trace("\n Database Init");
+        trace("Database Init\n=============================================\n", true);
 
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
@@ -238,7 +238,7 @@ class ShopDB {
   			}
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-        trace(" Query: ".$query);
+        trace($query);
         $query = ShopDB::replacePrefix($query);
         $res = ShopDB::$link->query($query);
         if (!$res) {

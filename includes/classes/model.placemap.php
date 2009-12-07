@@ -96,14 +96,15 @@ class PlaceMap Extends Model {
                return self::_abort('pm.publish4.a');
             }
           }
-          PlaceMapCategory::create_stat($cat->category_id, $cat->category_size) or $this->_abort('pm.publish5');
-        }
+       }
         $stats[$cat->category_ident]+= $cat->category_size;
 //      } elseif ($cat->category_size ==0) {
 //         return self::_abort('cant_publish_event_cat_no_size');
 //      } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
 //         return self::_abort('cant_publish_event_cat_not_connect');
       }
+      if (!PlaceMapCategory::create_stat($cat->category_id, $stats[$cat->category_ident]))
+        return self::_abort('pm.publish5');
     }
 
     if($dry_run or ShopDB::commit('placemap publised')){

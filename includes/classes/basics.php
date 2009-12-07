@@ -458,15 +458,39 @@ function subtractDaysFromDate($date,$no_days) {
   * @param mixed $content
   * @return void
   */
-  function trace($content){
+  function trace($content, $addDate=false){
     global $_SHOP;
 
     if(is($_SHOP->trace_on,false)){
-      $content = date('c',time()).' : '. $content."\n";
-      file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content,FILE_APPEND);
+      if ($addDate){
+        $content = date('c',time()).' : '. $content;
+      }
+      file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content."\n",FILE_APPEND);
     }
   }
 
+function orphanCheck(){
+  global $_SHOP, $orphancheck;
+  if(is($_SHOP->trace_on,false)){
+ //   trace("Start Orphan Check");
+    require_once("classes/OrphanCheck.php");
+    //Turn Off trace to run the Orphan check so we only get querys
+    $_SHOP->trace_on=false;
+    $data = Orphans::getlist($keys, false);
+    $keys =array_merge(array('_table            ','_id     ' ),$keys);
+    $text = implode('|',$keys)."\n";
+    foreach($data as $row) {
+      $send = array();
+      foreach($keys as $key) {
+        $send[] = str_pad ( (isset($row[trim($key)]))?$row[trim($key)]:'',strlen($key));
+      }
+      $text .= implode('|',$send)."\n";
+
+    }
+    $_SHOP->trace_on=true;
+    trace("\n\nOrphan Check Dump: \n".$text);
+  }
+}
 
 function addDaysToDate($date,$no_days) {
   $time1  = strtotime($date);
@@ -542,28 +566,6 @@ function md5pass($user,$pass) {
 }
 
 
-function orphanCheck(){
-  global $_SHOP, $orphancheck;
-  if(is($_SHOP->trace_on,false)){
- //   trace("Start Orphan Check");
-    require_once("classes/OrphanCheck.php");
-    //Turn Off trace to run the Orphan check so we only get querys
-    $_SHOP->trace_on=false;
-    $data = Orphans::getlist($keys, false);
-    $keys =array_merge(array('_table            ','_id     ' ),$keys);
-    $text = implode('|',$keys)."\n";
-    foreach($data as $row) {
-      $send = array();
-      foreach($keys as $key) {
-        $send[] = str_pad ( (isset($row[trim($key)]))?$row[trim($key)]:'',strlen($key));
-      }
-      $text .= implode('|',$send)."\n";
-
-    }
-    $_SHOP->trace_on=true;
-    trace("Orphan Check Dump: \n".$text);
-  }
-}
 
 /**
  * This function creates a md5 password code to allow login true WWW-Authenticate
@@ -641,7 +643,7 @@ function printMsg($key, $err = null) {
           $output = "<h4 class='error'>".$output. "</h4>";
           break;
         case '__Notice__':
-          $output = "<h4 class='notice'>".$output. "</h4>";
+          $output = "<h4 class='success'>".$output. "</h4>";
           break;
         default:
           $output = "<span class='err'>".$output. "</span>";

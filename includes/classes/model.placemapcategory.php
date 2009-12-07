@@ -64,21 +64,23 @@ class PlaceMapCategory Extends Model {
   }
 
   function load ($category_id){
-    $query="select *
-            from Category left join Category_stat on cs_category_id=category_id
+    $query="select c.*, cs.*, e.event_status
+            from Category c LEFT JOIN Event e ON event_id=category_event_id
+                            left join Category_stat cs on cs_category_id=category_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
       $new_category=new PlaceMapCategory;
       $new_category->_fill($res);
+      $new_category->category_color = self::resetColor($new_category->category_color);
       return $new_category;
     }
   }
 
   function loadFull ($category_id){
-    $query="select c.*, e.event_status
+    $query="select c.*, cs.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
-                            left join Category_stat on cs_category_id=category_id
+                            left join Category_stat cs on cs_category_id=category_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
@@ -144,7 +146,7 @@ class PlaceMapCategory Extends Model {
       echo "#ERR-NOSIZEDIFF(1)";
       return FALSE;
     }
-    if($this->category_status!='nosal'){
+    if($this->event_status!='nosal'){
         echo "#ERR-NOTUNPUBCAT(2)";
       return FALSE;
     }

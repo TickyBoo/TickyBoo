@@ -36,8 +36,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
 class DiscountView extends AdminView {
-  function table ($discount_event_id, $live = false)
-  {
+  function table ($discount_event_id, $live = false) {
     global $_SHOP;
     $query = "SELECT event_name, ort_name, event_status
               FROM Event left join Ort on ort_id=event_ort_id
@@ -57,31 +56,31 @@ class DiscountView extends AdminView {
     }
 
     $alt = 0;
-    echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='4'>\n";
-    echo "<tr><td class='admin_list_title' colspan='5' align='left'>". con('discount_title') . "</td></tr>";
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<tr><td class='admin_list_title' colspan='3' align='left'>". con('discount_title') . "</td>";
+    if (!$live) {
+      echo "<td align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id=$discount_event_id'>" . con('add') . "</a></td>";
+    }
+    echo "</tr>";
 
     while ($row = shopDB::fetch_assoc($res)) {
         echo "<tr class='admin_list_row_$alt'>";
      //  echo "<td class='admin_list_item'>{$row['discount_id']}</td>\n";
+        echo "<td class='admin_list_item' width=10'>&nbsp;</td>\n";
         echo "<td class='admin_list_item'>{$row['discount_name']}</td>\n";
         if ($row['discount_type'] == 'percent') {
             $type = "%";
         } else if ($row['discount_type'] == 'fixe') {
-            $type = $_SHOP->organizer_data->currency;
+            $type = ' '.$_SHOP->organizer_data->currency;
         }
-        echo "<td class='admin_list_item'>{$row['discount_value']}$type</td>\n";
-        echo "<td class='admin_list_item' width='20'></td>\n";
-        echo "<td class='admin_list_item' width='20'><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a></td>\n";
+        echo "<td class='admin_list_item'align='right'>{$row['discount_value']}$type</td>\n";
+        echo "<td class='admin_list_item' width='60' align='right'>
+                  <a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id'><img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
         if (!$live) {
-            echo "<td class='admin_list_item' width='20'><a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a></td>\n";
-        } else {
-            echo "<td></td>";
+            echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id\";}'><img src='images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
         }
-        echo "</tr>";
+        echo "</td></tr>";
         $alt = ($alt + 1) % 2;
-    }
-    if (!$live) {
-      echo "<tr><td colspan='6'><br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id=$discount_event_id'>" . con('add') . "</a></td></tr>";
     }
     echo "</table>\n";
   }
@@ -106,7 +105,7 @@ class DiscountView extends AdminView {
     $this->print_input('discount_value', $data, $err, 6, 5);
 		$this->form_foot();
 
-    echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['event_pm_id']}'>" . con('admin_list') . "</a></center>"; //print_r($data);
+    echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['discount_event_id']}'>" . con('admin_list') . "</a></center>"; //print_r($data);
   }
 
   function discount_check (&$data, &$err)

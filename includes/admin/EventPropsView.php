@@ -719,7 +719,7 @@ select SQL_CALC_FOUND_ROWS *
             }
           }
         }
-        echo $log;
+        If ($log) addWarning($log);
 
         if($varNum!==0) {
           if ($errs) {
@@ -727,8 +727,8 @@ select SQL_CALC_FOUND_ROWS *
           } else {
             $this->state_confirm_button($state);
           }
-        } else {
-          $this->delayedLocation('view_event.php');
+//        } else {
+//          $this->delayedLocation('view_event.php');
         }
 	      return true;
 
