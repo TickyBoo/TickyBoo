@@ -75,6 +75,8 @@ class Event Extends Model {
 
   function save(){
     $new = $this->id;
+    $new = empty($new);
+    echo 'order_id ',$this->id,'  ', ($new)?1:0 ;
     if (!$this->event_status) $this->event_status='unpub';
     if (ShopDB::begin('Save event')) {
       if (parent::save()){

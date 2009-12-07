@@ -98,7 +98,7 @@ class DiscountView extends AdminView {
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . $title . "</td></tr>";
 
-    $this->print_field('discount_id', $data);
+    $this->print_field_o('discount_id', $data);
 
     $this->print_input('discount_name', $data, $err, 30, 50);
     $this->print_select ("discount_type", $data, $err, array("fixe", "percent"));

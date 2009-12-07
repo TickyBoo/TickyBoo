@@ -115,8 +115,9 @@ class Order_Smarty {
   }
 
   function cancel_f ($order_id, $reason = null ){
-    global $_SHOP;
-    return Order::delete($order_id, is($reason,'order_canceled_by_user'), $this->user_auth_id);
+    if ($order = Order::load($order_id)) {
+      return Order::delete($order_id, is($reason,'order_canceled_by_user'), $this->user_auth_id);
+    }
   }
 
   function delete_ticket ($params, &$smarty){
@@ -124,8 +125,9 @@ class Order_Smarty {
   }
 
   function delete_ticket_f ($order_id,$ticket_id){
-    global $_SHOP;
-    return Order::delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
+    if ($order = Order::load($order_id)) {
+      return Order::delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
+    }
   }
 
 

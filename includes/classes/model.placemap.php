@@ -113,9 +113,9 @@ class PlaceMap Extends Model {
   }
 
   function delete (){
-    if (!$this->pm_id) return addWarning('Cant_delete_without_id');
 
     if(ShopDB::begin('delete Placmap: '.$this->pm_id)){
+      if (!$this->pm_id) return self::_abort('Cant_delete_without_id');
       if ($this->pm_event_id){
         $seats = shopDB::query_one_row("select count(*) from Seat
                                        where seat_event_id ={$this->pm_event_id}", false);
