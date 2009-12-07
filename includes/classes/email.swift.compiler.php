@@ -54,7 +54,7 @@ class EmailSwiftCompiler {
   private $emailBCC = null;
   private $emailFrom = null; //$email => $firstname $lastname
   private $emailDefLang = 0;
-  public $emailLangs = null;
+  public $langs = null;
   private $emailTemplates = null;
   private $emailAttachments = null;
   private $emailOrderPDF = null;
@@ -85,11 +85,9 @@ class EmailSwiftCompiler {
     }
     //No deflang pull the first lang
     if($lang===0 || empty($lang)){
-      $lang = $this->emailLangs[0];
+      $lang = $this->langs[0];
     }
-    $swift->setSubject($this->emailTemplates[$lang]['template_subject']);
-    print_r($this->emailTemplates[$lang]['template_text']);
-    print_r($this->buildSmarty($this->emailTemplates[$lang]['template_text'],$this->data,'text'));
+    $swift->setSubject($this->buildSmarty($this->emailTemplates[$lang]['template_subject'],$this->data,'subject'));
     $swift->setBody($this->buildSmarty($this->emailTemplates[$lang]['template_html'],$this->data,'html'),'text/html');
     $swift->addPart($this->buildSmarty($this->emailTemplates[$lang]['template_text'],$this->data,'text'),'text/plain');
     
@@ -143,7 +141,7 @@ class EmailSwiftCompiler {
     //check templates
     if(is($emailArray['email_templates'],false)){
       foreach($emailArray['email_templates'] as $lang=>$fields){
-        $this->emailLangs[] = $lang;
+        $this->langs[] = $lang;
         array_walk($fields,array(&$this,'recVarToVals'));
         $this->emailTemplates[$lang]=$fields;
       }
@@ -185,7 +183,7 @@ class EmailSwiftCompiler {
 require_once("classes/email.swift.compiler.php");
   
 class '.$newClassName.' extends EmailSwiftCompiler {
-  public $emailLangs = array('.$this->getEmailLangs($emailArray).');
+  public $langs = array('.$this->getLangs($emailArray).');
   
   function write(&$swiftInstance, &$data, $lang=0, $testAddress=""){
     $this->build($swiftInstance, $data, $lang, $testAddress);
@@ -195,7 +193,7 @@ class '.$newClassName.' extends EmailSwiftCompiler {
     return $ret;
   }
   
-  private function getEmailLangs($emailArray){
+  private function getLangs($emailArray){
     if(is_string($emailArray)){
       $emailArray = unserialize($emailArray);
     }
@@ -205,11 +203,11 @@ class '.$newClassName.' extends EmailSwiftCompiler {
         if(!empt($lang,false)){
           continue;
         }
-        $this->emailLangs[] = $lang;
+        $this->langs[] = $lang;
         $langs[] = "'".$lang."'";
       }
     }else{
-      $this->emailLangs = array();
+      $this->langs = array();
       $langs = array();
     }
     

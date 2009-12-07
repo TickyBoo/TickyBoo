@@ -68,53 +68,7 @@ class TemplateView extends AdminView{
         $order['activate_code'] = '{ActivationCode}';
         $order['new_password']  = '{NewPassword}' ;
      	case 'email':
-        require_once('templatedata.php');
-      	require_once('classes/htmlMimeMail.php');
-        require_once("classes/TemplateEngine.php");
-        if (!$tpl = TemplateEngine::getTemplate($name)) {
-          return false;
-       	}
-
-     		$lang = is($_GET['lang'], $_SHOP->lang);
-
-        if (!in_array($lang, $tpl->langs )) {
-          $lang = $tpl->langs[0];
-        }
-        $_GET['lang'] = $lang;
-
-        //$email = &new htmlMimeMail();
-        //$tpl->build($email, $order, $lang);
-        //$email = $email->asarray() ;
-        $langs = array();
-        foreach($tpl->langs as $lng) {
-          $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
-        }
-
-        echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
-        echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-        echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
-        $this->print_select_assoc ("lang", $_GET, $err, $langs, "onchange='javascript: document.frmEvents.submit();'");
-    		$this->print_field('email_from',htmlspecialchars($email['headers']['From']));
-        $this->print_field('email_to',htmlspecialchars(implode(',', $tpl->to)));
-        $this->print_field_o('email_cc',htmlspecialchars($email['headers']['Cc']));
-        $this->print_field_o('email_bcc',htmlspecialchars($email['headers']['Bcc']));
-        $this->print_field_o('email_return',htmlspecialchars($email['return_path']));
-        $this->print_field('email_subject',htmlspecialchars($email['headers']['Subject']));
-        echo "<tr><td colspan='2' class='admin_name'>" .con('email_text'). "</td></tr>";
-        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-				nl2br(htmlspecialchars($email["text"])) . "</td></tr>";
-
- 			  echo "<tr><td colspan='2' class='admin_name'>" .con('email_html'). "</td></tr>";
-        echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-          nl2br(htmlspecialchars($email["html"])) . "</td></tr>";
-
-       	echo "</table>\n";
-        echo "<input type='hidden' name='action' id='action' value='view'>
-          <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
-          </form>";
-
-        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
-          break;
+        
       case 'swift':
         include('templatedata.php');
         require_once("classes/TemplateEngine.php");
@@ -123,15 +77,15 @@ class TemplateView extends AdminView{
        	}
      		
         $lang = is($_GET['lang'], $_SHOP->lang);
-        if (!in_array($lang, $tpl->emailLangs )) {
-          $lang = $tpl->emailLangs[0];
+        if (!in_array($lang, $tpl->langs )) {
+          $lang = $tpl->langs[0];
         }
         $_GET['lang'] = $lang;
         
         $tpl->write($swift, $order, $lang);
         
         $langs = array();
-        foreach($tpl->emailLangs as $lng) {
+        foreach($tpl->langs as $lng) {
           $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
         }
         
@@ -354,25 +308,19 @@ class TemplateView extends AdminView{
      
   }
 
-	function compile_template ($name){
-		global $_SHOP;
-    	require_once("classes/TemplateEngine.php");
-    	$te = new TemplateEngine;
-    	if(!$te->getTemplate($name, true)){
-      		echo "<div class=err>'$name': ";
-      		if ($te->errors){
-        		foreach($te->errors as $error){
-          			echo "$error<br>";
-        		}
-      		}
-      		echo compilation_failed;
-      		echo "</div>";
-      		return false;
-    	}else{
-      		echo "<div class=success>'$name': " . compilation_succeed . "</div>";
-      		return true;
-    	}
-	}
+  function compile_template ($name){
+    global $_SHOP;
+    require_once("classes/TemplateEngine.php");
+    	
+    $te = new TemplateEngine;
+    if(!$te->getTemplate($name, true)){
+      addWarning($name.con('compilation_failed'));
+      return false;
+   	}else{
+   	  addNotice($name.con('compilation_succeed'));
+  		return true;
+   	}
+  }
 
   function draw (){
     global $_SHOP;
@@ -392,7 +340,7 @@ class TemplateView extends AdminView{
     );
 
     if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
-      $menu[con("templ_pdf")]= "?tab=3";
+      $menu[con("templ_pdf")]= "?tab=4";
    	}
 
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_TEMPLATE_tab'], "left");

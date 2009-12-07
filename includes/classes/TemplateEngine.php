@@ -43,21 +43,56 @@ class TemplateEngine {
   function TemplateEngine (){}
 
 	//internal function: loads, initializes the template object, and updates cache
-  function &try_load ($name, $t_class_name, $code){
+  function &try_load ($name, $t_class_name, $code, $test=false){
     global $_SHOP;
     //print_r($code['template_code']);
     if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
-      require_once($_SHOP->templates_dir.$t_class_name.'.php');    	
+      require_once($_SHOP->templates_dir.$t_class_name.'.php');
+         	
       if(class_exists($t_class_name)){
         $tpl = new $t_class_name;
         $tpl->sourcetext = $code['template_text'];
-        $tpl->template_type = $code['template_type'];
+        $tpl->template_type = $code['template_type'];               
         $_SHOP->templates[$name]=&$tpl;
-        return $tpl;
+        if($test){
+          return self::tryBuildEmail($tpl); 
+        }else{
+          return $tpl;
+        }
       }
     }
     return false;
 	}
+  
+  private function tryBuildEmail(&$orgTpl){
+    $tpl = $orgTpl;
+    $err=0;
+    if(!in_array($tpl->template_type,array('swift','systm','email'))){
+      return true;
+    }
+    include('admin/templatedata.php');
+		
+    $lang = is($_GET['lang'], $_SHOP->lang);
+    if (!in_array($lang, $tpl->langs )) {
+      $lang = $tpl->langs[0];
+    }
+    try{
+      $tpl->write($swift, $order, $lang);
+    }catch(exception $e){
+      addWarning(con('ClassCatch:').$e->getMessage());
+      $err++;
+    }
+    if(!empty($tpl->errors)){
+      foreach($tpl->errors as $error){
+        addWarning(con('Compile:').$error);
+        $err++;
+      }
+    }
+    if($err>0){
+      return false;
+    }
+    return $orgTpl;
+  }
 
 	//returns the template object or false
   function &getTemplate($name, $recompile=false){
@@ -107,9 +142,6 @@ class TemplateEngine {
     }
   
     //try to compile, pass template and name to compiler.
-    if(is_object($comp2)){
-      $code2 = $comp2->compile($data['template_text'],$t_class_name);  
-    }
     if(!$code = $comp->compile($data['template_text'],$t_class_name)){
       //if failed to compile set error.
       $this->errors = $comp->errors;
@@ -125,12 +157,6 @@ class TemplateEngine {
     if(file_exists($_SHOP->templates_dir.$t_class_name.'.php')){
       unlink($_SHOP->templates_dir.$t_class_name.'.php');
     }
-    
-    /*$fileStream = fopen($_SHOP->templates_dir.$t_class_name.'_swift.php', 'w');
-    if($fileStream){
-      $res=fwrite($fileStream,utf8_encode("<?php \n".$code2."\n?>"));
-      $close=fclose($fileStream);
-    }*/
 
     $fileStream = fopen($_SHOP->templates_dir.$t_class_name.'.php', 'w');
     if($fileStream){
@@ -139,7 +165,7 @@ class TemplateEngine {
     }
     
     //trying to load just compiled template
-    if($tpl = TemplateEngine::try_load($name, $t_class_name, $data)){
+    if($tpl = TemplateEngine::try_load($name, $t_class_name, $data, true)){
       
       //compilation ok: saving the code in db
       //$query="UPDATE Template SET template_status='comp', template_code="._esc($code)." WHERE template_id='{$data['template_id']}'";

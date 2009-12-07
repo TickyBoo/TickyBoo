@@ -241,9 +241,14 @@ function is(&$arg, $default = null)
 
 function empt(&$arg , $default=null){
   if(is_string($arg)){
-    if(trim($arg)<>''){
+    $arg=trim($arg);
+    if(!empty($arg)){
       return $arg;
     }
+  }elseif(empty($arg)){
+    return $default;
+  }else{
+    return $arg;
   }
   return $default;
 }
@@ -636,7 +641,7 @@ function printMsg($key, $err = null) {
           $output = "<h4 class='error'>".$output. "</h4>";
           break;
         case '__Notice__':
-          $output = "<h4 class='error'>".$output. "</h4>";
+          $output = "<h4 class='notice'>".$output. "</h4>";
           break;
         default:
           $output = "<span class='err'>".$output. "</span>";

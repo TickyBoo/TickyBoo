@@ -33,22 +33,23 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once "classes/xml2php.php";
 
+require_once (LIBS.'swift'.DS.'swift_required.php');
 class EmailSwiftXMLCompiler {
 
-  var $res=array(); //result of execution, indexed by language
+  private $res=array(); //result of execution, indexed by language
 
-  var $mode=0; //0 normal 1 text
-  var $stop_tag; //that stops the mode nr 1
+  private $mode=0; //0 normal 1 text
+  private $stop_tag; //that stops the mode nr 1
 
-  var $stack=array(); // local stack for various purposes
-  var $vars=array(); //variables are collected for informative purposes
-  var $args='data'; //name of the parameter array where variables are stored
-  protected $langs = array();
+  private $stack=array(); // local stack for various purposes
+  private $vars=array(); //variables are collected for informative purposes
+  private $args='data'; //name of the parameter array where variables are stored
+  public $langs = array();
 
-  var $deflang=0;
-  var $errors=array();
+  public $deflang=0;
+  public $errors=array();
+  private $xmlParsed = false;
 
   function EmailSwiftXMLCompiler (){
   }
@@ -70,61 +71,288 @@ class EmailSwiftXMLCompiler {
     $this->res[$lang][$key][]=$val;
   }
 
-  private function attribToParam ($val){
-    return $this->replace_vars($val);
+  protected function build (&$swiftInstance, &$data, $lang=0, $testme=false){
+    $xml = $this->sourcetext;
+    $this->data = $data;
+    
+    //Let smarty run
+    $xml = $this->buildSmarty($xml,$data);
+    
+    //Pass XML to Compiler.
+    $this->parseXml($xml); //Should Fill this->res
+    
+    if(!empty($this->errors)){
+      return false;
+    }
+    //Check if $swiftMessage exsists.
+    if(!is_object($swiftInstance)){
+      $swiftInstance = Swift_Message::newInstance();
+    }
+    $swift = &$swiftInstance;
+    
+    //Build Langs
+    foreach($this->res as $lang=>$vals){
+      if($lang){
+        $this->langs[] = $lang;
+      }
+    }
+    $lang = trim($lang);
+    //No Lang passed pull the default lang
+    if($lang===0 || empty($lang)){
+      $lang=$this->deflang;
+    }
+    //No deflang pull the first lang
+    if($lang===0 || empty($lang)){
+      $lang = $this->langs[0];
+    }
+  
+    //Build Message into $swift
+    $this->buildMessage($swift,$data,$lang,$testme);
+    
+    return $swift;  
   }
+  
+  private function buildSmarty ($code, $data, $name='', $testme=false){
+    global $_SHOP;
+    require_once("smarty/Smarty.class.php");
+    require_once("classes/gui_smarty.php");
 
-  private function attribToParamString ($val){
-    return "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\""; 
+    $smarty = new Smarty;
+    $gui = new gui_smarty($smarty);
+    
+    $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
+    $smarty->cache_dir    = $_SHOP->tmp_dir;
+    $smarty->compile_dir  = $_SHOP->tmp_dir;
+    $smarty->compile_id   = "xmlmail_".$_SHOP->lang;
+    $smarty->assign("_SHOP_lang", $_SHOP->lang);
+    $smarty->assign((array)$_SHOP->organizer_data);
+    $smarty->assign($data);
+    $smarty->assign("OrderData",$data);
+    $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
+    $smarty->assign("_SHOP_images", $_SHOP->images_url);
+
+    $smarty->my_template_source = $code;
+    $compiledXML = $smarty->fetch("text:".get_class($this).$name);
+    unset($smarty);
+    unset($gui);
+    return $compiledXML;
+  }
+  
+  private function buildMessage(&$message, &$data, $lang=0, $testme=false){
+    global $_SHOP;
+    
+    if(!$this->xmlParsed){
+      $this->errors[] = con('xml_parse_fail');
+      return false;
+    }
+    if(empty($this->res)){
+      $this->errors[] = con('no_template_tags');
+      return false;
+    }
+    if(empty($this->res[$lang])){
+      $this->errors[] = con('no_template_body');
+      return false;
+    }
+    $res = $this->res[0];
+    $langRes = $this->res[$lang];
+    
+    if(isset($res['from'])){
+   	  $message->setFrom((array)$res['from']);
+    }else{
+    	$message->setFrom(array($_SHOP->organizer_data->organizer_email => $_SHOP->organizer_data->organizer_name ));
+    }
+    
+    if(is($res['cc'],false)){
+      $ccArr = array();
+      foreach($res['cc'] as $arr){
+        $ccArr = array_merge($ccArr,(array)$arr);
+      }
+     	$message->setCc($ccArr);
+      unset($arr);
+    }
+
+    if(isset($res['bcc'])){
+      $bccArr = array();
+      foreach($res['bcc'] as $arr){
+        $bccArr = array_merge($bccArr,$arr);
+      }
+     	$message->setBcc($bccArr);
+      unset($arr);
+    }
+
+    if(isset($res['to'])){
+      $message->setTo($res['to']);
+    }
+
+    if(isset($langRes['subject'])){
+      $message->setSubject($langRes['subject']);
+    }
+
+    if(isset($res['return'])){
+      $message->setReturnPath($res['return']);
+    }
+
+    //defaults to UTF
+    if(isset($res['head_charset'])){
+      $message->setCharset($res['head_charset']);
+    }
+
+    if(isset($langRes['html'])){
+      $message->setBody($langRes['html'],'text/html',is($langRes['html_charset'],"null"));
+    }
+    if(isset($langRes['text'])){
+      $message->addPart($langRes['text'],'text/plain',is($langRes['text_charset'],"null"));
+    }
+
+    if(isset($res['order_pdf'])){
+      require_once("classes/model.order.php");
+      
+      foreach($res['order_pdf'] as $order_pdf){
+        $order_id =$order_pdf['order_id'];
+
+				if(strcasecmp($order_pdf['mode'],'tickets')=='0'){
+					$mode=1;
+				}elseif(strcasecmp($order_pdf['mode'],'summary')==0){
+					$mode=2;
+				}else{
+					$mode=3;
+				}
+        
+        $message->attach(Swift_Attachment::newInstance(Order::print_order($order_id, $order_pdf['summary'], 'data', FALSE, $mode), $order_pdf['name'], 'application/pdf'));
+
+        if(strcasecmp($order_pdf['mark_send'],'yes')==0){
+          $order=Order::load($order_id);
+          if ($order) {
+            $order->set_shipment_status('send');
+          }
+	      }
+      }
+    }
+    
+    /* Ignore Attachements for the moment
+    if(isset($data['attachment'])){
+      foreach($data['attachment'] as $attach){
+        $file=$attach['file'];
+        $data1=$attach['data'];
+
+        $r_data='$'.$this->args.'['.$data1.']';
+
+        if(isset($data1)){
+          $res.=$pre.'if(isset('.$r_data.")){\n";
+          $res.=$pre.'  $message->attach(Swift_Attachment::newInstance( '.$r_data.", ".$attach['name'].", ".$attach['type']."))".$post;
+          $res.=$pre."}\n";
+        }
+
+        if(isset($data1) and isset($file)){
+          $res.=$pre."else{\n";
+        }
+
+        if(isset($file)){
+          $res.=$pre.'$message->attach(Swift_Attachment::fromPath('.$attach['file'].', '.$attach['type']."))".$post;
+        }
+
+        if(isset($data1) and isset($file)){
+          $res.=$pre."}\n";
+        }
+      }
+    }
+    */
+    return $message;
+    
+  }
+  
+  private function characterData ($parser, $data) {
+    if($this->mode==1){
+      $this->text.=$data;
+    }
+  }
+  
+  
+  private function parseXml($xml){
+    $this->xml_parser=$this->newXmlParser();
+    
+    if (!xml_parse($this->xml_parser, $xml, TRUE)) {
+      $this->error(xml_error_string(xml_get_error_code($this->xml_parser)));
+      return false;
+    }
+    xml_parser_free($this->xml_parser);
+    $this->xmlParsed = true;
+    return true;
   }
   
   /**
    * EmailSwiftXMLCompiler::emailToParam()
    * Will try to turn email xml into an array format.
-   * @return $email or [$email] => "$names"
+   * @return array($email) or array($email => $names)
    */
   private function emailToParam($val){
     preg_match_all("/(.*?)(<)([^>]+)(>)/",$val,$matches);
     if(is($matches[3][0])){
-      $email = $this->replace_vars(str_replace('"','\"',$matches[3][0]),0);
+      $email = $this->varsToValues($matches[3][0]);
       if(is($matches[1][0])){
-        $names = $this->replace_vars(str_replace('"','\"',$matches[1][0]),1);
-        $ret = $email." => \"".$names."\"";
+        $names = $this->varsToValues($matches[1][0]);
+        $ret[$email] = $names;
         return $ret;
       }else{
-        $ret = "\"".$email."\"";
+        $ret[] = $email;
       }
     }
-    $ret = "\"".$this->replace_vars(str_replace('"','\"',$val),1)."\"";
+    $ret[] = $this->varsToValues($val);
     return $ret;
   }
 
   function error ($message){
     $this->errors[]=$message." line ".xml_get_current_line_number($this->xml_parser);
   }
-
-
-  private function replace_vars ($val,$quot=0){
-    if($quot){
-      $return = preg_replace_callback('/\$(\w+)/',array(&$this,'replaceCallbackQuote'),$val);
-      return $return;
-    }else{
-      return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceCallback'),$val);
+  
+  private function getEmailLangs($xml){
+    $this->parseXml($xml);
+    
+    $this->langs = array();
+    $langs = array();
+    foreach($this->res as $lang=>$vals){
+      if($lang){
+        $this->langs[] = $lang;
+        $langs[] = "'".$lang."'";
+      }
     }
+    
+    $langs = implode(',',$langs);
+    return $langs;
   }
 
-  private function replaceCallback ($matches){
-    array_push($this->vars,$matches[1]);
-    return '$'.$this->args.'["'.$matches[1].'"]';
+  /**
+   * EmailSwiftXMLCompiler::replaceVar()
+   * 
+   * Will replace the matched string with the value from data. 
+   * 
+   * @param mixed $matches 
+   * @return
+   */
+  private function replaceVar($matches){
+    //array_push($this->vars,$matches[1]);
+    $value = is($this->data[$matches[1]],$matches[0]);
+    return $value;
+  }
+  
+  private function recVarToVals(&$value,$key){
+    $value = $this->varsToValues($value);
+  }
+  
+  /**
+   * EmailSwiftCompiler::varsToValues()
+   * 
+   * Takes a string with $varibles and replaces the var with the $data['varible'] value
+   *  
+   * @return String with $varbles converted to values.
+   */
+  private function varsToValues($string){
+    return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceVar'),$string);
+      
   }
 
-  private function replaceCallbackQuote ($matches){
-    array_push($this->vars,$matches[1]);
-    return '".$'.$this->args.'["'.$matches[1].'"]."';
-  }
 
-
-  function startElement ($parser, $name, $a) {
+  private function startElement ($parser, $name, $a) {
     if($this->mode==1){
       $this->text.="<".strtolower($name)." ";
       foreach($a as $name=>$value){
@@ -161,7 +389,6 @@ class EmailSwiftXMLCompiler {
         break;
   
       case "to" :
-        //$this->addParam('to',$this->attribToParamString($a['EMAIL']),$a['LANG']);
         $this->addParam('to',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
         
@@ -175,98 +402,82 @@ class EmailSwiftXMLCompiler {
   
   		case "header" :
         $this->addToParam('header',array(
-  					'name'=>$this->attribToParamString($a['NAME']),
-  					'value'=>$this->attribToParamString($a['VALUE']),
+  					'name'=>$this->varsToValues($a['NAME']),
+  					'value'=>$this->varsToValues($a['VALUE']),
   				),$a['LANG']);
         break;
   
   		case "return" :
-        $this->addParam('return',$this->attribToParamString($a['EMAIL']),$a['LANG']);
+        $this->addParam('return',$this->varsToValues($a['EMAIL']),$a['LANG']);
         break;
   
   		case "text_charset" :
-        $this->addParam('text_charset',$this->attribToParamString($a['VALUE']),$a['LANG']);
+        $this->addParam('text_charset',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
   
   		case "html_charset" :
-        $this->addParam('html_charset',$this->attribToParamString($a['VALUE']),$a['LANG']);
+        $this->addParam('html_charset',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
   
   		case "head_charset" :
-        $this->addParam('head_charset',$this->attribToParamString($a['VALUE']),$a['LANG']);
+        $this->addParam('head_charset',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
   
   		case "subject" :
-        $this->addParam('subject',$this->attribToParamString($a['VALUE']),$a['LANG']);
+        $this->addParam('subject',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
   
       case "attachment":
         $this->addToParam('attachment',array(
-          'file'=>$this->attribToParamString($a['FILE']),
-          'name'=>$this->attribToParamString($a['NAME']),
-          'type'=>$this->attribToParamString($a['TYPE']),
-          'data'=>$this->attribToParamString($a['DATA'])
+          'file'=>$this->varsToValues($a['FILE']),
+          'name'=>$this->varsToValues($a['NAME']),
+          'type'=>$this->varsToValues($a['TYPE']),
+          'data'=>$this->varsToValues($a['DATA'])
         ),$a['LANG']);
         break;
   
       case "order_pdf" :
         $this->addToParam('order_pdf',array(
-          'name'=>$this->attribToParamString($a['NAME']),
-          'order_id'=>$this->attribToParam($a['ORDER_ID']),
-          'mark_send'=>$this->attribToParam($a['MARK_SEND']),
-  				'summary'=>$this->attribToParam($a['SUMMARY']),
-  				'mode'=>$this->attribToParam($a['MODE'])
+          'name'=>$this->varsToValues($a['NAME']),
+          'order_id'=>$this->varsToValues($a['ORDER_ID']),
+          'mark_send'=>$this->varsToValues($a['MARK_SEND']),
+  				'summary'=>$this->varsToValues($a['SUMMARY']),
+  				'mode'=>$this->varsToValues($a['MODE'])
         ),$a['LANG']);
         break;
     }
 
   }
 
-  function endElement ($parser, $name) {
-  if($this->mode==1  and $name!=$this->end_tag){
-    $this->text.="</".strtolower($name).">";
-    return;
-  }
+  private function endElement ($parser, $name) {
+    if($this->mode==1  and $name!=$this->end_tag){
+      $this->text.="</".strtolower($name).">";
+      return;
+    }
 
-  switch(strtolower($name)){
+    switch(strtolower($name)){
 
-    case "text":
-      $lang=array_pop($this->stack);
-      $this->mode=array_pop($this->stack);
+      case "text":
+        $lang=array_pop($this->stack);
+        $this->mode=array_pop($this->stack);
 
-      $this->addParam('text',$this->attribToParamString($this->text),$lang);
+        $this->addParam('text',$this->varsToValues($this->text),$lang);
 
-      $this->text='';
-      break;
+        $this->text='';
+        break;
 
-    case "html":
-      $lang=array_pop($this->stack);
-      $this->mode=array_pop($this->stack);
-
-      $this->addParam('html',$this->attribToParamString($this->text),$lang);
-
-      $this->text='';
-      break;
-
-    case "template":
-
-      $code='  function build(&$message,&$data,$lang="'.$this->deflang.'"){'."\n";
-
-      foreach($this->res as $lang=>$data){
-        if($lang){
-          $this->langs[] = "'{$lang}'";
-      	  $code.='    '.$els.'if($lang=="'.$lang."\"){\n";
-      	  $code.=$this->_gen_lang($lang,$data);
-      	  $code.="    }\n";
-      	  $els="else ";
-      	}
-      }
-      $code.=$this->_gen_lang(0,$this->res[0]);
-      $code.="  }\n";
-
-      $this->build=$code;
-      break;
-  }
+      case "html":
+        $lang=array_pop($this->stack);
+        $this->mode=array_pop($this->stack);
+  
+        $this->addParam('html',$this->varsToValues($this->text),$lang);
+  
+        $this->text='';
+        break;
+  
+      case "template":
+        break;
+    }
   }
 
   function _gen_lang ($lang,$data){
@@ -365,13 +576,7 @@ class EmailSwiftXMLCompiler {
     return $res;
   }
 
-  function characterData ($parser, $data) {
-    if($this->mode==1){
-      $this->text.=$data;
-    }
-  }
-
-  function new_xml_parser () {
+  private function newXmlParser() {
 
     $xml_parser = xml_parser_create();
     xml_set_object($xml_parser, $this);
@@ -404,51 +609,24 @@ class EmailSwiftXMLCompiler {
   }
 
   function compile ($xml, $className){
-    $this->res=array();
 
-    $this->mode=0;
-    $this->stop_tag;
-
-    $this->stack=array();
-    $this->vars=array();
-    $this->args='data';
-
-    $this->deflang=0;
-    $this->errors=array();
-
-    $this->xml_parser=$this->new_xml_parser();
-    if (!xml_parse($this->xml_parser, $xml, TRUE)) {
-      $this->error(xml_error_string(xml_get_error_code($this->xml_parser)));
-    }
-    xml_parser_free($this->xml_parser);
-
-    if (!$this->errors) {    	
-    	$langs = implode(",",$this->langs);
-    	$langs = str_replace('\'', '"', $langs);
+    if (!$this->errors) {
       $xyz =
 '/*this is a generated code. do not edit! produced '.date("C").' */
 
-require_once (LIBS."swift".DS."swift_required.php");
+require_once("classes/email.swift.xml.compiler.php");
 
-class '.$className.' {
+class '.$className.' extends EmailSwiftXMLCompiler {
   public $object_id;
   public $engine;
-  public $langs = array('.$langs.');
-  protected $deflang = "'.$this->deflang.'";
+  public $langs = array('.$this->getEmailLangs($xml).');
+  public $deflang = "'.$this->deflang.'";
   
   function '.$className.'(){}
   
-  function write(&$message,&$data,$lang="'.$this->deflang.'",$testEmail=""){
-    if(!is_object($message)){
-      $message = Swift_Message::newInstance();
-    }
-    if(!in_array($lang,$this->langs)){
-      $lang = $this->deflang;
-    }
-    $this->build($message,$data,$lang);
+  public function write(&$message,&$data,$lang="'.$this->deflang.'",$testEmail=""){
+    $this->build($message,$data,$lang,$testEmail="");
   }
-  
-  '.$this->build.'
 }';
 //    echo ($xyz);
     return $xyz;
