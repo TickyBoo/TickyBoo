@@ -189,13 +189,12 @@ class Event Extends Model {
     if(!$dry_run && !ShopDB::begin('Publish Event')){
       return false;
     }
-    trace(print_r($this));
     if($this->event_pm_id and ($this->event_rep=='sub' or $this->event_rep=='main,sub')){
       if (!PlaceMap::publish($this->event_pm_id, $this->event_id, $stats, $pmps, $dry_run)) {
         return false;
       }
       $es_total = 0;
-      print_r($stats);
+
       if($stats){
         foreach($stats as $category_ident =>$cs_total){
           $es_total += $cs_total;

@@ -404,6 +404,6 @@ die();
   	}
 
   orphanCheck();
-  trace("End of checkout \n\n\r");
+  trace("End of checkout \n");
 //session_write_close();
 ?>

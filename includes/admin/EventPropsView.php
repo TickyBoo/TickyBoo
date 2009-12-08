@@ -457,7 +457,7 @@ select SQL_CALC_FOUND_ROWS *
 		global $_SHOP;
 
 		if ( empty($data['event_name']) ) {
-			$err['event_name'] = mandatory;
+			$err['event_name'] = con('mandatory');
 		}
 		$this->Set_Time('event_time',$data,$err);
 		$this->Set_Time('event_open',$data,$err);
@@ -727,8 +727,8 @@ select SQL_CALC_FOUND_ROWS *
           } else {
             $this->state_confirm_button($state);
           }
-//        } else {
-//          $this->delayedLocation('view_event.php');
+        } else {
+          $this->delayedLocation('view_event.php');
         }
 	      return true;
 

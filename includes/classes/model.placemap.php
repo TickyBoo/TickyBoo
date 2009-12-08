@@ -103,7 +103,7 @@ class PlaceMap Extends Model {
 //      } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
 //         return self::_abort('cant_publish_event_cat_not_connect');
       }
-      if (!PlaceMapCategory::create_stat($cat->category_id, $stats[$cat->category_ident]))
+      if (!$dry_run && !PlaceMapCategory::create_stat($cat->category_id, $stats[$cat->category_ident]))
         return self::_abort('pm.publish5');
     }
 

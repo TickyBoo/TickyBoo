@@ -309,8 +309,8 @@ class PlaceMapCategory Extends Model {
     return $color;
   }
 
-  static function create_stat($cs_category_id,$cs_total,$cs_free=-1) {
-    if ($cs_free==-1) $es_free = $cs_total;
+  static function create_stat($cs_category_id, $cs_total, $cs_free=-1) {
+    if ($cs_free==-1) $cs_free = $cs_total;
      $query="insert into Category_stat set
               cs_category_id="._esc($cs_category_id).",
               cs_free="       ._esc($cs_free).",

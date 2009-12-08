@@ -478,7 +478,7 @@ function orphanCheck(){
     $_SHOP->trace_on=false;
     $data = Orphans::getlist($keys, false);
     $keys =array_merge(array('_table            ','_id     ' ),$keys);
-    $text = implode('|',$keys)."\n";
+    $text = "\n".implode('|',$keys)."\n";
     foreach($data as $row) {
       $send = array();
       foreach($keys as $key) {
@@ -488,7 +488,8 @@ function orphanCheck(){
 
     }
     $_SHOP->trace_on=true;
-    trace("\n\nOrphan Check Dump: \n".$text);
+    if ($data) { $text = "none";}
+    trace("\n\nOrphan Check Dump: ".$text);
   }
 }
 

@@ -46,7 +46,7 @@ class ShopDB {
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
 
-        trace("Database Init\n=============================================\n", true);
+        trace("Database Init\n=============================================", true);
 
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
@@ -238,7 +238,7 @@ class ShopDB {
   			}
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-        trace($query);
+        trace('=> '.$query);
         $query = ShopDB::replacePrefix($query);
         $res = ShopDB::$link->query($query);
         if (!$res) {
@@ -251,7 +251,7 @@ class ShopDB {
               $errString = "$err".basename($traceArr[1]['file']).' '.
                            $traceArr[1]['class'].$traceArr[1]['type'].$traceArr[1]['function'].' ('.$traceArr[1]['line'].')';
               self::dblogging($errString);
-              trace($errString);
+              trace('Error:'.$errString);
 
               $err = "";
             }
