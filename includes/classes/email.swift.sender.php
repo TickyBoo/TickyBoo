@@ -38,7 +38,7 @@ require_once (LIBS.'swift'.DS.'swift_required.php');
 
 class EmailSwiftSender {
   
-  public function send(&$swiftMessage,$testEmail=''){
+  public function send(&$swiftMessage,$testEmail='',&$logger , &$failed){
     global $_SHOP;
     
     //Add SMTP Mailer if defined.
@@ -71,6 +71,10 @@ class EmailSwiftSender {
     
     //Or to use the Echo Logger
     $logger = new Swift_Plugins_Loggers_EchoLogger();
+    $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+    
+    //Or to use the Normal Logger
+    $logger = new Swift_Plugins_Loggers_ArrayLogger();
     $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
     
     $ret = $mailer->send($swiftMessage,$failed);

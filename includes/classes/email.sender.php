@@ -33,37 +33,48 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
+require_once ('classes/model.emaillog.php');
 
 class EmailSender {
   
-  public function send(&$template,&$data,$testMail='',$lang=''){
-    
+  public function send(&$template,&$data,$testMail='',$lang=''){    
     //Get $template Type
     if(!is_object($template)){
       return false;
     }
     $type = is($template->template_type,'swift');
-    //if($type=='swift'){
-      require_once('classes/email.swift.sender.php');
-      $template->write($message,$data,$lang);
-      try{
-        if(EmailSwiftSender::send($message)){
-          return true;
-        }
-        return false;
-      }catch(Exception $e){
-        return false;
-      }
-    /*
-    }else{//either system or old mailer
-      require_once('classes/htmlMimeMail.php');
-      $email= new htmlMimeMail();
-      $template->build($email,$data,$lang);
-      if($email->send($template->to)){
+    
+    require_once('classes/email.swift.sender.php');
+    $template->write($message,$data,$lang);
+    
+    $log = new EmailLog();
+    $log->el_order_id = is($data['order_id']);
+    $log->el_user_id = is($data['user_id']);
+    $log->el_action = is($data['action'],'unknown'); //need to add action to the data.
+    $log->el_email_uid = is($message->getId());
+    $log->el_email_to = serialize(is($message->getTo()));
+    $log->el_email_cc = serialize(is($message->getCc()));
+    $log->el_email_message = is($message->toString());
+    $log->el_bad_emails = '';
+    try{
+      if(EmailSwiftSender::send($message,"",$logger,$failedAddr)){
+        $log->el_failed = 'no';
+        $log->el_log = empt($logger->dump(),'');
+        $log->el_bad_emails = serialize(empt($failedAddr,''));
+        $log->save();
         return true;
-      } 
+      }
+      $log->el_failed = 'yes';
+      $log->el_log = empt($logger->dump(),'');
+      $log->el_bad_emails = serialize(empt($failedAddr,''));
+      $log->save();
       return false;
-    }*/
+    }catch(Exception $e){
+      $log->el_log = empt($logger->dump(),'');
+      $log->el_failed = 'yes';
+      $log->save();
+      return false;
+    }
   }
 }
 ?>

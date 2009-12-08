@@ -95,8 +95,9 @@ class User extends Model{
 
   function register ($status, $data, &$err, $mandatory=0, $secure=0, $short=0){
     $user = new User();
-    //ANNOYING PARENT CHECKS!! :-P
+    $this->errors = &$err;
     $data['user_status']=$status;
+    
     if ($user->CheckValues($data, $status, $mandatory, $secure, $short)){
       if ($status == 2) {
         $query="SELECT count(*) as count
@@ -110,38 +111,47 @@ class User extends Model{
       if (ShopDB::begin('register user')) {
         $user->_fill($data);
         $user->user_status = $status;
-        if ($user->save()) {
-          if (in_array($status, array(2))) {
-            If ($short and empty($data['password1'])) {
-              $data['password1'] = substr( base_convert($active,15,36),0,8);
-            }
-            $active = md5(uniqid(rand(), true));
+        
+        //Try to save user
+        if (!$user->save()) {
+          return self::_abort('cant save user');
+        }
+        //Send activation code?
+        if (in_array($status, array(2))) {
+          if ($short and empty($data['password1'])) {
+            $data['password1'] = substr( base_convert($active,15,36),0,8);
+          }
+          
+          $active = md5(uniqid(rand(), true));
+          $query="insert into auth (username, password, user_id, active) VALUES (".
+                  _esc($data['user_email']).",".
+                  _esc(md5($data['password1'])).",".
+                  _esc($user->user_id).",".
+                  _esc($active).")";
 
-            $query="insert into auth (username, password, user_id, active) VALUES (".
-                    _esc($data['user_email']).",".
-                    _esc(md5($data['password1'])).",".
-                    _esc($user->user_id).",".
-                    _esc($active).")";
-
-            if(!ShopDB::query($query)){
-              $err = con('cant_save_auth');
-            	return self::_abort('cant store auth');
-            }
-            $data['user_id'] = $user->user_id;
-
-            if (!User::sendActivationCode($data, $active, $myerror)) {
-               $err = $myerror;
-               return self::_abort('cant send activation code');
-            }
+          if(!ShopDB::query($query)){
+            $err = con('cant_save_auth');
+            return self::_abort('cant store auth');
+          }
+          $data['user_id'] = $user->user_id;
+          
+          if (!User::sendActivationCode($data, $active, $myerror)) {
+            $err = $myerror;
+            return self::_abort('cant send activation code');
           }
         }
-        return $user_id;
+        
+        //Try to commit changes or fail;
+        if(!ShopDB::Commit('Registered user')){
+          return self::_abort('cant commit user');
+        }
+        //AND FINALY return the id
+        return $user->user_id; //eer silly <<<
       }
-      unset($user);
-      return ShopDB::Commit('Registered user');
     }
     $err = $user->errors();
     unset($user);
+    return false;
   }
 
 	function update (&$data, &$err, $mandatory=0, $short=0){

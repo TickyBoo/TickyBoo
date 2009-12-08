@@ -59,25 +59,25 @@ class Handling Extends Model {
 	}
 
 	function load ($handling_id){
-    	global $_SHOP;
+  	global $_SHOP;
 
-    	if(isset($_SHOP->_handling_cache[$handling_id])){
-      		return $_SHOP->_handling_cache[$handling_id];
-    	}
-
-  	  $query="SELECT *
-              FROM `Handling`
-              WHERE handling_id=".ShopDB::quote($handling_id);
-    	if($res=ShopDB::query_one_row($query)){
-      		$hand=new Handling;
-      		$hand->_fill($res);
-      		$hand->templates=Handling::_unser_templates($res['handling_email_template']);
-    			$hand->_unser_extra();
-      		$_SHOP->_handling_cache[$handling_id]=&$hand;
-      		return $hand;
-    	}
-    	return null;
+  	if(isset($_SHOP->_handling_cache[$handling_id])){
+    		return $_SHOP->_handling_cache[$handling_id];
   	}
+
+	  $query="SELECT *
+            FROM `Handling`
+            WHERE handling_id=".ShopDB::quote($handling_id);
+  	if($res=ShopDB::query_one_row($query)){
+    		$hand=new Handling;
+    		$hand->_fill($res);
+    		$hand->templates=Handling::_unser_templates($res['handling_email_template']);
+  			$hand->_unser_extra();
+    		$_SHOP->_handling_cache[$handling_id]=&$hand;
+    		return $hand;
+  	}
+  	return null;
+	}
 
   function loadAll ($handling_sale_mode=''){
     global $_SHOP;

@@ -73,6 +73,7 @@ class EmailSwiftCompiler {
       $swiftInstance = Swift_Message::newInstance();
     }
     $swift = &$swiftInstance;
+    
     $swift->setFrom($this->emailFrom);
     $swift->setTo($this->emailTo);
     $swift->setCc($this->emailCC);

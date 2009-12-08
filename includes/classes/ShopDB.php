@@ -148,34 +148,35 @@ class ShopDB {
 
     static function commit ($name='', $retaining = false)
     {
-        global $_SHOP;
+      global $_SHOP;
         if (($retaining && self::isTxn()) || self::$db_trx_started==1) {
-            unset($_SHOP->db_errno);
-            unset($_SHOP->db_error);
-            if (ShopDB::$link->commit()) {
-              if (!$retaining){
-                ShopDB::$link->autocommit(true);
-                self::$db_trx_started = 0;
-                self::dblogging("[Commit {$name}]");
-              } else
-                self::dblogging("[Commitremaining {$name}]");
-              return true;
+          unset($_SHOP->db_errno);
+          unset($_SHOP->db_error);
+          if (ShopDB::$link->commit()) {
+            if (!$retaining){
+              ShopDB::$link->autocommit(true);
+              self::$db_trx_started = 0;
+              self::dblogging("[Commit {$name}]");
             } else {
-              user_error($_SHOP->db_error= ShopDB::$link->error);
-              self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
-//                trace("[Commit {$name}] Error: $_SHOP->db_error");
-              self::Rollback($name);
-              return false;
+              self::dblogging("[Commitremaining {$name}]");
+              return true;
             }
+          } else {
+            user_error($_SHOP->db_error= ShopDB::$link->error);
+            self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
+            trace("[Commit {$name}] Error: $_SHOP->db_error");
+            self::Rollback($name);
+            return false;
+          }
         } elseif (self::$db_trx_started > 1) {
-            self::dblogging("[Commit {$name}] ".self::$db_trx_started);
-//            trace("[Commit {$name}] ".self::$db_trx_started);
-            self::$db_trx_started--;
-            return true;
+          self::dblogging("[Commit {$name}] ".self::$db_trx_started);
+          trace("[Commit {$name}] ".self::$db_trx_started);
+          self::$db_trx_started--;
+          return true;
         } else {
-            self::dblogging("[Commit {$name}] - no transaction");
-             return false;
-//            trace("[Commit {$name}] - no transaction");
+          self::dblogging("[Commit {$name}] - no transaction");
+          return false;
+          trace("[Commit {$name}] - no transaction");
         }
     }
     static function rollback ($name='')

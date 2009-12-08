@@ -232,6 +232,26 @@ $tbls['Event_stat']['key'] = array(
 $tbls['Event_stat']['remove'] = array ('es_organizer_id');
 $tbls['Event_stat']['engine'] = 'InnoDB';
 
+$tbls['email_log']['fields'] = array(
+  'el_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'el_order_id' => " int(11) DEFAULT NULL",
+  'el_user_id' => " int(11) NOT NULL DEFAULT '0'",
+  'el_failed' => " enum('no','yes') DEFAULT 'no'",
+  'el_received' => " enum('no','yes') DEFAULT 'yes'",
+  'el_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
+  'el_action' => " varchar(50) NOT NULL",
+  'el_email_uid' => " varchar(255) DEFAULT NULL",
+  'el_email_to' => " text",
+  'el_email_cc' => " text",
+  'el_email_message' => " text",
+  'el_log' => " text",
+  'el_bad_emails' => " text");
+$tbls['email_log']['key'] = array(
+  "PRIMARY KEY (`el_id`)",
+  "KEY `el_order_id` (`el_order_id`)",
+  "KEY `el_user_id` (`el_user_id`)");
+$tbls['email_log']['engine'] = 'InnoDB';
+
 //$tbls['Event_stat']['engine'] = 'InnoDB';
 // $tbls['Event_stat']['AUTO_INCREMENT'] = 3;
 $tbls['Handling']['fields'] = array(
