@@ -566,7 +566,43 @@ function md5pass($user,$pass) {
   return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
 }
 
+//added in not sure why it was removed?
+//Still has code reliant on it in gui_smarty.php
+//TODO: remove if not needed
+function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
+  Global $_SHOP;
 
+  $mod  = (!empty($mod)) ?$mod:$_REQUEST['mod'];
+  $ctrl = (!empty($ctrl))?$ctrl:$_REQUEST['ctlr'];
+
+  $mod  = (!empty($mod)) ?$mod:'shop';
+  $ctrl = (!empty($ctrl))?$ctrl:'main';
+
+  If ($_SHOP->UseRewriteURL) {
+    $result = $_SHOP->user_root.$mod;
+    if ($ctrl) {
+      $result .= '/'.$ctrl;
+      if ($action) {
+        $result .= '/'.$action;
+      }
+    }
+    IF ($params) {
+      $result .= '?'.$params;
+    }
+  } else {
+    $result = $_SHOP->user_root.'?mod='.$mod;
+    if ($ctrl) {
+      $result .= '&ctrl='.$ctrl;
+      if ($action) {
+        $result .= '&action='.$action;
+      }
+    }
+    IF ($params) {
+      $result .= '&'.$params;
+    }
+  }
+  return $result;
+}
 
 /**
  * This function creates a md5 password code to allow login true WWW-Authenticate
@@ -636,7 +672,13 @@ function printMsg($key, $err = null) {
   }
   if (isset($err[$key])) {
     foreach($err[$key] as $value){
-      $output .= $value. "</br>\n";
+      if(is_array($value)){
+        foreach($value as $val){
+          $output .= $val. "</br>\n";
+        }
+      }else{
+        $output .= $value. "</br>\n"; 
+      }
     }
     If ($output) {
       switch ($key) {

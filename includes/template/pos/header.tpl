@@ -40,9 +40,15 @@
 
 		<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
-
-
-
+    
+		<script type="text/javascript">
+			var lang = new Object();
+			lang.required = '{!mandatory!}';        lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
+			lang.fax_long = '{!fax_long!}';         lang.fax_short = '{!fax_short!}';
+			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
+			lang.not_number = '{!not_number!}';
+		</script>
+    
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 
@@ -59,6 +65,7 @@
     <script type="text/javascript" src="scripts/pos.jquery.order.functions.js"></script>
     <script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.order.user.js"></script>
+    <script type="text/javascript" src="scripts/pos.jq.forms.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.current.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.current.functions.js"></script>
     {literal}

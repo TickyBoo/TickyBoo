@@ -96,8 +96,8 @@ class User_Smarty {
 
  /* User data gets subbmitted to here */
   function register ($params, &$smarty){
-    if(!$this->register_f($params['ismember'], $params['data'], $err, $params['mandatory'], $params['secure'],$params['short'] )){
-      $smarty->assign('user_errors',$err);
+    if(!$this->register_f($params['ismember'], $params['data'], $err, $params['mandatory'], $params['secure'],$params['short'] ) || hasErrors()){
+      $smarty->assign('user_errors',true);
     }
   }
 

@@ -29,13 +29,13 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
- 
+ <!-- user_register.tpl -->
 {if $ManualRegister}
   {include file="header.tpl" name=!becomemember! header=!memberinfo!}
   <form action='index.php' method='post'  id="user-register">
 {else}
   {include file="header.tpl" name=!pers_info! header=!user_notice!}
-  <form action='checkout.php' method='post' >
+  <form action='checkout.php' method='post' id="user-register" >
 {/if}
   {if $user_errors}
      <br/>
@@ -69,7 +69,7 @@
       {elseif $user->mode() eq '2'}
         <tr>
           <td colspan='2' class='TblLower'>
-            <input type='checkbox' name='ismember' id='type' onclick='ShowPasswords(this.checked);' value='true' {if $smarty.post.ismember} checked {/if} /> {!becomemember!}
+            <input id="ismember-checkbox" type='checkbox' name='ismember' id='type' value='true' {if $smarty.post.ismember} checked {/if} /> {!becomemember!}
           </td>
         </tr>
       {/if}
@@ -104,17 +104,11 @@
       </tr>
       <tr>
         <td colspan='2' class='TblHigher'>
-          <input type='checkbox' class='checkbox' name='check_condition' value='check'> *
-          <a  href='agb.php' target='cond'>{eval var=!agrement!}</a>
+          <a  href='agb.php' target='cond' style="float:left; display:block;">{eval var=!agrement!}</a><span style="float:left;">&nbsp;*</span>  
+          <input type='checkbox' class='checkbox' name='check_condition' value='check'>
           <div class='error'>{$user_errors.check_condition}{printMsg key='check_condition'}</div>
         </td>
       </tr>
-{*      <tr>
-        <td>
-          <input type='checkbox' class='checkbox' name='check_use' value='check' />
-          <span> {eval var=!mayuse!}</span> <div class='error'>{$user_errors.check_use}</div>
-        </td>
-      </tr> *}
 
       <tr>
         <td colspan='2' align='right'><input type='submit' name='submit_info' value='{!continue!}'></td>
@@ -122,76 +116,17 @@
     </table>
 
   </form>
-{*  </td><td valign='top' align='right'>
-  <form action='checkout.php#member' method='post' >
-    {ShowFormToken name='UserLogin'}
-    <a name="member"></a>
-    <table  cellpadding='2' bgcolor='white' width='95%' id='member'>
-      <tr>
-        <td colspan='2' class='TblHeader'> {!member!}
-       </td>
-      </tr>
-      <tr>
-        <td colspan="2" class='TblHigher'>{!member_info!}
-       {if $login_error}
-         <div class='error'> {$login_error.msg}{$login_error.info} </div>
-       {/if}
-        </td>
-      </tr>
-      <tr>
-        <td width="120" class='TblLower' width='30%'> {!email!} </td>
-        <td class='TblHigher'><input type='text' name='username' size='30'></td>
-      </tr>
-      <tr>
-        <td class='TblLower'> {!password!} </td>
-        <td class='TblHigher'><input type='password' name='password' size='30'></td>
-      </tr>
-      <tr>
-        <td colspan="2" class='TblHigher'><a href='forgot_password.php' onclick='BasicPopup(this);' target='getpassword'>{!forgot_password!}</a></td>
-      </tr>
-      <tr>
-        <td  colspan="2" align='right'>
-          <input type='hidden' name='action' value='login'>
-          <input type='submit' name='submit_login' value='{!continue!}'>
-        </td>
-      </tr>
-    </table>
-  </form>
-  </td></tr></table> *}
-<br> {*
-<hr>
-{!user_notice!}*}<br><br>
-{literal}
+<br />
+<br />
+<br />
 <script  type="text/javascript">
-  function getElement(id){
-       if(document.all) {return document.all(id);}
-       if(document.getElementById) {return document.getElementById(id);}
-			}
-  function ShowPasswords(a){
-
-       if(tr1=getElement('passwords_tr1')){
-         if (a) {
-           tr1.style.display='';
-         } else {
-           tr1.style.display='none';
-         }
-       }
-       if(tr2=getElement('passwords_tr2')){
-         if (a) {
-           tr2.style.display='';
-         } else {
-           tr2.style.display='none';
-         }
-       }
-  }
-  {/literal}
 
   {if $user->mode() <= '1' or $ManualRegister}
-       ShowPasswords(true);
+    showPasswords(true);
   {elseif $user->mode() eq '2'}
-    ShowPasswords(getElement('type').checked);
+    showPasswords($('#ismember-checkbox').is(':checked'));
   {else}
-    ShowPasswords(false);
+    showPasswords(false);
   {/if}
 
 </script>

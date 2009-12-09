@@ -119,45 +119,56 @@ var loadOrder = function(){
       clearOrder();
     });
    
-   $("#order-form").submit(function(){
-     $("#error-message").hide();
-      $(this).ajaxSubmit({
-         data:{ajax:"yes",action:"addtocart"},
-         success: function(html){
+  $("#order-form").submit(function(){
+    $("#error-message").hide();
+    $(this).ajaxSubmit({
+      data:{ajax:"yes",action:"addtocart"},
+      success: function(html){
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
           setTimeout(function(){$("#error-message").hide();}, 4000);
         } else {
-              refreshOrder(); //Refresh Cart
-              refreshCategories(); //Update ticket info (Free tickets etc)
+          refreshOrder(); //Refresh Cart
+          refreshCategories(); //Update ticket info (Free tickets etc)
         }
-         }
-      });
-      return false;
+      }
+    });
+    return false;
    });
    
    /**
    	* Sends the order information the POS Confirm action in controller/checkout.php.
    	*/
-   $("#checkout").click(function(){
-      var userdata = {ajax:"yes",pos:"yes",action:"posConfirm"};
-    	userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
-      if($("input:checkbox[name='no_fee']").is(":checked")){
-        userdata['no_fee'] = 1;	
-      }else{
-        userdata['no_fee'] = 0;
+  $("#checkout").click(function(){
+    var userdata = {ajax:"yes",pos:"yes",action:"posConfirm"};
+    userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
+    
+    //If user is being passed check its valid
+    if(!$('#user_info_none').is(':checked')){
+      if(!$('#pos-user-form').valid()){
+        $("#error-text").html("Please fill missing fields!");
+        $("#error-message").show();
+        setTimeout(function(){$("#error-message").hide();}, 40000);
+        return;
       }
-      $("#user_data :input").each(function() {
-         userdata[$(this).attr("name")] = $(this).val();
-      });
-     $("#error-message").hide();
-     ajaxQManager.add({
-        type:      "POST",
-        url:      "checkout.php?x=order",
-        dataType:   "HTML",
-        data:      userdata,
-        success:function(html, status){
+    }
+    
+    if($("input:checkbox[name='no_fee']").is(":checked")){
+      userdata['no_fee'] = 1;	
+    }else{
+      userdata['no_fee'] = 0;
+    }
+    $("#user_data :input").each(function() {
+      userdata[$(this).attr("name")] = $(this).val();
+    });
+    $("#error-message").hide();
+    ajaxQManager.add({
+      type:      "POST",
+      url:      "checkout.php?x=order",
+      dataType:   "HTML",
+      data:      userdata,
+      success:function(html, status){
         if(html.substring(0,2) == '~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
@@ -167,9 +178,9 @@ var loadOrder = function(){
           $("#order_action").dialog('open');
           bindCheckoutSubmitForm();
         }
-        }
-      });
-      return false;
+      }
+    });
+    return false;
    });
 
    $("#cancel").click(function(){

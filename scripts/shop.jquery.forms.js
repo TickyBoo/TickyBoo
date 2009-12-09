@@ -61,7 +61,7 @@ $(window).load(function(){
 		success: "form-valid",
 		errorPlacement: function(error, element) {
 	 		if (element.attr("name") == "check_condition")
-		   		error.insertAfter("#condition_link");
+		   		error.insertAfter(element);
 		 	else
 		   		error.insertAfter(element);
 		}
@@ -78,4 +78,27 @@ $(window).load(function(){
 		errorClass: "form-error"
 		
 	});
+  
+  $('#ismember-checkbox').click(function(){
+    if($(this).is(':checked')){
+      showPasswords(true);
+      $("input[name='password1']").rules("add",{ required : true });
+      $("input[name='password2']").rules("add",{ required : true });
+    }else{
+      showPasswords(false);
+      $("input[name='password1']").rules("remove", "required");
+      $("input[name='password2']").rules("remove", "required");
+    }
+  });
+  
 });
+
+var showPasswords = function(show){
+  if(show == true){
+    $('#passwords_tr1').show();
+    $('#passwords_tr2').show(); 
+  }else{
+    $('#passwords_tr1').hide();
+    $('#passwords_tr2').hide();
+  }
+}

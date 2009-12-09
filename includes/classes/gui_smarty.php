@@ -494,6 +494,7 @@ class Gui_smarty {
     $params['action'] = is($params['action'],$this->action);
    // If ($matches<=$stepsize ) {return "";}
 
+    //TODO: Should this be using a new pagnation method?
     $url     = $this->url( $params, $smarty, array('name',$name,'maxpages','count','length'));
 
     $breaker = ( strpos($url,'?')===false)?'?':'&';

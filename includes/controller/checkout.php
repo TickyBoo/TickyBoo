@@ -163,28 +163,38 @@ die();
     return "user_update";
   }
 
-  Function registerAction ($smarty){
+  /**
+   * registerAction()
+   * 
+   * @return String : SmartyPage
+   */
+  function registerAction ($smarty){
     global $user;
+    
+    //if registerasmemeber field is not set, the user doenst want to be a member
     $type = is($_POST['ismember'],false);
+    
+    //Try and Register
     $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
-    var_dump($user_id);
-    If (!$user_id ) {
+    
+    //If errors return to user registration.
+    if (!$user_id || hasErrors() ) {
       $smarty->assign('user_data',   $_POST);
       $smarty->assign('reg_type',    $type);
-      $smarty->assign('user_errors', $errors);
       return "user_register";
-    } else
+    } else {
       $smarty->assign('newuser_id', $user_id);
+    }
     return "checkout_preview";
   }
 
 
-  function indexaction($smarty) {
+  function indexAction($smarty) {
     unset( $_SESSION['_SHOP_order']);
     return "checkout_preview";
   }
 
-  function reserveaction($smarty,$origin='www',$user_id=null) {
+  function reserveAction($smarty,$origin='www',$user_id=null) {
     global $order, $cart;
     $myorder = $order->make_f(1, $origin, NULL, $user_id);
     if (!$myorder) {
@@ -211,11 +221,9 @@ die();
     } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
-      if (!$user_id ) {
+      if (!$user_id || hasErrors() ) {
         echo "~~";
-        foreach($errors as $key=> $err) {
-          echo con($key).': '.$err."<br />\n";
-        }
+        echo printMsg('__Errors__');
         return "";
       } else {
         $smarty->assign('newuser_id', $user_id);

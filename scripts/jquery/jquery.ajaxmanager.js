@@ -1,16 +1,33 @@
 /**
  * @author alexander.farkas
  * 
- * @version 2.1
+ * @version 2.5.3
+ * project site: http://plugins.jquery.com/project/AjaxManager
  */
 (function($){
-	
+	$.support.ajax = !!(window.XMLHttpRequest);
+	var needActiveXFix = false;
+	if(window.ActiveXObject){
+		try{
+			new ActiveXObject("Microsoft.XMLHTTP");
+			$.support.ajax = true;
+		} catch(e){
+			$.support.ajax = false;
+			if(window.XMLHttpRequest){
+				$.ajaxSetup({xhr: function(){
+					return new XMLHttpRequest();
+				}});
+				$.support.ajax = true;
+			}
+		}
+	}
 	$.manageAjax = (function(){
 		var cache 			= {},
 			queues			= {},
 			presets 		= {},
 			activeRequest 	= {},
 			allRequests 	= {},
+			triggerEndCache = {},
 			defaults 		= {
 						queue: true, //clear
 						maxRequests: 1,
@@ -20,7 +37,7 @@
 						complete: function(){},
 						error: function(ahr, status){
 							var opts = this;
-							if(status &&  status.indexOf('error') != -1){
+							if(status && status.indexOf('error') != -1){
 								setTimeout(function(){
 									var errStr = status +': ';
 									if(ahr.status){
@@ -42,15 +59,20 @@
 				{};
 			
 			$.extend(true, presets[name], $.ajaxSettings, defaults, settings);
+			
 			if(!allRequests[name]){
 				allRequests[name] 	= {};
 				activeRequest[name] = {};
 				activeRequest[name].queue = [];
 				queues[name] 		= [];
+				triggerEndCache[name] = [];
 			}
 			$.each($.manageAjax, function(fnName, fn){
 				if($.isFunction(fn) && fnName.indexOf('_') !== 0){
-					publicMethods[fnName] = function(param){
+					publicMethods[fnName] = function(param, param2){
+						if(param2 && typeof param === 'string'){
+							param = param2;
+						}
 						fn(name, param);
 					};
 				}
@@ -60,7 +82,7 @@
 		
 		function complete(opts, args){
 			
-			if(args[1] == 'success'){
+			if(args[1] == 'success' || args[1] == 'notmodified'){
 				opts.success.apply(opts, [args[0].successData, args[1]]);
 				if (opts.global) {
 					$.event.trigger("ajaxSuccess", args);
@@ -118,16 +140,18 @@
 				activeR = activeRequest[name],
 				queue	= queues[name];
 			
-			var id 			= opts.type +'_'+ opts.url.replace(/\./g, '_'),
-				oldComplete = opts.complete,
-				ajaxFn 		= function(){
-								activeR[id] = {
-									xhr: $.ajax(opts),
-									ajaxManagerOpts: opts
-								};
-								activeR.queue.push(id);
-								return id;
-							}
+			var id 				= opts.type +'_'+ opts.url.replace(/\./g, '_'),
+				triggerStart 	= true,
+				oldComplete 	= opts.complete,
+				ajaxFn 			= function(){
+									activeR.queue.push(id);
+									activeR[id] = {
+										xhr: false,
+										ajaxManagerOpts: opts
+									};
+									activeR[id].xhr = $.ajax(opts);
+									return id;
+								}
 				;
 				
 			if(opts.data){
@@ -141,6 +165,7 @@
 			allR[id] = true;
 			
 			opts.complete = function(xhr, s, e){
+				var triggerEnd = true;
 				if(opts.abortOld){
 					$.each(activeR.queue, function(i, activeID){
 						if(activeID == id){
@@ -158,13 +183,31 @@
 					} 
 					activeRequest[name][id] = null;
 				}
+				triggerEndCache[name].push({xhr: xhr, status: s});
 				xhr = null;
 				activeRequest[name].queue = $.grep(activeRequest[name].queue, function(qid){
 					return (qid !== id);
 				});
 				allR[id] = false;
+				
 				e = null;
+				
 				delete activeRequest[name][id];
+				
+				$.each(activeR, function(id, queueRunning){
+					if(id !== 'queue' || queueRunning.length){
+						triggerEnd = false;
+						return false;
+					}
+				});
+				
+				if(triggerEnd){
+					$.event.trigger(name +'End', [triggerEndCache[name]]);
+					$.each(triggerEndCache[name], function(i, cached){
+						cached.xhr = null; //memory leak
+					});
+					triggerEndCache[name] = [];
+				}
 			};
 			
 			if(cache[id]){
@@ -175,7 +218,7 @@
 				};
 			} else if(opts.cacheResponse){
 				 opts.complete = proxy(opts.complete, function(xhr, s){
-					if(s != 'success'){
+					if( s !== "success" && s !== "notmodified" ){
 						return false;
 					}
 					cache[id][0].responseXML 	= xhr.responseXML;
@@ -197,6 +240,16 @@
 			
 			ajaxFn.ajaxID = id;
 			
+			$.each(activeR, function(id, queueRunning){
+				if(id !== 'queue' || queueRunning.length){
+					triggerStart = false;
+					return false;
+				}
+			});
+			
+			if(triggerStart){
+				$.event.trigger(name +'Start');
+			}
 			if(opts.queue){
 				opts.complete = proxy(opts.complete, function(){
 					
@@ -214,6 +267,9 @@
 				}
 				return id;
 			}
+			
+			
+			
 			return ajaxFn();
 		}
 		
@@ -255,8 +311,10 @@
 				return false;
 			}
 			function abortID(qid){
-				if(qid !== 'queue' && ar[qid] && typeof ar[qid].xhr !== 'unedfiend' && typeof ar[qid].xhr.abort !== 'unedfiend'){
-					ar[qid].xhr.abort();
+				if(qid !== 'queue' && ar[qid] && ar[qid].xhr){
+					try {
+						ar[qid].xhr.abort();
+					} catch(e){}
 					complete(ar[qid].ajaxManagerOpts, [ar[qid].xhr, 'abort']);
 				}
 				return null;

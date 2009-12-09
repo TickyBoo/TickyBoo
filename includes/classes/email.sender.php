@@ -34,6 +34,8 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 
+//The autoloader doenst seem to try to find this one.
+require_once("classes/model.emaillog.php");
 class EmailSender {
   
   public function send(&$template,&$data,$testMail='',$lang=''){    

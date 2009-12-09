@@ -70,7 +70,7 @@
     <table width='100%'>
       <tr>
         <td valign='top'  width='50%'>
-            <form name="pos-user">
+            <form id="pos-user-form" name="pos-user">
                {include file='user.tpl'}
             </form>
          </td>
