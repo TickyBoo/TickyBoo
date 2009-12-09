@@ -79,7 +79,7 @@
         <td class='TblHigher'>
            <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />&nbsp;
            {!pwd_min!}
-           <div class='error'>{$user_errors.password}</div>
+           <div class='error'>{$user_errors.password}{printMsg key='password'}</div>
         </td>
       </tr>
       <tr id='passwords_tr2'>
@@ -93,7 +93,7 @@
             <tr>
               <td >
                 <input type='text' name='user_nospam' size='10' maxlength="10" value='' >
-				<sup> &nbsp;{!nospam_info!} </sup><span class='error'>{$user_errors.user_nospam}</span>
+				<sup> &nbsp;{!nospam_info!} </sup><span class='error'>{$user_errors.user_nospam}{printMsg key='user_nospam'}</span>
               </td>
               <td align='center'>
                 <img src="nospam.php?name=user_nospam" alt='' border=1>
@@ -106,7 +106,7 @@
         <td colspan='2' class='TblHigher'>
           <input type='checkbox' class='checkbox' name='check_condition' value='check'> *
           <a  href='agb.php' target='cond'>{eval var=!agrement!}</a>
-          <div class='error'>{$user_errors.check_condition}</div>
+          <div class='error'>{$user_errors.check_condition}{printMsg key='check_condition'}</div>
         </td>
       </tr>
 {*      <tr>

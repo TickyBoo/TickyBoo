@@ -37,7 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class User extends Model{
   protected $_idName    = 'user_id';
   protected $_tableName = 'User';
-  protected $_columns   = array('#user_id', '*user_lastname', '*user_firstname', 'user_address', 'user_address1',
+  protected $_columns   = array('#user_id', '*user_lastname', '*user_firstname', '*user_address', 'user_address1',
                                 '*user_zip', '*user_city', 'user_state', '*user_country', 'user_phone', 'user_fax' ,
                                 '*user_email', '*user_status', 'user_prefs', 'user_custom1', 'user_custom2',
                                 'user_custom3', 'user_custom4', 'user_owner_id', 'user_lastlogin', 'user_order_total',
@@ -95,16 +95,17 @@ class User extends Model{
 
   function register ($status, $data, &$err, $mandatory=0, $secure=0, $short=0){
     $user = new User();
-    $this->errors = &$err;
     $data['user_status']=$status;
     
     if ($user->CheckValues($data, $status, $mandatory, $secure, $short)){
+      //Why should guests be allowed to use an exsisting email address?
       if ($status == 2) {
         $query="SELECT count(*) as count
                 from auth
                 where username="._esc($data['user_email']);
         if($row = ShopDB::query_one_row($query) and $row['count']>0){
           $err['user_email']=con('useralreadyexist');
+          addError('user_email','useralreadyexist');
           return FALSE;
         }
       }
@@ -149,7 +150,6 @@ class User extends Model{
         return $user->user_id; //eer silly <<<
       }
     }
-    $err = $user->errors();
     unset($user);
     return false;
   }
@@ -308,31 +308,39 @@ class User extends Model{
     if(!empty($data['user_email'])){
       if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $data['user_email'])){
         $err['user_email']=con('not_valid_email');
+        addError('user_email','not_valid_email');
       }
     }
 
     User::check_NoSpam($secure, $data);
     
     if (!$short and $status==2) {
-
+      
       if(empty($data['password1'])) {
         if (empty($data['user_id'])){
-          $this->_errors['password'] = con('mandatory');
+          $err['password'] = con('mandatory');
+          addError('password','mandatory');
         }
       } elseif (empty($data['password2'])) {
-        $this->_errors['password'] = con('pwd_second_missing');
+        $err['password'] = con('pwd_second_missing');
+        addError('password','pwd_second_missing');
       } elseif (empty($data['password2'])) {
-        $this->_errors['password'] = con('pwd_second_missing');
+        $err['password'] = con('pwd_second_missing');
+        addError('password','pwd_second_missing');
       } elseif (strlen($data['password1'])<=4) {
-        $this->_errors['password'] = con('pwd_to_short') ;
+        $err['password'] = con('pwd_to_short');
+        addError('password','pwd_to_short');
       } elseif ($data['password1']!=$data['password2']) {
-        $this->_errors['password'] = con('pwd_not_thesame');
+        $err['password'] = con('pwd_not_thesame');
+        addError('password','pwd_not_thesame');
       }
       if (!empty($data['user_id']) and empty($data['old_password'])){
-        $this->_errors['old_password']=con('mandatory');
+        $err['old_password']=con('mandatory');
+        addError('old_password','mandatory');
       }
     }
-    return (count($this->_errors)==0);
+    
+    return !hasErrors();
   }
 
   function cleanup($user_id = 0, $delete=false, $inclTrash=true){

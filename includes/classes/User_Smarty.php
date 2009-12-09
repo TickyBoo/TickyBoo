@@ -108,9 +108,8 @@ class User_Smarty {
     } else {
       $type = 4;
     }
-
+    
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
-      var_dump($res);
       $_SESSION['_NEW_MEMBER']= $ismember;
       $this->load_f($res);
       $this->new_member = $ismember;

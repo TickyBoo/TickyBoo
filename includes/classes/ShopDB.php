@@ -129,19 +129,16 @@ class ShopDB {
             if (ShopDB::$link->autocommit(false)) {
                 self::$db_trx_started = 1;
                 self::dblogging("[Begin {$name}]");
-                trace("[Begin {$name}]");
                 return true;
             } else {
                 $_SHOP->db_error= mysqli_error(ShopDB::$link);
                 self::dblogging("[Begin {$name}]Error: $_SHOP->db_error");
-                trace("[Begin {$name}]Error: $_SHOP->db_error");
                 user_error($_SHOP->db_error);
                 return false;
             }
         } else {
             self::$db_trx_started++;
             self::dblogging("[Begin {$name}] ".self::$db_trx_started);
-            trace("[Begin {$name}] ".self::$db_trx_started);
             return true;
         }
     }
@@ -159,24 +156,21 @@ class ShopDB {
               self::dblogging("[Commit {$name}]");
             } else {
               self::dblogging("[Commitremaining {$name}]");
-              return true;
             }
+            return true;
           } else {
             user_error($_SHOP->db_error= ShopDB::$link->error);
             self::dblogging("[Commit {$name}]Error: $_SHOP->db_error");
-            trace("[Commit {$name}] Error: $_SHOP->db_error");
             self::Rollback($name);
             return false;
           }
         } elseif (self::$db_trx_started > 1) {
           self::dblogging("[Commit {$name}] ".self::$db_trx_started);
-          trace("[Commit {$name}] ".self::$db_trx_started);
           self::$db_trx_started--;
           return true;
         } else {
           self::dblogging("[Commit {$name}] - no transaction");
           return false;
-          trace("[Commit {$name}] - no transaction");
         }
     }
     static function rollback ($name='')
@@ -252,14 +246,11 @@ class ShopDB {
               $errString = "$err".basename($traceArr[1]['file']).' '.
                            $traceArr[1]['class'].$traceArr[1]['type'].$traceArr[1]['function'].' ('.$traceArr[1]['line'].')';
               self::dblogging($errString);
-              trace('Error:'.$errString);
 
               $err = "";
             }
             self::dblogging("$err".$_SHOP->db_error);
-            trace("$err".$_SHOP->db_error);
             self::dblogging($query);
-            trace($query);
             if ($_SHOP->db_errno == DB_DEADLOCK) {
                 self::$db_trx_started = 0;
             }
@@ -563,6 +554,7 @@ class ShopDB {
 
     static function dblogging($debug) {
         global $_SHOP;
+        trace($debug);
         $handle=@fopen(INC."temp".DS."shopdb.log","a");
         @fwrite($handle, date('c',time()).' '. $debug."\n");
         @fclose($handle);

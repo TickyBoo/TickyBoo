@@ -647,7 +647,7 @@ function printMsg($key, $err = null) {
           $output = "<h4 class='success'>".$output. "</h4>";
           break;
         default:
-          $output = "<span class='err'>".$output. "</span>";
+          $output = "<span class='err error'>".$output. "</span>";
       }
     }
   }

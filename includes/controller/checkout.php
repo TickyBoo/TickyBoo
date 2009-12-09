@@ -167,6 +167,7 @@ die();
     global $user;
     $type = is($_POST['ismember'],false);
     $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
+    var_dump($user_id);
     If (!$user_id ) {
       $smarty->assign('user_data',   $_POST);
       $smarty->assign('reg_type',    $type);

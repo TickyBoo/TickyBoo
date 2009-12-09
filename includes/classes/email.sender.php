@@ -33,7 +33,6 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once ('classes/model.emaillog.php');
 
 class EmailSender {
   
