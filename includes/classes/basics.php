@@ -525,13 +525,14 @@ function get_loc($lang){
 }
 
 function strip_tags_in_big_string($textstring){
-    while (strlen($textstring) != 0)
-        {
-        $temptext = strip_tags(substr($textstring,0,1024));
-        $safetext .= $temptext;
-        $textstring = substr_replace($textstring,'',0,1024);
-        }
-    return $safetext;
+  $safetext = '';
+  while (strlen($textstring) != 0)
+      {
+      $temptext = strip_tags(substr($textstring,0,1024));
+      $safetext .= $temptext;
+      $textstring = substr_replace($textstring,'',0,1024);
+      }
+  return $safetext;
 }
 
 function wp_entities($string, $encode = 1){

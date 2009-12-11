@@ -71,7 +71,7 @@ $text = '2346789ABCEFGHKNPRT';
    $randomnr .= $char;
    $angle = rand(-15,15);
    $y = rand(-15,5);
-   if (function_exists(imagettftext)) {
+   if (function_exists('imagettftext')) {
      imagettftext($im, 16, $angle, 7+($i*19), 34+$y, $grey, $font, $char);
      imagettftext($im, 16, $angle, 5+($i*19), 36+$y, $white, $font, $char);
    } else {
