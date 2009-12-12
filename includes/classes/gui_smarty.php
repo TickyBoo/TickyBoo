@@ -70,10 +70,11 @@ class Gui_smarty {
     return printMsg($params['key']);
   }
 
-  function url($params, $smarty, $skipnames)
-  {
+  function url($params, $smarty, $skipnames){
     GLOBAL $_SHOP;
-    If (isset($params['url'])) {
+    if (isset($params['surl'])) {
+      return $_SHOP->root_secured.$params['url'];
+    } elseif (isset($params['url'])) {
       return $_SHOP->root.$params['url'];
     } else {
       If (!is_array($skipnames)) {$skipnames= array();}
@@ -85,17 +86,18 @@ class Gui_smarty {
           $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
         }
       }
-   //   $urlparams = substr($urlparams,1);
+      return $_SERVER['PHP_SELF']. $urlparams;
      // print_r($urlparams);
-      return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
+
+   //   return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
     }
   }
 
-  function print_r ($params,&$smarty) {
+  function print_r($params,&$smarty) {
     return '<pre>'.print_r($params['var'],true).'</pre>';
   }
 
-  function fillarr ($params,&$smarty)
+  function fillArr($params,&$smarty)
   {
       if (!isset($params['var'])) {
           $compiler->_syntax_error("assign: missing 'var' parameter", E_USER_WARNING);
@@ -158,7 +160,7 @@ class Gui_smarty {
     return str_replace(array('"',"\n","\r"),array('\\"',"\\n",""), $s);
 	}
 
-   function setdata($params, &$smarty) //($name, $width = 0, $colspan = 2)
+   function setData($params, &$smarty) //($name, $width = 0, $colspan = 2)
   {
     If( isset($params['data'])) {
       $this->guidata = $params['data'];
@@ -173,7 +175,7 @@ class Gui_smarty {
       $this->gui_name_width = $params['namewidth'] ;
     }
   }
-  function StartForm ($params, &$smarty) //($name, $width = 0, $colspan = 2)
+  function StartForm($params, &$smarty) //($name, $width = 0, $colspan = 2)
   {
     $name     = is($params['name']);
     $title    = is($params['title']);
@@ -221,7 +223,7 @@ class Gui_smarty {
     return $return. "</table>\n";
   }
 
-  function SetShowLabel($params, &$smarty) {
+  function setShowLabel($params, &$smarty) {
     $this->_ShowLabel =is($params['set'],$this->_ShowLabel);
   }
 
@@ -237,7 +239,7 @@ class Gui_smarty {
 
   }
 
-  function view ($params, &$smarty) //$name, &$data, $prefix = ''*/)
+  function view($params, &$smarty) //$name, &$data, $prefix = ''*/)
   {
     $name = is($params['name']);
     $Option = is($params['option']);
@@ -283,14 +285,14 @@ class Gui_smarty {
     return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
   }
 
-  function inputtime ($params, &$smarty) //($name, &$data, &$err,  = '')
+  function inputTime ($params, &$smarty) //($name, &$data, &$err,  = '')
   {
     $name = is($params['name']    );
     $timeselect = new DateTimeSelect('t', $name, $this->guidata[$name],0);
     return $this->showlabel($name, $timeselect->selectbox);
   }
 
-  function inputdate ($params, &$smarty) //($name, &$data, &$err,  = '')
+  function inputDate ($params, &$smarty) //($name, &$data, &$err,  = '')
   {
     $name = is($params['name']    );
     $type = is($params['type'],'d' );
@@ -299,7 +301,7 @@ class Gui_smarty {
     return $this->showlabel($name, $timeselect->selectbox);
   }
 
-  function viewurl ($params, &$smarty) //($name, &$data,  = '')
+  function viewUrl ($params, &$smarty) //($name, &$data,  = '')
   {
     $name = is($params['name']    );
     return $this->showlabel($name, "<a href='{$this->guidata[$name]}' target='blank'>{$this->guidata[$name]}</a>",$params['nolabel']);
@@ -341,7 +343,7 @@ class Gui_smarty {
     return $this->showlabel($name, $return. "</select>", $nolabel);
   }
 
-  protected function Loadcountrys() {
+  protected function loadCountrys() {
     global $_SHOP,  $_COUNTRY_LIST;
     if (!isset($_COUNTRY_LIST)) {
       If (file_exists(INC."lang".DS."countries_". $_SHOP->lang.".inc")){
@@ -351,13 +353,13 @@ class Gui_smarty {
       }
     }
   }
-  function GetCountry($name){
+  function getCountry($name){
     global $_SHOP, $_COUNTRY_LIST;
     self::Loadcountrys();
     return $_COUNTRY_LIST[$val];
   }
 
-  function viewcountry($params, &$smarty){
+  function viewCountry($params, &$smarty){
     global $_SHOP, $_COUNTRY_LIST;
     $this->Loadcountrys();
     if (!isset($params['value'])){
@@ -370,7 +372,7 @@ class Gui_smarty {
     return $this->view($params,$smarty);
   }
 
-  function selectcountry($params, &$smarty) { //($sel_name, $selected, &$err){
+  function selectCountry($params, &$smarty) { //($sel_name, $selected, &$err){
     global $_SHOP,  $_COUNTRY_LIST;
     $this->Loadcountrys();
     if (isset($params['DefaultEmpty'])) {
@@ -381,7 +383,7 @@ class Gui_smarty {
     return $this->selection($params, $smarty);
   }
 
-  protected function LoadStates() {
+  protected function loadStates() {
     global $_SHOP,  $_STATE_LIST;
     if (!isset($_STATE_LIST)) {
       If (file_exists(INC."lang".DS."states_". $_SHOP->lang.".inc")){
@@ -416,7 +418,7 @@ class Gui_smarty {
     }
   }
 
-  function selectcolor ($params, &$smarty) //($name, &$data, &$err)
+  function selectColor ($params, &$smarty) //($name, &$data, &$err)
   {
     $name = is($params['name']);
 
@@ -440,7 +442,7 @@ class Gui_smarty {
     return $this->showlabel($name, $return."</select>");
   }
 
-  function viewfile ($params, &$smarty) //($name, &$data, &$err, $type = 'img',  = '')
+  function viewFile ($params, &$smarty) //($name, &$data, &$err, $type = 'img',  = '')
   {
     $name = is($params['name']);
     $type = is($params['type'],'img');
@@ -457,7 +459,7 @@ class Gui_smarty {
     }
   }
 
-  function inputfile ($params, &$smarty) //($name, &$data, &$err, $type = 'img',  = '')
+  function inputFile ($params, &$smarty) //($name, &$data, &$err, $type = 'img',  = '')
   {
     $name = is($params['name']);
     $type = is($params['type'],'img');
@@ -554,7 +556,7 @@ class Gui_smarty {
   }
 
 
-  function TabBar($params , &$smarty) {
+  function tabBar($params , &$smarty) {
     require_once('admin'.DS.'AdminView.php');
 
     $TabBarid = is($params['TabBarid'],'TabBarid');
@@ -638,65 +640,20 @@ class Gui_smarty {
   <td class='gui_value'>";
       if (!empty($set)) {
           foreach ($set as $value) {
-              return "<a class='link' href='$file_name?action=view&$key_name=" . $value["id"] . "'>" . $value[$column_name] . "</a><br>";
+              return "<a class='link' href='$file_name?action=view&$key_name={$value['id']}'>" . $value[$column_name] . "</a><br>";
           }
       }
       return "</td></tr>\n";
   }
 
-  protected function user_url($data)
-  {
+  protected function user_url($data){
       global $_SHOP;
       return $_SHOP->root . $data;
   }
 
-  protected function user_file ($path)
-  {
+  protected function user_file ($path) {
       return ROOT. 'files'. DS . $path;
   }
-
-/* this does not belong here anymore where to put this then?
-  function file_post ($params, &$smarty) //($data, $id, $table, $name,  = '_image')
-  {
-      global $_SHOP;
-      $name = is($params['name']);
-      $suffix = is($params['name'], '_image');
-
-      $img_field = $name.$suffix ;
-      $id_field  = $name . '_id';
-
-      if ($this->guidata['remove_' . $name .$suffix]==1) {
-          $query = "UPDATE $table SET $img_field='' WHERE $id_field='$id'";
-//            unlink( $_SHOP->files_dir . "/" .$this->guidata['remove_' . $name ]);
-
-      } else
-      if (!empty($_FILES[$img_field]) and !empty($_FILES[$img_field]['name']) and !empty($_FILES[$img_field]['tmp_name'])) {
-          if (!preg_match('/\.(\w+)$/', $_FILES[$img_field]['name'], $ext)) {
-              return false;
-          }
-
-          $ext = strtolower($ext[1]);
-          if (!in_array($ext, $_SHOP->allowed_uploads)) {
-              return false;
-          }
-
-          $doc_name = $img_field . '_' . $id . '.' . $ext;
-
-          if (!move_uploaded_file ($_FILES[$img_field]['tmp_name'], $_SHOP->files_dir . "/" . $doc_name)) {
-              return false;
-          }
-
-          chmod($_SHOP->files_dir . "/" . $doc_name, $_SHOP->file_mode);
-          $query = "UPDATE $table SET $img_field='$doc_name' WHERE $id_field='$id'";
-      }
-
-      if (!$query or ShopDB::query($query)) {
-         return true;
-      }
-      return false;
-  }
-*/
-
 }
 
 
