@@ -208,7 +208,6 @@ class Model {
       if (!in_array($ext, $_SHOP->allowed_uploads)) {
         return addError($name,'img_loading_problem_ext');
       }
-
       $doc_name =  ($this->$name)?$this->$name:uniqid(strtolower($name)). '.' . $ext;
 
       if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir .DS. $doc_name)) {

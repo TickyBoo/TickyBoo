@@ -226,8 +226,12 @@ class PlaceMap Extends Model {
     return ShopDB::commit('copied Placmap to event:');
   }
 
-  function _fill($arr, $nocheck=true){
+  function CheckValues(&$arr) {
     $this->fillFilename($arr, 'pm_image');
+    return parent::CheckValues($arr);
+  }
+
+  function _fill($arr, $nocheck=true){
     return parent::_fill($arr, $nocheck);
   }
 

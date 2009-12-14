@@ -64,11 +64,11 @@ class OrganizerView extends AdminView{
     if(isset($_POST['submit'])){
       if($org->fillPost() && $org->save()) {
         $_SESSION['_SHOP_ORGANIZER_DATA'] = $org;
+      } else {
+        $org = $_POST;
       }
-      $this->organizer_form($_POST, null, con('organizer_update_title'));
-
-    } else
-      $this->organizer_form((ARRAY)$org, null, con('organizer_update_title'));
+    }
+    $this->organizer_form((ARRAY)$org, null, con('organizer_update_title'));
   }
 }
 ?>

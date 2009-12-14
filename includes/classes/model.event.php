@@ -33,6 +33,7 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
+
 class Event Extends Model {
   protected $_idName    = 'event_id';
   protected $_tableName = 'Event';
@@ -43,21 +44,20 @@ class Event Extends Model {
       '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
 
 
- function load ($id,$only_published=TRUE){
-   $pub=($only_published)?"and event_status='pub'":'';
-   $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
-           where Event.event_id="._esc($id)."
-           {$pub} limit 1";
+  function load ($id,$only_published=TRUE){
+    $pub=($only_published)?"and event_status='pub'":'';
+    $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
+            where Event.event_id="._esc($id)."
+            {$pub} limit 1";
 
-   if($res=ShopDB::query_one_row($query)){
-     $event = new Event;
-     $event->_fill($res);
-     //print_r($event);
-     return $event;
-   }else{
-     return FALSE;
-   }
- }
+    if($res=ShopDB::query_one_row($query)){
+      $event = new Event;
+      $event->_fill($res);
+      return $event;
+    }else{
+      return FALSE;
+    }
+  }
 
   function loadAllSubs ($event_main_id){
     $query="select * from Event

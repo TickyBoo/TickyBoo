@@ -453,8 +453,13 @@ class orphans {
       case 'Seat~user_id':
       case 'Spoint~user_id':
         ShopDB::Query("
-                      INSERT IGNORE INTO `User` (`user_id`, `user_lastname`, `user_firstname`, `user_address`, `user_address1`, `user_zip`, `user_city`, `user_state`, `user_country`, `user_phone`, `user_fax`, `user_email`, `user_status`, `user_prefs`, `user_custom1`, `user_custom2`, `user_custom3`, `user_custom4`, `user_owner_id`, `user_lastlogin`, `user_order_total`, `user_current_tickets`, `user_total_tickets`) VALUES
-                      ({$fix[4]}, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213', 'demo@fusionticket.test', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0, 0)") ;
+                      INSERT IGNORE INTO `User` (`user_id`, `user_lastname`, `user_firstname`, `user_address`, `user_address1`,
+                                                 `user_zip`, `user_city`, `user_state`, `user_country`, `user_phone`, `user_fax`,
+                                                 `user_email`, `user_status`, `user_prefs`, `user_custom1`, `user_custom2`,
+                                                 `user_custom3`, `user_custom4`, `user_owner_id`, `user_lastlogin`, `user_order_total`,
+                                                 `user_current_tickets`, `user_total_tickets`) VALUES
+                      ({$fix[4]}, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213',
+                      'demo@fusionticket.test', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0, 0)") ;
         break;
 
 

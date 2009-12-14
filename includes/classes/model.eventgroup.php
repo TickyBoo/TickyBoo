@@ -51,12 +51,14 @@ class Eventgroup Extends Model {
     }
   }
 
-  function _fill($arr, $nocheck=true){
+  function CheckValues(&$arr){
     $this->fillFilename($arr, 'event_group_image');
     $this->fillDate($arr, 'event_group_start_date');
     $this->fillDate($arr, 'event_group_end_date');
-    if (!isset($arr['event_group_status'])) {$arr['event_group_status'] ='unpub';}
+  }
 
+  function _fill($arr, $nocheck=true){
+    if (!isset($arr['event_group_status'])) {$arr['event_group_status'] ='unpub';}
     return parent::_fill($arr, $nocheck);
   }
 

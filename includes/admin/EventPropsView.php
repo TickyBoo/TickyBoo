@@ -195,7 +195,7 @@ select SQL_CALC_FOUND_ROWS *
           		<input type='hidden' name='action' id='action' value=''>
            		<button name='publish' value  ='".con('publish').  "' onclick='javascript: document.frmEvents.action.value=\"" . "publish" . "\";document.frmEvents.submit();'>".con('publish').  "</button>
            		<button name='unpublish' value='".con('unpublish')."' onclick='javascript: document.frmEvents.action.value=\"" . "unpublish" . "\";document.frmEvents.submit();'>".con('unpublish')."</button>
-           		<button name='publish' value  ='".con('delete').   "' onclick='javascript:if(confirm(\"" . con('delete_item') . "\")){document.frmEvents.action.value=\"" . "remove_events" . "\";document.frmEvents.submit();}'>".con('delete').   "</button>
+           		<button name='publish' value  ='".con('delete').   "' onclick='javascript: if(confirm(\"" . con('delete_item') . "\")){document.frmEvents.action.value=\"" . "remove_events" . "\";document.frmEvents.submit();}'>".con('delete').   "</button>
           	</td>
           	<td colspan='7'  align='right'>
            		<button name='add' value='".con('add')."' onclick='javascript: document.frmEvents.action.value=\"add\" ;document.frmEvents.submit();' >".con('add')."</button>
