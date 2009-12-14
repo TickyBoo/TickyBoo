@@ -322,7 +322,7 @@ class EmailTCompiler {
 				}
 
 
-       $res.=$pre.'$mail->addAttachment( new Attachment( Order::print_order('.$order_id.",'".
+       $res.=$pre.'$mail->addAttachment( new Attachment( Order::printOrder('.$order_id.",'".
              $order_pdf['summary']."', 'data', FALSE, $mode), ".$order_pdf['name'].", 'application/pdf', new Base64Encoding()))".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
@@ -480,7 +480,7 @@ class EmailTCompiler {
 
     xml_parser_free($this->xml_parser);
 
-    if (!$this->errors) {    	
+    if (!$this->errors) {
     	$langs = implode(",",$this->langs);
     	$langs = str_replace('\'', '"', $langs);
     $xyz =
@@ -492,7 +492,7 @@ class '.$out_class_name.' {
   var $object_id;
   var $engine;
   var $langs = array('.$langs.');
-  
+
   function '.$out_class_name.'(){}
 
   '.$this->build.'

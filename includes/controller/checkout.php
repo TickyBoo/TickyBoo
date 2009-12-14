@@ -165,18 +165,18 @@ die();
 
   /**
    * registerAction()
-   * 
+   *
    * @return String : SmartyPage
    */
   function registerAction ($smarty){
     global $user;
-    
+
     //if registerasmemeber field is not set, the user doenst want to be a member
     $type = is($_POST['ismember'],false);
-    
+
     //Try and Register
     $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
-    
+
     //If errors return to user registration.
     if (!$user_id || hasErrors() ) {
       $smarty->assign('user_data',   $_POST);
@@ -330,7 +330,7 @@ die();
     }
     $mode = (int)$_REQUEST['mode'];
     If (!$mode) $mode =2;
-    Order::print_order($myorder->order_id, '', 'stream', false, $mode );
+    Order::printOrder($myorder->order_id, '', 'stream', false, $mode );
     return;
   }
 

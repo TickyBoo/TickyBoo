@@ -1,7 +1,7 @@
 INSERT INTO `Admin` (`admin_id`,`admin_login`, `admin_password`,`admin_status`) VALUES
 ('1','demo','c514c91e4ed341f263e458d44b3bb0a7','organizer');
 
-INSERT INTO `organizer` (`organizer_name`, `organizer_address`, `organizer_plz`, `organizer_ort`, `organizer_state`, `organizer_country`, `organizer_email`, `organizer_fax`, `organizer_phone`, `organizer_place`, `organizer_currency`, `organizer_logo`) VALUES
+INSERT INTO `Organizer` (`organizer_name`, `organizer_address`, `organizer_plz`, `organizer_ort`, `organizer_state`, `organizer_country`, `organizer_email`, `organizer_fax`, `organizer_phone`, `organizer_place`, `organizer_currency`, `organizer_logo`) VALUES
 ('Demo Owner', '5678 Demo St', '11001', 'Demo Town', 'DT', 'US', 'info@fusionticket.test', '(555) 555-1215', '(555) 555-1214', '', 'USD', 'organizer_logo_3.png');
 
 
@@ -20,7 +20,7 @@ INSERT INTO `Color` (`color_id`, `color_code`) VALUES
 (9, '#00CCFF'),
 (10, '#000000');
 
-INSERT INTO `handling` (`handling_id`, `handling_payment`, `handling_shipment`, `handling_fee_fix`, `handling_fee_percent`, `handling_email_template`, `handling_pdf_template`, `handling_pdf_ticket_template`, `handling_pdf_format`, `handling_html_template`, `handling_sale_mode`, `handling_extra`, `handling_text_shipment`, `handling_text_payment`, `handling_expires_min`, `handling_alt`, `handling_alt_only`) VALUES
+INSERT INTO `Handling` (`handling_id`, `handling_payment`, `handling_shipment`, `handling_fee_fix`, `handling_fee_percent`, `handling_email_template`, `handling_pdf_template`, `handling_pdf_ticket_template`, `handling_pdf_format`, `handling_html_template`, `handling_sale_mode`, `handling_extra`, `handling_text_shipment`, `handling_text_payment`, `handling_expires_min`, `handling_alt`, `handling_alt_only`) VALUES
 (1, NULL, NULL, 0.00, 0.00, 'res=email_res', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7200, NULL, 'No'),
 (2, 'cash', 'sp', 0.00, 0.00, 'ord=,send=,payed=', 'Invoice_pdf2', '', 'a:2:{i:0;a:4:{i:0;d:0;i:1;d:0;i:2;d:0;i:3;d:0;}i:1;s:8:"portrait";}', 'Put some explanations here (edit this in Admin - Order Handlings )', 'sp', NULL, 'Point of sale', 'Cash', NULL, 1, 'No'),
 (3, 'entrance', 'entrance', 0.00, 0.00, 'ord=,send=,payed=', 'Receipt_pdf2', '', 'a:2:{i:0;a:4:{i:0;d:0;i:1;d:0;i:2;d:0;i:3;d:0;}i:1;s:0:"";}', 'Put some explanations here (edit this in Admin - Order Handlings )', 'sp,www', NULL, 'At the entrance\r\n', 'At the entrance\r\n', NULL, 1, 'No'),

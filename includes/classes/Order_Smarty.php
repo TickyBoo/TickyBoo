@@ -457,7 +457,7 @@ class Order_Smarty {
     $mode = (int)$params['mode'];
     If (!$mode) $mode =3;
 
-   Order::print_order($params['order_id'],'', 'stream', $print, $mode);
+   Order::printOrder($params['order_id'],'', 'stream', $print, $mode);
   }
 
   function secure_url_param($num=FALSE, $nonum=FALSE)

@@ -877,7 +877,7 @@ class Order Extends Model {
       return -5;
   }
 
-  function print_order ($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
+  function printOrder($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
     require_once("classes/TemplateEngine.php");
     require_once(LIBS."html2pdf/html2pdf.class.php");
     require_once('classes/gui_smarty.php');

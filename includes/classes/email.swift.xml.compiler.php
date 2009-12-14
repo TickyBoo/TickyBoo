@@ -53,8 +53,8 @@ class EmailSwiftXMLCompiler {
 
   function EmailSwiftXMLCompiler (){
   }
-  
-  
+
+
   private function addParam ($key,$val,$lang=0){
     if(!$lang){
       $lang=0; //insure that this is '0' and not other 'null' values
@@ -74,13 +74,13 @@ class EmailSwiftXMLCompiler {
   protected function build (&$swiftInstance, &$data, $lang=0, $testme=false){
     $xml = $this->sourcetext;
     $this->data = $data;
-    
+
     //Let smarty run
     $xml = $this->buildSmarty($xml,$data);
-    
+
     //Pass XML to Compiler.
     $this->parseXml($xml); //Should Fill this->res
-    
+
     if(!empty($this->errors)){
       return false;
     }
@@ -89,7 +89,7 @@ class EmailSwiftXMLCompiler {
       $swiftInstance = Swift_Message::newInstance();
     }
     $swift = &$swiftInstance;
-    
+
     //Build Langs
     foreach($this->res as $lang=>$vals){
       if($lang){
@@ -105,13 +105,13 @@ class EmailSwiftXMLCompiler {
     if($lang===0 || empty($lang)){
       $lang = $this->langs[0];
     }
-  
+
     //Build Message into $swift
     $this->buildMessage($swift,$data,$lang,$testme);
-    
-    return $swift;  
+
+    return $swift;
   }
-  
+
   private function buildSmarty ($code, $data, $name='', $testme=false){
     global $_SHOP;
     require_once("smarty/Smarty.class.php");
@@ -119,7 +119,7 @@ class EmailSwiftXMLCompiler {
 
     $smarty = new Smarty;
     $gui = new gui_smarty($smarty);
-    
+
     $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");
     $smarty->cache_dir    = $_SHOP->tmp_dir;
     $smarty->compile_dir  = $_SHOP->tmp_dir;
@@ -137,10 +137,10 @@ class EmailSwiftXMLCompiler {
     unset($gui);
     return $compiledXML;
   }
-  
+
   private function buildMessage(&$message, &$data, $lang=0, $testme=false){
     global $_SHOP;
-    
+
     if(!$this->xmlParsed){
       $this->errors[] = con('xml_parse_fail');
       return false;
@@ -155,13 +155,13 @@ class EmailSwiftXMLCompiler {
     }
     $res = $this->res[0];
     $langRes = $this->res[$lang];
-    
+
     if(isset($res['from'])){
    	  $message->setFrom((array)$res['from']);
     }else{
     	$message->setFrom(array($_SHOP->organizer_data->organizer_email => $_SHOP->organizer_data->organizer_name ));
     }
-    
+
     if(is($res['cc'],false)){
       $ccArr = array();
       foreach($res['cc'] as $arr){
@@ -206,7 +206,7 @@ class EmailSwiftXMLCompiler {
 
     if(isset($res['order_pdf'])){
       require_once("classes/model.order.php");
-      
+
       foreach($res['order_pdf'] as $order_pdf){
         $order_id =$order_pdf['order_id'];
 
@@ -217,8 +217,8 @@ class EmailSwiftXMLCompiler {
 				}else{
 					$mode=3;
 				}
-        
-        $message->attach(Swift_Attachment::newInstance(Order::print_order($order_id, $order_pdf['summary'], 'data', FALSE, $mode), $order_pdf['name'], 'application/pdf'));
+
+        $message->attach(Swift_Attachment::newInstance(Order::printOrder($order_id, $order_pdf['summary'], 'data', FALSE, $mode), $order_pdf['name'], 'application/pdf'));
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $order=Order::load($order_id);
@@ -228,7 +228,7 @@ class EmailSwiftXMLCompiler {
 	      }
       }
     }
-    
+
     /* Ignore Attachements for the moment
     if(isset($data['attachment'])){
       foreach($data['attachment'] as $attach){
@@ -258,19 +258,19 @@ class EmailSwiftXMLCompiler {
     }
     */
     return $message;
-    
+
   }
-  
+
   private function characterData ($parser, $data) {
     if($this->mode==1){
       $this->text.=$data;
     }
   }
-  
-  
+
+
   private function parseXml($xml){
     $this->xml_parser=$this->newXmlParser();
-    
+
     if (!xml_parse($this->xml_parser, $xml, TRUE)) {
       $this->error(xml_error_string(xml_get_error_code($this->xml_parser)));
       return false;
@@ -279,7 +279,7 @@ class EmailSwiftXMLCompiler {
     $this->xmlParsed = true;
     return true;
   }
-  
+
   /**
    * EmailSwiftXMLCompiler::emailToParam()
    * Will try to turn email xml into an array format.
@@ -304,10 +304,10 @@ class EmailSwiftXMLCompiler {
   function error ($message){
     $this->errors[]=$message." line ".xml_get_current_line_number($this->xml_parser);
   }
-  
+
   private function getEmailLangs($xml){
     $this->parseXml($xml);
-    
+
     $this->langs = array();
     $langs = array();
     foreach($this->res as $lang=>$vals){
@@ -316,17 +316,17 @@ class EmailSwiftXMLCompiler {
         $langs[] = "'".$lang."'";
       }
     }
-    
+
     $langs = implode(',',$langs);
     return $langs;
   }
 
   /**
    * EmailSwiftXMLCompiler::replaceVar()
-   * 
-   * Will replace the matched string with the value from data. 
-   * 
-   * @param mixed $matches 
+   *
+   * Will replace the matched string with the value from data.
+   *
+   * @param mixed $matches
    * @return
    */
   private function replaceVar($matches){
@@ -334,21 +334,21 @@ class EmailSwiftXMLCompiler {
     $value = is($this->data[$matches[1]],$matches[0]);
     return $value;
   }
-  
+
   private function recVarToVals(&$value,$key){
     $value = $this->varsToValues($value);
   }
-  
+
   /**
    * EmailSwiftCompiler::varsToValues()
-   * 
+   *
    * Takes a string with $varibles and replaces the var with the $data['varible'] value
-   *  
+   *
    * @return String with $varbles converted to values.
    */
   private function varsToValues($string){
     return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceVar'),$string);
-      
+
   }
 
 
@@ -376,57 +376,57 @@ class EmailSwiftXMLCompiler {
         $this->end_tag="TEXT";
         $this->mode=1;
         break;
-  
+
       case "html":
         array_push($this->stack,$this->mode);
         array_push($this->stack,$a["LANG"]);
         $this->end_tag="HTML";
         $this->mode=1;
         break;
-  
+
       case "from" :
         $this->addParam('from',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
-  
+
       case "to" :
         $this->addParam('to',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
-        
+
       case "cc" :
         $this->addToParam('cc',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
-  
+
   		case "bcc" :
         $this->addToParam('bcc',$this->emailToParam($a['EMAIL']),$a['LANG']);
         break;
-  
+
   		case "header" :
         $this->addToParam('header',array(
   					'name'=>$this->varsToValues($a['NAME']),
   					'value'=>$this->varsToValues($a['VALUE']),
   				),$a['LANG']);
         break;
-  
+
   		case "return" :
         $this->addParam('return',$this->varsToValues($a['EMAIL']),$a['LANG']);
         break;
-  
+
   		case "text_charset" :
         $this->addParam('text_charset',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
-  
+
   		case "html_charset" :
         $this->addParam('html_charset',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
-  
+
   		case "head_charset" :
         $this->addParam('head_charset',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
-  
+
   		case "subject" :
         $this->addParam('subject',$this->varsToValues($a['VALUE']),$a['LANG']);
         break;
-  
+
       case "attachment":
         $this->addToParam('attachment',array(
           'file'=>$this->varsToValues($a['FILE']),
@@ -435,7 +435,7 @@ class EmailSwiftXMLCompiler {
           'data'=>$this->varsToValues($a['DATA'])
         ),$a['LANG']);
         break;
-  
+
       case "order_pdf" :
         $this->addToParam('order_pdf',array(
           'name'=>$this->varsToValues($a['NAME']),
@@ -469,12 +469,12 @@ class EmailSwiftXMLCompiler {
       case "html":
         $lang=array_pop($this->stack);
         $this->mode=array_pop($this->stack);
-  
+
         $this->addParam('html',$this->varsToValues($this->text),$lang);
-  
+
         $this->text='';
         break;
-  
+
       case "template":
         break;
     }
@@ -535,8 +535,8 @@ class EmailSwiftXMLCompiler {
 				}else{
 					$mode=3;
 				}
-        
-        $res .= $pre.'$message->attach(Swift_Attachment::newInstance(Order::print_order('.$order_id.",'".$order_pdf['summary']."', 'data', FALSE, $mode), ".$order_pdf['name'].", 'application/pdf'))".$post;
+
+        $res .= $pre.'$message->attach(Swift_Attachment::newInstance(Order::printOrder('.$order_id.",'".$order_pdf['summary']."', 'data', FALSE, $mode), ".$order_pdf['name'].", 'application/pdf'))".$post;
 
         if(strcasecmp($order_pdf['mark_send'],'yes')==0){
           $res.=$pre.'$order=Order::load('.$order_id.')'.$post;
@@ -621,9 +621,9 @@ class '.$className.' extends EmailSwiftXMLCompiler {
   public $engine;
   public $langs = array('.$this->getEmailLangs($xml).');
   public $deflang = "'.$this->deflang.'";
-  
+
   function '.$className.'(){}
-  
+
   public function write(&$message,&$data,$lang="'.$this->deflang.'",$testEmail=""){
     $this->build($message,$data,$lang,$testEmail="");
   }
