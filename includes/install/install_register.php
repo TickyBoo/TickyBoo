@@ -38,10 +38,10 @@ class install_register {
   function precheck($Install) {
     return true;
   }
-  
+
   function postcheck($Install) {
     if ($_REQUEST['do_send']) {
-      require_once(dirname(__FILE__) . '/../classes/RMail.php');    
+      require_once(dirname(__FILE__) . '/../libs/rmail/RMail.php');
       $_REQUEST['forumname'] = clean($_REQUEST['forumname']);
       $_REQUEST['comments']  = clean($_REQUEST['comments']);
       $email= new Rmail();
@@ -107,10 +107,10 @@ class install_register {
                 <br>Register information:  <input type='checkbox' checked='checked' name='do_send' value='1'>
               </td>
             </tr>
-            
+
           </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();
-  }  
+  }
 }
 ?>
