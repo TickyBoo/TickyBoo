@@ -55,6 +55,7 @@ class Eventgroup Extends Model {
     $this->fillFilename($arr, 'event_group_image');
     $this->fillDate($arr, 'event_group_start_date');
     $this->fillDate($arr, 'event_group_end_date');
+    return parent::checkValues($arr);
   }
 
   function _fill($arr, $nocheck=true){

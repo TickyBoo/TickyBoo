@@ -107,7 +107,7 @@ class EventGroupView extends AdminView{
   function draw (){
     if($_GET['action']=='add'){
       $eg = new Eventgroup(true);
-      $this->form((array)$eg,null,event_group_add_title);
+      $this->form((array)$eg,null,con('event_group_add_title'));
     }elseif($_GET['action']=='edit'){
       $row = Eventgroup::load($_GET['event_group_id']);
       $this->form((array)$row, null, con('event_group_update_title'));
@@ -119,7 +119,7 @@ class EventGroupView extends AdminView{
       if ($eg->fillPost() && $eg->save()) {
         $this->table();
       } else {
-        $this->form($_POST, null, con((isset($_POST['$event_group_id']))?'ort_update_title':'ort_insert_title'));
+        $this->form($_POST, null, con((isset($_POST['$event_group_id']))?'event_group_update_title':'event_group_add_title'));
       }
 
     }elseif($_GET['action']=='remove' and $_GET['event_group_id']>0){
