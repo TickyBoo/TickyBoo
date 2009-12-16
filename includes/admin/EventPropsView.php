@@ -34,7 +34,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once ( "admin/EventViewCommon.php" );
-require_once ( 'admin/EventSubPropsView.php' );
 
 class EventPropsView extends EventViewCommon {
 
@@ -412,22 +411,6 @@ select SQL_CALC_FOUND_ROWS *
 				$this->form( $_POST, null);
         return;
 			}
-
-    } elseif ( $_REQUEST['action'] == 'insert' ) {
-			if ( !$this->event_check($_POST, $err) ) {
-				$this->form( $_POST, $err, con('event_add_title') );
-        return;
-			} elseif($_POST['event_recur_type'] == "nothing"){
-		    $id = $this->save_event( $_POST, true );
-        if ($_POST['event_rep'] == 'main') {
-        	require_once ( "admin/EventSubPropsView.php" );
-        	$_POST['event_rep']     = 'sub';
-        	$_POST['event_main_id'] = $id;
-          EventSubPropsView::insert_event( $_POST, $isnew ) ;
-        }
-			} else {
-        $this->save_recur_event($_POST, true);
-      }
 
 		} elseif ( $_GET['action'] == 'remove' and $_GET['event_id'] ) {
 			$event = Event::load( $_GET['event_id'], false ); print_r($event);echo "asfadgd:", $_GET['event_id'];

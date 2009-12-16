@@ -77,7 +77,7 @@ class Event Extends Model {
     $new = $this->id;
     $new = empty($new);
   //  echo 'order_id ',$this->id,'  ', ($new)?1:0 ;
-    print_r(debug_backtrace());
+   // print_r(debug_backtrace());
     if (ShopDB::begin('Save event')) {
       if ($checkRecursion && isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
          return $this->saveRecursion();
