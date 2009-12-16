@@ -37,16 +37,16 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class Event Extends Model {
   protected $_idName    = 'event_id';
   protected $_tableName = 'Event';
-  protected $_columns   = array( '#event_id',
-      '*event_name', 'event_text', 'event_short_text', 'event_url',
-      'event_image', '*event_ort_id', '#event_pm_id', 'event_date', 'event_time',
-      'event_open', 'event_end', '*event_status', '*event_order_limit', 'event_template',
-      '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
+  protected $_columns   = array('#event_id', '*event_name', 'event_text', 'event_short_text', 'event_url',
+                                'event_image', '#event_ort_id', '#event_pm_id', 'event_date', 'event_time',
+                                'event_open', 'event_end', '*event_status', 'event_order_limit', 'event_template',
+                                '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
 
-
-  function load ($id,$only_published=TRUE){
+  function load ($id, $only_published=TRUE){
     $pub=($only_published)?"and event_status='pub'":'';
-    $query="select * from Event LEFT JOIN Ort ON event_ort_id=ort_id
+    $query="select Event.*, pm_name, ort_name
+            from Event LEFT JOIN Ort ON event_ort_id=ort_id
+                       LEFT JOIN PlaceMap2 pm ON event_pm_id=pm_id
             where Event.event_id="._esc($id)."
             {$pub} limit 1";
 
@@ -73,42 +73,132 @@ class Event Extends Model {
     }
   }
 
-  function save(){
+  function save($checkRecursion=true){
     $new = $this->id;
     $new = empty($new);
-    echo 'order_id ',$this->id,'  ', ($new)?1:0 ;
-    if (!$this->event_status) $this->event_status='unpub';
+  //  echo 'order_id ',$this->id,'  ', ($new)?1:0 ;
+    print_r(debug_backtrace());
     if (ShopDB::begin('Save event')) {
-      if (parent::save()){
-
+      if ($checkRecursion && isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
+         return $this->saveRecursion();
+      } else {
         if(!$new){
           if($this->event_rep=='main' && !$this->update_subs()) {
             return false;
-          } elseif (ShopDB::commit('event Saved ')){
-            return $this->event_id;
           }
-        }else{
-          if($this->event_pm_id){
-            $pm=PlaceMap::load($this->event_pm_id);
+        }
+        if (!parent::save()){
+          return self::_abort('Cant_save_event');
+        } elseif($new && $this->event_pm_id){
+          $pm=PlaceMap::load($this->event_pm_id);
 
-            if($pm and $new_pm_id=$pm->copy($this->event_id)){
-              $query="update Event set
-                        event_pm_id={$new_pm_id}
-                      where event_id={$this->event_id}";
-              ShopDB::query($query);
-            } else {
-              return self::_abort('Cant find selected placemap.');
-            }
+          if($pm and $new_pm_id=$pm->copy($this->event_id)){
+            $query="update Event set
+                      event_pm_id={$new_pm_id}
+                    where event_id={$this->event_id}";
+            ShopDB::query($query);
+          } else {
+            return self::_abort('Cant find selected placemap.');
           }
-          if (ShopDB::commit('event Saved ')){
-            return $this->event_id;
-          }        }
-      } else {
-        return self::_abort('Cant_save_event');
+        }
+      }
+      if (ShopDB::commit('event Saved ')){
+        return $this->event_id;
       }
     }
   }
 
+  // #######################################################
+  function saveRecursion () {
+    if ($this->event_rep == 'main') {
+      if (!$id = $this->save(false)) {
+        return self::_abort('Cant_create recursion record');
+      }
+ 			$this->event_rep     = 'sub';
+ 			$this->event_main_id = $id;
+    }
+ 	  $event_dates = $this->getEventRecurDates();
+		foreach ($event_dates as $event_date) {
+      $this->event_date = $event_date;
+      unset($this->event_id);
+      if (!$this->save(false)) {
+        return self::_abort('Cant_create recursion record');
+      }
+		}
+  }
+
+  function getRecurionDates($invert= true) {
+  	$event_dates	= array();
+  	$rep_days     = is($this->recurse_days_selection, array());
+  	$start_date 	= $this->event_date;
+		$end_date     = $this->event_recur_end;
+
+    if ($invert) {
+		  $rep_days     = array_diff(array(0,1,2,3,4,5,6), $rep_days);
+    }
+
+		$dt_split     = explode("-",$start_date);
+		$weekday      = date("w", mktime(0,0,0,$dt_split[1],$dt_split[2],$dt_split[0]));
+		$no_days      = ceil(stringDatediff($start_date, $end_date) / 86400 );
+
+    for($i = 0; $i <= $no_days; $i++) {
+      $x = ($weekday + $i) % 7;
+      if (in_array($x, $rep_days)) {
+				$event_dates[] = addDaysToDate($start_date, $i);
+      }
+    }
+		return $event_dates;
+  }
+
+  function CheckValues(&$data) {
+    if (!$data['event_status']) $data['event_status']='unpub';
+		$this->fillTime($data,'event_time');
+		$this->fillTime($data,'event_open');
+		$this->fillTime($data,'event_end');
+    $this->fillDate($data,'event_date');
+    $this->fillFilename($data, 'event_image');
+    $this->fillFilename($data, 'event_mp3');
+    print_r($data);
+  	if ( $data['event_rep'] == 'unique' ) {
+  		$data['event_rep'] = 'main,sub';
+  	}
+    if ( strpos($data['event_rep'],'sub')!== false ){
+      $this->_columns   = array('#event_id', '*event_name', 'event_text', 'event_short_text', 'event_url',
+                                'event_image', '*event_ort_id', '#event_pm_id', '*event_date', '*event_time',
+                                'event_open', 'event_end', '*event_status', '*event_order_limit', 'event_template',
+                                '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
+
+    }
+
+		if ( !$data['event_id'] ) { //echo 'new:', $data['event_rep'],strpos($data['event_rep'],'sub'),$data['event_pm_ort_id'] ;
+			if ( strpos($data['event_rep'],'sub')!== false and $data['event_pm_ort_id'] == 'no_pm' ) {
+				addError('event_pm_ort_id','mandatory');
+			}
+			if ( $data['event_pm_ort_id'] != 'no_pm' ) {
+				list( $event_pm_id, $event_ort_id ) = explode( ',', $data['event_pm_ort_id'] );
+				$data['event_pm_id']  = $event_pm_id;
+				$data['event_ort_id'] = $event_ort_id;
+			}
+		}
+   //checking the event recurrence date
+    if(isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
+      $this->fillDate($data,'event_recur_end');
+    }
+    return parent::CheckValues($data);
+  }
+
+  function _fill($arr, $nocheck=true)  {
+    if ($arr['event_rep']=='sub') {
+      $main=Event::load($arr['event_main_id'], FALSE);
+      foreach($this->_columns as $key){
+        self::getFieldtype($key);
+        if (isset($arr["{$key}_chk"]) ) {
+          $arr[$key] = $main->$key;
+        }
+      }
+    }
+    return parent::_fill($arr,$nocheck);
+  }
 
   //LA FONCTION DELETE EST PUISSANTE!
   function delete (){
@@ -204,16 +294,18 @@ class Event Extends Model {
         return $this->_abort('publish6');
       }
     }
-    $this->event_status='pub';
 
-    if(!$dry_run && !$this->save()) {
-      return $this->_abort('publish7');
+    if(!$dry_run) {
+      $this->event_status='pub';
+      if (!$this->save()) {
+        return $this->_abort('publish7');
+      }
+      if( ShopDB::commit('Event publised')){
+        return TRUE;
+      }
+    } else {
+      return true;
     }
-
-    if($dry_run or ShopDB::commit('Event publised')){
-      return TRUE;
-    }
-
   }
 
   function stop_sales (){
@@ -289,7 +381,6 @@ class Event Extends Model {
           if (!ShopDB::query($query)) {
             return  $this->_abort('cant_update_sub_events');
           }
-
         }
       }
       return ShopDB::commit('Updated subevents');

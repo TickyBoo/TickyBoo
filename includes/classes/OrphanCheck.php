@@ -51,20 +51,32 @@ $orphancheck[]="
                           WHERE s.seat_event_id = e.event_id
                           and s.seat_category_id = category_id )
 ";
-
+/*******************************************************************/
 $orphancheck[]="
-select 'Category', category_id, 'event_id' l1 , category_event_id, event_id,
-                                'pm_id'    l2 , category_pm_id, pm_id,
-                                'pmp_id'   l3 , category_pmp_id, pmp_id,
-                                'stat_id'  i4 , category_id, cs_category_id
+select 'Category', category_id, 'event_id' l1 , category_event_id, event_id
 from Category left join Event         on category_event_id = event_id
-              left join PlaceMap2     on category_pm_id    = pm_id
-              left join PlaceMapPart  on category_pmp_id   = pmp_id
-              left join Category_stat on category_id       = cs_category_id
 where  (category_event_id is not null and event_id is null)
-or     (pm_id is null)
-or     (cs_category_id is null and event_status != 'unpub')
-or     (category_pmp_id is not null and pmp_id is null)
+";
+$orphancheck[]="
+select 'Category', category_id, 'pm_id'    l2 , category_pm_id, pm_id
+from Category left join PlaceMap2     on category_pm_id    = pm_id
+where  (pm_id is null)
+";
+$orphancheck[]="
+select 'Category', category_id, 'pmp_id'   l3 , category_pmp_id, pmp_id
+from Category left join PlaceMapPart  on category_pmp_id   = pmp_id
+where  (category_pmp_id is not null and pmp_id is null)
+";
+$orphancheck[]="
+select 'Category', category_id, 'stat_id'  i4 , category_id, cs_category_id
+from Category left join Category_stat on category_id       = cs_category_id
+              left join Event    on category_event_id = event_id
+where  (cs_category_id is null and event_status is not null and event_status != 'unpub')
+";
+$orphancheck[]="
+select 'Category', category_id, 'shadow'  , category_event_id, null
+from Category left join Event    on category_event_id = event_id
+where  (category_pm_id <> event_pm_id)
 ";
 /**/
 $orphancheck[]="
@@ -81,21 +93,29 @@ where  (event_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'Event', e.event_id,  'ort_id'   , e.event_ort_id,    ort_id,
-                             'pm_id'    , e.event_pm_id,     pm_id,
-                             'group_id' , e.event_group_id,  eg.event_group_id group_id,
-                             'stat_id'  , e.event_id,        es.es_event_id,
-                             'main_id'  , e.event_main_id,  me.event_id  main_id
+select 'Event', e.event_id,  'ort_id'   , e.event_ort_id,    ort_id
 from Event e left join Ort            on e.event_ort_id = ort_id
-             left join PlaceMap2      on e.event_pm_id = pm_id
-             left join Event_group eg on e.event_group_id = eg.event_group_id
-             left join Event me       on e.event_main_id = me.event_id
-             left join Event_stat es  on e.event_id = es.es_event_id
 where  (ort_id is null and e.event_ort_id is not null)
-or     (pm_id is null  and e.event_pm_id is not null)
-or     (es.es_event_id is null and e.event_status !='unpub' and e.event_rep !='main')
-or     (e.event_group_id is not null and eg.event_group_id is null)
-or     (e.event_main_id is not null and me.event_id is null)
+";
+$orphancheck[]="
+select 'Event', e.event_id,  'pm_id'    , e.event_pm_id,     pm_id
+from Event e left join PlaceMap2      on e.event_pm_id = pm_id
+where  (pm_id is null  and e.event_pm_id is not null)
+";
+$orphancheck[]="
+select 'Event', e.event_id,  'group_id' , e.event_group_id,  eg.event_group_id group_id
+from Event e left join Event_group eg on e.event_group_id = eg.event_group_id
+where  (e.event_group_id is not null and eg.event_group_id is null)
+";
+$orphancheck[]="
+select 'Event', e.event_id,  'stat_id'  , e.event_id,        es.es_event_id
+from Event e left join Event_stat es  on e.event_id = es.es_event_id
+where  (es.es_event_id is null and e.event_status !='unpub' and e.event_rep !='main')
+";
+$orphancheck[]="
+select 'Event', e.event_id,  'main_id'  , e.event_main_id,  me.event_id  main_id
+from Event e left join Event me       on e.event_main_id = me.event_id
+where  (e.event_main_id is not null and me.event_id is null)
 ";
 /**/
 
@@ -112,39 +132,56 @@ where  (User.user_id is null)
 
 /**/
 $orphancheck[]="
-select 'Order', o.order_id, 'user_id'  l1 ,o.order_user_id, u.user_id ,
-                            'handling_id' l2 , o.order_handling_id, handling_id,
-                            'reemited_id' l3 , o.order_reemited_id, o2.order_id,
-                            'owner_id' l4 ,    o.order_owner_id, POS.user_id
+select 'Order', o.order_id, 'user_id'  l1 ,o.order_user_id, u.user_id
 from `Order` o left join User u on o.order_user_id = u.user_id
-             left join Handling on o.order_handling_id = handling_id
-             left join `Order` o2 on o.order_reemited_id = o2.order_id
-             left join SPoint POS on o.order_owner_id = POS.user_id
 where  (u.user_id is null)
-or     (o.order_owner_id is not null and POS.user_id is null)
-or     (handling_id is null)
-or     (o.order_reemited_id is not null and o2.order_id is null)
+";
+$orphancheck[]="
+select 'Order', o.order_id, 'handling_id' l2 , o.order_handling_id, handling_id
+from `Order` o left join Handling on o.order_handling_id = handling_id
+where  (handling_id is null)
+";
+$orphancheck[]="
+select 'Order', o.order_id, 'reemited_id' l3 , o.order_reemited_id, o2.order_id
+from `Order` o left join `Order` o2 on o.order_reemited_id = o2.order_id
+where  (o.order_reemited_id is not null and o2.order_id is null)
+";
+$orphancheck[]="
+select 'Order', o.order_id, 'owner_id' l4 ,    o.order_owner_id, POS.user_id
+from `Order` o left join SPoint POS on o.order_owner_id = POS.user_id
+where  (o.order_owner_id is not null and POS.user_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'PlaceMap', pm_id, 'ort_id'  l1 ,pm_ort_id, ort_id,
-                           'event_id' l2 ,pm_event_id, event_id
+select 'PlaceMap', pm_id, 'ort_id'  l1 ,pm_ort_id, ort_id
 from `PlaceMap2` left join Ort on pm_ort_id = ort_id
-                 left join Event on pm_event_id = event_id
 where  (ort_id is null)
-or     (pm_event_id is not null and event_id is null)
+";
+$orphancheck[]="
+select 'PlaceMap', pm_id, 'event_id' l2 ,pm_event_id, event_id
+from `PlaceMap2` left join Event on pm_event_id = event_id
+where (pm_event_id is not null and event_id is null)
+";
+$orphancheck[]="
+select 'PlaceMap', pm_id, 'shadow' l2 ,pm_event_id, null
+from `PlaceMap2` left join Event on pm_event_id = event_id
+where (pm_event_id is not null and event_pm_id != pm_id)
 ";
 /**/
 $orphancheck[]="
-select 'PlaceMapPart', pmp_id,'pm_id'  l1 , pmp_pm_id, pm_id,
-                              'ort_id'  l2 ,pmp_ort_id, ort_id,
-                              'event_id'  l3 ,pmp_event_id, event_id
+select 'PlaceMapPart', pmp_id,'pm_id'  l1 , pmp_pm_id, pm_id
+from `PlaceMapPart` left join PlaceMap2 on pmp_pm_id = pm_id
+where (pm_id is null)
+";
+$orphancheck[]="
+select 'PlaceMapPart', 'ort_id'  l2 ,pmp_ort_id, ort_id
 from `PlaceMapPart` left join Ort on pmp_ort_id = ort_id
-                 left join Event on pmp_event_id = event_id
-                 left join PlaceMap2 on pmp_pm_id = pm_id
 where  (pmp_ort_id is not null  and ort_id is null)
-or     (pmp_event_id is not null and event_id is null)
-or     (pm_id is null)
+";
+$orphancheck[]="
+select 'PlaceMapPart', pmp_id, 'event_id'  l3 ,pmp_event_id, event_id
+from `PlaceMapPart` left join Event on pmp_event_id = event_id
+where  (pmp_event_id is not null and event_id is null)
 ";
 /**/
 $orphancheck[]="
@@ -154,31 +191,39 @@ where  (pm_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'Seat', seat_id, 'event_id' l0  ,seat_event_id, event_id,
-                        'cat_id'  l1 ,seat_category_id, category_id,
-                        'user_id' l2 ,seat_user_id, user_id,
-                        'order_id'l3 , seat_order_id, order_id,
-                        'pmz_id' l4 , seat_zone_id, pmz_id,
-                        'pmp_id'  l5  , seat_pmp_id,pmp_id,
-                        'disc_id' l6 , seat_discount_id, discount_id
-from `Seat`      left join PlaceMapZone on seat_zone_id = pmz_id
-                 left join PlaceMapPart on seat_pmp_id = pmp_id
-
-                 left join `Order` on seat_order_id = order_id
-                 left join User on seat_user_id = user_id
-                 left join Event on seat_event_id = event_id
-
-                 left join Discount on seat_discount_id = discount_id
-                 left join Category on seat_category_id = category_id
+select 'Seat', seat_id, 'event_id' l0  ,seat_event_id, event_id
+from `Seat`      left join Event on seat_event_id = event_id
+where  (event_id is null)
+";
+$orphancheck[]="
+select 'Seat', seat_id, 'cat_id'  l1 ,seat_category_id, category_id
+from `Seat`      left join Category on seat_category_id = category_id
 where  (category_id is null)
-or     (event_id is null)
-or     (seat_order_id is not null and order_id is null)
-
-or     (seat_user_id is not null and  user_id is null)
-or     (seat_zone_id is not null and  pmz_id is null)
-
-or     (seat_pmp_id is not null and pmp_id is null)
-or     (seat_discount_id is not null and discount_id is null)
+";
+$orphancheck[]="
+select 'Seat', seat_id, 'user_id' l2 ,seat_user_id, user_id
+from `Seat`      left join User on seat_user_id = user_id
+where  (seat_user_id is not null and  user_id is null)
+";
+$orphancheck[]="
+select 'Seat', seat_id, 'order_id'l3 , seat_order_id, order_id
+from `Seat`      left join `Order` on seat_order_id = order_id
+where  (seat_order_id is not null and order_id is null)
+";
+$orphancheck[]="
+select 'Seat', seat_id, 'pmz_id' l4 , seat_zone_id, pmz_id
+from `Seat`      left join PlaceMapZone on seat_zone_id = pmz_id
+where  (seat_zone_id is not null and  pmz_id is null)
+";
+$orphancheck[]="
+select 'Seat', seat_id, 'pmp_id'  l5  , seat_pmp_id,pmp_id
+from `Seat`      left join PlaceMapPart on seat_pmp_id = pmp_id
+where  (seat_pmp_id is not null and pmp_id is null)
+";
+$orphancheck[]="
+select 'Seat', seat_id, 'disc_id' l6 , seat_discount_id, discount_id
+from `Seat`      left join Discount on seat_discount_id = discount_id
+where  (seat_discount_id is not null and discount_id is null)
 ";
 
 /**/
@@ -225,7 +270,11 @@ class orphans {
       $result = ShopDB::query($query);
       while ($row = ShopDB::fetch_row($result)) {
 
-        $r = array ('_table' => $row[0], '_id' => $row[1]);
+        if (!isset($data["{$row[0]}{$row[1]}"])){
+          $r = array ('_table' => $row[0], '_id' => $row[1] );
+        } else {
+          $r = $data["{$row[0]}{$row[1]}"];
+        }
 
         for( $x=2;$x< count($row); $x+=3) {
           $z = var_export ((!is_null($row[$x+1]) and $row[$x+2]===$row[$x+1])?'':$row[$x+1], true);
@@ -251,7 +300,7 @@ class orphans {
             $r[$row[$x]] = $z;
           }
         }
-        $data[] = $r;
+        $data[$row[0].$row[1]] = $r;
       }
     }
     $_SHOP->trace_on= $trace;

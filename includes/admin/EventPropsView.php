@@ -36,13 +36,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once ( "admin/EventViewCommon.php" );
 require_once ( 'admin/EventSubPropsView.php' );
 
-function showstr( $Text, $len = 20 ) {
-	if ( strlen($Text) > $len ) {
-		$Text = substr( $Text, 0, $len ) . '&hellip;';
-	}
-	return $Text;
-}
-
 class EventPropsView extends EventViewCommon {
 
 	function table($history=false) {
@@ -93,11 +86,15 @@ select SQL_CALC_FOUND_ROWS *
 */
     $wherex = (!$history)?"event_status='pub' or ":"event_status !='pub' AND ";
     $where  = "and ((event_rep!='main' and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
-    $where .= "     or (event_rep='main' and  (select COALESCE(count(*),0)
+    $where .= "     or (event_rep='main' and ((select COALESCE(count(*),0)
                                                from Event main
                                                where main.event_main_id = Event.event_id
                                                and event_status!='trash'
-                                               and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)";
+                                               and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)
+                                             OR
+                                             (select COALESCE(count(*),0)
+                                               from Event main
+                                               where main.event_main_id = Event.event_id) = 0)";
     $_REQUEST['page'] = is($_REQUEST['page'],1);
   //  $this->page_length = 2;
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
@@ -185,7 +182,7 @@ select SQL_CALC_FOUND_ROWS *
 
 			$alt = ( $alt + 1 ) % 2;
 			if ( $row['event_rep'] == 'main' ) {
-				$this->event_sub_list( $row['event_id'], $alt,$row['event_name'], $history);
+				$this->tableSubs( $row['event_id'], $alt,$row['event_name'], $history);
 			}
 		}
 		if (!$history){
@@ -208,7 +205,7 @@ select SQL_CALC_FOUND_ROWS *
 //		echo "<br><center><a class='link' href='view_event.php?action=add'>" . con('add') .	"</a></center>";
 	}
 
-	function event_sub_list( $event_main_id, &$alt, $main_name, $history= false ) {
+	function tableSubs( $event_main_id, &$alt, $main_name, $history= false ) {
 		global $_SHOP;
     $where = "and (TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())+1 ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
 
@@ -263,7 +260,7 @@ select SQL_CALC_FOUND_ROWS *
       } else {
          echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
       }
-      echo "  <a class='link' href='view_event.php?action=edit_sub&event_id={$row['event_id']}'>
+      echo "  <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
                    <img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') ."'>
               </a>\n";
 
@@ -292,7 +289,7 @@ select SQL_CALC_FOUND_ROWS *
 		}
 	}
 
-	function form( &$data, &$err ) {
+	function form( $data, $err ) {
 		global $_SHOP;
 
 		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
@@ -300,29 +297,41 @@ select SQL_CALC_FOUND_ROWS *
   		$this->form_head(con('event_add_title'));
 		} else {
   		$this->form_head(con('event_edit_title'));
-    }
-
-		$this->print_field_o('event_id', $data);
-		$this->print_input('event_name', $data, $err, 30, 100 );
-		if ( !$data['event_id'] ) {
-			$this->print_select_group( 'event_group_id', $data, $err );
-			$this->print_select_pm( 'event_pm_ort_id', $data, $err );
-			$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
-			echo "<input type='hidden' name='action' value='insert'/>\n";
-		} else {
-			$this->print_field_o( 'event_group_name', $data, $err );
-			$this->print_field( 'event_ort_name', $data );
-			$this->print_field( 'event_rep', $data );
-
 			echo "<input type='hidden' name='event_id' value='{$data['event_id']}'/>\n";
-			echo "<input type='hidden' name='action' value='update'/>\n";
+    }
+		echo "<input type='hidden' name='action' value='save'/>\n";
+    If ($data['event_rep']=='sub'){
+      if(!$main=Event::load($data['event_main_id'],FALSE) ){return FALSE;}
+    } else {
+      $mail ='';
+    }
+		$this->print_field_o('event_id', $data);
+		$this->print_input('event_name', $data, $err, 30, 100, $main );
+		if ( !$data['event_id'] ) {
+			$this->print_select_group( 'event_group_id', $data, $err, $main );
+			$this->print_select_pm( 'event_pm_ort_id', $data, $err );
+		} else {
+			$this->print_field_o( 'event_group_name', $data );
+			$this->print_field( 'event_ort_name', $data );
+			$this->print_field_o( 'event_pm_name', $data );
 		}
-		$this->print_area( 'event_short_text', $data, $err, 3,55 );
-		$this->print_large_area( 'event_text', $data, $err,6,95 );
-		$this->print_input( 'event_url', $data, $err, 30, 100 );
 
-		$this->print_date( 'event_date', $data, $err );
-    if($_REQUEST['action'] == "add" || $_REQUEST['action'] == "insert") {
+    If ($data['event_rep']=='sub'){
+			echo "<input type='hidden' name='event_rep' value='sub'/>\n";
+			echo "<input type='hidden' name='event_main_id' value='{$data['event_main_id']}'/>\n";
+    } elseif ( !$data['event_id'] ) {
+			$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
+		} else {
+			$this->print_field( 'event_rep', $data );
+		}
+
+
+		$this->print_area( 'event_short_text', $data, $err, 3,55,$main );
+		$this->print_large_area( 'event_text', $data, $err,6,95,$main  );
+		$this->print_input( 'event_url', $data, $err, 30, 100, $main  );
+
+		$this->print_date( 'event_date', $data, $err, $main );
+		if ( !$data['event_id'] ) {
    		$this->print_select_recurtype("event_recur_type",$data);
   		$this->print_date('event_recur_end', $data, $err);
   		$this->print_days_selection($data,$err);
@@ -331,17 +340,17 @@ select SQL_CALC_FOUND_ROWS *
   		$this->printRecurChangeScript();
     }
 
-		$this->print_time( 'event_time', $data, $err );
-		$this->print_time( 'event_open', $data, $err );
-		$this->print_time( 'event_end', $data, $err );
+		$this->print_time( 'event_time', $data, $err , $main);
+		$this->print_time( 'event_open', $data, $err, $main );
+		$this->print_time( 'event_end', $data, $err, $main );
 
-		$this->print_input( 'event_order_limit', $data, $err, 3, 4 );
-		$this->print_select_tpl( 'event_template', $data, $err );
+		$this->print_input( 'event_order_limit', $data, $err, 3, 4, $main  );
+		$this->print_select_tpl( 'event_template', $data, $err, $main );
 
-		$this->select_types( 'event_type', $data, $err );
+		$this->select_types( 'event_type', $data, $err, $main );
 
-		$this->print_file( 'event_image', $data, $err, 'img' );
-		$this->print_file( 'event_mp3', $data, $err, 'mp3' );
+		$this->print_file( 'event_image', $data, $err, 'img', $main);
+		$this->print_file( 'event_mp3', $data, $err, 'mp3', $main );
         //recurrence
 
 
@@ -351,27 +360,6 @@ select SQL_CALC_FOUND_ROWS *
 		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') ."</a></center>";
 	}
 
-	function fill_images() {
-		$img_pub['pub'] = array(
-            "src" => 'images/grun.png',
-            'title' => con('icon_unpublish'),
-            'alt' => con('icon_unpublish_alt'),
-            'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
-
-		$img_pub['unpub'] = array(
-            "src" => 'images/rot.png',
-            'title' => con('icon_publish'),
-            'alt' => con('icon_publish_alt'),
-            'link' => "view_event.php?action=publish&cbxEvents[]=" );
-
-		$img_pub['nosal'] = array(
-            "src" => 'images/grey.png',
-            "title" => con('icon_nosal'),
-            "alt" => con('icon_nosal_alt'),
-            "link" => "view_event.php?action=publish&cbxEvents[]=" );
-
-		return $img_pub;
-	}
 
 	// #######################################################
 	// #######################################################
@@ -383,34 +371,47 @@ select SQL_CALC_FOUND_ROWS *
   			 preg_match('/_pm$/'  , $_REQUEST['action']) ) {
 			require_once ( "admin/PlaceMapView2.php" );
 			$pmp_view = new PlaceMapView( $this->width );
-			if ( $pmp_view->draw($history) ) {
-				$this->table($history);
+			if ( !$pmp_view->draw($history) ) {
+				return;
 			}
-		} elseif ( preg_match('/_sub$/', $_REQUEST['action']) ) {
-			require_once ( "admin/EventSubPropsView.php" );
-			$pmp_view = new EventSubPropsView( $this->width );
-			if ( $pmp_view->draw($history) ) {
-				$this->table($history);
-			}
-		} elseif($_POST['action'] == 'remove_events') {
-		  if(count($_REQUEST['cbxEvents']) > 0)
-			  foreach($_REQUEST['cbxEvents'] as $eventId){
-          $event = Event::load($eventId, false);
-          if ($event->event_status !=='pub') {
-                $event->delete();
-          }
-			}
-			$this->table($history);
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
-    	  if (!$this->state_change(1)) {
-          $this->table($history);
+    	  if($this->state_change(1)) {
+          return;
         }
-		} elseif ( $_REQUEST['action'] == 'unpublish' ) {
-    	  if (!$this->state_change(2)) {
-          $this->table($history);
+  	} elseif ( $_REQUEST['action'] == 'unpublish' ) {
+    	  if($this->state_change(2)) {
+          return;
         }
+
+		} elseif ( $_REQUEST['action'] == 'add_sub' ) {
+			if ($event = Event::load( (int)$_GET['event_main_id'], false )){
+  			$row = ( array )$event;
+        $row['event_rep'] = 'sub';
+        $row['event_main_id'] = (int)$_GET['event_main_id'];
+        unset($row['event_id']);
+  			$this->form( $row, null );
+        return;
+      }
 		} elseif ( $_REQUEST['action'] == 'add' ) {
-			$this->form( $row, $err, con('event_add_title') );
+      $event = new Event(true);
+			$this->form( (array)$event, null );
+      return;
+		} elseif ( $_GET['action'] == 'edit' and $_GET['event_id'] ) {
+			$event = Event::load( $_GET['event_id'], false );
+			$row = ( array )$event;
+			if ( !$row ) {
+				return $this->table($history);
+			}
+			$this->form( $row, null );
+      return;
+		} elseif ( $_POST['action'] == 'save' ) {
+      if (!$event = Event::load($_POST['event_id'], false)) {
+        $event = new Event(true);
+      }
+      if (!$event->fillPost() || !$event->save()) {
+				$this->form( $_POST, null);
+        return;
+			}
 
     } elseif ( $_REQUEST['action'] == 'insert' ) {
 			if ( !$this->event_check($_POST, $err) ) {
@@ -427,129 +428,21 @@ select SQL_CALC_FOUND_ROWS *
 			} else {
         $this->save_recur_event($_POST, true);
       }
-			$this->table($history);
-		} elseif ( $_GET['action'] == 'edit' and $_GET['event_id'] ) {
-			$event = Event::load( $_GET['event_id'], false );
-			$row = ( array )$event;
-			if ( !$row ) {
-				return $this->table($history);
-			}
-			$this->form( $row, $err );
-		} elseif ( $_POST['action'] == 'update' ) {
-			if ( !$this->event_check($_POST, $err) ) {
-				$this->form( $_POST, $err, con('event_add_title') );
-			} else {
-				$this->save_event( $_POST, false );
-				$this->table($history);
-			}
+
 		} elseif ( $_GET['action'] == 'remove' and $_GET['event_id'] ) {
-			$event = Event::load( $_GET['event_id'], false );
+			$event = Event::load( $_GET['event_id'], false ); print_r($event);echo "asfadgd:", $_GET['event_id'];
 			$event->delete();
-			$this->table($history);
-		} else {
-			$this->table($history);
+		} elseif($_POST['action'] == 'remove_events') {
+		  if(count($_REQUEST['cbxEvents']) > 0)
+			  foreach($_REQUEST['cbxEvents'] as $eventId){
+          $event = Event::load($eventId, false);
+          if ($event->event_status !=='pub') {
+                $event->delete();
+          }
+			}
 		}
+		$this->table($history);
 	}
-	// #######################################################
-	// #######################################################
-	// #######################################################
-	function event_check( &$data, &$err ) {
-		global $_SHOP;
-
-		if ( empty($data['event_name']) ) {
-			$err['event_name'] = con('mandatory');
-		}
-		$this->Set_Time('event_time',$data,$err);
-		$this->Set_Time('event_open',$data,$err);
-		$this->Set_Time('event_end',$data,$err);
-    $this->Set_Date('event_date',$data,$err);
-
-//		if ( $data['event_rep'] == 'unique' ) {
-			if ( !isset($data['event_date']) and !isset($err['event_date']) ) {
-				$err['event_date'] = con('mandatory');
-			}
-			if ( !isset($data['event_time']) and !isset($err['event_time']) ) {
-				$err['event_time'] = con('mandatory');
-			}
-			// if(!isset($data['event_open'])){$err['event_open']=mandatory;}
-//		}
-
-		if ( !$data['event_id'] ) {
-			if ( $data['event_rep'] == 'unique' and $data['event_pm_ort_id'] == 'no_pm' ) {
-				$err['event_pm_ort_id'] = con('mandatory');
-			}
-			if ( $data['event_pm_ort_id'] != 'no_pm' ) {
-				list( $event_pm_id, $event_ort_id ) = explode( ',', $data['event_pm_ort_id'] );
-				$data['event_pm_id']  = $event_pm_id;
-				$data['event_ort_id'] = $event_ort_id;
-			}
-
-			if ( $data['event_rep'] == 'unique' ) {
-				$data['event_rep'] = 'main,sub';
-			}
-		}
-
-   //checking the event recurrence date
-    if(isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
-      $this->Set_Date('event_recur_end',$data,$err);
-    }
-		return empty( $err );
-	}
-
-	// #######################################################
-	function save_event( &$data, $isnew ) {
-		global $_SHOP;
-
-		if ( $isnew ) {
-			$event = new Event;
-		} else {
-			if ( !$event = Event::load($data['event_id'], false) ) {
-				echo "<div class=error>" . con('invalid_event') . "</div>";
-				return;
-			}
-		}
-
-		$event->_fill( $data );
-
-		if ( !$event_id = $event->save() ) {
-			echo "<div class=error>" . con('event_not_updated') . shopDB::error() . "</div>";
-			return;
-		}
-
-		if ( !$this->photo_post($_POST, $event_id) ) {
-			echo "<div class=error>" . con('img_loading_problem') . "</div>";
-		}
-
-		if ( !$this->photo_post_ort($_POST, $event_id) ) {
-			echo "<div class=error>" . con('img_loading_problem') . "</div>";
-		}
-
-		if ( !$this->mp3_post($_POST, $event_id) ) {
-			echo "<div class=error>" . con('mp3_loading_problem') . "</div>";
-		}
-		return  $event_id;
-	}
-
-  // #######################################################
-  function save_recur_event (&$data, $isnew ) {
- 	  $event_dates = $this->getEventRecurDates($data);
-    if ($data['event_rep'] !== 'main') {
-  		foreach ($event_dates as $event_date) {
-        $data['event_date'] = $event_date;
-        $this->save_event( $data, $isnew ) ;
-  		}
-    } else {
-      $id = $this->save_event( $data, $isnew ) ;
- 			require_once ( "admin/EventSubPropsView.php" );
- 			$data['event_rep']     = 'sub';
- 			$data['event_main_id'] = $id;
-  		foreach ($event_dates as $event_date) {
-        $data['event_date'] = $event_date;
-        EventSubPropsView::insert_event( $data, $isnew ) ;
-  		}
-    }
-  }
-
 
   function event_view (&$data, $stats=0, $pmps=0 ) {
       $data["event_date"] = formatAdminDate($data["event_date"]);
@@ -728,7 +621,7 @@ select SQL_CALC_FOUND_ROWS *
             $this->state_confirm_button($state);
           }
         } else {
-          $this->delayedLocation('view_event.php');
+//          $this->delayedLocation('view_event.php');
         }
 	      return true;
 
@@ -760,5 +653,28 @@ select SQL_CALC_FOUND_ROWS *
       }  else
         return false;
   }
+
+  function fill_images() {
+		$img_pub['pub'] = array(
+            "src" => 'images/grun.png',
+            'title' => con('icon_unpublish'),
+            'alt' => con('icon_unpublish_alt'),
+            'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
+
+		$img_pub['unpub'] = array(
+            "src" => 'images/rot.png',
+            'title' => con('icon_publish'),
+            'alt' => con('icon_publish_alt'),
+            'link' => "view_event.php?action=publish&cbxEvents[]=" );
+
+		$img_pub['nosal'] = array(
+            "src" => 'images/grey.png',
+            "title" => con('icon_nosal'),
+            "alt" => con('icon_nosal_alt'),
+            "link" => "view_event.php?action=publish&cbxEvents[]=" );
+
+		return $img_pub;
+	}
+
 }
 ?>

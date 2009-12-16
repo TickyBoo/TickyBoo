@@ -488,7 +488,7 @@ function orphanCheck(){
 
     }
     $_SHOP->trace_on=true;
-    if ($data) { $text = "none";}
+    if (!$data) { $text = "none";}
     trace("\n\nOrphan Check Dump: ".$text);
   }
 }

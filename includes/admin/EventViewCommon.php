@@ -58,23 +58,24 @@ class EventViewCommon extends AdminView {
     if ($main == 'main') {
         echo "<option value='no_pm' {$sel['no_pm']}></option>";
     } elseif ($main == 'has_def') {
-        echo "<option value='copy_main_pm' {$sel['no_pm']}>(" . copy_main_pm . ")</option>";
+        echo "<option value='copy_main_pm' {$sel['no_pm']}>(" . con('copy_main_pm') . ")</option>";
     }
     while ($row = shopDB::fetch_assoc($res)) {
         if ($row['ort_id'] != $ort_id) {
             $ort_id = $row['ort_id'];
-            echo "<option value='0,{$row['ort_id']}' {$sel[$row['pm_id']]}>{$row['ort_name']} - " . agenda_only . "</option>\n";
+            echo "<option value='0,{$row['ort_id']}' {$sel[$row['pm_id']]}>{$row['ort_name']} - " . con('agenda_only') . "</option>\n";
         }
         if ($row['pm_id']) {
             echo "<option value='{$row['pm_id']},{$row['pm_ort_id']}' {$sel[$row['pm_id']]}>{$row['ort_name']} - {$row['pm_name']}</option>\n";
         }
     }
 
-    echo "</select><span class='err'>{$err[$name]}</td></tr>\n";
+    echo "</select>". printMsg($name, $err). "</td></tr>\n";
   }
 
   function print_select_tpl ($name, &$data, &$err, $suffix = '') {
     global $_SHOP;
+    $suffix = self::_check($name, $suffix,$data);
 
     $query = "SELECT template_name FROM Template
               WHERE template_type='pdf2'
@@ -96,12 +97,13 @@ class EventViewCommon extends AdminView {
         echo "<option value='$value' " . $sel[$v[0]] . ">{$v[0]}</option>\n";
     }
 
-    echo "</select><span class='err'>{$err[$name]}</span>
+    echo "</select>". printMsg($name, $err). "
           </td></tr>\n";
   }
 
-  function print_select_group ($name, &$data, &$err){
+  function print_select_group ($name, &$data, &$err, $suffix=''){
       global $_SHOP;
+      $suffix = self::_check($name, $suffix, $data);
 
       $query = "SELECT event_group_id,event_group_name
                 FROM Event_group
@@ -112,7 +114,7 @@ class EventViewCommon extends AdminView {
 
       $sel[$data[$name]] = " selected ";
 
-      echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
+      echo "<tr><td class='admin_name'  width='40%'>{$suffix}" . con($name) . "</td>
             <td class='admin_value'>
              <select name='$name'>
              <option value=''></option>\n";
@@ -121,13 +123,12 @@ class EventViewCommon extends AdminView {
           echo "<option value='{$v[0]}' " . $sel[$v[0]] . ">{$v[1]}</option>\n";
       }
 
-      echo "</select><span class='err'>{$err[$name]}</span>
+      echo "</select>". printMsg($name, $err). "
             </td></tr>\n";
   }
 
 
-  function print_select_ort ($name, &$data, &$err)
-  {
+  function print_select_ort ($name, &$data, &$err) {
       $query = "SELECT * FROM Ort";
       if (!$res = ShopDB::query($query)) {
           return;
@@ -145,55 +146,35 @@ class EventViewCommon extends AdminView {
       echo "</select></td></tr>\n";
   }
 
-  function photo_post($data, $event_id)
-  {
-      return $this->file_post($data, $event_id, 'Event', 'event');
-  }
-
-  function mp3_post ($data, $event_id)
-  {
-      return $this->file_post($data, $event_id, 'Event', 'event', '_mp3');
-  }
-
-  function photo_post_ort ($data, $event_id)
-  {
-      return $this->file_post($data, $event_id, 'Event', 'event', '_ort_image');
-  }
-
-  function get_event_types () {
-     global $_SHOP;
-     return $_SHOP->event_type_enum;
-  }
-
-  function select_types ($name, &$data, &$err) {
+  function select_types ($name, &$data, &$err, $suffix='') {
       global $_SHOP;
+      $suffix = self::_check($name, $suffix,$data);
+
       $sel[$data["$name"]] = " selected ";
-      echo "<tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
+      echo "<tr><td class='admin_name'  width='40%'>{$suffix}" . con($name) . "</td>
             <td class='admin_value'> <select name='$name'>";
       $types = $_SHOP->event_type_enum;
       // print_r($types);
       foreach($types as $k => $v) {
           echo "<option value='" . $v . "' " . $sel[$v] . ">" . con($v) . "</option>\n";
       }
-      echo "</select><span class='err'>{$err[$name]}</span></td></tr>\n";
+      echo "</select>". printMsg($name, $err). "</td></tr>\n";
   }
 
-  function print_type ($name, &$data)
-  {
+  function print_type ($name, &$data) {
       echo "<tr><td class='admin_name' width='40%'>" . con($name) . "</td>
             <td class='admin_value'>" . con($data[$name]) . "
             </td></tr>\n";
   }
   //mychanges
 
-  function print_subtitle($name)
-  {
+  function print_subtitle($name){
   	echo "<tr>
   			<td colspan=2>$name</td>
   		  </tr>";
   }
-  function print_select_recurtype($name,$data)
-  {
+
+  function print_select_recurtype($name,$data){
   	$type_list = array("nothing","daily");
 
   	echo "<tr><td class='admin_name' width='40%'>".con($name)."</td>
@@ -258,33 +239,11 @@ class EventViewCommon extends AdminView {
     }
     echo "	</tr>
 	      	</table>
-   		    	<span class='err'>{$err['opt_days']}</span>
+   		    	". printMsg($name, $err). "
    		  	</td>
 	   </tr>\n";
   }
 
-  function getEventRecurDates($data, $invert= true) {
-  	$event_dates	= array();
-  	$rep_days     = is($data['recurse_days_selection'], array());
-  	$start_date 	= $data['event_date'];
-		$end_date     = $data['event_recur_end'];
-
-    if ($invert) {
-		  $rep_days     = array_diff(array(0,1,2,3,4,5,6), $rep_days);
-    }
-
-		$dt_split     = explode("-",$start_date);
-		$weekday      = date("w", mktime(0,0,0,$dt_split[1],$dt_split[2],$dt_split[0]));
-		$no_days      = ceil(stringDatediff($start_date, $end_date) / 86400 );
-
-    for($i = 0; $i <= $no_days; $i++) {
-      $x = ($weekday + $i) % 7;
-      if (in_array($x, $rep_days)) {
-				$event_dates[] = addDaysToDate($start_date, $i);
-      }
-    }
-		return $event_dates;
-  }
 
   function Print_Recure_end(){
 	   echo "

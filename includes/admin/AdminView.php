@@ -309,12 +309,16 @@ class AdminView extends AUIComponent {
     }
 
     function _check ($name,$main,$data){
-      if($main->$name!=$data[$name]){$chk='checked';}
-      return "<input type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
+      if (is_object($main)) {
+        if($main->$name!=$data[$name]){$chk='checked';}
+        return "<input type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
+      }
+      return $main;
     }
 
 
     function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
+      $suffix = self::_check($name, $suffix,$data);
       if($arrPrefix <> ''){
         $prefix = $arrPrefix."[$name]";
       }else{
@@ -338,24 +342,22 @@ class AdminView extends AUIComponent {
                 </td></tr>\n";*/
     }
 
-    function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '')
-    {
-        echo "<tr><td id='{$name}-tr' class='admin_name'>$suffix" . con($name) . "</td>
-                <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
-                ".printMsg($name, $err)."
-                </td></tr>\n";
+    function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '') {
+      $suffix = self::_check($name, $suffix,$data);
+      echo "<tr><td id='{$name}-tr' class='admin_name'>$suffix" . con($name) . "</td>
+          <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
+          ".printMsg($name, $err)."
+          </td></tr>\n";
     }
 
-    function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='')
-    {
-        echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
-                <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
-
-                </td></tr>\n";
+    function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='') {
+      $suffix = self::_check($name, $suffix,$data);
+      echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
+              <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
+              </td></tr>\n";
     }
 
-    function print_set ($name, &$data, $table_name, $column_name, $key_name, $file_name)
-    {
+    function print_set ($name, &$data, $table_name, $column_name, $key_name, $file_name) {
         $ids = explode(",", $data);
         $set = array();
         if (!empty($ids) and $ids[0] != "") {
@@ -380,33 +382,35 @@ class AdminView extends AUIComponent {
     }
 
     function print_time ($name, &$data, &$err, $suffix = '') {
-        global $_SHOP;
-        if (isset($data[$name])) {
-            $src = $data[$name];
-            $data["$name-f"] = 'AM';
-            list($h, $m, $s) = explode(":", $src);
-            if (($_SHOP->input_time_type == 12) and ($h > 12)) {
-              $h -=12;
-              $data["$name-f"] = 'PM';
-		    }
-        } else {
-            $h = $data["$name-h"];
-            $m = $data["$name-m"];
-        }
-        echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
-             <td class='admin_value'>
-             <input type='text' name='$name-h' value='$h' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-m'])\"> :
-             <input type='text' name='$name-m' value='$m' size='2' maxlength='2'>";
-             if ($_SHOP->input_time_type == 12) {
-               $time_fs = array("AM","PM");
-               echo "<select name='$name-f'>";
-        	     foreach ($time_fs as $time_f) {
-             	    echo "<option ".(($data["$name-f"] == $time_f) ? "selected" :'') ."  value={$time_f}>". $time_f ."</option>";
-               }
-               echo "</select>";
+      global $_SHOP;
+      $suffix = self::_check($name, $suffix,$data);
+
+      if (isset($data[$name])) {
+          $src = $data[$name];
+          $data["$name-f"] = 'AM';
+          list($h, $m, $s) = explode(":", $src);
+          if (($_SHOP->input_time_type == 12) and ($h > 12)) {
+            $h -=12;
+            $data["$name-f"] = 'PM';
+          }
+      } else {
+          $h = $data["$name-h"];
+          $m = $data["$name-m"];
+      }
+      echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
+           <td class='admin_value'>
+           <input type='text' name='$name-h' value='$h' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-m'])\"> :
+           <input type='text' name='$name-m' value='$m' size='2' maxlength='2'>";
+           if ($_SHOP->input_time_type == 12) {
+             $time_fs = array("AM","PM");
+             echo "<select name='$name-f'>";
+      	     foreach ($time_fs as $time_f) {
+           	    echo "<option ".(($data["$name-f"] == $time_f) ? "selected" :'') ."  value={$time_f}>". $time_f ."</option>";
              }
-        echo "".printMsg($name, $err)."
-             </td></tr>\n";
+             echo "</select>";
+           }
+      echo printMsg($name, $err)."
+           </td></tr>\n";
     }
     function Set_time($name, & $data, & $err) {
       global $_SHOP;
@@ -429,6 +433,7 @@ class AdminView extends AUIComponent {
 
     function print_date ($name, &$data, &$err, $suffix = '') {
       global $_SHOP;
+      $suffix = self::_check($name, $suffix,$data);
         if (isset($data[$name])) {
             $src = $data[$name];
             list($y, $m, $d) = explode("-", $src);
@@ -482,8 +487,7 @@ class AdminView extends AUIComponent {
     </td></tr>\n";
     }
 
-    function print_select ($name, &$data, &$err, $opt, $actions='')
-    {
+    function print_select ($name, &$data, &$err, $opt, $actions=''){
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
 
@@ -499,8 +503,7 @@ class AdminView extends AUIComponent {
               </td></tr>\n";
     }
 
-    function print_select_assoc ($name, &$data, &$err, $opt, $actions='', $mult = false)
-    {
+    function print_select_assoc ($name, &$data, &$err, $opt, $actions='', $mult = false) {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
         if ($mult) {
@@ -517,8 +520,7 @@ class AdminView extends AUIComponent {
         echo "</select>".printMsg($name, $err)."</td></tr>\n";
     }
 
-    function print_color ($name, &$data, &$err)
-    {
+    function print_color ($name, &$data, &$err) {
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>" . con($name) . "</td>
         <td class='admin_value'>
         <select name='$name'>\n";
@@ -541,15 +543,27 @@ class AdminView extends AUIComponent {
         echo "</select>";
     }
 
-    function view_file ($name, &$data, &$err, $type = 'img', $prefix = '')
-    {
+    function view_file ($name, &$data, &$err, $type = 'img', $prefix = '') {
         global $_SHOP;
+        $prefix = self::_check($name, $prefix,$data);
 
         if ($data[$name]) {
             $src = $this->user_url($data[$name]);
             echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$prefix" . con($name) . "</td>";
             if ($type == 'img') {
-                echo "<td class='admin_value'><img width=300 src='$src'>";
+              echo "<td class='admin_value'>";
+           		if(file_exists(ROOT.'files'.DS.$data[$name])){
+           			list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$data[$name]);
+      					if (($width>$height) and ($width > 300)) {
+      						$attr = "width='300'";
+      					} elseif ($height > 250) {
+      						$attr = "height='250'";
+      					}
+      					echo "<img $attr src='$src'>";
+           		}else{
+           			echo "<strong>File does not exsist</strong>";
+           		}
+//                echo "<td class='admin_value'><img width=300 src='$src'>";
             } else {
                 echo "<td class='admin_value'><a class=link href='$src'>{$data[$name]}</a>";
             }
@@ -558,7 +572,8 @@ class AdminView extends AUIComponent {
     }
 
     function print_file ($name, &$data, &$err, $type = 'img', $suffix = ''){
-        global $_SHOP;
+      global $_SHOP;
+      $suffix = self::_check($name, $suffix,$data);
 
         if (!isset($data[$name]) || empty($data[$name])) {
             echo "\n<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
@@ -566,7 +581,7 @@ class AdminView extends AUIComponent {
         } else {
             $src = $this->user_url($data[$name]);
 
-            echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+            echo "<tr id='{$name}-tr'><td class='admin_name' rowspan=3 valign='top' width='40%'>$suffix" . con($name) . "</td>
             <td class='admin_value'>";
 
             if ($type == 'img') {
@@ -585,10 +600,13 @@ class AdminView extends AUIComponent {
                 echo "<a href='$src'>{$data[$name]}</a>";
             }
 
-            echo "</td></tr><tr><td class='admin_name'  width='40%'>" . con($name) . "</td>
-            <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td></tr>";
-            echo "<tr><td class='admin_name'  width='40%'>" . con("remove_image") . "</td>
-            <td class='admin_value'><input type='checkbox'  name='remove_$name' value='1'>" . con('yes') . "</td></tr>\n";
+            echo "</td></tr>
+              <tr>
+                <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td>
+              </tr>
+              <tr>
+                <td class='admin_value'><input type='checkbox'  name='remove_$name' value='1'>  " . con('remove_image') . "</td>
+              </tr>\n";
         }
     }
 
@@ -634,8 +652,7 @@ class AdminView extends AUIComponent {
     return $_COUNTRY_LIST[$val];
   }
 
-  function file_post ($data, $id, $table, $name, $suffix = '_image')
-  {
+  function file_post ($data, $id, $table, $name, $suffix = '_image') {
       global $_SHOP;
 
       $img_field = $name . $suffix;
@@ -676,14 +693,12 @@ class AdminView extends AUIComponent {
       return false;
   }
 
-  function user_url($data)
-  {
+  function user_url($data) {
       global $_SHOP;
       return $_SHOP->files_url . $data;
   }
 
-  function user_file ($path)
-  {
+  function user_file ($path){
       global $_SHOP;
       return $_SHOP->files_dir . $path;
   }

@@ -43,8 +43,8 @@ class Model {
   protected $_columns = array();
 
   function __construct($filldefs= false){
-    if ((!$this->_columns || $filldefs) && $_tableName) {
-      $defs = & ShopDB::FieldListExt($this->tableName);
+    if ((!$this->_columns || $filldefs) && $this->_tableName) {
+      $defs = & ShopDB::FieldListExt($this->_tableName);
       if (!$this->_columns) {
         foreach($defs as $key => $value) {
           If ($key != $this->_idName) {
@@ -121,15 +121,15 @@ class Model {
 
   function _set ($key, $value='~~~'){
     $type= self::getFieldtype($key);
-    if ($key == $this->idName) {
+    if ($key == $this->_idName) {
       return null;
     } elseif($value =='~~~'){
        If (isset($this->$key)) {
          $value = $this->$key;
        } else
          return null;
-    } elseif ($type == self::MDL_IDENTIFY) {
-      if ($value === 0)
+    }
+    if ($type == self::MDL_IDENTIFY && $value == 0){
         $value = null;
     }
     return "`{$key}`="._esc($value);
