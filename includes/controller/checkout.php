@@ -209,6 +209,7 @@ die();
 
   function posConfirmAction($smarty) {
   	global $order, $cart, $user;
+    
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected
         echo "~~".con('No_handling_selected');//.print_r($_POST,true);
         return "";
@@ -232,17 +233,17 @@ die();
        $user_id = $_POST['user_id'];
     }
     $no_fee = is($_POST['no_fee'], 0);
-
-    ob_start();
+   
+    //ob_start();
     //print_r($_SESSION['_SHOP_AUTH_USER_DATA']);
     unset($_SESSION['_SHOP_order']) ;
     if((int)$_POST['handling_id'] === 1){
-      $return = reserveaction($smarty,'pos',$user_id);
+      $return = reserveAction($smarty,'pos',$user_id);
     }else{
-      $return = confirmaction($smarty, 'pos', $user_id, $no_fee );
+      $return = confirmAction($smarty, 'pos', $user_id, $no_fee );
     }
-    $result = ob_get_contents();
-    ob_end_clean();
+    //$result = ob_get_contents();
+    //ob_end_clean();
     if ($return == 'checkout_preview' ) {
       echo '~~'.$order->error.'<br /><pre>'.$result.'</pre>';
       return '';

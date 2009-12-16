@@ -70,8 +70,8 @@ class EmailSwiftSender {
     $mailer = Swift_Mailer::newInstance($transport);
     
     //Or to use the Echo Logger
-    $logger = new Swift_Plugins_Loggers_EchoLogger();
-    $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+    //$logger = new Swift_Plugins_Loggers_EchoLogger();
+    //$mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
     
     //Or to use the Normal Logger
     $logger = new Swift_Plugins_Loggers_ArrayLogger();

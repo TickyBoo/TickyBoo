@@ -28,6 +28,12 @@ Change Log
  * clear to you.
  */
  
+//////////////////////////////////// 
+// THIS FILE IS NOW DEPRICATED
+// IT IS ONLY KEEP FOR HISTORIC REASONS
+// FOR bug/feature tracking use http://mantis.fusionticket.org
+////////////////////////////////////
+
  
 Feedback:
 	- When users signup add in another email feild to check there email is the same as the first field.

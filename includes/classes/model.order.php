@@ -154,6 +154,7 @@ class Order Extends Model {
     }
 
   }
+  
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
     array_push($this->places, Seat::ticket($event_id, $category_id, $place_id, $this->order_user_id, $this->order_session_id, $price, $discount));
   }
@@ -231,7 +232,7 @@ class Order Extends Model {
       if(!OrderStatus::statusChange($this->order_id,$order_status,NULL,'Order::save',"Create New order")){
         return false;
       }
-
+      
       foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
         $ticket->order_id($this->order_id);

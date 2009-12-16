@@ -490,6 +490,7 @@ class Order_Smarty {
 }
 
 function _collect(&$event_item,&$cat_item,&$place_item,&$order){
+  
   if(!$place_item->is_expired()){
 
     $i=0;

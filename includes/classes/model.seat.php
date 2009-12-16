@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class Seat  Extends Model {
-  protected $_idName    = 'pm_id';
+  protected $_idName    = 'seat_id';
   protected $_tableName = 'Seat';
   protected $_columns   = array('#seat_id', '*seat_event_id', '*seat_category_id', '#seat_user_id', '#seat_order_id',
                                 '#seat_row_nr', '#seat_zone_id', '#seat_pmp_id', 'seat_nr', 'seat_ts', 'seat_sid',
@@ -50,7 +50,7 @@ class Seat  Extends Model {
                               'seat_price', '#seat_discount_id', 'seat_code', '*seat_status');
     $seat->seat_event_id=$event_id;
     $seat->seat_category_id=$category_id;
-    $seat->seat_seat_id=$seat_id;
+    $seat->seat_id=$seat_id;
     $seat->seat_user_id=$user_id;
     $seat->seat_sid = $sid;
     if(isset($discount)){

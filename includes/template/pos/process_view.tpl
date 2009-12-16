@@ -275,7 +275,7 @@
             <td class='subtitle'>{!price!}</td>
             <td class='subtitle'>&nbsp;</td>
           </tr>
-          {order->tickets order_id=$shop_order.order_id}
+          {order->tickets order_id=$order_id}
             {counter assign='row' print=false}
             <input type='hidden' name='place[]' value='{$shop_ticket.seat_id}'/>
             <tr class='admin_list_row_{$row%2}'>
