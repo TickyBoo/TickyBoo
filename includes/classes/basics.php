@@ -678,7 +678,7 @@ function printMsg($key, $err = null) {
           $output .= $val. "</br>\n";
         }
       }else{
-        $output .= $value. "</br>\n"; 
+        $output .= $value. "</br>\n";
       }
     }
     If ($output) {
@@ -695,6 +695,13 @@ function printMsg($key, $err = null) {
     }
   }
   return $output;
+}
+
+function showstr( $Text, $len = 20 ) {
+	if ( strlen($Text) > $len ) {
+		$Text = substr( $Text, 0, $len ) . '&hellip;';
+	}
+	return $Text;
 }
 
 ?>

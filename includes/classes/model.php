@@ -208,7 +208,8 @@ class Model {
       if (!in_array($ext, $_SHOP->allowed_uploads)) {
         return addError($name,'img_loading_problem_ext');
       }
-      $doc_name =  ($this->$name)?$this->$name:uniqid(strtolower($name)). '.' . $ext;
+
+      $doc_name =  (($this->$name)?pathinfo($this->$name,PATHINFO_FILENAME ):uniqid(strtolower($name))). '.' . $ext;
 
       if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir .DS. $doc_name)) {
         return addError($name,'img_loading_problem_copy');
@@ -222,7 +223,6 @@ class Model {
   }
 
   function fillDate(&$array, $name) {
-    $data = (array)$this;
 		if ( (isset($array["$name-y"]) and strlen($array["$name-y"]) > 0) or
          (isset($array["$name-m"]) and strlen($array["$name-m"]) > 0) or
          (isset($array["$name-d"]) and strlen($array["$name-d"]) > 0) ) {
@@ -241,7 +241,6 @@ class Model {
 
   function fillTime(&$data, $name) {
     global $_SHOP;
-    $data = (array)$this;
 		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
          (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
 			$h = $data[$name.'-h'];

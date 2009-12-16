@@ -138,7 +138,7 @@ class PlaceMapPart Extends Model {
 
   function save (){
     If (!$this->data) {
-      $this->data = array_fill(0, $this->pmp_height, array_fill(0, $this->pmp_width, array(0, 0, 0)));
+      $this->data = array_fill(0, (int)$this->pmp_height, array_fill(0, (int)$this->pmp_width, array(0, 0, 0)));
     }
     $this->pmp_data  = $this->_ser_data();
     return parent::save();

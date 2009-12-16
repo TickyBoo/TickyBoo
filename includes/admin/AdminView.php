@@ -308,8 +308,13 @@ class AdminView extends AUIComponent {
         }
     }
 
-    function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='')
-    {
+    function _check ($name,$main,$data){
+      if($main->$name!=$data[$name]){$chk='checked';}
+      return "<input type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
+    }
+
+
+    function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
       if($arrPrefix <> ''){
         $prefix = $arrPrefix."[$name]";
       }else{
