@@ -133,7 +133,7 @@ class PlaceMapView extends AdminView {
 
 			echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}'>" . con('admin_list') .	"</a></center>";
 		} else {
-			echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?ort_id={$data['pm_ort_id']}'>" . con('admin_list') . "</a></center>";
+			echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}'>" . con('admin_list') . "</a></center>";
 		}
 	}
 
@@ -164,6 +164,7 @@ class PlaceMapView extends AdminView {
 
 		} elseif ( $_GET['action'] == 'add_pm' ) {
       $pm = new PlaceMap(true);
+      $pm->pm_ort_id = (int)$_REQUEST['pm_ort_id'];
 			$this->form( (array)$pm, null, con('add_pm') );
     } elseif ( $_GET['action'] == 'edit_pm' and (int)$_GET['pm_id'] > 0 ) {
       $pm = PlaceMap::load($_GET['pm_id']);

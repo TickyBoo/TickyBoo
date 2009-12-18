@@ -66,13 +66,9 @@
         {!total_price!}
       </td>
       <td class="title" align='right'>
-        {capture name='total_price'}
-          {cart->total_price}
-        {/capture}        {* $smarty.capture.total_price} | *}
-        {valuta value=$smarty.capture.total_price} {* //it seems this is not needed: |string_format:"%.2f" *}
+        {valuta value=$cart->total_price_f()|string_format:"%.2f"} {* //it seems this is not needed: |string_format:"%.2f" *}
       </td>
       <td>&nbsp;</td>
     </tr>
   </table>
 {/if}
-

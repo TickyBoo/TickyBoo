@@ -80,13 +80,14 @@ class Cart {
     }
   }
 
-  function total_price (){
+  function total_price(){
     $total_price=0;
     foreach($this->event_items as $event){
       $total_price+=$event->total_price();
     }
     return $total_price;
   }
+
   function use_alt (){
     $use_alt=0;
     foreach($this->event_items as $event){
@@ -104,7 +105,7 @@ class Cart {
     foreach($this->event_items as $event){
       $min_date=min($event->event_date,$min_date);
     }
-  return $min_date;
+    return $min_date;
   }
 
   function total_places ($event_id=0,$cat_id=0,$only_valid=TRUE){

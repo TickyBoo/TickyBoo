@@ -252,13 +252,11 @@ class PlaceMapCategory Extends Model {
   }
 
   function _fill(&$arr,$nocheck= true){
-    if(!$arr['category_id']) {
-      if ($arr['category_numbering']<>'none' && !$arr['category_pmp_id']) {
-        $arr['category_size'] = 0;
-      }
-      if(!$arr['category_ident']){
-        $arr['category_ident']=$this->_find_ident($arr['category_pm_id']);
-      }
+    if ($arr['category_numbering']<>'none' && !$arr['category_pmp_id']) {
+      $arr['category_size'] = 0;
+    }
+    if(!$arr['category_ident']){
+      $arr['category_ident']=$this->_find_ident($arr['category_pm_id']);
     }
     $arr['category_color'] = self::resetColor($arr['category_color']);
     return parent::_fill($arr, $nocheck);

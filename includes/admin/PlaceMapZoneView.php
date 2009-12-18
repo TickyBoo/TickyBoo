@@ -131,6 +131,8 @@ class PlaceMapZoneView extends AdminView {
 
     if ($_GET['action'] == 'add_pmz' and $_GET['pm_id'] > 0) {
       $pmz = new PlaceMapZone(true);
+      $pmz->pmz_pm_id = $_GET['pm_id'];
+
       $this->form((Array)$pmz, null);
     } elseif ($_GET['action'] == 'edit_pmz' and $_GET['pmz_id'] > 0) {
       $pmz = PlaceMapZone::load($_GET['pmz_id']);

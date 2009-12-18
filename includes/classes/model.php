@@ -100,9 +100,9 @@ class Model {
   }
 
   function update($exclude=null){
-    $values  = join(",", $this->quoteColumnVals($exclude));
+    $values  = join(", \n    ", $this->quoteColumnVals($exclude));
 
-    $sql = "UPDATE `{$this->_tableName}` SET $values";
+    $sql = "UPDATE `{$this->_tableName}` SET \n    $values";
     if ($this->_idName){
       $sql .= " WHERE `{$this->_idName}` = "._esc($this->id)  ;
     }
