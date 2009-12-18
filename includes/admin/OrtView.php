@@ -103,12 +103,13 @@ class OrtView extends AdminView {
         require_once('admin/PlaceMapView2.php');
         $pm_view = new PlaceMapView($this->width);
         if ($pm_view->draw()) {
-          if ($ort = ort::load($_REQUEST['pm_ort_id'])) {
+          if ($ort = Ort::load($_REQUEST['pm_ort_id'])) {
             $this->form((array)$ort, null, con('ort_update_title'));
           } else {
             $this->table();
           }
         }
+        $this->addJQuery($pm_view->getJQuery());
 
     } elseif ($_GET['action'] == 'add') {
        $this->form($row, $err, con('ort_add_title'));

@@ -146,21 +146,27 @@ class PlaceMapView extends AdminView {
 				$event = Event::load( $_REQUEST['discount_event_id'], false );
 				$this->form( $event->event_pm_id, null, con('edit_pm'));
 			}
+      $this->addJQuery($pmp_view->getJQuery());
+      
 		} elseif ( preg_match('/_pmp$/', $_REQUEST['action']) ) {
 			$pmp_view = new PlaceMapPartView( $this->width );
 			if ( $pmp_view->draw() ) {
 				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
 			}
+      $this->addJQuery($pmp_view->getJQuery());
+      
 		} elseif ( preg_match('/_pmz$/', $_REQUEST['action']) ) {
 			$pmz_view = new PlaceMapZoneView( $this->width );
 			if ( $pmz_view->draw() ) {
 				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
 			}
+      
 		} elseif ( preg_match('/_category$/', $_REQUEST['action']) ) {
 			$view = new PlaceMapCategoryView( $this->width );
 			if ( $view->draw() ) {
 				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
 			}
+      $this->addJQuery($view->getJQuery());
 
 		} elseif ( $_GET['action'] == 'add_pm' ) {
       $pm = new PlaceMap(true);

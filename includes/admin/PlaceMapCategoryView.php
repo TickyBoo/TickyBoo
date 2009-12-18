@@ -93,7 +93,19 @@ class PlaceMapCategoryView extends AdminView {
     if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
       $this->print_select('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
       //TODO : add script to disable the category_size when category_numbering <> none
-      $script = " ";
+      $script = "
+      $('#category_numbering-select').change(function(){
+        var category_size;
+        if($(this).val() == 'none'){
+          $('#category_size-input').val(category_size);
+          $('#category_size-tr').show();
+        }else{
+          $('#category_size-tr').hide();
+          category_size = $('#category_size-input').val();
+          $('#category_size-input').val('');
+        }
+      });
+      $('#category_numbering-select').change();";
       $this->addJQuery($script);
       $this->print_input('category_size', $data, $err, 6, 6);
     } else {

@@ -50,6 +50,7 @@ class EventTabsView extends AdminView {
            require_once ('OrtView.php');
            $viewer = new OrtView($this->width);
            $viewer->draw();
+           $this->addJQuery($viewer->getJQuery());
            break;
 
        case 1:

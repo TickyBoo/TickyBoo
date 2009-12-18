@@ -83,7 +83,8 @@ class AdminPage extends AUIComponent {
     }
     $this->drawChild($body);
     echo"</td></tr></table>\n";
-
+    
+    
     if(is_object($body)){
       $this->setJQuery($body->getJQuery());
     }

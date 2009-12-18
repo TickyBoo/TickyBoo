@@ -324,8 +324,8 @@ class AdminView extends AUIComponent {
       }else{
         $prefix = "{$name}";
       }
-      echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
-            <td class='admin_value'><input type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
+      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+            <td class='admin_value'><input id='{$name}-input' type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
             ".printMsg($name, $err)."
             </td></tr>\n";
     }
@@ -493,7 +493,7 @@ class AdminView extends AUIComponent {
 
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>" . con($name) . "</td>
               <td class='admin_value'>
-               <select name='$name' $actions>\n";
+               <select id='{$name}-select' name='$name' $actions>\n";
 
         foreach($opt as $v) {
             echo "<option value='$v'{$sel[$v]}>" . con($name . "_" . $v) . "</option>\n";
