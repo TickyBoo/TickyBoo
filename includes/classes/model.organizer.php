@@ -55,9 +55,15 @@ class Organizer  Extends Model {
     return parent::update();
   }
 
+  function saveEx(){
+    if($id = parent::saveEx()){
+      $this->fillFilename($_POST, 'organizer_logo');
+    }
+    return $id;
+  }
+
   function CheckValues(&$arr){
    //if(empty($data['user_email'])){$err['user_email']=mandatory;}
-    $this->fillFilename($arr, 'organizer_logo');
     if($email=$arr['organizer_email']){
       $check_mail = preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email );
       if(!$check_mail){

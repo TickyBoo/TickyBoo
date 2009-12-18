@@ -172,7 +172,7 @@ class PlaceMapView extends AdminView {
       if (!$pm = PlaceMap::load((int)$_POST['pm_id'])) {
          $pm = new PlaceMap(true);
       }
-      if ( !$pm->fillPost() || !$pm->save() ) {
+      if ( !$pm->fillPost() || !$pm->saveEx() ) {
         $this->form( $_POST, null , con((isset($_POST['ort_id']))?'edit_pm':'add_pm') );
       } else {
         $this->form( (array)$pm, null , con('add_pm') );

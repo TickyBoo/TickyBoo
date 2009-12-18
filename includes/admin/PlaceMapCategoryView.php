@@ -134,7 +134,7 @@ class PlaceMapCategoryView extends AdminView {
       if (!$pmc = PlaceMapCategory::load((int)$_POST['category_id'])) {
          $pmc = new PlaceMapCategory(true);
       }
-      if (!$pmc->fillPost() || !$pmc->save()) {
+      if (!$pmc->fillPost() || !$pmc->saveEx()) {
         $this->form($_POST, null);
       } else {
         return true;

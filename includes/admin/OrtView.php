@@ -121,7 +121,7 @@ class OrtView extends AdminView {
       if (!$ort = ort::load($_POST['ort_id'])) {
          $ort = new ort(true);
       }
-      if ($ort->fillPost() && $ort->save()) {
+      if ($ort->fillPost() && $ort->saveEx()) {
         $this->table();
       } else {
         $this->form($_POST, null, con((isset($_POST['ort_id']))?'ort_update_title':'ort_insert_title'));

@@ -134,7 +134,7 @@ class DiscountView extends AdminView {
       if (!$disc = Discount::load((int)$_POST['discount_id'])) {
          $disc = new Discount(true);
       }
-      if ( !$disc->fillPost() || !$disc->save() ) {
+      if ( !$disc->fillPost() || !$disc->saveEx() ) {
         $this->form( $_POST, null , con((isset($_POST['ort_id']))?'discount_update_title':'discount_add_title') );
       } else {
         return true;

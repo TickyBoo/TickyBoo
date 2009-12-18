@@ -53,13 +53,15 @@ class Ort Extends Model {
       return $ort;
     }
   }
-  function CheckValues(&$arr) {
-    $this->fillFilename($arr, 'ort_image');
-    return parent::CheckValues($arr);
-  }
 
-  function _fill($arr, $nocheck=true){
-    return parent::_fill($arr, $nocheck);
+  function saveEx(){
+    if($id = parent::saveEx()){
+      $this->fillFilename($_POST, 'ort_image');
+
+      echo "helo::";
+    }
+
+    return $id;
   }
 
   function copy (){

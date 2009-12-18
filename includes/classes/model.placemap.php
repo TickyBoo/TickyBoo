@@ -70,6 +70,12 @@ class PlaceMap Extends Model {
     return $pms;
   }
 
+  function saveEx(){
+    if($id = parent::saveEx()){
+      $this->fillFilename($_POST, 'pm_image');
+    }
+    return $id;
+  }
 
   function publish ($pm_id, $event_id, &$stats, &$pmps, $dry_run=FALSE){
     if(!$dry_run){ShopDB::begin('Publish placemap');}
@@ -114,7 +120,6 @@ class PlaceMap Extends Model {
   }
 
   function delete (){
-
     if(ShopDB::begin('delete Placmap: '.$this->pm_id)){
       if (!$this->pm_id) return self::_abort('Cant_delete_without_id');
       if ($this->pm_event_id){
@@ -225,16 +230,5 @@ class PlaceMap Extends Model {
     }
     return ShopDB::commit('copied Placmap to event:');
   }
-
-  function CheckValues(&$arr) {
-    $this->fillFilename($arr, 'pm_image');
-    return parent::CheckValues($arr);
-  }
-
-  function _fill($arr, $nocheck=true){
-    return parent::_fill($arr, $nocheck);
-  }
-
-
 }
 ?>

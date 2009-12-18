@@ -38,7 +38,7 @@ class Model {
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
 
-  protected $_idName;
+  protected $_idName = false;
   protected $_tableName;
   protected $_columns = array();
 
@@ -83,6 +83,10 @@ class Model {
     }
   }
 
+  function SaveEx($id = null, $exclude=null){
+    return $this->Save($id, $explude);
+  }
+
   function insert($exclude=null){
   // $this->_idName
   // unset($this->$this->_idName);
@@ -103,10 +107,11 @@ class Model {
       $sql .= " WHERE `{$this->_idName}` = "._esc($this->id)  ;
     }
     $sql .= " LIMIT 1";
-    if (ShopDB::query($sql)) {
+    if ($data = ShopDB::query($sql)) {
       return ($this->_idName) ? $this->id : true; // Not always correct due to mysql update bug/feature
-    } else
+    } else {
       return false;
+    }
   }
 
   function quoteColumnVals() {
@@ -187,13 +192,17 @@ class Model {
 
   function fillFilename (&$array, $name, $removefile= true) {
     global $_SHOP;
-
+    //if (!$this->id) {return false;}
     $remove = 'remove_' . $name;
     if (isset($array[$remove])) {
       if ($removefile) {
         @ unlink( $_SHOP->files_dir . DS  .$this->$name);
       }
-      $array[$name] = '';
+      $this->$name = null;
+      $query = "update {$this->_tableName} set
+                  {$name} = NULL
+                where {$this->_idName} = {$this->id}";
+      ShopDB::query($query);
     } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
       if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) {
         return addError($name,'img_loading_problem_match');
@@ -209,14 +218,18 @@ class Model {
         return addError($name,'img_loading_problem_ext');
       }
 
-      $doc_name =  (($this->$name)?pathinfo($this->$name,PATHINFO_FILENAME ):uniqid(strtolower($name))). '.' . $ext;
+      $doc_name =  strtolower($name). "_{$this->id}.{$ext}";
 
       if (!move_uploaded_file ($_FILES[$name]['tmp_name'], $_SHOP->files_dir .DS. $doc_name)) {
         return addError($name,'img_loading_problem_copy');
       }
 
-      chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
-      $array[$name] = $doc_name;
+      @chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
+      $this->$name = $doc_name;
+      $query = "update {$this->_tableName} set
+                  {$name} = "._esc($doc_name)."
+                where {$this->_idName} = {$this->id}";
+      ShopDB::query($query);
 //
     }
     return true;

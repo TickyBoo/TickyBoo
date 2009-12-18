@@ -660,7 +660,7 @@ class PlaceMapPartView extends AdminView {
         $pmp = new PlaceMapPart;
         $pmp->pmp_event_id = $pm->pm_event_id;
         $pmp->pmp_pm_id    = $pm->pm_id;
-        if ((!$pmp->fillPost() or !$pmp->save()) && !$_POST['pmp_id'] ) {
+        if ((!$pmp->fillPost() or !$pmp->saveEx()) && !$_POST['pmp_id'] ) {
           $this->form($_POST, null);
         } else {
           $this->view($pmp->pmp_id,null);

@@ -80,7 +80,7 @@ class Event Extends Model {
    // print_r(debug_backtrace());
     if (ShopDB::begin('Save event')) {
       if ($checkRecursion && isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
-         return $this->saveRecursion();
+         if (!$this->saveRecursion()) { return false;}
       } else {
         if(!$new){
           if($this->event_rep=='main' && !$this->update_subs()) {
@@ -100,12 +100,23 @@ class Event Extends Model {
           } else {
             return self::_abort('Cant find selected placemap.');
           }
+          if ($this->event_rep=='sub') {
+            Discount::Copy($this->event_main_id, $this->event_id);
+          }
         }
       }
       if (ShopDB::commit('event Saved ')){
         return $this->event_id;
       }
     }
+  }
+
+  function saveEx(){
+    if($id = parent::saveEx()){
+      $this->fillFilename($_POST, 'event_image');
+      $this->fillFilename($_POST, 'event_mp3');
+    }
+    return $id;
   }
 
   // #######################################################
@@ -116,6 +127,9 @@ class Event Extends Model {
       }
  			$this->event_rep     = 'sub';
  			$this->event_main_id = $id;
+      if ($this->CheckValues ((array)$this)) {
+        return self::_abort('');
+      }
     }
  	  $event_dates = $this->getEventRecurDates();
 		foreach ($event_dates as $event_date) {
@@ -156,9 +170,6 @@ class Event Extends Model {
 		$this->fillTime($data,'event_open');
 		$this->fillTime($data,'event_end');
     $this->fillDate($data,'event_date');
-    $this->fillFilename($data, 'event_image');
-    $this->fillFilename($data, 'event_mp3');
-    print_r($data);
   	if ( $data['event_rep'] == 'unique' ) {
   		$data['event_rep'] = 'main,sub';
   	}

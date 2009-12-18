@@ -308,6 +308,9 @@ select SQL_CALC_FOUND_ROWS *
 		$this->print_input('event_name', $data, $err, 30, 100, $main );
 		if ( !$data['event_id'] ) {
 			$this->print_select_group( 'event_group_id', $data, $err, $main );
+      If ($data['event_ort_id']) {
+        $data['event_pm_ort_id'] = $data['event_pm_id'].','.$data['event_ort_id'];
+      }
 			$this->print_select_pm( 'event_pm_ort_id', $data, $err );
 		} else {
 			$this->print_field_o( 'event_group_name', $data );
@@ -345,6 +348,7 @@ select SQL_CALC_FOUND_ROWS *
 
 		$this->print_input( 'event_order_limit', $data, $err, 3, 4, $main  );
 		$this->print_select_tpl( 'event_template', $data, $err, $main );
+
 
 		$this->select_types( 'event_type', $data, $err, $main );
 
@@ -407,14 +411,15 @@ select SQL_CALC_FOUND_ROWS *
       if (!$event = Event::load($_POST['event_id'], false)) {
         $event = new Event(true);
       }
-      if (!$event->fillPost() || !$event->save()) {
+      if (!$event->fillPost() || !$event->saveEx()) {
 				$this->form( $_POST, null);
         return;
 			}
 
 		} elseif ( $_GET['action'] == 'remove' and $_GET['event_id'] ) {
-			$event = Event::load( $_GET['event_id'], false ); print_r($event);echo "asfadgd:", $_GET['event_id'];
-			$event->delete();
+			If ($event = Event::load( $_GET['event_id'], false )){
+			  $event->delete();
+      }
 		} elseif($_POST['action'] == 'remove_events') {
 		  if(count($_REQUEST['cbxEvents']) > 0)
 			  foreach($_REQUEST['cbxEvents'] as $eventId){

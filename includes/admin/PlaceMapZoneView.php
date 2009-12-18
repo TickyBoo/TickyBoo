@@ -139,7 +139,7 @@ class PlaceMapZoneView extends AdminView {
       if (!$pmc = PlaceMapZone::load((int)$_POST['pmz_id'])) {
          $pmc = new PlaceMapZone(true);
       }
-      if (!$pmc->fillPost() || !$pmc->save()) {
+      if (!$pmc->fillPost() || !$pmc->saveEx()) {
         $this->form($_POST, null);
       } else {
         return true;

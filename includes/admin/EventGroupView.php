@@ -116,7 +116,7 @@ class EventGroupView extends AdminView{
       if (!$eg = Eventgroup::load($_POST['event_group_id'])) {
          $eg = new Eventgroup(true);
       }
-      if ($eg->fillPost() && $eg->save()) {
+      if ($eg->fillPost() && $eg->saveEx()) {
         $this->table();
       } else {
         $this->form($_POST, null, con((isset($_POST['$event_group_id']))?'event_group_update_title':'event_group_add_title'));

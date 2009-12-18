@@ -61,11 +61,13 @@ class Discount  Extends Model {
     }
   }
 
-  function loadAll (){
-    $query="SELECT * FROM Discount";
+  function loadAll ($event_id){
+    $query="SELECT *
+            FROM Discount
+            Where discount_event_id ="._esc($event_id);
     if($res=ShopDB::query($query)){
       $discounts = array();
-      while($event_d=shopDB::fetch_assoc($res)){
+      while($row=shopDB::fetch_assoc($res)){
         $new = new Discount;
         $new->_fill($row);
         $discounts[]= $new;
@@ -86,6 +88,16 @@ class Discount  Extends Model {
         return self::_abort('cant delete discount');
       } else
         return ShopDB::commit('Deleted discount');
+    }
+  }
+
+  function copy($event_main_id, $event_sub_id) {
+    $discs = self::LoadAll($event_main_id);
+    print_r($discs);
+    foreach ($discs as $disc) {
+      $disc->discount_event_id = $event_sub_id;
+      unset($disc->discount_id);
+      $disc->save();
     }
   }
 

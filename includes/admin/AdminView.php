@@ -525,17 +525,14 @@ class AdminView extends AUIComponent {
         <td class='admin_value'>
         <select name='$name'>\n";
 
-        $act = $data[$name];
-
+        if ($act = $data[$name]){
+          echo "<option value='$act'style='color:$act;' selected>$act</option>\n";
+        }
         for($r = 16;$r < 256;$r += 64) {
             for($g = 16;$g < 256;$g += 64) {
                 for($b = 16;$b < 256;$b += 64) {
                     $color = '#' . dechex($r) . dechex($g) . dechex($b);
-                    if ($act == $color) {
-                        echo "<option value='$color'style='color:$color;' selected>$color</option>\n";
-                    } else {
-                        echo "<option value='$color'style='color:$color;'>$color</option>\n";
-                    }
+                    echo "<option value='$color'style='color:$color;'>$color</option>\n";
                 }
             }
         }
