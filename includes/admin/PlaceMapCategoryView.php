@@ -92,7 +92,6 @@ class PlaceMapCategoryView extends AdminView {
     $this->print_color('category_color', $data, $err);
     if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
       $this->print_select('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
-      //TODO : add script to disable the category_size when category_numbering <> none
       $script = "
       $('#category_numbering-select').change(function(){
         var category_size;

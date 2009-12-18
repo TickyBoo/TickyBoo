@@ -375,8 +375,10 @@ select SQL_CALC_FOUND_ROWS *
 			require_once ( "admin/PlaceMapView2.php" );
 			$pmp_view = new PlaceMapView( $this->width );
 			if ( !$pmp_view->draw($history) ) {
+        $this->addJQuery($pmp_view->getJQuery());
 				return;
-			}
+			} 
+      
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
     	  if($this->state_change(1)) {
           return;
