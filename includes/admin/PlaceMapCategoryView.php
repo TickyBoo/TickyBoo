@@ -93,15 +93,15 @@ class PlaceMapCategoryView extends AdminView {
     if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
       $this->print_select('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
       $script = "
+      var category_size = 0;
       $('#category_numbering-select').change(function(){
-        var category_size;
         if($(this).val() == 'none'){
           $('#category_size-input').val(category_size);
           $('#category_size-tr').show();
         }else{
           $('#category_size-tr').hide();
           category_size = $('#category_size-input').val();
-          $('#category_size-input').val('');
+          $('#category_size-input').val('0');
         }
       });
       $('#category_numbering-select').change();";

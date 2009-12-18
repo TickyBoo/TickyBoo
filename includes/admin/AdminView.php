@@ -297,7 +297,7 @@ class AdminView extends AUIComponent {
 
     function print_field ($name, &$data, $prefix='') {
 
-        echo "<tr><td id='{$name}-tr' class='admin_name' width='40%'>$prefix" , con($name) , "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name' width='40%'>$prefix" , con($name) , "</td>
               <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
     }
 
@@ -344,8 +344,8 @@ class AdminView extends AUIComponent {
 
     function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '') {
       $suffix = self::_check($name, $suffix,$data);
-      echo "<tr><td id='{$name}-tr' class='admin_name'>$suffix" . con($name) . "</td>
-          <td class='admin_value'><textarea rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
+      echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
+          <td class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
           ".printMsg($name, $err)."
           </td></tr>\n";
     }
@@ -353,7 +353,7 @@ class AdminView extends AUIComponent {
     function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='') {
       $suffix = self::_check($name, $suffix,$data);
       echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
-              <tr><td colspan='2' class='admin_value'><textarea rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
+              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
               </td></tr>\n";
     }
 
@@ -375,7 +375,7 @@ class AdminView extends AUIComponent {
     <td class='admin_value'>";
         if (!empty($set)) {
             foreach ($set as $value) {
-                echo "<a class='link' href='$file_name?action=view&$key_name=" . $value["id"] . "'>" . $value[$column_name] . "</a><br>";
+                echo "<a id='{$name}-a' class='link' href='$file_name?action=view&$key_name=" . $value["id"] . "'>" . $value[$column_name] . "</a><br>";
             }
         }
         echo "</td></tr>\n";
@@ -483,7 +483,7 @@ class AdminView extends AUIComponent {
     function print_url ($name, &$data, $prefix = ''){
         echo "<tr id='{$name}-tr'><td class='admin_name' width='40%'>$prefix" . con($name) . "</td>
     <td class='admin_value'>
-    <a href='{$data[$name]}' target='blank'>{$data[$name]}</a>
+    <a id='{$name}-a' href='{$data[$name]}' target='blank'>{$data[$name]}</a>
     </td></tr>\n";
     }
 
@@ -511,7 +511,7 @@ class AdminView extends AUIComponent {
         }
 
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%' $mu>" . con($name) . "</td>
-                <td class='admin_value'> <select name='$name'  $actions>\n";
+                <td class='admin_value'> <select id='{$name}-select' name='$name'  $actions>\n";
 
         foreach($opt as $k => $v) {
             echo "<option value='$k'{$sel[$k]}>".con($v)."</option>\n";
@@ -523,7 +523,7 @@ class AdminView extends AUIComponent {
     function print_color ($name, &$data, &$err) {
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>" . con($name) . "</td>
         <td class='admin_value'>
-        <select name='$name'>\n";
+        <select id='{$name}-select' name='$name'>\n";
 
         if ($act = $data[$name]){
           echo "<option value='$act'style='color:$act;' selected>$act</option>\n";
@@ -558,9 +558,8 @@ class AdminView extends AUIComponent {
       					}
       					echo "<img $attr src='$src'>";
            		}else{
-           			echo "<strong>File does not exsist</strong>";
+           			echo "<strong>".con("file_not_exsist")."</strong>";
            		}
-//                echo "<td class='admin_value'><img width=300 src='$src'>";
             } else {
                 echo "<td class='admin_value'><a class=link href='$src'>{$data[$name]}</a>";
             }
@@ -591,7 +590,7 @@ class AdminView extends AUIComponent {
       					}
       					echo "<img $attr src='$src'>";
            		}else{
-           			echo "<strong>File does not exsist</strong>";
+           			echo "<strong>".con("file_not_exsist")."</strong>";
            		}
             } else {
                 echo "<a href='$src'>{$data[$name]}</a>";
@@ -599,10 +598,10 @@ class AdminView extends AUIComponent {
 
             echo "</td></tr>
               <tr>
-                <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td>
+                <td class='admin_value'><input id='{$name}-file' type='file' name='$name'>".printMsg($name, $err)."</td>
               </tr>
               <tr>
-                <td class='admin_value'><input type='checkbox'  name='remove_$name' value='1'>  " . con('remove_image') . "</td>
+                <td class='admin_value'><input id='{$name}-checkbox' type='checkbox' name='remove_$name' value='1'>  " . con('remove_image') . "</td>
               </tr>\n";
         }
     }
@@ -625,7 +624,7 @@ class AdminView extends AUIComponent {
     }
 
     echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>" . con($name) . "</td>
-            <td class='admin_value'><select name='$name'>";
+            <td class='admin_value'><select id='{$name}-select' name='$name'>";
     $si[$selected]=' selected';
     foreach ($_COUNTRY_LIST as $key=>$value){
       $si[$key] = (isset($si[$key]))?$si[$key]:'';
