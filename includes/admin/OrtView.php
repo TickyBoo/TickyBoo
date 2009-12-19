@@ -51,7 +51,7 @@ class OrtView extends AdminView {
           echo "<tr class='admin_list_row_$alt'>";
           echo "<td class='admin_list_item' width='50%'>{$row['ort_name']}</td>\n";
           echo "<td class='admin_list_item'>{$row['ort_city']}</td>\n";
-          echo "<td class='admin_list_item'width='80' align='right' nowrap><nowrap>";
+          echo "<td class='admin_list_item'width='60' align='right' nowrap><nowrap>";
           echo $this->print_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}","edit",2);
           echo $this->print_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&ort_id={$row['ort_id']}\";}","remove",2);
           echo "</nowrap></td>\n";
