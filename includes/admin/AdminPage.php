@@ -177,11 +177,9 @@ class AdminPage extends AUIComponent {
 
     function drawFoot() {
       global $_SHOP;
-      /*$body = $this->items['body'];
-      if(is_object($body)){
-        $this->setJQuery($body->getJQuery());
-      }*/
+      
       print_r($_SHOP->Messages);
+      
       echo "
       <br><br>
       <script type=\"text/javascript\">
@@ -189,14 +187,9 @@ class AdminPage extends AUIComponent {
             $(\"a[class*='has-tooltip']\").tooltip({
               delay:40,
               showURL:false,
-              bodyHandler: function() {
-                var idString = $(this).attr(\"id\");
-                if(idString != ''){
-                  var toolTipId = '#'+idString+'-tooltip'; 
-                  if($(toolTipId).html() != ''){
-                    return $(toolTipId).html();
-                  }
-                  return false;
+              bodyHandler: function() { 
+                if($(this).children('div').html() != ''){
+                  return $(this).children('div').html();
                 }else{
                   return false;
                 }

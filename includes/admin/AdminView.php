@@ -445,11 +445,11 @@ class AdminView extends AUIComponent {
       if($text){
         $rtn .= con($name);
       }
-      $rtn .= "</a>";
-      //Add on the Tooltip div for the text
+       //Add on the Tooltip div for the text
       if(!empty($hasTTClass)){
         $rtn .= "<div id='".$toolTipName."' style='display:none;'>".$toolTipText."</div>";
       }
+      $rtn .= "</a>";
       
       return $rtn;
     }
