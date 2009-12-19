@@ -40,23 +40,23 @@ class EventPropsView extends EventViewCommon {
 	function table($history=false) {
 		global $_SHOP;
 
+		echo "<script>";
+		echo "var val=1;";
 		echo "
-    <script>
-  		var val=1;
-  		function checkall()	{
-				for(i=0;i<document.getElementsByTagName('input').length;i++){
-					if(document.getElementsByTagName('input')[i].type == 'checkbox'){
-    			  if(document.getElementsByTagName('input')[i].checked == false && val==1)	{
-              document.getElementsByTagName('input')[i].checked=true;
-       			}
-						if(document.getElementsByTagName('input')[i].checked == true && val==0)	{
-							 document.getElementsByTagName('input')[i].checked=false;
-						}
-          }
-				}
-				val=(val==1)?0:1;
-	  	}
-    </script>\n";
+    function checkall()	{
+      for(i=0;i<document.getElementsByTagName('input').length;i++){
+        if(document.getElementsByTagName('input')[i].type == 'checkbox'){
+          if(document.getElementsByTagName('input')[i].checked == false && val==1) {
+            document.getElementsByTagName('input')[i].checked=true;
+     			}
+					if(document.getElementsByTagName('input')[i].checked == true && val==0)	{
+				    document.getElementsByTagName('input')[i].checked=false;
+					}
+        }
+      }
+			val=(val==1)?0:1;
+  	}
+  </script>\n";
 
 /*
 select SQL_CALC_FOUND_ROWS *

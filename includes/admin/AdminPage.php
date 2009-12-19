@@ -121,6 +121,7 @@ class AdminPage extends AUIComponent {
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.caret.js\"></script>
     <script><!--
       function set_lang(box)
       {
@@ -175,28 +176,27 @@ class AdminPage extends AUIComponent {
       echo printMsg('__Notice__');
   }
 
-    function drawFoot() {
-      global $_SHOP;
-      
-      print_r($_SHOP->Messages);
-      
-      echo "
+  function drawFoot() {
+    global $_SHOP;
+    
+    print_r($_SHOP->Messages);
+    echo "
       <br><br>
       <script type=\"text/javascript\">
-         $(document).ready(function(){
-            $(\"a[class*='has-tooltip']\").tooltip({
-              delay:40,
-              showURL:false,
-              bodyHandler: function() { 
-                if($(this).children('div').html() != ''){
-                  return $(this).children('div').html();
-                }else{
-                  return false;
-                }
+        $(document).ready(function(){
+          $(\"a[class*='has-tooltip']\").tooltip({
+            delay:40,
+            showURL:false,
+            bodyHandler: function() { 
+              if($(this).children('div').html() != ''){
+                return $(this).children('div').html();
+              }else{
+                return false;
               }
-            });
-            ". is($this->items['jquery'],'') ."
-         });
+            }
+          });
+          ". is($this->items['jquery'],'') ."
+        });
       </script>
       <div id='footer'>
      		 <!-- To comply with our GPL please keep the following link in the footer of your site -->

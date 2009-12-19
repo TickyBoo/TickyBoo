@@ -146,7 +146,9 @@ class TemplateView extends AdminView{
 
   function template_form_swift(&$data, &$err, $title, $type) {
     global $_SHOP;
-
+    
+    $this->codeInsert();
+    
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
@@ -194,7 +196,8 @@ class TemplateView extends AdminView{
   function template_form (&$data, &$err, $title, $type) {
     global $_SHOP;
 
-
+    $this->codeInsert();
+    
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
@@ -321,6 +324,29 @@ class TemplateView extends AdminView{
   		return true;
    	}
   }
+  
+  private function codeInsert(){
+    $script = "
+      //Add Listeners for the selected field.
+      var curInput = false;
+      $('input[name*=\"template\"]').live('click',function(){
+        curInput = this;
+      });
+      $('textarea[name*=\"template\"]').live('click',function(){
+        curInput = this;
+      });
+      
+      //Add Listener for the option field.
+      $('#template-vars').dblclick(function(e){
+        var name = $(this).val();
+        name = '{ $'+name+' }';
+        if(curInput){
+          $(curInput).insertAtCaret(name);
+        }
+      });
+    ";
+    $this->addJQuery($script);
+  }
 
   function draw (){
     global $_SHOP;
@@ -377,36 +403,36 @@ class TemplateView extends AdminView{
 			}
   	}elseif ($_POST['action'] == 'update'){
       $this->preInsertEmailTemp();
-      		if (!$this->template_check($_POST, $err)){
-        		if($type == "swift" ){
-              $this->template_form_swift($_POST, $err, template_add_title,$type);
-            }else{
-           	  $this->template_form($_POST, $err, template_add_title, $type);
-            }
-      		}else{
-        		$query = "UPDATE Template SET
-    					template_name=" . _esc($_POST['template_name']) . ",
-					    template_type=" . _esc($type) . ",
-					    template_text=" . _esc($_POST['template_text']) . ",
-					    template_status='new'
-					    WHERE template_id="._esc((int)$_POST['template_id']);
- 				// echo $query;
-        		if (!ShopDB::query($query)){
-          			return 0;
-        		}
+      if (!$this->template_check($_POST, $err)){
+        if($type == "swift" ){
+          $this->template_form_swift($_POST, $err, template_add_title,$type);
+        }else{
+          $this->template_form($_POST, $err, template_add_title, $type);
+        }
+     	}else{
+    		$query = "UPDATE Template SET
+			   template_name=" . _esc($_POST['template_name']) . ",
+  		   template_type=" . _esc($type) . ",
+  		   template_text=" . _esc($_POST['template_text']) . ",
+  		   template_status='new'
+  		   WHERE template_id="._esc((int)$_POST['template_id']);
+        
+        if (!ShopDB::query($query)){
+          return 0;
+       	}
 
-        		if ($this->compile_template($_POST['template_name'])){
-          			$this->template_list($type);
-        		}else{
-        			//if (get_magic_quotes_gpc ()) this is done automaticaly by init_common now
-           		//$_POST['template_text'] = stripslashes (  $_POST['template_text']);
-        			if($type == "swift" ){
-                $this->template_form_swift($_POST, $err, template_add_title,$type);
-              }else{
-             	  $this->template_form($_POST, $err, template_add_title, $type);
-              }
-        		}
-      		}
+     		if ($this->compile_template($_POST['template_name'])){
+          $this->template_list($type);
+      	}else{
+          //if (get_magic_quotes_gpc ()) this is done automaticaly by init_common now
+          //$_POST['template_text'] = stripslashes (  $_POST['template_text']);
+          if($type == "swift" ){
+            $this->template_form_swift($_POST, $err, template_add_title,$type);
+          }else{
+            $this->template_form($_POST, $err, template_add_title, $type);
+          }
+      	}
+      }
   	}elseif ($_GET['action'] == 'add'){
  	      if($type=='swift'){
  	        $this->template_form_swift($row, $err, template_add_title, $type);
@@ -465,18 +491,22 @@ class TemplateView extends AdminView{
       $_POST['template_text']=serialize($_POST['template_array']);
     }
   }
+
   function extramenus(&$menu) {
     global $order;
-    if ($_REQUEST['action']!=='edit') {return;}
+    
+    if ( ($_REQUEST['action']!=='edit') && ($_REQUEST['action']!=='add') ) {return;}
     $include="
     <table width='190' class='menu_admin' cellspacing='2' style='padding-left: 0px;'>
       <tr><td class='menu_admin_title'>".con('legende')."</td></tr>
       <tr><td  style='padding-right: 0px;'>
-         <select name='choicefield'  multiple='multiple' size='15'class='menu_admin' style='border: none; width:100% '>";
+         <select id='template-vars' name='choicefield'  multiple='multiple' size='15'class='menu_admin' style='border: none; width:100% '>";
+         
     require_once('templatedata.php');
+    
     $select ='';
     foreach($order as $key => $value) {
-      echo $test = substr($key,0,strpos($key,'_'));
+      //echo $test = substr($key,0,strpos($key,'_'));
       if ($key == 'bill') {
         $include .= "<OPTGROUP LABEL='".con('Bill')."'/>";
         $value = reset($value);
