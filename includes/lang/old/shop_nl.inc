@@ -169,7 +169,7 @@ define("ordered","Besteld");
 define("order_date","Order datum");
 define("status","Status");
 define("cancelled","Geannuleerd");
-define("reemitted","Afgewezen");
+define("reissued","Afgewezen");
 define("sent","Verstuurd");
 define("notsent",""Niet verzonden");
 define("paid","betaald");
@@ -197,7 +197,7 @@ define("pers_mess2","Alleen de 6 laatste bestellingen worden getoond.<br><br>Kli
 define("ordernumber","Bestelnummer");
 define("Orderdate","Besteldatum");
 define("pers_cancel","Geannuleerd");
-define("pers_reemit","Remade");
+define("pers_reissue","Remade");
 define("pers_res","Gereserveerd");
 define("pers_send","Betaald & verzonden");
 define("pers_payed","Betaald");

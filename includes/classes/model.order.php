@@ -498,7 +498,7 @@ class Order Extends Model {
 
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order_old['order_id'],'ord',null,'Order::reserve_to_order','Order Completed Reissue')){
-        return Order::_abort('order_cannot_reemit_update_status');
+        return Order::_abort('order_cannot_reissue_update_status');
       }
 
       //returns cost of seats Adds up the seats with the same order id.
@@ -564,7 +564,7 @@ class Order Extends Model {
 
   function reissue ($order_id){
 
-    if(ShopDB::begin('reemit order: '.$order_id)){
+    if(ShopDB::begin('reissue order: '.$order_id)){
       //loads old order into var
       $query="SELECT *
               FROM `Order`
@@ -575,13 +575,13 @@ class Order Extends Model {
 
       //checks to see if its an remitted or canceled order!
       if($order['order_status']=='cancel' or
-      $order['order_status']=='reemit'){
-        return Order::_abort(order_already_reemited_canceled);
+       $order['order_status']=='reissue'){
+        return Order::_abort('order_already_reissue_canceled');
       }
 
       //Update Status to let the admin know the order has been remitted.
-      if(!OrderStatus::statusChange($order['order_id'],'reemit',null,'Order::reissue','Order Reissue')){
-        return Order::_abort('order_cannot_reemit_update_status_1');
+      if(!OrderStatus::statusChange($order['order_id'],'reissue',null,'Order::reissue','Order Reissue')){
+        return Order::_abort('order_cannot_reissue_update_status_1');
       }
 
       //Selects Seats from old order using passed order_id from 'params'
@@ -590,7 +590,7 @@ class Order Extends Model {
         return Order::_abort(order_cannot_lock_seats);
       }
       //Runs through each seat and gives it a new seat_code and the new order_id.
-      $seats = Seat::loadAllEvent($order['order_id']);
+      $seats = Seat::loadAllOrder($order['order_id']);
       foreach($seats as $seat ){
         $seat->seat_code=Seat::generate_code(8);
         if (!$seat->save()){
@@ -599,15 +599,15 @@ class Order Extends Model {
       }
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
-        return Order::_abort('order_cannot_reemit_update_status');
+        return Order::_abort('order_cannot_reissue_update_status');
       }
 
       //Commit and finish
-      if(!ShopDB::commit('order reemited')){
-        return addWarning('order_cannot_reemit');
+      if(!ShopDB::commit('order reissued')){
+        return addWarning('order_cannot_reissue');
       }
 
-      addNotice('order_type_reemited_Success');
+      addNotice('order_type_reissued_Success');
 
       return $order['order_id'];
     }
@@ -659,7 +659,7 @@ class Order Extends Model {
     if(ShopDB::begin('set_statusEx to '.$new_status)){
       $order=Order::load($order_id);
       if($order->order_status=='cancel' or
-         $order->order_status=='reemit'){
+         $order->order_status=='reissue'){
         return false;
       }
       if (!$order->set_status ($new_status)) {
@@ -685,7 +685,7 @@ class Order Extends Model {
     $old_status=$this->order_status;
     //checks to see if its an remitted or canceled order!
     if($this->order_status=='cancel' or
-       $this->order_status=='reemit'){
+       $this->order_status=='reissue'){
       return false;
     }
 

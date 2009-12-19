@@ -42,7 +42,7 @@
         			<table width='100' >
         			  <tr>
     		   		    <td align='center'>
-    				        {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
+    				        {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"}
               				<a href='print.php?mode=doit&order_id={$shop_order.order_id}'><img border='0' src='{$_SHOP_themeimages}printer.gif'></a>
               				<a href='javascript:if(confirm("Delete Order?")){literal}{location.href="view.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
               				<img border='0' src='{$_SHOP_themeimages}trash.png'></a>
@@ -77,7 +77,7 @@
     		    <font color='blue'>{!ordered!}</font>
     		  {elseif $shop_order.order_status eq "cancel"}
     		    <font color='#cccccc'>{!cancelled!}</font>
-    		  {elseif $shop_order.order_status eq "reemit"}
+    		  {elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}
     		    <font color='#ffffcc'>{!reemitted!}</font>
     		    (<a href='view.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
     		      {$shop_order.order_reemited_id}</a>)

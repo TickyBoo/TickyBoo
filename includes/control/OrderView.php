@@ -209,9 +209,9 @@ class OrderView extends AUIComponent{
       case 'send':  return "<font color='red'>".con('sended')."</font>";
       case 'payed': return "<font color='green'>".con('payed')."</font>";
       case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
-      case 'reemit':return "<font color='#787878'>".con('reemited')."</font> (
-      <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reemited_id']}'>
-      {$order['order_reemited_id']}</a> )";
+      case 'reissue':return "<font color='#787878'>".con('reissued')."</font> (
+      <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reissued_id']}'>
+      {$order['order_reissued_id']}</a> )";
     }
   }
 

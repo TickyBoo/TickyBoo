@@ -104,7 +104,7 @@
    {order->order_list user_id=$user->user_id order_by_date="DESC" length=6}
 		    {if $shop_order.order_status eq "cancel"}
 				<tr class='user_order_{$shop_order.order_status}'>
-			{elseif $shop_order.order_status eq "reemit"}
+			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}
 				<tr class='user_order_{$shop_order.order_status}'>
 			{elseif $shop_order.order_status eq "res"}
 				<tr class='user_order_{$shop_order.order_status}'>
@@ -123,7 +123,7 @@
 			<td class='admin_info'>{$shop_order.order_total_price}</td>
 			<td class='admin_info'>
 			{if $shop_order.order_status eq "cancel"}{!pers_cancel!}
-			{elseif $shop_order.order_status eq "reemit"}{!pers_reeemit!}
+			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}{!pers_reissue!}
 			{elseif $shop_order.order_status eq "res"}{!pers_res!}
 			{elseif $shop_order.order_shipment_status eq "send"}{!pers_send!}
 			{elseif $shop_order.order_payment_status eq "payed"}{!pers_payed!}

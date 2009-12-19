@@ -379,7 +379,11 @@ class AdminView extends AUIComponent {
       }
       $text = false;
       $icon = false;
-      $iconArr = array('add'=>array('image'=>'add.png'),'edit','delete');
+      $iconArr = array(
+        'add'=>array('image'=>'add.png'),
+        'edit'=>array('image'=>'edit.gif'),
+        'delete'=>array('image'=>'trash.png'),
+        'remove'=>array('image'=>'trash.png'));
       
       if($type===1 || $type >= 3){
         $icon = false;
@@ -388,7 +392,7 @@ class AdminView extends AUIComponent {
       if($type===2 || $type >= 3){
         foreach($iconArr as $icoNm=>$iconDtl){
           $name2 = strtolower($name);
-          if(preg_match('/'.$name2.'/',$icoNm)){
+          if(preg_match('/^'.$icoNm.'/',$name2)){
             $icon = $icoNm;
             $image = $iconDtl['image'];
             break;
@@ -399,11 +403,11 @@ class AdminView extends AUIComponent {
         }
       }
       if($icon && $image && $text){ $css = 'admin-buttona-icon-left'; }else{ $css = ''; }
-      $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link' href='".empt($url,'#')."' >";
+      $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link' href='".empt($url,'#')."' title='".con($name)."' >";
       if($icon && $image && $text){
         $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title=".con($name)." ></span>";
       }elseif($icon && $image){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\");' title=".con($name)." ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\");' title='".con($name)."' ></span>";
       }
       if($text){
         $rtn .= con($name);

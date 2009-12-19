@@ -37,7 +37,7 @@
   <td class='admin_info'><img src='{$_SHOP_themeimages}dot.gif' class='admin_order_send' width='15' height='15' /> {!sent!}</td>
   <td class='admin_info'><img src='{$_SHOP_themeimages}dot.gif' class='admin_order_payed' width='15' height='15' /> {!paid!}</td>
   <td class='admin_info'><img src='{$_SHOP_themeimages}dot.gif' class='admin_order_cancel' width='15' height='15' /> {!canceled!}</td>
-  <td class='admin_info'><img src='{$_SHOP_themeimages}dot.gif' class='admin_order_reemit' width='15' height='15' /> {!reemitted!}</td>
+  <td class='admin_info'><img src='{$_SHOP_themeimages}dot.gif' class='admin_order_reemit' width='15' height='15' /> {!reissued!}</td>
   <td class='admin_info'><img src='{$_SHOP_themeimages}dot.gif' class='admin_order_res' width='15' height='15' /> {!reserved!}</td>
   </tr>
   </table>

@@ -193,7 +193,7 @@ function order_details ($order_id){
  function ticket_commands ($order_id,$ticket_id){
    $params=$_GET;
    $params['seat_id']=$ticket_id;
-   $com["reemit"]=$this->link("reemit_ticket",$order_id,"remis.png",TRUE,con('reemit_ticket')." $ticket_id",$params);
+   $com["reissue"]=$this->link("reissue_ticket",$order_id,"remis.png",TRUE,con('reissue_ticket')." $ticket_id",$params);
    $com["delete"]=$this->link("delete_ticket",$order_id,"trash.png",TRUE,con('delete_ticket')." $ticket_id",$params);
    return $com;
  }
@@ -201,7 +201,7 @@ function order_details ($order_id){
 
  function order_commands ($order,$list=TRUE){
      if($list){$com["details"]=$this->link("details",$order["order_id"],"view.png");}
-     if($order['order_status']=='reemit' or $order['order_status']=='cancel'){
+     if($order['order_status']=='reissue' or $order['order_status']=='cancel'){
        if(empty($com)){$com[]='';}
        return $com;
      }
@@ -229,7 +229,7 @@ function order_details ($order_id){
      }
 
      if(!$list){
-       $com["reemit"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,con('reemit_order'),$_GET);
+       $com["reissue"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,con('reissue_order'),$_GET);
        $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png");
      }
      if(empty($com)){$com[]='';}
@@ -260,7 +260,7 @@ function order_list (){
   $tr['ord']     = con('order_type_ordered');
   $tr['send']    = con('order_type_sended');
   $tr['cancel']  = con('order_type_canceled');
-  $tr['reemit']  = con('order_type_reemited');
+  $tr['reissue']  = con('order_type_reissued');
   $tr['pending'] = con('order_type_pending');
   $tr['payed']   = con('order_type_payed');
   $tr['res']     = con('order_type_reserved');
@@ -291,8 +291,8 @@ function order_list (){
                                                                         "&order_payment_status={$obj['order_payment_status']}'>";
   		if($obj['order_status']=='cancel'){
   		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&order_handling_id=$hand'>".con('purge')."</a>)";
-  		}elseif($obj['order_status']=='reemit'){
-  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".con('purge')."</a>)";
+  		}elseif($obj['order_status']=='reissue'){
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_rereissued&order_handling_id=$hand'>".con('purge')."</a>)";
   		}else{
   			$purge='';
   		}
@@ -337,7 +337,7 @@ function order_event_list (){
   $tr['ord']     = con('order_type_ordered');
   $tr['send']    = con('order_type_sended');
   $tr['cancel']  = con('order_type_canceled');
-  $tr['reemit']  = con('order_type_reemited');
+  $tr['reissue']  = con('order_type_reissued');
   $tr['pending'] = con('order_type_pending');
   $tr['payed']   = con('order_type_payed');
   $tr['res']     = con('order_type_reserved');
@@ -367,8 +367,8 @@ function order_event_list (){
 
 /*  		if($obj->order_status=='cancel'){
   		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&event_id=$hand'>".purge."</a>)";
-  		}elseif($obj->order_status=='reemit'){
-  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reemited&order_handling_id=$hand'>".purge."</a>)";
+  		}elseif($obj->order_status=='reissue'){
+  		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_reissued&order_handling_id=$hand'>".purge."</a>)";
   		}else{
   			$purge='';
   		} */
@@ -417,7 +417,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
   $tr['ord']     = con('order_type_ordered');
   $tr['send']    = con('order_type_sended');
   $tr['cancel']  = con('order_type_canceled');
-  $tr['reemit']  = con('order_type_reemited');
+  $tr['reissue']  = con('order_type_reissued');
   $tr['pending'] = con('order_type_pending');
   $tr['payed']   = con('order_type_payed');
   $tr['res']     = con('order_type_reserved');
@@ -439,7 +439,7 @@ function order_sub_list ($order_handling_id,$order_status,$order_shipment_status
 
     $com=$this->order_commands($row,TRUE);
     echo "<td class='admin_list_item'>".$com["details"]." ".$com["print"]."</td>
-          <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reemit"]." ".$com["delete"]."</td>";
+          <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reissue"]." ".$com["delete"]."</td>";
     echo "</tr>";
   }
 
@@ -453,7 +453,7 @@ function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$o
   $tr['ord']     = con('order_type_ordered');
   $tr['send']    = con('order_type_sended');
   $tr['cancel']  = con('order_type_canceled');
-  $tr['reemit']  = con('order_type_reemited');
+  $tr['reissue']  = con('order_type_reissued');
   $tr['pending'] = con('order_type_pending');
   $tr['payed']   = con('order_type_payed');
   $tr['res']     = con('order_type_reserved');
@@ -506,7 +506,7 @@ function order_event_sub_list ($event_id,$order_status,$order_shipment_status,$o
 
     $com=$this->order_commands($row,TRUE);
     echo "<td class='admin_list_item'>".$com["details"]." ".$com["print"]."</td>
-          <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reemit"]." ".$com["delete"]."</td>";
+          <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reissue"]." ".$com["delete"]."</td>";
     echo "</tr>";
   }
 
@@ -559,7 +559,7 @@ function draw($noTab=false){
     }
   }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Order::delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
-  }elseif($_GET['action1']=="reemit_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
+  }elseif($_GET['action1']=="reissue_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
     Seat::reIssue($_GET["order_id1"], $_GET['seat_id']);
   }
 
@@ -594,8 +594,8 @@ function draw($noTab=false){
 		Order::purgeDeleted((int)$_GET['order_handling_id']);
     $this->order_list();
 
-	} else if($_GET['action']=='purge_reemited'){
-		Order::purgeReemited((int)$_GET['order_handling_id']);
+	} else if($_GET['action']=='purge_reissued'){
+		Order::purgeReissued((int)$_GET['order_handling_id']);
     $this->order_list();
 
   } elseif($_SESSION['_overview_tab']==1) {
@@ -622,9 +622,9 @@ function print_order_status ($order){
     case 'send':  return "<font color='red'>".con('sended')."</font>";
     case 'payed': return "<font color='green'>".con('payed')."</font>";
     case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
-    case 'reemit':return "<font color='#787878'>".con('reemited')."</font> (
-    <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reemited_id']}'>
-    {$order['order_reemited_id']}</a> )";
+    case 'reissue':return "<font color='#787878'>".con('reissued')."</font> (
+    <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reissued_id']}'>
+    {$order['order_reissued_id']}</a> )";
   }
 
 
@@ -640,7 +640,7 @@ function print_order_status ($order){
     <tr><td class='admin_order_send' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('sended')."</td></tr>
     <tr><td class='admin_order_payedsend' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('payed_and_send')."</td></tr>
     <tr><td class='admin_order_cancel' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('canceled')."</td></tr>
-    <tr><td class='admin_order_reemit' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('reemited')."</td></tr>
+    <tr><td class='admin_order_reissue' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('reissue')."</td></tr>
     </table><br>";
 
     if($_GET["action"]=='list_all' or $_GET["action"]=='list_type' or $_GET["action"]=='details'){
@@ -659,7 +659,7 @@ function print_order_status ($order){
       <tr><td class='menu_admin_item' $sty><img src='../images/pig.png' border='0'> ".con('change_order_to_payed')."</td></tr>
       <tr><td class='menu_admin_item' $sty><img src='../images/no_pig.png' border='0'> ".con('change_order_to_no_payed')."</td></tr>
 
-      <tr><td class='menu_admin_item' $sty><img src='../images/remis.png' border='0'> ".con('reemit_order_menu')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/remis.png' border='0'> ".con('reissue_order_menu')."</td></tr>
       <tr><td class='menu_admin_item' $sty><img src='../images/trash.png' border='0'> ".con('cancel_order')."</td></tr>
 
       </table>";

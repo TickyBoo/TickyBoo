@@ -97,7 +97,7 @@
 
             {if $shop_order.order_status eq "cancel"}
               <tr class='admin_order_{$shop_order.order_status}'>
-            {elseif $shop_order.order_status eq "reemit"}
+            {elseif $shop_order.order_status eq "reissue" or $shop_order.order_status eq "reemit" } {* Legacy support for older orders. *}
               <tr class='admin_order_{$shop_order.order_status}'>
             {elseif $shop_order.order_status eq "res"}
               <tr class='admin_order_{$shop_order.order_status}'>
@@ -118,7 +118,7 @@
                 <a href='view.php?order_id={$shop_order.order_id}'>
                   <img src='{$_SHOP_themeimages}view.png' border='0'>
                 </a>
-                {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit"}
+                {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"} {* Legacy support for older orders. *}
                   <a href='print.php?order_id={$shop_order.order_id}'>
                     <img border='0' src='{$_SHOP_themeimages}printer.gif'>
                   </a>

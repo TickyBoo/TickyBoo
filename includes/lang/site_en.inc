@@ -163,7 +163,7 @@ define("no_result","No Result!");
 define("old_order_canceled","Old Order Cancelled!");
 define("order_allready_cancelled","Order Allready Cancelled!");
 define("order_canceled","Order Cancelled!");
-define("order_cannot_reemit","Can Not Re-Issue!");
+define("order_cannot_reissue","Can Not Re-Issue!");
 define("order_not_found","Order Not Found!");
 define("order_not_canceled","Order Not Cancelled!");
 define("pass_not_egal","Passwords Do Not Match!");
@@ -505,7 +505,7 @@ define("order_event_list_title","Orders by Event");
 	define("order_type_ordered","Ordered");
 	define("order_type_pending","Pending");
 	define("order_type_canceled","Cancelled");
-	define("order_type_reemited","Re-issued");
+	define("order_type_reissued","Re-issued");
 	define("order_type_payed","Paid");
 	define("order_type_sended","Sent");
 	define("order_type_reserved","Reserved");
@@ -534,8 +534,8 @@ define("order_event_list_title","Orders by Event");
 	define("change_status_to_no_send","Change Status to Not Sent?");
 	define("change_status_to_payed","Change Status to Paid?");
 	define("change_status_to_no_payed","Change Status to Not Paid?");
-	define("reemit_order","Cancel this order and re-issue with new tickets?");
-	define("reemit_ticket","Re-issue the ticket (recalculate unique barcode)? Ticket Nr:");
+	define("reissue_order","Update this order and re-issue with new tickets?");
+	define("reissue_ticket","Re-issue the ticket (recalculate unique barcode)? Ticket Nr:");
 
 	//Legend Menu
 	define("legende","Explanation");
@@ -546,7 +546,7 @@ define("order_event_list_title","Orders by Event");
 	define("sended","Sent");
 	define("payed_and_send","Paid and Sent");
 	define("canceled","Cancelled");
-	define("reemited","Re-issued");
+	define("reissued","Re-issued");
 
 	//Action menu
 	define("possible_actions","Possible Actions");
@@ -558,7 +558,7 @@ define("order_event_list_title","Orders by Event");
 	define("change_order_to_payed","Mark 'Paid'");
 	define("change_order_to_send","Mark 'Sent'");
 	define("change_order_to_no_payed","Mark 'Not Paid'");
-	define("reemit_order_menu","Cancel and Issue a New Order with New Order Number. Mark as 'Ordered' and 'Re-issued'");
+	define("reissue_order_menu","Update this Order and Issue with new tickets.");
 	define("cancel_order","Mark 'Canceled' and Delete Tickets");
 
 //Templates
@@ -896,7 +896,7 @@ define("pers_cancel","Cancelled");
 define("pers_ord","Ordered/Unpaid");
 define("pers_page","Personal Page"); //user_logon_block.tpl
 define("pers_payed","Paid");
-define("pers_reemit","Re-issued");
+define("pers_reissue","Re-issued");
 define("pers_res","Reserved");
 define("pers_send","Sent & Paid");
 define("pers_unknown","Unknown Status - Contact Admin");
@@ -1022,7 +1022,7 @@ define("shipmentstatus","Shipment Status");
 define("next_order_id","Next Order ID");
 //process_view.tpl; view.tpl; view_reorder.tpl
 define("cancel_ticket","Cancel Ticket");
-define("reemitted","Re-issued");
+define("reissueted","Re-issued");
 
 //user.tpl
 define("exist_user","Existing");

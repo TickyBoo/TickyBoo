@@ -218,7 +218,7 @@ BACKGROUND-COLOR:#ededed;
 
 .order_list_canceled{background-color:#cccccc ;}
 
-.order_list_reemit{background-color:#cccccc ;}
+.order_list_reissue{background-color:#cccccc ;}
 
 
 
@@ -238,7 +238,7 @@ BACKGROUND-COLOR:#ededed;
 
 .admin_order_cancel{background-color:#cccccc;}
 
-.admin_order_reemit{background-color:#ffffcc;}
+.admin_order_reissue{background-color:#ffffcc;}
 
 .admin_order_payedsend{background-color:#FF9966;}
 
@@ -342,7 +342,7 @@ A.UITabMenuNavOn:hover {
 .admin-button { 
    outline: 0; 
    margin:0 2px 0 0; 
-   padding: .4em 1em; 
+   padding: .4em .8em; 
    text-decoration:none !important; 
    cursor:pointer; 
    display: inline-block;

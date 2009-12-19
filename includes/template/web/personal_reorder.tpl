@@ -70,8 +70,8 @@
 			    <font color="blue">{!ordered!}</font>
 			  {elseif $shop_order.order_status eq "cancel"}
 			    <font color="#cccccc">{!cancelled!}</font>
-			  {elseif $shop_order.order_status eq "reemit"}
-			    <font color="#ffffcc">{!reemitted!}</font>
+			  {elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}
+			    <font color="#ffffcc">{!reissued!}</font>
 			    (<a href='index.php?action=view_order&order_id={$shop_order.order_reemited_id}'>
 			    {$shop_order.order_reemited_id}</a>)
 			  {/if}

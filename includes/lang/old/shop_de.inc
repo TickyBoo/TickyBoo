@@ -181,7 +181,7 @@ define("ordered","Bestellt");
 define("order_date","Bestelldatum");
 define("status","Status");
 define("cancelled","Annulliert");
-define("reemitted","Wieder ausgestellt");
+define("reissued","Wieder ausgestellt");
 define("sent","Gesendet");
 define("notsent","Not Sent");
 define("paid","Bezahlt");
@@ -213,7 +213,7 @@ define("pers_mess2","To change or see your orders in more detail please click <a
 define("ordernumber","Order Number");
 define("Orderdate","Date Ordered");
 define("pers_cancel","Canceled");
-define("pers_reemit","Remade");
+define("pers_reissue","Remade");
 define("pers_res","Reserved");
 define("pers_send","Sent & Payed");
 define("pers_payed","Payed");
