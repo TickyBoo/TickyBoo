@@ -177,35 +177,26 @@ class EventViewCommon extends AdminView {
   function print_select_recurtype($name,$data){
   	$type_list = array("nothing","daily");
 
-  	echo "<tr><td class='admin_name' width='40%'>".con($name)."</td>
+  	echo "<tr id='{$name}-tr'><td class='admin_name' width='40%'>".con($name)."</td>
   			<td  class='admin_value' ><select id='event_recur_type' name={$name} onchange='changeRecurType(this.value)'>\n";
   	foreach ($type_list as $item) {
   		echo "<option ".(($data["$name"] == $item) ? "selected" : '')." value={$item}>".con("recure_$item")."</option>\n";
   	}
   	echo "</select></td></tr>\n";
-  	echo "<tr>
-            <td colspan='2' style='padding:0px;margin:0px;'>
-               <table id='recur_table' border=0 width='100%'>\n";
-  }
-
-  function print_select_recurdays($dsp_name,$name)
-  {
-  	echo "<tr><td class='admin_name' width='40%'>$dsp_name</td>
-  			<td  class='admin_value'><div  style='float:left;' id='$name'> <select name='$name'>\n";
-  	for($i=1;$i<8;$i++) {
-  		echo "<option>".$i."</option>\n";
-  	}
-  	echo "</select></div><div style='float:left;padding-left:2px;' id='$name-suffix'> days</div></td></tr>\n";
-  }
-
-  function print_recur_enddate($dsp_name,$name) {
-  	echo "<tr><td  class='admin_value' colspan='2' style='padding:0px;margin:0px;'>\n";
-  	echo "<table id='recur_table' border=1 width='100%'>
-            <tr>
-              <td class='admin_name' width='40%'>$dsp_name</td>
-	          <td  class='admin_value' ><input type='text' name='$name'></td>
-            </tr>\n";
-
+		$this->print_date('event_recur_end', $data, $err);
+		$this->print_days_selection($data,$err);
+    $script ="
+       $('#event_recur_type').change(function(){
+        if($(this).val() == 'daily'){
+          $('#recure_days_selection-tr').show();
+          $('#event_recur_end-tr').show();
+        }else{
+          $('#recure_days_selection-tr').hide();
+          $('#event_recur_end-tr').hide();
+        }
+      });
+      $('#event_recur_type').change();";
+    $this->addJQuery($script);
   }
 
   function print_days_selection(&$data,&$err) {
@@ -218,7 +209,7 @@ class EventViewCommon extends AdminView {
     }
 
   	echo "
-        <tr>
+        <tr id='recure_days_selection-tr'>
   			  <td class='admin_name' width='40%'>".con('recure_days_selection')."</td>
   		    <td class='admin_value'>
   		    	<table id='day_options'>
@@ -243,32 +234,6 @@ class EventViewCommon extends AdminView {
    		  	</td>
 	   </tr>\n";
   }
-
-
-  function Print_Recure_end(){
-	   echo "
-         </table>
-	   </td>
-   </tr>\n";
-  }
-
-  function printRecurChangeScript() {
-  	echo "<script type='text/javascript'>
-  			changeRecurType();
-  			function changeRecurType() {
-  				type = document.getElementById('event_recur_type').value;
-  				if(type == 'daily') {
- 				    document.getElementById('recur_table').style.display='';
-  				} else {
-  					document.getElementById('recur_table').style.display='none';
-  				}
-  			}
-  		  </script>
-  		";
-  }
-
-
-
 }
 
 ?>

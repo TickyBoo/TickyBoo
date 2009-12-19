@@ -623,7 +623,7 @@ class AdminView extends AUIComponent {
    	  if(empty($selected)){$selected='US';}
     }
 
-    echo "<tr><td id='{$name}-tr' class='admin_name'  width='40%'>" . con($name) . "</td>
+    echo "<tr id='{$name}-tr'><td class='admin_name'  width='40%'>" . con($name) . "</td>
             <td class='admin_value'><select id='{$name}-select' name='$name'>";
     $si[$selected]=' selected';
     foreach ($_COUNTRY_LIST as $key=>$value){

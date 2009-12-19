@@ -335,11 +335,6 @@ select SQL_CALC_FOUND_ROWS *
 		$this->print_date( 'event_date', $data, $err, $main );
 		if ( !$data['event_id'] ) {
    		$this->print_select_recurtype("event_recur_type",$data);
-  		$this->print_date('event_recur_end', $data, $err);
-  		$this->print_days_selection($data,$err);
-  		$this->Print_Recure_end();
-
-  		$this->printRecurChangeScript();
     }
 
 		$this->print_time( 'event_time', $data, $err , $main);
@@ -377,8 +372,8 @@ select SQL_CALC_FOUND_ROWS *
 			if ( !$pmp_view->draw($history) ) {
         $this->addJQuery($pmp_view->getJQuery());
 				return;
-			} 
-      
+			}
+
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
     	  if($this->state_change(1)) {
           return;

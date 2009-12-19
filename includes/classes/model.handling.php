@@ -108,11 +108,6 @@ class Handling Extends Model {
     return parent::save(null, $exclude);
   }
 
-  function CheckValues($arr) {
-    $ok = parent::CheckValues($arr);
-    return  $ok; //$this->extra_Check($arr) and
-  }
-
   /* Remember when concreting that you cant change the parent access! */
   function delete (){
     global $_SHOP;
@@ -205,7 +200,6 @@ class Handling Extends Model {
     }
   }
 
-
 	function admin_view(){
 		if($pm=$this->pment()){
   		return $pm->admin_view();
@@ -218,13 +212,6 @@ class Handling Extends Model {
 		}
 	}
 
-	function admin_check(&$data, &$errors){
-		if($pm = $this->pment()){
-			return $pm->admin_check($data, $errors);
-		}else{
-			return true;
-		}
-	}
 
 	/**
 	 * Handling::isValidCallback()
@@ -465,7 +452,25 @@ class Handling Extends Model {
     }
   }
 
+	function CheckValues($data){
+ 		if(empty($data['handling_pdf_template'])){addError('handling_pdf_template','mandatory');}
+    if ($data['handling_id']) {
+ 	  	if(empty($data['handling_text_payment'])){addError('handling_text_payment','mandatory');}
+ 		  if(empty($data['handling_text_shipment'])){addError('handling_text_shipment','mandatory');}
+    }
+    $ok = parent::CheckValues($data);
+
+		if($pm = $this->pment()){
+			return $pm->admin_check($data, $errors) && $ok;
+		}else{
+			return $ok;
+		}
+	}
+
   function _fill ($data, $nocheck=true){
+ 		if($data['handling_sale_mode_a']){
+			$data['handling_sale_mode']=implode(',',$data['handling_sale_mode_a']);
+	 	}
     if (parent::_fill($data, $nocheck) and ( $pm = $this->pment())) {
       foreach($pm->extras as $key)
         $this->extra[$key] = is($data[$key], null);
