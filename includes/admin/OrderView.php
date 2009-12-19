@@ -531,80 +531,80 @@ function _order_status_color($row){
 		return $alt;
 }
 
-function draw($noTab=false){
-  if(!$noTab){
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
+  function draw($noTab=false){
+    if(!$noTab){
+      if(isset($_REQUEST['tab'])) {
+        $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
+      }
+      $menu = array( con("orders_handlings_tab")=>"?tab=0", con("orders_event_tab")=>'?tab=1');
+      echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
     }
-    $menu = array( con("orders_handlings_tab")=>"?tab=0", con("orders_event_tab")=>'?tab=1');
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
-  }
-
-  if(!isset($_REQUEST['order_id'])){
-    $_REQUEST['order_id']=$_REQUEST['order_id1'];
-  }
-
-  if(preg_match('/^set_status_/',$_GET['action1']) and $_GET['order_id1']>0){
-    if(!$order=Order::load($_GET['order_id1'])){return;}
-    switch($_GET['action1']){
-      case 'set_status_shipment_send': $order->set_shipment_status('send');break;
-      case 'set_status_shipment_none': $order->set_shipment_status('none');break;
-      case 'set_status_payment_payed': $order->set_payment_status('payed');break;
-      case 'set_status_payment_none':  $order->set_payment_status('none');break;
-      case 'set_status_ord':           $order->set_status('ord');break;
+  
+    if(!isset($_REQUEST['order_id'])){
+      $_REQUEST['order_id']=$_REQUEST['order_id1'];
     }
-  }elseif($_GET['action1']=="make_new" and $_GET["order_id1"]){
-    if($new_id=Order::reissue($_GET["order_id1"], 0)){
-      $this->order_details($new_id);
+  
+    if(preg_match('/^set_status_/',$_GET['action1']) and $_GET['order_id1']>0){
+      if(!$order=Order::load($_GET['order_id1'])){return;}
+      switch($_GET['action1']){
+        case 'set_status_shipment_send': $order->set_shipment_status('send');break;
+        case 'set_status_shipment_none': $order->set_shipment_status('none');break;
+        case 'set_status_payment_payed': $order->set_payment_status('payed');break;
+        case 'set_status_payment_none':  $order->set_payment_status('none');break;
+        case 'set_status_ord':           $order->set_status('ord');break;
+      }
+    }elseif($_GET['action1']=="make_new" and $_GET["order_id1"]){
+      if($new_id=Order::reissue($_GET["order_id1"], 0)){
+        $this->order_details($new_id);
+      }
+    }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
+      Order::delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
+    }elseif($_GET['action1']=="reissue_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
+      Seat::reIssue($_GET["order_id1"], $_GET['seat_id']);
     }
-  }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-    Order::delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
-  }elseif($_GET['action1']=="reissue_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-    Seat::reIssue($_GET["order_id1"], $_GET['seat_id']);
+  
+    if($_GET['action']=='list_type'){
+      $this->order_bytype($_GET["order_status"],$_GET["order_type"],$_GET["page"]);
+  
+    }elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
+      $this->order_details($_REQUEST["order_id"]);
+  
+    }elseif($_GET['action']=='delete'){
+      $this->order_prepare_delete($_GET["order_id"]);
+  
+    }elseif($_GET['action']=='cancel'){ 
+      Order::delete($_GET["order_id"], 'order_deleted_manual');
+      $this->order_details($_GET["order_id"]);
+  
+    } elseif($_GET['action']=='list_all'){
+      $this->order_sub_list($_GET["order_handling_id"],
+                            $_GET["order_status"],
+                            $_GET["order_shipment_status"],
+                            $_GET["order_payment_status"],
+  			                    $_GET["page"]);
+  
+    } elseif($_GET['action']=='event_all'){
+      $this->order_event_sub_list($_GET["event_id"],
+                                  $_GET["order_status"],
+                                  $_GET["order_shipment_status"],
+                                  $_GET["order_payment_status"],
+        			                    $_GET["page"]);
+  
+  	} else if($_GET['action']=='purge_deleted'){
+  		Order::purgeDeleted((int)$_GET['order_handling_id']);
+      $this->order_list();
+  
+  	} else if($_GET['action']=='purge_reissued'){
+  		Order::purgeReissued((int)$_GET['order_handling_id']);
+      $this->order_list();
+  
+    } elseif($_SESSION['_overview_tab']==1) {
+       $this->order_event_list();
+  
+    } else {
+       $this->order_list();
+    }
   }
-
-  if($_GET['action']=='list_type'){
-    $this->order_bytype($_GET["order_status"],$_GET["order_type"],$_GET["page"]);
-
-  }elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
-    $this->order_details($_REQUEST["order_id"]);
-
-  }elseif($_GET['action']=='delete'){
-    $this->order_prepare_delete($_GET["order_id"]);
-
-  }elseif($_GET['action']=='cancel'){ 
-    Order::delete($_GET["order_id"], 'order_deleted_manual');
-    $this->order_details($_GET["order_id"]);
-
-  } elseif($_GET['action']=='list_all'){
-    $this->order_sub_list($_GET["order_handling_id"],
-                          $_GET["order_status"],
-                          $_GET["order_shipment_status"],
-                          $_GET["order_payment_status"],
-			                    $_GET["page"]);
-
-  } elseif($_GET['action']=='event_all'){
-    $this->order_event_sub_list($_GET["event_id"],
-                                $_GET["order_status"],
-                                $_GET["order_shipment_status"],
-                                $_GET["order_payment_status"],
-      			                    $_GET["page"]);
-
-	} else if($_GET['action']=='purge_deleted'){
-		Order::purgeDeleted((int)$_GET['order_handling_id']);
-    $this->order_list();
-
-	} else if($_GET['action']=='purge_reissued'){
-		Order::purgeReissued((int)$_GET['order_handling_id']);
-    $this->order_list();
-
-  } elseif($_SESSION['_overview_tab']==1) {
-     $this->order_event_list();
-
-  } else {
-     $this->order_list();
-  }
-}
 
 function print_status ($user_status){
   if($user_status=='1'){

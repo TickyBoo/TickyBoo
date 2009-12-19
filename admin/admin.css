@@ -341,8 +341,8 @@ A.UITabMenuNavOn:hover {
 
 .admin-button { 
    outline: 0; 
-   margin:0 2px 0 0; 
-   padding: .3em .4em; 
+   margin:0 0 0 0; 
+   padding: .0em .0em; 
    text-decoration:none !important; 
    cursor:pointer; 
    display: inline-block;
@@ -352,5 +352,6 @@ A.UITabMenuNavOn:hover {
 }
 
 .admin-buttona-icon-left{
+  padding: .2em .4em;
   padding-left: 2.5em;
 }

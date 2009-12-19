@@ -40,7 +40,7 @@ require_once("../includes/config/init_admin.php");
 require_once ("admin/OrderView.php");
 
 if($_GET['action']=='print' and $_GET['order_id']>0){
-  Order::print_order($_GET['order_id'],'','stream');
+  Order::printOrder($_GET['order_id'],'','stream');
   exit;
 }
 $body=new OrderView();
