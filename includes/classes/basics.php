@@ -671,7 +671,7 @@ function printMsg($key, $err = null) {
        return '';
 
   }
-  if (isset($err[$key])) {
+  if (isset($err[$key]) && is_array($err[$key])) {
     foreach($err[$key] as $value){
       if(is_array($value)){
         foreach($value as $val){
@@ -681,19 +681,23 @@ function printMsg($key, $err = null) {
         $output .= $value. "</br>\n";
       }
     }
-    If ($output) {
-      switch ($key) {
-        case '__Warning__':
-          $output = "<h4 class='error'>".$output. "</h4>";
-          break;
-        case '__Notice__':
-          $output = "<h4 class='success'>".$output. "</h4>";
-          break;
-        default:
-          $output = "<span class='err error'>".$output. "</span>";
-      }
+
+  }else {
+    $output .= $err[$key]. "</br>\n";
+  }
+  If ($output) {
+    switch ($key) {
+      case '__Warning__':
+        $output = "<h4 class='error'>".$output. "</h4>";
+        break;
+      case '__Notice__':
+        $output = "<h4 class='success'>".$output. "</h4>";
+        break;
+      default:
+        $output = "<span class='err error'>".$output. "</span>";
     }
   }
+
   return $output;
 }
 
