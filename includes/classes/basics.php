@@ -682,7 +682,7 @@ function printMsg($key, $err = null) {
       }
     }
 
-  }else {
+  }elseif (isset($err[$key]) && is_string($err[$key])) {
     $output .= $err[$key]. "</br>\n";
   }
   If ($output) {
