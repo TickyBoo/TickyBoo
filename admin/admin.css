@@ -351,8 +351,12 @@ A.UITabMenuNavOn:hover {
    zoom: 1; 
 }
 
-.admin-button-text{
-  
+.admin-button:hover { 
+  font-weight:normal;
+  background:url("images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #DADADA;
+  border:1px solid #999999;
+  color:#212121;
+  outline:medium none;
 }
 
 .admin-buttona-icon-left{
