@@ -68,27 +68,27 @@ class TemplateView extends AdminView{
         $order['activate_code'] = '{ActivationCode}';
         $order['new_password']  = '{NewPassword}' ;
      	case 'email':
-        
+
       case 'swift':
         include('templatedata.php');
         require_once("classes/TemplateEngine.php");
         if (!$tpl = TemplateEngine::getTemplate($name)) {
           return false;
        	}
-     		
+
         $lang = is($_GET['lang'], $_SHOP->lang);
         if (!in_array($lang, $tpl->langs )) {
           $lang = $tpl->langs[0];
         }
         $_GET['lang'] = $lang;
-        
+
         $tpl->write($swift, $order, $lang);
-        
+
         $langs = array();
         foreach($tpl->langs as $lng) {
           $langs[$lng] = (isset($_SHOP->langs_names[$lng]))?$_SHOP->langs_names[$lng]:$lng;
         }
-        
+
         echo "<form method='GET' name='frmEvents' action='{$_SERVER['PHP_SELF']}'>\n";
         echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
         echo "<tr><td colspan='2' class='admin_list_title' >" . $data["template_name"] . "</td></tr>";
@@ -96,7 +96,7 @@ class TemplateView extends AdminView{
         echo "<tr><td colspan='2' class='admin_name'>" .con('email_header'). "</td></tr>";
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
 				nl2br(htmlspecialchars($swift->getHeaders()->toString())) . "</td></tr>";
-        
+
         echo "<tr><td colspan='2' class='admin_name'>" .con('email_body'). "</td></tr>";
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
 				nl2br(htmlspecialchars($swift->toString())) . "</td></tr>";
@@ -303,15 +303,15 @@ class TemplateView extends AdminView{
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>" . add . "</a></center>";
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=compile_all'>" . compile_all . "</a></center>";
     if($type=="swift"){
-      echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=sendtest'>" . send_test . "</a></center>";  
+      echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=sendtest'>" . send_test . "</a></center>";
     }
-     
+
   }
 
   function compile_template ($name){
     global $_SHOP;
     require_once("classes/TemplateEngine.php");
-    	
+
     $te = new TemplateEngine;
     if(!$te->getTemplate($name, true)){
       addWarning($name.con('compilation_failed'));
@@ -447,20 +447,20 @@ class TemplateView extends AdminView{
   private function preInsertEmailTemp(){
     if(is($_POST['template_array'],false)){
       $tempArr = $_POST['template_array'];
-      
+
       $tempArr['emails_cc'] = is($tempArr['emails_cc'],array());
       foreach($tempArr['emails_cc'] as $key=>$array){
         $tempArr['emails_cc'][$array['key']]=$array['value'];
         unset($tempArr['emails_cc'][$key]);
       }
-    
+
       $tempArr['emails_bcc'] = is($tempArr['emails_bcc'],array());
       foreach($tempArr['emails_bcc'] as $key=>$array){
         $tempArr['emails_bcc'][$array['key']]=$array['value'];
         unset($tempArr['emails_bcc'][$key]);
       }
-    
-  
+
+
       $_POST['template_array'] = $tempArr;
       $_POST['template_text']=serialize($_POST['template_array']);
     }
@@ -483,8 +483,8 @@ class TemplateView extends AdminView{
            $include .= "<option value='bill[].{$key}'>bill[].{$key}</option>\n";
         }
         continue;
-      } elseif ($select <> strstr ($key,'_',true)) {
-        $select = strstr ($key,'_',true);
+      } elseif ($select <> strstr ($key,'_')) {
+        $select = strstr ($key,'_');
         $include .= "<OPTGROUP LABEL='".con($select)."'/>";
       }
       $include .= "<option value='{$key}'>{$key}</option>\n";
