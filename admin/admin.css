@@ -47,7 +47,7 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 	position: relative;
         width: 805px;
 	height: 22px;
-	background: #ffffff url(../images/theme/default/back2.gif) 0 100% repeat-x;
+	background: #ffffff url(../images/back2.gif) 0 100% repeat-x;
 	font: bold 12px Verdana, Helvetica, Arial, sans-serif;
 	border-bottom: 3px solid #375AAA;
 }
