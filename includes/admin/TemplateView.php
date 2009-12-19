@@ -476,6 +476,7 @@ class TemplateView extends AdminView{
     require_once('templatedata.php');
     $select ='';
     foreach($order as $key => $value) {
+      echo $test = substr($key,0,strpos($key,'_'));
       if ($key == 'bill') {
         $include .= "<OPTGROUP LABEL='".con('Bill')."'/>";
         $value = reset($value);
@@ -483,8 +484,8 @@ class TemplateView extends AdminView{
            $include .= "<option value='bill[].{$key}'>bill[].{$key}</option>\n";
         }
         continue;
-      } elseif ($select <> strstr ($key,'_')) {
-        $select = strstr ($key,'_');
+      } elseif ($select <> $test) {
+        $select = $test;
         $include .= "<OPTGROUP LABEL='".con($select)."'/>";
       }
       $include .= "<option value='{$key}'>{$key}</option>\n";
