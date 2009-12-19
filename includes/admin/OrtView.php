@@ -42,7 +42,7 @@ class OrtView extends AdminView {
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellpadding='2' cellspacing='1'>\n";
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('ort_title') . "</td>";
-    echo "<td colspan='1' align='right'>".$this->print_button("{$_SERVER['PHP_SELF']}?action=add","Add",3)."</td>";
+    echo "<td colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add_venue",3)."</td>";
     echo "</tr>\n";
     if (!$res) {
       //
@@ -52,8 +52,8 @@ class OrtView extends AdminView {
           echo "<td class='admin_list_item' width='50%'>{$row['ort_name']}</td>\n";
           echo "<td class='admin_list_item'>{$row['ort_city']}</td>\n";
           echo "<td class='admin_list_item'width='60' align='right' nowrap><nowrap>";
-          echo $this->print_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}","edit",2);
-          echo $this->print_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&ort_id={$row['ort_id']}\";}","remove",2);
+          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}","edit",2);
+          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&ort_id={$row['ort_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$row['ort_name']}?"));
           echo "</nowrap></td>\n";
           echo "</tr>";
           $alt = ($alt + 1) % 2;

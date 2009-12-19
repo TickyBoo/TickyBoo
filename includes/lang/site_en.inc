@@ -31,6 +31,7 @@ define("dts_day_arr", "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday"
 //BUTTONS & LINKS
 //for continuity all Buttons & Links should be defined the same if initiating the same action
 define("add","Add");
+define("add_venue","Add");
 define("add_tickets","Add Ticket(s)");
 define("admin_list","List");
 define("cancel","Cancel Order?");
@@ -63,6 +64,12 @@ define("icon_publish","Click to Publish");
 define("icon_publish_alt","New Event");
 define("icon_nosal","Click to RePublish");
 define("icon_nosal_alt","UnPublished");
+
+
+//TOOLTIPS COULD BE MOVED TO ANOTHER FILE
+//By default they use the name of the item plus _tooltip eg. add-tooltip
+
+define("add_venue-tooltip","Add Venue"); 
 
 //NAVIGATION
 //should remain the same throughout all pages.

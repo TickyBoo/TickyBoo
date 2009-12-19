@@ -115,9 +115,12 @@ class AdminPage extends AUIComponent {
     <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
     <title>" . $this->getTitle() . "</title>
     <link rel='stylesheet' href='../css/ui-lightness/jquery-ui-1.7.2.custom.css' />
+    <link rel='stylesheet' href='../css/jquery.tooltip.css' />
     <link rel='stylesheet' href='admin.css' />
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.3.2.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>
     <script><!--
       function set_lang(box)
       {
@@ -183,6 +186,22 @@ class AdminPage extends AUIComponent {
       <br><br>
       <script type=\"text/javascript\">
          $(document).ready(function(){
+            $(\"a[class*='has-tooltip']\").tooltip({
+              delay:40,
+              showURL:false,
+              bodyHandler: function() {
+                var idString = $(this).attr(\"id\");
+                if(idString != ''){
+                  var toolTipId = '#'+idString+'-tooltip'; 
+                  if($(toolTipId).html() != ''){
+                    return $(toolTipId).html();
+                  }
+                  return false;
+                }else{
+                  return false;
+                }
+              }
+            });
             ". is($this->items['jquery'],'') ."
          });
       </script>

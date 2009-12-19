@@ -373,9 +373,11 @@ class AdminView extends AUIComponent {
      *  'image'=>"image url",
      *  'style'=>'extra style info here'
      *  'classes'=>'css-class-1 css-class-2'
+     *  'tooltiptext'=>''
+     *  'showtooltip'=>false
      * @return string
      */
-    protected function print_button($url, $name, $type=1, $options=array() ){
+    protected function show_button($url, $name, $type=1, $options=array() ){
       
       if(!empt($name,false)){
           return;
@@ -388,6 +390,7 @@ class AdminView extends AUIComponent {
         'delete'=>array('image'=>'trash.png'),
         'remove'=>array('image'=>'trash.png'));
       
+      //Find what to show
       if($type===1 || $type >= 3){
         $icon = false;
         $text = $name;
@@ -398,7 +401,7 @@ class AdminView extends AUIComponent {
       }elseif($type===2 || $type >= 3){
         foreach($iconArr as $icoNm=>$iconDtl){
           $name2 = strtolower($name);
-          if(preg_match('/^'.$icoNm.'/',$name2)){
+          if(preg_match('/'.$icoNm.'/',$name2)){
             $icon = $icoNm;
             $image = $iconDtl['image'];
             break;
@@ -408,21 +411,45 @@ class AdminView extends AUIComponent {
           $text = $name;
         }
       }
+      
+      //Extra options
       $classes = is($options['classes'],'');
       $style = is($options['style'],'');
+      
+      //Tooltip stuff
+      $toolTipName = $this->hasToolTip($name);
+      $hasTTClass = 'has-tooltip';
+      $toolTipText = con($toolTipName);
+      if($options['showtooltip']===false){
+        $hasTTClass = '';
+        $title = con($name);
+        
+      }elseif(empt($options['tooltiptext'],false)){
+        $toolTipText = $options['tooltiptext'];
+        $toolTipName = empt($toolTipName,$name."-tooltip");
+        
+      }elseif(!empt($toolTipName,false)){
+        $hasTTClass = '';
+        $title = con($name);
+      }
+      
       //If image bolt on image css for button
       if($icon && $image && $text){ $css = 'admin-buttona-icon-left'; }else{ $css = ''; }
       
-      $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link ".$classes."' style='".$style."' href='".empt($url,'#')."' title='".con($name)."' >";
+      $rtn .= "<a id='".$name."' class='".$hasTTClass." admin-button ui-state-default " . $css .  " ui-corner-all link ".$classes."' style='".$style."' href='".empt($url,'#')."' title='{$title}' >";
       if($icon && $image && $text){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title=".con($name)." ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
       }elseif($icon && $image){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\");' title='".con($name)."' ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\");' title='{$title}' ></span>";
       }
       if($text){
         $rtn .= con($name);
       }
       $rtn .= "</a>";
+      //Add on the Tooltip div for the text
+      if(!empty($hasTTClass)){
+        $rtn .= "<div id='".$toolTipName."' style='display:none;'>".$toolTipText."</div>";
+      }
       
       return $rtn;
     }
@@ -852,6 +879,21 @@ class AdminView extends AUIComponent {
       echo con('nav_last')."\n";
     }
     echo "</td></tr></table>";
+  }
+  
+  /**
+   * AdminView::hasToolTip()
+   * 
+   * @param string constantName : constant name
+   * 
+   * @return mixed : false or the tooltip constant name.
+   */
+  protected function hasToolTip($constantName){
+    if(con($constantName."-tooltip") == $constantName."-tooltip" ){
+      return false;
+    }else{
+      return $constantName."-tooltip";
+    }
   }
 
   function print_hidden ($name, $data=''){
