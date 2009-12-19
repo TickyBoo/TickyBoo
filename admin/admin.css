@@ -335,3 +335,22 @@ A.UITabMenuNavOn:hover {
 	font-size:x-small;
 	padding:4px;
         }
+        
+        
+/* Button Layouts for new jQuer Framework */
+
+.admin-button { 
+   outline: 0; 
+   margin:0 2px 0 0; 
+   padding: .4em 1em; 
+   text-decoration:none !important; 
+   cursor:pointer; 
+   display: inline-block;
+   position: relative; 
+   text-align: center; 
+   zoom: 1; 
+}
+
+.admin-buttona-icon-left{
+  padding-left: 3.1em;
+}

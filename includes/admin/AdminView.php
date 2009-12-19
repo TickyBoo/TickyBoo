@@ -356,6 +356,62 @@ class AdminView extends AUIComponent {
               <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
               </td></tr>\n";
     }
+    
+    
+    /**
+     * AdminView::print_button()
+     * 
+     * NEEDS TO BE ECHO'D ON RETURN!
+     * 
+     * returns <a href=$url> ... </a> depending
+     * on the settings.
+     * 
+     * @param string url : the url of the link
+     * @param string name : the method of the button, if not recognised will print text instead.
+     * @param int type : 1 = text only, 2 = icon (will try to match against $name) 3 = both
+     * 
+     * @return string
+     */
+    protected function print_button($url, $name, $type=1 ){
+      
+      if(!empt($name,false)){
+          return;
+      }
+      $text = false;
+      $icon = false;
+      $iconArr = array('add'=>array('image'=>'add.png'),'edit','delete');
+      
+      if($type===1 || $type >= 3){
+        $icon = false;
+        $text = $name;
+      }
+      if($type===2 || $type >= 3){
+        foreach($iconArr as $icoNm=>$iconDtl){
+          $name2 = strtolower($name);
+          if(preg_match('/'.$name2.'/',$icoNm)){
+            $icon = $icoNm;
+            $image = $iconDtl['image'];
+            break;
+          };
+        }
+        if(!$icon){
+          $text = $name;
+        }
+      }
+      if($icon && $image && $text){ $css = 'admin-buttona-icon-left'; }else{ $css = ''; }
+      $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link' href='".empt($url,'#')."' >";
+      if($icon && $image && $text){
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title=".con($name)." ></span>";
+      }elseif($icon && $image){
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"images/{$image}\");' title=".con($name)." ></span>";
+      }
+      if($text){
+        $rtn .= con($name);
+      }
+      $rtn .= "</a>";
+      
+      return $rtn;
+    }
 
     function print_set ($name, &$data, $table_name, $column_name, $key_name, $file_name) {
         $ids = explode(",", $data);
