@@ -89,7 +89,6 @@ class OrtView extends AdminView {
 
     if  (($data['ort_id'])) {
         require_once('admin/PlaceMapView2.php');
-        echo "<br>";
         PlaceMapView::table($data['ort_id']);
     }
 

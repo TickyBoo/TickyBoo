@@ -50,11 +50,10 @@ class PlaceMapZoneView extends AdminView {
       // zones
       $alt = 0;
 
-      echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='3'>\n";
+      echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
       echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('pm_zones') . "</td>\n";
       if (!$live and $mine) {
-        echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id'>
-              <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
+        echo "<td colspan=1 align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_pmz&pm_id=$pm_id","add",3)."</td>";
       }
       echo "</tr>";
       while ($zone = shopDB::fetch_object($res)) {
@@ -67,6 +66,10 @@ class PlaceMapZoneView extends AdminView {
           echo "<td class='admin_list_item' width=60 align=right>\n";
 
           if ($mine) {
+              echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pmz&pm_id=$pm_id&pmz_id=$zone_ident","edit",2);
+              if (!$live) {
+                echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmz&pm_id=$pm_id&pmz_id=$zone->pmz_id\";}","remove",2,array('tooltiptext'=>"Delete {$zone->pmz_name}?"));
+              }
               echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pmz&pm_id=$pm_id&pmz_id=$zone_ident'>
                       <img src='../images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
               if (!$live) {
@@ -74,8 +77,7 @@ class PlaceMapZoneView extends AdminView {
                          <img src='../images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
               }
           } else {
-            echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmz&pm_id=$pm_id&pmz_id=$zone_ident'>
-               <img src='../images/view.png' border='0' alt='" . con('view') . "' title='" . con('view') . "'></a>\n";
+            echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmz&pm_id=$pm_id&pmz_id=$zone_ident","view",2);
           }
 
           echo'</td></tr>';

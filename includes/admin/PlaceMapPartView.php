@@ -44,11 +44,10 @@ class PlaceMapPartView extends AdminView {
       }
 
       $alt = 0;
-      echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+      echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
       echo "<tr><td class='admin_list_title' colspan='3' align='left'>" . con('pm_parts') . "</td>";
       if ($mine and !$live) {
-        echo "<td colspan=1 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pmp&pm_id=$pm_id'>
-                <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
+        echo "<td colspan=1 align=right>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_pmp&pm_id=$pm_id","add",3)."</td>";
       }
       echo "</tr>\n";
       $query = "select * from PlaceMapPart where pmp_pm_id="._esc($pm_id);
@@ -61,14 +60,16 @@ class PlaceMapPartView extends AdminView {
           echo "<td class='admin_list_item'>{$pmp['pmp_width']} &times; {$pmp['pmp_height']} (".$pmp['pmp_width'] * $pmp['pmp_height'].")</td>\n";
 
           echo "<td class='admin_list_item' width=60 align=right>\n";
+
+
           if ($mine) {
-              echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}'><img src='../images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
-              echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=split_pmp&pm_id=$pm_id&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id'><img src='../images/copy_to_folder16.gif' border='0' alt='" . split_pm . "' title='" . split_pm . "'></a>\n";
+              echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}","edit",2);
+              echo $this->show_button("{$_SERVER['PHP_SELF']}?action=split_pmp&pmp_id={$pmp['pmp_id']}","split_pm",2, array('image'=>'copy_to_folder16.gif'));
               if (!$live) {
-                  echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}'><img src='../images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>\n";
+                echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}","remove",2,array('tooltiptext'=>"Delete {$row['ort_name']}?"));
               }
           } else {
-            echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}'><img src='../images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
+            echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}","view",2, array('image'=>'view.png'));
           }
           echo'</td></tr>';
           $alt = ($alt + 1) % 2;
@@ -608,14 +609,14 @@ class PlaceMapPartView extends AdminView {
     function pmp_check ($data, &$err)
     {
         if (!isset($data['pmp_name']) or (!$data['pmp_name'])) {
-            $err['pmp_name'] = mandatory;
+            $err['pmp_name'] = con('mandatory');
         }
         if (!$data['pmp_id']) {
             if (!isset($data['pmp_width']) or (!$data['pmp_width'])) {
-                $err['pmp_width'] = mandatory;
+                $err['pmp_width'] = con('mandatory');
             }
             if (!isset($data['pmp_height']) or (!$data['pmp_height'])) {
-                $err['pmp_height'] = mandatory;
+                $err['pmp_height'] = con('mandatory');
             }
         }
         return empty($err);
@@ -743,19 +744,19 @@ class PlaceMapPartView extends AdminView {
     function check_autonumbers (&$data, &$err)
     {
         if (!isset($data['first_row']) or (!$data['first_row'])) {
-            $err['first_row'] = mandatory;
+            $err['first_row'] = con('mandatory');
         }
         if (!isset($data['first_row']) or (!$data['step_row'])) {
-            $err['step_row'] = mandatory;
+            $err['step_row'] = con('mandatory');
         }
         if (!isset($data['first_row']) or (!$data['inv_row'])) {
             $data['inv_row'] = 0;
         }
         if (!isset($data['first_row']) or (!$data['first_seat'])) {
-            $err['first_seat'] = mandatory;
+            $err['first_seat'] = con('mandatory');
         }
         if (!isset($data['first_row']) or (!$data['step_seat'])) {
-            $err['step_seat'] = mandatory;
+            $err['step_seat'] = con('mandatory');
         }
         if (!isset($data['first_row']) or (!$data['inv_seat'])) {
             $data['inv_seat'] = 0;

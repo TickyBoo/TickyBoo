@@ -56,10 +56,10 @@ class DiscountView extends AdminView {
     }
 
     $alt = 0;
-    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='3' align='left'>". con('discount_title') . "</td>";
     if (!$live) {
-      echo "<td align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id=$discount_event_id'>" . con('add') . "</a></td>";
+      echo "<td align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id=$discount_event_id","add",3)."</td>";
     }
     echo "</tr>";
 
@@ -74,10 +74,10 @@ class DiscountView extends AdminView {
             $type = ' '.$_SHOP->organizer_data->currency;
         }
         echo "<td class='admin_list_item'align='right'>{$row['discount_value']}$type</td>\n";
-        echo "<td class='admin_list_item' width='60' align='right'>
-                  <a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id'><img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
+        echo "<td class='admin_list_item' width='60' align='right'>";
+        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id={$discount_event_id}","edit",2);
         if (!$live) {
-            echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id=$discount_event_id\";}'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
+          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id={$discount_event_id}\";}","remove",2,array('tooltiptext'=>"Delete {$row['discount_name']}?"));
         }
         echo "</td></tr>";
         $alt = ($alt + 1) % 2;
@@ -105,7 +105,7 @@ class DiscountView extends AdminView {
     $this->print_input('discount_value', $data, $err, 6, 5);
 		$this->form_foot();
 
-    echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['discount_event_id']}'>" . con('admin_list') . "</a></center>"; //print_r($data);
+    echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['event_pm_id']}'>" . con('admin_list') . "</a></center>"; //print_r($data);
   }
 
   function discount_check (&$data, &$err)

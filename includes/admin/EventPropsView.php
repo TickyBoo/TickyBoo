@@ -233,9 +233,9 @@ select SQL_CALC_FOUND_ROWS *
       } else {
          echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
       }
-      echo  $this->show_button("{view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
+      echo  $this->show_button("view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
 			if ( $row['event_pm_id'] ) {
-        echo  $this->show_button("{view_event.php?action=edit&event_id={$row['event_id']}",'place_map',2,
+        echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,
                                  array('image'=>'pm.png'));
 			}
 
@@ -245,7 +245,7 @@ select SQL_CALC_FOUND_ROWS *
 				 * $alt = "Archive";
 				 * $src = "images/archive.jpg";
 				 * $link = "archive_event.php?event_id=$event_id";*/
-        echo  $this->show_button("{archive_event.php?event_id={$row['event_id']}",'Archive',2,
+        echo  $this->show_button("archive_event.php?event_id={$row['event_id']}",'Archive',2,
                                  array('image'=>'archive.png'));
         echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_id={$row['event_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$row['event_name']}?"));
 

@@ -54,10 +54,9 @@ class PlaceMapView extends AdminView {
 		}
 
 		$alt = 0;
-	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
 	  echo "<tr><td class='admin_list_title' colspan='1' align='left'>" . con('place_maps') . "</td>\n";
-    echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pm&pm_ort_id=$ort_id'>
-            <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
+    echo "<td colspan=1 align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
 	  echo "</tr>";
 
 		while ( $pm = shopDB::fetch_assoc($res) ) {
@@ -66,14 +65,11 @@ class PlaceMapView extends AdminView {
 //			echo "<td class='admin_list_item' width='20'>{$pm['pm_id']}</td>\n";
 			echo "<td class='admin_list_item' >{$pm['pm_name']}</td>\n";
 
-			echo "<td class='admin_list_item' width=60 align=right>";
-			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}'>
-             <img src='../images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
-			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}'>
-             <img src='../images/copy.png' border='0' alt='" .	con('copy') . "' title='" . con('copy') . "'></a>\n";
-			echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}\";}'>
-              <img src='../images/trash.png' border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'></a>\n";
-			echo "</td></tr>";
+			echo "<td class='admin_list_item' width=65 align=right>";
+      echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}","edit",2);
+      echo $this->show_button("{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}","edit",2, array('image'=>'copy.png'));
+      echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm['pm_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$pm['pm_name']}?"));
+      echo "</td></tr>";
 			$alt = ( $alt + 1 ) % 2;
 		}
 		echo "</table>";
@@ -94,6 +90,7 @@ class PlaceMapView extends AdminView {
 
 		$this->form_head( $title );
 		$this->print_field_o( 'pm_id', $data );
+		$this->print_field( 'pm_event_id', $data );
 
 		if ( isset($data['pm_event_id']) && $event = Event::load( $data['pm_event_id'], false )) {
 			$live = $event->event_status != 'unpub';
@@ -113,7 +110,7 @@ class PlaceMapView extends AdminView {
 		$this->print_input( 'pm_name', $data, $err, 30, 100 );
 		$this->print_file(  'pm_image', $data, $err, 'img' );
 		$this->form_foot();
-  	echo "<br>";
+  //	echo "<br>";
 
 		if ( $data['pm_id'] ) {
 			$pmp_view = new PlaceMapCategoryView( $this->width );
@@ -147,20 +144,20 @@ class PlaceMapView extends AdminView {
 				$this->form( $event->event_pm_id, null, con('edit_pm'));
 			}
       $this->addJQuery($pmp_view->getJQuery());
-      
+
 		} elseif ( preg_match('/_pmp$/', $_REQUEST['action']) ) {
 			$pmp_view = new PlaceMapPartView( $this->width );
 			if ( $pmp_view->draw() ) {
 				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
 			}
       $this->addJQuery($pmp_view->getJQuery());
-      
+
 		} elseif ( preg_match('/_pmz$/', $_REQUEST['action']) ) {
 			$pmz_view = new PlaceMapZoneView( $this->width );
 			if ( $pmz_view->draw() ) {
 				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
 			}
-      
+
 		} elseif ( preg_match('/_category$/', $_REQUEST['action']) ) {
 			$view = new PlaceMapCategoryView( $this->width );
 			if ( $view->draw() ) {

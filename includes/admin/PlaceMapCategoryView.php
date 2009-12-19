@@ -39,11 +39,10 @@ require_once("admin/AdminView.php");
 class PlaceMapCategoryView extends AdminView {
   function table ($pm_id, $live = false) {
     $alt = 0;
-    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" .con('categories'). "</td>\n";
     if (!$live) {//
-      echo "<td colspan=5 align='right' valign='middle' ><a title='".con('add')."' class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>
-              <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."' /></a></td>\n";// ".con('add')."
+      echo "<td colspan=5 align='right' valign='middle' >".$this->show_button("{$_SERVER['PHP_SELF']}?action=add&pm_id={$pm_id}","add",3)."</td>\n";// ".con('add')."
     }
     echo "</tr>\n";
     if ($cats = PlaceMapCategory::LoadAll($pm_id)){
@@ -54,12 +53,10 @@ class PlaceMapCategoryView extends AdminView {
         echo "<td class='admin_list_item'>{$category->category_size} ".con('cat_at')." {$category->category_price} </td>\n";
         echo "<td class='admin_list_item'>" . con($category->category_numbering) . " </td>\n";
 
-        echo "<td class='admin_list_item' width=60 align=right>";
-        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
-        <img src='../images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
+        echo "<td class='admin_list_item' width=65 align=right>";
+        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_category&pm_id={$pm_id}&category_id={$category->category_id}","edit",2);
         if (!$live) {
-            echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id=$pm_id&category_id={$category->category_id}\";}'>
-                    <img src='../images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\n";
+          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm_id}&category_id={$category->category_id}\";}","remove",2,array('tooltiptext'=>"Delete {$category->category_name}?"));
         }
         echo'</td></tr>';
         $alt = ($alt + 1) % 2;
