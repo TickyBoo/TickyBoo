@@ -369,10 +369,13 @@ class AdminView extends AUIComponent {
      * @param string url : the url of the link
      * @param string name : the method of the button, if not recognised will print text instead.
      * @param int type : 1 = text only, 2 = icon (will try to match against $name) 3 = both
-     * 
+     * @param array options : array of additional options.
+     *  'image'=>"image url",
+     *  'style'=>'extra style info here'
+     *  'classes'=>'css-class-1 css-class-2'
      * @return string
      */
-    protected function print_button($url, $name, $type=1 ){
+    protected function print_button($url, $name, $type=1, $options=array() ){
       
       if(!empt($name,false)){
           return;
@@ -389,7 +392,10 @@ class AdminView extends AUIComponent {
         $icon = false;
         $text = $name;
       }
-      if($type===2 || $type >= 3){
+      if(is($options['image'],false)){
+        $icon = true;
+        $image = $options['image'];
+      }elseif($type===2 || $type >= 3){
         foreach($iconArr as $icoNm=>$iconDtl){
           $name2 = strtolower($name);
           if(preg_match('/^'.$icoNm.'/',$name2)){
@@ -402,8 +408,12 @@ class AdminView extends AUIComponent {
           $text = $name;
         }
       }
+      $classes = is($options['classes'],'');
+      $style = is($options['style'],'');
+      //If image bolt on image css for button
       if($icon && $image && $text){ $css = 'admin-buttona-icon-left'; }else{ $css = ''; }
-      $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link' href='".empt($url,'#')."' title='".con($name)."' >";
+      
+      $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link ".$classes."' style='".$style."' href='".empt($url,'#')."' title='".con($name)."' >";
       if($icon && $image && $text){
         $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title=".con($name)." ></span>";
       }elseif($icon && $image){
