@@ -40,7 +40,7 @@ class OrtView extends AdminView {
     $query = "SELECT * FROM Ort ";
     $res = ShopDB::query($query);
     $alt = 0;
-    echo "<table class='admin_list' width='$this->width' cellpadding='4' cellspacing='1'>\n";
+    echo "<table class='admin_list' width='$this->width' cellpadding='2' cellspacing='1'>\n";
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('ort_title') . "</td>";
     echo "<td colspan='1' align='right'>".$this->print_button("{$_SERVER['PHP_SELF']}?action=add","Add",3)."</td>";
     echo "</tr>\n";
