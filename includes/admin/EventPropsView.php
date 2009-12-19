@@ -40,9 +40,10 @@ class EventPropsView extends EventViewCommon {
 	function table($history=false) {
 		global $_SHOP;
 
-		echo "<script>";
-		echo "var val=1;";
-		echo "function checkall()	{
+		echo "
+    <script>
+  		var val=1;
+  		function checkall()	{
 				for(i=0;i<document.getElementsByTagName('input').length;i++){
 					if(document.getElementsByTagName('input')[i].type == 'checkbox'){
     			  if(document.getElementsByTagName('input')[i].checked == false && val==1)	{
@@ -55,8 +56,7 @@ class EventPropsView extends EventViewCommon {
 				}
 				val=(val==1)?0:1;
 	  	}
-		}
-  </script>\n";
+    </script>\n";
 
 /*
 select SQL_CALC_FOUND_ROWS *
@@ -112,11 +112,11 @@ select SQL_CALC_FOUND_ROWS *
     if(!$rowcount=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
 		$alt = 0;
     echo "<form action='{$_SERVER['PHP_SELF']}' method='POST' name='frmEvents'>";
-    echo "<table class='admin_list' border='0' width='$this->width' cellspacing='2' cellpadding='2'>\n";
-    echo "<tr><td class='admin_list_title' colspan='8' align='left'>" . con(($history)?'event_history_title':'event_title') . "</td></tr>\n";
-    if (!$history) {
-       echo "<tr><td class='admin_list_title' colspan='8' align='left'><input type='checkbox'  onclick=\"checkall();\">&nbsp;Check/Uncheck All</td></tr>\n";
-    }
+    echo "<table class='admin_list' border='0' width='$this->width' cellspacing='1' cellpadding='2'>\n";
+    echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . con(($history)?'event_history_title':'event_title') . "</td>\n";
+    echo "<td colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    echo "</tr>\n";
+
 		$img_pub = $this->fill_images();
 
 		$alt = 0;
@@ -136,9 +136,9 @@ select SQL_CALC_FOUND_ROWS *
 
 			if ( $row['event_rep'] == 'main') {
         if (!$history) {
-  				echo "<td colspan=2 class='admin_list_item'><a class='link' title='" . con('add') .
-  			    		"' alt='" . con('add') . "' href='view_event.php?action=add_sub&event_main_id={$row['event_id']}'>" .
-  					   con('multi') . "</a></td>\n";
+  				echo "<td colspan=2 class='admin_list_item'>".
+               $this->show_button("{view_event.php?action=add_sub&event_main_id={$row['event_id']}",'add_multi',3) .
+               "</td>\n";
 		  	} else {
 				  echo "<td colspan=2 class='admin_list_item'>&nbsp;</td>\n";
         }
@@ -148,35 +148,7 @@ select SQL_CALC_FOUND_ROWS *
 			}
 
 			echo "<td width=100 class='admin_list_item' nowrap='nowrap'>";
-			if (!$history) {
-        echo "  <a class='link' alt='{$img_pub[$row['event_status']]['alt']}'
-                    title='{$img_pub[$row['event_status']]['title']}'
-                    href='{$img_pub[$row['event_status']]['link']}{$row['event_id']}'>
-               <img border='0' src='{$img_pub[$row['event_status']]['src']}'>
-            </a>";
-      } else {
-         echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
-      }
-
-      echo"      <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
-              <img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . con('edit') . "' title='" . con('edit') . "'>
-            </a>\n";
-
-			if ( $row['event_pm_id'] ) {
-				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$row['event_pm_id']}'>
-                <img src=\"".$_SHOP->root."images/pm.png\" border='0' alt='" .	con('place_map') . "' title='" . con('place_map') . "'>
-              </a>\n";
-			}
-
-			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or
-           (!$row['event_pm_id'] and $row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') ) {
-				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
-                <img src=\"".$_SHOP->root."images/archive.png\" border='0' alt='" .	con('Archive') . "' title='" . con('Archive') . "'></a>\n";
-				echo "<a class='link' title='" . con('delete_item') . "' href='javascript:if(confirm(\"" .
-    					  con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-               <img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'>
-            </a>\n";
-			}
+      $this->showbuttons($img_pub, $row, $history);
 			echo "</td></tr>\n\n";
 
 			$alt = ( $alt + 1 ) % 2;
@@ -187,14 +159,12 @@ select SQL_CALC_FOUND_ROWS *
 		if (!$history){
       echo "
           <tr>
-          	<td colspan='3'>
+          	<td colspan='5'>
           		<input type='hidden' name='action' id='action' value=''>
+              <input type='checkbox'  onclick=\"checkall();\">&nbsp;<font size=-1>Check/Uncheck All&nbsp;&nbsp; </font>
            		<button name='publish' value  ='".con('publish').  "' onclick='javascript: document.frmEvents.action.value=\"" . "publish" . "\";document.frmEvents.submit();'>".con('publish').  "</button>
            		<button name='unpublish' value='".con('unpublish')."' onclick='javascript: document.frmEvents.action.value=\"" . "unpublish" . "\";document.frmEvents.submit();'>".con('unpublish')."</button>
            		<button name='publish' value  ='".con('delete').   "' onclick='javascript: if(confirm(\"" . con('delete_item') . "\")){document.frmEvents.action.value=\"" . "remove_events" . "\";document.frmEvents.submit();}'>".con('delete').   "</button>
-          	</td>
-          	<td colspan='7'  align='right'>
-           		<button name='add' value='".con('add')."' onclick='javascript: document.frmEvents.action.value=\"add\" ;document.frmEvents.submit();' >".con('add')."</button>
           	</td>
           </tr>\n";
     }
@@ -247,26 +217,26 @@ select SQL_CALC_FOUND_ROWS *
                 <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
 
 			echo "<td class='admin_list_item'>";
-      if (!$history) {
+      $this->showbuttons($img_pub, $row, $history);
+			echo "
+      </td></tr>\n\n";
+			$alt = ( $alt + 1 ) % 2;
+		}
+	}
 
-        echo "<a class='link' alt='{$img_pub[$row['event_status']]['alt']}'
-                                                        title='{$img_pub[$row['event_status']]['title']}'
-                                                        href='{$img_pub[$row['event_status']]['link']}{$row['event_id']}'>
-                <img border='0' alt='{$img_pub[$row['event_status']]['alt']}'
-                                title='{$img_pub[$row['event_status']]['title']}'
-                                src='{$img_pub[$row['event_status']]['src']}'>
-              </a>";
+  function showbuttons($img_pub, $row, $history) {
+      if (!$history) {
+        echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
+                                $img_pub[$row['event_status']]['title'],2,
+                                 array('image'=>$img_pub[$row['event_status']]['src'],
+                                       'alt'  =>con($img_pub[$row['event_status']]['alt'])));
       } else {
          echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
       }
-      echo "  <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
-                   <img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . con('edit') . "' title='" . con('edit') ."'>
-              </a>\n";
-
+      echo  $this->show_button("{view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
 			if ( $row['event_pm_id'] ) {
-				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$row['event_pm_id']}'>
-                         <img src=\"".$_SHOP->root."images/pm.png\" border='0' alt='" . con('place_map') .
-					"' title='" . con('place_map') . "'></a>\n";
+        echo  $this->show_button("{view_event.php?action=edit&event_id={$row['event_id']}",'place_map',2,
+                                 array('image'=>'pm.png'));
 			}
 
 			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or (!$row['event_pm_id'] and
@@ -275,18 +245,13 @@ select SQL_CALC_FOUND_ROWS *
 				 * $alt = "Archive";
 				 * $src = "images/archive.jpg";
 				 * $link = "archive_event.php?event_id=$event_id";*/
+        echo  $this->show_button("{archive_event.php?event_id={$row['event_id']}",'Archive',2,
+                                 array('image'=>'archive.png'));
+        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_id={$row['event_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$row['event_name']}?"));
 
-				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
-                         <img src=\"".$_SHOP->root."images/archive.png\" border='0' alt='".con('Archive') . "' title='" . con('Archive') . "'></a>\n";
-
-				echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-                        <img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
 			}
-			echo "
-      </td></tr>\n\n";
-			$alt = ( $alt + 1 ) % 2;
-		}
-	}
+
+  }
 
 	function form( $data, $err ) {
 		global $_SHOP;

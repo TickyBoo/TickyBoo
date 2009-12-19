@@ -69,7 +69,7 @@ define("icon_nosal_alt","UnPublished");
 //TOOLTIPS COULD BE MOVED TO ANOTHER FILE
 //By default they use the name of the item plus _tooltip eg. add-tooltip
 
-define("add_venue-tooltip","Add Venue"); 
+define("add_venue-tooltip","Add Venue");
 
 //NAVIGATION
 //should remain the same throughout all pages.
@@ -442,7 +442,7 @@ define("also_sub","Subevents also");
 define("event_add_title","Add a New Event");
 define("event_edit_title","Modify Event");
 define("event_update_title","Modify Event");
-define("multi","Add Sub-Event");
+define("add_multi","Add Sub-Event");
 
 	define("event_id","Event ID#");
 	define("event_name","Event Name");
