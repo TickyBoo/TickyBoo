@@ -176,10 +176,10 @@ function order_details ($order_id){
      }
 
      return "<a href='javascript:if(confirm(\"".con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}'>".
-          "<img border='0' src='images/$img'></a>";
+          "<img border='0' src='../images/$img'></a>";
    }
    return "<a $target href='".$_SERVER['PHP_SELF']."?action=$action&order_id=$order_id'>".
-          "<img border='0' src='images/$img'></a>";
+          "<img border='0' src='../images/$img'></a>";
  }
 
  function get_limit ($page,$count=0){
@@ -648,19 +648,19 @@ function print_order_status ($order){
       $menu[]="
       <table width='190' class='menu_admin' cellspacing='2'>
       <tr><td align='center' class='menu_admin_title'>".con('possible_actions')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='images/view.png' border='0'> ".con('view_order_details')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='images/printer.gif' border='0'> ".con('print_order')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='images/ord.png' border='0'> ".con('change_order_to_ord')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/view.png' border='0'> ".con('view_order_details')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/printer.gif' border='0'> ".con('print_order')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/ord.png' border='0'> ".con('change_order_to_ord')."</td></tr>
 
-      <tr><td class='menu_admin_item' $sty><img src='images/mail.png' border='0'> ".con('send_order_post')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='images/no_mail.png' border='0'> ".con('no_send_order_post')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/mail.png' border='0'> ".con('send_order_post')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/no_mail.png' border='0'> ".con('no_send_order_post')."</td></tr>
 
-      <!--tr><td class='menu_admin_item' $sty><img src='images/email.png' border='0'> ".con('send_order_email')."</td></tr-->
-      <tr><td class='menu_admin_item' $sty><img src='images/pig.png' border='0'> ".con('change_order_to_payed')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='images/no_pig.png' border='0'> ".con('change_order_to_no_payed')."</td></tr>
+      <!--tr><td class='menu_admin_item' $sty><img src='../images/email.png' border='0'> ".con('send_order_email')."</td></tr-->
+      <tr><td class='menu_admin_item' $sty><img src='../images/pig.png' border='0'> ".con('change_order_to_payed')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/no_pig.png' border='0'> ".con('change_order_to_no_payed')."</td></tr>
 
-      <tr><td class='menu_admin_item' $sty><img src='images/remis.png' border='0'> ".con('reemit_order_menu')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='images/trash.png' border='0'> ".con('cancel_order')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/remis.png' border='0'> ".con('reemit_order_menu')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/trash.png' border='0'> ".con('cancel_order')."</td></tr>
 
       </table>";
     }

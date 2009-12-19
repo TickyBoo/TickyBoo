@@ -41,9 +41,9 @@ class StatisticView extends AdminView{
     
     function fill_images()
     {
-        $this->img_pub['pub']   = 'images/grun.png';
-        $this->img_pub['unpub'] = 'images/rot.png';
-        $this->img_pub['nosal'] = 'images/grey.png';
+        $this->img_pub['pub']   = '../images/grun.png';
+        $this->img_pub['unpub'] = '../images/rot.png';
+        $this->img_pub['nosal'] = '../images/grey.png';
     }
 
   function plotEventStats ($start_date, $end_date, $month, $year) {
@@ -128,10 +128,10 @@ class StatisticView extends AdminView{
     $percent = round($percent, 0);
     echo "<table border='0' cellspacing='0' width='100%'><tr>";//$width
     if ($percent > 0){
-      echo "<td bgcolor='#ff0000' width='{$percent}%'><img src='images/dot.gif' width='0' height='12'></td>";
+      echo "<td bgcolor='#ff0000' width='{$percent}%'><img src='../images/dot.gif' width='0' height='12'></td>";
     }
     if ($percent < 100){
-      echo "<td bgcolor='#00aa00'><img src='images/dot.gif' width='0' height='12'></td>";
+      echo "<td bgcolor='#00aa00'><img src='../images/dot.gif' width='0' height='12'></td>";
     }
     echo "</tr></table><td nowrap='nowrap' align='right'>$percent% ($saled/$tot)</td>";
   }

@@ -159,22 +159,22 @@ select SQL_CALC_FOUND_ROWS *
       }
 
       echo"      <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
-              <img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'>
+              <img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . con('edit') . "' title='" . con('edit') . "'>
             </a>\n";
 
 			if ( $row['event_pm_id'] ) {
 				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$row['event_pm_id']}'>
-                <img src='images/pm.png' border='0' alt='" .	con('place_map') . "' title='" . con('place_map') . "'>
+                <img src=\"".$_SHOP->root."images/pm.png\" border='0' alt='" .	con('place_map') . "' title='" . con('place_map') . "'>
               </a>\n";
 			}
 
 			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or
            (!$row['event_pm_id'] and $row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') ) {
 				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
-                <img src='images/archive.png' border='0' alt='" .	con('Archive') . "' title='" . con('Archive') . "'></a>\n";
+                <img src=\"".$_SHOP->root."images/archive.png\" border='0' alt='" .	con('Archive') . "' title='" . con('Archive') . "'></a>\n";
 				echo "<a class='link' title='" . con('delete_item') . "' href='javascript:if(confirm(\"" .
     					  con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-               <img src='images/trash.png' border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'>
+               <img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'>
             </a>\n";
 			}
 			echo "</td></tr>\n\n";
@@ -260,12 +260,12 @@ select SQL_CALC_FOUND_ROWS *
          echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
       }
       echo "  <a class='link' href='view_event.php?action=edit&event_id={$row['event_id']}'>
-                   <img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') ."'>
+                   <img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . con('edit') . "' title='" . con('edit') ."'>
               </a>\n";
 
 			if ( $row['event_pm_id'] ) {
 				echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$row['event_pm_id']}'>
-                         <img src='images/pm.png' border='0' alt='" . con('place_map') .
+                         <img src=\"".$_SHOP->root."images/pm.png\" border='0' alt='" . con('place_map') .
 					"' title='" . con('place_map') . "'></a>\n";
 			}
 
@@ -277,10 +277,10 @@ select SQL_CALC_FOUND_ROWS *
 				 * $link = "archive_event.php?event_id=$event_id";*/
 
 				echo "<a class='link' target='_blank' href='archive_event.php?event_id={$row['event_id']}'>
-                         <img src='images/archive.png' border='0' alt='".con('Archive') . "' title='" . con('Archive') . "'></a>\n";
+                         <img src=\"".$_SHOP->root."images/archive.png\" border='0' alt='".con('Archive') . "' title='" . con('Archive') . "'></a>\n";
 
 				echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"view_event.php?action=remove&event_id={$row['event_id']}\";}'>
-                        <img src='images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
+                        <img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
 			}
 			echo "
       </td></tr>\n\n";
@@ -641,19 +641,19 @@ select SQL_CALC_FOUND_ROWS *
 
   function fill_images() {
 		$img_pub['pub'] = array(
-            "src" => 'images/grun.png',
+            "src" => '../images/grun.png',
             'title' => con('icon_unpublish'),
             'alt' => con('icon_unpublish_alt'),
             'link' => "view_event.php?action=unpublish&cbxEvents[]=" );
 
 		$img_pub['unpub'] = array(
-            "src" => 'images/rot.png',
+            "src" => '../images/rot.png',
             'title' => con('icon_publish'),
             'alt' => con('icon_publish_alt'),
             'link' => "view_event.php?action=publish&cbxEvents[]=" );
 
 		$img_pub['nosal'] = array(
-            "src" => 'images/grey.png',
+            "src" => '../images/grey.png',
             "title" => con('icon_nosal'),
             "alt" => con('icon_nosal_alt'),
             "link" => "view_event.php?action=publish&cbxEvents[]=" );

@@ -72,8 +72,8 @@ class HandlingView extends AdminView{
   				echo "<td width='30' class='admin_list_item'>$handling_mode_web</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_pos</td>\n";
   				echo "<td class='admin_list_item' width='40' align='right'>
-                  <a class='link' href='view_handling.php?action=edit&handling_id={$hand->handling_id}'><img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n
-  				        <a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"view_handling.php?action=remove&handling_id={$hand->handling_id}\";}'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a></td>";
+                  <a class='link' href='view_handling.php?action=edit&handling_id={$hand->handling_id}'><img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n
+  				        <a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"view_handling.php?action=remove&handling_id={$hand->handling_id}\";}'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a></td>";
 			 	}
 				echo "</tr>";
 				$alt=($alt+1)%2;

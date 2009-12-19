@@ -107,42 +107,42 @@ function draw (){
 	          AND seat_code="._esc($ticket_code);
 
     if(!$ticket=ShopDB::query_one_row($query)){
-        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
+        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
         return 0;
     } 
 
     if($ticket['seat_event_id']!=$_SESSION['event']){
-      echo "<div class='err' ><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".not_valid_event."</td></tr></table></div>";
+      echo "<div class='err' ><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".not_valid_event."</td></tr></table></div>";
       return 0;
     }
 
 /*
     if($ticket['category_numbering']=='both' or $ticket['category_numbering']=='rows' ){
       if($ticket['seat_row_nr']!=$rang){
-         echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
+         echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
          return 0;
        }
     }
 
     if($ticket['category_numbering']=='both'){
       if($ticket['seat_nr']!=$place){
-         echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
+         echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
          return 0;
       }
     }
 */
     if($ticket['seat_status']=='check'){
-        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".ticket_already_checked."</td></tr></table></div>";
+        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".ticket_already_checked."</td></tr></table></div>";
         return 0;
     } 
 
     if($ticket['seat_status']=='free'){
-        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".place_not_commanded."</td></tr></table></div>";
+        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".place_not_commanded."</td></tr></table></div>";
         return 0;
     } 
 
     if($ticket['seat_status']=='res'){
-        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='images/attention.png'></td><td class='error' >".place_only_reserved."</td></tr></table></div>";
+        echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src=\"".$_SHOP->root."images/attention.png\" ></td><td class='error' >".place_only_reserved."</td></tr></table></div>";
         return 0;
     } 
     
@@ -157,7 +157,7 @@ function draw (){
     }
     
     echo "<table class='check' width='700' cellpadding='5'>
-          <tr><td align='center' valign='middle' width='150'><img src='images/bigsmile.gif'></td>
+          <tr><td align='center' valign='middle' width='150'><img src=\"".$_SHOP->root."images/bigsmile.gif\" ></td>
 	  <td align='center' class='success'><table border='0' width='350'><tr>
 	  <td   align='center' class='success'>".check_success."</td></tr>
           <tr><td class='value' align='center'>{$ticket['category_name']} {$ticket['pmz_name']}</td></tr><tr><td  class='value' align='center'> $place_nr </td></tr>

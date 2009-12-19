@@ -57,7 +57,7 @@ class PlaceMapView extends AdminView {
 	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 	  echo "<tr><td class='admin_list_title' colspan='1' align='left'>" . con('place_maps') . "</td>\n";
     echo "<td colspan=1 align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add_pm&pm_ort_id=$ort_id'>
-            <img src='images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
+            <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
 	  echo "</tr>";
 
 		while ( $pm = shopDB::fetch_assoc($res) ) {
@@ -68,11 +68,11 @@ class PlaceMapView extends AdminView {
 
 			echo "<td class='admin_list_item' width=60 align=right>";
 			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}'>
-             <img src='images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
+             <img src='../images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
 			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}'>
-             <img src='images/copy.png' border='0' alt='" .	con('copy') . "' title='" . con('copy') . "'></a>\n";
+             <img src='../images/copy.png' border='0' alt='" .	con('copy') . "' title='" . con('copy') . "'></a>\n";
 			echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}\";}'>
-              <img src='images/trash.png' border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'></a>\n";
+              <img src='../images/trash.png' border='0' alt='" .	con('remove') . "' title='" . con('remove') . "'></a>\n";
 			echo "</td></tr>";
 			$alt = ( $alt + 1 ) % 2;
 		}

@@ -125,14 +125,14 @@ class AdminView extends AUIComponent {
         echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_name' width='40%'>".con($name)."</td>
                 <td class='admin_value'>
                   <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
-                  <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
+                  <a class='{$name}-row-delete link' href='#'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a>
                   ".printMsg($name, $err)."
                 </td></tr>\n";
       }else{
         echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_value' style='width:100%;' colspan='2'>
                 <input type='text' name='{$prefix}[$i][key]' value='" . htmlspecialchars($key, ENT_QUOTES) . "'>
                 <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
-                <a class='{$name}-row-delete link' href='#'><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>
+                <a class='{$name}-row-delete link' href='#'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a>
                 ".printMsg($name, $err)."
               </td></tr>\n";
       }
@@ -146,7 +146,7 @@ class AdminView extends AUIComponent {
                 \"<td class='admin_value' style='width:100%;' colspan='2'>\"+
                   \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][key]' value='' />&nbsp; \"+
                   \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][value]' value='' />\"+
-                  \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
+                  \"<a class='{$name}-row-delete link' href=''><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
                 \"</td>\"+
               \"</tr>\");
 
@@ -159,7 +159,7 @@ class AdminView extends AUIComponent {
             $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='40%'>".con($name)."</td>\"+
                 \"<td class='admin_value'>\"+
                   \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][value]' value='' />\"+
-                  \"<a class='{$name}-row-delete link' href=''><img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
+                  \"<a class='{$name}-row-delete link' href=''><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
                 \"</td>\"+
               \"</tr>\");
 
@@ -205,7 +205,7 @@ class AdminView extends AUIComponent {
               <td class='admin_name'  width='40%'>".con($name)." ".con('select')."</td>
               <td class='admin_value'>
                <select id='{$name}-group-select' name='{$name}_group_select'>\n</select>
-               <a class='link' href='#' id='{$name}-group-delete'><img src='images/trash.png' border='0' alt='".con('remove_group')."' title='".con('remove_group')."'></a>
+               <a class='link' href='#' id='{$name}-group-delete'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove_group')."' title='".con('remove_group')."'></a>
               </td>
             </tr>\n";
 

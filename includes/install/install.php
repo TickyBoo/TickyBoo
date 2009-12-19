@@ -143,7 +143,7 @@ $Install->return_pg  = $_REQUEST['inst_pg'];
   echo "
     <div id=\"wrap\">
       <div id=\"header\">
-        <img src=\"".BASE_URL."/images/fusion.png\" border=\"0\"/>
+        <img src=\"".BASE_URL."/images/logo.png\" border=\"0\"/>
         <h2>Installation Procedure <span style=\"color:red; font-size:14px;\"><i>[".INSTALL_VERSION."]</i></span></h2>
       </div>
       <div id=\"navbar\">

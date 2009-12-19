@@ -139,6 +139,7 @@ define("event_order_limit_exceeded","Sorry, The number of seats that you can ord
 define("fax_short","The Fax Number is too Short!");
 define("fax_long","The Fax Number is too Long!");
 define("img_loading_problem","Problem Loading Image!");
+define("img_loading_problem_copy","Problem Loading Image Copy!");
 define("in_use","This Object is in use and <b>cannot</b> be Deleted!");
 define("internal_error","Internal Error!");
 define("invalid_date","Invalid Date!");
@@ -380,8 +381,8 @@ define("pm_parts","Seat Chart Parts");
 			define("pmp_scene_west","West");
 		define("pmp_shift","Shift Rows");
 			//do not edit.  Places stage image
-				define("scene_h","images/scene_h_en.png");
-				define("scene_v","images/scene_v_en.png");
+				define("scene_h","../images/scene_h_en.png");
+				define("scene_v","../images/scene_v_en.png");
 
 	define("label","Label:");
 		define("label_type_text","Text");

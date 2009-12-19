@@ -144,10 +144,10 @@ class SPointView extends AdminView {
 			echo "<td class='admin_list_item' width='33%'>{$row['user_lastname']}</td>\n";
 			echo "<td class='admin_list_item' width='59%'>{$row['user_address']} {$row['user_address1']} {$row['user_city']}</td>\n";
 			echo "<td class='admin_list_item' nowrap='nowrap' align='right'>";
-			//            <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&user_id={$row['user_id']}'><img src='images/view.png' border='0' alt='".view."' title='".view."'></a></td>\n";
-			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&user_id={$row['user_id']}'><img src='images/edit.gif' border='0' alt='" .
+			//            <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&user_id={$row['user_id']}'><img src='../images/view.png' border='0' alt='".view."' title='".view."'></a></td>\n";
+			echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&user_id={$row['user_id']}'><img src='../images/edit.gif' border='0' alt='" .
 				edit . "' title='" . edit . "'></a>\n";
-			echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&user_id={$row['user_id']}\";}'><img src='images/trash.png' border='0' alt='" .
+			echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&user_id={$row['user_id']}\";}'><img src='../images/trash.png' border='0' alt='" .
 				remove . "' title='" . remove . "'></a>\n";
 			echo "</td></tr>";
 			$alt = ( $alt + 1 ) % 2;

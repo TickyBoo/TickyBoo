@@ -147,9 +147,9 @@ global $_SHOP;
     echo "<tr class='admin_list_row_$alt'>";
     echo "<td class='admin_list_item' width='550' >{$row['control_login']}</td>\n";
     echo "<td class='admin_list_item' nowrap='nowrap' align='right'  >
-          <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&control_login={$row['control_login']}'><img src='images/view.png' border='0' alt='".con("view")."' title='".con("view")."'></a>\n";
-    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&control_login={$row['control_login']}'><img src='images/edit.gif' border='0' alt='".con("edit")."' title='".con("edit")."'></a>\n";
-    echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&control_login={$row['control_login']}\";}'><img src='images/trash.png' border='0' alt='".con("remove")."' title='".con("remove")."'></a>\n";
+          <a class='link' href='{$_SERVER['PHP_SELF']}?action=view&control_login={$row['control_login']}'><img src=\"".$_SHOP->root."images/view.png\" border='0' alt='".con("view")."' title='".con("view")."'></a>\n";
+    echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&control_login={$row['control_login']}'><img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='".con("edit")."' title='".con("edit")."'></a>\n";
+    echo "<a class='link' href='javascript:if(confirm(\"".delete_item."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&control_login={$row['control_login']}\";}'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con("remove")."' title='".con("remove")."'></a>\n";
     echo "</td></tr>";
     $alt=($alt+1)%2;
   }

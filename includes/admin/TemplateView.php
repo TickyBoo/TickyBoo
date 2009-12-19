@@ -275,9 +275,9 @@ class TemplateView extends AdminView{
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
     echo "<tr><td class='admin_list_title' colspan='6' align='center'>" . con('template_title') . "</td></tr>\n";
 
-    $img_pub['new'] = 'images/new.png';
-    $img_pub['error'] = 'images/error.png';
-    $img_pub['comp'] = 'images/compiled.png';
+    $img_pub['new'] = '../images/new.png';
+    $img_pub['error'] = '../images/error.png';
+    $img_pub['comp'] = '../images/compiled.png';
 
     while ($row = shopDB::fetch_assoc($res)){
       echo "<tr class='admin_list_row_$alt'>";
@@ -287,12 +287,12 @@ class TemplateView extends AdminView{
       echo "<td class='admin_list_item' >{$row['template_name']}</td>\n";
       $target = ($type=='pdf2')?'target="_blank"':'';
       echo "<td class='admin_list_item' width='60' nowarp=nowarp'>
-            <a class='link' {$target}  href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src='images/view.png' border='0' alt='" . view . "' title='" . view . "'></a>\n";
+            <a class='link' {$target}  href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src=\"".$_SHOP->root."images/view.png\" border='0' alt='" . view . "' title='" . view . "'></a>\n";
       if ($row['template_type'] !=='pdf') {
-        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
+        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
       }
       if ($row['template_type'] !=='systm') {
-        echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src='images/trash.png' border='0' alt='" . remove . "' title='" . remove . "'></a>";
+        echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" . remove . "' title='" . remove . "'></a>";
       }
       echo "</td>\n";
       echo "</tr>";

@@ -43,7 +43,7 @@ class PlaceMapCategoryView extends AdminView {
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" .con('categories'). "</td>\n";
     if (!$live) {//
       echo "<td colspan=5 align='right' valign='middle' ><a title='".con('add')."' class='link' href='{$_SERVER['PHP_SELF']}?action=add_category&pm_id=$pm_id'>
-              <img src='images/add.png' border='0' alt='".con('add')."' title='".con('add')."' /></a></td>\n";// ".con('add')."
+              <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."' /></a></td>\n";// ".con('add')."
     }
     echo "</tr>\n";
     if ($cats = PlaceMapCategory::LoadAll($pm_id)){
@@ -56,10 +56,10 @@ class PlaceMapCategoryView extends AdminView {
 
         echo "<td class='admin_list_item' width=60 align=right>";
         echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_category&pm_id=$pm_id&category_id={$category->category_id}'>
-        <img src='images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
+        <img src='../images/edit.gif' border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
         if (!$live) {
             echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id=$pm_id&category_id={$category->category_id}\";}'>
-                    <img src='images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\n";
+                    <img src='../images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\n";
         }
         echo'</td></tr>';
         $alt = ($alt + 1) % 2;
