@@ -401,9 +401,9 @@ class AdminView extends AUIComponent {
       if($icon && $image && $text){ $css = 'admin-buttona-icon-left'; }else{ $css = ''; }
       $rtn .= "<a class='admin-button ui-state-default " . $css .  " ui-corner-all link' href='".empt($url,'#')."' >";
       if($icon && $image && $text){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title=".con($name)." ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title=".con($name)." ></span>";
       }elseif($icon && $image){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"images/{$image}\");' title=".con($name)." ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\");' title=".con($name)." ></span>";
       }
       if($text){
         $rtn .= con($name);

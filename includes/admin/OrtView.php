@@ -42,12 +42,7 @@ class OrtView extends AdminView {
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellpadding='4' cellspacing='1'>\n";
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('ort_title') . "</td>";
-<<<<<<< .mine
-    echo "<td colspan=1 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>
-            <img src='../images/add.png' border='0' alt='".con('add')."' title='".con('add')."'></a></td>";
-=======
     echo "<td colspan='1' align='right'>".$this->print_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
->>>>>>> .r809
     echo "</tr>\n";
     if (!$res) {
       //
@@ -56,11 +51,7 @@ class OrtView extends AdminView {
           echo "<tr class='admin_list_row_$alt'>";
           echo "<td class='admin_list_item' width='50%'>{$row['ort_name']}</td>\n";
           echo "<td class='admin_list_item'>{$row['ort_city']}</td>\n";
-<<<<<<< .mine
           echo "<td class='admin_list_item'width='40' align='right' nowrap><nowrap><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}'><img src='../images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>";
-=======
-          echo "<td class='admin_list_item'width='80' align='right' nowrap><nowrap><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}'><img src='images/edit.gif' border='0' alt='" . edit . "' title='" . edit . "'></a>";
->>>>>>> .r809
           echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&ort_id={$row['ort_id']}\";}'>
                  <img src='../images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a></nowrap></td>\n";
           echo "</tr>";
