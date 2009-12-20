@@ -36,13 +36,16 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
 class HandlingView extends AdminView{
+  
   function table (){
 		global $_SHOP;
 		$pay=Handling::getPayment ();
 		$send=Handling::getShipment();
 		$alt=1;
 		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-		echo "<tr><td class='admin_list_title' colspan='8' align='center'>".con('handling_title')."</td></tr>\n";
+		echo "<tr><td class='admin_list_title' colspan='4' align='center'>".con('handling_title')."</td>";
+    echo "<td class='admin_list_title' colspan='2' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    echo "</tr>\n";
 		if($hands=Handling::loadAll()){
 			foreach($hands as $hand){
 				$handling_mode_pos=(strpos($hand->handling_sale_mode,'sp')!==false)?'pos':'&nbsp;';
@@ -71,19 +74,17 @@ class HandlingView extends AdminView{
   				echo "</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_web</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_pos</td>\n";
-  				echo "<td class='admin_list_item' width='40' align='right'>
-                  <a class='link' href='view_handling.php?action=edit&handling_id={$hand->handling_id}'><img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n
-  				        <a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"view_handling.php?action=remove&handling_id={$hand->handling_id}\";}'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a></td>";
+  				echo "<td class='admin_list_item' width='40' align='right'>".
+                $this->show_button('view_handling.php?action=edit&handling_id={$hand->handling_id}',"edit",2).
+                $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"view_handling.php?action=remove&handling_id={$hand->handling_id}\";}","remove",2)
+				      ."</td>";
 			 	}
 				echo "</tr>";
 				$alt=($alt+1)%2;
 			 }
 		 }
-
-
+     
 		echo "</table>\n";
-
-		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>".con('add')."</a></center>";
   }
 
   function form ($data, $err, $title){

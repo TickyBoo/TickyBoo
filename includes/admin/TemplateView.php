@@ -313,8 +313,7 @@ class TemplateView extends AdminView{
           if($type=="swift" || $type=='email' || $type=='systm'){
             echo $this->show_button("{$_SERVER['PHP_SELF']}?action=sendtest","send_test",1);
           }
-    echo "</center></td>
-      </tr>\n";
+    echo "</center></td></tr>\n";
     
     echo "</table>\n";
     
