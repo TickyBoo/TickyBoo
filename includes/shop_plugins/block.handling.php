@@ -67,8 +67,9 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
     if($params['www']){
      $where .= " and handling_sale_mode LIKE '%www%'";
     }
-
-    if($_SHOP->shopconfig_restime > 0){
+    
+    // We use the reserve button in the shop.
+    if($_SHOP->shopconfig_restime > 0 && !$params['www']){
       $where .= " OR handling_id = 1";
     }
 

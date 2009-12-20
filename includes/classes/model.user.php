@@ -409,6 +409,15 @@ class User extends Model{
         echo 'cant set new password';
     }
   }
+  
+  public function currentTickets($user_id,$status){
+    
+    $options['seat_user_id'] = $user_id;
+    $options['status'] = $status;
+    
+    return Seat::getCount($options);
+  }
+  
 }
 
 function convMandatory($mandatory_l){

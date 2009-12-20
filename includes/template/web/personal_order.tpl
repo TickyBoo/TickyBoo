@@ -42,17 +42,13 @@
 		<td>
 	    	<table  cellspacing='1' cellpadding='4' border='0'>
 	      		<tr>
-			  		<td class='title'>{!order_id!} {$shop_order.order_id}</td>
+			  		<td class='title'>{!order_id!} #{$shop_order.order_id}</td>
 				</tr>
 				<tr>
 			  		<td class='user_info'>
 	    				{!number_tickets!}
 	  		  		</td>
 			  		<td class='subtitle'>{$shop_order.order_tickets_nr}</td>
-				</tr>
-	  			<tr>
-			  		<td class='user_info'>{!userid!}</td>
-			  		<td class='subtitle'>{$shop_order.order_user_id}</td>
 				</tr>
 				<tr>
 			  		<td class='user_info'>{!total_price!}</td>
@@ -175,6 +171,8 @@
 			<tr>
 			  <td class='subtitle'>{!id!}</td>
 			  <td class='subtitle'>{!event!}</td>
+        <td class='subtitle'>{!event!} {!event_date!}</td>
+        <td class='subtitle'>{!event_time!}</td>
 			  <td class='subtitle'>{!category!}</td>
 			  <td class='subtitle'>{!zone!}</td>
 			  <td class='subtitle'>{!seat!}</td>
@@ -185,7 +183,9 @@
 			{counter assign='row' print=false}
 			<tr class='user_list_row_{$row%2}'>
 			  <td class='admin_info'>{$shop_ticket.seat_id}</td>
-			  <td class='admin_info'>{$shop_ticket.event_name}</td>
+			  <td class='admin_info'><a href="index.php?event_id={$shop_ticket.event_id}" title="{!open_event!}">{$shop_ticket.event_name}</a></td>
+        <td class='admin_info'>{$shop_ticket.event_date}</td>
+        <td class='admin_info'>{$shop_ticket.event_time}</td>
 			  <td class='admin_info'>{$shop_ticket.category_name}</td>
 			  <td class='admin_info'>{$shop_ticket.pmz_name}</td>
 			  <td class='admin_info'>

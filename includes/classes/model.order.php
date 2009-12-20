@@ -39,7 +39,7 @@ class Order Extends Model {
   protected $_idName    = 'order_id';
   protected $_tableName = 'Order';
   protected $_columns   = array('#order_id', '*order_user_id', 'order_session_id', '*order_tickets_nr',
-                                '*order_total_price', '*order_date', '*order_shipment_status',
+                                '*order_total_price', '*order_date','order_timestamp', '*order_shipment_status',
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '#order_date_expire', 'order_responce', 'order_responce_date',
@@ -175,7 +175,7 @@ class Order Extends Model {
    * Save order function, will take parmaters from the class varibles constructor.
    *
    * @since 1.0
-   * @updated 1.0 beta5
+   * @updated 1.0 beta6
    */
   function save () {
 
@@ -222,7 +222,8 @@ class Order Extends Model {
     $this->order_shipment_status = "none";
     $this->order_payment_status = "none";
 
-    $this->order_date =date('d-m-Y');
+    //This is legacy... all new orders will use the timestamp which is set on save.
+    $this->order_date = date('Y-m-d H:i:s');
 
     if(!ShopDB::begin('Save Order')){
       return FALSE;

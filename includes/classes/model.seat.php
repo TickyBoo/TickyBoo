@@ -360,6 +360,24 @@ class Seat  Extends Model {
     }
     return TRUE;
   }
+  
+  public function getCount($options){
+    
+    $query = "SELECT count(seat_id) ticketcount FROM seat WHERE 1=1";
+    
+    if(is($options['seat_user_id'],false)){
+      $query .= " AND seat_user_id="._esc($options['seat_user_id']);
+    }
+    if(is($options['status'],false)){
+      $query .= " AND seat_status="._esc($options['status']);
+    }
+    
+    if($row = ShopDB::query_one_row($query)){
+      return $row['ticketcount'];
+    }else{
+      return 0;
+    }
+  }
 
 
   function free ($sid, $event_id, $category_id, $seats){

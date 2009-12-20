@@ -29,96 +29,108 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
+ <!-- checkout_preview.tpl -->
 {if $user->mode() eq 0 && !$user->active}
 	{include file="user_activate.tpl"}
 {else}
-	{include file="header.tpl" name=!shopping_cart_check_out! header=!Handling_cont_mess!}
-    {if  $user->mode() lte 2 && $user->new_member}
-    	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
-        	<tr>
-				<td class='TblLower'>
-          			<span class='title'>{!act_name!}<br><br> </span>
-          			{include file="user_registred.tpl"}
-        		</td>
-			</tr>
-		</table>
+  {include file="header.tpl" name=!shopping_cart_check_out! header=!Handling_cont_mess!}
+  {if  $user->mode() lte 2 && $user->new_member}
+    <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+      <tr>
+        <td class='TblLower'>
+          <span class='title'>{!act_name!}<br><br> </span>
+          {include file="user_registred.tpl"}
+    		</td>
+      </tr>
+    </table>
  	{/if}
 
 	{if $order_error}
-    	<div class='error'>{$order_error}</div><br />
+    <div class='error'>{$order_error}</div><br />
 	{/if}
 
-  	{include file="cart_content.tpl" check_out="on" }
-  	{assign var=total value=$cart->total_price_f()}
+  {include file="cart_content.tpl" check_out="on" }
+  {assign var=total value=$cart->total_price_f()}
+  
 	<br />
-  	<table cellpadding="0" cellspacing='0' border='0' width='100%'>
-    	<tr>
-    		<td width="50%" valign="top" align="left">
-      			{include file="user_address.tpl" title="on"}
-    		</td>
-    		<td valign='top' align="right">
-    			{if !$update->is_demo()}
-       			<form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
-          			{ShowFormToken name='OrderHandling'}
-          			<input type='hidden' name='action' value='confirm' />
-    			{/if}
- 	  			<table border=0 width='90%' cellpadding="5" bgcolor='white'>
-        			<tr>
-        		  		<td colspan='3' class='TblHeader' align='left'>{!handlings!}</td>
-       				</tr>
-        			{assign var=min_date value=$cart->min_date_f()}
-        			{handling www='on' event_date=$min_date }
+  
+  <table cellpadding="0" cellspacing='0' border='0' width='100%'>
+    <tr>
+      <td width="50%" valign="top" align="left">
+        {include file="user_address.tpl" title="on"}
+  		</td>
+    	<td valign='top' align="right">
+        {if !$update->is_demo()}
+          <form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+          {ShowFormToken name='OrderHandling'}
+          <input type='hidden' name='action' value='confirm' />
+        {/if}
+        <table border='0' width='90%' cellpadding="5" bgcolor='white'>
+   			  <tr>
+            <td colspan='3' class='TblHeader' align='left'>{!handlings!}</td>
+     			</tr>
+      		{assign var=min_date value=$cart->min_date_f()}
+          {update->view event_date=$min_date}
+                    
+          {handling www='on' event_date=$min_date }
           			
-				  	<tr class="{cycle name='payments' values='TblHigher,TblLower'}">
-          		  		<td class='payment_form'>
-            		  		<input checked="checked" type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}'>
-          		  		</td>
-          		  		<td class='payment_form'>
-          		  			<label for='{$shop_handling.handling_id}_check'>
-            		  			{!payment!}: {eval var=$shop_handling.handling_text_payment}<br>
-            		  			{!shipment!}: {eval var=$shop_handling.handling_text_shipment}
-          		  			</label>
-          		  		</td>
-          		  		<td class='payment_form' align='right'>
-             				{assign var=fee value="`$total*$shop_handling.handling_fee_percent/100.00+$shop_handling.handling_fee_fix`"}
-             				{if  $fee}
-                   				+ {gui->valuta value=$fee|string_format:"%.2f"}
-                  			{/if}&nbsp;
-          		  		</td>
-          			</tr>
-            		{/handling}
-        			{if $update_view.currentres}
-       				<tr class="{cycle values='TblHigher,TblLower'}">
-          				<td colspan="3">
-           			  		{*$update_view.maxres*}
-           			  		{!limit!}
-          				</td>
-          			</tr>
-        			{/if}
-      			</table>
-  				<br />
-    	    	<input type='submit' name='submit' value='{!order_it!}'/>
-    			{if !$update->is_demo()}
-    			</form>
-    			{else}
-       			<div class='error'><br/> For safety issues we have disabled the order button. </div>
-    			{/if}
-    			{* update->view event_date=$min_date user=user->user_id *}
-    			{if $update_view.can_reserve }
-        			{if !$update->is_demo()}
-       				<form action='' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
-          				<input type='hidden' name='action' value='reserve'>
-          			{ShowFormToken name='ReservHandling'}
+				  <tr class="{cycle name='payments' values='TblHigher,TblLower'}">
+            <td class='payment_form'>
+              <input checked="checked" type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
+		  		  </td>
+          	<td class='payment_form'>
+	  			    <label for='{$shop_handling.handling_id}_check'>
+                {!payment!}: {eval var=$shop_handling.handling_text_payment}<br/>
+            		{!shipment!}: {eval var=$shop_handling.handling_text_shipment}
+   		  			</label>
+        		</td>
+            <td class='payment_form' align='right'>
+              {assign var=fee value="`$total*$shop_handling.handling_fee_percent/100.00+$shop_handling.handling_fee_fix`"}
+              {if  $fee}
+                + {gui->valuta value=$fee|string_format:"%.2f"}
+              {/if}&nbsp;
+            </td>
+      		</tr>
+          
+   	      {/handling}
+          
+        	{if $update_view.currentres}
+         		<tr class="{cycle values='TblHigher,TblLower'}">
+              <td colspan="3">
+             	  {*$update_view.maxres*}
+             	  {!limit!}
+              </td>
+          	</tr>
+          {/if}
+          <tr> 
+            <td colspan="3">
+          	  <input type='submit' name='submit' value='{!order_it!}'/>
+          		
+              {if !$update->is_demo()}
+        		  </form>
+          		{else}
+             	<div class='error'><br/> For safety issues we have disabled the order button. </div>
+          		{/if}
+          			{* update->view event_date=$min_date user=user->user_id *}
+          		{if $update_view.can_reserve}
+                {if !$update->is_demo()}
+                  <form action='' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+              	    <input type='hidden' name='action' value='reserve' />
+                		{ShowFormToken name='ReservHandling'}
+         			  {/if}
+                <input style="float:right; display:inline-block;" type='submit' name='submit_reserve' value='{!reserve!}'/>
+   		  		    <span style="float:right; display:inline-block;">{!orclick!}</span>
+                
+      					{if !$update->is_demo()}
+      					 </form>
           			{/if}
-    		  		{!orclick!}
-      					<input type='submit' name='submit_reserve' value='{!reserve!}'>
-    				
-					{if !$update->is_demo()}
-					</form>
-    				{/if}
- 				{/if}
-    		</td>
-    	</tr>
-	</table>
-{/if}
-{include file="footer.tpl"}
+       				{/if}
+            </td>
+          </tr>
+       </table>
+       
+    	</td>
+   	</tr>
+  </table>
+  {/if}
+  {include file="footer.tpl"}

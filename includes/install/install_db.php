@@ -286,6 +286,7 @@ $tbls['Order']['fields'] = array(
   'order_tickets_nr' => " int(11) NOT NULL DEFAULT '0'",
   'order_total_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'order_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+  'order_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'order_shipment_status' => " enum('none','send') NOT NULL DEFAULT 'none'",
   'order_payment_status' => " enum('none','pending','payed') NOT NULL DEFAULT 'none'",
   'order_payment_id' => " varchar(255) DEFAULT NULL",

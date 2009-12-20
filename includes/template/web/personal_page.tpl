@@ -102,7 +102,8 @@
             <td><p><b>{!status!}</b></p></td>
           </tr>
    {order->order_list user_id=$user->user_id order_by_date="DESC" length=6}
-		    {if $shop_order.order_status eq "cancel"}
+      {print_r var=$shop_order}   
+	    {if $shop_order.order_status eq "cancel"}
 				<tr class='user_order_{$shop_order.order_status}'>
 			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}
 				<tr class='user_order_{$shop_order.order_status}'>
@@ -117,7 +118,7 @@
 			{else}
 				<tr class='user_order_cancel'>
 			{/if}
-		    <td class='admin_info'>{$shop_order.order_id}</td>
+      <td class='admin_info'>{$shop_order.order_id}</td>
 			<td class='admin_info'>{$shop_order.order_date}</td>
 			<td class='admin_info'>{$shop_order.order_tickets_nr}</td>
 			<td class='admin_info'>{$shop_order.order_total_price}</td>
