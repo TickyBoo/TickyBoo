@@ -282,7 +282,7 @@ class PosAjax {
         if ($seat_item->is_expired()) {
             $col = "<font color='red'>".con('expired').'</font>';
       	} else {
-      	    $col = $seat_item->ttl()." min.";          //"<img src='images/clock.gif' valign='middle' align='middle'> ".
+      	    $col = $seat_item->ttl()." min.";          //"<img src='../images/clock.gif' valign='middle' align='middle'> ".
         }
         $col ="<form id='remove' name='remove{$seat_item_id}' action='index.php' method='POST' >".
      		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
@@ -290,7 +290,7 @@ class PosAjax {
       		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
              "<button type='submit' class='ui-widget-content jqgrow'
                       style='display: inline; cursor: pointer; padding:0; margin: 0; border: 0px'> ".
-             "<img src='images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
+             "<img src='../images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
              $col.
   			     "</form>";
   //  			 "<input type='hidden' value='remove" name="action" />

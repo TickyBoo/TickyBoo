@@ -47,7 +47,7 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 	position: relative;
     width: 100%;
 	height: 22px;
-	background: #ffffff url(../images/theme/default/back2.gif) 0 100% repeat-x;
+	background: #ffffff url(../images/back2.gif) 0 100% repeat-x;
 	font: bold 12px Verdana, Helvetica, Arial, sans-serif;
 	border-bottom: 3px solid #375AAA;
 }
@@ -63,7 +63,7 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 	margin: 0;
   list-style-type: none;
 	float: left;
-	background: url(../images/theme/default/back1.gif) 0 100% no-repeat;
+	background: url(../images/back1.gif) 0 100% no-repeat;
 }
 
 #navbar ul li a:link, #navbar ul li a:active, #navbar ul li a:visited {
@@ -76,7 +76,7 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 }
 
 #navbar ul li a:hover {
-	background: url(../images/theme/default/back1.gif) 0 100% repeat-x;
+	background: url(../images/back1.gif) 0 100% repeat-x;
 }
 
 INPUT,SELECT,TEXTAREA{
