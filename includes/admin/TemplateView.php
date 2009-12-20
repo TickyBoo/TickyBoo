@@ -235,8 +235,7 @@ class TemplateView extends AdminView{
     return empty($err);
   }
 
-  function compile_all ()
-  {
+  function compile_all () {
     global $_SHOP;
     $query = "SELECT template_name FROM Template where template_type <> 'PDF' order by template_name ";
     if (!$res = ShopDB::query($query)){

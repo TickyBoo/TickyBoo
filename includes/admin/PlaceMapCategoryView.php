@@ -42,7 +42,7 @@ class PlaceMapCategoryView extends AdminView {
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" .con('categories'). "</td>\n";
     if (!$live) {//
-      echo "<td colspan=5 align='right' valign='middle' >".$this->show_button("{$_SERVER['PHP_SELF']}?action=add&pm_id={$pm_id}","add",3)."</td>\n";// ".con('add')."
+      echo "<td colspan=5 align='right' valign='middle' >".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_category&pm_id={$pm_id}","add",3)."</td>\n";// ".con('add')."
     }
     echo "</tr>\n";
     if ($cats = PlaceMapCategory::LoadAll($pm_id)){

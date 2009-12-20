@@ -56,7 +56,7 @@ class PlaceMapView extends AdminView {
 		$alt = 0;
 	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
 	  echo "<tr><td class='admin_list_title' colspan='1' align='left'>" . con('place_maps') . "</td>\n";
-    echo "<td colspan=1 align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    echo "<td colspan=1 align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_pm","add",3)."</td>";
 	  echo "</tr>";
 
 		while ( $pm = shopDB::fetch_assoc($res) ) {
