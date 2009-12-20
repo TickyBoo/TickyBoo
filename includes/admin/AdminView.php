@@ -441,12 +441,8 @@ class AdminView extends AUIComponent {
       //Extra options
       $classes = is($options['classes'],'');
       $style   = is($options['style'],'');
-      $alt     = is($options['alt'],$title );
       $idname  = is($options['id'], $name);
       $disabled= is($options['disable'],false);
-      if ($alt) {
-        $alt = "alt='{$alt}'";
-      }
       if(!$icon){
         $classes .= " admin-button-text";
       }
@@ -471,7 +467,12 @@ class AdminView extends AUIComponent {
         $hasTTClass = '';
         $title = con($name);
       }
-      
+
+      $alt     = is($options['alt'],$title );
+      if ($alt) {
+        $alt = "alt='{$alt}'";
+      }
+
       //If image bolt on image css for button
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
 
