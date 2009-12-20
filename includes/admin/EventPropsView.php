@@ -225,29 +225,23 @@ select SQL_CALC_FOUND_ROWS *
 	}
 
   function showbuttons($img_pub, $row, $history) {
-        echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
-                                $img_pub[$row['event_status']]['title'],2,
-                                 array('image'=>$img_pub[$row['event_status']]['src'],
-                                       'alt'  =>con($img_pub[$row['event_status']]['alt']),
-                                       'disable'=> $history));
-      echo  $this->show_button("view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
-			if ( $row['event_pm_id'] ) {
-        echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,
-                                 array('image'=>'pm.png'));
-			}
-
-			if ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or (!$row['event_pm_id'] and
-				$row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') ) {
-				/*  $title = "Archive";
-				 * $alt = "Archive";
-				 * $src = "images/archive.jpg";
-				 * $link = "archive_event.php?event_id=$event_id";*/
-        echo  $this->show_button("archive_event.php?event_id={$row['event_id']}",'Archive',2,
-                                 array('image'=>'archive.png'));
-        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_id={$row['event_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$row['event_name']}?"));
-
-			}
-
+    echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
+                            $img_pub[$row['event_status']]['title'],2,
+                             array('image'=>$img_pub[$row['event_status']]['src'],
+                                   'alt'  =>con($img_pub[$row['event_status']]['alt']),
+                                   'disable'=> $history));
+    echo  $this->show_button("view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
+    echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,
+                             array('image'=>'pm.png',
+                                   'disable'=> !$row['event_pm_id']));
+    $pub = ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or (!$row['event_pm_id'] and
+      				$row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') );
+    echo  $this->show_button("archive_event.php?event_id={$row['event_id']}",'Archive',2,
+                             array('image'=>'archive.png',
+                                   'disable'=> !$pub));
+    echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_id={$row['event_id']}\";}","remove",2,
+                             array('tooltiptext'=>"Delete {$row['event_name']}?",
+                                   'disable'=> !$pub ));
   }
 
 	function form( $data, $err ) {

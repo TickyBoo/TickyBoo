@@ -91,8 +91,7 @@ class OrtView extends AdminView {
         require_once('admin/PlaceMapView2.php');
         PlaceMapView::table($data['ort_id']);
     }
-
-    echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+		echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}",'admin_list',3);
   }
 
   function draw () {

@@ -55,9 +55,9 @@ class PlaceMapCategoryView extends AdminView {
 
         echo "<td class='admin_list_item' width=65 align=right>";
         echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_category&pm_id={$pm_id}&category_id={$category->category_id}","edit",2);
-        if (!$live) {
-          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm_id}&category_id={$category->category_id}\";}","remove",2,array('tooltiptext'=>"Delete {$category->category_name}?"));
-        }
+        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm_id}&category_id={$category->category_id}\";}","remove",2,
+                                  array('tooltiptext'=>"Delete {$category->category_name}?",
+                                        'disable'=>$live ));
         echo'</td></tr>';
         $alt = ($alt + 1) % 2;
       }

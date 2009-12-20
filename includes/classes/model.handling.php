@@ -111,15 +111,13 @@ class Handling Extends Model {
   /* Remember when concreting that you cant change the parent access! */
   function delete (){
     global $_SHOP;
-    if (!$id) $id = $this->handling_id;
-		$query="SELECT count(order_id) AS count
+ 		$query="SELECT count(order_id) AS count
             FROM `Order`
             WHERE order_handling_id="._esc($this->id);
-		if($res=ShopDB::query_one_row($query, false) and $res['count']==0){
+		if($res=ShopDB::query_one_row($query) and $res['count']==0){
 		  return parent::delete();
 		}else{
-		  echo "<div class=err>".con('in_use')."</div>";
-			return;
+			return addWarning('in_use');
 		}
   }
 

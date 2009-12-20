@@ -76,9 +76,11 @@ function option_form (&$data, &$err){
 	global $_SHOP;
 	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');
 
-	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_update_title')."</td></tr>";
 	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+  echo "<input type='hidden' name='action' value='update'>\n";
+  $this->form_head(con('option_update_title'));
+//	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+	//echo "<tr><td class='admin_list_title' colspan='2'>".con('option_update_title')."</td></tr>";
 //  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
 //	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 
@@ -91,8 +93,8 @@ function option_form (&$data, &$err){
   $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
   $this->print_select_assoc('shopconfig_delunpaid_pos',$data,$err,$yesno);
 
- 	echo "</table>\n<br>";
-	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+// 	echo "</table>\n<br>";
+//	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
 	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_others_title')."</td></tr>";
     $this->print_select_assoc('shopconfig_user_activate',$data,$err,
      array('-1'=>con('act_restrict_cart'),
@@ -105,17 +107,7 @@ function option_form (&$data, &$err){
 	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
 	$this->print_input('res_delay' ,$data, $err, 5, 10);
   $this->print_input('cart_delay',$data, $err, 5, 10);
-
- 	echo "</table>\n";
-  echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-  echo "<input type='hidden' name='action' value='update'>\n";
-
-	echo "<tr><td align='center' class='admin_value' colspan='2'>
-  	<input type='submit' name='save' value='".save."'> ";
-
-	echo "<input type='reset' name='reset' value='".res."'></td></tr>";
-	echo "</form>\n";
- 	echo "</table>\n";
+  $this->form_foot();
 
 }
 function options_check (&$data, &$err){

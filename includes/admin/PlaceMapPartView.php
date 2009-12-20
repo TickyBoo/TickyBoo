@@ -59,18 +59,19 @@ class PlaceMapPartView extends AdminView {
           echo "<td class='admin_list_item' title='{$pmp['pmp_id']}' width='50%'>{$pmp['pmp_name']}</td>\n";
           echo "<td class='admin_list_item'>{$pmp['pmp_width']} &times; {$pmp['pmp_height']} (".$pmp['pmp_width'] * $pmp['pmp_height'].")</td>\n";
 
-          echo "<td class='admin_list_item' width=60 align=right>\n";
-
+          echo "<td class='admin_list_item' width=65 align=right>\n";
 
           if ($mine) {
-              echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}","edit",2);
-              echo $this->show_button("{$_SERVER['PHP_SELF']}?action=split_pmp&pmp_id={$pmp['pmp_id']}","split_pm",2, array('image'=>'copy_to_folder16.gif'));
-              if (!$live) {
-                echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}","remove",2,array('tooltiptext'=>"Delete {$row['ort_name']}?"));
-              }
+            echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pmp&pm_id=$pm_id&pmp_id={$pmp['pmp_id']}","edit",2);
           } else {
             echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}","view",2, array('image'=>'view.png'));
           }
+          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=split_pmp&pmp_id={$pmp['pmp_id']}","split_pm",2,
+                                  array('image'=>'copy_to_folder16.gif',
+                                        'disable'=>(!$mine)));
+          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}","remove",2,
+                                  array('tooltiptext'=>"Delete {$row['ort_name']}?",
+                                        'disable'=>($live and $mine)));
           echo'</td></tr>';
           $alt = ($alt + 1) % 2;
       }
@@ -98,11 +99,7 @@ class PlaceMapPartView extends AdminView {
 
     $this->print_select('pmp_scene', $data, $err, array('none','north', 'east', 'south', 'west'));
     $this->print_checkbox('pmp_shift', $data, $err, 30, 50);
-    $this->form_foot();
-
-    if (!$data['pmp_id']) {
-      echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['pm_id']}' class=link>" . con('place_map') . "</a></center>";
-    }
+    $this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['pm_id']}");
   }
 
   function view($pmp_id, $err = null, $sel_cat = 0, $sel_pmz = 0, $view_only = false) {

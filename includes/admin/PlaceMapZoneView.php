@@ -63,22 +63,16 @@ class PlaceMapZoneView extends AdminView {
           echo "<td class='admin_list_item' width=10 bgcolor='{$zone->pmz_color}'>&nbsp;</td>\n";
           echo "<td class='admin_list_item'>{$zone->pmz_ident} {$zone->pmz_name} ({$zone->pmz_short_name})</td>\n";
 
-          echo "<td class='admin_list_item' width=60 align=right>\n";
+          echo "<td class='admin_list_item' width=65 align=right>\n";
 
           if ($mine) {
-              echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pmz&pm_id=$pm_id&pmz_id=$zone_ident","edit",2);
-              if (!$live) {
-                echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmz&pm_id=$pm_id&pmz_id=$zone->pmz_id\";}","remove",2,array('tooltiptext'=>"Delete {$zone->pmz_name}?"));
-              }
-              echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pmz&pm_id=$pm_id&pmz_id=$zone_ident'>
-                      <img src='../images/edit.gif' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a>\n";
-              if (!$live) {
-                  echo "<a class='link' href='javascript:if(confirm(\"" . con('delete_item') . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmz&pm_id=$pm_id&pmz_id=$zone->pmz_id\";}'>
-                         <img src='../images/trash.png' border='0' alt='" . con('remove') . "' title='" . con('remove') . "'></a>\n";
-              }
+            echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pmz&pm_id=$pm_id&pmz_id=$zone_ident","edit",2);
           } else {
             echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmz&pm_id=$pm_id&pmz_id=$zone_ident","view",2);
           }
+          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmz&pm_id=$pm_id&pmz_id=$zone->pmz_id\";}","remove",2,
+                                  array('tooltiptext'=>"Delete {$zone->pmz_name}?",
+                                        'disable'    => ($live and $mine)));
 
           echo'</td></tr>';
           $alt = ($alt + 1) % 2;
@@ -104,12 +98,7 @@ class PlaceMapZoneView extends AdminView {
     $this->print_input('pmz_name', $data, $err, 30, 50);
     $this->print_input('pmz_short_name', $data, $err, 4, 10);
     $this->print_color('pmz_color', $data, $err);
-    $this->form_foot();
-
-    echo "</form>";
-    echo "<br><center>
-          <a href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['pmz_pm_id']}' class=link>" . con('place_map') . "</a>
-          </center>";
+    $this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['pmz_pm_id']}");
   }
 
   function view($pmz){
@@ -123,9 +112,8 @@ class PlaceMapZoneView extends AdminView {
     $this->print_field('pmz_short_name', $data);
     $this->show_color('pmz_color', $data);
 
-    echo "</table><br><center>
-          <a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pmz->pmz_pm_id}'>" . con('place_map') . "</a>
-          </center>";
+    echo "</table>";
+  	echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['pmz_pm_id']}",'admin_list',3);
   }
 
   function draw (){

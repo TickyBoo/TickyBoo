@@ -68,7 +68,8 @@ class PlaceMapView extends AdminView {
 			echo "<td class='admin_list_item' width=65 align=right>";
       echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}","edit",2);
       echo $this->show_button("{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}","edit",2, array('image'=>'copy.png'));
-      echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm['pm_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$pm['pm_name']}?"));
+      echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm['pm_id']}\";}","remove",2,
+                              array('tooltiptext'=>"Delete {$pm['pm_name']}?"));
       echo "</td></tr>";
 			$alt = ( $alt + 1 ) % 2;
 		}
@@ -121,16 +122,17 @@ class PlaceMapView extends AdminView {
 			echo "<br>";
 			$pmp_view = new PlaceMapPartView( $this->width );
 			$pmp_view->table( $data['pm_id'], $live );
-			echo "<br>";
+
 		}
 		if ( $event ) {
-			require_once ( "DiscountView.php" );
+			echo "<br>";
+      require_once ( "DiscountView.php" );
 			$dist_view = new DiscountView( $this->width );
 			$dist_view->table( $event->event_id, $live );
 
-			echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}'>" . con('admin_list') .	"</a></center>";
+			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}",'admin_list',3);
 		} else {
-			echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}'>" . con('admin_list') . "</a></center>";
+			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}",'admin_list',3);
 		}
 	}
 

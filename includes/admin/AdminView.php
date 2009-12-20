@@ -87,8 +87,13 @@ class AdminView extends AUIComponent {
       }
   }
 
-  function form_foot($colspan = 2) {
-      echo "<tr><td align='right' class='admin_value' colspan='$colspan'>";
+  function form_foot($colspan = 2, $backlink='' ) {
+      echo "<tr  class='admin_value' ><td>";
+      if ($backlink) {
+        echo  $this->show_button($backlink,'admin_list',3);
+      }
+      $colspan = $colspan-1;
+      echo "&nbsp;</td><td align='right' class='admin_value' colspan='{$colspan}'>";
       echo $this->Show_button('submit','save',3);
       echo $this->Show_button('reset','res',3);
       echo "</table></form>\n";
@@ -276,7 +281,7 @@ class AdminView extends AUIComponent {
       }
       $inputs .= "\"<tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td class='admin_name' width='40%'>".con($field)."</td><td class='admin_value'>{$input}</td></tr>\"+";
     }
-    
+
     $addScript = "$('#{$name}-group-add-button').click(function(){
       var newGroup = $('#{$name}-group-add-field').val();
       newGroup = jQuery.trim(newGroup);
@@ -402,6 +407,7 @@ class AdminView extends AUIComponent {
         'add'=>array('image'=>'add.png'),
         'edit'=>array('image'=>'edit.gif'),
         'view'=>array('image'=>'view.png'),
+        'list'=>array('image'=>'arrow_left.png'),
         'delete'=>array('image'=>'trash.png'),
         'remove'=>array('image'=>'trash.png'));
 
@@ -466,7 +472,7 @@ class AdminView extends AUIComponent {
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
 
       if(!$button){
-        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";  
+        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";
       }else{
         $rtn .= "<button $disAtr type='{$url}' name='{$name}' id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' {$alt}>";
       }

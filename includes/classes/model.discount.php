@@ -38,6 +38,18 @@ class Discount  Extends Model {
   protected $_tableName = 'Discount';
   protected $_columns   = array( '#discount_id', '*discount_type', '*discount_value', '*discount_name',
                                  '#discount_event_id');
+  function __construct($filldefs= false, $event_id=null){
+    parent::__construct($filldefs);
+    if ($filldefs) {
+      $query="SELECT event_pm_id
+              FROM event where event_id="._esc($event_id);
+      if($row=ShopDB::query_one_row($query)){
+        $row['discount_event_id'] = $event_id;
+        $this->_fill($row);
+      }
+    }
+  }
+
 
   function create ($discount_id,$discount_type,$discount_value,$discount_name,$discount_event_id){
     $new = new Discount;

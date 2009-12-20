@@ -36,14 +36,12 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/AdminView.php");
 
 class HandlingView extends AdminView{
-  
+
   function table (){
 		global $_SHOP;
-		$pay=Handling::getPayment ();
-		$send=Handling::getShipment();
 		$alt=1;
 		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
-		echo "<tr><td class='admin_list_title' colspan='4' align='center'>".con('handling_title')."</td>";
+		echo "<tr><td class='admin_list_title' colspan='4' align='left'>".con('handling_title')."</td>\n";
     echo "<td class='admin_list_title' colspan='2' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
     echo "</tr>\n";
 		if($hands=Handling::loadAll()){
@@ -74,16 +72,16 @@ class HandlingView extends AdminView{
   				echo "</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_web</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_pos</td>\n";
-  				echo "<td class='admin_list_item' width='40' align='right'>".
-                $this->show_button('view_handling.php?action=edit&handling_id={$hand->handling_id}',"edit",2).
-                $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"view_handling.php?action=remove&handling_id={$hand->handling_id}\";}","remove",2)
-				      ."</td>";
+
+          echo "<td class='admin_list_item' width='40' align='right' nowrap><nowrap>";
+          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&handling_id={$hand->handling_id}","edit",2);
+          echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&handling_id={$hand->handling_id}\";}","remove",2,array('tooltiptext'=>"Delete {$row['ort_name']}?"));
+          echo "</nowrap></td>\n";
 			 	}
 				echo "</tr>";
 				$alt=($alt+1)%2;
 			 }
 		 }
-     
 		echo "</table>\n";
   }
 
@@ -153,9 +151,7 @@ class HandlingView extends AdminView{
 		  $this->extra_form($h, $data, $err);
 		}
 
-    $this->form_foot();
-
-		echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>".con('admin_list')."</a></center>";
+    $this->form_foot(2,$_SERVER['PHP_SELF']);
   }
 
 
@@ -167,18 +163,19 @@ class HandlingView extends AdminView{
  			return 0;
 		}elseif($_GET['action']=='edit'){
   		$hand=Handling::load($_GET["handling_id"]);
-  		$this->form((array)$hand, $err, con('payment_update_title'));
+  		$this->form((array)$hand, null, con('payment_update_title'));
  			return 0;
 		}elseif($_POST['action']=='save'){
+      $new = false;
 			if(!$hand=Handling::load($_POST["handling_id"])){
     		$hand= new Handling(true); $new = true;
       }
 
 			if(!$hand->fillPost() || !$hand->saveEx()){
-    			$this->form($_POST, $err, con('handling_update_title')); //handling_add_title
+    			$this->form($_POST, null, con('handling_update_title')); //handling_add_title
     			return 0;
 			} elseif ($new){
-    			$this->form((array)$hand, $err, con('handling_update_title'));
+    			$this->form((array)$hand, null, con('handling_update_title'));
     			return 0;
 			}
 
