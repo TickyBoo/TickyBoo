@@ -42,7 +42,7 @@ class HandlingView extends AdminView{
 		$pay=Handling::getPayment ();
 		$send=Handling::getShipment();
 		$alt=1;
-		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+		echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
 		echo "<tr><td class='admin_list_title' colspan='4' align='center'>".con('handling_title')."</td>";
     echo "<td class='admin_list_title' colspan='2' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
     echo "</tr>\n";

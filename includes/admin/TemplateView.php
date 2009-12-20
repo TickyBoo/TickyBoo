@@ -278,7 +278,7 @@ class TemplateView extends AdminView{
     $alt = 0;    
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='2' align='center'>" . con('template_title') . "</td>";
-    echo "<td class='admin_list_title' width='67' colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    echo "<td class='admin_list_title' width='68' colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
     echo "</tr>\n";
 
     $img_pub['new'] = '../images/new.png';

@@ -268,17 +268,18 @@ class AdminView extends AUIComponent {
       if($type=='text'){
         $size=is($arr['size'],40);
         $max=is($arr['max'],100);
-        $input = "<input type='text' name='{$prefix}[\"+newGroup+\"][$field]' value='' size='{$size}' maxlength='{$max}'>";
+        $input = "<input type='text' name='{$prefix}[\"+newGroup+\"][$field]' value='' size='{$size}' maxlength='{$max}' />";
       }elseif($type=='textarea'){
         $rows=is($arr['rows'],10);
         $cols=is($arr['cols'],70);
-        $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[\"+newGroup+\"][$field]'></textarea>";
+        $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[\"+newGroup+\"][$field]'> </textarea>";
       }
-      $inputs .= "\"<tr id='{$name}-'+newGroup+'-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row'>\"+
-              \"<td class='admin_name' width='40%'>".con($field)."</td>\"+
+      $inputs .= "\"<tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'> </tr>\"+";
+      "+\"<td class='admin_name' width='40%'>".con($field)."</td>\"+
               \"<td class='admin_value'>".$input."</td>\"+
             \"</tr>\"+";
     }
+    
     $addScript = "$('#{$name}-group-add-button').click(function(){
       var newGroup = $('#{$name}-group-add-field').val();
       newGroup = jQuery.trim(newGroup);
@@ -297,7 +298,8 @@ class AdminView extends AUIComponent {
     $changeScript = "$('#{$name}-group-select').change(function(){
       var group = $(this).val();
       $('.{$name}-group-row').each(function(){
-        $(this).hide();
+        //$(this).hide();
+        $(this).attr('style','display:none;');
       });
       $(\".{$name}-\"+group+\"-row\").each(function(){
         $(this).show();
