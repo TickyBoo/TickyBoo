@@ -147,9 +147,9 @@ select SQL_CALC_FOUND_ROWS *
 				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"] ) . "</td> ";
 			}
 
-			echo "<td width=100 class='admin_list_item' nowrap='nowrap'>";
+			echo "<td width=105 class='admin_list_item' nowrap='nowrap'><nobr>";
       $this->showbuttons($img_pub, $row, $history);
-			echo "</td></tr>\n\n";
+			echo "</nobr></td></tr>\n\n";
 
 			$alt = ( $alt + 1 ) % 2;
 			if ( $row['event_rep'] == 'main' ) {
@@ -216,10 +216,10 @@ select SQL_CALC_FOUND_ROWS *
                 <td class='admin_list_item'>$edate $etime</td>
                 <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
 
-			echo "<td class='admin_list_item'>";
+			echo "<td class='admin_list_item' width=250 NOWRAP><nobr>xx";
       $this->showbuttons($img_pub, $row, $history);
 			echo "
-      </td></tr>\n\n";
+      </nobr></td></tr>\n\n";
 			$alt = ( $alt + 1 ) % 2;
 		}
 	}

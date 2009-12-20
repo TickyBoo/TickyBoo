@@ -337,23 +337,23 @@ A.UITabMenuNavOn:hover {
 	font-size:x-small;
 	padding:4px;
         }
-        
-        
+
+
 /* Button Layouts for new jQuer Framework */
 
-.admin-button { 
-   outline: 0; 
-   margin:0 0 0 0; 
-   padding: .05em .05em; 
-   text-decoration:none !important; 
-   cursor:pointer; 
+.admin-button {
+   outline: 0;
+   margin:0 .05em 0 0 ;
+   padding: .05em .05em;
+   text-decoration:none !important;
+   cursor:pointer;
    display: inline-block;
-   position: relative; 
-   text-align: center; 
-   zoom: 1; 
+   position: relative;
+   text-align: center;
+   zoom: 1;
 }
 
-.admin-button:hover { 
+.admin-button:hover {
   font-weight:normal;
   background:url("../css/ui-lightness/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #DADADA;
   border:1px solid #999999;

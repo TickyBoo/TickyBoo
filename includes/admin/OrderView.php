@@ -238,8 +238,7 @@ class OrderView extends AdminView{
       <td class='admin_list_item'>".$row["order_date"]."</td>";
 
       $com=$this->order_commands($row,TRUE);
-      echo "<td class='admin_list_item'>".$com["details"]." ".$com["print"]."</td>
-            <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reissue"]." ".$com["delete"]."</td>";
+      echo "<td class='admin_list_item' align='right' width=130>".$com["details"].$com["print"]." ".$com["send"].$com["payed"].$com["reissue"].$com["delete"]."</td>";
       echo "</tr>";
     }
 
@@ -305,8 +304,7 @@ class OrderView extends AdminView{
       <td class='admin_list_item'>".$row["order_date"]."</td>";
 
       $com=$this->order_commands($row,TRUE);
-      echo "<td class='admin_list_item'>".$com["details"]." ".$com["print"]."</td>
-            <td class='admin_list_item' valign='middle'>".$com["send"]." ".$com["payed"]." ".$com["reissue"]." ".$com["delete"]."</td>";
+      echo "<td class='admin_list_item'>".$com["details"].$com["print"].' '.$com["send"].$com["payed"].$com["reissue"].$com["delete"]."</td>";
       echo "</tr>";
     }
 
@@ -333,7 +331,7 @@ function order_details ($order_id){
     return;
   }
 
-  $com = implode('&nbsp;&nbsp;',$this->order_commands($order,FALSE));;
+  $com = implode('',$this->order_commands($order,FALSE));;
 
   $status=$this->print_order_status($order);
   $order["order_status"]=$status;
@@ -341,9 +339,7 @@ function order_details ($order_id){
 
   echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
   echo "<tr><td class='admin_list_title'>".con('order_nr')."  ".$order_id."</td>
-  <td align='right'><table width='100' style='border:#cccccc 1px solid;'><tr><td align='center'>
-  $com
-  </td></tr></table></td></tr>";
+            <td align='right'>{$com}</td></tr>";
 
   $this->print_field('order_tickets_nr',$order);
   $this->print_field('order_fee',$order);
@@ -501,14 +497,9 @@ function order_details ($order_id){
      $com["payed"]=$this->link("set_status_payment_payed",$order["order_id"],"pig.png",TRUE,con('change_status_to_payed'),$_GET,
        !(!$list or $order['order_payment_status']=='none'));
 
-     if(!$list){
-       $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_payed'),$_GET);
-     }
-
-     if(!$list){
-       $com["reissue"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,con('reissue_order'),$_GET);
-       $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png");
-     }
+     $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_payed'),$_GET, $list);
+     $com["reissue"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,con('reissue_order'),$_GET, $list);
+     $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png",false,'',null, $list);
      if(empty($com)){$com[]='';}
      return $com;
  }
