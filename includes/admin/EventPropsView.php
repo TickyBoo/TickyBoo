@@ -225,14 +225,11 @@ select SQL_CALC_FOUND_ROWS *
 	}
 
   function showbuttons($img_pub, $row, $history) {
-      if (!$history) {
         echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
                                 $img_pub[$row['event_status']]['title'],2,
                                  array('image'=>$img_pub[$row['event_status']]['src'],
-                                       'alt'  =>con($img_pub[$row['event_status']]['alt'])));
-      } else {
-         echo "    <img border='0' src='{$img_pub[$row['event_status']]['src']}'>";
-      }
+                                       'alt'  =>con($img_pub[$row['event_status']]['alt']),
+                                       'disable'=> $history));
       echo  $this->show_button("view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
 			if ( $row['event_pm_id'] ) {
         echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,

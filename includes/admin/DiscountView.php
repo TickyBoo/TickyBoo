@@ -108,8 +108,7 @@ class DiscountView extends AdminView {
     echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['event_pm_id']}'>" . con('admin_list') . "</a></center>"; //print_r($data);
   }
 
-  function discount_check (&$data, &$err)
-  {
+  function discount_check (&$data, &$err) {
       if (empty($data['discount_name'])) {
           $err['discount_name'] = con('mandatory');
       }

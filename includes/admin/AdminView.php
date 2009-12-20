@@ -88,9 +88,9 @@ class AdminView extends AUIComponent {
   }
 
   function form_foot($colspan = 2) {
-      echo "<tr><td align='right' class='admin_value' colspan='$colspan'>
-        <button type='submit' name='submit' value='" . con("save") . "'>" . con("save") . "</button>
-        <button type='reset' name='reset' value='" . con("res") . "'>" . con("res") . "</button></td></tr>";
+      echo "<tr><td align='right' class='admin_value' colspan='$colspan'>";
+      echo $this->Show_button('submit','save',3);
+      echo $this->Show_button('reset','res',3);
       echo "</table></form>\n";
   }
 
@@ -192,7 +192,7 @@ class AdminView extends AUIComponent {
     }else{
       $prefix = "{$name}";
     }
-    
+
     if(is($other['add_arr']) && is_array($other['add_arr']) ){
       $select = "<select name='{$name}_group_add' id='{$name}-group-add-field' >";
       foreach($other['add_arr'] as $oVal=>$oName){
@@ -200,7 +200,7 @@ class AdminView extends AUIComponent {
       }
       $select .= "</select>";
     }else{
-      $select = "<input type='text' name='{$name}_group_add' id='{$name}-group-add-field' size='15' maxlength='100'>"; 
+      $select = "<input type='text' name='{$name}_group_add' id='{$name}-group-add-field' size='15' maxlength='100'>";
     }
 
     echo "
@@ -427,9 +427,9 @@ class AdminView extends AUIComponent {
         }
       }
       //Is it a button?
-      if($url=='submit' || $url=='reset'){
-        $button = true; 
-      } 
+      if($url=='submit' || $url=='reset'|| $url=='button'){
+        $button = true;
+      }
       //Extra options
       $classes = is($options['classes'],'');
       $style   = is($options['style'],'');
@@ -458,9 +458,9 @@ class AdminView extends AUIComponent {
       }
       //If image bolt on image css for button
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
-      
+
       if(!$button){
-        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";  
+        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";
       }else{
         $rtn .= "<button type='{$url}' name='{$name}' id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' {$alt}>";
       }
@@ -477,11 +477,11 @@ class AdminView extends AUIComponent {
         $rtn .= "<div id='".$toolTipName."' style='display:none;'>".$toolTipText."</div>";
       }
       if(!$button){
-        $rtn .= "</a>";  
+        $rtn .= "</a>";
       }else{
         $rtn .= "</button>";
       }
-      
+
 
       return $rtn;
     }

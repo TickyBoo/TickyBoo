@@ -46,31 +46,26 @@ class EventGroupView extends AdminView{
     }
 
     $alt=0;
-    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='1' align='left'>".con('event_group_title')."</td>\n";
-    echo "<td  align='right'><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>
-             <img src=\"".$_SHOP->root."images/add.png\" border='0' alt='".con('add')."' title='".con('add')."'></a></td></tr>";
+    echo "<td  align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td></tr>";
 
     while($row=shopDB::fetch_assoc($res)){
 
        echo "<tr class='admin_list_row_$alt'>";
   //     echo "<td class='admin_list_item'>{$row['event_group_id']}</td>";
        echo "<td  class='admin_list_item' width='100%'>{$row['event_group_name']}</td>";
-       echo "<td class='admin_list_item' nowrap>\n";
+       echo "<td class='admin_list_item' align='right' nowrap>\n";
 
        if($row['event_group_status']=='pub'){
-         echo "<a class='link' href='javascript:if(confirm(\"".con('unpublish_event_group')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=unpublish&event_group_id={$row['event_group_id']}\";}'>
-               <img src=\"".$_SHOP->root."images/unpublish.jpg\" width=16 border='0' alt='".con('unpublish')."' title='".con('unpublish')."'></a>\n";
+          echo $this->show_button("javascript:if(confirm(\"".con('unpublish_event_group')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=unpublish&event_group_id={$row['event_group_id']}\"; }","unpublish",2,
+               array('image'=>'checked.gif'));
        } else {
-         echo "<a class='link' href='javascript:if(confirm(\"".con('publish_event_group')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=publish&event_group_id={$row['event_group_id']}\";}'>
-                 <img src=\"".$_SHOP->root."images/publish.jpg\" width=16 border='0' alt='".con('publish')."' title='".con('publish')."'></a>\n";
+          echo $this->show_button("javascript:if(confirm(\"".con('publish_event_group')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=publish&event_group_id={$row['event_group_id']}\"; }","publish",2,
+               array('image'=>'unchecked.gif'));
        }
-
-  //     echo "<a class='link' href='view_event_group.php?action=view&event_group_id={$row['event_group_id']}'><img src=\"".$_SHOP->root."images/view.png\" border='0' alt='".view."' title='".view."'></a>\n";
-       echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&event_group_id={$row['event_group_id']}'>
-         <img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='".con('edit')."' title='".con('edit')."'></a>\n";
-       echo "<a class='link' href='javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_group_id={$row['event_group_id']}\";}'>
-         <img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a>";
+       echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&event_group_id={$row['event_group_id']}","edit",2);
+       echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_group_id={$row['event_group_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$row['event_group_name']}?"));
        echo "</td></tr>";
        $alt=($alt+1)%2;
     }
