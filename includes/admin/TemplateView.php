@@ -297,9 +297,10 @@ class TemplateView extends AdminView{
       if ($row['template_type'] !=='pdf') {
         echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}","edit",2)."\n";
       }
-      if ($row['template_type'] !=='systm') {
-        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}","remove",2)."\n";
-      }
+      echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}","remove",2,array(
+        'disable'=>$row['template_type']==='systm',
+        'showtooltip'=>$row['template_type']!=='systm',
+        'tooltiptext'=>con('remove')." {$row['template_name']}"))."\n";
       echo "</td>\n";
       echo "</tr>";
       $alt = ($alt + 1) % 2;

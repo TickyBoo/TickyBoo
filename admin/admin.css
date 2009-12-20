@@ -80,9 +80,11 @@ BACKGROUND-COLOR:#ededed;
   background-color:#888888;
   border-style: #cccccc 1px solid;
 }
-.admin_list_row_0{background-color:#ededed}
-
+.admin_list_row_0{background-color:#ededed;}
+tr.admin_list_row_0:hover {background-color:#Faede4}
 .admin_list_row_1{background-color:#cdcdcd}
+tr.admin_list_row_1:hover {background-color:#Faede4}
+
 .admin_list_hover{background-color:#Faede4}
 
 .admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
