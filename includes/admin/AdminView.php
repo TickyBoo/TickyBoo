@@ -223,7 +223,7 @@ class AdminView extends AUIComponent {
         <td class='admin_name'  width='40%'>".con($name)." ".con('select')."</td>
         <td class='admin_value'>
           <select id='{$name}-group-select' name='{$name}_group_select'>\n</select> ".
-          $this->show_button('#','remove_group',2,
+          $this->show_button('button','remove_group',2,
                              array('id'=>"{$name}-group-delete",
                                    'image'=>"trash.png")).
         "</td>
@@ -439,6 +439,14 @@ class AdminView extends AUIComponent {
         $button = true;
       }
       //Extra options
+      $classes = is($options['classes'],'');
+      $style   = is($options['style'],'');
+      $alt     = is($options['alt'],$title );
+      $idname  = is($options['id'], $name);
+      $disabled= is($options['disable'],false);
+      if ($alt) {
+        $alt = "alt='{$alt}'";
+      }
       if(!$icon){
         $classes .= " admin-button-text";
       }
@@ -463,14 +471,7 @@ class AdminView extends AUIComponent {
         $hasTTClass = '';
         $title = con($name);
       }
-      $classes = is($options['classes'],'');
-      $style   = is($options['style'],'');
-      $alt     = is($options['alt'],$title );
-      $idname  = is($options['id'], $name);
-      $disabled= is($options['disable'],false);
-      if ($alt) {
-        $alt = "alt='{$alt}'";
-      }
+      
       //If image bolt on image css for button
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
 
