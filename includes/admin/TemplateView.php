@@ -167,7 +167,7 @@ class TemplateView extends AdminView{
 
     $this->print_multiRowField('emails_cc',$data['template_array'], $err, 30, 100, true,'template_array');
     $this->print_multiRowField('emails_bcc',$data['template_array'], $err, 30, 100, true,'template_array');
-
+    
     $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5,"",'template_array');
 
     $fields = array('template_subject'=>array('type'=>'text','size'=>'60','max'=>'150'),
@@ -177,17 +177,19 @@ class TemplateView extends AdminView{
     //$data['template_array']['email_templates'] = array('en'=>array('template_group'=>'en','template_text'=>'hello email body'));
     $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields,'template_array',array('add_arr'=>$_SHOP->langs_names));
 
+
+    echo "<tr><td align='center' class='admin_value' colspan='2'>
+    <input type='submit' name='submit' value='" . con('save') . "'>
+    <input type='reset' name='reset' value='" . con('res') . "'></td></tr>";
+    echo "</table>";
     if ($data['template_id']){
       echo "<input type='hidden' name='template_id' value='{$data['template_id']}'/>\n";
       echo "<input type='hidden' name='action' value='update'/>\n";
     }else{
       echo "<input type='hidden' name='action' value='insert'/>\n";
     }
-
-    echo "<tr><td align='center' class='admin_value' colspan='2'>
-    <input type='submit' name='submit' value='" . con('save') . "'>
-    <input type='reset' name='reset' value='" . con('res') . "'></td></tr>";
-    echo "</table></form>\n";
+    
+    echo "</form>\n";
 
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . admin_list . "</a></center>";
 
