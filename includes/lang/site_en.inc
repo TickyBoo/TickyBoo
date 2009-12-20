@@ -31,6 +31,7 @@ define("dts_day_arr", "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday"
 //BUTTONS & LINKS
 //for continuity all Buttons & Links should be defined the same if initiating the same action
 define("add","Add");
+define("add_row","Add");
 define("add_venue","Add");
 define("add_tickets","Add Ticket(s)");
 define("admin_list","List");
@@ -70,6 +71,7 @@ define("icon_nosal_alt","UnPublished");
 //By default they use the name of the item plus _tooltip eg. add-tooltip
 
 define("add_venue-tooltip","Add Venue");
+define("compile_all-tooltip","This will (re)compile all the templates to check there all valid.");
 
 //NAVIGATION
 //should remain the same throughout all pages.
@@ -571,13 +573,14 @@ define("order_event_list_title","Orders by Event");
 //Templates
 define("templ_System","System Emails");
 define("templ_email","Emails");
+define("templ_swift","Simple Email");
 define("templ_pdf2","Html2pdf's" );
 define("templ_pdf","Old Pdf's" );
 define("template_title","All Templates");
 define("template_add_title","Add a Template");
 define("template_update_title","Modify Template");
-	define("lang","Language");
-		define("lang_en","English");
+define("lang","Language");
+define("lang_en","English");
 	define("email_from","From:");
 	define("email_to","To:");
 	define("email_subject","Subject");
@@ -587,6 +590,19 @@ define("template_update_title","Modify Template");
 	define("template_type","Type");
 	define("template_name","Name");
 	define("compile_all","Compile all");
+define("email_to_name","Email to name:");
+define("email_to_email","To email address:");
+define("email_from_name","Email from name:");
+define("email_from_email","From email address:");
+define("emails_cc","CC emails:");
+define("emails_bcc","BCC emails:");
+define("email_def_lang","Default template language:");
+define("email_templates","Email templates:");
+define("remove_group","Remove");
+define("template_subject","Template language subject");
+define("template_text","Template language plain text");
+define("template_html","Template language HTML");
+define("send_test","Send Test Email");
 
 //Order Handling
 define("handling_title","All Order Handlings");

@@ -230,7 +230,7 @@ class '.$newClassName.' extends EmailSwiftCompiler {
    * @return String with $varbles converted to values.
    */
   private function varsToValues($string){
-    return preg_replace_callback('/\$(\w+)/',array(&$this,'replaceVar'),$string);
+    return preg_replace_callback('/{\$(\w+)}/',array(&$this,'replaceVar'),$string);
       
   }
   

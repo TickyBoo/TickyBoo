@@ -177,9 +177,10 @@ class AdminView extends AUIComponent {
   }
 
   /**
-   * @unfinished
+   * @param array other : additional optional options
+   *  add_arr => array('value'=>'name') this is the value for the add row button which wen set can be a drop down box.
    */
-  protected function print_multiRowGroup($name, &$data , &$err, $fields=array(),$arrayPrefix=''){
+  protected function print_multiRowGroup($name, &$data , &$err, $fields=array(),$arrayPrefix='',$other=array()){
     if(!is_array($fields)){
       return false;
     }elseif(empty($fields)){
@@ -191,23 +192,35 @@ class AdminView extends AUIComponent {
     }else{
       $prefix = "{$name}";
     }
+    
+    if(is($other['add_arr']) && is_array($other['add_arr']) ){
+      $select = "<select name='{$name}_group_add' id='{$name}-group-add-field' >";
+      foreach($other['add_arr'] as $oVal=>$oName){
+        $select .= "<option value='{$oVal}' >{$oName}</option>";
+      }
+      $select .= "</select>";
+    }else{
+      $select = "<input type='text' name='{$name}_group_add' id='{$name}-group-add-field' size='15' maxlength='100'>"; 
+    }
 
-     echo "<tr id='{$name}-group-add-tr' >
-              <td class='admin_name' width='40%'>" , con($name) , "</td>
-              <td class='admin_value' >
-                <button id='{$name}-group-add-button' type='button'>".con($name)." ".con('add_row')."</button>
-                <input type='text' name='{$name}_group_add' id='{$name}-group-add-field' size='15' maxlength='100'>
-                <span id='{$name}-error' style='display:none;'>".con('err_blank_or_allready')."</span>
-              </td>
-            </tr>\n";
+    echo "
+      <tr id='{$name}-group-add-tr' >
+        <td class='admin_name' width='40%'>" , con($name) , "</td>
+        <td class='admin_value' >
+          <button id='{$name}-group-add-button' type='button'>".con($name)." ".con('add_row')."</button>
+          {$select}
+          <span id='{$name}-error' style='display:none;'>".con('err_blank_or_allready')."</span>
+        </td>
+      </tr>\n";
 
-      echo "<tr id='{$name}-group-select-tr'>
-              <td class='admin_name'  width='40%'>".con($name)." ".con('select')."</td>
-              <td class='admin_value'>
-               <select id='{$name}-group-select' name='{$name}_group_select'>\n</select>
-               <a class='link' href='#' id='{$name}-group-delete'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove_group')."' title='".con('remove_group')."'></a>
-              </td>
-            </tr>\n";
+    echo "
+      <tr id='{$name}-group-select-tr'>
+        <td class='admin_name'  width='40%'>".con($name)." ".con('select')."</td>
+        <td class='admin_value'>
+          <select id='{$name}-group-select' name='{$name}_group_select'>\n</select>
+          <a class='link' href='#' id='{$name}-group-delete'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='".con('remove_group')."' title='".con('remove_group')."'></a>
+        </td>
+      </tr>\n";
 
     $data[$name] = is($data[$name],array());
     foreach($data[$name] as $group=>$values){
@@ -366,7 +379,7 @@ class AdminView extends AUIComponent {
      * returns <a href=$url> ... </a> depending
      * on the settings.
      *
-     * @param string url : the url of the link
+     * @param string url : the url, can also set button type (submit,reset)
      * @param string name : the method of the button, if not recognised will print text instead.
      * @param int type : 1 = text only, 2 = icon (will try to match against $name) 3 = both
      * @param array options : array of additional options.
@@ -382,11 +395,13 @@ class AdminView extends AUIComponent {
       if(!empt($name,false)){
           return;
       }
+      $button = false;
       $text = false;
       $icon = false;
       $iconArr = array(
         'add'=>array('image'=>'add.png'),
         'edit'=>array('image'=>'edit.gif'),
+        'view'=>array('image'=>'view.png'),
         'delete'=>array('image'=>'trash.png'),
         'remove'=>array('image'=>'trash.png'));
 
@@ -411,11 +426,17 @@ class AdminView extends AUIComponent {
           $text = $name;
         }
       }
-
+      //Is it a button?
+      if($url=='submit' || $url=='reset'){
+        $button = true; 
+      } 
       //Extra options
       $classes = is($options['classes'],'');
       $style   = is($options['style'],'');
       $alt     = is($options['alt'],'');
+      if(!$icon){
+        $classes .= " admin-button-text";
+      }
       //Tooltip stuff
       $toolTipName = $this->hasToolTip($name);
       $hasTTClass = 'has-tooltip';
@@ -436,9 +457,13 @@ class AdminView extends AUIComponent {
         $alt = "alt='{$alt}'";
       }
       //If image bolt on image css for button
-      if($icon && $image && $text){ $css = 'admin-buttona-icon-left'; }else{ $css = ''; }
-
-      $rtn .= "<a id='".$name."' class='".$hasTTClass." admin-button ui-state-default " . $css .  " ui-corner-all link ".$classes."' style='".$style."' href='".empt($url,'#')."' title='{$title}' {$alt}>";
+      if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
+      
+      if(!$button){
+        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";  
+      }else{
+        $rtn .= "<button type='{$url}' name='{$name}' id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' {$alt}>";
+      }
       if($icon && $image && $text){
         $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
       }elseif($icon && $image){
@@ -451,7 +476,12 @@ class AdminView extends AUIComponent {
       if(!empty($hasTTClass)){
         $rtn .= "<div id='".$toolTipName."' style='display:none;'>".$toolTipText."</div>";
       }
-      $rtn .= "</a>";
+      if(!$button){
+        $rtn .= "</a>";  
+      }else{
+        $rtn .= "</button>";
+      }
+      
 
       return $rtn;
     }

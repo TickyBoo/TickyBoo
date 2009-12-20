@@ -150,7 +150,7 @@ class TemplateView extends AdminView{
     $this->codeInsert();
     
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
-    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='3'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
 
     $data['template_array'] = unserialize($data['template_text']);
@@ -175,7 +175,7 @@ class TemplateView extends AdminView{
       'template_html'=>array('type'=>'textarea','cols'=>'70','rows'=>'10')
     );
     //$data['template_array']['email_templates'] = array('en'=>array('template_group'=>'en','template_text'=>'hello email body'));
-    $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields,'template_array');
+    $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields,'template_array',array('add_arr'=>$_SHOP->langs_names));
 
     if ($data['template_id']){
       echo "<input type='hidden' name='template_id' value='{$data['template_id']}'/>\n";
@@ -199,7 +199,7 @@ class TemplateView extends AdminView{
     $this->codeInsert();
     
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
-    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='3'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>" . $title . "</td></tr>";
 
     $data['template_text'] = htmlspecialchars($data['template_text'], ENT_QUOTES);
@@ -226,9 +226,10 @@ class TemplateView extends AdminView{
       echo "<input type='hidden' name='action' value='insert'/>\n";
     }
 
-    echo "<tr><td align='center' class='admin_value' colspan='2'>
-    <input type='submit' name='submit' value='" . con('save') . "'>
-    <input type='reset' name='reset' value='" . con('res') . "'></td></tr>";
+    echo "<tr><td align='center' class='admin_value' colspan='2'>".
+    $this->show_button('submit',"save",1).
+    $this->show_button('reset',"res",1)."
+    </td></tr>";
     echo "</table></form>\n";
 
     echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . admin_list . "</a></center>";
@@ -274,9 +275,11 @@ class TemplateView extends AdminView{
       return;
     }
 
-    $alt = 0;
-    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-    echo "<tr><td class='admin_list_title' colspan='6' align='center'>" . con('template_title') . "</td></tr>\n";
+    $alt = 0;    
+    echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
+    echo "<tr><td class='admin_list_title' colspan='2' align='center'>" . con('template_title') . "</td>";
+    echo "<td class='admin_list_title' width='67' colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    echo "</tr>\n";
 
     $img_pub['new'] = '../images/new.png';
     $img_pub['error'] = '../images/error.png';
@@ -289,25 +292,31 @@ class TemplateView extends AdminView{
       //echo "<td class='admin_list_item' width='10%'>{$row['template_type']}</td>\n";
       echo "<td class='admin_list_item' >{$row['template_name']}</td>\n";
       $target = ($type=='pdf2')?'target="_blank"':'';
-      echo "<td class='admin_list_item' width='60' nowarp=nowarp'>
-            <a class='link' {$target}  href='{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}'><img src=\"".$_SHOP->root."images/view.png\" border='0' alt='" . view . "' title='" . view . "'></a>\n";
+      echo "<td class='admin_list_item' width='60' nowarp=nowarp'>".
+        $this->show_button("{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}","view",2)."\n";
       if ($row['template_type'] !=='pdf') {
-        echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}'><img src=\"".$_SHOP->root."images/edit.gif\" border='0' alt='" . edit . "' title='" . edit . "'></a>\n";
+        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}","edit",2)."\n";
       }
       if ($row['template_type'] !=='systm') {
-        echo "<a class='link' href='javascript:if(confirm(\"" . delete_item . "\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}'><img src=\"".$_SHOP->root."images/trash.png\" border='0' alt='" . remove . "' title='" . remove . "'></a>";
+        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&template_id={$row['template_id']}\";}","remove",2)."\n";
       }
       echo "</td>\n";
       echo "</tr>";
       $alt = ($alt + 1) % 2;
     }
+    
+    echo "
+      <tr>
+        <td colspan='5'><center>";
+          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=compile_all","compile_all",1);
+          if($type=="swift" || $type=='email' || $type=='systm'){
+            echo $this->show_button("{$_SERVER['PHP_SELF']}?action=sendtest","send_test",1);
+          }
+    echo "</center></td>
+      </tr>\n";
+    
     echo "</table>\n";
-
-    echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=add'>" . add . "</a></center>";
-    echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=compile_all'>" . compile_all . "</a></center>";
-    if($type=="swift"){
-      echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=sendtest'>" . send_test . "</a></center>";
-    }
+    
 
   }
 
@@ -339,7 +348,7 @@ class TemplateView extends AdminView{
       //Add Listener for the option field.
       $('#template-vars').dblclick(function(e){
         var name = $(this).val();
-        name = '{ $'+name+' }';
+        name = '{'+'$'+name+'}';
         if(curInput){
           $(curInput).insertAtCaret(name);
         }
@@ -350,7 +359,7 @@ class TemplateView extends AdminView{
 
   function draw (){
     global $_SHOP;
-    $types = array('systm','email','pdf2','swift','pdf');
+    $types = array('systm','email','swift','pdf2','pdf');
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
    	}
@@ -361,8 +370,8 @@ class TemplateView extends AdminView{
     $menu = array(
       con("templ_System")=>"?tab=0",
       con("templ_email")=>'?tab=1',
-      con("templ_pdf2")=>"?tab=2",
-      con("templ_swift")=>'?tab=3'
+      con("templ_swift")=>'?tab=2',
+      con("templ_pdf2")=>"?tab=3"
     );
 
     if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
