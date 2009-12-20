@@ -383,6 +383,7 @@ class AdminView extends AUIComponent {
      * @param string name : the method of the button, if not recognised will print text instead.
      * @param int type : 1 = text only, 2 = icon (will try to match against $name) 3 = both
      * @param array options : array of additional options.
+     *  'disable' => false,
      *  'image'=>"image url",
      *  'style'=>'extra style info here'
      *  'classes'=>'css-class-1 css-class-2'
@@ -434,8 +435,14 @@ class AdminView extends AUIComponent {
       $classes = is($options['classes'],'');
       $style   = is($options['style'],'');
       $alt     = is($options['alt'],'');
+      $disabled= is($options['disable'],false);
       if(!$icon){
         $classes .= " admin-button-text";
+      }
+      if($disabled){
+        $disAtr = " disabled='disabled' ";
+        $disClass = " ui-state-disabled ";
+        $url = '';
       }
       //Tooltip stuff
       $toolTipName = $this->hasToolTip($name);
@@ -460,21 +467,21 @@ class AdminView extends AUIComponent {
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
 
       if(!$button){
-        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";
+        $rtn .= "<a id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";  
       }else{
-        $rtn .= "<button type='{$url}' name='{$name}' id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes}' style='{$style}' {$alt}>";
+        $rtn .= "<button $disAtr type='{$url}' name='{$name}' id='{$name}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' {$alt}>";
       }
       if($icon && $image && $text){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); background-position:center center; margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
       }elseif($icon && $image){
-        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\");' title='{$title}' ></span>";
+        $rtn .= " <span class='ui-icon' style='background-image:url(\"../images/{$image}\"); background-position:center center; ' title='{$title}' ></span>";
       }
       if($text){
         $rtn .= con($name);
       }
        //Add on the Tooltip div for the text
       if(!empty($hasTTClass)){
-        $rtn .= "<div id='".$toolTipName."' style='display:none;'>".$toolTipText."</div>";
+        $rtn .= "<div id='{$toolTipName}' style='display:none;'>{$toolTipText}</div>";
       }
       if(!$button){
         $rtn .= "</a>";
