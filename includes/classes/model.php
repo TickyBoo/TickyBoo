@@ -37,6 +37,7 @@ class Model {
   const MDL_NONE      = 0;
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
+  const MDL_NOQOUTE   = 4;
 
   protected $_idName = false;
   protected $_tableName;
@@ -134,10 +135,10 @@ class Model {
        } else
          return null;
     }
-    if ($type == self::MDL_IDENTIFY && $value == 0){
+    if (($type & self::MDL_IDENTIFY) && $value == 0){
         $value = null;
     }
-    return "`{$key}`="._esc($value);
+    return "`{$key}`="._esc($value, ($type & self::MDL_NOQOUTE)?false:true );
   }
 
   function delete()  {
@@ -150,7 +151,7 @@ class Model {
 
   Function CheckValues (&$arr) {
     foreach($this->_columns as $key){
-      if (self::getFieldtype($key)== self::MDL_MANDATORY) {
+      if (self::getFieldtype($key) & self::MDL_MANDATORY) {
         if ((!isset($arr[$key]) || $arr[$key]=='') && ( (!isset($this->$key) || ($this->$key=='')))) {
           addError($key, 'mandatory');
         }
@@ -166,15 +167,22 @@ class Model {
   }
 
   static function getFieldtype(&$key){
-    $type= substr($key,0,1);
-    if ($type == '#') {
-      $key = substr($key,1);
-      return self::MDL_IDENTIFY;
-    } elseif ($type == '*') {
-      $key = substr($key,1);
-      return self::MDL_MANDATORY;
+    $return = self::MDL_NONE;
+    while (true ){
+      $type= substr($key,0,1);
+      if ($type == '#') {
+        $key = substr($key,1);
+        $return +=  self::MDL_IDENTIFY;
+      } elseif ($type == '*') {
+        $key = substr($key,1);
+        $return +=  self::MDL_MANDATORY;
+      } elseif ($type == '~') {
+        $key = substr($key,1);
+        $return +=  self::MDL_NOQOUTE;
+      } else {
+        return $return;
+      }
     }
-    return self::MDL_NONE;
   }
 
   function fillPost($nocheck=false)    { return $this->_fill($_POST,$nocheck); }

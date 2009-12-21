@@ -154,7 +154,7 @@ class Order Extends Model {
     }
 
   }
-  
+
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
     array_push($this->places, Seat::ticket($event_id, $category_id, $place_id, $this->order_user_id, $this->order_session_id, $price, $discount));
   }
@@ -233,7 +233,7 @@ class Order Extends Model {
       if(!OrderStatus::statusChange($this->order_id,$order_status,NULL,'Order::save',"Create New order")){
         return false;
       }
-      
+
       foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
         $ticket->order_id($this->order_id);
@@ -388,7 +388,7 @@ class Order Extends Model {
   }
   /* static functions of common use */
 
-  function delete_ticket ($order_id,$seat_id,$dummy=0,$user_id=0){
+  function delete_ticket ($order_id, $seat_id, $dummy=0, $user_id=0){
     global $_SHOP;
 
     if(ShopDB::begin('order_delete_ticket')){
@@ -903,13 +903,11 @@ class Order Extends Model {
 
 
     if(!$order=ShopDB::query_one_row($orderqry)){
-      echo 'error: cant load orderdata';
-      return FALSE;
+      return addWarning('cant_load_orderdata');
     }
 
     if(!$res=ShopDB::query($seatqry)){
-      echo 'error: cant load ticket data';
-      return FALSE;
+      return addWarning('cant load ticket data');
     }
     $order['bill'] = array();
     while($data=shopDB::fetch_assoc($res)){
@@ -972,14 +970,10 @@ class Order Extends Model {
         //applying the template
         $tpl->write($pdf, $order);
       }else{
-        echo "<div class=err>".no_template." : $bill_template </div>";
-        return FALSE;
+        return addWarning('template_not_found'.$bill_template);
       }
-//        echo $bill_template,":";
-//        Print_r($tpl);
 
     }
-//    PRINT_r($seats);
     foreach($seats as $seat) {
       if($hand->handling_pdf_ticket_template){
         $tpl_id=$hand->handling_pdf_ticket_template;
@@ -994,8 +988,7 @@ class Order Extends Model {
       if($tpl_id and ($subj & 1)){
         //load the template
         if(!$tpl =& $te->getTemplate($tpl_id)){
-          user_error(no_template.": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
-          return FALSE;
+          return addwarning(con('no_template').": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
         }
 //        echo $tpl_id,":";
 //        Print_r($tpl);

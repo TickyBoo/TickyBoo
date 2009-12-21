@@ -85,13 +85,14 @@ class OrtView extends AdminView {
     $this->print_input('ort_url', $data, $err, 50, 100);
     $this->print_area('ort_pm', $data, $err, 4, 49);
     $this->print_file('ort_image', $data, $err);
-    $this->form_foot();
 
     if  (($data['ort_id'])) {
+      $this->form_foot();
         require_once('admin/PlaceMapView2.php');
         PlaceMapView::table($data['ort_id']);
-    }
-		echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}",'admin_list',3);
+    		echo "<br \>".$this->show_button("{$_SERVER['PHP_SELF']}",'admin_list',3);
+    } else
+      $this->form_foot(2,$_SERVER['PHP_SELF']);
   }
 
   function draw () {
