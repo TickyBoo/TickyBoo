@@ -31,78 +31,49 @@
  *}
 
 <table width="100%" cellpadding="3" class="main">
-	<tr>
-	  <td class="title">
-      <h3>{!personal!}</h3>      </td>
-      <td class="title">
-      <h3>{!pers_orders!}</h3>      </td>
-    </tr>
-    <tr>
-    	<td valign="top">
-          <table class="table_dark">
-            <tr>
-              <td colspan="2"><p>{!pers_mess!}
-              </p><br />
-			  </td>
-            </tr>
-            <tr>
-              <td>{!user_firstname!}</td>
-              <td>{user->user_firstname|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_lastname!}</td>
-              <td>{user->user_lastname|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_address1!}</td>
-              <td>{user->user_address|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_address2!}</td>
-              <td>{user->user_address2|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_zip!}</td>
-			        <td>{user->user_zip|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_city!}</td>
-              <td>{user->user_city|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_state!}</td>
-              <td>{user->user_state|clean}</td>
-            </tr>
-            {gui->viewcountry name='user_country' value=$user->user_country}
-            <tr>
-              <td>{!user_phone!}</td>
-              <td>{user->user_phone|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_fax!}</td>
-              <td>{user->user_fax|clean}</td>
-            </tr>
-            <tr>
-              <td>{!user_email!}</td>
-              <td>{user->user_email|clean}</td>
-            </tr>
-        </table>
+  <tr>
+    <td class="title">
+      <h3>{!personal!}</h3>      
+    </td>
+    <td class="title">
+      <h3>{!pers_orders!}</h3>      
+    </td>
+  </tr>
+  <tr>
+    <td width="40%" valign="top">
+    
+      <table class="table_dark">
+        <tr>
+          <td colspan="2"><p>{!pers_mess!}</p><br /></td>
+        </tr>
+        {gui->view name='user_firstname' value=$user->user_firstname|clean}
+        {gui->view name='user_lastname' value=$user->user_lastname|clean}
+        {gui->view name='user_address' value=$user->user_address|clean}
+        {gui->view name='user_address2' value=$user->user_address2|clean}
+        {gui->view name='user_zip' value=$user->user_zip|clean}
+        {gui->view name='user_city' value=$user->user_city|clean}
+        {gui->view name='user_state' value=$user->user_state|clean}
+        {gui->viewcountry name='user_country' value=$user->user_country}
+        {gui->view name='user_phone' value=$user->user_phone|clean}
+        {gui->view name='user_fax' value=$user->user_fax|clean}
+        {gui->view name='user_email' value=$user->user_email|clean}
+      </table>
+      
 	  </td>
-      <td valign="top">
-		<table class="table_dark">
-		  <tr>
-		  	<td colspan="5"><p>{!pers_mess2!}  <br></p>
-			</td>
-		  </tr>
-          <tr>
-            <td><p><strong>{!order_id!}</strong></p></td>
-            <td><p><strong>{!order_date!}</strong></p></td>
-            <td><p><strong>{!tickets!}</strong></p></td>
-            <td><p><strong>{!total_price!}</strong></p></td>
-            <td><p><b>{!status!}</b></p></td>
-          </tr>
-   {order->order_list user_id=$user->user_id order_by_date="DESC" length=6}
-      {print_r var=$shop_order}   
+    <td valign="top">
+    
+		  <table class="table_dark">
+		    <tr>
+          <td colspan="5"><p>{!pers_mess2!}  <br/></p></td>
+		    </tr>
+        <tr>
+          <td><p><strong>{!order_id!}</strong></p></td>
+          <td><p><strong>{!order_date!}</strong></p></td>
+          <td><p><strong>{!tickets!}</strong></p></td>
+          <td><p><strong>{!total_price!}</strong></p></td>
+          <td><p><b>{!status!}</b></p></td>
+        </tr>
+        {order->order_list user_id=$user->user_id order_by_date="DESC" length=6}   
 	    {if $shop_order.order_status eq "cancel"}
 				<tr class='user_order_{$shop_order.order_status}'>
 			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}

@@ -236,7 +236,6 @@ class Gui_smarty {
     } else {
       return $value;
     }
-
   }
 
   function view($params, &$smarty) //$name, &$data, $prefix = ''*/)
@@ -249,6 +248,7 @@ class Gui_smarty {
       return $this->showlabel($name, $value, $nolabel);
     }
   }
+  
   function hidden ($params, &$smarty) //$name, &$data, $size = 30, $max = 100)
   {
     $name = is($params['name'] );
