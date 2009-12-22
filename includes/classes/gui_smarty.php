@@ -227,10 +227,10 @@ class Gui_smarty {
     $this->_ShowLabel =is($params['set'],$this->_ShowLabel);
   }
 
-  private function showlabel($name, $value, $nolabel=false) {
+  private function showlabel($name, $value, $nolabel=false,$options=array()) {
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr><td class='{$this->gui_name}' width='{$this->gui_name_width}'>" . con($name) . "</td>".
-                "    <td class='{$this->gui_value}'>{$value}";
+      $return = "<tr id='{$name}-tr' class='shop-tr'><th id='{$name}-label' class='{$this->gui_name}' width=''>" . con($name) . "</th>".
+                "    <td id='{$name}-value' class='{$this->gui_value}'>{$value}";
       $return .= printMsg($name);
       return $return."</td></tr>\n";
     } else {

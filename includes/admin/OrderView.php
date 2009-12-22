@@ -236,7 +236,7 @@ class OrderView extends AdminView{
       echo "<tr class='admin_order_$alt'><td class='admin_list_item'>".$row["order_id"]."</td>
       <td class='admin_list_item'>".$row["order_total_price"]."</td>
       <td class='admin_list_item'>".$row["order_date"]."</td>";
-
+      
       $com=$this->order_commands($row,TRUE);
       echo "<td class='admin_list_item' align='right' width=130>".$com["details"].$com["print"]." ".$com["send"].$com["payed"].$com["reissue"].$com["delete"]."</td>";
       echo "</tr>";
@@ -480,26 +480,27 @@ function order_details ($order_id){
 
      if($order['order_status']=='reissue' or $order['order_status']=='cancel'){
        $hide = true;
-       $list = true;
+       //$list = true; //Just cause its a list doesnt mean it should be disabled?
      }
 
-     $com["details"]=$this->link("details",$order["order_id"],"view.png",false,'',null, $list);
+     $com["details"]=$this->link("details",$order["order_id"],"view.png",false,'',null, !$list);
 
      $com["print"]=$this->link("print",$order["order_id"],"printer.gif",false,'',null, $hide );
 
      $com["ord"]=$this->link("set_status_ord",$order["order_id"],"ord.png",TRUE,con('change_status_to_ord'),$_GET, $list);
 
      $com["send"]=$this->link("set_status_shipment_send",$order["order_id"],"mail.png",TRUE,con('change_status_to_send'),$_GET,
-         !(!$list or $order['order_shipment_status']=='none'));
+         ($hide || ($order['order_shipment_status']=='send' && $list) ||  $order['order_status']=='res'));
 
      $com["no_send"]=$this->link("set_status_shipment_none",$order["order_id"],"no_mail.png",TRUE,con('change_status_to_no_send'),$_GET, $list);
-
+     
      $com["payed"]=$this->link("set_status_payment_payed",$order["order_id"],"pig.png",TRUE,con('change_status_to_payed'),$_GET,
-       !(!$list or $order['order_payment_status']=='none'));
+       ($order['order_payment_status']=='payed' || $order['order_status']=='res' || $hide));
 
      $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_payed'),$_GET, $list);
      $com["reissue"]=$this->link("make_new",$order["order_id"],"remis.png",TRUE,con('reissue_order'),$_GET, $list);
-     $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png",false,'',null, $list);
+     $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png",false,'',null, 
+      ($order['order_payment_status']=='payed' || $hide || $list));
      if(empty($com)){$com[]='';}
      return $com;
  }

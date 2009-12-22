@@ -135,15 +135,7 @@ a:hover{text-decoration:underline;color:#000000;}
 	background: url('images/theme/default/back1.gif') 0 100% repeat-x;
 }
 
-.TblLower { text-align: left;}
 
-.table_dark{background-color:#FFFFFF;width:100%;}
-.div_dark{width:550px;padding:10px;background-color:#FFFFFF; }
-.div_midtone{width:550px; background-color:#FFFFFF; padding:10px; color:#333333;}
-.table_midtone{background-color:#FFFFFF;color:#333333;width:100%;}
-.table_trans{width:550px;}
-.small_table_dark{width:100%; background-color:#efefef;}
-.small_div_dark{width:260px; background-color:#efefef; border:#666666 1px solid; padding:10px;}
 
 .title_link{font-size:14px;}
 .title_link:hover{font-size:14px; color:#333333; background-color:#FFFFFF; text-decoration:none;}
@@ -207,3 +199,69 @@ label.form-valid {
 	height: 16px;
 }
 .submit { float: none; }
+
+
+/* DEFAULT tables */
+
+.TblLower { text-align: left;}
+
+.table_dark{background-color:#FFFFFF;width:100%;}
+.div_dark{width:550px;padding:10px;background-color:#FFFFFF; }
+.div_midtone{width:550px; background-color:#FFFFFF; padding:10px; color:#333333;}
+.table_midtone{background-color:#FFFFFF;color:#333333;width:100%;}
+.table_trans{width:550px;}
+.small_table_dark{width:100%; background-color:#efefef;}
+.small_div_dark{width:260px; background-color:#efefef; border:#666666 1px solid; padding:10px;}
+
+.shop-table  {
+  background:none repeat scroll 0 0 #FFFFFF;
+  border-collapse:collapse;
+  font-family:"Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+  font-size:12px;
+  margin:1px;
+  text-align:left;
+  width:100%;
+}
+
+.shop-table th {
+  border-bottom:1px solid #6678B1;
+  color:#003399;
+  font-size:14px;
+  font-weight:normal;
+  padding:4px 4px;
+}
+
+.shop-table td {
+  border-bottom:1px solid #CCCCCC;
+  color:#666699;
+  padding:4px 4px;
+}
+
+.shop-table tbody tr:hover td {
+  color: #0000FF ;
+}
+
+tr.user-order-res {
+  border-right: 2px solid orange;
+  border-left: 2px solid orange;
+}
+
+tr.user-order-payed {
+  border-right: 2px solid green;
+  border-left: 2px solid green;
+}
+
+tr.user-order-cancel {
+  border-right: 2px solid gray;
+  border-left: 2px solid gray;
+}
+
+tr.user-order-send {
+  border-right: 2px solid #FFCCCC;
+  border-left: 2px solid #FFCCCC;
+}
+
+tr.user-order-ord {
+  border-right: 2px solid #99CCFF;
+  border-left: 2px solid #99CCFF;
+}

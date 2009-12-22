@@ -40,12 +40,13 @@
     </td>
   </tr>
   <tr>
-    <td width="40%" valign="top">
+    <td><p>{!pers_mess!}</p></td>
+    <td><p>{!pers_mess2!}</p></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
     
-      <table class="table_dark">
-        <tr>
-          <td colspan="2"><p>{!pers_mess!}</p><br /></td>
-        </tr>
+      <table class="table_dark shop-table">
         {gui->view name='user_firstname' value=$user->user_firstname|clean}
         {gui->view name='user_lastname' value=$user->user_lastname|clean}
         {gui->view name='user_address' value=$user->user_address|clean}
@@ -62,48 +63,49 @@
 	  </td>
     <td valign="top">
     
-		  <table class="table_dark">
-		    <tr>
-          <td colspan="5"><p>{!pers_mess2!}  <br/></p></td>
-		    </tr>
-        <tr>
-          <td><p><strong>{!order_id!}</strong></p></td>
-          <td><p><strong>{!order_date!}</strong></p></td>
-          <td><p><strong>{!tickets!}</strong></p></td>
-          <td><p><strong>{!total_price!}</strong></p></td>
-          <td><p><b>{!status!}</b></p></td>
-        </tr>
-        {order->order_list user_id=$user->user_id order_by_date="DESC" length=6}   
-	    {if $shop_order.order_status eq "cancel"}
-				<tr class='user_order_{$shop_order.order_status}'>
-			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}
-				<tr class='user_order_{$shop_order.order_status}'>
-			{elseif $shop_order.order_status eq "res"}
-				<tr class='user_order_{$shop_order.order_status}'>
-			{elseif $shop_order.order_shipment_status eq "send"}
-				<tr class='user_order_{$shop_order.order_shipment_status}'>
-			{elseif $shop_order.order_payment_status eq "payed"}
-				<tr class='user_order_{$shop_order.order_payment_status}'>
-			{elseif $shop_order.order_status eq "ord"}
-				<tr class='user_order_{$shop_order.order_status}'>
-			{else}
-				<tr class='user_order_cancel'>
-			{/if}
-      <td class='admin_info'>{$shop_order.order_id}</td>
-			<td class='admin_info'>{$shop_order.order_date}</td>
-			<td class='admin_info'>{$shop_order.order_tickets_nr}</td>
-			<td class='admin_info'>{$shop_order.order_total_price}</td>
-			<td class='admin_info'>
-			{if $shop_order.order_status eq "cancel"}{!pers_cancel!}
-			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}{!pers_reissue!}
-			{elseif $shop_order.order_status eq "res"}{!pers_res!}
-			{elseif $shop_order.order_shipment_status eq "send"}{!pers_send!}
-			{elseif $shop_order.order_payment_status eq "payed"}{!pers_payed!}
-			{elseif $shop_order.order_status eq "ord"}{!pers_ord!}
-			{else}{!pers_unknown!}
-			{/if}</td>
-	  	  </tr>
- 	  {/order->order_list}
-        </table></td>
+		  <table class="table_dark shop-table">
+        <thead>
+          <tr>
+            <th>{!order_id!}</th>
+            <th>{!order_date!}</th>
+            <th>{!tickets!}</th>
+            <th>{!total_price!}</th>
+            <th>{!status!}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {order->order_list user_id=$user->user_id order_by_date="DESC" length=6}
+  	    {if $shop_order.order_status eq "cancel"}
+  				<tr class='user-order-{$shop_order.order_status}'>
+  			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}
+  				<tr class='user-order-{$shop_order.order_status}'>
+  			{elseif $shop_order.order_status eq "res"}
+  				<tr class='user-order-{$shop_order.order_status}'>
+        {elseif $shop_order.order_payment_status eq "payed"}
+  				<tr class='user-order-{$shop_order.order_payment_status}'>
+  			{elseif $shop_order.order_shipment_status eq "send"}
+  				<tr class='user-order-{$shop_order.order_shipment_status}'>
+  			{elseif $shop_order.order_status eq "ord"}
+  				<tr class='user-order-{$shop_order.order_status}'>
+  			{else}
+  				<tr class='user_order_cancel'>
+  			{/if}
+            <td class='admin_info' align="center">{$shop_order.order_id}</td>
+      			<td class='admin_info' align="center">{$shop_order.order_date}</td>
+      			<td class='admin_info' align="center">{$shop_order.order_tickets_nr}</td>
+      			<td class='admin_info' align="center">{$shop_order.order_total_price}</td>
+      			<td class='admin_info' align="center">
+      			{if $shop_order.order_status eq "cancel"}{!pers_cancel!}
+      			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}{!pers_reissue!}
+      			{elseif $shop_order.order_status eq "res"}{!pers_res!}
+      			{elseif $shop_order.order_shipment_status eq "send"}{!pers_send!}
+      			{elseif $shop_order.order_payment_status eq "payed"}{!pers_payed!}
+      			{elseif $shop_order.order_status eq "ord"}{!pers_ord!}
+      			{else}{!pers_unknown!}
+      			{/if}</td>
+ 	      </tr>
+ 	      {/order->order_list}
+        </tbody>
+      </table></td>
     </tr>
 </table>
