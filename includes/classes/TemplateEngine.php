@@ -65,6 +65,8 @@ class TemplateEngine {
 	}
   
   private function tryBuildEmail(&$orgTpl){
+    global $_SHOP;
+    
     $tpl = $orgTpl;
     $err=0;
     if(!in_array($tpl->template_type,array('swift','systm','email'))){

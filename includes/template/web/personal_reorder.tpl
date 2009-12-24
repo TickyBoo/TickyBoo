@@ -131,45 +131,51 @@
 			</tr>
 		  </table>
 	  	</td>
-	  </tr>
-	    <tr>
-		  	<td colspan="2">
-		  	<form name='f' action='index.php' method='post'>
-          <input type='hidden' name='personal_page' value='orders'>
-  			  <input type="hidden" name="order_id" value='{$shop_order.order_id}'>
-	  		  <input type='hidden' name='action' value='order_res'>
+      </tr>
+      <tr>
+		    <td colspan="2">
+          <form name='f' action='index.php' method='post'>
+          <input type='hidden' name='personal_page' value='orders' />
+  			  <input type="hidden" name="order_id" value='{$shop_order.order_id}' />
+	  		  <input type='hidden' name='action' value='order_res' />
+          
           {ShowFormToken name='reorder'}
-			  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
-			  <center>
-				<tr>
-				  <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
-				  <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
-				</tr>
-				{order->tickets order_id=$shop_order.order_id min_date='on' }
-					{assign var="event_date" value=$shop_ticket_min_date}
-				{/order->tickets}
-				{handling www='on' event_date=$event_date}
-				<tr>
-				  <td class='payment_form'>
-	<input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}'>
-				  </td>
-				  <td class='payment_form'><label for='{$shop_handling.handling_id}_check'>{!payment!}
-				  {if $shop_handling.handling_text_payment}{eval var=$shop_handling.handling_text_payment}{/if}
-				  <br>{!shipment!}
-				  {if $shop_handling.handling_text_shipment}{eval var=$shop_handling.handling_text_shipment}{/if}
-				  </label>
-				  </td>
-				  <td class='payment_form'>
-					{assign var=fee value="`$shop_handling.handling_fee_percent*$shop_order.order_total_price/100.00+$shop_handling.handling_fee_fix`"} + {$fee|string_format:"%.2f"} {$organizer_currency}
-				  </td>
-				</tr>
-				{/handling}
-			  </table>
-			  <br>
-			  <input type='submit' name='submit_payment' value='{!order_it!}'>
-			  </center>
-			  </form>
-			</td>
+          
+          <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
+				    <tr>
+				      <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
+				      <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
+				    </tr>
+		        {order->tickets order_id=$shop_order.order_id min_date='on' }
+              {assign var="event_date" value=$shop_ticket_min_date}
+				    {/order->tickets}
+            
+            {handling www='on' event_date=$event_date}
+        
+            <tr>
+              <td class='payment_form'>
+                <input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}' />
+              </td>
+    				  <td class='payment_form'>
+                <label for='{$shop_handling.handling_id}_check'>{!payment!}
+    				      {if $shop_handling.handling_text_payment}{eval var=$shop_handling.handling_text_payment}{/if}
+    		          <br />{!shipment!}
+    				      {if $shop_handling.handling_text_shipment}{eval var=$shop_handling.handling_text_shipment}{/if}
+    				    </label>
+    				  </td>
+    				  <td class='payment_form'>
+                {assign var=fee value="`$shop_handling.handling_fee_percent*$shop_order.order_total_price/100.00+$shop_handling.handling_fee_fix`"} + {$fee|string_format:"%.2f"} {$organizer_currency}
+    				  </td>
+    				</tr>
+    				
+            {/handling}
+			  
+          </table>
+          
+          <br/>
+          <input type='submit' name='submit_payment' value='{!order_it!}'/>
+          </form>
+        </td>
 		  </tr>
   	{/order->order_list}
   	  <tr>

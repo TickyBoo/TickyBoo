@@ -37,7 +37,6 @@
   {assign var='next_order_id' value=$shop_order.order_id}
 {/order->order_list}
 <br>
-<form name='f' action='view.php' method='post'>
   <table width='100%' border=0>
     {order->order_list order_id=$order_id handling=true}
       <tr>
@@ -92,7 +91,7 @@
               </td>
             </tr>
             {if $shop_order.order_status eq "res"}
-              
+              <form name='f' action='view.php' method='post'>
               <input type='hidden' name='action' value='reorder' />
               <input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
               <input id="order-id" type="hidden" name="order_id" value="{$shop_order.order_id}" />
@@ -103,6 +102,7 @@
                   </center>
                 </td>
               </tr>
+            </form>
             {/if}
             <tr>
               <td class="admin_info">{!paymentstatus!}</td>
@@ -136,7 +136,7 @@
 				          		<p>
 				          		<input type="submit" value="{!change_order_to_payed!}" />
 					      	<p>
-					      	</form>			
+              </form>			
 				  		{/if}
 				  		
 				  	{/if}
@@ -319,7 +319,6 @@
       </form>
     </tr>
   </table>
-</form>
 <br />
 <!-- Dialog Box for order -->
 <div id="current-order" style="display:none;"></div>

@@ -229,7 +229,7 @@ class AdminView extends AUIComponent {
         "</td>
       </tr>\n";
 
-    $data[$name] = is($data[$name],array());
+    $data[$name] = is($data[$name],array()); $opts = "";
     foreach($data[$name] as $group=>$values){
       //for each group add the option list.
       $opts .= "<option value='{$group}'>".con($group)."</option>";
@@ -241,15 +241,20 @@ class AdminView extends AUIComponent {
         if($type=='text'){
           $size=is($arr['size'],40);
           $max=is($arr['max'],100);
-          $input = "<input type='text' name='{$prefix}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."' size='{$size}' maxlength='{$max}'>";
+          $input = "<td colspan='1' width='60%' class='admin_value'><input type='text' name='{$prefix}[$group][$field]' value='".htmlspecialchars($value, ENT_QUOTES)."' size='{$size}' maxlength='{$max}'></td>";
+          $colspan = 1;
         }elseif($type=='textarea'){
           $rows=is($arr['rows'],10);
-          $cols=is($arr['cols'],70);
-          $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[$group][$field]'>".$value."</textarea>";
+          $cols=is($arr['cols'],92);
+          $input = "</tr>
+                    <tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-group-row {$name}-{$group}-row' style='display:none;'>
+                      <td colspan='2' class='admin_value'><textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[$group][$field]'>".$value."</textarea></td>";
+          $colspan = 2;
         }
+        
         echo "<tr id='{$name}-{$group}-{$field}-row' class='{$name}-row {$name}-group-row {$name}-{$group}-row' style='display:none;'>
-                <td class='admin_name' width='40%'>".con($field)."</td>
-                <td class='admin_value'>".$input."</td>
+                <td colspan='{$colspan}' class='admin_name'>".con($field)."</td>"
+                .$input."
               </tr>\n";
       }
     }
@@ -268,20 +273,22 @@ class AdminView extends AUIComponent {
     $this->addJQuery($deleteScript);
 
     //This is the add section, We build the fields first then chuck them into jquery;
-    unset($input);
+    unset($input); $inputs = "";
     foreach($fields as $field=>$arr){
       $type = is($arr['type'],'text');
       $value = is($values[$field],'');
       if($type=='text'){
         $size=is($arr['size'],40);
         $max=is($arr['max'],100);
-        $input = "<input type='text' name='{$prefix}[\"+newGroup+\"][{$field}]' value='' size='{$size}' maxlength='{$max}' />";
+        $input = "<td colspan='1' class='admin_value' width='60%'><input type='text' name='{$prefix}[\"+newGroup+\"][{$field}]' value='' size='{$size}' maxlength='{$max}' /></td>";
+        $colspan = 1;
       }elseif($type=='textarea'){
         $rows=is($arr['rows'],10);
-        $cols=is($arr['cols'],70);
-        $input = "<textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[\"+newGroup+\"][{$field}]'> </textarea>";
+        $cols=is($arr['cols'],92);
+        $input = "</tr><tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td colspan='2' class='admin_value'><textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[\"+newGroup+\"][{$field}]'> </textarea></td>";
+        $colspan = 2;
       }
-      $inputs .= "\"<tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td class='admin_name' width='40%'>".con($field)."</td><td class='admin_value'>{$input}</td></tr>\"+";
+      $inputs .= "\"<tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td colspan='{$colspan}' class='admin_name' width='40%'>".con($field)."</td>{$input}</tr>\"+";
     }
 
     $addScript = "$('#{$name}-group-add-button').click(function(){
@@ -344,7 +351,7 @@ class AdminView extends AUIComponent {
         $prefix = "{$name}";
       }
       echo "<tr id='{$name}-tr' ><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
-            <td class='admin_value'><input id='{$name}-input' type='text' name='$prefix' value='" . htmlspecialchars($data[$name], ENT_QUOTES) . "' size='$size' maxlength='$max'>
+            <td class='admin_value'><input id='{$name}-input' type='text' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
             ".printMsg($name, $err)."
             </td></tr>\n";
     }
@@ -369,7 +376,7 @@ class AdminView extends AUIComponent {
           </td></tr>\n";
     }
 
-    function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='') {
+    function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 92, $suffix = '', $class='') {
       $suffix = self::_check($name, $suffix,$data);
       echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
               <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
@@ -446,6 +453,7 @@ class AdminView extends AUIComponent {
       if(!$icon){
         $classes .= " admin-button-text";
       }
+      $disClass = ''; $disAtr = '';
       if($disabled){
         $disAtr = " disabled='disabled' ";
         $disClass = " ui-state-disabled ";
@@ -455,7 +463,7 @@ class AdminView extends AUIComponent {
       $toolTipName = $this->hasToolTip($name);
       $hasTTClass = 'has-tooltip';
       $toolTipText = con($toolTipName);
-      if($options['showtooltip']===false){
+      if(is($options['showtooltip'])===false){
         $hasTTClass = '';
         $title = con($name);
 
@@ -468,11 +476,12 @@ class AdminView extends AUIComponent {
         $title = con($name);
       }
 
-      $alt     = is($options['alt'],$title );
+      $alt     = is($options['alt'],is($title,con($name)));
       if ($alt) {
         $alt = "alt='{$alt}'";
       }
-
+      $rtn = "";
+      
       //If image bolt on image css for button
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
 
@@ -652,6 +661,7 @@ class AdminView extends AUIComponent {
     function print_select_assoc ($name, &$data, &$err, $opt, $actions='', $mult = false) {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
+        $mu = '';
         if ($mult) {
             $mu = 'multiple';
         }

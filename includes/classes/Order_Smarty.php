@@ -93,19 +93,24 @@ class Order_Smarty {
   function res_to_order($params,&$smarty){
       $order_id=$params['order_id'];
       $handling_id=$params['handling_id'];
+      
+      if(empty($order_id) || empty($handling_id)){
+        return;
+      }
+      
       //if(($order_id=$this->secure_url_param($params['order_id']))<=1){return;}
       //if(($handling_id=$this->secure_url_param($params['handling_id']))<=1){return;}
       if($params['no_cost']===true){$no_cost=true;}
       if($params['no_fee']===true){$no_fee=true;}
       if($params['place']!='pos'){$place='www';}else{$place='pos';}
 
-    $this->res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place);
-
-    $smarty->assign('order_success',true);
+    if($this->res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place)){
+      $smarty->assign('order_success',true); 
+    }
   }
 
   function res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place){
-    global $_SHOP;
+    //global $_SHOP; // no need for this?
     return Order::reserve_to_order($order_id,$handling_id,$no_fee,$no_cost,$place);
   }
 
@@ -414,7 +419,11 @@ class Order_Smarty {
   }
   //Added v1.3.4 For Processing Menu PoS process.tpl
   function set_status_f($order_id,$status){
-  return Order::set_status_order($order_id,$status);
+    return Order::set_status_order($order_id,$status);
+  }
+  
+  function setStatusPaid($order_id){
+    return Order::set_payed($order_id);
   }
 
   function set_send_f($order_id){
@@ -443,8 +452,7 @@ class Order_Smarty {
   }
 
   function set_payed_f ($order_id){
-    global $_SHOP;
-    return Order::set_payed($order_id, 0, $this->user_auth_id);
+    return Order::set_payed($order_id);
   }
 
   function order_print ($params, &$smarty){

@@ -39,10 +39,10 @@ class Order Extends Model {
   protected $_idName    = 'order_id';
   protected $_tableName = 'Order';
   protected $_columns   = array('#order_id', '*order_user_id', 'order_session_id', '*order_tickets_nr',
-                                '*order_total_price', '*order_date','order_timestamp', '*order_shipment_status',
+                                '*order_total_price', '*~order_date','order_timestamp', '*order_shipment_status',
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
-                                '#order_date_expire', 'order_responce', 'order_responce_date',
+                                '~order_date_expire', 'order_responce', 'order_responce_date',
                                 'order_note', 'order_lock', 'order_lock_time', '#order_lock_admin_id');
   public $places=array();
   public $tickets = array();
@@ -166,7 +166,7 @@ class Order Extends Model {
   function amount (){
     $res=0;
     foreach($this->places as $seat){
-      $res+=$seat->price;
+      $res+=$seat->seat_price;
     }
     return $res;
   }
@@ -186,6 +186,7 @@ class Order Extends Model {
     }
 
     $amount=$this->amount();
+    
     if(!$this->no_fee){
       $fee= $this->order_handling->calculate_fee($amount);
     }else{
@@ -205,15 +206,17 @@ class Order Extends Model {
     $this->order_total_price=$total;
     $this->order_fee=$fee;
 
-    $this->order_date_expire = null;
+    //$this->order_date_expire = null;
+    
+    //var_dump($this->order_handling);
 
     if($this->order_handling->handling_id=='1'){
       $this->order_status="res";
-      $this->order_date_expire = "TIMESTAMPADD( MINUTE , ".$_SHOP->shopconfig_restime.", NOW())";
+      $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$_SHOP->shopconfig_restime.",CURRENT_TIMESTAMP()) ";
     }else{
       $this->order_status="ord";
       if ($this->order_handling->handling_expires_min>10) {
-        $this->order_date_expire = "TIMESTAMPADD( MINUTE , ".$this->order_handling->handling_expires_min.", NOW())";
+        $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$this->order_handling->handling_expires_min.",CURRENT_TIMESTAMP()) ";
       }
     }
 
@@ -223,14 +226,19 @@ class Order Extends Model {
     $this->order_payment_status = "none";
 
     //This is legacy... all new orders will use the timestamp which is set on save.
-    $this->order_date = date('Y-m-d H:i:s');
-
+    //$this->order_date = date('Y-m-d H:i:s');
+    $this->order_date = "CURRENT_TIMESTAMP() ";
+    
+    //var_dump($this);
+    //var_dump($this->order_date_expire);
+    //return self::_abort('testing');
+    
     if(!ShopDB::begin('Save Order')){
       return FALSE;
     } elseif(parent::save()){
 
       /*Create intial Order status */
-      if(!OrderStatus::statusChange($this->order_id,$order_status,NULL,'Order::save',"Create New order")){
+      if(!OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order")){
         return false;
       }
 
@@ -518,7 +526,8 @@ class Order Extends Model {
         if(!$no_cost){
           $total+=$fee;
         }else{
-          $total=0;}
+          $total=0;
+        }
       }
 
       //Selects Seats from old order using passed order_id from 'params'
@@ -530,7 +539,7 @@ class Order Extends Model {
       while($seat = ShopDB::fetch_assoc($res)){
         $code=Seat::generate_code(8);
         $query="UPDATE `Seat` set
-                  seat_code='{$code}'
+                  seat_code='{$code}',
                   seat_status='com'
                 WHERE seat_id='{$seat['seat_id']}' ";
         if(!ShopDB::query($query)){
@@ -555,7 +564,7 @@ class Order Extends Model {
         return false;
       }
 
-      addNotify('order_madefinal');
+      addNotice('order_madefinal');
 
       return true;
     } else {

@@ -385,11 +385,11 @@ class EmailSwiftXMLCompiler {
         break;
 
       case "from" :
-        $this->addParam('from',$this->emailToParam($a['EMAIL']),$a['LANG']);
+        $this->addParam('from',$this->emailToParam($a['EMAIL']));
         break;
 
       case "to" :
-        $this->addParam('to',$this->emailToParam($a['EMAIL']),$a['LANG']);
+        $this->addParam('to',$this->emailToParam($a['EMAIL']));
         break;
 
       case "cc" :

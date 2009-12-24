@@ -38,7 +38,7 @@ require_once("admin/AdminView.php");
 
 class TemplateView extends AdminView{
   function show_pdf() {
-    if ($_GET['action'] == 'view' and $_SESSION['_TEMPLATE_tab']=='2'){
+    if ($_GET['action'] == 'view' and $_SESSION['_TEMPLATE_tab']=='3'){
       $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
       if ($row = ShopDB::query_one_row($query)){
         $this->template_view($row, $row['template_type']);
@@ -70,7 +70,8 @@ class TemplateView extends AdminView{
      	case 'email':
 
       case 'swift':
-        include('templatedata.php');
+        //include('templatedata.php');
+        require_once('admin/templatedata.php');
         require_once("classes/TemplateEngine.php");
         if (!$tpl = TemplateEngine::getTemplate($name)) {
           return false;
@@ -100,13 +101,17 @@ class TemplateView extends AdminView{
         echo "<tr><td colspan='2' class='admin_name'>" .con('email_body'). "</td></tr>";
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
 				nl2br(htmlspecialchars($swift->toString())) . "</td></tr>";
-
+        
+        echo "<tr><td colspan='1'>";
+        echo $this->show_button("{$_SERVER['PHP_SELF']}","admin_list",3);
+        echo "</td><td align='right'>";
+        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&template_id={$data['template_id']}","edit",3);
+        echo " </td></tr>";
        	echo "</table>\n";
         echo "<input type='hidden' name='action' id='action' value='view'>
           <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
           </form>";
-
-        echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+          
         break;
       case 'pdf2':
         require_once("classes/TemplateEngine.php");
@@ -177,8 +182,8 @@ class TemplateView extends AdminView{
     $this->print_input("email_def_lang", $data['template_array'], $err, 10, 5,"",'template_array');
 
     $fields = array('template_subject'=>array('type'=>'text','size'=>'60','max'=>'150'),
-      'template_text'=>array('type'=>'textarea','cols'=>'70','rows'=>'10'),
-      'template_html'=>array('type'=>'textarea','cols'=>'70','rows'=>'10')
+      'template_text'=>array('type'=>'textarea','cols'=>'92','rows'=>'10'),
+      'template_html'=>array('type'=>'textarea','cols'=>'92','rows'=>'10')
     );
     //$data['template_array']['email_templates'] = array('en'=>array('template_group'=>'en','template_text'=>'hello email body'));
     $this->print_multiRowGroup('email_templates',$data['template_array'],$err , $fields,'template_array',array('add_arr'=>$_SHOP->langs_names));
@@ -211,9 +216,10 @@ class TemplateView extends AdminView{
       $this->print_input('template_name', $data, $err, 30, 100);
     }
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
-
+    
+    //cols = 96 is too big in ff and ie 92 is the max size before you misshape the table, this is because opera adds the scrollbar.
     echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
-    <textarea rows='20' cols='96' name='template_text'>" .$data['template_text'] ."</textarea>
+    <textarea rows='20' cols='92' name='template_text'>" .$data['template_text'] ."</textarea>
 
     </td></tr>";
     $this->form_foot(2, $_SERVER['PHP_SELF']);
@@ -504,6 +510,7 @@ class TemplateView extends AdminView{
         }
         continue;
       } elseif ($select <> $test) {
+        //TODO: is test ment to be set? As it never is...
         $select = $test;
         $include .= "<OPTGROUP LABEL='".con($select)."'/>";
       }
