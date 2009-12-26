@@ -85,7 +85,7 @@ class Model {
   }
 
   function SaveEx($id = null, $exclude=null){
-    return $this->Save($id, $explude);
+    return $this->Save($id, $exclude);
   }
 
   function insert($exclude=null){
