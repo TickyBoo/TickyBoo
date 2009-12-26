@@ -30,6 +30,7 @@ var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 
 var bindForms = function(){
 	$("form").submit(function(){
+	   console.log("fire!!");
 		var form = $(this);
 		if($(form).attr("id") == "order-form"){
     		return false;

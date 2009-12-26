@@ -158,8 +158,9 @@ var unBindSeatChart = function(){
    $("#show-seats button").unbind( "click" );
 }
 
-var BindEventRemove = function(){
-   $("#remove").submit(function(){
+var bindCartRemove = function(){
+  $(".remove-cart-row").unbind('submit');
+  $(".remove-cart-row").submit(function(){
       $(this).ajaxSubmit({
          data:{ajax:"yes",action:"remove"},
          success: function(html){

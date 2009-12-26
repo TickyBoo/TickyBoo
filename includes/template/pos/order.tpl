@@ -60,6 +60,7 @@
   </form>
 
   <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
+  <div id="cart-pager"></div> 
   <div id="order_action" title='{!pos_order_page!}'></div>
   <br />
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >

@@ -284,11 +284,11 @@ class PosAjax {
       	} else {
       	    $col = $seat_item->ttl()." min.";          //"<img src='../images/clock.gif' valign='middle' align='middle'> ".
         }
-        $col ="<form id='remove' name='remove{$seat_item_id}' action='index.php' method='POST' >".
+        $col ="<form id='remove' class='remove-cart-row' name='remove{$seat_item_id}' action='index.php' method='POST' >".
      		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
       		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
       		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
-             "<button type='submit' class='ui-widget-content jqgrow'
+             "<button type='submit' class='ui-widget-content jqgrow remove-cart-row-button'
                       style='display: inline; cursor: pointer; padding:0; margin: 0; border: 0px'> ".
              "<img src='../images/trash.png' style='display: inline; cursor: pointer;padding:0; margin: 0; border: 0px' width=16></button> ".
              $col.

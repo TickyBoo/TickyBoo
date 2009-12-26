@@ -24,30 +24,30 @@ var loadOrder = function(){
     }
   });
   
-   $('#cart_table').jqGrid({
-      url:'ajax.php?x=cart',
-      datatype: 'json',
-      mtype: 'POST',
-      postData: {"pos":true,"action":"CartInfo"},
-      colNames: ['Expire_in','Event','Count','Tickets','Price','Total'],
-      colModel :[
-         {name:'Expire_in',  index:'Expire_in',  width:100, sortable:false },
-         {name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
-         {name:'Count',      index:'Count',      width: 55, sortable:false, resizable: false, align:'right' },
-         {name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
-         {name:'Price',      index:'Price',      width: 70, sortable:false, resizable: false, align:'right' },
-         {name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
-      altRows: true,
-      height: 116,
+  $('#cart_table').jqGrid({
+    url:'ajax.php?x=cart',
+    datatype: 'json',
+    mtype: 'POST',
+    postData: {"pos":true,"action":"CartInfo"},
+    colNames: ['Expire_in','Event','Count','Tickets','Price','Total'],
+    colModel :[
+        {name:'Expire_in',  index:'Expire_in',  width:100, sortable:false },
+        {name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
+        {name:'Count',      index:'Count',      width: 55, sortable:false, resizable: false, align:'right' },
+        {name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
+        {name:'Price',      index:'Price',      width: 70, sortable:false, resizable: false, align:'right' },
+        {name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
+    altRows: true,
+    height: 116,
 
-      hiddengrid : true,
-      hoverrows : false,
-      footerrow : false,
-      gridComplete:  function(){
+    hiddengrid : true,
+    hoverrows : false,
+    footerrow : false,
+    gridComplete:  function(){
       $('#cart_table td').addClass('payment_form');
       var data = $('#cart_table').getGridParam("userData");
-         $.each(data.handlings,function(index, domElement){
-            $(this.index).html(this.value);
+      $.each(data.handlings,function(index, domElement){
+        $(this.index).html(this.value);
       });
       $('#total_price').html(data.total);
       if (data.can_cancel) {
@@ -60,11 +60,11 @@ var loadOrder = function(){
       } else {
         $('#checkout').hide();
       }
-      BindEventRemove()
+      bindCartRemove(); // This listens for cart remove button;
     }
-    });
-    //refreshOrder();
-    updateEvents();
+  });
+  //refreshOrder();
+  updateEvents();
     
     $('#event-from').datepicker({
       minDate:0, changeMonth: true,
