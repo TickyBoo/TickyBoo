@@ -536,6 +536,15 @@ define("order_event_list_title","Orders by Event");
 	define("order_deleted_manual","Order Manually Canceled");
 	define("order_responce","Cancellation Type");
 	define("order_responce_date","Cancellation Date");
+  define("order_delete_now","Are you sure to remove this order?");
+  define("order_details_tickettab",'Tickets');
+  define("order_details_usertab",'User');
+  define("order_details_logtab",'Statuslog');
+  define("order_details_notetab",'Note');
+  define("order_statuslog",'Order status log');
+  define("order_note",'Dont forget to save the note.');
+  define("Order_note_title",'Note');
+
 
 	//Action icons
 	define("change_status_to_ord","Change Status to Ordered?");
