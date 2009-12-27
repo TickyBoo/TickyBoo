@@ -601,17 +601,18 @@ class OrderView extends AdminView{
     $com["print"]=$this->link("print",$order["order_id"],"printer.gif",false,'',null, $hide );
 
     $com["ord"]=$this->link("set_status_ord",$order["order_id"],"ord.png",TRUE,con('change_status_to_ord'),$_GET, $list);
-
-    $com["send"]=$this->link("set_status_shipment_send",$order["order_id"],"mail.png",TRUE,con('change_status_to_send'),$_GET,
-                             ($hide || ($order['order_shipment_status']=='send' && $list) ||  $order['order_status']=='res'));
-
-    $com["no_send"]=$this->link("set_status_shipment_none",$order["order_id"],"no_mail.png",TRUE,con('change_status_to_no_send'),$_GET, $list);
-
+    if ($order['order_shipment_status']!=='send') {
+      $com["send"]=$this->link("set_status_shipment_send",$order["order_id"],"mail.png",TRUE,con('change_status_to_send'),$_GET,
+                               ($hide || ( $list) ||  $order['order_status']=='res'));
+    } else {
+      $com["no_send"]=$this->link("set_status_shipment_none",$order["order_id"],"no_mail.png",TRUE,con('change_status_to_no_send'),$_GET,
+                               ($hide || ( $list) ||  $order['order_status']=='res'));
+    }
     $com["payed"]=$this->link("set_status_payment_payed",$order["order_id"],"pig.png",TRUE,con('change_status_to_payed'),$_GET,
-                              ($order['order_payment_status']=='payed' || $order['order_status']=='res' || $hide));
+                              ($order['order_payment_status']=='payed' || $order['order_status']=='res' || $list));
 
     $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_payed'),$_GET,
-                                 $list);
+                                 $order['order_payment_status']=='none' || $order['order_status']=='res' || $list);
     $com["reissue"]=$this->link("reissue",$order["order_id"],"remis.png",TRUE,con('reissue_order'),$_GET, $list);
 
     $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png",true,con('order_delete_now') ,$_GET,
