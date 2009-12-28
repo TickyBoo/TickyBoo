@@ -73,7 +73,7 @@ class HandlingView extends AdminView{
   				echo "<td width='30' class='admin_list_item'>$handling_mode_web</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_pos</td>\n";
 
-          echo "<td class='admin_list_item' width='40' align='right' nowrap><nowrap>";
+          echo "<td class='admin_list_item' width='45' align='right' nowrap><nowrap>";
           echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&handling_id={$hand->handling_id}","edit",2);
           echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&handling_id={$hand->handling_id}\";}","remove",2,array('tooltiptext'=>"Delete {$row['ort_name']}?"));
           echo "</nowrap></td>\n";
@@ -136,9 +136,9 @@ class HandlingView extends AdminView{
 			$data["handling_email_template_{$t[0]}"]=$t[1];
 		}
 
-		$this->print_select_tpl('handling_email_template_ord','email',$data,$err);
-		$this->print_select_tpl('handling_email_template_payed','email',$data,$err);
-    $this->print_select_tpl('handling_email_template_send','email',$data,$err);
+		$this->print_select_tpl('handling_email_template_ord','email',$data,$err, true);
+		$this->print_select_tpl('handling_email_template_payed','email',$data,$err, true);
+    $this->print_select_tpl('handling_email_template_send','email',$data,$err, true);
 
 		$this->print_select_tpl('handling_pdf_template','pdf2',$data,$err);
 		$this->print_select_tpl('handling_pdf_ticket_template','pdf2',$data,$err);
@@ -170,8 +170,8 @@ class HandlingView extends AdminView{
 			if(!$hand=Handling::load($_POST["handling_id"])){
     		$hand= new Handling(true); $new = true;
       }
-
-			if(!$hand->fillPost() || !$hand->saveEx()){
+      var_dump($ok = $hand->fillPost());
+			if(!$ok || !$hand->saveEx()){
     			$this->form($_POST, null, con('handling_update_title')); //handling_add_title
     			return 0;
 			} elseif ($new){
@@ -215,7 +215,7 @@ class HandlingView extends AdminView{
     }
   }
 
-  function print_select_tpl ($name,$type,&$data,&$err){
+  function print_select_tpl ($name, $type, &$data, &$err, $inclPdf=false){
     global $_SHOP;
 
     $query="SELECT template_name FROM Template WHERE template_type='{$type}' ORDER BY template_name";
@@ -226,7 +226,7 @@ class HandlingView extends AdminView{
     $sel[$data[$name]]=" selected ";
 
     echo "<tr><td class='admin_name'  width='40%'>".con($name)."</td>
-    <td class='admin_value'>
+    <td class='admin_value'><nowrap>
      <select name='$name'>
      <option value=''></option>\n";
 
@@ -235,8 +235,17 @@ class HandlingView extends AdminView{
       echo "<option value='$value' ".$sel[$v[0]].">{$v[0]}</option>\n";
     }
 
-    echo "</select>".printMsg($name, $err)."
-    </td></tr>\n";
+    echo "</select>";
+    if ($inclPdf) {
+       $checked = ($data["{$name}_incl_pdf"]==1)?"selected":"";
+       echo "&nbsp;&nbsp;".con("{$name}_incl_pdf")."
+             <select name='{$name}_incl_pdf'>
+                <option value='0'>".con('confirm_no')."</option>\n
+                <option value='1' $checked>".con('confirm_yes')."</option>\n";
+       echo "</select>";
+
+    }
+    echo "</nowrap>".printMsg($name, $err)."</td></tr>\n";
   }
 
 }

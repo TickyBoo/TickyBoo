@@ -365,11 +365,10 @@ class OrderView extends AdminView{
       while($os=shopDB::fetch_assoc($res)){
         echo "<tr class='admin_list_row_$alt'>
         	   <td class='admin_list_item'>".$os["os_id"]."</td>
-         	   <td class='admin_list_item'>".formatAdminDate($os["os_changed"], false).' '.
-                                       	   formatTime($os["os_changed"])."</td>
+         	   <td class='admin_list_item'>".formatTime($os["os_changed"])."</td>
          	   <td class='admin_list_item'>".$os["os_description"]."</td>
        	   <tr>\n";
-         $alt=($alt+1)%2;
+         $alt=($alt+1)%2;//
 
       }
       echo "</table>\n";

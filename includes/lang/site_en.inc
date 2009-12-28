@@ -544,6 +544,9 @@ define("order_event_list_title","Orders by Event");
   define("order_statuslog",'Order status log');
   define("order_note",'Dont forget to save the note.');
   define("Order_note_title",'Note');
+  define("handling_email_template_ord_incl_pdf"," Incl Pdfs");
+  define("handling_email_template_payed_incl_pdf","&nbsp;Incl&nbsp;Pdfs");
+  define("handling_email_template_send_incl_pdf","&nbsp;Incl&nbsp;Pdfs");
 
 
 	//Action icons

@@ -39,13 +39,16 @@ class Handling Extends Model {
   protected $_tableName = 'Handling';
   protected $_columns   = array('#handling_id', 'handling_payment', 'handling_shipment', 'handling_fee_fix',
                                 'handling_fee_percent', 'handling_email_template', 'handling_pdf_template',
-                                'handling_pdf_ticket_template', 'handling_pdf_format', 'handling_html_template',
+                                'handling_pdf_ticket_template', 'handling_html_template',
                                 'handling_sale_mode', 'handling_extra', 'handling_text_shipment', 'handling_text_payment',
                                 'handling_expires_min', '#handling_alt', 'handling_alt_only' );
-//  'handling_delunpaid' => " enum('Yes','No') NOT NULL DEFAULT 'No'",
 
-  var $templates;
   protected $_pment = null;
+  protected $_sment = null;
+
+  public $templates;
+  public $extra = array();
+  public $sale_mode;
 
 	function clear() {
 	  parent::clear();
@@ -71,7 +74,7 @@ class Handling Extends Model {
   	if($res=ShopDB::query_one_row($query)){
     		$hand=new Handling;
     		$hand->_fill($res);
-    		$hand->templates=Handling::_unser_templates($res['handling_email_template']);
+        $hand->_unser_templates('handling_email_template');
   			$hand->_unser_extra();
     		$_SHOP->_handling_cache[$handling_id]=&$hand;
     		return $hand;
@@ -90,7 +93,7 @@ class Handling Extends Model {
       while($data=shopDB::fetch_assoc($res)){
         $hand=new Handling;
         $hand->_fill($data);
-        $hand->templates=Handling::_unser_templates($data['handling_email_template']);
+        $hand->_unser_templates('handling_email_template');
 				$hand->_unser_extra();
         $hands[]=$hand;
       }
@@ -99,10 +102,8 @@ class Handling Extends Model {
   }
 
   function save (){
-    global $_SHOP;
-
 		$this->_ser_extra();
-    $this->handling_email_template = $this->_ser_templates($this->templates);
+    $this->_ser_templates('handling_email_template');
     $exclude = ($this->handling_id)? array('handling_payment','handling_shipment'): null;
 
     return parent::save(null, $exclude);
@@ -186,15 +187,13 @@ class Handling Extends Model {
 
   // Loads default extras for payment method eg."pm_paypal_View.php"
   function admin_init(){
+    $this->handling_text_payment=  con($this->handling_payment);
+   	$this->handling_text_shipment=  con($this->handling_shipment);
   	if($pm=$this->pment()){
       $pm->admin_init();
-  	} else {
-      $this->handling_text_payment=  con($this->handling_payment);
     }
   	if($sm=$this->sment()){
       $sm->admin_init();
-  	} else {
-    	$this->handling_text_shipment=  con($this->handling_shipment);
     }
   }
 
@@ -400,21 +399,24 @@ class Handling Extends Model {
 	}
 
   function _ser_templates($templates){
-    if(is_array($templates)){
-      foreach($templates as $state=>$template){
-        $t0[]="$state=$template";
+    $t0 = array();
+    foreach ($this as $key => $value) {
+      if(strpos($key, $templates.'_')!== false){
+        $key = substr($key,strlen($templates)+1);
+        $t0[]="$key=$value";
       }
-      return implode(',',$t0);
     }
+    $this->$templates = implode(',',$t0);
   }
 
   function _unser_templates($handling_templates){
-    if($handling_templates and $t0=explode(',',$handling_templates)){
+    if($this->$handling_templates and $t0=explode(',',$this->$handling_templates)){
       foreach($t0 as $s_t){
         list($state,$template)=explode('=',$s_t);
-        $templates[$state]=$template;
+        $statex = $handling_templates.'_'.$state;
+        $this->$statex = $template;
+        $this->templates[$state] = $template;
       }
-      return $templates;
     }
   }
 
@@ -455,25 +457,24 @@ class Handling Extends Model {
     if ($data['handling_id']) {
  	  	if(empty($data['handling_text_payment'])){addError('handling_text_payment','mandatory');}
  		  if(empty($data['handling_text_shipment'])){addError('handling_text_shipment','mandatory');}
+      if($pm = $this->pment()){
+  			$pm->admin_check($data);
+  		}
     }
-    $ok = parent::CheckValues($data);
-
-		if($pm = $this->pment()){
-			return $pm->admin_check($data, $errors) && $ok;
-		}else{
-			return $ok;
-		}
+		return parent::CheckValues($data);
 	}
 
   function _fill ($data, $nocheck=true){
  		if($data['handling_sale_mode_a']){
 			$data['handling_sale_mode']=implode(',',$data['handling_sale_mode_a']);
 	 	}
-    if (parent::_fill($data, $nocheck) and ( $pm = $this->pment())) {
+    $ok = parent::_fill($data, $nocheck);
+    if ($ok and ( $pm = $this->pment())) {
       foreach($pm->extras as $key)
         $this->extra[$key] = is($data[$key], null);
     }
     $this->sale_mode = $data['sale_mode'];
+    return $ok;
   }
 }
 ?>

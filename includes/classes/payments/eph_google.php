@@ -80,8 +80,8 @@ class EPH_google extends Payment{
            "{gui->view name='pm_google_sandbox'}";
 	}
 
-	public function admin_check(&$data, &$err){
-		parent::admin_check($data, $err);
+	public function admin_check(&$data){
+		parent::admin_check($data);
 		global $_SHOP;
 
 		$data['pm_google_callback_link'] = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();

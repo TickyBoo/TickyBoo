@@ -34,11 +34,11 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 class Payment {
-	
+
   public $handling;
   public $extras    = array();
   public $mandatory = array();
-  
+
 	function __construct (&$handling) {
  		$this->handling = &$handling;
   }
@@ -62,20 +62,20 @@ class Payment {
 	public function admin_view ( ){}
 
   	public function admin_form ( ){}
-  	
+
 	function admin_init (){}
-	
+
 	/**
 	 * Used to check the manditory fields defined in the manditory array
 	 */
-	public function admin_check (&$data, &$err){
+	public function admin_check (&$data){
   		foreach($this->mandatory as $field){
-  			if(empty($data[$field])){$err[$field]=con('mandatory');}
+  			if(empty($data[$field])){ddError($field, 'mandatory');}
   		}
-    	return (count($err)==0);
+    	return true;
   	}
 
-	
+
 	function on_handle($order, $new_status, $old_status, $field){
     return true;
   }
@@ -83,7 +83,7 @@ class Payment {
 	function on_order_delete($order_id){
     return true;
   }
-	
+
   function on_confirm(&$order){return '';}
 
   function on_submit(&$order, &$err ){}
@@ -97,21 +97,21 @@ class Payment {
   function on_notify(&$order){}
 
   function on_check(&$order){ return false;}
-  
+
   public function getOrder(){
-  	
+
   }
-  
+
   public function encodeCallback(){return "";}
-  
+
   public function decodeCallback(){return true;}
-  
+
 //****************************************************************************//
 
 	protected function encodeEPHCallback($ephCode){
-		
+
 		$code = base64_encode($this->handling_payment.':'.base_convert($this->handling_id,10,36).':'.$ephCode);
-		
+
 		return "cbr=".urlencode($code);
 	}
 
