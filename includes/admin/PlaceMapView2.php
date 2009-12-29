@@ -56,7 +56,7 @@ class PlaceMapView extends AdminView {
 		$alt = 0;
 	  echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
 	  echo "<tr><td class='admin_list_title' colspan='1' align='left'>" . con('place_maps') . "</td>\n";
-    echo "<td colspan=1 align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_pm","add",3)."</td>";
+    echo "<td colspan=1 align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_pm&pm_ort_id={$ort_id}","add",3)."</td>";
 	  echo "</tr>";
 
 		while ( $pm = shopDB::fetch_assoc($res) ) {
@@ -80,7 +80,7 @@ class PlaceMapView extends AdminView {
     if (is_numeric($data)) {
       $data = (array)Placemap::Load($data);
     }
-    $data['pm_ort_id'] =(!isset($data['pm_ort_id']))?$_REQUEST['pm_ort_id']:$data['pm_ort_id'];
+//    print_r($data);
 		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>";
   	echo "<input type=hidden name=action value=save_pm>
           <input type=hidden name=pm_ort_id value='{$data['pm_ort_id']}'>";
@@ -169,7 +169,8 @@ class PlaceMapView extends AdminView {
 
 		} elseif ( $_GET['action'] == 'add_pm' ) {
       $pm = new PlaceMap(true);
-      $pm->pm_ort_id = (int)$_REQUEST['pm_ort_id'];
+      $pm->pm_ort_id = $_REQUEST['pm_ort_id'];
+      var_dump($_REQUEST['pm_ort_id']);var_dump($_REQUEST);
 			$this->form( (array)$pm, null, con('add_pm') );
     } elseif ( $_GET['action'] == 'edit_pm' and (int)$_GET['pm_id'] > 0 ) {
       $pm = PlaceMap::load($_GET['pm_id']);
