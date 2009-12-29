@@ -91,7 +91,7 @@ class PlaceMapView extends AdminView {
 
 		$this->form_head( $title );
 		$this->print_field_o( 'pm_id', $data );
-		$this->print_field( 'pm_event_id', $data );
+		$this->print_field_o( 'pm_event_id', $data );
 
 		if ( isset($data['pm_event_id']) && $event = Event::load( $data['pm_event_id'], false )) {
 			$live = $event->event_status != 'unpub';

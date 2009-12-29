@@ -113,20 +113,17 @@ class PlaceMapCategoryView extends AdminView {
 
     $this->print_area('category_data', $data, $err, 3, 40);
 
-    $this->form_foot();
     if ($data['event_status'] == 'nosal' and $data['category_numbering'] == 'none') {
+      $this->form_foot();
       echo "<br>";
       echo "<form action='{$_SERVER['PHP_SELF']}' method=post>";
-      $this->form_head(con('category_new_size_title'));
-      $this->print_input('category_new_size', $data, $err, 6, 6);
-      $this->form_foot();
       echo "<input type=hidden name=pm_id value={$data['category_pm_id']}>";
       echo "<input type=hidden name=category_id value={$data['category_id']}>";
       echo "<input type=hidden name=action value=resize_category>";
-      echo "</form>";
+      $this->form_head(con('category_new_size_title'));
+      $this->print_input('category_new_size', $data, $err, 6, 6);
     }
-
-    echo "<br><center><a href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['category_pm_id']}' class=link>".con('place_map')."</a></center>";
+    $this->form_foot(2, "{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['category_pm_id']}");
   }
 
 
