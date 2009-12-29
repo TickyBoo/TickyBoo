@@ -35,7 +35,7 @@
 # In PHP 5.2 or higher we don't need to bring this in
 if (!defined('ft_check')) {die('System intrusion ');}
 if (!function_exists('json_encode')) {
-  require_once 'JSON/JSON.php';
+  require_once LIBS.'json/JSON.php';
   function json_encode($arg)
   {
     global $services_json;

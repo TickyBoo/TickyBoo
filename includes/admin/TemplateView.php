@@ -72,7 +72,7 @@ class TemplateView extends AdminView{
       case 'swift':
         //include('templatedata.php');
         require_once('admin/templatedata.php');
-        require_once("classes/TemplateEngine.php");
+        require_once("classes/class.templateengine.php");
         if (!$tpl = TemplateEngine::getTemplate($name)) {
           return false;
        	}
@@ -114,7 +114,7 @@ class TemplateView extends AdminView{
           
         break;
       case 'pdf2':
-        require_once("classes/TemplateEngine.php");
+        require_once("classes/class.templateengine.php");
         require_once(LIBS."html2pdf/html2pdf.class.php");
         require_once('templatedata.php');
 
@@ -308,7 +308,7 @@ class TemplateView extends AdminView{
 
   function compile_template ($name){
     global $_SHOP;
-    require_once("classes/TemplateEngine.php");
+    require_once("classes/class.templateengine.php");
 
     $te = new TemplateEngine;
     if(!$te->getTemplate($name, true)){

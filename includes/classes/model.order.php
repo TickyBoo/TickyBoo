@@ -33,7 +33,7 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once('classes/orderstatus.php');
+require_once('classes/model.orderstatus.php');
 
 class Order Extends Model {
   protected $_idName    = 'order_id';
@@ -889,9 +889,9 @@ class Order Extends Model {
   }
 
   function printOrder($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
-    require_once("classes/TemplateEngine.php");
+    require_once("classes/class.templateengine.php");
     require_once(LIBS."html2pdf/html2pdf.class.php");
-    require_once('classes/gui_smarty.php');
+    require_once('classes/smarty.gui.php'); 
 
     global $_SHOP;
     if (!$mode) $mode = 'file';

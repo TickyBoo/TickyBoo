@@ -194,7 +194,7 @@ class HandlingView extends AdminView{
     $extras = $hand->admin_form();
     if ( $extras) {
       require_once('smarty/Smarty.class.php');
-      require_once('classes/gui_smarty.php');
+      require_once('classes/smarty.gui.php');
 
       $smarty = new Smarty;
   //    $smarty->plugins_dir = array("plugins", INC . "shop_plugins".DS);

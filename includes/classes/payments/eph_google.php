@@ -43,7 +43,7 @@ require_once('google/library/googleresponse.php');
 require_once('google/library/googleresult.php');
 require_once('google/library/googlerequest.php');
 
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 
 class EPH_google extends Payment{
 

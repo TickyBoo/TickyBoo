@@ -1,5 +1,5 @@
 <?php
-require_once(INC.'classes'.DS.'ShopDB.php');
+require_once(INC.'classes'.DS.'class.shopdb.php');
 
 class TestOfShopDB extends UnitTestCase {
     function __construct() {

@@ -153,7 +153,7 @@ class IndexView extends AdminView {
   }
   
   function getLatestVersion(){
-    require_once("classes/restserviceclient.php");
+    require_once("classes/class.restservice.client.php");
     
     //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
     $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');

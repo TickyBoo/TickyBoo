@@ -33,7 +33,7 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once('classes/ShopDB.php');
+require_once('classes/class.shopdb.php');
 
 class Ort Extends Model {
   protected $_idName    = 'ort_id';

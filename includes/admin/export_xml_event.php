@@ -66,7 +66,7 @@ class export_xml_event extends AdminView {
     global $_SHOP;
   
     if($_GET['submit'] and $_GET['export_xml_event_event']>0){
-			require_once('classes/xmldata.php');      
+			require_once('classes/class.xmldata.php');      
 			$event_id=_esc((int)$_GET['export_xml_event_event']);
 			
 			$what[]=array(

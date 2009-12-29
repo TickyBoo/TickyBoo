@@ -115,7 +115,7 @@ $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
 define ('BASE_URL',$root);
 
 require_once(ROOT."includes".DS."classes".DS."basics.php");
-require_once(ROOT."includes/classes/ShopDB.php");
+require_once(ROOT."includes/classes/class.shopdb.php");
 require_once(ROOT."includes/install/install_base.php");
 
 foreach($states as $id => $name) {

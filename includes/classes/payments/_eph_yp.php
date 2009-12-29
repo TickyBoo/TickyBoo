@@ -33,7 +33,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 class eph_yp extends Payment{
   public $extras = array('pm_yp_shop_id', 'pm_yp_url');
   public $mandatory = array('pm_yp_shop_id', 'pm_yp_url');

@@ -126,13 +126,11 @@ class TemplateEngine {
     switch ($data['template_type']) {
       case 'systm':
       case 'email':
-        //require_once("classes/EmailTCompiler.php");
         require_once("classes/email.swift.xml.compiler.php");
-        //$comp = new EmailTCompiler;
-        $comp = new EmailSwiftXMLCompiler; //For testing only
+        $comp = new EmailSwiftXMLCompiler;
         break;
       case 'pdf2':
-        require_once("classes/PDF2TCompiler.php");
+        require_once("classes/pdf.compiler.php");
         $comp = new PDF2TCompiler;
         break;
       case 'swift':

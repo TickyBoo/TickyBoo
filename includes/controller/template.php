@@ -49,11 +49,11 @@ echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 
 require_once ( 'smarty/Smarty.class.php');
-require_once ( 'classes/MyCart_Smarty.php');
-require_once ( 'classes/User_Smarty.php');
-require_once ( 'classes/Order_Smarty.php');
-require_once ( 'classes/gui_smarty.php');
-require_once ( 'classes/Update_Smarty.php');
+require_once ( 'classes/smarty.mycart.php');
+require_once ( 'classes/smarty.user.php');
+require_once ( 'classes/smarty.order.php');
+require_once ( 'classes/smarty.gui.php');
+require_once ( 'classes/smarty.update.php');
 require_once ( 'config/init.php');
 
 

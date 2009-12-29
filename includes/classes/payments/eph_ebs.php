@@ -33,7 +33,7 @@
  */
 //if (!defined('ft_check')) {die('System intrusion ');}
 
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 
 class EPH_ebs extends payment{
   public $extras = array('pm_ebs_accountid', 'pm_ebs_seckey','pm_ebs_test');

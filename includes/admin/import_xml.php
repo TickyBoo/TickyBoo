@@ -58,7 +58,7 @@ class import_xml extends AdminView {
     global $_SHOP;
   
 		if(!empty($_FILES['import_xml_file']) and !empty($_FILES['import_xml_file']['name']) and !empty($_FILES['import_xml_file']['tmp_name'])){
-			require_once('classes/xmldata.php');
+			require_once('classes/class.xmldata.php');
 			echo import_xml_title." : ".$_FILES['import_xml_file']['name']." ... ";
 			flush();
 			xmldata::xml2sql($_FILES['import_xml_file']['tmp_name']);

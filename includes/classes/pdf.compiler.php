@@ -41,7 +41,7 @@ class PDF2TCompiler {
   function build ($pdf, $data, $testme=false){
     global $_SHOP;
     require_once("smarty/Smarty.class.php");
-    require_once("classes/gui_smarty.php");
+    require_once("classes/smarty.gui.php");
 
     $smarty = new Smarty;
     $gui    = new gui_smarty($smarty);
@@ -74,7 +74,7 @@ $ret=
 produced '.date("l dS of F Y h:i:s A").' 
 
 */
-require_once("classes/PDF2TCompiler.php");
+require_once("classes/pdf.compiler.php");
 
 class '.$out_class_name.' extends PDF2TCompiler {
   function write($pdf, $data, $testme=false){

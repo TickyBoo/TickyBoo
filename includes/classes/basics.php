@@ -307,7 +307,7 @@ function empt(&$arg , $default=null){
   }
 
 function check_event($event_date){
-  require_once("classes/Time.php");
+  require_once("classes/class.time.php");
 
   global $_SHOP;
   if($_SHOP->shopconfig_posttocollect>=10){
@@ -326,7 +326,7 @@ function check_event($event_date){
 
 function check_system() {
   global $_SHOP;
-  require_once("classes/Time.php");
+  require_once("classes/class.time.php");
 
   // NS: I moved the current_db_time to the init.php so we have lesser sql calls.
   // also i have moved the error messages to the language file. so the can be translated.
@@ -350,7 +350,7 @@ function check_system() {
     }
     if ( $res = ShopDB::query($query) ) {
       while ( $row = shopDB::fetch_assoc($res) ) {
-        Order::order_delete( $row['order_id'], 'AutoCancel_order');
+        Order::delete( $row['order_id'], 'AutoCancel_order');
       }
     }
   }
@@ -568,7 +568,7 @@ function md5pass($user,$pass) {
 }
 
 //added in not sure why it was removed?
-//Still has code reliant on it in gui_smarty.php
+//Still has code reliant on it in smarty.gui.php
 //TODO: remove if not needed
 function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
   Global $_SHOP;

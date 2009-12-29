@@ -36,7 +36,7 @@ define('ft_check','admin');
 session_cache_limiter("must-revalidate");
 
 require_once("../includes/config/init_admin.php");
-require_once("classes/ShopDB.php");
+require_once("classes/class.shopdb.php");
 require_once 'Spreadsheet/Excel/Writer.php';
 
 global $_SHOP;

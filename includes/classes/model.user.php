@@ -39,7 +39,7 @@ class User extends Model{
   protected $_tableName = 'User';
   protected $_columns   = array('#user_id', '*user_lastname', '*user_firstname', '*user_address', 'user_address1',
                                 '*user_zip', '*user_city', 'user_state', '*user_country', 'user_phone', 'user_fax' ,
-                                '*user_email', '*user_status', 'user_prefs', 'user_custom1', 'user_custom2',
+                                '*user_email', '*user_status', 'user_prefs', '~user_created', 'user_custom1', 'user_custom2',
                                 'user_custom3', 'user_custom4', 'user_owner_id', 'user_lastlogin', 'user_order_total',
                                 'user_current_tickets', 'user_total_tickets');
 
@@ -275,7 +275,7 @@ class User extends Model{
 	}
 
   public function sendActivationCode($row, $active, &$errors){
-  	require_once('classes/TemplateEngine.php');
+  	require_once('classes/class.templateengine.php');
     require_once('classes'.DS.'email.sender.php');
     global $_USER_ERROR, $_SHOP;
     // new part
@@ -379,7 +379,7 @@ class User extends Model{
 
   function forgot_password($email){
     global $_SHOP;
-    require_once('classes/TemplateEngine.php');
+    require_once('classes/class.templateengine.php');
     require_once('classes'.DS.'email.sender.php');
     
 

@@ -42,6 +42,7 @@ $tbls['Admin']['fields'] = array(
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
+  'admin_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
 $tbls['Admin']['key'] = array(
   "PRIMARY KEY (`admin_id`)",
@@ -102,6 +103,7 @@ $tbls['User']['fields'] = array(
   'user_email' => " varchar(50) NOT NULL DEFAULT ''",
   'user_status' => " tinyint(4) NOT NULL DEFAULT '0'",
   'user_prefs' => " varchar(50) DEFAULT NULL",
+  'user_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'user_custom1' => " varchar(50) DEFAULT ''",
   'user_custom2' => " text",
   'user_custom3' => " int(11) DEFAULT '0'",
@@ -182,6 +184,7 @@ $tbls['Discount']['remove'] = array ();
 
 $tbls['Event']['fields'] = array(
   'event_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'event_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'event_name' => " varchar(100) NOT NULL DEFAULT ''",
   'event_text' => " text",
   'event_short_text' => " text",
@@ -189,6 +192,7 @@ $tbls['Event']['fields'] = array(
   'event_image' => " varchar(100) DEFAULT NULL",
   'event_ort_id' => " int(11) DEFAULT NULL",
   'event_pm_id' => " int(11) DEFAULT NULL",
+  'event_timestamp' => " timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'event_date' => " date DEFAULT NULL",
   'event_time' => " time DEFAULT NULL",
   'event_open' => " time DEFAULT NULL",
@@ -203,7 +207,8 @@ $tbls['Event']['fields'] = array(
   'event_type' => " varchar(25) DEFAULT NULL");
 $tbls['Event']['key'] = array(
   "PRIMARY KEY (`event_id`)",
-  "KEY `event_date` (`event_date`)");
+  "KEY `event_date` (`event_date`)",
+  "KEY `event_timestamp` (`event_timestamp`)");
 $tbls['Event']['engine'] = 'InnoDB';
 $tbls['Event']['remove'] = array ('event_organizer_id');
 //$tbls['Event']['AUTO_INCREMENT'] = 4;
@@ -272,7 +277,8 @@ $tbls['Handling']['fields'] = array(
 //  'handling_delunpaid' => " enum('Yes','No') NOT NULL DEFAULT 'No'",
   'handling_expires_min' => " int(11) DEFAULT NULL",
   'handling_alt' => " int(11) DEFAULT NULL",
-  'handling_alt_only' => " enum('Yes','No') NOT NULL DEFAULT 'No'");
+  'handling_alt_only' => " enum('Yes','No') NOT NULL DEFAULT 'No'",
+  'handling_only_manual_send' => " enum('Yes','No') NOT NULL DEFAULT 'No'");
 $tbls['Handling']['key'] = array(
   "PRIMARY KEY (`handling_id`)");
 $tbls['Handling']['engine'] = 'InnoDB';
@@ -306,7 +312,8 @@ $tbls['Order']['fields'] = array(
 $tbls['Order']['key'] = array(
   "PRIMARY KEY (`order_id`)",
   "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
-  "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)");
+  "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)",
+  "KEY `order_timestamp` (`order_timestamp`)");
 $tbls['Order']['engine'] = 'InnoDB';
 $tbls['Order']['remove'] = array ('order_organizer_id');
 
@@ -349,6 +356,7 @@ $tbls['Organizer']['remove'] = array ('organizer_id')   ;
 
 $tbls['Ort']['fields'] = array(
   'ort_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'ort_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'ort_name' => " varchar(100) NOT NULL DEFAULT ''",
   'ort_phone' => " varchar(50) DEFAULT NULL",
   'ort_plan_nr' => " varchar(100) DEFAULT ''",
@@ -417,6 +425,7 @@ $tbls['PlaceMapZone']['remove'] = array ('pmz_organizer_id')   ;
 
 $tbls['Seat']['fields'] = array(
   'seat_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'seat_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'seat_event_id' => " int(11) NOT NULL DEFAULT '0'",
   'seat_category_id' => " int(11) NOT NULL DEFAULT '0'",
   'seat_user_id' => " int(11) DEFAULT NULL",
@@ -425,6 +434,7 @@ $tbls['Seat']['fields'] = array(
   'seat_zone_id' => " int(11) DEFAULT NULL",
   'seat_pmp_id' => " int(11) DEFAULT NULL",
   'seat_nr' => " int(11) NOT NULL DEFAULT '0'",
+  //TODO: Real timestamp. for res_delay
   'seat_ts' => " int(11) DEFAULT NULL",
   'seat_sid' => " varchar(32) DEFAULT NULL",
   'seat_price' => " decimal(10,2) DEFAULT NULL",

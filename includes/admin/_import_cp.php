@@ -58,7 +58,7 @@ class import_cp extends AdminView {
     global $_SHOP;
   
 		if(!empty($_FILES['import_cp_file']) and !empty($_FILES['import_cp_file']['name']) and !empty($_FILES['import_cp_file']['tmp_name'])){
-			require_once('classes/xmldata.php');
+			require_once('classes/class.xmldata.php');
 			
 			XMLData::xml2sql($_FILES['import_cp_file']['tmp_name']);
 			

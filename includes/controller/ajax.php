@@ -60,7 +60,7 @@ if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUE
 		if (isset($_REQUEST['action'])) {
 			$r = $_REQUEST;
 		    $action = clean($_REQUEST['action']); //need to be cleaned so no false data can be included.
-		    require_once("classes/pos_ajax.php");
+		    require_once("classes/ajax.posajax.php");
 		    $PosAjax = new PosAjax($r,$action);
 		    $result = $PosAjax->callAction();
 		}

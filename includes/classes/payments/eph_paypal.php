@@ -33,7 +33,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 
 class EPH_paypal extends payment{
   public $extras = array('pm_paypal_business', 'pm_paypal_test');

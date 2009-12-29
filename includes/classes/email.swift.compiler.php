@@ -153,7 +153,7 @@ class EmailSwiftCompiler {
   private function buildSmarty ($code, $data, $name='', $testme=false){
     global $_SHOP;
     require_once("smarty/Smarty.class.php");
-    require_once("classes/gui_smarty.php");
+    require_once("classes/smarty.gui.php");
 
     $smarty = new Smarty;
     $gui = new gui_smarty($smarty);

@@ -40,7 +40,7 @@ If (!defined('ACQUIRERTIMEOUT')) {
   define ('EXPIRATIONPERIOD','PT10M');
 }
 
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 require_once('ideal/iDEALConnector.php');
 
 class eph_ideal extends payment{

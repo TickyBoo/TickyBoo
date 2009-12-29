@@ -239,7 +239,7 @@ class StatisticView extends AdminView{
       $date = date('Y-m-1');
 
       $query = "select event_date from Event where event_date>='$date' order by event_date,event_time limit 1";
-      require_once('classes/ShopDB.php');
+      require_once('classes/class.shopdb.php');
       if ($row = ShopDB::query_one_row($query, false) and !empty($row[0])){
         list($year, $month) = split('-', $row[0]);
         $start_date = "$year-$month-1";

@@ -37,8 +37,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class Event Extends Model {
   protected $_idName    = 'event_id';
   protected $_tableName = 'Event';
-  protected $_columns   = array('#event_id', '*event_name', 'event_text', 'event_short_text', 'event_url',
-                                'event_image', '#event_ort_id', '#event_pm_id', 'event_date', 'event_time',
+  protected $_columns   = array('#event_id', 'event_created', '*event_name', 'event_text', 'event_short_text', 'event_url',
+                                'event_image', '#event_ort_id', '#event_pm_id', 'event_timestamp', 'event_date', 'event_time',
                                 'event_open', 'event_end', '*event_status', 'event_order_limit', 'event_template',
                                 '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
 
@@ -87,6 +87,7 @@ class Event Extends Model {
             return false;
           }
         }
+        $this->event_timestamp = $this->event_date." ".$this->event_time;
         if (!parent::save()){
           return self::_abort('Cant_save_event');
         } elseif($new && $this->event_pm_id){
@@ -134,6 +135,7 @@ class Event Extends Model {
  	  $event_dates = $this->getEventRecurDates();
 		foreach ($event_dates as $event_date) {
       $this->event_date = $event_date;
+      $this->event_timestamp = $this->event_date." ".$this->event_time;
       unset($this->event_id);
       if (!$this->save(false)) {
         return self::_abort('Cant_create recursion record');

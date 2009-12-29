@@ -41,7 +41,7 @@ class Handling Extends Model {
                                 'handling_fee_percent', 'handling_email_template', 'handling_pdf_template',
                                 'handling_pdf_ticket_template', 'handling_html_template',
                                 'handling_sale_mode', 'handling_extra', 'handling_text_shipment', 'handling_text_payment',
-                                'handling_expires_min', '#handling_alt', 'handling_alt_only' );
+                                'handling_expires_min', '#handling_alt', 'handling_alt_only', 'handling_only_manual_send' );
 
   protected $_pment = null;
   protected $_sment = null;
@@ -129,7 +129,7 @@ class Handling Extends Model {
 
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
-    include_once(INC.'classes'.DS.'TemplateEngine.php');
+    include_once(INC.'classes'.DS.'class.templateengine.php');
     require_once(INC.'classes'.DS.'email.sender.php');
 
     $ok=TRUE;
@@ -141,6 +141,7 @@ class Handling Extends Model {
       $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
+      $order_d['order_old_status'] = $old_state;
 
       if(!EmailSender::send($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));

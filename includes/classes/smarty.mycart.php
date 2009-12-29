@@ -34,7 +34,7 @@
 
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("classes/MyCart.php");
+require_once("classes/class.mycart.php");
 
 class MyCart_Smarty {
   var $error='';

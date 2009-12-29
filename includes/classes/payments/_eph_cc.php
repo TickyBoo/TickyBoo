@@ -33,7 +33,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 class EPH_cc extends payment{
   public $extras = array('pm_cc_pubkey');
 

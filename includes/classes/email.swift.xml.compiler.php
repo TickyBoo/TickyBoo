@@ -73,7 +73,7 @@ class EmailSwiftXMLCompiler {
 
   protected function build (&$swiftInstance, &$data, $lang=0, $testme=false){
     $xml = $this->sourcetext;
-    $this->data = $data;
+    $this->data = &$data;
 
     //Let smarty run
     $xml = $this->buildSmarty($xml,$data);
@@ -115,7 +115,7 @@ class EmailSwiftXMLCompiler {
   private function buildSmarty ($code, $data, $name='', $testme=false){
     global $_SHOP;
     require_once("smarty/Smarty.class.php");
-    require_once("classes/gui_smarty.php");
+    require_once("classes/smarty.gui.php");
 
     $smarty = new Smarty;
     $gui = new gui_smarty($smarty);
@@ -203,6 +203,9 @@ class EmailSwiftXMLCompiler {
     if(isset($langRes['text'])){
       $message->addPart($langRes['text'],'text/plain',is($langRes['text_charset'],"null"));
     }
+    
+    //TODO: Add check for new auto send methods.
+    //if($data['handling_email_template_ord_incl_pdf'])
 
     if(isset($res['order_pdf'])){
       require_once("classes/model.order.php");

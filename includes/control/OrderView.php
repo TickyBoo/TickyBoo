@@ -34,7 +34,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once("classes/AUIComponent.php");
-require_once("classes/gui_smarty.php");
+require_once("classes/smarty.gui.php");
 
 class OrderView extends AUIComponent{
   var $page_length=15;

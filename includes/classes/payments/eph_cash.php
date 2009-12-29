@@ -32,7 +32,7 @@
  * clear to you.
  */
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once('classes/Payment.php');
+require_once('classes/class.payment.php');
 class EPH_cash extends payment{
   public $extras = array();
 
