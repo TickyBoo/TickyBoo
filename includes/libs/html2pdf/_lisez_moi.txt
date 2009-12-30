@@ -6,9 +6,9 @@
 **                                                   **
 **  Copyright 2000-2009 par Laurent Minguet          **
 *******************************************************
-********************************
-* HTML2PDF v3.25 - xx/xx/2009 *
-********************************
+*******************************
+* HTML2PDF v3.27 - xx/12/2009 *
+*******************************
 
 Utilisation :
 ------------
@@ -87,13 +87,23 @@ Utilisation :
          
 Modification :
 -------------
- 3.26 : correctif pour support des images générés en CGI
+ 3.27 : correction sur page_header et page_footer
+        ajout de la possibilité de pouvoir mettre l'index automatique dans la page que l'on veut
+        correction sur la gestion du canal alpha pour les PNGs
+        correction sur la gestion des border-radius (cf exemple radius) conforme au CSS3
+        correction sur la gestion du background-color
+        correction sur la gestion de thead, tfoot, et tbody
+        ajout du dessin verctoriel (cf exemples tigre et draw)
+ 3.26 : correction pour support des images générés en CGI
         ajout de la gestion du canal alpha pour les PNGs (nécessite GD2)
         ajout de la méthode setDefaultFont permettant de spécifier une fonte par défaut
         ajout de la propriété format pour la balise <page> (cf exemple 4)
         amélioration de la gestion des couleurs css RGB (cf exemple 2)
         ajout de la gestion des couleurs css CMYK (cf exemple 2)
-        ajout de la propriété css overflow:hidden pour la balise <div>
+        ajout de la propriété css overflow:hidden pour la balise <div> (cf exemple 2)
+        correction sur page_header et page_footer
+        ajout de la possibilité de pouvoir directement convertir le résultat d'une vraie page HTML
+        nombreux petits correctifs sur les styles
  3.25 : correctif sur le calcul des tableaux dans le page_footer
         correctif sur l'interprétation des espaces entre certaines balises
         correction sur la gestion des balises H1, H2, H3, H4, H5, H6

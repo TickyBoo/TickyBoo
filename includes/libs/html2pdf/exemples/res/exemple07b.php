@@ -42,7 +42,7 @@
 					<tr><td style="width: 40%;">Client :		</td><td style="width: 60%;">M. Albert Dupont</td></tr>
 					<tr><td style="width: 40%;">Adresse :		</td><td style="width: 60%;">Résidence perdue<br>1, rue sans nom<br>00 000 - Pas de Ville</td></tr>
 					<tr><td style="width: 40%;">TEL : 			</td><td style="width: 60%;">33 (0) 1 00 00 00 00</td></tr>
-					<tr><td style="width: 40px;">A</td><td>B</td></tr>
+					<tr><td style="width: 40%;">FAX :			</td><td style="width: 60%;">33 (0) 1 00 00 00 01</td></tr>
 					<tr><td style="width: 40%;">Code Client	:	</td><td style="width: 60%;">00C4520100A</td></tr>
 				</table>
 				<table cellspacing="0" style="width: 100%; border: solid 2px #000000">

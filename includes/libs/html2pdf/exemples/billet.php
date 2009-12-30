@@ -5,7 +5,7 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
  * 
  * isset($_GET['vuehtml']) n'est pas obligatoire
  * il permet juste d'afficher le résultat au format HTML
@@ -28,13 +28,13 @@
 	<div style="rotate: 90; position: absolute; width: 100mm; height: 4mm; left: 195mm; top: 0; font-style: italic; font-weight: normal; text-align: center; font-size: 2.5mm;">
 		Ceci est votre e-ticket à présenter au contrôle d'accès -
 		billet généré par <a href="http://html2pdf.fr/" style="color: #222222; text-decoration: none;">html2pdf</a>
-	</page_footer>
-	<table style="width: 100%;border: none;" cellspacing="4mm" cellpadding="0">
+	</div>
+	<table style="width: 99%;border: none;" cellspacing="4mm" cellpadding="0">
 		<tr>
 			<td colspan="2" style="width: 100%">
 				<div class="zone" style="height: 34mm;position: relative;font-size: 5mm;">
 					<div style="position: absolute; right: 3mm; top: 3mm; text-align: right; font-size: 4mm; ">
-						<b>DUPONT Alphonse</b><br>
+						<b><?php echo $nom; ?></b><br>
 					</div>
 					<div style="position: absolute; right: 3mm; bottom: 3mm; text-align: right; font-size: 4mm; ">
 						<b>1</b> place <b>plein tarif</b><br>
@@ -43,7 +43,7 @@
 						Date d'achat : <b><?php echo date('d/m/Y à H:i:s'); ?></b><br> 
 					</div>
 					<h1>Billet soirée spécial HTML2PDF</h1>
-					&nbsp;&nbsp;&nbsp;&nbsp;<b>Valable le 01/01/2010 à 20h30</b><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;<b>Valable le <?php echo $date; ?> à 20h30</b><br>
 					<img src="./res/logo.gif" alt="logo" style="margin-top: 3mm; margin-left: 20mm">
 				</div>
 			</td>
@@ -51,7 +51,7 @@
 		<tr>
 			<td style="width: 25%;">
 				<div class="zone" style="height: 40mm;vertical-align: middle;text-align: center;">
-					<qrcode value="<?php echo $num; ?>" ec="H" size="4"></qrcode>
+					<qrcode value="<?php echo $num."\n".$nom."\n".$date; ?>" ec="Q" size="4" noborder="noborder" ></qrcode>
 				</div>
 			</td>
 			<td style="width: 75%">

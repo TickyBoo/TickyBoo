@@ -5,7 +5,7 @@
  * permet la gestion de champs de formulaire dans un PDF 
  * Inspiré des sources de http://fpdf.org/fr/script/script36.php et http://fpdf.org/fr/script/script40.php
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
  */
 
 if (!defined('__CLASS_FPDF_FORMULAIRE__'))

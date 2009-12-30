@@ -5,7 +5,7 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
  */
 	require_once(dirname(__FILE__).'/../html2pdf.class.php');
 
@@ -23,9 +23,8 @@
 	// conversion
 	$html2pdf->WriteHTML($content, isset($_GET['vuehtml']));
 	
-	// ajout de l'index (obligatoirement en fin de document)
-	$html2pdf->setNewPage();
-	$html2pdf->CreateIndex('Index', 25, 12);
+	// ajout de l'index (obligatoirement en fin de génération)
+	$html2pdf->CreateIndex('Sommaire', 30, 12, false, true, 2);
 	
 	// envoie du PDF
 	$html2pdf->Output('about.pdf');

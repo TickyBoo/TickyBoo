@@ -10,7 +10,7 @@ C Test overflow<br>C Test overflow<br>C Test overflow<br>';
 div.zone
 {
 	border: solid 2mm #66AACC;
-	border-radius: 3mm 3mm;
+	border-radius: 3mm;
 	padding: 1mm;
 	background-color: #FFEEEE;
 	color: #440000;

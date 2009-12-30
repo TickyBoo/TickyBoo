@@ -5,8 +5,8 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.25 - 07/10/2009
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
+ * @version		3.27 - xx/12/2009
  */
  
 if (!defined('__CLASS_PARSINGHTML__'))
@@ -69,7 +69,11 @@ if (!defined('__CLASS_PARSINGHTML__'))
 						)
 					);
 
-			$balises_no_closed = array('br', 'hr', 'img', 'input', 'link', 'option', 'col');
+			$balises_no_closed = array(
+										'br', 'hr', 'img', 'col', 
+										'input', 'link', 'option',
+										'circle', 'ellipse', 'path', 'rect', 'line', 'polygon', 'polyline'
+								);
 			$todos = array();
 			foreach($tmp as $part)
 			{
@@ -154,7 +158,9 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			$balises_clean = array('page', 'page_header', 'page_footer', 'form',
 									'table', 'thead', 'tfoot', 'tr', 'td', 'th', 'br',
 									'div', 'hr', 'p', 'ul', 'ol', 'li',
-									'h1', 'h2', 'h3', 'h4', 'h5', 'h6');
+									'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+									'bookmark',
+									'draw', 'circle', 'ellipse', 'path', 'rect', 'line', 'g', 'polygon', 'polyline');
 			$nb = count($todos);
 			for($k=0; $k<$nb; $k++)
 			{
@@ -323,8 +329,11 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			}
 			if ($border!==null)
 			{
-				if ($border)	$param['style'] = 'border: solid '.$border.' '.$color.'; '.$param['style'];
-				else			$param['style'] = 'border: none'.$param['style']; 
+				if ($border)	$border = 'border: solid '.$border.' '.$color;
+				else			$border = 'border: none';
+				
+				$param['style'] = $border.'; '.$param['style'];
+				$param['border'] = $border; 
 			}
 			
 			// lecture des styles - décomposition

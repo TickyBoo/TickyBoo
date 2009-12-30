@@ -1,3 +1,16 @@
+	<style type="text/css">
+<!--
+div.special { margin: auto; width:95%; border:1px solid #000000; padding: 2px; }
+div.special table	{ width:100%; border:1px solid #000000; font-size:10px; border-collapse:collapse; }
+.topLeftRight	{ border-top:1px solid #000; border-left:1px solid #000; border-right:1px solid #000;}
+.topLeftBottom	{ border-top:1px solid #000; border-left:1px solid #000; border-bottom:1px solid #000; }
+.topLeft		{ border-top:1px solid #000; border-left:1px solid #000; }
+.bottomLeft		{ border-bottom:1px solid #000; border-left:1px solid #000; }
+.topRight		{ border-top:1px solid #000; border-right:1px solid #000; }
+.bottomRight	{ border-bottom:1px solid #000; border-right:1px solid #000; }
+.topRightBottom	{ border-top:1px solid #000; border-bottom:1px solid #000; border-right:1px solid #000; }
+-->
+</style>
 <page style="font-size: 16px">
 	Vous pouvez choisir le format et l'orientation de votre document, en utilisant ceci :<br>
 	<br>
@@ -56,4 +69,16 @@
 			<td style="width: 30%; border: solid 1px #0000FF;">CCC</td>
 		</tr>
 	</table>
+	<br>
+	<div class="special">
+		<table>
+			<tr>
+				<td colspan="2" class="topLeftRight" style="width: 100%; text-align:left;border-bottom:1px dashed #000000">blabla blabla</td>
+			</tr>
+			<tr>
+				<td class="bottomLeft" style="width:70%;border-right:1px dashed #000000;text-align:left;">blabla blabla</td>
+				<td class="bottomRight" style="width: 30%; text-align:left;vertical-align:top;">Date :<br /> Signature :</td>
+			</tr>
+		</table>
+	</div>
 </page>

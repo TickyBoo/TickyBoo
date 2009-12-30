@@ -25,6 +25,6 @@
 	
 	require_once(dirname(__FILE__).'/../html2pdf.class.php');
 	$html2pdf = new HTML2PDF('P','A4','fr');
-	$html2pdf->pdf->IncludeJS("print(true);");
+	$html2pdf->pdf->IncludeJS("print(false);");
 	$html2pdf->WriteHTML($content, isset($_GET['vuehtml']));
 	$html2pdf->Output('js1.pdf');

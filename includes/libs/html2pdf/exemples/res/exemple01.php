@@ -34,9 +34,9 @@ table.morpion td.j2 { color: #A00; }
 		test<sub>test<sup>test</sup></sub>.
 	</span><br>
 	<br>
-	<table align="center" style="border-radius: 6mm 6mm; border-top: solid 3mm #000077; border-right: solid 2mm #007700; border-bottom: solid 1mm #770000;	border-left: solid 2mm #007777;	background: #DDDDAA;" ><tr><td style="width: 100mm; height: 20mm; text-align: center; ">Coucou ! ceci est un border solid avec un radius !!! </td></tr></table>
+	<table align="center" style="border-radius: 6mm; border-top: solid 3mm #000077; border-right: solid 2mm #007700; border-bottom: solid 1mm #770000;	border-left: solid 2mm #007777;	background: #DDDDAA;" ><tr><td style="width: 100mm; height: 20mm; text-align: center; ">Coucou ! ceci est un border solid avec un radius !!! </td></tr></table>
 	<br>
-	<table align="center" style="border-radius: 6mm 6mm; border: none; background: #DDDDAA;" ><tr><td style="width: 100mm; height: 20mm; text-align: center; ">Coucou ! ceci est un background avec un radius !!! </td></tr></table>
+	<table align="center" style="border-radius: 6mm; border: none; background: #DDDDAA;" ><tr><td style="width: 100mm; height: 20mm; text-align: center; ">Coucou ! ceci est un background avec un radius !!! </td></tr></table>
 	<br>
 	<table align="center" style="border: solid 1px #000000;"><tr><td style=" border-top: solid 4mm #000077;	border-right: solid 3mm #007700;	border-bottom: solid 2mm #770000;	border-left:	solid 1mm #007777;	padding: 2mm 4mm 6mm 8mm; width: 100mm; background: #FFDDDD">Coucou ! ceci est un border solid</td></tr></table>
 	<br>

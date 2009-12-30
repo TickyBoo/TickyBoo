@@ -2,7 +2,7 @@
 <!--
 	table.page_header {width: 100%; border: none; background-color: #DDDDFF; border-bottom: solid 1mm #AAAADD; padding: 2mm }
 	table.page_footer {width: 100%; border: none; background-color: #DDDDFF; border-top: solid 1mm #AAAADD; padding: 2mm}
-	div.note {border: solid 1mm #DDDDDD;background-color: #EEEEEE; padding: 2mm; border-radius: 2mm 2mm; width: 100%; }
+	div.note {border: solid 1mm #DDDDDD;background-color: #EEEEEE; padding: 2mm; border-radius: 2mm; width: 100%; }
 	ul.main { width: 95%; list-style-type: square; }
 	ul.main li { padding-bottom: 2mm; }
 	h1 { text-align: center; font-size: 20mm}
@@ -44,7 +44,7 @@
 	<br><br><br><br><br>
 	<div style="text-align: center; width: 100%;">
 		<br>
-		<img src="./res/logo.gif" alt="Logo HTML2PDF" style="width: 150mm">
+		<img src="./res/logo.png" alt="Logo HTML2PDF" style="width: 150mm">
 		<br>
 	</div>
 	<br><br><br><br><br>
@@ -57,6 +57,10 @@
 		<br>
 		Vous pouvez télécharger la dernière version de HTML2PDF ici : <a href="http://html2pdf.fr/">http://html2pdf.fr/</a>.<br>
 	</div>
+</page>
+<page pageset="old">
+	<bookmark title="Sommaire" level="0" ></bookmark>
+	<!-- ici se trouvera l'index -->
 </page>
 <page pageset="old">
 	<bookmark title="Compatibilité" level="0" ></bookmark>	
@@ -90,6 +94,7 @@
 		<li>&lt;ol&gt;, &lt;ul&gt;, &lt;li&gt;</li>
 		<li>&lt;form&gt;, &lt;input&gt;, &lt;textarea&gt;, &lt;select&gt;, &lt;option&gt;</li>
 		<li>&lt;del&gt;, &lt;ins&gt;</li>
+		<li>&lt;draw&gt;, &lt;line&gt;, &lt;rect&gt;, &lt;circle&gt;, &lt;ellipse&gt;, &lt;polygone&gt;, &lt;polyline&gt;, &lt;path&gt;</li>
 	</ul>
 	<bookmark title="Balises spécifiques" level="2" ></bookmark>	
 	<div class="note">
@@ -145,21 +150,20 @@
 					<li>right</li>
 					<li>float</li>
 					<li>rotate</li>
-				</ul>
-			</td>
-			<td style="width: 50%">
-				<ul class="main">
 					<li>background</li>
 					<li>background-color</li>
 					<li>background-image</li>
 					<li>background-position</li>
 					<li>background-repeat</li>
+				</ul>
+			</td>
+			<td style="width: 50%">
+				<ul class="main">
 					<li>border</li>
 					<li>border-style</li>
 					<li>border-color</li>
 					<li>border-width</li>
 					<li>border-collapse</li>
-					<li>border-radius</li>
 					<li>border-top</li>
 					<li>border-top-style</li>
 					<li>border-top-color</li>
@@ -176,6 +180,11 @@
 					<li>border-left-style</li>
 					<li>border-left-color</li>
 					<li>border-left-width</li>
+					<li>border-radius</li>
+					<li>border-top-left-radius</li>
+					<li>border-top-right-radius</li>
+					<li>border-bottom-left-radius</li>
+					<li>border-bottom-right-radius</li>
 					<li>list-style</li>
 					<li>list-style-type</li>
 					<li>list-style-image</li>
@@ -183,6 +192,8 @@
 			</td>
 		</tr>
 	</table>
+</page>
+<page pageset="old">
 	<bookmark title="Propriétés" level="1" ></bookmark>	
 	<div class="note">
 		La liste des propriétés utilisables est la suivante :<br>
@@ -212,8 +223,6 @@
 			</td>
 		</tr>
 	</table>
-</page>
-<page pageset="old">
 	<bookmark title="Limitations" level="0" ></bookmark>	
 	<div class="note">
 		Cette librairie comporte des limitations :<br>
@@ -224,5 +233,6 @@
 		<li>Elle ne permet généralement pas la conversion directe d'une page HTML en PDF, ni la conversion du résultat d'un WYSIWYG en PDF.</li>
 		<li>Cette librairie est là pour faciliter la génération de documents PDF, pas pour convertir n'importe quelle page HTML.</li>
 		<li>Les formulaires ne marchent qu'à partir de la version <b>9</b> de <b>Adobe Reader</b>.</li>
+		<li>Lisez bien le wiki : <a href="http://wiki.spipu.net/doku.php?id=html2pdf:Accueil">http://wiki.spipu.net/doku.php?id=html2pdf:Accueil</a>.</li>
 	</ul>
 </page>

@@ -315,6 +315,7 @@ class Order Extends Model {
 
   function Check_payment($order_id){
     $order = Order::load($order_id, true);
+    var_dump($order);
     if ($order && $order->order_handling) {
       return $order->order_handling->on_check($order);
     } else {

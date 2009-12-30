@@ -20,6 +20,13 @@
 	<br>
 	<br>
 	<table style="width: 80%;border: solid 1px #5544DD; border-collapse: collapse" align="center">
+		<thead>
+			<tr>
+				<th style="width: 30%; text-align: left; border: solid 1px #337722; background: #CCFFCC">Header 1</th>
+				<th style="width: 30%; text-align: left; border: solid 1px #337722; background: #CCFFCC">Header 2</th>
+			</tr>
+		</thead>
+		<tbody>
 <?php for($k=0; $k<13; $k++) { ?>
 		<tr>
 			<td style="width: 30%; text-align: left; border: solid 1px #55DD44">
@@ -35,6 +42,13 @@
 			</td>
 		</tr>
 <?php } ?>
+		</tbody>
+		<tfoot>
+			<tr>
+				<th style="width: 30%; text-align: left; border: solid 1px #337722; background: #CCFFCC">Footer 1</th>
+				<th style="width: 30%; text-align: left; border: solid 1px #337722; background: #CCFFCC">Footer 2</th>
+			</tr>
+		</tfoot>
 	</table>
 	<br>
 	Ca marche !!!<br>

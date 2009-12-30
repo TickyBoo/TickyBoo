@@ -123,7 +123,7 @@ require_once(dirname(__FILE__).'/00_fpdf_codebar.class.php');
 			}
 		}
 		
-		function CreateIndex(&$obj, $titre = 'Index', $size_title = 20, $size_bookmark = 15, $bookmark_title = true, $display_page = true)
+		function CreateIndex(&$obj, $titre = 'Index', $size_title = 20, $size_bookmark = 15, $bookmark_title = true, $display_page = true, $page = null)
 		{
 			if ($bookmark_title) $this->Bookmark($titre, 0, -1);
 			
@@ -139,7 +139,7 @@ require_once(dirname(__FILE__).'/00_fpdf_codebar.class.php');
 			{
 				if ($this->getY()+$this->FontSize>=($this->h - $this->bMargin))
 				{
-					$obj->setNewPage();
+					$obj->INDEX_NewPage($page);
 					$this->SetFontSize($size_bookmark);
 				}
 				

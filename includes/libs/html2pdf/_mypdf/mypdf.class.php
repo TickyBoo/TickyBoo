@@ -5,8 +5,8 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.26 - xx/xx/2009
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
+ * @version		3.27 - xx/12/2009
  */
 
 if (!defined('__CLASS_MYPDF__'))
@@ -22,6 +22,7 @@ if (!defined('__CLASS_MYPDF__'))
 		var $underline		= false;
 		var $overline		= false;
 		var $linethrough	= false;
+		var $transf			= array();
 			
 		function MyPDF($sens = 'P', $unit = 'mm', $format = 'A4')
 		{
@@ -403,6 +404,41 @@ if (!defined('__CLASS_MYPDF__'))
 			$this->_out($path . 'f');
 		}
 		
+		function drawCoin($ext1_x, $ext1_y, $ext2_x, $ext2_y, $int_x, $int_y, $cen_x, $cen_y)
+		{
+			$MyArc = 4/3 * (sqrt(2) - 1);
+			
+			$ext1_x = $ext1_x*$this->k; $ext1_y = ($this->h-$ext1_y)*$this->k;
+			$ext2_x = $ext2_x*$this->k; $ext2_y = ($this->h-$ext2_y)*$this->k;
+			$int_x  = $int_x*$this->k;  $int_y  = ($this->h-$int_y)*$this->k;
+			$cen_x	= $cen_x*$this->k;	$cen_y	= ($this->h-$cen_y) *$this->k;
+			
+			$path = '';
+			
+			if ($ext1_x-$cen_x!=0)
+			{
+				$xt1 = $cen_x+($ext1_x-$cen_x);
+				$yt1 = $cen_y+($ext2_y-$cen_y)*$MyArc;
+				$xt2 = $cen_x+($ext1_x-$cen_x)*$MyArc;
+				$yt2 = $cen_y+($ext2_y-$cen_y);
+			}
+			else
+			{
+				$xt1 = $cen_x+($ext2_x-$cen_x)*$MyArc;
+				$yt1 = $cen_y+($ext1_y-$cen_y);
+				$xt2 = $cen_x+($ext2_x-$cen_x);
+				$yt2 = $cen_y+($ext1_y-$cen_y)*$MyArc;
+
+			}
+
+			$path.= sprintf('%.2F %.2F m ', $ext1_x, $ext1_y);
+			$path.= sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c ', $xt1, $yt1, $xt2, $yt2, $ext2_x, $ext2_y);
+			$path.= sprintf('%.2F %.2F l ', $int_x, $int_y);
+			$path.= sprintf('%.2F %.2F l ', $ext1_x, $ext1_y);
+			
+			$this->_out($path . 'f');
+		}
+				
 		function startTransform()
 		{
 			$this->_out('q');
@@ -491,6 +527,365 @@ if (!defined('__CLASS_MYPDF__'))
 		{
 			$this->x=$this->lMargin;
 			$this->y=$y;
+		}
+		
+		function SetXY($x, $y)
+		{
+			$this->x=$x;
+			$this->y=$y;
+		}
+
+		function svgRect($x, $y, $w, $h, $style)
+		{
+			$xa=$x; $xb=$x+$w; $xc=$x+$w; $xd=$x;
+			$ya=$y; $yb=$y; $yc=$y+$h; $yd=$y+$h;
+			
+			if($style=='F') $op='f';
+			elseif($style=='FD' || $style=='DF') $op='B';
+			else $op='S';
+			$this->_Point($xa, $ya, true);
+			$this->_Line($xb, $yb, true);
+			$this->_Line($xc, $yc, true);
+			$this->_Line($xd, $yd, true);
+			$this->_Line($xa, $ya, true);
+			$this->_out($op);
+		}
+
+		function svgLine($x1, $y1, $x2, $y2)
+		{
+			$op='S';
+			$this->_Point($x1, $y1, true);
+			$this->_Line($x2, $y2, true);
+			$this->_out($op);
+		}
+		
+		function svgEllipse($x0, $y0, $rx, $ry, $style)
+		{
+			if($style=='F') $op='f';
+			elseif($style=='FD' || $style=='DF') $op='B';
+			else $op='S';
+			
+			$this->_Arc($x0, $y0, $rx, $ry, 0, 2*M_PI, true, true, true);
+			$this->_out($op);
+		}
+
+		function svgPolygone($actions, $style)
+		{
+			if($style=='F') $op='f';
+			elseif($style=='FD' || $style=='DF') $op='B';
+			else $op='S';
+
+			$first = array('', 0, 0);
+			$last = array(0, 0, 0, 0);
+			
+			foreach($actions as $action)
+			{
+				switch($action[0])
+				{
+					case 'M':
+					case 'm':
+						$first = $action;
+						$x = $action[1]; $y = $action[2]; $xc = $x; $yc = $y;
+						$this->_Point($x, $y, true);
+						break;
+							
+					case 'Z':
+					case 'z':
+						$x = $first[1]; $y = $first[2]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+					break;	
+
+					case 'L':
+						$x = $action[1]; $y = $action[2]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+						break;
+						
+					case 'l':
+						$x = $last[0]+$action[1]; $y = $last[1]+$action[2]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+						break;
+						
+					case 'H':
+						$x = $action[1]; $y = $last[1]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+						break;	
+							
+					case 'h':
+						$x = $last[0]+$action[1]; $y = $last[1]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+						break;	
+							
+					case 'V':
+						$x = $last[0]; $y = $action[1]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+						break;	
+
+					case 'v':
+						$x = $last[0]; $y = $last[1]+$action[1]; $xc = $x; $yc = $y;
+						$this->_Line($x, $y, true);
+						break;	
+
+					case 'A':
+						$rx = $action[1];	// rx
+						$ry = $action[2];	// ry
+						$a = $action[3];	// angle de deviation de l'axe X
+						$l = $action[4];	// large-arc-flag 
+						$s = $action[5];	// sweep-flag
+						$x1 = $last[0];		// begin x
+						$y1 = $last[1];		// begin y
+						$x2 = $action[6];	// final x
+						$y2 = $action[7];	// final y
+						
+						$this->_Arc2($x1, $y1, $x2, $y2, $rx, $ry, $a, $l, $s, true);
+						
+						$x = $x2; $y = $y2; $xc = $x; $yc = $y;
+						break;
+
+					case 'a':
+						$rx = $action[1];	// rx
+						$ry = $action[2];	// ry
+						$a = $action[3];	// angle de deviation de l'axe X
+						$l = $action[4];	// large-arc-flag 
+						$s = $action[5];	// sweep-flag
+						$x1 = $last[0];		// begin x
+						$y1 = $last[1];		// begin y
+						$x2 = $last[0]+$action[6];	// final x
+						$y2 = $last[1]+$action[7];	// final y
+						
+						$this->_Arc2($x1, $y1, $x2, $y2, $rx, $ry, $a, $l, $s, true);
+						
+						$x = $x2; $y = $y2; $xc = $x; $yc = $y;
+						break;
+
+					case 'C':
+						$x1 = $action[1];
+						$y1 = $action[2];
+						$x2 = $action[3];
+						$y2 = $action[4];
+						$xf = $action[5];
+						$yf = $action[6];
+						$this->_Curve($x1, $y1, $x2, $y2,$xf, $yf, true);
+						$x = $xf; $y = $yf; $xc = $x2; $yc = $y2;
+						break;
+
+					case 'c':
+						$x1 = $last[0]+$action[1];
+						$y1 = $last[1]+$action[2];
+						$x2 = $last[0]+$action[3];
+						$y2 = $last[1]+$action[4];
+						$xf = $last[0]+$action[5];
+						$yf = $last[1]+$action[6];
+						$this->_Curve($x1, $y1, $x2, $y2,$xf, $yf, true);
+						$x = $xf; $y = $yf; $xc = $x2; $yc = $y2;
+						break;
+
+					default:
+						echo 'MyPDF Path : <b>'.$action[0].'</b> non reconnu...';
+						exit;
+				}
+				$last = array($x, $y, $xc, $yc);
+			}
+			$this->_out($op);
+		}
+
+		function _Point($x, $y, $trans = false)
+		{
+			if ($trans) $this->ptTransform($x, $y);
+			
+			$this->_out(sprintf('%.2F %.2F m', $x, $y));
+		}
+		
+		function _Line($x, $y, $trans = false)
+		{
+			if ($trans) $this->ptTransform($x, $y);
+
+			$this->_out(sprintf('%.2F %.2F l', $x, $y));
+		}
+		
+		function _Curve($x1, $y1, $x2, $y2, $x3, $y3, $trans = false)
+		{
+			if ($trans)
+			{
+				$this->ptTransform($x1, $y1);
+				$this->ptTransform($x2, $y2);
+				$this->ptTransform($x3, $y3);
+			}
+			$this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c', $x1, $y1, $x2, $y2, $x3, $y3));
+		}
+		
+		function _Arc($xc, $yc, $rx, $ry, $a_debut, $a_fin, $sens = true, $draw_first = true, $trans=false)
+		{
+			$nSeg = 8;
+		
+			if (!$sens) $a_debut+= M_PI*2.;
+			 
+			$totalAngle = $a_fin - $a_debut;
+			$dt = $totalAngle/$nSeg;
+			$dtm = $dt/3;
+		
+			$x0 = $xc; $y0 = $yc;
+		
+			$t1 = $a_debut;
+			$a0 = $x0 + ($rx * cos($t1));
+			$b0 = $y0 + ($ry * sin($t1));
+			$c0 = -$rx * sin($t1);
+			$d0 = $ry * cos($t1);
+			if ($draw_first) $this->_Point($a0, $b0, $trans);
+			for ($i = 1; $i <= $nSeg; $i++)
+			{
+				// Draw this bit of the total curve
+				$t1 = ($i * $dt)+$a_debut;
+				$a1 = $x0 + ($rx * cos($t1));
+				$b1 = $y0 + ($ry * sin($t1));
+				$c1 = -$rx * sin($t1);
+				$d1 = $ry * cos($t1);
+				$this->_Curve(
+						$a0 + ($c0 * $dtm), $b0 + ($d0 * $dtm),
+						$a1 - ($c1 * $dtm), $b1 - ($d1 * $dtm),
+						$a1, $b1,
+						$trans
+					);
+				$a0 = $a1;
+				$b0 = $b1;
+				$c0 = $c1;
+				$d0 = $d1;
+			}
+		}
+		
+		function _Arc2($x1, $y1, $x2, $y2, $rx, $ry, $a=0, $l=0, $s=0, $trans = false)
+		{
+			$v = array();
+			$v['x1'] = $x1;
+			$v['y1'] = $y1;
+			$v['x2'] = $x2;
+			$v['y2'] = $y2;
+			$v['rx'] = $rx;
+			$v['ry'] = $ry;
+			$v['xr1'] = $v['x1']*cos($a) - $v['y1']*sin($a); 
+			$v['yr1'] = $v['x1']*sin($a) + $v['y1']*cos($a); 
+			$v['xr2'] = $v['x2']*cos($a) - $v['y2']*sin($a); 
+			$v['yr2'] = $v['x2']*sin($a) + $v['y2']*cos($a); 
+			$v['Xr1'] = $v['xr1']/$v['rx']; 
+			$v['Yr1'] = $v['yr1']/$v['ry']; 
+			$v['Xr2'] = $v['xr2']/$v['rx']; 
+			$v['Yr2'] = $v['yr2']/$v['ry']; 
+			$v['dXr'] = $v['Xr2'] - $v['Xr1'];
+			$v['dYr'] = $v['Yr2'] - $v['Yr1'];
+			$v['D'] = $v['dXr']*$v['dXr'] + $v['dYr']*$v['dYr']; 
+			
+			if ($v['D']==0 || $v['D']>4)
+			{
+				$this->_Line($x2, $y2, $trans);
+				return false;
+			}
+			
+			$v['s1'] = array();
+			$v['s2'] = array();
+			$v['s1']['t'] = sqrt((4.-$v['D'])/$v['D']);
+			$v['s1']['Xr'] = ($v['Xr1']+$v['Xr2'])/2. + $v['s1']['t']*($v['Yr2']-$v['Yr1'])/2.;
+			$v['s1']['Yr'] = ($v['Yr1']+$v['Yr2'])/2. + $v['s1']['t']*($v['Xr1']-$v['Xr2'])/2.;
+			$v['s1']['xr'] = $v['s1']['Xr']*$v['rx'];
+			$v['s1']['yr'] = $v['s1']['Yr']*$v['ry'];
+			$v['s1']['x'] = $v['s1']['xr']*cos($a)+$v['s1']['yr']*sin($a); 
+			$v['s1']['y'] =-$v['s1']['xr']*sin($a)+$v['s1']['yr']*cos($a); 
+			$v['s1']['a1'] = atan2($v['y1']-$v['s1']['y'], $v['x1']-$v['s1']['x']); 
+			$v['s1']['a2'] = atan2($v['y2']-$v['s1']['y'], $v['x2']-$v['s1']['x']); 
+			if ($v['s1']['a1']>$v['s1']['a2']) $v['s1']['a1']-=2*M_PI;
+			
+			$v['s2']['t'] = -$v['s1']['t'];
+			$v['s2']['Xr'] = ($v['Xr1']+$v['Xr2'])/2. + $v['s2']['t']*($v['Yr2']-$v['Yr1'])/2.;
+			$v['s2']['Yr'] = ($v['Yr1']+$v['Yr2'])/2. + $v['s2']['t']*($v['Xr1']-$v['Xr2'])/2.;
+			$v['s2']['xr'] = $v['s2']['Xr']*$v['rx']; 
+			$v['s2']['yr'] = $v['s2']['Yr']*$v['ry']; 
+			$v['s2']['x'] = $v['s2']['xr']*cos($a)+$v['s2']['yr']*sin($a); 
+			$v['s2']['y'] =-$v['s2']['xr']*sin($a)+$v['s2']['yr']*cos($a); 
+			$v['s2']['a1'] = atan2($v['y1']-$v['s2']['y'], $v['x1']-$v['s2']['x']); 
+			$v['s2']['a2'] = atan2($v['y2']-$v['s2']['y'], $v['x2']-$v['s2']['x']); 
+			if ($v['s2']['a1']>$v['s2']['a2']) $v['s2']['a1']-=2*M_PI;
+			
+			if (!$l)
+			{
+				if ($s)
+				{
+					$xc = $v['s2']['x'];
+					$yc = $v['s2']['y'];
+					$a1 = $v['s2']['a1'];
+					$a2 = $v['s2']['a2'];
+					$this->_Arc($xc, $yc, $rx, $ry, $a1, $a2, true, false, $trans);
+					
+				}
+				else
+				{
+					$xc = $v['s1']['x'];
+					$yc = $v['s1']['y'];
+					$a1 = $v['s1']['a1'];
+					$a2 = $v['s1']['a2'];
+					$this->_Arc($xc, $yc, $rx, $ry, $a1, $a2, false, false, $trans);
+				}
+			}
+			else
+			{
+				if ($s)
+				{
+					$xc = $v['s1']['x'];
+					$yc = $v['s1']['y'];
+					$a1 = $v['s1']['a1'];
+					$a2 = $v['s1']['a2'];
+					$this->_Arc($xc, $yc, $rx, $ry, $a1, $a2, true, false, $trans);
+				}
+				else
+				{
+					$xc = $v['s2']['x'];
+					$yc = $v['s2']['y'];
+					$a1 = $v['s2']['a1'];
+					$a2 = $v['s2']['a2'];
+					$this->_Arc($xc, $yc, $rx, $ry, $a1, $a2, false, false, $trans);
+				}
+			}
+		}
+		
+		function ptTransform(&$x,  &$y, $trans=true)
+		{
+			$nb = count($this->transf);
+			if ($nb)	$m = $this->transf[$nb-1];
+			else		$m = array(1,0,0,1,0,0);
+			
+			list($x,$y) = array(($x*$m[0]+$y*$m[2]+$m[4]),($x*$m[1]+$y*$m[3]+$m[5]));
+			
+			if ($trans)
+			{
+				$x = $x*$this->k;
+				$y = ($this->h-$y)*$this->k;
+			}
+			
+			return true;
+		}
+	
+		function doTransform($n = null)
+		{
+			$nb = count($this->transf);
+			if ($nb)	$m = $this->transf[$nb-1];
+			else		$m = array(1,0,0,1,0,0);
+			
+			if (!$n) $n = array(1,0,0,1,0,0);
+
+			$n = array(
+					$m[0]*$n[0]+$m[2]*$n[1],
+					$m[1]*$n[0]+$m[3]*$n[1],
+					$m[0]*$n[2]+$m[2]*$n[3],
+					$m[1]*$n[2]+$m[3]*$n[3],
+					$m[0]*$n[4]+$m[2]*$n[5]+$m[4],  
+					$m[1]*$n[4]+$m[3]*$n[5]+$m[5]  
+				);	
+				
+//			echo 'do-'.count($this->transf).' => '.print_r($n, true).'<br>';
+			$this->transf[] = $n;
+		}
+		
+		function undoTransform()
+		{
+			array_pop($this->transf);
+//			echo 'un-'.count($this->transf).'<br>';
 		}
 	}
 }

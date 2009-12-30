@@ -1045,26 +1045,9 @@ function Output($name='', $dest='')
 			ini_set('zlib.output_compression','0');
 			echo $this->buffer;
 			break;
-		case 'P':
-		
-		//"Content-type"=>"application/x-print-pdf",
-    //"Content-Disposition"=>$order_file_name.".pdt"
-			//Download file
-			if(ob_get_length())
-				$this->Error('Some data has already been output, can\'t send PDF file');
-			header('Content-Type: application/x-print-pdf');
-			if(headers_sent())
-				$this->Error('Some data has already been output, can\'t send PDF file');
-			header('Content-Length: '.strlen($this->buffer));
-			header('Content-Disposition: attachment; filename="'.$name.'.pdt"');//".pdt".
-			header('Cache-Control: private, max-age=0, must-revalidate');
-			header('Pragma: public');
-			ini_set('zlib.output_compression','0');
-			echo $this->buffer;
-			break;
 		case 'F':
 			//Save to local file
-			$f=fopen($name.'.pdf','wb');
+			$f=fopen($name,'wb');
 			if(!$f)
 				$this->Error('Unable to create output file: '.$name);
 			fwrite($f,$this->buffer,strlen($this->buffer));

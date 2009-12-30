@@ -115,7 +115,7 @@ if (!defined('__CLASS_FPDF_ALPHA__'))
 			}
 			else // modification by spipu :) pas besoin de tracer l'image si c'est pour faire un mask !!!!
 			{
-				$this->_out(sprintf('q %.2f 0 0 %.2f %.2f %.2f cm /I%d Do Q',$w*$this->k,$h*$this->k,$x*$this->k,($this->h-($y+$h))*$this->k,$info['i']));
+				$this->_out(sprintf('q %.2F 0 0 %.2F %.2F %.2F cm /I%d Do Q',$w*$this->k,$h*$this->k,$x*$this->k,($this->h-($y+$h))*$this->k,$info['i']));
 				if($link) $this->Link($x,$y,$w,$h,$link);
 			}
 		
@@ -126,9 +126,9 @@ if (!defined('__CLASS_FPDF_ALPHA__'))
 		// pixel-wise operation, not very fast
 		function ImagePngWithAlpha($file,$x,$y,$w=0,$h=0,$link='')
 		{
-			$tmp_alpha = tempnam('.', 'mska');
+			$tmp_alpha = tempnam(null, 'mska');
 			$this->tmpFiles[] = $tmp_alpha;
-			$tmp_plain = tempnam('.', 'mskp');
+			$tmp_plain = tempnam(null, 'mskp');
 			$this->tmpFiles[] = $tmp_plain;
 		
 			list($wpx, $hpx) = @getimagesize($file);

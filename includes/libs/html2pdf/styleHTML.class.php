@@ -5,8 +5,8 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.25 - 07/10/2009
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
+ * @version		3.27 - xx/12/2009
  */
  
 if (!defined('__CLASS_STYLEHTML__'))
@@ -278,7 +278,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		function resetStyle($balise = '')
 		{
 			$collapse = isset($this->value['border']['collapse']) ? $this->value['border']['collapse'] : false;
-			if (!in_array($balise, array('tr', 'td', 'th'))) $collapse = false;
+			if (!in_array($balise, array('tr', 'td', 'th', 'thead', 'tbody', 'tfoot'))) $collapse = false;
 			
 			$this->value['position']			= null;
 			$this->value['x']					= null;
@@ -299,7 +299,12 @@ if (!defined('__CLASS_STYLEHTML__'))
 										'r' => $this->readBorder('none'),
 										'b' => $this->readBorder('none'),
 										'l' => $this->readBorder('none'),
-										'radius' => array(0, 0),
+										'radius' => array(
+											'tl' => array(0, 0),
+											'tr' => array(0, 0),
+											'br' => array(0, 0),
+											'bl' => array(0, 0)
+										),
 										'collapse' => $collapse,
 									);
 									
@@ -347,7 +352,12 @@ if (!defined('__CLASS_STYLEHTML__'))
 										'r' => $this->readBorder('solid 1px #000000'),
 										'b' => $this->readBorder('solid 1px #000000'),
 										'l' => $this->readBorder('solid 1px #000000'),
-										'radius' => array(0, 0),
+										'radius' => array(
+											'tl' => array(0, 0),
+											'tr' => array(0, 0),
+											'br' => array(0, 0),
+											'bl' => array(0, 0)
+										),
 										'collapse' => false,
 									);
 				$this->ConvertBackground('#FFFFFF', $this->value['background']);
@@ -487,7 +497,74 @@ if (!defined('__CLASS_STYLEHTML__'))
 		 * @param	array	tableau de style
 		 * @return	null
 		 */			
-		function analyse($balise, &$param)
+		
+		function getSvgStyle($balise, &$param)
+		{
+			// preparation
+			$balise = strtolower($balise);
+			$id		= isset($param['id'])		? strtolower(trim($param['id']))	: null; if (!$id)	$id		= null;
+			$name	= isset($param['name'])		? strtolower(trim($param['name']))	: null; if (!$name)	$name	= null;
+			
+			// lecture de la propriete classe
+			$class = array();
+			$tmp	= isset($param['class'])	? preg_replace('/[\s]+/', ' ', strtolower($param['class']))	: '';
+			$tmp = explode(' ', $tmp);
+			foreach($tmp as $k => $v)
+			{
+				$v = trim($v);
+				if ($v) $class[] = $v;
+			}
+			
+			// identification de la balise et des styles direct qui pourraient lui être appliqués
+			$this->value['id_balise']	= $balise;
+			$this->value['id_name']		= $name;
+			$this->value['id_id']		= $id;
+			$this->value['id_class']	= $class;
+			$this->value['id_lst']		= array();
+			$this->value['id_lst'][] = '*';
+			$this->value['id_lst'][] = $balise;
+			if (count($class))
+			{
+				foreach($class as $v)
+				{ 
+					$this->value['id_lst'][] = '*.'.$v;
+					$this->value['id_lst'][] = '.'.$v;
+					$this->value['id_lst'][] = $balise.'.'.$v;
+				}
+			}
+			if ($id)
+			{
+				$this->value['id_lst'][] = '*#'.$id;
+				$this->value['id_lst'][] = '#'.$id;
+				$this->value['id_lst'][] = $balise.'#'.$id;
+			}
+			
+			// style CSS
+			$styles = $this->getFromCSS();
+
+			// on ajoute le style propre à la balise
+			$styles = array_merge($styles, $param['style']);
+			
+			$styles['stroke']		= isset($styles['stroke'])			? $this->ConvertToColor($styles['stroke'],	$res)	: null;
+			$styles['fill']			= isset($styles['fill'])			? $this->ConvertToColor($styles['fill'],	$res)	: null;
+			$styles['stroke-width']	= isset($styles['stroke-width'])	? $this->ConvertToMM($styles['stroke-width'])		: null;
+			$styles['fill-opacity']	= isset($styles['fill-opacity'])	? 1.*$styles['fill-opacity']		: null;
+
+			if (!$styles['stroke-width'])	$styles['stroke']		= null;	
+			if (!$styles['stroke'])			$styles['stroke-width']	= null;	
+			
+			return $styles;
+		}
+		
+		/**
+		 * Analyse un tableau de style provenant du parseurHTML
+		 *
+		 * @param	string	nom de la balise
+		 * @param	array	tableau de style
+		 * @param	array	tableau initialisant des styles
+		 * @return	null
+		 */			
+		function analyse($balise, &$param, $heritage = null)
 		{
 			// preparation
 			$balise = strtolower($balise);
@@ -537,6 +614,19 @@ if (!defined('__CLASS_STYLEHTML__'))
 
 			// mise à zero des styles non hérités
 			$this->resetStyle($balise);
+			if ($heritage)
+			{
+				foreach($heritage as $he_nom => $he_val)
+				{
+					if (is_array($he_val))
+					{
+						foreach($he_val as $he2_nom => $he2_val)
+							$this->value[$he_nom][$he2_nom] = $he2_val;
+					}
+					else
+						$this->value[$he_nom] = $he_val;
+				}
+			}
 					
 			// interpreration des nouvelles valeurs
 			$correct_width = false;
@@ -841,25 +931,55 @@ if (!defined('__CLASS_STYLEHTML__'))
 						break;
 						
 					case 'border-radius':
-						// nettoyage des valeurs
-						$val = explode(' ', $val);
-						foreach($val as $k => $v)
-						{
-							$v = trim($v);
-							if ($v)
-							{
-								$v = $this->ConvertToMM($v, 0);
-								if ($v) $val[$k] = $v;
-								else	unset($val[$k]);
-							}
-							else	unset($val[$k]);	
-						}
-						$val = array_values($val);
-						
-						if (!isset($val[1]) && isset($val[0])) $val[1] = $val[0];
-						if (count($val)==2)
-							$this->value['border']['radius'] = array($val[0], $val[1]);
+						$val = explode('/', $val); if (count($val)>2) break;
 
+						$val_h = $this->ConvertToRadius(trim($val[0]));
+						if (count($val_h)<1 || count($val_h)>4) break;
+						if (!isset($val_h[1])) $val_h[1] = $val_h[0];
+						if (!isset($val_h[2])) $val_h = array($val_h[0], $val_h[0], $val_h[1], $val_h[1]);
+						if (!isset($val_h[3])) $val_h[3] = $val_h[1];
+						
+						if (isset($val[1]))
+							{
+							$val_v = $this->ConvertToRadius(trim($val[1]));
+							if (count($val_v)<1 || count($val_v)>4) break;
+							if (!isset($val_v[1])) $val_v[1] = $val_v[0];
+							if (!isset($val_v[2])) $val_v = array($val_v[0], $val_v[0], $val_v[1], $val_v[1]);
+							if (!isset($val_v[3])) $val_v[3] = $val_v[1];
+							}
+						else
+							$val_v = $val_h;
+						
+						$this->value['border']['radius'] = array(
+									'tl' => array($val_h[0], $val_v[0]),
+									'tr' => array($val_h[1], $val_v[1]),
+									'br' => array($val_h[2], $val_v[2]),
+									'bl' => array($val_h[3], $val_v[3])
+								);
+						break;
+						
+					case 'border-top-left-radius':
+						$val = $this->ConvertToRadius($val);
+						if (count($val)<1 || count($val)>2) break;
+						$this->value['border']['radius']['tl'] = array($val[0], isset($val[1]) ? $val[1] : $val[0]);
+						break;
+						
+					case 'border-top-right-radius':
+						$val = $this->ConvertToRadius($val);
+						if (count($val)<1 || count($val)>2) break;
+						$this->value['border']['radius']['tr'] = array($val[0], isset($val[1]) ? $val[1] : $val[0]);
+						break;
+
+					case 'border-bottom-right-radius':
+						$val = $this->ConvertToRadius($val);
+						if (count($val)<1 || count($val)>2) break;
+						$this->value['border']['radius']['br'] = array($val[0], isset($val[1]) ? $val[1] : $val[0]);
+						break;
+
+					case 'border-bottom-left-radius':
+						$val = $this->ConvertToRadius($val);
+						if (count($val)<1 || count($val)>2) break;
+						$this->value['border']['radius']['bl'] = array($val[0], isset($val[1]) ? $val[1] : $val[0]);
 						break;
 						
 					case 'border-top':
@@ -1053,11 +1173,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 			return null;
 		}
 				
-		function getParentBalise()
+		function getLastValue($key)
 		{
 			$nb = count($this->table);
 			if ($nb>0)
-				return $this->table[$nb-1]['id_balise'];
+				return $this->table[$nb-1][$key];
 			return null;
 		}
 		
@@ -1342,6 +1462,25 @@ if (!defined('__CLASS_STYLEHTML__'))
 			else												$val = null;	
 
 			return $val;
+		}
+		
+		function ConvertToRadius($val)
+		{
+			$val = explode(' ', $val);
+			foreach($val as $k => $v)
+			{
+				$v = trim($v);
+				if ($v)
+				{
+					$v = $this->ConvertToMM($v, 0);
+					if ($v!==null)
+						$val[$k] = $v;
+					else
+						unset($val[$k]);
+				}
+				else	unset($val[$k]);	
+			}
+			return array_values($val);			
 		}
 		
  		/**
