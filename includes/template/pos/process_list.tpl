@@ -119,7 +119,7 @@
                   <img src='{$_SHOP_themeimages}view.png' border='0'>
                 </a>
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"} {* Legacy support for older orders. *}
-                  <a href='print.php?order_id={$shop_order.order_id}'>
+                  <a href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
                     <img border='0' src='{$_SHOP_themeimages}printer.gif'>
                   </a>
                   {if $shop_order.payment_status eq 'none'}
