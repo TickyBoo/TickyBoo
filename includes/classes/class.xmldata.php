@@ -284,7 +284,6 @@ class _xmltmp{
 	}
 
 	function write(){
-	  require_once('classes/class.shopdb.php');
 		global $_SHOP;
 		$query='select count(*) from `'.$this->table.
 		'` where `'.$this->pk.'`='.ShopDB::quote($this->query[$this->pk]);

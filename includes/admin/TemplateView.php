@@ -61,7 +61,7 @@ class TemplateView extends AdminView{
    	$name = $data['template_name'];
     switch ($data['template_type']) {
       case 'systm':
-        require_once('templatedata.php');
+        require_once('admin/templatedata.php');
       	$order['is_member']     = ($order['user_status']==2);
         $order['active']        = (empty($order['active']));
         $order['link']          = '{HTML-ActivationCode}';
@@ -101,7 +101,7 @@ class TemplateView extends AdminView{
         echo "<tr><td colspan='2' class='admin_name'>" .con('email_body'). "</td></tr>";
         echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
 				nl2br(htmlspecialchars($swift->toString())) . "</td></tr>";
-        
+
         echo "<tr><td colspan='1'>";
         echo $this->show_button("{$_SERVER['PHP_SELF']}","admin_list",3);
         echo "</td><td align='right'>";
@@ -111,12 +111,12 @@ class TemplateView extends AdminView{
         echo "<input type='hidden' name='action' id='action' value='view'>
           <input type='hidden' name='template_id' id='' value='{$data['template_id']}'>
           </form>";
-          
+
         break;
       case 'pdf2':
         require_once("classes/class.templateengine.php");
         require_once(LIBS."html2pdf/html2pdf.class.php");
-        require_once('templatedata.php');
+        require_once('admin/templatedata.php');
 
         $paper_size=$_SHOP->pdf_paper_size;
 			  $paper_orientation=$_SHOP->pdf_paper_orientation;
@@ -216,7 +216,7 @@ class TemplateView extends AdminView{
       $this->print_input('template_name', $data, $err, 30, 100);
     }
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
-    
+
     //cols = 96 is too big in ff and ie 92 is the max size before you misshape the table, this is because opera adds the scrollbar.
     echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
     <textarea rows='20' cols='92' name='template_text'>" .$data['template_text'] ."</textarea>

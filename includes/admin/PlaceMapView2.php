@@ -88,7 +88,6 @@ class PlaceMapView extends AdminView {
 		if ( $data['pm_id'] ) {
       echo "<input type=hidden name=pm_id value='{$data['pm_id']}'>";
 		}
-
 		$this->form_head( $title );
 		$this->print_field_o( 'pm_id', $data );
 		$this->print_field_o( 'pm_event_id', $data );
@@ -126,7 +125,7 @@ class PlaceMapView extends AdminView {
 		}
 		if ( $event ) {
 			echo "<br>";
-      require_once ( "DiscountView.php" );
+      require_once ( "admin/DiscountView.php" );
 			$dist_view = new DiscountView( $this->width );
 			$dist_view->table( $event->event_id, $live );
 
@@ -175,6 +174,7 @@ class PlaceMapView extends AdminView {
     } elseif ( $_GET['action'] == 'edit_pm' and (int)$_GET['pm_id'] > 0 ) {
       $pm = PlaceMap::load($_GET['pm_id']);
       $this->form((array)$pm, null, con('edit_pm'));
+
 		} elseif ( $_POST['action'] == 'save_pm' ) {
       if (!$pm = PlaceMap::load((int)$_POST['pm_id'])) {
          $pm = new PlaceMap(true);

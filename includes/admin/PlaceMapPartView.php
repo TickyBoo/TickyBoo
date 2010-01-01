@@ -66,7 +66,7 @@ class PlaceMapPartView extends AdminView {
           } else {
             echo $this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp['pmp_id']}","view",2, array('image'=>'view.png'));
           }
-          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=split_pmp&pmp_id={$pmp['pmp_id']}","split_pm",2,
+          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=split_pmp&pm_id={$pmp['pmp_pm_id']}&pmp_id={$pmp['pmp_id']}","split_pm",2,
                                   array('image'=>'copy_to_folder16.gif',
                                         'disable'=>(!$mine)));
           echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pmp&pmp_id={$pmp['pmp_id']}&pm_id=$pm_id\";}","remove",2,
@@ -108,10 +108,9 @@ class PlaceMapPartView extends AdminView {
       global $_SHOP;
       $pmp = PlaceMapPart::loadFull($pmp_id);
       if ($pmp->event_id and $pmp->event_status != 'unpub') {
-          $view_only = true;
+        $view_only = true;
       }
-      var_dump($pmp_id);
-      print_r($pmp);
+
       $stats = $pmp->getStats();
       // infos
       echo "<table class='admin_form' width='100%' border=0 cellspacing='1' cellpadding='4'>
@@ -458,15 +457,16 @@ class PlaceMapPartView extends AdminView {
       // if($pmp->event_id){
       // echo "<a class='link' href='view_event.php?action=view&event_id={$pmp->event_id}'>".event."</a>";
       // }else{
-      echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pmp->pm_id}'>" . con('place_map') . "</a>";
-      // }
+      if (!$view_only) {
+        echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pmp->pm_id}",'admin_list',3);
+      } else {
+        echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pmp&pmp_id={$pmp->pmp_id}",'admin_list',3);
+      }
       $this->pmpnamesList($pmp->pm_id, $pmp->pmp_id, $view_only);
-      echo "</center>";
   }
 
 	function split_form( $pm_id, $pmp_id ) {
 		global $_SHOP;
-
 		if ( !$pm = PlaceMap::load($pm_id) ) {
 			return;
 		}
@@ -475,199 +475,188 @@ class PlaceMapPartView extends AdminView {
 		}
 
 		echo "<form action='{$_SERVER['PHP_SELF']}' method=POST>";
-		$this->form_head( pm_split );
+		echo "<input type='hidden' name='action' value='split_pmp'>
+          <input type='hidden' name='pm_id' value='$pm_id'>";
+		$this->form_head( con('pm_split') );
 		if ( !$pmp_id ) {
-			echo "<tr><td class='admin_name'  width='40%' >" . split_pm . "</td>
+			echo "<tr><td class='admin_name'  width='40%' >" . con('split_pm') . "</td>
                  <td class='admin_value'>
                  <select name='pm_parts[]' multiple>\n";
 			foreach ( $pm_parts as $pmp ) {
 				echo "<option value='{$pmp->pmp_id}'>{$pmp->pmp_name}</option>\n";
 			}
+	   	echo "</select></td></tr>\n";
 		} else {
 			echo "<input type='hidden' name='pm_parts[]' value='$pmp_id'>";
 		}
-		echo "</select></td></tr>\n";
 
 		$this->print_checkbox( 'split_zones', $data, $err );
-		$this->form_foot();
+		$this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm_id}");
 
-		echo "
-    <input type='hidden' name='action' value='split_pmp'>
-    <input type='hidden' name='pm_id' value='$pm_id'>
-    </form>
-    <br>
-    <center><a class=link href='{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id=$pm_id'>" .
-			con('place_map') . "</a></center>
-    ";
 	}
 
   function zone_edit ($zone_ident, $pmp_id) {
-      global $_SHOP;
+    global $_SHOP;
 
-      if (!$pmp = PlaceMapPart::loadFull($pmp_id)) {
-          return;
-      }
-
-      $doubles = $pmp->find_doubles($zone_ident);
-
-      $this_zone = $pmp->zones[$zone_ident];
-      // title
-      echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>
-          <tr><td class='admin_list_title' colspan='2'>
-      	Zone: {$this_zone->pmz_name} ($this_zone->pmz_short_name)
-      	<div class='admin_list_title'style='font-size:smaller;'>
-      	{$pmp->pmp_name} ({$pmp->pmp_width}x{$pmp->pmp_height}) -
-      	{$pmp->pm_name} -
-      	{$pmp->ort_name} - {$pmp->event_name} - {$pmp->event_date}
-      	</div>
-      	</td></tr></table><br>";
-          // numbering
-      echo "<form action='{$_SERVER['PHP_SELF']}' method=POST name=thisform>
-              <input type=hidden name=action value='pmz_save_num_pmp'>
-            	<input type='hidden' name='pmp_id' value='$pmp_id'>
-           	<input type='hidden' name='pmz_ident' value='$zone_ident'> ";
-      // <input type='hidden' name='pm_ort_id' value='{$pm['pm_ort_id']}'>";
-      $this->list_head(con('seat_numbering'), 1);
-      // echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='4'>\n";
-      // echo "<tr><td class='admin_list_title'  align='center'>".seat_numbering."</td></tr>\n";
-      echo "<tr><td align=center><table>";
-
-      $zone_bounds = $pmp->zone_bounds($zone_ident);
-
-      for($j = $zone_bounds['top'];$j <= $zone_bounds['bottom'];$j++) {
-          echo "<tr>";;
-          for($k = $zone_bounds['left'];$k <= $zone_bounds['right'];$k++) {
-              $seat = $pmp->data[$j][$k];
-
-              if ($z = $seat[PM_ZONE]) {
-                  $zone = $zones[$z];
-                  $col = "bgcolor='{$zone->pmz_color}'";
-              } else {
-                  $col = '';
-              }
-
-              echo "<td  $col>";
-              if ($seat[PM_ZONE] == $zone_ident) {
-                  if ($doubles[$j][$k]) {
-                      echo "<input type='text' name='seat[$j][$k]' value='{$seat[PM_ROW]}/{$seat[PM_SEAT]}' size='4' style='font-size:8px;color:#cc0000;'>";
-                  } else {
-                      echo "<input type='text' name='seat[$j][$k]' value='{$seat[PM_ROW]}/{$seat[PM_SEAT]}' size='4' style='font-size:8px;'>";
-                  }
-              } else {
-                  echo "&nbsp;";
-              }
-              echo "</td>\n";
-          }
-          echo "</tr>\n";
-      }
-
-      echo "</td></tr></table>";
-      $this->form_foot(1);
-      // echo "<tr><td align='center' class='admin_value' colspan='2'>
-      // <input type=hidden name=action value='set_zone_num'>
-      // <input type='submit' name='save' value='".save."'>
-      // </tr></table><br>";
-      echo "</form>";
-      // auto numbering
-      echo "<form action='{$_SERVER['PHP_SELF']}' method=POST>
-	         <input type='hidden' name='pmp_id' value='$pmp_id'>
-           <input type='hidden' name='pmz_ident' value='$zone_ident'>
-           <input type='hidden' name='action' value='pmz_auto_num_pmp'>";
-
-      $this->form_head(con('autonumber_pmz'));
-
-      if (!isset($data['first_row'])) {
-          $data['first_row'] = 1;
-      }
-      if (!isset($data['step_row'])) {
-          $data['step_row'] = 1;
-      }
-      if (!isset($data['first_seat'])) {
-          $data['first_seat'] = 1;
-      }
-      if (!isset($data['step_seat'])) {
-          $data['step_seat'] = 1;
-      }
-
-      $this->print_input('first_row', $data, $err, 3, 4);
-      $this->print_input('step_row', $data, $err, 3, 4);
-      $this->print_checkbox('inv_row', $data, $err);
-      $this->print_input('first_seat', $data, $err, 3, 4);
-      $this->print_input('step_seat', $data, $err, 3, 4);
-      $this->print_checkbox('inv_seat', $data, $err);
-      $this->print_checkbox('flip', $data, $err);
-      $this->print_checkbox('keep', $data, $err);
-
-      $this->form_foot();
-
-      echo "</form><br>";
-
-      echo "<center><a href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id' class='link'>" . con('map') . "</a>";
-      $this->pmpnamesList($pmp->pm_id, $pmp->pmp_id);
-      echo "</center>";
-  }
-    function pmp_check ($data, &$err)
-    {
-        if (!isset($data['pmp_name']) or (!$data['pmp_name'])) {
-            $err['pmp_name'] = con('mandatory');
-        }
-        if (!$data['pmp_id']) {
-            if (!isset($data['pmp_width']) or (!$data['pmp_width'])) {
-                $err['pmp_width'] = con('mandatory');
-            }
-            if (!isset($data['pmp_height']) or (!$data['pmp_height'])) {
-                $err['pmp_height'] = con('mandatory');
-            }
-        }
-        return empty($err);
+    if (!$pmp = PlaceMapPart::loadFull($pmp_id)) {
+        return;
     }
 
+    $doubles = $pmp->find_doubles($zone_ident);
 
-    function pmpnamesList ($pm_id, $pmp_id = 0, $view_only = false) {
-        if (!$pmps = PlaceMapPart::loadNames($pm_id) or count($pmps) < 2) {
-            return;
-        }
+    $this_zone = $pmp->zones[$zone_ident];
+    // title
+    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>
+        <tr><td class='admin_list_title' colspan='2'>
+    	Zone: {$this_zone->pmz_name} ($this_zone->pmz_short_name)
+    	<div class='admin_list_title'style='font-size:smaller;'>
+    	{$pmp->pmp_name} ({$pmp->pmp_width}x{$pmp->pmp_height}) -
+    	{$pmp->pm_name} -
+    	{$pmp->ort_name} - {$pmp->event_name} - {$pmp->event_date}
+    	</div>
+    	</td></tr></table><br>";
+        // numbering
+    echo "<form action='{$_SERVER['PHP_SELF']}' method=POST name=thisform>
+            <input type=hidden name=action value='pmz_save_num_pmp'>
+          	<input type='hidden' name='pmp_id' value='$pmp_id'>
+         	<input type='hidden' name='pmz_ident' value='$zone_ident'> ";
+    // <input type='hidden' name='pm_ort_id' value='{$pm['pm_ort_id']}'>";
+    $this->list_head(con('seat_numbering'), 1);
+    // echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='4'>\n";
+    // echo "<tr><td class='admin_list_title'  align='center'>".seat_numbering."</td></tr>\n";
+    echo "<tr><td align=center><table>";
 
-        if ($view_only) {
-            $action = "view_only_pmp";
-        } else {
-            $action = "view_pmp";
+    $zone_bounds = $pmp->zone_bounds($zone_ident);
+
+    for($j = $zone_bounds['top'];$j <= $zone_bounds['bottom'];$j++) {
+        echo "<tr>";;
+        for($k = $zone_bounds['left'];$k <= $zone_bounds['right'];$k++) {
+            $seat = $pmp->data[$j][$k];
+
+            if ($z = $seat[PM_ZONE]) {
+                $zone = $zones[$z];
+                $col = "bgcolor='{$zone->pmz_color}'";
+            } else {
+                $col = '';
+            }
+
+            echo "<td  $col>";
+            if ($seat[PM_ZONE] == $zone_ident) {
+                if ($doubles[$j][$k]) {
+                    echo "<input type='text' name='seat[$j][$k]' value='{$seat[PM_ROW]}/{$seat[PM_SEAT]}' size='4' style='font-size:8px;color:#cc0000;'>";
+                } else {
+                    echo "<input type='text' name='seat[$j][$k]' value='{$seat[PM_ROW]}/{$seat[PM_SEAT]}' size='4' style='font-size:8px;'>";
+                }
+            } else {
+                echo "&nbsp;";
+            }
+            echo "</td>\n";
         }
+        echo "</tr>\n";
+    }
+
+    echo "</td></tr></table>";
+    $this->form_foot(1);
+    // echo "<tr><td align='center' class='admin_value' colspan='2'>
+    // <input type=hidden name=action value='set_zone_num'>
+    // <input type='submit' name='save' value='".save."'>
+    // </tr></table><br>";
+    echo "</form>";
+    // auto numbering
+    echo "<form action='{$_SERVER['PHP_SELF']}' method=POST>
+        <input type='hidden' name='pmp_id' value='$pmp_id'>
+         <input type='hidden' name='pmz_ident' value='$zone_ident'>
+         <input type='hidden' name='action' value='pmz_auto_num_pmp'>";
+
+    $this->form_head(con('autonumber_pmz'));
+
+    if (!isset($data['first_row'])) {
+        $data['first_row'] = 1;
+    }
+    if (!isset($data['step_row'])) {
+        $data['step_row'] = 1;
+    }
+    if (!isset($data['first_seat'])) {
+        $data['first_seat'] = 1;
+    }
+    if (!isset($data['step_seat'])) {
+        $data['step_seat'] = 1;
+    }
+
+    $this->print_input('first_row', $data, $err, 3, 4);
+    $this->print_input('step_row', $data, $err, 3, 4);
+    $this->print_checkbox('inv_row', $data, $err);
+    $this->print_input('first_seat', $data, $err, 3, 4);
+    $this->print_input('step_seat', $data, $err, 3, 4);
+    $this->print_checkbox('inv_seat', $data, $err);
+    $this->print_checkbox('flip', $data, $err);
+    $this->print_checkbox('keep', $data, $err);
+
+    $this->form_foot();
+
+    echo "</form><br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id={$pmp_id}",'admin_list',3);
+    $this->pmpnamesList($pmp->pm_id, $pmp->pmp_id);
+  }
+
+  function pmp_check ($data, &$err)  {
+    if (!isset($data['pmp_name']) or (!$data['pmp_name'])) {
+        $err['pmp_name'] = con('mandatory');
+    }
+    if (!$data['pmp_id']) {
+      if (!isset($data['pmp_width']) or (!$data['pmp_width'])) {
+          $err['pmp_width'] = con('mandatory');
+      }
+      if (!isset($data['pmp_height']) or (!$data['pmp_height'])) {
+          $err['pmp_height'] = con('mandatory');
+      }
+    }
+    return empty($err);
+  }
+
+
+  function pmpnamesList ($pm_id, $pmp_id = 0, $view_only = false) {
+    if (!$pmps = PlaceMapPart::loadNames($pm_id) or count($pmps) < 2) {
+        return;
+    }
+
+    if ($view_only) {
+        $action = "view_only_pmp";
+    } else {
+        $action = "view_pmp";
+    }
 
 //        echo"<br><br><center>";
-        foreach($pmps as $pmp) {
-            if ($pmp_id != $pmp->pmp_id) {
-                echo " | <a href='{$_SERVER['PHP_SELF']}?action=$action&pmp_id={$pmp->pmp_id}' class='link'>{$pmp->pmp_name}</a>";
-            } else {
-                echo " | <b>{$pmp->pmp_name}</b>";
-            }
-        }
-//        echo"</center>";
+    foreach($pmps as $pmp) {
+      if ($pmp_id != $pmp->pmp_id) {
+          echo " ".$this->show_button("{$_SERVER['PHP_SELF']}?action={$action}&pmp_id={$pmp->pmp_id}",$pmp->pmp_name,1);
+      } else {
+          echo " ".$this->show_button("{$_SERVER['PHP_SELF']}?action={$action}&pmp_id={$pmp->pmp_id}",$pmp->pmp_name,1,
+              array('disable'=>true));
+      }
     }
+//        echo"</center>";
+  }
 
-  function draw ()
-  {
+  function draw (){
     global $_SHOP;
 //    print_r($_REQUEST);
     if ($_GET['action'] == 'add_pmp' and $_GET['pm_id'] > 0) {
-        $this->form($_GET, null);
+      $this->form($_GET, null);
     } else if ($_GET['action'] == 'edit_pmp' and $_GET['pmp_id'] > 0) {
-      if ($pmp = PlaceMapPart::load($_GET['pmp_id'])) {
-          $data = (array)$pmp;
-          $this->form($data, null);
-      }
+      $this->view($_GET['pmp_id'] , null);
     } elseif ($_POST['action'] == 'save_pmp' and $_POST['pm_id'] > 0) {
-      if ($pm = PlaceMap::load($_POST['pm_id'])) {
-        $pmp = new PlaceMapPart;
-        $pmp->pmp_event_id = $pm->pm_event_id;
-        $pmp->pmp_pm_id    = $pm->pm_id;
-        if ((!$pmp->fillPost() or !$pmp->saveEx()) && !$_POST['pmp_id'] ) {
-          $this->form($_POST, null);
-        } else {
-          $this->view($pmp->pmp_id,null);
+      if (!$pmp = PlaceMapPart::load((int)$_POST['pmp_id'])) {
+        if ($pm = PlaceMap::load($_POST['pm_id'])) {
+          $pmp = new PlaceMapPart;
+          $pmp->pmp_event_id = $pm->pm_event_id;
+          $pmp->pmp_pm_id    = $pm->pm_id;
         }
-      } else
-        return true;
+      }
+      if (!$pmp or ((!$pmp->fillPost() or !$pmp->saveEx()) && !$_POST['pmp_id'] )) {
+        $this->form($_POST, null);
+      } else {
+        $this->view($pmp->pmp_id, null);
+      }
     } elseif ($_GET['action'] == 'view_pmp' and $_GET['pmp_id'] > 0) {
         $this->view($_GET['pmp_id'], $err, $_GET['category_id'], $_GET['pmz_ident'], $err);
     } elseif ($_GET['action'] == 'view_only_pmp' and $_GET['pmp_id'] > 0) {

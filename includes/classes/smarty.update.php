@@ -33,7 +33,7 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once ( "classes/Time.php" );
+require_once ( "classes/class.time.php" );
 
 class Update_Smarty {
 
@@ -48,7 +48,7 @@ class Update_Smarty {
   	global $_SHOP; //print_r( $_SHOP  );
     return  $_SHOP->shopconfig_run_as_demo;
   }
-  
+
 	//Used for returning results so a template can know if a button/item should be enabled
 	function view( $params, &$smarty ) {
     global $_SHOP;
@@ -66,7 +66,7 @@ class Update_Smarty {
 			// people reserving tickets that would expire after the event.
 			$time = Time::StringToTime( $event_date );
 			$remain = Time::countdown( $time );
-      
+
 			// edit number to change the offset for reserving, reserved tickets will allways expire 2 days before the event.
 			// I would recommend keeping this above 1440, a day before the event.
 			if ( $remain["justmins"] >= ($_SHOP->shopconfig_restime + 2880) ) {
@@ -81,7 +81,7 @@ class Update_Smarty {
 					require_once ( 'classes/smarty.mycart.php' );
 					$cart = MyCart_Smarty::overview_f();
           $totalResSeats = User::currentTickets($user['user_id'],'resp');
-          
+
 					$res_total = $totalResSeats + $cart['valid'];
 
 					if ( $res_total > $_SHOP->shopconfig_maxres ) {

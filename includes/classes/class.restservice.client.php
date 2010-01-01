@@ -31,9 +31,9 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("xml2php.php");
+require_once("class.xml2php.php");
 
 class RestServiceClient {
 
@@ -64,21 +64,21 @@ class RestServiceClient {
 	public function excuteRequest() {
 		//work ok the URI we are calling
 		$uri = $this->url . $this->getQueryString();
-    
+
     //set timeout so that you wont be waiting forever if our server is under heavy load.
-    $ctx = stream_context_create(array( 
-      'http' => array( 
-        'timeout' => 1 
-        ) 
-      ) 
+    $ctx = stream_context_create(array(
+      'http' => array(
+        'timeout' => 1
+        )
+      )
     );
-    
+
 		//get the URI trapping errors
 		$result = @file_get_contents($uri,0,$ctx);
 
 		// Retrieve HTTP status code
 		list($httpVersion, $httpStatusCode, $httpMessage) = explode(' ', $http_response_header[0], 3);
-    
+
 		//if we didn't get a '200 OK' then thow an Exception
 		if ($httpStatusCode != 200) {
 			throw new Exception('HTTP/REST error: ' . $httpMessage, $httpStatusCode);
@@ -90,13 +90,13 @@ class RestServiceClient {
 	public function getResponse() {
 		return $this->response;
 	}
-  
+
   public function getArray(){
     return Xml2php::xml2array($this->getResponse());
   }
-  
+
   public static function example(){
-    
+
     $rws = new RestServiceClient('http://localhost/ft/cpanel/versions/latest.xml');
     //$rws->query = 'Donnie Darko';
     //$rws->results = 8;
@@ -104,16 +104,16 @@ class RestServiceClient {
     $rws->excuteRequest();
     $rws->getResponse();
     return $rws->getArray();
-    
+
   }
 
 	//turn our array of variables to send into a query string
 	protected function getQueryString() {
     global $_SHOP;
-    
+
     $this->siteUrl = $_SHOP->root;
     $this->siteVersion = CURRENT_VERSION;
-    
+
 		$queryArray = array();
 
 		foreach ($this->data as $var => $val) {
