@@ -33,7 +33,7 @@
  */
 
 ini_set('display_errors', 1);
-error_reporting(E_ALL);
+
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
