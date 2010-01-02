@@ -67,8 +67,8 @@ class PlaceMapView extends AdminView {
 
 			echo "<td class='admin_list_item' width=65 align=right>";
       echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pm['pm_id']}","edit",2);
-      echo $this->show_button("{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}","edit",2, array('image'=>'copy.png'));
-      echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm['pm_id']}\";}","remove",2,
+      echo $this->show_button("{$_SERVER['PHP_SELF']}?action=copy_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}","copy",2, array('image'=>'copy.png'));
+      echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_pm&pm_id={$pm['pm_id']}&pm_ort_id={$pm['pm_ort_id']}\";}","remove",2,
                               array('tooltiptext'=>"Delete {$pm['pm_name']}?"));
       echo "</td></tr>";
 			$alt = ( $alt + 1 ) % 2;
