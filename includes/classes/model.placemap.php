@@ -102,12 +102,21 @@ class PlaceMap Extends Model {
                return self::_abort('pm.publish4.a');
             }
           }
-       }
+        }
         $stats[$cat->category_ident]+= $cat->category_size;
-//      } elseif ($cat->category_size ==0) {
-//         return self::_abort('cant_publish_event_cat_no_size');
-//      } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
-//         return self::_abort('cant_publish_event_cat_not_connect');
+      }
+      if(!$dry_run){
+        if($cat->category_numbering !== 'none'){
+          $cat->category_size = $stats[$cat->category_ident];
+          $cat->category_pmp_id = $pmps[$cat->category_ident];
+          if (!$cat->save())
+            return self::_abort('pm.publish4.b');
+        }
+        if ($cat->category_size ==0) {
+           return self::_abort('cant_publish_event_cat_no_size');
+        } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
+           return self::_abort('cant_publish_event_cat_not_connect');
+        }
       }
       if (!$dry_run && !PlaceMapCategory::create_stat($cat->category_id, $stats[$cat->category_ident]))
         return self::_abort('pm.publish5');
