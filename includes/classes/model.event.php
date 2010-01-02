@@ -167,7 +167,7 @@ class Event Extends Model {
   }
 
   function CheckValues(&$data) {
-    if (!$data['event_status']) $data['event_status']='unpub';
+    if (!$data['event_status'] and !$this->event_status) $data['event_status']='unpub';
 		$this->fillTime($data,'event_time');
 		$this->fillTime($data,'event_open');
 		$this->fillTime($data,'event_end');
