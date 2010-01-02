@@ -96,7 +96,7 @@ class User extends Model{
   function register ($status, $data, &$err, $mandatory=0, $secure=0, $short=0){
     $user = new User();
     $data['user_status']=$status;
-    
+
     if ($user->CheckValues($data, $status, $mandatory, $secure, $short)){
       //Why should guests be allowed to use an exsisting email address?
       if ($status == 2) {
@@ -112,7 +112,7 @@ class User extends Model{
       if (ShopDB::begin('register user')) {
         $user->_fill($data);
         $user->user_status = $status;
-        
+
         //Try to save user
         if (!$user->save()) {
           return self::_abort('cant save user');
@@ -122,7 +122,7 @@ class User extends Model{
           if ($short and empty($data['password1'])) {
             $data['password1'] = substr( base_convert($active,15,36),0,8);
           }
-          
+
           $active = md5(uniqid(rand(), true));
           $query="insert into auth (username, password, user_id, active) VALUES (".
                   _esc($data['user_email']).",".
@@ -135,13 +135,13 @@ class User extends Model{
             return self::_abort('cant store auth');
           }
           $data['user_id'] = $user->user_id;
-          
+
           if (!User::sendActivationCode($data, $active, $myerror)) {
             $err = $myerror;
             return self::_abort('cant send activation code');
           }
         }
-        
+
         //Try to commit changes or fail;
         if(!ShopDB::Commit('Registered user')){
           return self::_abort('cant commit user');
@@ -287,7 +287,7 @@ class User extends Model{
     $row['link']=$_SHOP->root."activation.php?uar=".urlencode($activation);
     $row['activate_code'] = $activation;
     //New Mailer
-    
+
     if(EmailSender::send($tpl,$row)){
       return true;
     } else {
@@ -313,9 +313,9 @@ class User extends Model{
     }
 
     User::check_NoSpam($secure, $data);
-    
+
     if (!$short and $status==2) {
-      
+
       if(empty($data['password1'])) {
         if (empty($data['user_id'])){
           $err['password'] = con('mandatory');
@@ -339,7 +339,7 @@ class User extends Model{
         addError('old_password','mandatory');
       }
     }
-    
+
     return !hasErrors();
   }
 
@@ -381,7 +381,7 @@ class User extends Model{
     global $_SHOP;
     require_once('classes/class.templateengine.php');
     require_once('classes'.DS.'email.sender.php');
-    
+
 
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
@@ -391,15 +391,15 @@ class User extends Model{
 
     $pwd = substr( base_convert(md5(uniqid(rand())),15,36),0,8);
     $pwd_md5=md5($pwd);
-    
+
     $query="UPDATE auth SET password="._esc($pwd_md5)." WHERE user_id="._esc($row['user_id'])." limit 1";
-    
+
     if(ShopDB::query($query) and ShopDB::affected_rows()==1){
 
       $tpl=TemplateEngine::getTemplate('forgot_passwd');
 //      $row = $this->values;
       $row['new_password']=$pwd;
-      
+
       if(EmailSender::send($tpl,$row,"",$_SHOP->lang)){
         return true;
       } else {
@@ -409,15 +409,16 @@ class User extends Model{
         echo 'cant set new password';
     }
   }
-  
+
   public function currentTickets($user_id,$status){
-    
+    require_once('classes/model.seat.php');
+
     $options['seat_user_id'] = $user_id;
     $options['status'] = $status;
-    
+
     return Seat::getCount($options);
   }
-  
+
 }
 
 function convMandatory($mandatory_l){
