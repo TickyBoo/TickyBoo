@@ -118,21 +118,21 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
         }
         $res .= '</tr>';
     }
-
+    print_r($pmp);
     for ($j = $top; $j <= $bottom; $j++) {
         $res .= '<tr>';
         $res .= $ml[$j % 2];
         ///////////
         for ($k = $left; $k <= $right; $k++) {
-            $seat = $pmp->pmp_data[$j][$k];
+            $seat = $pmp->data[$j][$k];
             if ($seat[PM_ZONE] == 'L') {
-                if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->pmp_data[$j][$k + 1][PM_ROW]) {
+                if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
                     $res .= "<td $cspan class='label_RE'>$irow";
-                } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->pmp_data[$j][$k - 1][PM_ROW]) {
+                } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->data[$j][$k - 1][PM_ROW]) {
                     $res .= "<td $cspan class='label_RW'>$irow";
-                } elseif ($seat[PM_LABEL_TYPE] == 'SS' and $iseat = $pmp->pmp_data[$j + 1][$k][PM_SEAT]) {
+                } elseif ($seat[PM_LABEL_TYPE] == 'SS' and $iseat = $pmp->data[$j + 1][$k][PM_SEAT]) {
                     $res .= "<td $cspan class='label_SS'>$iseat";
-                } elseif ($seat[PM_LABEL_TYPE] == 'SN' and $iseat = $pmp->pmp_data[$j - 1][$k][PM_SEAT]) {
+                } elseif ($seat[PM_LABEL_TYPE] == 'SN' and $iseat = $pmp->data[$j - 1][$k][PM_SEAT]) {
                     $res .= "<td $cspan class='label_SN'>$iseat";
                 } elseif (($seat[PM_LABEL_TYPE] == 'T') and !$seat[PM_LABEL_SIZE]) {
                     continue;
