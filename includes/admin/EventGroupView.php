@@ -118,7 +118,7 @@ class EventGroupView extends AdminView{
       }
 
     }elseif($_GET['action']=='remove' and $_GET['event_group_id']>0){
-      $eg = Eventgroup::load($_POST['event_group_id']);
+      $eg = Eventgroup::load($_GET['event_group_id']);
       $eg->delete($_GET['event_group_id']);
       $this->table();
 
