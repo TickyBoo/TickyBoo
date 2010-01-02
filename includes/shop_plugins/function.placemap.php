@@ -118,7 +118,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
         }
         $res .= '</tr>';
     }
-    print_r($pmp);
+//    print_r($pmp);
     for ($j = $top; $j <= $bottom; $j++) {
         $res .= '<tr>';
         $res .= $ml[$j % 2];
