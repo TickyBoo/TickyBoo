@@ -91,9 +91,9 @@ select SQL_CALC_FOUND_ROWS *
                                                and event_status!='trash'
                                                and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)
                                              OR
-                                             (select COALESCE(count(*),0)
+                                             ((select COALESCE(count(*),0)
                                                from Event main
-                                               where main.event_main_id = Event.event_id) = 0)";
+                                               where main.event_main_id = Event.event_id) = 0) and event_rep='main')";
     $_REQUEST['page'] = is($_REQUEST['page'],1);
   //  $this->page_length = 2;
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
