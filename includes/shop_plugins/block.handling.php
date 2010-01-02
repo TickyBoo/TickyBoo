@@ -67,7 +67,7 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
     if($params['www']){
      $where .= " and handling_sale_mode LIKE '%www%'";
     }
-    
+
     // We use the reserve button in the shop.
     if($_SHOP->shopconfig_restime > 0 && !$params['www']){
       $where .= " OR handling_id = 1";
@@ -79,11 +79,11 @@ function smarty_block_handling ($params, $content, &$smarty, &$repeat) {
 
     $res=ShopDB::query($query);
 
-    $pay=shopDB::fetch_array($res);
+    $pay=shopDB::fetch_assoc($res);
 
   }else{
     $res=array_pop($smarty->_SHOP_db_res);
-    $pay=shopDB::fetch_array($res);
+    $pay=shopDB::fetch_assoc($res);
   }
 
 

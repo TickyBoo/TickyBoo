@@ -186,7 +186,7 @@ class Order Extends Model {
     }
 
     $amount=$this->amount();
-    
+
     if(!$this->no_fee){
       $fee= $this->order_handling->calculate_fee($amount);
     }else{
@@ -207,7 +207,7 @@ class Order Extends Model {
     $this->order_fee=$fee;
 
     //$this->order_date_expire = null;
-    
+
     //var_dump($this->order_handling);
 
     if($this->order_handling->handling_id=='1'){
@@ -228,11 +228,11 @@ class Order Extends Model {
     //This is legacy... all new orders will use the timestamp which is set on save.
     //$this->order_date = date('Y-m-d H:i:s');
     $this->order_date = "CURRENT_TIMESTAMP() ";
-    
+
     //var_dump($this);
     //var_dump($this->order_date_expire);
     //return self::_abort('testing');
-    
+
     if(!ShopDB::begin('Save Order')){
       return FALSE;
     } elseif(parent::save()){
@@ -892,7 +892,7 @@ class Order Extends Model {
   function printOrder($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
     require_once("classes/class.templateengine.php");
     require_once(LIBS."html2pdf/html2pdf.class.php");
-    require_once('classes/smarty.gui.php'); 
+    require_once('classes/smarty.gui.php');
 
     global $_SHOP;
     if (!$mode) $mode = 'file';
@@ -1018,10 +1018,9 @@ class Order Extends Model {
       if($mode=='file'){
         $pdf->output($_SHOP->ticket_dir.DS.$order_file_name, 'F');
       }else if($mode=='stream'){
+        $pdf->output($order_file_name, 'I');
         if($print){
-          $pdf->output($order_file_name, 'P');
-        }else{
-          $pdf->output($order_file_name, 'I');
+          $html2pdf->pdf->IncludeJS("print(false);");
         }
       }else if($mode=='data'){
         $pdf_data=$pdf->output($order_file_name, 'S');

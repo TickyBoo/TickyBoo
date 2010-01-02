@@ -90,7 +90,7 @@ class POS_Smarty {
 		$sqli="SELECT user_id,user_firstname,user_lastname FROM `User` WHERE owner_id={$this->user_id} user_status=3";  // 3= guest users
 		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}
 		$options="";
-		while ($row=shopDB::fetch_array($result)) {
+		while ($row=shopDB::fetch_assoc($result)) {
 			$id=$row["user_id"];
 			//$selected = ($id==$selectid) ? ' selected="selected"' : '';
 			$firstname=$row["user_firstname"];

@@ -35,7 +35,7 @@
 function smarty_block_category ($params, $content, &$smarty,&$repeat) {
 
   if ($repeat) {
-    
+
     if($params['placemap']){
       $from = 'from Category LEFT JOIN PlaceMap2 ON category_pm_id=pm_id';
     }else{
@@ -46,21 +46,21 @@ function smarty_block_category ($params, $content, &$smarty,&$repeat) {
     if($params['category_id']){
       $where .= " and category_id="._esc($params['category_id']);
     }
- 
+
      if($params['order']){
       $order_by="order by "._esc($params['order'],false);
-    } 
-    
-    
+    }
+
+
     if($params['event_id']){
       $where .= " and category_event_id="._esc($params['event_id']);
     }
-  
+
     if($params['stats']){
       $from.=',Category_stat';
       $where.=' and category_id=cs_category_id';
     }
-  
+
 
     if($params['event']){
       $from.=',Event,Ort';
@@ -69,22 +69,22 @@ function smarty_block_category ($params, $content, &$smarty,&$repeat) {
 
     $query="select * $from $where $order_by";
     $res=ShopDB::query($query);
-    
-    $cat=shopDB::fetch_array($res);
-    
+
+    $cat=shopDB::fetch_assoc($res);
+
   }else{
     $res=array_pop($smarty->_SHOP_db_res);
-    $cat=shopDB::fetch_array($res);
+    $cat=shopDB::fetch_assoc($res);
   }
 
   $repeat=!empty($cat);
 
   if($cat){
-    $smarty->assign("shop_category",$cat);  
-    
-    $smarty->_SHOP_db_res[]=$res; 
+    $smarty->assign("shop_category",$cat);
+
+    $smarty->_SHOP_db_res[]=$res;
   }
-  
+
   return $content;
 }
 

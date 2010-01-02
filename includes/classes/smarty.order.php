@@ -93,11 +93,11 @@ class Order_Smarty {
   function res_to_order($params,&$smarty){
       $order_id=$params['order_id'];
       $handling_id=$params['handling_id'];
-      
+
       if(empty($order_id) || empty($handling_id)){
         return;
       }
-      
+
       //if(($order_id=$this->secure_url_param($params['order_id']))<=1){return;}
       //if(($handling_id=$this->secure_url_param($params['handling_id']))<=1){return;}
       if($params['no_cost']===true){$no_cost=true;}
@@ -105,7 +105,7 @@ class Order_Smarty {
       if($params['place']!='pos'){$place='www';}else{$place='pos';}
 
     if($this->res_to_order_f($order_id,$handling_id,$no_fee,$no_cost,$place)){
-      $smarty->assign('order_success',true); 
+      $smarty->assign('order_success',true);
     }
   }
 
@@ -296,20 +296,20 @@ class Order_Smarty {
       $part_count = ShopDb::query_one_row("Select FOUND_ROWS()", false);
       $part_count = $part_count[0];
       $res = array($res,$part_count);
-      $order=shopDB::fetch_array($res[0]);
+      $order=shopDB::fetch_assoc($res[0]);
 
     }else{
       $res=array_pop($smarty->_SHOP_db_res);
       $part_count= $res[1];
       if(isset($res)){
-        $order=shopDB::fetch_array($res[0]);
+        $order=shopDB::fetch_assoc($res[0]);
       }
     }
 
     if($params['all']){
       if(!empty($order)){
         $orders[]=$order;
-        while($order=shopDB::fetch_array($res)){
+        while($order=shopDB::fetch_assoc($res)){
           $orders[]=$order;
         }
         $smarty->assign("shop_orders",$orders);
@@ -330,7 +330,7 @@ class Order_Smarty {
 
         $query="SELECT * FROM User WHERE user_id={$order['order_user_id']}";
         $res=ShopDB::query($query);
-        $user=shopDB::fetch_array($res);
+        $user=shopDB::fetch_assoc($res);
         if($user){
           $smarty->assign("user_order",$user);
         }
@@ -376,14 +376,14 @@ class Order_Smarty {
 	      	$ticket=ShopDB::fetch_array($res);
     	}else{
       		$res=array_pop($smarty->_SHOP_db_res);
-		  	$ticket=ShopDB::fetch_array($res);
+		  	$ticket=ShopDB::fetch_assoc($res);
     	}
     	if($params['all']){
    			//$repeat=!empty($ticket); //not required
      		if($ticket){
        			$c=1;
 		       $tickets[]=$ticket;
-		       while($ticket=ShopDB::fetch_array($res)){
+		       while($ticket=ShopDB::fetch_assoc($res)){
 		         $tickets[]=$ticket;$c++;
 		       }
 
@@ -397,7 +397,7 @@ class Order_Smarty {
     		if($ticket){
 		    	$c=1;
 		        $min_date=true;
-		        while($ticket=ShopDB::fetch_array($res)){
+		        while($ticket=ShopDB::fetch_assoc($res)){
 		        	$c++;
 		            $min_date=min($ticket['event_date'],$min_date);
       			}
@@ -421,7 +421,7 @@ class Order_Smarty {
   function set_status_f($order_id,$status){
     return Order::set_status_order($order_id,$status);
   }
-  
+
   function setStatusPaid($order_id){
     return Order::set_payed($order_id);
   }
@@ -498,7 +498,7 @@ class Order_Smarty {
 }
 
 function _collect(&$event_item,&$cat_item,&$place_item,&$order){
-  
+
   if(!$place_item->is_expired()){
 
     $i=0;

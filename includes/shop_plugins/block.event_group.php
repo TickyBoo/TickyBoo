@@ -34,16 +34,16 @@
 
 function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
 	global $_SHOP;
-	
-	
+
+
   if ($repeat) {
     $from='from Event_group';
     $where="where 1";
-  
+
     if($params['order']){
       $order_by="order by {$params['order']}";
-    } 
-    
+    }
+
     if($params['group_id']){
      $where .= " and event_group_id="._esc($params['group_id']);
     }
@@ -51,7 +51,7 @@ function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
      if($params['limit']){
       $limit='limit '.$params['limit'];
     }
-    
+
     if($params['group_status']){
      $where .= " and event_group_status="._esc($params['group_status']);
     }
@@ -63,25 +63,25 @@ function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
     }else if($params['length']){
       $limit='limit 0,'.$params['length'];
     }
-  
+
     $query="select * $from $where $order_by $limit";
     $res=ShopDB::query($query);
-    
-    $event=shopDB::fetch_array($res);
-    
+
+    $event=shopDB::fetch_assoc($res);
+
   }else{
     $res=array_pop($smarty->_SHOP_db_res);
-    $event=shopDB::fetch_array($res);
+    $event=shopDB::fetch_assoc($res);
   }
 
   $repeat=!empty($event);
 
   if($event){
-    $smarty->assign("shop_event_group",$event);  
-    
-    $smarty->_SHOP_db_res[]=$res; 
+    $smarty->assign("shop_event_group",$event);
+
+    $smarty->_SHOP_db_res[]=$res;
   }
-  
+
   return $content;
 }
 

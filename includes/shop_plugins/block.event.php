@@ -37,13 +37,13 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 
   if ($repeat) {
     $from='Event';
-    $where="where event_status='pub'";		
-		
+    $where="where event_status='pub'";
+
     if($params['order']){
 			$params['order']=_esc($params['order'], false);
       $order_by="order by {$params['order']}";
     }
-    
+
     if($params['event_id']){
 			$where .= " and event_id="._esc($params['event_id']);
     }
@@ -55,7 +55,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     if($params['place_map']){
       $from.=' LEFT JOIN PlaceMap2 ON pm_event_id=event_id';
     }
-  
+
     if($params['stats']){
       $from.=' left join Event_stat on event_id=es_event_id';
     }
@@ -82,7 +82,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     }
 
     $limit=($params['limit'])?'limit '._esc($params['limit'],false):'';
-    
+
 
     if($params['search']){
       $params['search']=_ESC($params['event_search']);
@@ -137,13 +137,13 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 			$params['length']=(int)$params['length'];
       $limit='limit 0,'.$params['length'];
     }
-  
+
 	if($limit){
 		$cfr='SQL_CALC_FOUND_ROWS';
 	}
-	
+
 	if($params['search']){
-		$where .= "AND (event_name LIKE '%"._esc($params['search'],false)."%' 
+		$where .= "AND (event_name LIKE '%"._esc($params['search'],false)."%'
 			OR event_text LIKE '%"._esc($params['search'],false)."%'
 			OR event_date LIKE '%"._esc($params['search'],false)."%' ";
 		if($params['ort']){
@@ -151,7 +151,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 		}
 		$where .= ")";
 	}
-		
+
     $query="select $cfr * from $from $where $order_by $limit";
     $res=ShopDB::query($query);
 
@@ -166,7 +166,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 		  $tot_count=$part_count;
 		}
 
-    $event=shopDB::fetch_array($res);
+    $event=shopDB::fetch_assoc($res);
 
   } else {
     $res_a=array_pop($smarty->_SHOP_db_res);
@@ -174,8 +174,8 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 		$res=$res_a[0];
 		$tot_count=$res_a[1];
 		$part_count=$res_a[2];
-		
-    $event=shopDB::fetch_array($res);
+
+    $event=shopDB::fetch_assoc($res);
   }
 
   $repeat=!empty($event);

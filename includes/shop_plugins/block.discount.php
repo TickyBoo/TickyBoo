@@ -75,16 +75,16 @@ function smarty_block_discount ($params, $content, &$smarty, &$repeat)
 
         $res = ShopDB::query($query);
 
-        $discount = shopDB::fetch_array($res);
+        $discount = shopDB::fetch_assoc($res);
     } else {
         $res = array_pop($smarty->_SHOP_db_res);
-        $discount = shopDB::fetch_array($res);
+        $discount = shopDB::fetch_assoc($res);
     }
     if ($params['all']) {
         if (!empty($discount)) {
             $c = 1;
             $discounts[] = $discount;
-            while ($discount = shopDB::fetch_array($res)) {
+            while ($discount = shopDB::fetch_assoc($res)) {
                 If ($params['cat_price']) {
                     if($discount['discount_type']=='fixe'){
                       $discount['discount_price'] = $params['cat_price']-$discount['discount_value'];

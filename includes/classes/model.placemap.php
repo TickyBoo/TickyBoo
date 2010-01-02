@@ -61,7 +61,7 @@ class PlaceMap Extends Model {
             from PlaceMap2 left join Ort on pm_ort_id=ort_id
             where ort_id="._esc($ort_id);
     if($res=ShopDB::query($query)){
-      while($data=shopDB::fetch_array($res)){
+      while($data=shopDB::fetch_assoc($res)){
         $new_pm=new PlaceMap;
         $new_pm->_fill($data);
         $pms[]=$new_pm;
