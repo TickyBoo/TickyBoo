@@ -37,12 +37,13 @@ define('ft_check','admin');
 session_cache_limiter("must-revalidate");
 
 require_once("../includes/config/init_admin.php");
-require_once ("admin/OrderView.php");
 
 if($_GET['action']=='print' and $_GET['order_id']>0){
   Order::printOrder($_GET['order_id'],'','stream');
   exit;
 }
+
+require_once ("admin/view.orders.php");
 $body=new OrderView();
 $body->drawall();
 ?>

@@ -275,12 +275,11 @@ class User extends Model{
 	}
 
   public function sendActivationCode($row, $active, &$errors){
-  	require_once('classes/class.templateengine.php');
-    require_once('classes'.DS.'email.sender.php');
+  	require_once('classes/model.template.php');
     global $_USER_ERROR, $_SHOP;
     // new part
     $email = $data['user_email'] ;
-    if (!$tpl = TemplateEngine::getTemplate('Signup_email')) {
+    if (!$tpl = Template::getTemplate('Signup_email')) {
       return false;
     }
     $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
@@ -288,7 +287,7 @@ class User extends Model{
     $row['activate_code'] = $activation;
     //New Mailer
 
-    if(EmailSender::send($tpl,$row)){
+    if(Template::sendMail($tpl,$row)){
       return true;
     } else {
       $errors = con("log_err_mailnotsend");
@@ -379,9 +378,7 @@ class User extends Model{
 
   function forgot_password($email){
     global $_SHOP;
-    require_once('classes/class.templateengine.php');
-    require_once('classes'.DS.'email.sender.php');
-
+    require_once('classes/model.template.php');
 
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
@@ -396,11 +393,11 @@ class User extends Model{
 
     if(ShopDB::query($query) and ShopDB::affected_rows()==1){
 
-      $tpl=TemplateEngine::getTemplate('forgot_passwd');
+      $tpl=Template::getTemplate('forgot_passwd');
 //      $row = $this->values;
       $row['new_password']=$pwd;
 
-      if(EmailSender::send($tpl,$row,"",$_SHOP->lang)){
+      if(Template::sendMail($tpl,$row,"",$_SHOP->lang)){
         return true;
       } else {
         echo 'cant send email:';

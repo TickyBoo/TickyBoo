@@ -890,7 +890,7 @@ class Order Extends Model {
   }
 
   function printOrder($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
-    require_once("classes/class.templateengine.php");
+    require_once("classes/model.template.php");
     require_once(LIBS."html2pdf/html2pdf.class.php");
     require_once('classes/smarty.gui.php');
 
@@ -966,7 +966,6 @@ class Order Extends Model {
      $paper_size=$_SHOP->pdf_paper_size;
      $paper_orientation=$_SHOP->pdf_paper_orientation;
 
-    $te  = new TemplateEngine();
     $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 
      if(!$bill_template){
@@ -975,7 +974,7 @@ class Order Extends Model {
     $first_page = true;
     if($bill_template and ($subj & 2)){
       //loading the template
-      if($tpl =& $te->getTemplate($bill_template)){
+      if($tpl =& Template::getTemplate($bill_template)){
         $first_page=FALSE;
         //applying the template
         $tpl->write($pdf, $order);
@@ -997,7 +996,7 @@ class Order Extends Model {
 
       if($tpl_id and ($subj & 1)){
         //load the template
-        if(!$tpl =& $te->getTemplate($tpl_id)){
+        if(!$tpl =&Template::getTemplate($tpl_id)){
           return addwarning(con('no_template').": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
         }
 //        echo $tpl_id,":";

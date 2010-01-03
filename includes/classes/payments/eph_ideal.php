@@ -33,7 +33,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-//require_once("admin/AdminView.php");
+//require_once("admin/class.adminview.php");
 If (!defined('ACQUIRERTIMEOUT')) {
   define ('ACQUIRERTIMEOUT',10);
   define ('TRACELEVEL', 'DEBUG,ERROR');
@@ -44,7 +44,7 @@ require_once('classes/class.payment.php');
 require_once('ideal/iDEALConnector.php');
 
 class eph_ideal extends payment{
-	
+
   public $extras = array('pm_ideal_merchantid', 'pm_ideal_subid', 'pm_ideal_key',
                          'pm_ideal_keypass', 'pm_ideal_pcert', 'pm_ideal_certficate',
                          'pm_ideal_issuer','pm_ideal_test');
@@ -86,7 +86,7 @@ class eph_ideal extends payment{
     $_SHOP->smarty->assign('ideal_issuers',$issuerList );
 
     //print_r($order);
-    
+
     return "
       {gui->StartForm name='iDealING' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
         {gui->hidden name='action' value='submit'}
@@ -122,7 +122,7 @@ class eph_ideal extends payment{
     header('location:'.$issuerAuthenticationURL);
     return '';
   }
-  
+
   function on_return(&$order, $result){
     global $_SHOP;
     $ideal = $this->init_ideal();
@@ -171,7 +171,7 @@ class eph_ideal extends payment{
                    'response'=> 'Reason: '.$response->GetStatusText());
     }
   }
-  
+
   function on_check(&$order){
     global $_SHOP;
     $ideal = $this->init_ideal();
@@ -207,13 +207,13 @@ class eph_ideal extends payment{
     } else {
       $url= 'ssl://idealtest.secure-ing.com:443/ideal/iDeal';
     }
-    
+
     $config = array(
         'PRIVATEKEY'      => "$this->pm_ideal_key",
         'PRIVATEKEYPASS'  => "$this->pm_ideal_keypass",
         'PRIVATECERT'     => "$this->pm_ideal_pcert",
         'CERTIFICATE0'    => "$this->pm_ideal_certficate",
-        
+
         'ACQUIRERURL'     => "$url",
         #'ROXY'=Vul hier een proxyserver in (gebruik dit ALLEEN als de webshop achter een proxyserver zit)
         #'ROXYACQURL'=vul hier de url van de acquirer in (gebruik dit ALLEEN als de webshop achter een proxyserver zit)
@@ -227,7 +227,7 @@ class eph_ideal extends payment{
         'TRACELEVEL'      => TRACE_DEBUG.TRACE_ERROR,
         );
     return new iDEALConnector($config);
-    
+
 
   }
 }

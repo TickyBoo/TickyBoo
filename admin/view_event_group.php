@@ -36,7 +36,7 @@
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
-require_once ("admin/EventGroupView.php");
+require_once ("admin/view.eventgroup.php");
 //print cart update
 $body=new EventGroupView();
 $body->drawall();

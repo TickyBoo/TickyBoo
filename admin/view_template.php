@@ -37,7 +37,7 @@ ini_set('display_errors', 1);
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
-require_once ("admin/TemplateView.php");
+require_once ("admin/view.template.php");
 
 
 //print cart update

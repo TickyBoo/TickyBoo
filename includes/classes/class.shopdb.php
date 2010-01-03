@@ -585,7 +585,7 @@ class ShopDB {
           if ($data['error']) $result .= $data['error'];
         }
         If ($result) {
-          require_once('admin'.DS.'AdminView.php');
+          require_once('admin'.DS.'class.adminview.php');
           echo "
 <style type='text/Css'>
 .admin_name{

@@ -129,21 +129,19 @@ class Handling Extends Model {
 
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
-    include_once(INC.'classes'.DS.'class.templateengine.php');
-    require_once(INC.'classes'.DS.'email.sender.php');
+    include_once(INC.'classes'.DS.'model.template.php');
 
     $ok=TRUE;
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
-      $te=new TemplateEngine;
-      $tpl=&$te->getTemplate($template_name);
+      $tpl= &Template::getTemplate($template_name);
 
       $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
       $order_d['order_old_status'] = $old_state;
 
-      if(!EmailSender::send($tpl,$order_d,"",$_SHOP->lang)){
+      if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;
       }
@@ -186,7 +184,7 @@ class Handling Extends Model {
     	return ($this->pment())?true:false;
   	}
 
-  // Loads default extras for payment method eg."pm_paypal_View.php"
+  // Loads default extras for payment method eg.
   function admin_init(){
     $this->handling_text_payment=  con($this->handling_payment);
    	$this->handling_text_shipment=  con($this->handling_shipment);

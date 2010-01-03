@@ -248,7 +248,7 @@ class Gui_smarty {
       return $this->showlabel($name, $value, $nolabel);
     }
   }
-  
+
   function hidden ($params, &$smarty) //$name, &$data, $size = 30, $max = 100)
   {
     $name = is($params['name'] );
@@ -557,7 +557,7 @@ class Gui_smarty {
 
 
   function tabBar($params , &$smarty) {
-    require_once('admin'.DS.'AdminView.php');
+    require_once('admin'.DS.'class.adminview.php');
 
     $TabBarid = is($params['TabBarid'],'TabBarid');
     $menuAlign = is($params['menuAlign'],'left');

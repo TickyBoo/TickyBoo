@@ -1074,7 +1074,7 @@ define("eph_cash_confirm","The order is created, press '".con('pay')."' to conti
 //------------------------------------------------------
 //Not quite sure about these.  8/26/09 Lou
 
-//AdminView.php - These are in the file but I can not find where they display
+//class.adminview.php - These are in the file but I can not find where they display
 define("page_format_default","Default");
 define("page_format_std","Standard");
 define("page_format_custom","Custom");

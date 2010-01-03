@@ -35,7 +35,7 @@
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
-require_once ("admin/SearchView.php");
+require_once ("admin/view.search.php");
 
 $body=new SearchView();
 $body->drawall();

@@ -34,7 +34,7 @@
 
 define('ft_check','admin');
 require_once ("../includes/config/init_admin.php");
-require_once ("admin/indexview.php");
+require_once ("admin/view.tabs.main.php");
   $body = new indexview(700);
   $body->drawall();
 

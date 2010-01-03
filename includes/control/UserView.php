@@ -34,7 +34,7 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 //require_once("classes/AUIComponent.php");
-require_once("admin/AdminView.php");
+require_once("admin/class.adminview.php");
 class UserView extends AdminView{
 
   function UserView ($id){

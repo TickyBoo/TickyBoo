@@ -1,4 +1,4 @@
-<?php
+<?PHP
 /**
 %%%copyright%%%
  *
@@ -32,10 +32,43 @@
  * clear to you.
  */
 
-define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.handlings.php");
-//print cart update
-$body=new HandlingView();
-$body->drawall();
+if (!defined('ft_check')) {die('System intrusion ');}
+require_once("admin/class.adminview.php");
+
+class import_cp extends AdminView {
+
+  function cp_form (&$data,&$err){
+		global $_SHOP;
+
+    echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+		$this->form_head(import_cp_title);
+
+		echo "<tr><td class='admin_name'  width='40%'>".import_cp_file."</td>
+					<td class='admin_value'><input type='file' name='import_cp_file'></td></tr>";
+
+		echo "
+		<tr><td align='center' class='admin_value' colspan='2'>
+  	<input type='hidden' name='import_type' value='cp'>
+		<input type='submit' name='submit' value='".import_cp_submit."'></td></tr>
+		</table></form>";
+  }
+
+
+  function import (){
+    global $_SHOP;
+
+		if(!empty($_FILES['import_cp_file']) and !empty($_FILES['import_cp_file']['name']) and !empty($_FILES['import_cp_file']['tmp_name'])){
+			require_once('classes/class.xmldata.php');
+
+			XMLData::xml2sql($_FILES['import_cp_file']['tmp_name']);
+
+			return TRUE;
+    }
+  }
+
+  function draw (){
+    $this->cp_form($_GET,$this->err);
+  }
+
+}
 ?>
