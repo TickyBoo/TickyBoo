@@ -44,9 +44,7 @@ class OrtView extends AdminView {
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('ort_title') . "</td>";
     echo "<td colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add_venue",3)."</td>";
     echo "</tr>\n";
-    if (!$res) {
-      //
-    } else {
+    if ($res) {
       while ($row = ShopDB::fetch_assoc($res)) {
           echo "<tr class='admin_list_row_$alt'>";
           echo "<td class='admin_list_item' width='50%'>{$row['ort_name']}</td>\n";
@@ -58,8 +56,8 @@ class OrtView extends AdminView {
           echo "</tr>";
           $alt = ($alt + 1) % 2;
       }
-      echo "</table>\n";
     }
+    echo "</table>\n";
     // echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}?action=import'>".import."</a></center>";
   }
 
@@ -88,7 +86,7 @@ class OrtView extends AdminView {
 
     if  (($data['ort_id'])) {
       $this->form_foot();
-        require_once('admin/PlaceMapView2.php');
+        require_once('admin/view.placemap.php');
         PlaceMapView::table($data['ort_id']);
     		echo "<br \>".$this->show_button("{$_SERVER['PHP_SELF']}",'admin_list',3);
     } else
@@ -99,7 +97,7 @@ class OrtView extends AdminView {
    // addNotice("Action: {$_REQUEST['action']} pm_id {$_REQUEST['pm_id']}");
     if (preg_match('/_pm$/', $_REQUEST['action']) or preg_match('/_pmz$/', $_REQUEST['action']) or
         preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
-        require_once('admin/PlaceMapView2.php');
+        require_once('admin/view.placemap.php');
         $pm_view = new PlaceMapView($this->width);
         if ($pm_view->draw()) {
           if ($ort = Ort::load($_REQUEST['pm_ort_id'])) {
