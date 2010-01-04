@@ -88,7 +88,7 @@ if (!defined('PATH_SEPARATOR')) {
     }
 }
 set_include_path(INC. PATH_SEPARATOR.
-                 INC.'pear'.PATH_SEPARATOR.
+                 LIBS.'pear'.PATH_SEPARATOR.
                  get_include_path());
 // system defines
 
