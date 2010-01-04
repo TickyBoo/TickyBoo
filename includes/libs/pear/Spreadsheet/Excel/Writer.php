@@ -4,7 +4,7 @@
 *
 *  PERL Spreadsheet::WriteExcel module.
 *
-*  The author of the Spreadsheet::WriteExcel module is John McNamara 
+*  The author of the Spreadsheet::WriteExcel module is John McNamara
 *  <jmcnamara@cpan.org>
 *
 *  I _DO_ maintain this code, and John McNamara has nothing to do with the
@@ -31,8 +31,8 @@
 *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-require_once('PEAR.php');
-require_once('Spreadsheet/Excel/Writer/Workbook.php');
+require_once 'PEAR.php';
+require_once 'Spreadsheet/Excel/Writer/Workbook.php';
 
 /**
 * Class for writing Excel Spreadsheets. This class should change COMPLETELY.
@@ -86,19 +86,19 @@ class Spreadsheet_Excel_Writer extends Spreadsheet_Excel_Writer_Workbook
         if ($col > 255) { //maximum column value exceeded
             return new PEAR_Error("Maximum column value exceeded: $col");
         }
-        
+
         $int = (int)($col / 26);
         $frac = $col % 26;
         $chr1 = '';
-        
+
         if ($int > 0) {
             $chr1 = chr(ord('A') + $int - 1);
         }
-        
+
         $chr2 = chr(ord('A') + $frac);
         $row++;
-        
-        return $chr1.$chr2.$row;
+
+        return $chr1 . $chr2 . $row;
     }
 }
 ?>
