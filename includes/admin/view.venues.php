@@ -86,7 +86,7 @@ class OrtView extends AdminView {
 
     if  (($data['ort_id'])) {
       $this->form_foot();
-        require_once('admin/view.placemap.php');
+        require_once('admin/view.placemaps.php');
         PlaceMapView::table($data['ort_id']);
     		echo "<br \>".$this->show_button("{$_SERVER['PHP_SELF']}",'admin_list',3);
     } else
@@ -97,7 +97,7 @@ class OrtView extends AdminView {
    // addNotice("Action: {$_REQUEST['action']} pm_id {$_REQUEST['pm_id']}");
     if (preg_match('/_pm$/', $_REQUEST['action']) or preg_match('/_pmz$/', $_REQUEST['action']) or
         preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
-        require_once('admin/view.placemap.php');
+        require_once('admin/view.placemaps.php');
         $pm_view = new PlaceMapView($this->width);
         if ($pm_view->draw()) {
           if ($ort = Ort::load($_REQUEST['pm_ort_id'])) {
