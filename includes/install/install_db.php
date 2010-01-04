@@ -41,21 +41,41 @@ $tbls['Admin']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(45) NOT NULL DEFAULT ''",
-  'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
+  'admin_status' => " set('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
   'admin_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
-  'control_event_ids' => " varchar(100) NOT NULL DEFAULT ''");
+  'admin_user_id' => " int(11) DEFAULT NULL",
+  'admin_ismaster' => " enum('No','Yes') DEFAULT 'No'");
 $tbls['Admin']['key'] = array(
   "PRIMARY KEY (`admin_id`)",
   "KEY `admin_login` (`admin_login`)");
 $tbls['Admin']['engine'] = 'InnoDB';
-$tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
+$tbls['Admin']['remove'] = array ('control_organizer_id','admin_level','control_event_ids')   ;
 
+$tbls['admingroups']['fields'] = array(
+  'admingroup_id' => " int(11) NOT NULL AUTO_INCREMENT ",
+  'admingroup_name' => " varchar(50) NOT NULL DEFAULT ''",
+  'admingroup_ismaster' => " enum('No','Yes') DEFAULT 'No'",
+  'admingroup_inuse' => " enum('No','Yes') DEFAULT 'No'");
+$tbls['admingroups']['key'] = array(
+  "PRIMARY KEY (`admingroup_id`)");
+$tbls['admingroups']['engine'] = 'InnoDB';
+
+$tbls['admingrouprelations']['fields'] = array(
+  'agr_id' => " int(11) NOT NULL AUTO_INCREMENT ",
+  'agr_admingroup_id' => " int(11) NOT NULL DEFAULT '0'",
+  'agr_admin_id' => " int(11) DEFAULT NULL",
+  'agr_event_id' => " int(11) DEFAULT NULL",
+  'agr_eventgroup_id' => " int(11) DEFAULT NULL");
+$tbls['admingrouprelations']['key'] = array(
+  "PRIMARY KEY (`agr_id`)");
+$tbls['admingrouprelations']['engine'] = 'InnoDB';
 
 $tbls['Control']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'control_login' => " varchar(50) NOT NULL DEFAULT ''",
   'control_password' => " varchar(45) NOT NULL DEFAULT ''",
   'admin_status' => " enum('admin','organizer','control','pos') NOT NULL DEFAULT 'control'",
+
   'control_event_ids' => " varchar(100) DEFAULT ''");
 $tbls['Control']['key'] = array(
   "PRIMARY KEY (`admin_id`)"

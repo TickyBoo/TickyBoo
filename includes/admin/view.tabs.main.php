@@ -46,12 +46,13 @@ class IndexView extends AdminView {
       $_SESSION['_INDEX_tab'] = (int)$_REQUEST['tab'];
     }
 
+    $menu[con("index_admin_tab")]= "?tab=0";
+    $menu[con("owner_tab")]      = '?tab=1';
+    $menu[con("shopconfig_tab")] = "?tab=2";
 
-    $menu = array( con("index_admin_tab")=>"?tab=0", con("owner_tab")=>'?tab=1', con("shopconfig_tab")=>"?tab=2");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_INDEX_tab'], "left");
 
-    switch ((int)$_SESSION['_INDEX_tab'])
-      {
+    switch ((int)$_SESSION['_INDEX_tab']){
       case 0:
         $licention = file_get_contents (ROOT."licence.txt");
        	$this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->getLatestVersion(),$this->width,1);
@@ -64,10 +65,9 @@ class IndexView extends AdminView {
         $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
         $this->print_field('InfoPhpVersion',  phpversion ());
         $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
+        $this->print_field('InfoMysqlDB'     ,$_SHOP->db_name);
         $this->print_field('InfoAdminCount',  $this->Admins_Count ());
         $this->print_field('InfoUserCount',   $this->Users_Count ());
-//        $this->print_field('InfoGroupCount',  $this->Groups_Count ());
-//        $this->print_field('InfoVenueCount',  $this->Venues_Count ());
         $this->print_field('InfoEventCount',  $this->Events_Count ());
 		    echo "</table>\n";
         break;
@@ -82,7 +82,7 @@ class IndexView extends AdminView {
            $viewer->draw();
            break;
 
-       }
+    }
   }
 
   function Users_Count () {

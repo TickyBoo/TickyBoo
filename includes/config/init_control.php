@@ -40,9 +40,9 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->session_name="ControlSession";
 
   $_SHOP->auth_required=TRUE;
-  $_SHOP->auth_table="Control";
-  $_SHOP->auth_login="control_login";
-  $_SHOP->auth_password="control_password";
+  $_SHOP->auth_status="control";
+
+
 
   require_once("init.php");
   $_SHOP->event_ids=$_SESSION['_SHOP_AUTH_USER_DATA']['control_event_ids'];

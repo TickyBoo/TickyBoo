@@ -177,67 +177,16 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   if(isset($_SHOP->auth_required)){
 
-    if(!isset($_SHOP->auth_dsn)){
-      $_SHOP->auth_dsn="mysql://".$_SHOP->db_uname.":".$_SHOP->db_pass."@".$_SHOP->db_host."/".$_SHOP->db_name;
-    }
-
     //authentication stuff
     require_once "Auth/Auth.php";
-
-    //this function shows the login-password dialog
-    //languages stuff is loaded after, so it is not internationalized
-    function loginFunction ($username, $status, $auth){
-			echo "<html><head>
-      <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
-			</head>
-			<body>
-      <center><form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?login=1\">
-      <table style='border: #cccccc 1px solid;' cellpadding='5' cellespacing='0'>
-       <tr><td>User</td><td><input type=\"text\" name=\"username\" value=\"{$username}\"></td></tr>
-      <tr><td>Password</td><td><input type=\"password\" name=\"password\"></td></tr>
-      <tr><td>Language</td><td><select name='setlang'>";
-
-			global $_SHOP;
-			foreach($_SHOP->langs_names as $lang=>$name){
-				echo"<option value='$lang'>$name</option>";
-			}
-			echo "</select></td></tr>";
-      echo "<tr><td colspan='2' align='center'><input type=\"submit\" value='login'></td></tr></table>";
-      if (empty($status)) {
-        echo '<i>Your session expired. Please login again!</i>'."\n";
-      } elseif ($status == AUTH_EXPIRED) {
-        echo '<i>Your session expired. Please login again!</i>'."\n";
-      } else if ($status == AUTH_IDLED) {
-        echo '<i>You have been idle for too long. Please login again!</i>'."\n";
-      } else if ($status == AUTH_WRONG_LOGIN) {
-        echo '<i>Wrong login data!</i>'."\n";
-      }
-
-      echo "</form></center></body></html>";
-    }
-
-    function loginCallback ($username,$auth){
-      global $_SHOP;
-      $query="SELECT * FROM `{$_SHOP->auth_table}` WHERE `{$_SHOP->auth_login}`="._esc($username);
-      if($res=ShopDB::query($query) and $data=shopDB::fetch_assoc($res)){
-        unset($data[ $_SHOP->auth_password ]);
-        $_SESSION['_SHOP_AUTH_USER_DATA']=$data;
-      }	else {
-        session_destroy();
-	      exit;
-      }
-
-      $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
-     // echo ini_get("session.gc_maxlifetime");
-   }
+    require_once "classes/model.admin.php";
 
     //authentication starts here
-    $params = array("dsn" => $_SHOP->auth_dsn,
-      'table' =>$_SHOP->auth_table,
-      'usernamecol' =>$_SHOP->auth_login,
-      'passwordcol' =>$_SHOP->auth_password);
+    $params = array("advancedsecurity"=>false );
 
-    $_auth = new Auth('DB',$params,'loginFunction');
+
+    $auth_container = new CustomAuthContainer($_SHOP->auth_status);
+    $_auth = new Auth($auth_container,$params);//,'loginFunction'
     $_auth ->setSessionName($_SHOP->session_name);
     $_auth ->setLoginCallback('loginCallback');
     is($action,"");
@@ -252,10 +201,9 @@ if (!defined('ft_check')) {die('System intrusion ');}
       $_auth->start();
     }
 
-    if (!$_auth->getAuth()) {
+    if (!$_auth->checkAuth()) {
       exit;
     }
-
     $_SHOP->auth = $_auth;
   }
 
@@ -268,4 +216,21 @@ if (!defined('ft_check')) {die('System intrusion ');}
 	}
 
   $_SHOP->organizer_data=(object)$_SESSION['_SHOP_ORGANIZER_DATA'];
+
+  function logincallback ($username,$auth){
+    global $_shop;
+    $query="select * from `Admin` where `admin_login`="._esc($username);
+    if($res=shopdb::query($query) and $data=shopdb::fetch_assoc($res)){
+      unset($data[ $_shop->auth_password ]);
+      $_session['_shop_auth_user_data']=$data;
+    }	else {
+      session_destroy();
+     exit;
+    }
+
+    $_session['_shop_auth_user_name']=$username;
+   // echo ini_get("session.gc_maxlifetime");
+  }
+
+
 ?>

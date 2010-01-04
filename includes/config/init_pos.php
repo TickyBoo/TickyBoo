@@ -35,13 +35,11 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   global $_SHOP;
   require_once("init_common.php");
-  
+
   $_SHOP->session_name="SalesSession";
 
   $_SHOP->auth_required=TRUE;
-  $_SHOP->auth_table="SPoint";
-  $_SHOP->auth_login="login";
-  $_SHOP->auth_password="password";
+  $_SHOP->auth_status="pos";
 
   $_SHOP->root .= 'pos/';
   $_SHOP->root_secured .= 'pos/';

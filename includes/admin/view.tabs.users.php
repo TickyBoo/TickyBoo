@@ -48,32 +48,31 @@ class UserTabsView extends AdminView {
     				con("control_tab")=>"?tab=3");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_ADMIN_tab'], "left");
 
-    switch ((int)$_SESSION['_ADMIN_tab'])
-       {
-       case 0:
-           require_once ('view.users.admin.php');
-           $viewer = new AdminUserView($this->width);
-           $viewer->draw('admin');
-           break;
+    switch ((int)$_SESSION['_ADMIN_tab']) {
+     case 0:
+         require_once ('view.users.admin.php');
+         $viewer = new AdminUserView($this->width);
+         $viewer->draw('admin');
+         break;
 
-       case 1:
-           require_once ('view.users.admin.php');
-           $viewer = new AdminUserView($this->width);
-           $viewer->draw('organizer');
-           break;
+     case 1:
+         require_once ('view.users.admin.php');
+         $viewer = new AdminUserView($this->width);
+         $viewer->draw('organizer');
+         break;
 
-       case 2:
-           require_once ('view.users.pos.php');
-           $viewer = new SPointView($this->width);
-           $viewer->draw();
-           break;
+     case 2:
+         require_once ('view.users.pos.php');
+         $viewer = new SPointView($this->width);
+         $viewer->draw();
+         break;
 
-       case 3:
-           require_once ('view.users.tickettaker.php');
-           $viewer = new controlView($this->width);
-           $viewer->draw();
-           break;
-       }
+     case 3:
+         require_once ('view.users.tickettaker.php');
+         $viewer = new controlView($this->width);
+         $viewer->draw();
+         break;
+     }
   }
 }
 

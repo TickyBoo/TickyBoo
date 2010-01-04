@@ -37,14 +37,13 @@ require_once("classes/AUIComponent.php");
 
 class MenuAdmin extends AUIComponent {
 
-    function draw ()
-    {
-        global $_SHOP;
+  function draw () {
+    global $_SHOP;
 		// Get the current filename
 		$current_script_name=$_SERVER["SCRIPT_NAME"];
 		$exploded_script_name=explode("/",$current_script_name);
 		$current_file_name = $exploded_script_name[count($exploded_script_name) - 1];
-		
+
 		// Specify menu items in an array
 		//  "file name" 		=> "text_define"    (text define from /includes/lang/site_XX.inc)
 		$menu_items = array (
@@ -62,11 +61,11 @@ class MenuAdmin extends AUIComponent {
 
 		// Begin drawing the menu table
 		echo "<center>
-        <table width='".$this->width."' class='menu_admin' cellspacing='1' >
+        <table width='{$this->width}' class='menu_admin' cellspacing='1' >
         <tr><td  class='menu_admin_title'>" . con('administration') . "</td></tr>";
-		
+
 		// Loop through the menu item array and put the'menu_admin_link_selected'-class on the linkt to current file
-		foreach($menu_items as $link => $text){ 
+		foreach($menu_items as $link => $text){
 			echo "<tr><td  class='menu_admin_item'><a href={$link} ";
 			if ($link==$current_file_name){
 				echo "class='menu_admin_link_selected'>";
@@ -78,16 +77,16 @@ class MenuAdmin extends AUIComponent {
 		}
 		// Continue and close the menu table below
 
-        /*
-       if($_SHOP->is_admin){
-         echo "<tr><td  class='menu_admin_item'><a href='$_SHOP->php_myadmin' class='menu_admin_link'>PHP MyAdmin</a></td></tr>";
-       }*/
-        echo "<tr><td></td></tr>";
-        echo "<tr><td  class='menu_admin_item'>
-       <a href='{$_SERVER["PHP_SELF"]}?action=logout' class='menu_admin_link'>" . con('logout') . "</a></td></tr>
-       </table>
-      </center><br>";
-    }
+      /*
+     if($_SHOP->is_admin){
+       echo "<tr><td  class='menu_admin_item'><a href='$_SHOP->php_myadmin' class='menu_admin_link'>PHP MyAdmin</a></td></tr>";
+     }*/
+    echo "<tr><td></td></tr>";
+    echo "<tr><td  class='menu_admin_item'>
+     <a href='{$_SERVER["PHP_SELF"]}?action=logout' class='menu_admin_link'>" . con('logout') . "</a></td></tr>
+     </table>
+    </center><br>";
+  }
 }
 
 ?>
