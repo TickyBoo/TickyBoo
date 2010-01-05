@@ -41,6 +41,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		var $pdf			= null;		// objet PDF
 		var $maxX			= 0;		// zone maxi X
 		var $maxY			= 0;		// zone maxi Y
+		var $maxE			= 0;		// nomre d'elements dans la zone
 
 		var $FirstPage		= true;		// premier page
 		
@@ -554,17 +555,21 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			list($lx, $rx) = $this->getMargins($this->pdf->y);
 			$this->pdf->x=$lx;
+			$wMax = $rx-$lx;
 			
 			if (
 				$this->style->value['text-align']!='right' && 
 				$this->style->value['text-align']!='center' && 
 				$this->style->value['text-align']!='justify'
 				)
+			{
+//				$this->pdf->setWordSpacing(0);
 				return null;
+			}
 
 			$sub = null;
 			$this->CreateSubHTML($sub);
-			$sub->saveMargin(0, 0,  $sub->pdf->w-$rx+$lx);
+			$sub->saveMargin(0, 0, $sub->pdf->w-$wMax);
 			$sub->forOneLine = true;
 			$sub->parse_pos = $this->parse_pos;
 			$sub->parsing->code = $this->parsing->code;
@@ -578,10 +583,12 @@ if (!defined('__CLASS_HTML2PDF__'))
 			for($sub->parse_pos; $sub->parse_pos<count($sub->parsing->code); $sub->parse_pos++)
 			{
 				$todo = $sub->parsing->code[$sub->parse_pos];
-				if (!$sub->loadAction($todo)) break;
+				$res = $sub->loadAction($todo);
+				if (!$res) break;
 			}
 
-			$w = $sub->maxX;
+			$w = $sub->maxX; // largeur maximale
+			$e = ($res===null ? $sub->maxE : 0); // nombre d'éléments maximal
 
 			$this->DestroySubHTML($sub);
 			if ($this->style->value['text-align']=='center')
@@ -590,6 +597,12 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$this->pdf->x = $rx-$w-0.01;
 			else
 				$this->pdf->x = $lx;
+/*				
+			if ($this->style->value['text-align']=='justify' &&  $e>1)
+				$this->pdf->setWordSpacing(($wMax-$w)/($e-1));
+			else
+				$this->pdf->setWordSpacing(0);
+*/
 		}
 		
 		/** 
@@ -1763,6 +1776,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if (!isset($param['value']))	$param['value']	= 0;
 			if (!isset($param['bar_w']))	$param['bar_w']	= $lst_barcode[$param['type']];
 			if (!isset($param['bar_h']))	$param['bar_h']	= '10mm';
+			if (!isset($param['label']))	$param['label']	= 'label';
 			
 			if (!isset($param['style']['color'])) $param['style']['color'] = '#000000';
 			$param['style']['background-color'] = $param['style']['color'];
@@ -1777,12 +1791,13 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$w = $this->style->ConvertToMM($param['bar_w']);
 			$h = $this->style->ConvertToMM($param['bar_h']);
 
-			$infos = $this->pdf->{'BARCODE_'.$param['type']}($x, $y, $param['value'], $h, $w);
+			$infos = $this->pdf->{'BARCODE_'.$param['type']}($x, $y, $param['value'], $h, $w, $param['label']!=='none');
 
 			// position maximale globale
 			$this->maxX = max($this->maxX, $x+$infos[0]);
 			$this->maxY = max($this->maxY, $y+$infos[1]);
  			$this->maxH = max($this->maxH, $infos[1]);
+ 			$this->maxE++; 
  			
  			$this->pdf->setX($x+$infos[0]);
  			
@@ -1993,6 +2008,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$old = $str;
 
 					$i++;
+					if (!isset($lst[$i])) break;
 					$str.= ' '.$lst[$i];
 				}
 				$str = $old;
@@ -2011,6 +2027,15 @@ if (!defined('__CLASS_HTML2PDF__'))
 				// ecriture du bout de phrase extrait et qui rentre
 				$wc = ($align=='L' ? $w : $this->style->value['width']);
 				if ($right - $left<$wc) $wc = $right - $left;
+/*
+				if ($this->pdf->ws)
+				{
+					$oldSpace = $this->pdf->CurrentFont['cw'][' '];
+					$this->pdf->CurrentFont['cw'][' ']*=(1.+$this->pdf->ws);
+					$wc = $this->pdf->GetStringWidth($str);
+					$this->pdf->CurrentFont['cw'][' '] = $oldSpace;
+				}
+*/
 				if (strlen($str)) $this->pdf->Cell($wc, $h+$dh, $str, 0, 0, $align, $fill, $this->inLink);
 				$this->maxH = max($this->maxH, $this->style->getLineHeight());
 				
@@ -2027,8 +2052,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 				{
 					if ($this->forOneLine)
 					{
+						$this->maxE+= $i+1;
 						$this->maxX = max($this->maxX, $maxX);
-						return false;
+						return null;
 					}
 					
 					// retour à la ligne
@@ -2054,8 +2080,18 @@ if (!defined('__CLASS_HTML2PDF__'))
 			// si il reste du text apres découpe, c'est qu'il rentre direct => on l'affiche
 			if (strlen($txt))
 			{
+/*
+				if ($this->pdf->ws)
+				{
+					$oldSpace = $this->pdf->CurrentFont['cw'][' '];
+					$this->pdf->CurrentFont['cw'][' ']*=(1.+$this->pdf->ws);
+					$w = $this->pdf->GetStringWidth($txt);
+					$this->pdf->CurrentFont['cw'][' '] = $oldSpace;
+				}
+*/
 				$this->pdf->Cell(($align=='L' ? $w : $this->style->value['width']), $h+$dh, $txt, 0, 0, $align, $fill, $this->inLink);
 				$this->maxH = max($this->maxH, $this->style->getLineHeight());
+				$this->maxE+= count(explode(' ', $txt));
 			}
 			
 			// détermination des positions MAX
@@ -2120,7 +2156,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 			
 			// detection du float
 			$float = $this->style->getFloat();
-			if ($float && $this->maxH) $this->o_BR(array());
+			if ($float && $this->maxH)
+				if (!$this->o_BR(array()))
+					return false;
 
 			// position d'affichage
 			$x = $this->pdf->getX();
@@ -2129,6 +2167,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 			// si l'image ne rentre pas dans la ligne => nouvelle ligne 
 			if (!$float && ($x + $w>$this->pdf->w - $this->pdf->rMargin) && $this->maxH)
 			{
+				if ($this->forOneLine) return null;
+
 				$hnl = $this->style->getLineHeight();
 				$hnl = max($this->maxH, $hnl);
 				$this->setNewLine($hnl);
@@ -2227,6 +2267,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->maxY = max($this->maxY, $y+$h);
  			$this->maxH = max($this->maxH, $h);
 		}
+			return true;
 		}
 		
 		/**
@@ -2738,22 +2779,34 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			if ($this->forOneLine) return false;
 			
-			$h = $this->style->getLineHeight();
-			$h = max($this->maxH, $h);
-			$y = $this->pdf->getY();
+			$h = max($this->maxH, $this->style->getLineHeight());
 
 			// si la ligne est vide, la position maximale n'a pas été mise à jour => on la met à jour
-			if ($this->maxH==0) $this->maxY = max($this->maxY, $y+$h);
+			if ($this->maxH==0) $this->maxY = max($this->maxY, $this->pdf->getY()+$h);
 			
-			// si le saut de ligne rentre => on le prend en compte, sinon nouvelle page
-			if (($y+$h<$this->pdf->h - $this->pdf->bMargin) || $this->isInOverflow)
-				$this->setNewLine($h, $curr);
-			else
-				$this->setNewPage(null, '', null, $curr);
-				
+			$this->makeBR($h, $curr);
+			
 			$this->maxH = 0;
 			
 			return true;
+		}
+		
+		function makeBR($h, $curr = null)
+		{
+			// si le saut de ligne rentre => on le prend en compte, sinon nouvelle page
+			if ($h)
+			{
+				if (($this->pdf->getY()+$h<$this->pdf->h - $this->pdf->bMargin) || $this->isInOverflow)
+				$this->setNewLine($h, $curr);
+			else
+				$this->setNewPage(null, '', null, $curr);
+			}
+			else
+			{
+				$this->setNewPositionForNewLine($curr);	
+			}
+				
+			$this->maxH = 0;
 		}
 		
 		/**
@@ -3117,16 +3170,30 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if (!in_array($this->previousCall, array('c_P', 'c_UL')))
 			{
 				if ($this->maxH) $this->o_BR(array());
-				$this->o_BR(array());
 			}
 			
 			$this->style->save();
 			$this->style->analyse('p', $param);
 			$this->style->setPosition($this->pdf->x, $this->pdf->y);
 			$this->style->FontSet();
+			 // annule les effets du setposition
+			$this->pdf->x-= $this->style->value['margin']['l'];
+			$this->pdf->y-= $this->style->value['margin']['t'];
 			
-			if ($this->style->value['text-indent']>0) $this->pdf->x+= $this->style->value['text-indent'];
+			list($mL, $mR) = $this->getMargins($this->pdf->y);
+			$mR = $this->pdf->w-$mR;
+			$mL+= $this->style->value['margin']['l']+$this->style->value['padding']['l'];
+			$mR+= $this->style->value['margin']['r']+$this->style->value['padding']['r'];
+			$this->saveMargin($mL,0,$mR);
 			
+			if ($this->style->value['text-indent']>0)
+			{
+				$y = $this->pdf->y+$this->style->value['margin']['t']+$this->style->value['padding']['t'];
+				$this->pageMarges[floor($y*100)] = array($mL+$this->style->value['text-indent'], $this->pdf->w-$mR);
+				$y+= $this->style->getLineHeight()*0.1;
+				$this->pageMarges[floor($y*100)] = array($mL, $this->pdf->w-$mR);
+			}
+			$this->makeBR($this->style->value['margin']['t']+$this->style->value['padding']['t']);
 			return true;
 		}
 		
@@ -3142,7 +3209,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($this->forOneLine) return false;
 
 			if ($this->maxH) $this->o_BR(array());
-			$this->o_BR(array());
+			$this->loadMargin();
+			$this->makeBR($this->style->value['margin']['b']+$this->style->value['padding']['b']); 
+			
 			$this->style->load();
 			$this->style->FontSet();
 					
@@ -4722,11 +4791,13 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->style->FontSet();
 
 			// affichage de l'image			
-			$this->Image($src, isset($param['sub_li']));
+			$res = $this->Image($src, isset($param['sub_li']));
+			if (!$res) return $res;
 
 			// restauration du style
 			$this->style->load();
 			$this->style->FontSet();	
+			$this->maxE++; 
 			
 			return true;
 		}

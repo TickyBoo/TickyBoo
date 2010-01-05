@@ -62,10 +62,10 @@
 					</tr>
 				</table>
 			</td>
-			<td border="1"><barcode type="EAN13" value="45" bar_h="10mm" bar_w="0.35mm"></barcode></td>
+			<td border="1"><barcode type="EAN13" value="45" bar_h="6mm" bar_w="0.3mm"></barcode></td>
 		</tr>
 		<tr>
-			<td border="1">B2</td>
+			<td border="1"><barcode type="CODE39" value="HTML2PDF" bar_h="8mm" bar_w="0.48mm" label="none"></barcode></td>
 			<td border="1">A2</td>
 		</tr>
 	</table>

@@ -35,11 +35,12 @@ if (!defined('__CLASS_FPDF_ALPHA__'))
 				//First use of image, get info
 				if($type=='')
 				{
-					/* MODIFICATION HTML2PDF pour le support des images PHP */
+					/* MODIFICATION HTML2PDF pour le support des images générées */
 					$type = explode('?', $file);
 					$type = pathinfo($type[0]);
 					if (!isset($type['extension']) || !$type['extension'])
-						$this->Error('Image file has no extension and no type was specified: '.$file);
+						$type['extension'] = 'php';
+//						$this->Error('Image file has no extension and no type was specified: '.$file);
 						
 					$type = $type['extension'];
 					/* FIN MODIFICATION */
@@ -52,7 +53,7 @@ if (!defined('__CLASS_FPDF_ALPHA__'))
 				}
 				$type=strtolower($type);
 
-				/* MODIFICATION HTML2PDF pour le support des images PHP et CGI*/
+				/* MODIFICATION HTML2PDF pour le support des images générées */
 				if ($type=='php' || $type=='cgi')
 				{
 					// identification des infos

@@ -5,7 +5,7 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
  * 
  * isset($_GET['vuehtml']) n'est pas obligatoire
  * il permet juste d'afficher le résultat au format HTML

@@ -94,6 +94,8 @@ Modification :
         correction sur la gestion du background-color
         correction sur la gestion de thead, tfoot, et tbody
         ajout du dessin verctoriel (cf exemples tigre et draw)
+        ajout de la propriété label="none/label" pour la balise barcode
+        nombreux petits correctifs
  3.26 : correction pour support des images générés en CGI
         ajout de la gestion du canal alpha pour les PNGs (nécessite GD2)
         ajout de la méthode setDefaultFont permettant de spécifier une fonte par défaut

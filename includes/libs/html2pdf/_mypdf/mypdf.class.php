@@ -125,6 +125,12 @@ if (!defined('__CLASS_MYPDF__'))
 			$this->_out($s);
 		}
 
+		function setWordSpacing($ws=0.)
+		{
+			$this->ws = $ws;
+			$this->_out(sprintf('%.3F Tw',$ws*$this->k));
+		}
+
 		// redéfinition de la methode Cell de FPDF afin de rajouter la gestion des overline et linethrough
 		function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='')
 		{
@@ -135,18 +141,10 @@ if (!defined('__CLASS_MYPDF__'))
 				//Automatic page break
 				$x=$this->x;
 				$ws=$this->ws;
-				if($ws>0)
-				{
-					$this->ws=0;
-					$this->_out('0 Tw');
-				}
+				if($ws>0) $this->setWordSpacing(0);
 				$this->AddPage($this->CurOrientation,$this->CurPageFormat);
 				$this->x=$x;
-				if($ws>0)
-				{
-					$this->ws=$ws;
-					$this->_out(sprintf('%.3F Tw',$ws*$k));
-				}
+				if($ws>0) $this->setWordSpacing($ws);
 			}
 			if($w==0)
 				$w=$this->w-$this->rMargin-$this->x;
@@ -172,6 +170,7 @@ if (!defined('__CLASS_MYPDF__'))
 				if(strpos($border,'B')!==false)
 					$s.=sprintf('%.2F %.2F m %.2F %.2F l S ',$x*$k,($this->h-($y+$h))*$k,($x+$w)*$k,($this->h-($y+$h))*$k);
 			}
+			
 			if($txt!=='')
 			{
 				if($align=='R')
@@ -196,6 +195,7 @@ if (!defined('__CLASS_MYPDF__'))
 				if($link)
 					$this->Link($this->x+$dx,$this->y+.5*$h-.5*$this->FontSize,$this->GetStringWidth($txt),$this->FontSize,$link);
 			}
+			
 			if($s)
 				$this->_out($s);
 			$this->lasth=$h;

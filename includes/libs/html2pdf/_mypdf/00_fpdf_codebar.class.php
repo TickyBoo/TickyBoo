@@ -49,14 +49,14 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			$this->FPDF($sens, $unit, $format);
 		}
 		
-		function BARCODE_EAN13($x,$y,$barcode,$h=10,$w=.35)
+		function BARCODE_EAN13($x,$y,$barcode,$h=10,$w=.35, $label=true)
 		{
-			return $this->Barcode($x,$y,$barcode,$h,$w,13);
+			return $this->Barcode($x,$y,$barcode,$h,$w,13,$label);
 		}
 		
-		function BARCODE_UPC_A($x,$y,$barcode,$h=10,$w=.35)
+		function BARCODE_UPC_A($x,$y,$barcode,$h=10,$w=.35, $label=true)
 		{
-			return $this->Barcode($x,$y,$barcode,$h,$w,12);
+			return $this->Barcode($x,$y,$barcode,$h,$w,12,$label);
 		}
 		
 		function GetCheckDigit($barcode)
@@ -84,7 +84,7 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			return ($sum+$barcode{12})%10==0;
 		}
 		
-		function Barcode($x,$y,$barcode,$h,$w,$len)
+		function Barcode($x,$y,$barcode,$h,$w,$len, $label=true)
 		{
 			//Padding
 			$barcode=str_pad($barcode,$len-1,'0',STR_PAD_LEFT);
@@ -138,16 +138,23 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			$code_t = substr($barcode,-$len);
 			
 			$code_f = $code_w/strlen($code_t)*$this->k/0.60;
-			$code_h = $h+$code_f/$this->k;
 			
+			if ($label)
+			{
 			//Print text uder barcode
+				$code_h = $h+$code_f/$this->k;
 			$this->SetFont('Arial','',$code_f);
 			$this->Text($x,$y+$h+0.90*$code_f/$this->k,$code_t);
+			}
+			else
+			{
+				$code_h = $h;
+			}
 
 			return array($code_w, $code_h);
 		}
 		
-		function BARCODE_CODE39($xpos, $ypos, $code,$height=10, $baseline=0.5 )
+		function BARCODE_CODE39($xpos, $ypos, $code,$height=10, $baseline=0.5, $label=true)
 		{
 		
 			$wide = $baseline;
@@ -223,13 +230,19 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			
 			$code_w = $xpos-$xpos_dep;
 			$code_t = $code;
-			
 			$code_f = $code_w/strlen($code_t)*$this->k/0.60/3;
-			$code_h = $height+$code_f/$this->k;
 			
+			if ($label)
+			{
 			//Print text uder barcode
+				$code_h = $height+$code_f/$this->k;		
 			$this->SetFont('Arial','',$code_f);
 			$this->Text($xpos_dep,$ypos+$height+0.90*$code_f/$this->k,$code_t);
+			}
+			else
+			{
+				$code_h = $height;		
+			}
 
 			return array($code_w, $code_h);
 		}

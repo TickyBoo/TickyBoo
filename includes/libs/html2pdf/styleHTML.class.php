@@ -309,12 +309,13 @@ if (!defined('__CLASS_STYLEHTML__'))
 									);
 									
 			if (!in_array($balise, array('h1', 'h2', 'h3', 'h4', 'h5', 'h6')))
-			$this->value['margin']	= array(
-									't' => 0,
-									'r' => 0,
-									'b' => 0,
-									'l' => 0
-								);
+				$this->value['margin']	= array('t'=>0,'r'=>0,'b'=>0,'l'=>0);
+				
+			if ($balise=='p')
+			{
+				$this->value['margin']['t'] = null;
+				$this->value['margin']['b'] = null;
+			}
 			$this->value['margin-auto'] = false;
 			
 			if (in_array($balise, array('div')))
@@ -686,6 +687,8 @@ if (!defined('__CLASS_STYLEHTML__'))
 						break;
 					
 					case 'text-align':
+						$val = strtolower($val);
+						if (!in_array($val, array('left', 'right', 'center', 'justify'))) $val = 'left';
 						$this->value['text-align'] = $val;
 						break;
 						
@@ -1057,6 +1060,9 @@ if (!defined('__CLASS_STYLEHTML__'))
 				}				
 			}
 
+			if ($this->value['margin']['t']===null) $this->value['margin']['t'] = $this->value['font-size'];
+			if ($this->value['margin']['b']===null) $this->value['margin']['b'] = $this->value['font-size'];
+			
 			if ($this->onlyLeft) $this->value['text-align'] = 'left';
 			
 			// correction de la largeur pour correspondre au modèle de boite quick

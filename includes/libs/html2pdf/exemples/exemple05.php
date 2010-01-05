@@ -5,7 +5,7 @@
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
  * Distribué sous la licence LGPL. 
  *
- * @author		Laurent MINGUET <webmaster@spipu.net>
+ * @author		Laurent MINGUET <webmaster@html2pdf.fr>
  *
  * SetDisplayMode : permet de choisir le mode d'affichage par defaut
  * 
