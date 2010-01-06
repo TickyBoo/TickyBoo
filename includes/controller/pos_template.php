@@ -84,7 +84,7 @@ $smarty->assign( 'organizer_currency', $_SHOP->organizer_data->organizer_currenc
 $smarty->assign( 'organizer', $_SHOP->organizer_data );
 
 
-$smarty->template_dir = $_SHOP->tpl_dir . 'pos' . DS;
+$smarty->template_dir = array($_SHOP->tpl_dir.'pos'.DS.'custom'.DS, $_SHOP->tpl_dir.'pos'.DS);
 $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
 $smarty->compile_id   = 'pos_'.$_SHOP->lang;
 $smarty->cache_dir    = $_SHOP->tmp_dir; // . '/web/cache/';
