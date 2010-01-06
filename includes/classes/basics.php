@@ -137,7 +137,7 @@ function uses()
 
 function FindClass(&$class_name) {
   $class_name = strtolower($class_name);
-
+//  echo CLASSES . 'model.'. $class_name . '.php','|';
   If (file_exists(CLASSES . $class_name . '.php')) {
     return CLASSES ;
   }  elseIf (file_exists(CLASSES . 'model.'. $class_name . '.php')) {
@@ -150,12 +150,22 @@ function FindClass(&$class_name) {
 
 
 function __autoload ($class_name ) {
+//  echo $class_name ,'~';
   $class_name = strtolower($class_name);
   If ($path = FindClass($class_name)) {
      require ($path . $class_name . '.php');
   }
 }
 
+function autoLoader ($class_name ) {
+//  echo $class_name ,'|';
+  $class_name = strtolower($class_name);
+  If ($path = FindClass($class_name)) {
+     require ($path . $class_name . '.php');
+  }
+}
+
+spl_autoload_register('autoLoader');
 /**
  * Gets an environment variable from available sources.
  * Used as a backup if $_SERVER/$_ENV are disabled.

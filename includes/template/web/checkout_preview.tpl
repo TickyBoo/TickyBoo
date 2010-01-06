@@ -51,9 +51,9 @@
 
   {include file="cart_content.tpl" check_out="on" }
   {assign var=total value=$cart->total_price_f()}
-  
+
 	<br />
-  
+
   <table cellpadding="0" cellspacing='0' border='0' width='100%'>
     <tr>
       <td width="50%" valign="top" align="left">
@@ -71,12 +71,12 @@
      			</tr>
       		{assign var=min_date value=$cart->min_date_f()}
           {update->view event_date=$min_date}
-                    
+
           {handling www='on' event_date=$min_date }
-          			
+{* checked="checked" *}
 				  <tr class="{cycle name='payments' values='TblHigher,TblLower'}">
             <td class='payment_form'>
-              <input checked="checked" type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
+              <input  type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
 		  		  </td>
           	<td class='payment_form'>
 	  			    <label for='{$shop_handling.handling_id}_check'>
@@ -91,9 +91,9 @@
               {/if}&nbsp;
             </td>
       		</tr>
-          
+
    	      {/handling}
-          
+
         	{if $update_view.currentres}
          		<tr class="{cycle values='TblHigher,TblLower'}">
               <td colspan="3">
@@ -102,10 +102,10 @@
               </td>
           	</tr>
           {/if}
-          <tr> 
+          <tr>
             <td colspan="3">
           	  <input type='submit' name='submit' value='{!order_it!}'/>
-          		
+
               {if !$update->is_demo()}
         		  </form>
           		{else}
@@ -120,7 +120,7 @@
          			  {/if}
                 <input style="float:right; display:inline-block;" type='submit' name='submit_reserve' value='{!reserve!}'/>
    		  		    <span style="float:right; display:inline-block;">{!orclick!}</span>
-                
+
       					{if !$update->is_demo()}
       					 </form>
           			{/if}
@@ -128,7 +128,7 @@
             </td>
           </tr>
        </table>
-       
+
     	</td>
    	</tr>
   </table>
