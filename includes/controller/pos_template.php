@@ -50,9 +50,9 @@ echo "<script>window.location.href='$url';</script>"; exit;
 require_once ( 'smarty/Smarty.class.php' );
 require_once ( 'classes/smarty.mycart.php' );
 require_once ( 'classes/smarty.user.php' );
-require_once ( 'classes/smarty.order.php' ); 
+require_once ( 'classes/smarty.order.php' );
 require_once ( 'classes/smarty.gui.php');
-require_once ( 'classes/smarty.update.php'); 
+require_once ( 'classes/smarty.update.php');
 require_once ( 'classes/smarty.pos.php' );
 require_once("config/init.php");
 
@@ -67,6 +67,9 @@ $user   = new User_Smarty( $smarty );
 $order  = new Order_Smarty( $smarty );
 $update = new Update_Smarty($smarty);
 $pos    = new POS_Smarty( $smarty );
+
+$gui->gui_name  ='TblLower';
+$gui->gui_value ='TblHigher';
 
 $smarty->assign( '_SHOP_root', $_SHOP->root );
 $smarty->assign( '_SHOP_root_secured', $_SHOP->root_secured );
@@ -92,7 +95,7 @@ $smarty->plugins_dir  = array( "plugins", $_SHOP->includes_dir . "shop_plugins" 
 if ($fond) {
   $smarty->display( $fond . '.tpl' );
   orphanCheck();
-  trace("End of pos \n\n\r");  
+  trace("End of pos \n\n\r");
 }
 
 ?>

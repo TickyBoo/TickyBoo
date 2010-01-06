@@ -263,10 +263,12 @@ function empt(&$arg , $default=null){
   return $default;
 }
 
-  function con($name) {
+  function con($name, $value='') {
     global $_SHOP;
     if (defined($name)) {
       return constant($name);
+    } elseif ($value) {
+      return $value;
     } else {
 /*      if (is_writable($_SHOP->langfile)){
 

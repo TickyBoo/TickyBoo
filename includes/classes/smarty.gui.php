@@ -206,12 +206,12 @@ class Gui_smarty {
   function EndForm($params, &$smarty) //($colspan = 2)
   {
     $name     = is($params['name'],'submit');
-    $align    = is($params['align'],'center');
+    $align    = is($params['align'],'right');
     $title    = is($params['title'], con('gui_save','submit'));
-    $class    = is($params['class'],'gui_value');
+    $class    = is($params['class'], $this->gui_value);
     $noreset  = is($params['noreset'], false);
     $onclick  = is($params['onclick'],'');
-    $return = "<tr><td align='$align' class='$class' colspan='2'>\n".
+    $return = "<tr class='$class' ><td align='$align'colspan='2'>\n".
               "<input type='submit' name='$name' value='" . $title . "'>";
     if (!$noreset) {
       $return .= "&nbsp; <input type='reset' name='reset' value='" . con('gui_reset','reset') . "'>\n";
@@ -230,7 +230,7 @@ class Gui_smarty {
 
   private function showlabel($name, $value, $nolabel=false,$options=array()) {
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr id='{$name}-tr' class='shop-tr'><th id='{$name}-label' class='{$this->gui_name}' width=''>" . con($name) . "</th>".
+      $return = "<tr id='{$name}-tr' class='shop-tr'><th id='{$name}-label' class='{$this->gui_name}' width='40%'>" . con($name) . "</th>".
                 "    <td id='{$name}-value' class='{$this->gui_value}'>{$value}";
       $return .= printMsg($name);
       return $return."</td></tr>\n";

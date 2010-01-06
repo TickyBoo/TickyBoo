@@ -31,7 +31,7 @@
  *}
 {include file="header.tpl" name=!order_reg! header=!tnx_order_mess!}
 
-  <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
+  <table class='table_dark' cellspacing='1' cellpadding='4' border=0 bgcolor='white' width='100%'>
     {eval var=$shop_handling.handling_text_payment assign=test}
     {gui->view name=payment value=$test}
     {eval var=$shop_handling.handling_text_shipment  assign=test}
@@ -39,8 +39,8 @@
     {gui->view name=order_id value=$order_id}
     {gui->valuta value=$order_total_price assign=test}
     {gui->view name=total_price value=$test}
-  </table><br>
+  </table>
   {eval var=$confirmtext}
- 
- 
+
+
  {include file="footer.tpl"}

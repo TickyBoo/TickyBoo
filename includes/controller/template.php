@@ -68,6 +68,8 @@ $cart   = new MyCart_Smarty($smarty);
 $user   = new User_Smarty($smarty);
 $order  = new Order_Smarty($smarty);
 $update = new Update_Smarty($smarty);
+$gui->gui_name  ='TblLower';
+$gui->gui_value ='TblHigher';
 
 $smarty->assign('_SHOP_root', $_SHOP->root);
 $smarty->assign('_SHOP_root_secured', $_SHOP->root_secured);
