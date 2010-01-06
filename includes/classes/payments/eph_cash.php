@@ -49,25 +49,32 @@ class EPH_cash extends payment{
 	}
 
 
-  function on_confirm(&$order) {
+  function on_confirm(&$order, $alreadypayed=0) {
+    global $_SHOP;
     if (!isset($_POST['cc_name'])) {
       $user = User::load($_SESSION['_SHOP_USER']);  //'user'
       $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
     }
 		$order_id= $order->order_id;
-    return "<form id='payment-confirm-form' action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
-            ".eph_cash_confirm."<br>
-            <div align='right'>
+    $alreadypayed=(float) $alreadypayed;
+    return "{gui->StartForm title=".con('eph_cash_confirm')." id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php?{$order->EncodeSecureCode()}' method='POST' onsubmit='this.submit.disabled=true;return true;'}
               <input type='hidden' name='action' value='submit'>
-              <INPUT type='submit' name='submit' value='{!pay!}' >
               <input type='hidden' name='order_id' value='{$order_id}'>
-            </div>
-            </form>";
+              <input type='hidden' name='alreadypayed' value='{$alreadypayed}'>
+              {GUI->view option=true name='order_payed_already' value='{$alreadypayed}'}
+              {GUI->input name='order_payed_total' value='".($order->order_total_price -$alreadypayed)."'}
+            {gui->EndForm title='!pay!'}
+            ";
   }
 
   function on_submit(&$order, &$err){
-    $order->set_payment_status('payed');
-		return array('approved'=>TRUE);
+    $payed = (float) ($_POST['order_payed_already'] + $_POST['order_payed_total']);
+    if ($order->order_total_price === $payed ) {
+      $order->set_payment_status('payed');
+		  return array('approved'=>TRUE);
+    } else {
+      return $this->on_comfirm($order, $payed);
+    }    
 	}
 
 

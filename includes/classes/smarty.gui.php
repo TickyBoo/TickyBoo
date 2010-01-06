@@ -178,6 +178,7 @@ class Gui_smarty {
   function StartForm($params, &$smarty) //($name, $width = 0, $colspan = 2)
   {
     $name     = is($params['name']);
+    $id       = is($params['id']);
     $title    = is($params['title']);
     $width    = is($params['width'],$this->width);
     $class    = is($params['class'],'gui_form');
