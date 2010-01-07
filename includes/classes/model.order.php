@@ -280,6 +280,9 @@ class Order Extends Model {
       if(!$res=ShopDB::query($query)){
         return self::_abort('user_failed_not found');
       }
+      
+      $tmpOrdForDate = Order::load($this->order_id);
+      $this->order_date = $tmpOrdForDate->order_date;
 
       if($this->order_handling->handling_id=='1'){
          $ok = $this->set_status('res',TRUE);

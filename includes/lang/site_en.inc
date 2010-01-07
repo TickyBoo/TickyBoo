@@ -544,10 +544,7 @@ define("order_event_list_title","Orders by Event");
   define("order_statuslog",'Order status log');
   define("order_note",'Dont forget to save the note.');
   define("Order_note_title",'Note');
-  define("handling_email_template_ord_incl_pdf"," Incl Pdfs");
-  define("handling_email_template_payed_incl_pdf","&nbsp;Incl&nbsp;Pdfs");
-  define("handling_email_template_send_incl_pdf","&nbsp;Incl&nbsp;Pdfs");
-
+  
 
 	//Action icons
 	define("change_status_to_ord","Change Status to Ordered?");
@@ -648,6 +645,18 @@ define("payment_update_title","Modify the Payment Type");
 	define("handling_text_payment","Payment Label");
 	define("handling_text_shipment","Shipment Label");
 	define("handling_html_template","HTML Template for Explanations");
+  
+  define("handling_email_template_ord_incl_pdf","Include PDF's for Order");
+  define("handling_email_template_payed_incl_pdf","Include PDF's for Paid");
+  define("handling_email_template_send_incl_pdf","Include PDF's for Sent");
+  define("handling_email_template_ord_incl_inv_pdf","Invoice/Receipt");
+  define("handling_email_template_payed_incl_inv_pdf","Invoice/Receipt");
+  define("handling_email_template_send_incl_inv_pdf","Invoice/Receipt");
+  define("handling_email_template_ord_incl_ticket_pdf"," Ticket");
+  define("handling_email_template_payed_incl_ticket_pdf"," Ticket");
+  define("handling_email_template_send_incl_ticket_pdf"," Ticket");
+  
+  
 
 	//paypal
 	define("pm_paypal_business","PayPal Account");

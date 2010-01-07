@@ -140,6 +140,23 @@ class Handling Extends Model {
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
       $order_d['order_old_status'] = $old_state;
+      
+      $handTemps=explode(",",$order->order_handling->handling_email_template);
+      if(!is_array($handTemps)){
+        $handTemps = array();
+      }
+      foreach($handTemps as $temp){
+        $t=explode("=",$temp);
+        $tempStatus = substr($t[0],0,strlen($new_state));
+        
+        if(strcasecmp($tempStatus,$new_state)===0){
+          $tempPdfName = substr($t[0],(strlen($tempStatus)+1));
+          
+          if( empt($tempPdfName,false) ){
+            $order_d["handling_{$tempPdfName}"] = $t[1];
+          }
+        }
+      }
 
       if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));

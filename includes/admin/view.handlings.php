@@ -119,7 +119,7 @@ class HandlingView extends AdminView{
 			</td></tr>";
 
 
-		//This is for the alt payments if nothing is slected alt wont be used when close to event.
+		//This is for the alt payments if nothing is slected alt wont be used when close to an event.
     $this->print_select_assoc('handling_alt',$data,$err,
            Handling::getHandlings(con('handling_no_alt')));
 
@@ -129,6 +129,8 @@ class HandlingView extends AdminView{
 		$this->print_input('handling_expires_min',$data,$err,10);
 		$this->print_input('handling_fee_fix',$data,$err,5,10);
 		$this->print_input('handling_fee_percent',$data,$err,5,10);
+    
+    //print_r($data['handling_email_template']);
 
 		$temps=explode(",",$data['handling_email_template']);
 		foreach($temps as $temp){
@@ -136,18 +138,18 @@ class HandlingView extends AdminView{
 			$data["handling_email_template_{$t[0]}"]=$t[1];
 		}
 
-		$this->print_select_tpl('handling_email_template_ord','email',$data,$err, true);
-		$this->print_select_tpl('handling_email_template_payed','email',$data,$err, true);
-    $this->print_select_tpl('handling_email_template_send','email',$data,$err, true);
+		$this->print_select_tpl('handling_email_template_ord',"'email','swift'",$data,$err, true);
+		$this->print_select_tpl('handling_email_template_payed',"'email','swift'",$data,$err, true);
+    $this->print_select_tpl('handling_email_template_send',"'email','swift'",$data,$err, true);
 
-		$this->print_select_tpl('handling_pdf_template','pdf2',$data,$err);
-		$this->print_select_tpl('handling_pdf_ticket_template','pdf2',$data,$err);
+		$this->print_select_tpl('handling_pdf_template',"'pdf2'",$data,$err);
+		$this->print_select_tpl('handling_pdf_ticket_template',"'pdf2'",$data,$err);
 //		$this->print_paper_format('pdf_paper',$data,$err);
 
 		if($data['handling_id']){
 			$this->print_large_area('handling_text_payment',$data,$err,3,92,'');
 			$this->print_large_area('handling_text_shipment',$data,$err,3,92,'');
-			$this->print_large_area('handling_html_template',$data,$err,10,95,'');
+			$this->print_large_area('handling_html_template',$data,$err,10,92,'');
 		  $this->extra_form($h, $data, $err);
 		}
 
@@ -155,29 +157,31 @@ class HandlingView extends AdminView{
   }
 
 
-	function draw (){
-		global $_SHOP;
-  	if($_GET['action']=='add'){
-  		$hand= new Handling(true);
-			$this->form((array)$hand, null, con('handling_add_title'));
- 			return 0;
-		}elseif($_GET['action']=='edit'){
-  		$hand=Handling::load($_GET["handling_id"]);
-  		$this->form((array)$hand, null, con('payment_update_title'));
- 			return 0;
-		}elseif($_POST['action']=='save'){
-      $new = false;
-			if(!$hand=Handling::load($_POST["handling_id"])){
-    		$hand= new Handling(true); $new = true;
-      }
-      var_dump($ok = $hand->fillPost());
-			if(!$ok || !$hand->saveEx()){
-    			$this->form($_POST, null, con('handling_update_title')); //handling_add_title
+  function draw (){
+    global $_SHOP;
+      if($_GET['action']=='add'){
+        $hand= new Handling(true);
+        $this->form((array)$hand, null, con('handling_add_title'));
+        return 0;
+		  }elseif($_GET['action']=='edit'){
+  		  $hand=Handling::load($_GET["handling_id"]);
+  		  $this->form((array)$hand, null, con('payment_update_title'));
+ 			  return 0;
+		  }elseif($_POST['action']=='save'){
+        $new = false;
+        if(!$hand=Handling::load($_POST["handling_id"])){
+          $hand= new Handling(true); $new = true;
+        }
+        var_dump($ok = $hand->fillPost());
+        if(!$ok || !$hand->saveEx()){
+    		  $this->form($_POST, null, con('handling_update_title')); //handling_add_title
     			return 0;
-			} elseif ($new){
-    			$this->form((array)$hand, null, con('handling_update_title'));
-    			return 0;
-			}
+        } elseif ($new){
+          $this->form((array)$hand, null, con('handling_update_title'));
+          return 0;
+        }else{
+          addNotice('save_successful');
+        }
 
 		}elseif($_GET['action']=='remove' and $_GET['handling_id']>0){
    		$hand=new Handling();
@@ -218,7 +222,7 @@ class HandlingView extends AdminView{
   function print_select_tpl ($name, $type, &$data, &$err, $inclPdf=false){
     global $_SHOP;
 
-    $query="SELECT template_name FROM Template WHERE template_type='{$type}' ORDER BY template_name";
+    $query="SELECT template_name FROM Template WHERE template_type IN ({$type}) ORDER BY template_name";
     if(!$res=ShopDB::query($query)){
       return FALSE;
     }
@@ -237,15 +241,32 @@ class HandlingView extends AdminView{
 
     echo "</select>";
     if ($inclPdf) {
-       $checked = ($data["{$name}_incl_pdf"]==1)?"selected":"";
-       echo "&nbsp;&nbsp;".con("{$name}_incl_pdf")."
-             <select name='{$name}_incl_pdf'>
+      echo "</nowrap>".printMsg($name, $err)."</td></tr>\n";
+      
+      echo "<tr><td class='admin_name'  width='40%'>".con($name."_incl_pdf")."</td>";
+      echo "<td class='admin_value'>";
+      
+      //Include Inv/Ord
+      $checked = ($data["{$name}_incl_inv_pdf"]==1)?"selected":"";
+      echo "&nbsp;&nbsp;".con("{$name}_incl_inv_pdf")."
+             <select name='{$name}_incl_inv_pdf'>
                 <option value='0'>".con('confirm_no')."</option>\n
                 <option value='1' $checked>".con('confirm_yes')."</option>\n";
-       echo "</select>";
+      echo "</select>";
+      
+      //Include Tickets
+      $checked = ($data["{$name}_incl_ticket_pdf"]==1)?"selected":"";
+      echo "&nbsp;&nbsp;".con("{$name}_incl_ticket_pdf")."
+             <select name='{$name}_incl_ticket_pdf'>
+                <option value='0'>".con('confirm_no')."</option>\n
+                <option value='1' $checked>".con('confirm_yes')."</option>\n";
+      echo "</select>";
+      
+      echo "</td></tr>\n";
 
+    }else{
+      echo "</nowrap>".printMsg($name, $err)."</td></tr>\n";
     }
-    echo "</nowrap>".printMsg($name, $err)."</td></tr>\n";
   }
 
 }

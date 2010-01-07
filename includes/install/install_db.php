@@ -332,7 +332,10 @@ $tbls['Order']['fields'] = array(
 $tbls['Order']['key'] = array(
   "PRIMARY KEY (`order_id`)",
   "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",
-  "KEY `order_status` (`order_handling_id`,`order_shipment_status`,`order_payment_status`,`order_status`)",
+  "KEY `order_handling_id` (`order_handling_id`)",
+  "KEY `order_status` (`order_status`)",
+  "KEY `order_shipment_status` (`order_payment_status`)",
+  "KEY `order_payment_status` (`order_payment_status`)",
   "KEY `order_timestamp` (`order_timestamp`)");
 $tbls['Order']['engine'] = 'InnoDB';
 $tbls['Order']['remove'] = array ('order_organizer_id');
@@ -466,7 +469,11 @@ $tbls['Seat']['fields'] = array(
   'seat_old_status' => "varchar(5) DEFAULT NULL");
 $tbls['Seat']['key'] = array(
   "PRIMARY KEY (`seat_id`)",
-  "KEY `seat_event_id` (`seat_event_id`,`seat_category_id`,`seat_order_id`,`seat_ts`,`seat_status`)");
+  "KEY `seat_event_id` (`seat_event_id`)",
+  "KEY `seat_category_id` (`seat_category_id`)",
+  "KEY `seat_order_id` (`seat_order_id`)",
+  "KEY `seat_ts` (`seat_ts`)",
+  "KEY `seat_status` (`seat_status`)");
 $tbls['Seat']['engine'] = 'InnoDB';
 $tbls['Seat']['remove'] = array ('seat_organizer_id')   ;
 
