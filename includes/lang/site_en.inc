@@ -645,7 +645,6 @@ define("payment_update_title","Modify the Payment Type");
 	define("handling_text_payment","Payment Label");
 	define("handling_text_shipment","Shipment Label");
 	define("handling_html_template","HTML Template for Explanations");
-  
   define("handling_email_template_ord_incl_pdf","Include PDF's for Order");
   define("handling_email_template_payed_incl_pdf","Include PDF's for Paid");
   define("handling_email_template_send_incl_pdf","Include PDF's for Sent");
@@ -655,6 +654,7 @@ define("payment_update_title","Modify the Payment Type");
   define("handling_email_template_ord_incl_ticket_pdf"," Ticket");
   define("handling_email_template_payed_incl_ticket_pdf"," Ticket");
   define("handling_email_template_send_incl_ticket_pdf"," Ticket");
+  define("handling_only_manual_send","Allways manually send sent email");
   
   
 

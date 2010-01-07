@@ -144,6 +144,7 @@ class HandlingView extends AdminView{
 
 		$this->print_select_tpl('handling_pdf_template',"'pdf2'",$data,$err);
 		$this->print_select_tpl('handling_pdf_ticket_template',"'pdf2'",$data,$err);
+    $this->print_select_assoc('handling_only_manual_send',$data,$err,array('No'=>'no','Yes'=>'yes'));
 //		$this->print_paper_format('pdf_paper',$data,$err);
 
 		if($data['handling_id']){

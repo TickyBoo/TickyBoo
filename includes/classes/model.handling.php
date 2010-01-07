@@ -157,6 +157,8 @@ class Handling Extends Model {
           }
         }
       }
+      
+      $order_d = array_merge($order_d,(array)$order->order_handling);
 
       if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
@@ -376,12 +378,12 @@ class Handling Extends Model {
   }
 
   function getPayment (){
-    $types=array('cash','entrance','invoice');
+    $types=array('entrance'=>'entrance','invoice'=>'invoice');
     $dir = INC.'classes'.DS.'payments';
 	  if ($handle = opendir($dir)) {
 		  while (false !== ($file = readdir($handle))){
         if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^eph_(.*?\w+).php/", $file, $matches)) {
-          $types[] =  $matches[1];
+          $types[$matches[1]] =  $matches[1];
         }
       }
       closedir($handle);
@@ -395,7 +397,10 @@ class Handling Extends Model {
     $query="SHOW  COLUMNS  FROM Handling {$like}";
     if(!$res=ShopDB::query_one_row($query)){return;}
     $types=explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2",$res['Type']));
-    return $types;
+    foreach($types as $key=>$type){
+      $namedTypes[$type]=$type;
+    }
+    return $namedTypes;
   }
 
   function getHandlings ($include =''){
