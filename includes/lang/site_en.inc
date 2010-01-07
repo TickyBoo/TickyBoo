@@ -638,7 +638,7 @@ define("payment_update_title","Modify the Payment Type");
 	define("handling_fee_fix","Fee Fixed");
 	define("handling_fee_percent","Fee Percent");
 	define("handling_email_template_ord","Email Template for Order");
-	define("handling_email_template_send","Email Template for Shipment");
+	define("handling_email_template_send","Email Template for Sent");
 	define("handling_email_template_payed","Email Template for Payment");
 	define("handling_pdf_template","PDF Template for Invoice/Receipt");
 	define("handling_pdf_ticket_template","PDF Ticket Template");

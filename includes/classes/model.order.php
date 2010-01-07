@@ -892,7 +892,17 @@ class Order Extends Model {
     } else
       return -5;
   }
-
+  
+  /**
+   * Order::printOrder()
+   * 
+   * @param mixed $order_id
+   * @param string $bill_template
+   * @param string $mode
+   * @param bool $print
+   * @param integer $subj : 1=tickets, 2=invoice, 3=both
+   * @return pdf_data or pdf_file 
+   */
   function printOrder($order_id, $bill_template='', $mode='file', $print=FALSE, $subj=3){ //print subj: 1=tickets, 2=invoice, 3=both
     require_once("classes/model.template.php");
     require_once(LIBS."html2pdf/html2pdf.class.php");

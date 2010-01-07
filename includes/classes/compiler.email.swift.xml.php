@@ -206,6 +206,8 @@ class EmailSwiftXMLCompiler {
 
     //TODO: Add check for new auto send methods.
     //if($data['handling_email_template_ord_incl_pdf'])
+    
+    /*
 
     if(isset($res['order_pdf'])){
       require_once("classes/model.order.php");
@@ -231,6 +233,7 @@ class EmailSwiftXMLCompiler {
 	      }
       }
     }
+    */
 
     /* Ignore Attachements for the moment
     if(isset($data['attachment'])){

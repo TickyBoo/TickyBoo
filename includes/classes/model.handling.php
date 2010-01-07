@@ -134,6 +134,7 @@ class Handling Extends Model {
     $ok=TRUE;
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
+      
       $tpl= &Template::getTemplate($template_name);
 
       $order_d=(array)$order;   //print_r( $order_d);
@@ -159,10 +160,20 @@ class Handling Extends Model {
       }
       
       $order_d = array_merge($order_d,(array)$order->order_handling);
-
+      
       if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;
+      }
+    }
+    
+    //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
+    $status = strtolower($new_state);
+    $manSend = strtolower($order->order_handling->handling_only_manual_send);
+    if($status=='payed' && $order->order_handling->handling_shipment=='email' && $manSend=='no'){
+      $order2=Order::load($order->order_id,true);
+      if ($order2) {
+        $order2->set_shipment_status('send');
       }
     }
 
