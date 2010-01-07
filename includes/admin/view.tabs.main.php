@@ -140,7 +140,7 @@ class IndexView extends AdminView {
 			return FALSE;
 		}
 
-		while($data=shopDB::fetch_row($res)){ print_r($daTA);
+		while($data=shopDB::fetch_row($res)){ //print_r($daTA);
       $part['total'] += $data[0];
       $part[$data[1]]=$data[0];
 		}
@@ -168,7 +168,9 @@ class IndexView extends AdminView {
     }
     $matches = explode(' ', INSTALL_REVISION);
    // print_r($matches);
-    if( $matches[1] < $currentOrder){
+    if( $matches[1] > $currentOrder){
+      $string = " <span style='color:red; '> SVN Build </span>";
+    }elseif( $matches[1] < $currentOrder){
       $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
     }else{
       //$string = " - You have the latest Version";

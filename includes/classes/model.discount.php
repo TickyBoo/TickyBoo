@@ -105,7 +105,7 @@ class Discount  Extends Model {
 
   function copy($event_main_id, $event_sub_id) {
     $discs = self::LoadAll($event_main_id);
-    print_r($discs);
+    //print_r($discs);
     foreach ($discs as $disc) {
       $disc->discount_event_id = $event_sub_id;
       unset($disc->discount_id);

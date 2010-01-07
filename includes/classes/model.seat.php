@@ -82,7 +82,7 @@ class Seat  Extends Model {
     }
     return $pmp;
   }
-  
+
   public function loadAllOrder($order_id){
     global $_SHOP;
 
@@ -348,7 +348,7 @@ class Seat  Extends Model {
       }
     }
 
-    if(!empty($pmp_check)){print_r($pmp_check);
+    if(!empty($pmp_check)){//print_r($pmp_check);
       foreach($pmp_check as $pmp_id=>$v){
         if ($pmp_id and !PlaceMapPart::clear_cache($pmp_id)) {
           return self::_abort('cant_cancel_seat_5');//echo d;;
@@ -360,18 +360,18 @@ class Seat  Extends Model {
     }
     return TRUE;
   }
-  
+
   public function getCount($options){
-    
+
     $query = "SELECT count(seat_id) ticketcount FROM seat WHERE 1=1";
-    
+
     if(is($options['seat_user_id'],false)){
       $query .= " AND seat_user_id="._esc($options['seat_user_id']);
     }
     if(is($options['status'],false)){
       $query .= " AND seat_status="._esc($options['status']);
     }
-    
+
     if($row = ShopDB::query_one_row($query)){
       return $row['ticketcount'];
     }else{
@@ -517,6 +517,6 @@ class Seat  Extends Model {
     echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reissued')."</div>";
     return false;
   }
-  
+
 }
 ?>

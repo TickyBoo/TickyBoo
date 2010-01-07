@@ -411,10 +411,13 @@ class OrderView extends AdminView{
       Order::reissue($_GET["order_id"], 0);
       return $this->view($_GET["order_id"]);
 
-    }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-      Order::delete_ticket($_GET["order_id1"], $_GET['seat_id'],0);
-    }elseif($_GET['action1']=="reissue_ticket" and $_GET["order_id1"] and $_GET['seat_id']){
-      Seat::reIssue($_GET["order_id1"], $_GET['seat_id']);
+    }elseif($_GET['action1']=="delete_ticket" and $_GET["order_id"] and $_GET['seat_id']){
+      Order::delete_ticket($_GET["order_id"], $_GET['seat_id'],0);
+    }elseif($_GET['action1']=="reissue_ticket" and $_GET["order_id"] and $_GET['seat_id']){
+      Seat::reIssue($_GET["order_id"], $_GET['seat_id']);
+    }elseif($_GET['action1']=='delete'){
+      Order::delete($_GET["order_id"], 'order_deleted_manual');
+
     }
 
     if($_GET['action']=='savenote') {
