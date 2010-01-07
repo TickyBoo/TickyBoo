@@ -355,6 +355,19 @@ class AdminView extends AUIComponent {
             </td></tr>\n";
     }
 
+    function print_password ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
+      $suffix = self::_check($name, $suffix,$data);
+      if($arrPrefix <> ''){
+        $prefix = $arrPrefix."[$name]";
+      }else{
+        $prefix = "{$name}";
+      }
+      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='40%'>$suffix" . con($name) . "</td>
+            <td class='admin_value'><input id='{$name}-input' type='password' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
+            ".printMsg($name, $err)."
+            </td></tr>\n";
+    }
+
     function print_checkbox ($name, &$data, &$err, $size = '', $max = '')
     {
       self::print_select_assoc ($name, $data, $err, array('0'=>'no', '1'=>'yes'));

@@ -7,6 +7,98 @@
  * @copyright 2010
  */
 include_once 'Auth/Container.php';
+class Admins extends Model {
+  protected $_idName    = 'admin_id';
+  protected $_tableName = 'Admin';
+  protected $_columns   = array( 'admin_id', '*admin_login', '*admin_password', 'admin_status',
+                                 '#admin_user_id', 'admin_ismaster','*admin_inuse','control_event_ids');
+
+  function __construct($filldefs= false, $admintype='') {
+    parent::__construct($filldefs);
+    if ( $admintype=='pos') {
+      $this->user = new User($filldefs);
+    }
+    $this->admin_status =$admintype;
+  }
+
+  function load ($id = 0){
+    $query = "select *
+              from Admin
+              where admin_id = "._esc($id);
+    if ($row = ShopDB::query_one_row($query)){
+      $adm = new Admins(false, $row['admin_status']);
+      if ($adm->admin_status =='pos') {
+        $query = "select *
+                  from User
+                  where user_id = "._esc($row['admin_user_id']);
+        $rowx = ShopDB::query_one_row($query);
+      } else $rowx = array();
+      $adm->_fill($row);
+      $adm->_fill($rowx);
+      return $adm;
+    }
+  }
+
+  function saveEx() {
+    if ($this->admin_status =='pos') {
+      $this->admin_user_id = $this->user->saveEx();
+    }
+    if (($this->admin_status !=='pos') || ($this->admin_user_id)) {
+      return parent::saveEx();
+    }
+    return false;
+  }
+
+  function CheckValues(&$data) {
+    $nickname=$data['admin_login'];
+    if(empty($data['admin_login'])){
+      addError('admin_login','mandatory');
+    } else {
+      $query="select Count(*) as count
+              from Admin
+              where admin_login= "._esc($nickname)."
+              and admin_id <> "._esc((int)$this->admin_id);
+      if(!$res=ShopDB::query_one_row($query)){
+        user_error(shopDB::error());
+      } elseif($res["count"]>0){
+        addError('admin_login','already_exist');
+      }
+    }
+    if(!$this->admin_id){
+      if(empty($data['password1']) ){
+        addError('password1','mandatory');
+      } elseif(empty($data['password2'])){
+        addError('password2','mandatory');
+      }
+    } elseif(!empty($data['password1']) and strlen($data['password1'])<5){
+      addError('password1','pass_too_short');
+    } elseif($data['password1']!=$data['password2']){
+      addError('password2','pass_not_egal');
+    }
+    if (!hasErrors() and !empty($data['password1']) ){
+      $data['admin_password'] = md5 ($data['password1']);
+    }
+    if(is_array($data['control_event_ids'])){
+      $data['control_event_ids'] = implode(',', $data['control_event_ids']);
+    }
+    $data['user_lastname'] = $data['kasse_name'];
+    $data['user_firstname'] = 'POS:';
+    return parent::CheckValues(&$data);
+  }
+
+  function _fill($arr , $nocheck=true)  {
+    if (parent::_fill($arr , $nocheck)){
+      return (!$this->user) || $this->user->_fill($arr , $nocheck);
+    } else
+      return false;
+  }
+
+  function delete() {
+    if (parent::delete() and $this->user) {
+      return $this->user->delete();
+    }
+  }
+}
 
 class CustomAuthContainer extends Auth_Container {
     /**

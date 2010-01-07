@@ -21,14 +21,14 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
+ * For pricing of this licence please contact us via e-mail to
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
 {assign var='order_id' value=$smarty.request.order_id}
@@ -48,7 +48,9 @@
               </td>
               <td class='title'  align='right'>&nbsp;
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue" }
-                  <a href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'><img border='0' src='{$_SHOP_themeimages}printer.gif'></a> 
+                  <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
+                    <img border='0' src='{$_SHOP_images}printer.gif'>
+                  </a>
                   <a href='javascript:if(confirm("{!pos_deleteorder!}")){literal}{location.href="view.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
                     <img border='0' src='{$_SHOP_themeimages}trash.png'>
                   </a>
@@ -116,7 +118,7 @@
                 {/if}
               </td>
             </tr>
-   			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") 
+   			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
 				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"
 				and $shop_order.handling_payment neq 'entrance' }
 			<tr>
@@ -136,9 +138,9 @@
 				          		<p>
 				          		<input type="submit" value="{!change_order_to_payed!}" />
 					      	<p>
-              </form>			
+              </form>
 				  		{/if}
-				  		
+
 				  	{/if}
 					{/handling}
 					      	</td>
@@ -154,7 +156,7 @@
                 {/if}
               </td>
             </tr>
-           	{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") 
+           	{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
 				and $shop_order.order_payment_status eq "payed" and $shop_order.order_shipment_status neq "send"
 				and ($shop_order.handling_shipment eq 'sp' or $shop_order.handling_shipment eq 'post') }
 			<tr>
@@ -163,7 +165,7 @@
 						<input type="hidden" name="action" value="setsend" />
 						<input id="order-id" type="hidden" name="order_id" value="{$shop_order.order_id}" />
 				        <input type="submit" value="{!change_order_to_send!}" />
-	     			</form>			
+	     			</form>
 			  	</td>
 			</tr>
 			{/if}
@@ -245,7 +247,7 @@
             <td width='33%' align="left"><a href="view.php">{!pos_goback!}</a></td>
             <td width='34%' align="center"> &nbsp;</td>
             <td width='33%' align="right">
-            	
+
 				{if $not_status eq "payed"}
               		<a href="view.php?order_id={$next_order_id}">{!pos_nextunpaid!}</a>
   				{elseif $not_status eq "send" }
@@ -263,7 +265,7 @@
         <table width='100%' cellspacing='1' cellpadding='4' border=0>
           <tr>
             <td class='title' colspan='9'>{!tickets!}<br></td>
-          </tr>   
+          </tr>
           <tr>
             <td class='subtitle'>{!id!}</td>
             <td class='subtitle'>{!event!}</td>
@@ -325,7 +327,7 @@
 <script type="text/javascript">
 {literal}
   $(document).ready(function(){
-    reOrder();  
+    reOrder();
   });
 {/literal}
 </script>

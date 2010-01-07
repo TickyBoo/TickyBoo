@@ -280,7 +280,7 @@ class Order Extends Model {
       if(!$res=ShopDB::query($query)){
         return self::_abort('user_failed_not found');
       }
-      
+
       $tmpOrdForDate = Order::load($this->order_id);
       $this->order_date = $tmpOrdForDate->order_date;
 
@@ -848,6 +848,7 @@ class Order Extends Model {
   function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
 
     if ($order == null) $order = $this;
+    if (is_numeric($order)) $order = self::load($order);
     if ($order == null) return '';
     if (!$order->order_tickets_nr ) $order->order_tickets_nr = $order->size();
     $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.

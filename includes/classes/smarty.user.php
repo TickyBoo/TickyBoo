@@ -108,7 +108,7 @@ class User_Smarty {
     } else {
       $type = 4;
     }
-    
+
     if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
       $_SESSION['_NEW_MEMBER']= $ismember;
       $this->load_f($res);
@@ -138,7 +138,7 @@ class User_Smarty {
     	}
     	$mandatory = convMandatory($mandatory_l);
 
-		if (User::Update($member, $err, $mandatory_l=0, $short)) {
+		if (User::UpdateEx($member, $err, $mandatory_l=0, $short)) {
       		$user = User::load($this->user_id);
       		$this->_fill($user);
       		$this->logged=true;

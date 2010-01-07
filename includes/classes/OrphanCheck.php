@@ -125,9 +125,10 @@ from Event_stat left join Event  on es_event_id = event_id
 where  (event_id is null)
 ";
 $orphancheck[]="
-select 'Spoint', SPoint.user_id, 'user_id' , SPoint.user_id, User.user_id
-from SPoint left join User  on SPoint.user_id = User.user_id
+select 'Spoint', SPoint.admin_id, 'user_id' , SPoint.admin_user_id, User.user_id
+from Admin SPoint left join User  on SPoint.user_id = User.user_id
 where  (User.user_id is null)
+and    admin_status = 'pos'
 ";
 
 /**/
@@ -146,9 +147,10 @@ select 'Order', o.order_id, 'reemited_id' l3 , o.order_reemited_id, o2.order_id
 from `Order` o left join `Order` o2 on o.order_reemited_id = o2.order_id
 where  (o.order_reemited_id is not null and o2.order_id is null)
 ";
+/*
 $orphancheck[]="
 select 'Order', o.order_id, 'owner_id' l4 ,    o.order_owner_id, POS.user_id
-from `Order` o left join SPoint POS on o.order_owner_id = POS.user_id
+from `Order` o left join admin POS on o.order_owner_id = POS.admin_user_id
 where  (o.order_owner_id is not null and POS.user_id is null)
 ";
 /**/
@@ -495,8 +497,8 @@ class orphans {
         break;
       case 'Order~owner_id':
         ShopDB::Query("
-                      INSERT INTO `SPoint` (`user_id`, `login`, `password`, `admin_status`) VALUES
-                                           ({$fix[4]}, 'demo', 'c514c91e4ed341f263e458d44b3bb0a7', 'pos')") ;
+                      INSERT INTO `Admin` (`admin_user_id`, `login`, `password`, `admin_status`) VALUES
+                                           ({$fix[4]}, 'pos~demo`{$fix[4]}', 'c514c91e4ed341f263e458d44b3bb0a7', 'pos')") ;
         break;
       case 'Order~user_id':
       case 'Seat~user_id':

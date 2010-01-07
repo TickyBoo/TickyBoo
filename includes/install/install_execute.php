@@ -31,14 +31,14 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_execute {
   function precheck($Install) {
     global $_SHOP;
     RemoveDir(ROOT."includes/temp",false);
-    
+
     $install_mode=$_SESSION['radio'];
 
     OpenDatabase();
@@ -63,10 +63,17 @@ class install_execute {
         } else {
          //  $Install->Warnings[] = "<pre>".$data['changes']."<pre>";
         }
-      }  
+      }
       if ($Install->Errors) return true;
     }
-
+    if (ShopDB::Tableexists('SPoint')){
+         $Install->Warnings[] = "<pre>Migrated Spoint<pre>";
+      self::MigrateSpoint();
+    }
+    if (ShopDB::Tableexists('Control')){
+         $Install->Warnings[] = "<pre>Migrated Control<pre>";
+      self::MigrateControl();
+    }
     if ($install_mode == 'NORMAL'){
       // import contens of mysqldump to db
       if ($error = file_to_db(ROOT."includes/install/base_sql.sql")){
@@ -95,14 +102,14 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where template_name='email_res'");
     install_execute::CreateConfig();
 
-    
+
     return true;
   }
 
   function postcheck($Install) {
     return true;
   }
-  
+
   function CreateConfig() {
     $config = "<?php\n";
     $config .= "/**\n";
@@ -120,7 +127,9 @@ class install_execute {
     if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
       $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
     }
-
+    if (!isset($_SESSION['SHOP']['secure_id'])) {
+      $_SESSION['SHOP']['secure_id'] = sha1(AUTH_REALM. BASE_URL . uniqid());
+    }
     foreach ($_SESSION['SHOP'] as $key =>$value) {
       $value = _esc($value);
       $config .= "\$_SHOP->{$key} = {$value};\n";
@@ -129,7 +138,7 @@ class install_execute {
     $config .= "\n?>";
     return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);
   }
-  
+
   function display() {
     Install_Form_Open (BASE_URL."/index.php",'', false);
     echo "<h2>Installation Completed</h2>You are now ready to start using Fusion Ticket.<br />\n";
@@ -150,6 +159,51 @@ class install_execute {
     Install_Form_Buttons ();
     Install_Form_Close ();
 //        session_destroy();
-  }  
+  }
+  function checkadmin($name) {
+    $query="select Count(*) as count
+            from Admin
+            where admin_login= "._esc($name);
+    if(!$res=ShopDB::query_one_row($query)){
+      user_error(shopDB::error());
+    } else
+      return ($res["count"]>0);
+  }
+
+  function MigrateSpoint() {
+    $query = "select * from SPoint";
+    $res = ShopDB::Query($query);
+    while ($row = ShopDB::fetch_assoc($res)){
+      If (self::checkAdmin($row['login'])) $row['login'] = "pos~{$row['login']}";
+      $query = "INSERT INTO `Admin` SET ".
+         "admin_login = '{$row['login']}',
+          admin_password = '{$row['password']}',
+          admin_user_id = {$row['user_id']},
+          admin_status = 'pos'";
+      ShopDB::query($query);
+    }
+    $sql = "RENAME TABLE `SPoint` TO  `old_spoint`"; // The MySQL way.
+    ShopDB::query($sql);
+  }
+
+  function MigrateControl(){
+    $query = "select * from `Control`";
+    $res = ShopDB::Query($query);
+    while ($row = ShopDB::fetch_assoc($res)){
+      If (self::checkAdmin($row['control_login'])) $row['control_login'] = "tt~{$row['control_login']}";
+      $query = "INSERT INTO `Admin` SET ".
+         "admin_login = '{$row['control_login']}',
+          admin_password = '{$row['control_password']}',
+          control_event_ids = '{$row['control_event_ids']}',
+          admin_status = 'control'";
+      ShopDB::query($query);
+    }
+    $sql = "RENAME TABLE `Control` TO  `old_control`"; // The MySQL way.
+    ShopDB::query($sql);
+  }
+
 }
 ?>
+
+
+

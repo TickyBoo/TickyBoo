@@ -44,18 +44,20 @@ $tbls['Admin']['fields'] = array(
   'admin_status' => " set('admin','organizer','control','pos') NOT NULL DEFAULT 'organizer'",
   'admin_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'admin_user_id' => " int(11) DEFAULT NULL",
-  'admin_ismaster' => " enum('No','Yes') DEFAULT 'No'");
+  'admin_ismaster' => " enum('No','Yes') DEFAULT 'No'",
+  'admin_inuse' => " enum('No','Yes') DEFAULT 'Yes'",
+  'control_event_ids' => " varchar(100) DEFAULT ''");
 $tbls['Admin']['key'] = array(
   "PRIMARY KEY (`admin_id`)",
   "KEY `admin_login` (`admin_login`)");
 $tbls['Admin']['engine'] = 'InnoDB';
-$tbls['Admin']['remove'] = array ('control_organizer_id','admin_level','control_event_ids')   ;
+$tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
 
 $tbls['admingroups']['fields'] = array(
   'admingroup_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admingroup_name' => " varchar(50) NOT NULL DEFAULT ''",
   'admingroup_ismaster' => " enum('No','Yes') DEFAULT 'No'",
-  'admingroup_inuse' => " enum('No','Yes') DEFAULT 'No'");
+  'admingroup_inuse' => " enum('No','Yes') DEFAULT 'Yes'");
 $tbls['admingroups']['key'] = array(
   "PRIMARY KEY (`admingroup_id`)");
 $tbls['admingroups']['engine'] = 'InnoDB';
@@ -70,6 +72,7 @@ $tbls['admingrouprelations']['key'] = array(
   "PRIMARY KEY (`agr_id`)");
 $tbls['admingrouprelations']['engine'] = 'InnoDB';
 
+/*
 $tbls['Control']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'control_login' => " varchar(50) NOT NULL DEFAULT ''",
@@ -93,6 +96,7 @@ $tbls['SPoint']['key'] = array(
 $tbls['SPoint']['engine'] = 'InnoDB';
 $tbls['SPoint']['remove'] = array ();
 
+*/
 
 $tbls['auth']['fields'] = array(
   'auth_id' => " int(11) NOT NULL AUTO_INCREMENT",
@@ -110,6 +114,7 @@ $tbls['auth']['remove'] = array ('owner_id','userlevel');
 
 $tbls['User']['fields'] = array(
   'user_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'user_status' => " tinyint(4) NOT NULL DEFAULT '0'",
   'user_lastname' => " varchar(50) NOT NULL DEFAULT ''",
   'user_firstname' => " varchar(50) NOT NULL DEFAULT ''",
   'user_address' => " varchar(75) NOT NULL DEFAULT ''",
@@ -121,7 +126,6 @@ $tbls['User']['fields'] = array(
   'user_phone' => " varchar(50) DEFAULT NULL",
   'user_fax' => " varchar(50) DEFAULT NULL",
   'user_email' => " varchar(50) NOT NULL DEFAULT ''",
-  'user_status' => " tinyint(4) NOT NULL DEFAULT '0'",
   'user_prefs' => " varchar(50) DEFAULT NULL",
   'user_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'user_custom1' => " varchar(50) DEFAULT ''",

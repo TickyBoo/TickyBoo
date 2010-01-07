@@ -46,8 +46,7 @@ class UserView extends AdminView{
     $status = $this->print_status($user["user_status"]);
     $user["user_status"] = $status;
     echo "<table class='admin_form' width='{$this->width}' cellspacing='1' cellpadding='4'>\n";
-    echo "<tr><td class='admin_list_title' colspan='2'>{$user["user_lastname"]}
-    {$user["user_firstname"]}</td></tr>";
+    echo "<tr><td class='admin_list_title' colspan='2'>{$user["user_lastname"]} {$user["user_firstname"]}</td></tr>";
 
     $this->print_field('user_lastname', $user);
     $this->print_field('user_firstname', $user);
@@ -77,11 +76,11 @@ class UserView extends AdminView{
       return;
     }
     echo "<br><table class='admin_list' cellspacing='0' cellpadding='5' width='{$this->width}'>
-   <tr><td class='admin_list_title' colspan='7'>" . orders . "</td></tr>";
+   <tr><td class='admin_list_title' colspan='7'>" . con('orders') . "</td></tr>";
     while ($order = shopDB::fetch_assoc($res)){
       echo "<tr><td class='order_item'>" . $order["order_id"] . "</td>
-               <td class='order_item' colspan='6'>" . tickets_nr . " " . $order["order_tickets_nr"] .
-      " - $currency " . $order["order_total_price"] . " - " . date . "  " . $order["order_date"] .
+               <td class='order_item' colspan='6'>" . con('tickets_nr') . " " . $order["order_tickets_nr"] .
+      " - $currency " . $order["order_total_price"] . " - " . con('date') . "  " . $order["order_date"] .
       " - " . $order["order_shipment_mode"] . " - " .
       $this->print_order_status($order["order_status"]) . "
 	       <a href='{$_SERVER['PHP_SELF']}?action=order_detail&order_id=" . $order["order_id"] . "'>
@@ -95,9 +94,9 @@ class UserView extends AdminView{
         if ((!$ticket["category_numbering"]) or $ticket["category_numbering"] == 'both'){
           $place = $ticket["seat_row_nr"] . "-" . $ticket["seat_nr"];
         }else if ($ticket["category_numbering"] == 'rows'){
-          $place = place_row . " " . $ticket["seat_row_nr"];
+          $place = con('place_row') . " " . $ticket["seat_row_nr"];
         }else if ($ticket["category_numbering"] == 'seat'){
-          $place = place_seat . " " . $ticket["seat_nr"];
+          $place = con('place_seat') . " " . $ticket["seat_nr"];
         }else{
           $place = '---';
         }
@@ -117,23 +116,23 @@ class UserView extends AdminView{
 
   function print_status ($user_status) {
     if ($user_status == '1'){
-      return sale_point;
+      return con('sale_point');
     }else if ($user_status == '2'){
-      return member;
+      return con('member');
     }else if ($user_status == '3'){
-      return guest;
+      return con('guest');
     }
   }
 
   function print_order_status ($order_status) {
     if ($order_status == 'ord'){
-      return "<font color='blue'>" . ordered . "</font>";
+      return "<font color='blue'>" . con('ordered') . "</font>";
     }else if ($order_status == 'send'){
-      return "<font color='red'>" . sended . "</font>";
+      return "<font color='red'>" . con('sended') . "</font>";
     }else if ($order_status == 'payed'){
-      return "<font color='green'>" . payed . "</font>";
+      return "<font color='green'>" . con('payed') . "</font>";
     }else if ($order_status == 'cancel'){
-      return "<font color='#787878'>" . canceled . "</font>";
+      return "<font color='#787878'>" . con('canceled') . "</font>";
     }
   }
 }

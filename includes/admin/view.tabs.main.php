@@ -132,19 +132,15 @@ class IndexView extends AdminView {
   }
 
   function admins_Count (){
-    $part = array('admin'=>0, 'organizer'=>0, 'control'=>0,'total'=>0);
+    $part = array('admin'=>0, 'organizer'=>0, 'pos'=>0, 'control'=>0,'total'=>0);
  	  $sql = "SELECT count(admin_status) as count, admin_status
   	       	FROM Admin
-  	       	group by admin_status
-  	       	union
-  	       	SELECT count(admin_status) as count, admin_status
-  	       	FROM Control
-            group by admin_status";
+  	       	group by admin_status";
  		if(!$res=ShopDB::query($sql)){
 			return FALSE;
 		}
 
-		while($data=shopDB::fetch_row($res)){
+		while($data=shopDB::fetch_row($res)){ print_r($daTA);
       $part['total'] += $data[0];
       $part[$data[1]]=$data[0];
 		}
@@ -160,19 +156,22 @@ class IndexView extends AdminView {
     try{
       $rsc->excuteRequest();
       $array = $rsc->getArray();
+    //  print_r($array);
       if(isset($array['versions']['version_attr']['version'])){
         $currentVersion = $array['versions']['version_attr']['version'];
+        $currentOrder = $array['versions']['version_attr']['order'];
       }else{
         throw new Exception('Couldnt get version');
       }
     }catch(Exception $e){
       return " - Could not check for new version.";
     }
-
-    if(CURRENT_VERSION <> $currentVersion){
-      $string = " - <span style='color:red; font-size:large;'> ".$currentVersion." is Available! </span>";
+    $matches = explode(' ', INSTALL_REVISION);
+   // print_r($matches);
+    if( $matches[1] < $currentOrder){
+      $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
     }else{
-      $string = " - You have the latest Version";
+      //$string = " - You have the latest Version";
     }
 
     return $string;

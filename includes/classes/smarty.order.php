@@ -468,6 +468,10 @@ class Order_Smarty {
    Order::printOrder($params['order_id'],'', 'stream', $print, $mode);
   }
 
+  function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
+    return Order::EncodeSecureCode($order, $item, $loging);
+  }
+
   function secure_url_param($num=FALSE, $nonum=FALSE)
   {
   if ($num) {
@@ -492,9 +496,9 @@ class Order_Smarty {
     }
     }
   }
-  function EncodeSecureCode($order){
-    return $order->EncodeSecureCode();
-  }
+//  function EncodeSecureCode($order){
+//    return $order->EncodeSecureCode();
+//  }
 }
 
 function _collect(&$event_item,&$cat_item,&$place_item,&$order){

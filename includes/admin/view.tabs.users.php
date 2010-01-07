@@ -62,15 +62,15 @@ class UserTabsView extends AdminView {
          break;
 
      case 2:
-         require_once ('view.users.pos.php');
-         $viewer = new SPointView($this->width);
-         $viewer->draw();
+         require_once ('view.users.admin.php');
+         $viewer = new AdminUserView($this->width);
+         $viewer->draw('pos');
          break;
 
      case 3:
-         require_once ('view.users.tickettaker.php');
-         $viewer = new controlView($this->width);
-         $viewer->draw();
+         require_once ('view.users.admin.php');
+         $viewer = new AdminUserView($this->width);
+         $viewer->draw('control');
          break;
      }
   }

@@ -80,7 +80,7 @@ class Model {
     if($this->id){
       return $this->update($exclude);
     }else{
-     return  $this->insert($exclude);
+      return $this->insert($exclude);
     }
   }
 
@@ -189,7 +189,7 @@ class Model {
   function fillGet($nocheck=false)     { return $this->_fill($_GET ,$nocheck); }
   function fillRequest($nocheck=false) { return $this->_fill($_REQUEST ,$nocheck); }
 
-  function _fill($arr , $nocheck=true)  {
+  function _fill(&$arr , $nocheck=true)  {
     if(is_array($arr) and ($nocheck or $this->CheckValues ($arr))) {
       foreach($arr as $key => $val)
         $this->$key = $val;

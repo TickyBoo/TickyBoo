@@ -21,14 +21,14 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
+ * For pricing of this licence please contact us via e-mail to
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
 
@@ -77,7 +77,7 @@
 {if $smarty.get.toy and $smarty.get.tom and $smarty.get.tod}
     {assign var='to' value="`$smarty.get.toy`-`$smarty.get.tom`-`$smarty.get.tod` 23:59:59.999999"}
 {/if}
-  
+
 <table border='0' width='100%' >
   <tr>
     <td>
@@ -92,8 +92,8 @@
         </tr>
 
         {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to}
-          {counter print=false assign=count}  
-          {if $count lt ($length+1)}    
+          {counter print=false assign=count}
+          {if $count lt ($length+1)}
 
             {if $shop_order.order_status eq "cancel"}
               <tr class='admin_order_{$shop_order.order_status}'>
@@ -119,8 +119,8 @@
                   <img src='{$_SHOP_themeimages}view.png' border='0'>
                 </a>
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"} {* Legacy support for older orders. *}
-                  <a href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
-                    <img border='0' src='{$_SHOP_themeimages}printer.gif'>
+                  <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
+                    <img border='0' src='{$_SHOP_images}printer.gif'>
                   </a>
                   {if $shop_order.payment_status eq 'none'}
                   <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
@@ -139,4 +139,3 @@
     </td>
   </tr>
 </table>
-
