@@ -180,10 +180,8 @@ class User_Smarty {
       return false;
     }
     return User::activate($_REQUEST['uar']);
-    }
-    return true;
   }
-  
+
   function asarray(){
     return (array)$this;
   }

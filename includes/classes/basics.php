@@ -638,9 +638,9 @@ function is_base64_encoded($data){
  * @param mixed $const
  * @return
  */
-function addError($key, $const) {
+function addError($key, $const, $varb='') {
   Global $_SHOP;
-  $_SHOP->Messages['__Errors__'][$key][] = con($const);
+  $_SHOP->Messages['__Errors__'][$key][] = con($const).$varb;
   return false;
 }
 
@@ -649,9 +649,9 @@ function addError($key, $const) {
  *
  * @return
  */
-function addNotice($const) {
+function addNotice($const, $varb='') {
   Global $_SHOP;
-  $_SHOP->Messages['__Notice__'][] = con($const);
+  $_SHOP->Messages['__Notice__'][] = con($const).$varb;
   return false;
 }
 
@@ -660,9 +660,9 @@ function addNotice($const) {
  *
  * @return
  */
-function addWarning($const) {
+function addWarning($const, $varb='') {
   Global $_SHOP;
-  $_SHOP->Messages['__Warning__'][] = con($const);
+  $_SHOP->Messages['__Warning__'][] = con($const).$varb;
   return false;
 }
 
@@ -714,7 +714,7 @@ function printMsg($key, $err = null, $addspan=true) {
     }
   }
 
-  return trim($output);
+  return str_replace("'",'"', str_replace("\r",'', str_replace("\n",'', $output)));
 }
 
 function showstr( $Text, $len = 20 ) {

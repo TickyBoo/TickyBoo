@@ -38,17 +38,17 @@
 		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
 
 		<link rel='stylesheet' href='style.php' type='text/css' />
-		
+
 		<!-- Must be included in all templates -->
-		
+
 		<link rel="icon" href="favicon.ico" type="image/x-icon" />
-		
+
 		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
     <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
-		
+
 		<script type="text/javascript">
 			var lang = new Object();
 			lang.required = '{!mandatory!}';        lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
@@ -57,44 +57,24 @@
 			lang.pass_short = '{!pass_too_short!}'; lang.pass_match = '{!pass_match!}';
 			lang.not_number = '{!not_number!}';     lang.condition ='{!check_condition!}';
 		</script>
-		
+
 		<script type="text/javascript" src="scripts/countdownpro.js" defer="defer"></script>
-		
+
 		<meta scheme="countdown1" name="d_hidezero" content="1" />
 		<meta scheme="countdown1" name="h_hidezero" content="1" />
 		<meta scheme="countdown1" name="m_hidezero" content="1" />
 		<meta scheme="countdown1" name="s_hidezero" content="1" />
 		<meta scheme="countdown1" name="event_msg"  content="0! " />
 		<meta scheme="countdown1" name="servertime" content="{$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'} GMT+00:00" />
-		
+
 		<!-- End Required Headers -->
-    {literal}
-			<script type="text/javascript">
-				$(document).ready(function(){
-        //  var msg = ' errors';
-          var msg = '{/literal}{printMsg key='__Warning__' addspan=false}{literal}';
-          if(msg) {
-            $("#error-text").html(msg);
-            $("#error-message").show();
-            setTimeout(function(){$("#error-message").hide();}, 5000);
-          }
-          var msg = '{/literal}{printMsg key='__Notice__' addspan=false}{literal}';
-          if(msg) {
-            $("#notice-text").html(msg);
-            $("#notice-message").show();
-            setTimeout(function(){$("#notice-message").hide();}, 5000);
-          }
-        });  
-        
-    </script>
-    {/literal}
 	</head>
 
   {*
             $("#error-message").hide();
           $("#notice-message").hide();
 *}
-  
+
 	<body class='main_side'>   <center>
 		<div class="mainbody" align='left'>
 			<img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" />
@@ -117,7 +97,7 @@
   		<div align="right" style="vertical-align: top; width:100%; " >
   			<a href="?setlang=en">[en]</a>
   		</div>
-		</div> 
+		</div>
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="padding: 1em; margin-top: .7em; display:none;" >
        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
           <span id='error-text'>ffff</span>

@@ -43,9 +43,6 @@
         {ShowFormToken name='TryActivateUser'}
         <input type='hidden' name='action' value='activate'>
         <tr><td  colspan='2'>{!act_enter_code!}<br><br></td></tr>
-        {if $errors}
-          <tr><td colspan='2' class='error'>{$errors}<br><br></td></tr>
-        {/if}
         <tr>
           <td>{!act_code!}</td>
           <td><input type='text' name='uar' value='{$smarty.request.uar}' size='40'> &nbsp; <input type='submit' name='submit' value="{!act_send!}"></td>

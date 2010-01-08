@@ -152,7 +152,7 @@ class Seat  Extends Model {
   	}
 
     if(!ShopDB::begin('Reservate seats')){
-      $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:62');
+      addWarning('internal_error','seat:62');
       return FALSE;
     }
 
@@ -176,13 +176,13 @@ class Seat  Extends Model {
 
         if(!$res=ShopDB::query($query)){
           ShopDB::rollback('cant lock seat');
-          $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:90');
+          addWarning('internal_error','seat:90');
           return FALSE;
         }
 
         if(!$row=ShopDB::fetch_assoc($res)){
           ShopDB::rollback('Cant find seat');
-          $_SHOP->place_error=array('errno'=>con('PLACE_ERR_OCCUPIED'));
+          addWarning('places_occupied');
       	  return FALSE;
       	}else{
       	  $pmps_id[$row['seat_pmp_id']]=1;
@@ -200,7 +200,7 @@ class Seat  Extends Model {
 
       if(!$res=ShopDB::query($query)){
         ShopDB::rollback('cant lock seats');
-        $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:115');
+        addWarning('internal_error','seat:115');
         return FALSE;
       }
 
@@ -212,7 +212,7 @@ class Seat  Extends Model {
       //is there less seats available that asked for? dono, return error
       if(count($seats_id)<$seats){
         ShopDB::rollback('Not engough seats to reservate');
-        $_SHOP->place_error=array('errno'=>con('PLACE_ERR_TOOMUCH'),'remains'=>count($seats_id));
+        addWarning('places_toomuch',' remains:'.count($seats_id));
         return FALSE;
       }
 
@@ -229,13 +229,13 @@ class Seat  Extends Model {
                 LIMIT 1 FOR UPDATE";
         if(!$res=ShopDB::query($query)){
           ShopDB::rollback('cant lock seat');
-          $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:142');
+          addWarning('internal_error','seat:142');
           return FALSE;
         }
 
   	    if(!$row=shopDB::fetch_assoc($res)){
           ShopDB::rollback('Cant find seat');
-          $_SHOP->place_error=array('errno'=>con('PLACE_ERR_OCCUPIED'));
+          addWarning('places_occupied');
       	  return FALSE;
       	}else{
       	  $pmps_id[$row['seat_pmp_id']]=1;
@@ -245,8 +245,7 @@ class Seat  Extends Model {
     //some strange thing happens
     }else{
       ShopDB::rollback("unknown place_numbering $numbering category $category_id");
-      $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:171');
-      user_error("unknown place_numbering $numbering category $category_id");
+      addWarning("unknown place_numbering $numbering category $category_id");
       return FALSE;
     }
 
@@ -264,13 +263,13 @@ class Seat  Extends Model {
 
      if(!ShopDB::query($query)){
         ShopDB::rollback('cant update seat');
-        $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:189');
+        addWarning('internal_error', 'seat:189');
         return FALSE;
       }else{
         //place taken by someone in the middle
         if(ShopDB::affected_rows()!=1){
           ShopDB::rollback('seat not changed');
-          $_SHOP->place_error=array('errno'=>con('PLACE_ERR_OCCUPIED'));
+          addWarning('places_occupied');
           return FALSE;
         }
       }
@@ -285,7 +284,7 @@ class Seat  Extends Model {
 
     //commit the reservation
     if(!ShopDB::commit('Seats reservated')){
-      $_SHOP->place_error=array('errno'=>con('PLACE_ERR_INTERNAL'),'place'=>'seat:211');
+      addWarning('internal_error','seat:211');
       return FALSE;
     }
 
@@ -485,7 +484,7 @@ class Seat  Extends Model {
 
       $res = ShopDB::query($query);
       if(!$res || ShopDB::affected_rows()<>1){
-        echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reissued')."(2)</div>";
+        addWarning('ticket_not_reissued',"Seat ID: $seat_id (1)");
         ShopDB::rollback('Failed to find the re-issue ticket');
         return false;
       }
@@ -499,24 +498,23 @@ class Seat  Extends Model {
               LIMIT 1";
 
       if(!ShopDB::query($query) or ShopDB::affected_rows()!=1){
-        echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reissued')."</div>";
+        addWarning('ticket_not_reissued',"Seat ID: $seat_id (2)");
         ShopDB::rollback('Failed to update the re-issue ticket');
         return FALSE;
       }
 
       if(!OrderStatus::statusChange($order_id,false,null,'Seat::reIssue',"Seat ID: $seat_id, Old Ticket Invalid")){
-        echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reissued')."(2)</div>";
+        addWarning('ticket_not_reissued',"Seat ID: $seat_id (3)");
         return false;
       }
 
       if(ShopDB::commit("Commit Ticket Re-Issue")){
-         echo "<div class=success> Seat ID: $seat_id : ".con('ticket_reissued')."</div>";
+         addNotice('ticket_reissued',"Seat ID: $seat_id ");
          return True;
       }
     }
-    echo "<div class=error> Seat ID: $seat_id : ".con('ticket_not_reissued')."</div>";
+    addWarning('ticket_not_reissued',"Seat ID: $seat_id (4)");
     return false;
   }
-
 }
 ?>

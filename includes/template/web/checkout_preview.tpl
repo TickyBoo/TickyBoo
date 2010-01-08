@@ -45,10 +45,6 @@
     </table>
  	{/if}
 
-	{if $order_error}
-    <div class='error'>{$order_error}</div><br />
-	{/if}
-
   {include file="cart_content.tpl" check_out="on" }
   {assign var=total value=$cart->total_price_f()}
 

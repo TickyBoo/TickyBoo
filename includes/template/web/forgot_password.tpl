@@ -39,7 +39,8 @@
 <link rel='stylesheet' href='style.php' type='text/css' >
 
 </head>
-<body topmargin="0" leftmargin="0" style='align:left;'> <br><center>
+<body topmargin="0" leftmargin="0" style='align:left;'> <br>
+<center>
 
   <table border="0" cellpadding="5" cellspacing="5" width="600" class="login_table"  >
     <tr>
@@ -48,26 +49,18 @@
       </td>
     </tr>
     {if $smarty.post.email}
-      <tr>
-        <td valign=top  class="TblHigher" >
-          {if $user->forgot_password_f($smarty.post.email) }
-            <div class='success'>{!pwd_is_sent!}.</div>
-          {else}
-            <div class='error'>{!pwd_err!}</div>
-          {/if}
-          <br><br>
-        </td>
-      </tr>
-    </table>
-    <br>
-    <button onclick="window.close();">{!close!}</button>
-  {else}
+      {$user->forgot_password_f($smarty.post.email) }
+      <button onclick="window.close();">{!close!}</button>
+    {else}
       <form action='forgot_password.php' method='post'>
         {ShowFormToken name='resendpassword'}
-        <tr><td  colspan='2'>{!pwd_note!}<br><br></td></tr>
+        <tr><td colspan='2'>{!pwd_note!}<br><br></td></tr>
         <tr>
           <td>{!user_email!}</td>
-          <td><input type='text' name='email' size='30'> &nbsp; <input type='submit' name='submit' value="{!pwd_send!}"></td>
+          <td>
+            <input type='text' name='email' size='30'> &nbsp;
+            <input type='submit' name='submit' value="{!pwd_send!}">
+          </td>
         </tr>
       </table>
     </form>

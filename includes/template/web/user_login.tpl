@@ -35,12 +35,12 @@
 	{user->logout}
 {/if}
 {if !$user->logged}
+  {include file="header.tpl" name=!login! header=!memberinfo!}
 
   <form method='post' action='index.php' style='margin-top:0px;'>
     <input type="hidden" name="action" value="login">
     {ShowFormToken name='login'}
 
-    {include file="header.tpl" name=!login! header=!memberinfo!}
 
     {if $smarty.get.action neq "logout" and $smarty.get.action neq "login"}
       <input type="hidden" name="uri" value="{$smarty.server.REQUEST_URI}">
@@ -49,11 +49,11 @@
       <table border="0" cellpadding="3" class="login_table" bgcolor='white' width='80%'>
       	<tr>
       		<td width='30%' class="TblLower">{!email!}</td>
-      		<td class="TblHigher" ><input type='input' name='username' size=20 ></td>
+      		<td class="TblHigher" ><input type='input' name='username' size=20 > {printMsg key='loginusername'}</td>
       	</tr>
       	<tr>
       		<td  class="TblLower">{!password!}</td>
-      		<td class="TblHigher" ><input type='password' name='password' size=20 ></td>
+      		<td class="TblHigher" ><input type='password' name='password' size=20 > {printMsg key='loginpassword'}</td>
       	</tr>
       	<tr>
       		<td colspan=2 class="TblLower">

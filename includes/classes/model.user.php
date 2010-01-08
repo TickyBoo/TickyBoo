@@ -211,36 +211,29 @@ class User extends Model{
   	}
 
   function activate($userdata){
-    //echo $userdata, "<br>\n";
     if (strpos($userdata,'%')!==false) {
       $userdata = urldecode($userdata);
     }
-    if (!is_base64_encoded($userdata)) {
-    	addWarning('act_uselink');
-    } else {
-      	$userdata2 = base64_decode($userdata);
-        //echo $userdata2, "<br>\n";
-
-      	list($x,$z,$y) = explode('|', $userdata2, 3);
-      	//echo $x ,' - ',$y , "<br>\n";
-      	if (!isset($x) or !isset($y)) {
-        	addWarning('act_uselink');
-      	} else {
-        	$x = (int)    $x;
-        	$y = (string) $y;
+    if (is_base64_encoded($userdata)) {
+    	$userdata2 = base64_decode($userdata);
+    	list($x,$z,$y) = explode('|', $userdata2, 3);
+    	if (isset($x) && isset($y)) {
+      	$x = (int)    $x;
+      	$y = (string) $y;
 
         if ( ($x> 0) && (strlen($y) == 32)) {
           $query = "UPDATE auth SET active=NULL WHERE user_id="._esc($x)." AND active="._esc($y)." LIMIT 1";
           if (ShopDB::query($query) and shopDB::affected_rows() == 1) {
+            addNotice('act_sent');
             return true;
           } else {
         		addWarning('act_error') ;
+            return false;
           }
-        } else {
-          addWarning('act_uselink') ;
         }
       }
     }
+    addWarning('act_uselink') ;
     return false;
   }
 
@@ -369,7 +362,7 @@ class User extends Model{
 
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
-      echo 'username not found';
+      addWarning('username not found');
       return FALSE;
     }
 
@@ -385,6 +378,7 @@ class User extends Model{
       $row['new_password']=$pwd;
 
       if(Template::sendMail($tpl,$row,"",$_SHOP->lang)){
+        addNotice('pwd_is_sent');
         return true;
       } else {
         addWarning('cant send email');

@@ -518,18 +518,17 @@ select SQL_CALC_FOUND_ROWS *
       return '';
 
     if ($oke){
-      $log = "<div class='success'> <b>'$date'</b> " . con($result.'success') . "</div>\n";
+      addNotice($result.'success',$date);
       if ($event->event_rep == 'main' and $_POST['also_sub_'.$event->event_id] and $subs = Event::loadAllSubs($event->event_id)) {
         foreach($subs as $sub) {
           if ($sub->event_status == $oldstate) {
-            $log .= $this->state_change_event($state, $sub);
+            $this->state_change_event($state, $sub);
           }
         }
       }
     } else {
-      $log = "<div class='err'> <b>'$date'</b> " . con($result.'failure') . "</div>\n";
+      addWarning($result.'failure',$date);
     }
-    return $log;
   }
 
   function state_change ($state)    {
@@ -549,22 +548,17 @@ select SQL_CALC_FOUND_ROWS *
              	$errs = $this->event_view($event_d, $stats, $pmps, false) or $errs;
              	$varNum++;
             } else {
-              $log .= $this->state_change_event ($state, $event);
+              $this->state_change_event ($state, $event);
             }
           }
         }
-        If ($log) addWarning($log);
-
         if($varNum!==0) {
           if ($errs) {
-            echo "<br><div class=error align=center>" . con('correct_errors_first') . "<br></div>";
+            addWarning('correct_errors_first');
           } else {
             $this->state_confirm_button($state);
           }
-        } else {
-//          $this->delayedLocation('view_event.php');
         }
-	      return true;
 
       } elseif (count($_POST['cbxEvents']) > 0) {
 		     $varNum = 0;
@@ -589,10 +583,7 @@ select SQL_CALC_FOUND_ROWS *
             }
 		     }
 
-		      return $varNum!==0;
-
-      }  else
-        return false;
+      }
   }
 
   function fill_images() {

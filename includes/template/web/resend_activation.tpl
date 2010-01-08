@@ -31,14 +31,8 @@
  *}
 {include file="header.tpl" name=!resend_activation!}
 {if $smarty.post.email}
-  {if $user->resend_activation_f($smarty.post.email) }
-    <div class='success'>
-    {!act_sent!}.</div>
-  {else}
-    <div class='error'>
-    {!act_err!}</div>
-  {/if}
-{else}  
+  {$user->resend_activation_f($smarty.post.email)}
+{else}
   <form action='index.php' method='post'>
     {ShowFormToken name='ResendActivation'}
     <input type='hidden' name='action' value='resend_activation'>

@@ -72,7 +72,7 @@
           <span class='note'>
             {!Discount_for!} {$shop_discount.discount_name}:
               {valuta value=$shop_discount.discount_price|string_format:"%.2f"}
-          </span>
+          </span><br>
         {/discount}
       </td>
     </tr>
@@ -146,7 +146,7 @@
               </select>
             </td>
             <td  align='left'>
-              <div id='qqq'  align='left' style='font-size:9px; float:left;'>x 
+              <div id='qqq'  align='left' style='font-size:9px; float:left;'>x
 {*			  	      <input style="float:none;" type='text' name='qty' size='4' maxlength='2' />*}
                 {assign var=limit value=14}
                 {if $shop_event.event_order_limit>0}

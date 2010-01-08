@@ -53,5 +53,26 @@
 		</table>
 	</div>
 </div>
+    {literal}
+			<script type="text/javascript">
+				$(document).ready(function(){
+        //  var msg = ' errors';
+          var msg = '{/literal}{printMsg key='__Warning__' addspan=false}{literal}';
+          if(msg) {
+            $("#error-text").html(msg);
+            $("#error-message").show();
+            setTimeout(function(){$("#error-message").hide();}, 5000);
+          }
+          var msg = '{/literal}{printMsg key='__Notice__' addspan=false}{literal}';
+          if(msg) {
+            $("#notice-text").html(msg);
+            $("#notice-message").show();
+            setTimeout(function(){$("#notice-message").hide();}, 5000);
+          }
+        });
+
+    </script>
+    {/literal}
+
 </body>
 </html>

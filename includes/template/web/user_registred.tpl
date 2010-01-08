@@ -29,16 +29,21 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-<table class="table_dark" >
-  <tr>
-    <td>
-      {!act_is_sent!}
-    </td>
-  </tr>
-  <tr><td>
-    {!act_mess_line!}
-  </td></tr>
-</table>
+
+  <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-top: .7em; " >
+     <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+        <table >
+          <tr>
+            <td>
+              {!act_is_sent!}
+            </td>
+          </tr>
+          <tr><td>
+            {!act_mess_line!}
+          </td></tr>
+        </table>
+     </p>
+  </div>
 
 
 

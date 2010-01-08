@@ -47,7 +47,7 @@
 				<tr>
 			  		<td class='user_info'>
 	    				{!number_tickets!}
-	  		  		</td>
+	  	  		</td>
 			  		<td class='subtitle'>{$shop_order.order_tickets_nr}</td>
 				</tr>
 				<tr>
@@ -75,7 +75,7 @@
 			  		</td>
 				</tr>
 				{if $shop_order.order_status eq "res"}
-			
+
 				<tr>
 			  		<td colspan="2">
 			  		{update->countdown order_id=$shop_order.order_id reserved=true}
@@ -105,7 +105,7 @@
 				</tr>
 			</form>
 			{/if}
-			
+
 			<tr>
   				<td class="user_info">{!payment!} {!status!}</td>
 			  	<td class="subtitle">
@@ -116,7 +116,7 @@
 			  	{/if}
 			  	</td>
 			</tr>
-			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") 
+			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
 				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
 			<tr>
 				<td colspan="2">
@@ -167,7 +167,7 @@
   	  	  <table width='100%' cellspacing='1' cellpadding='4'>
 			<tr>
 		  	  <td class='title' colspan='8'>{!tickets!}<br></td>
-			</tr>   
+			</tr>
 			<tr>
 			  <td class='subtitle'>{!id!}</td>
 			  <td class='subtitle'>{!event!}</td>

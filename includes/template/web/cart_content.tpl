@@ -62,11 +62,11 @@
       {/if}
     {/cart->items}
     <tr class="{cycle name='events' values='TblHigher,TblLower'}">
-      <td  colspan='2' class="title" align='right'>
-        {!total_price!}
+      <td  colspan='2' align='right'>
+        <b>{!total_price!}</b>
       </td>
-      <td class="title" align='right'>
-        {valuta value=$cart->total_price_f()|string_format:"%.2f"} {* //it seems this is not needed: |string_format:"%.2f" *}
+      <td align='right'>
+       <b> {valuta value=$cart->total_price_f()|string_format:"%.2f"}</b> {* //it seems this is not needed: |string_format:"%.2f" *}
       </td>
       <td>&nbsp;</td>
     </tr>

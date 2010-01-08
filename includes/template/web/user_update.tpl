@@ -53,8 +53,8 @@
 			<link rel="icon" href="images\animated_favicon1.gif" type="image/gif" />
 			<link rel='stylesheet' href='style.php' type='text/css' />
 	</head>
-	
-	<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE"> 
+
+	<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE">
 	<br />
 	<center>
 		<form action="checkout.php" method='post'>
@@ -71,20 +71,13 @@
 	<table cellpadding="3" class="main" bgcolor='white'>
 		{include file='user_form.tpl'}
    	{if $user->is_member}
-      <tr>
-     		<td class='TblLower'>{!old_password!} </td>
-     		<td class='TblHigher'>
-		      <input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10' />
-          <div class='error'>{$user_errors.old_password}</div>
-       	</td>
-     	</tr>
+      {gui->input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10'}
      	{if !$usekasse}
         <tr id='passwords_tr1' >
           <td class='TblLower'>{!new_password!} (opt.)</td>
           <td class='TblHigher'>
              <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
-             {!pwd_min!}
-             <div class='error'>{$user_errors.password}</div>
+             {!pwd_min!}{printMsg key='password'}
           </td>
         </tr>
         <tr id='passwords_tr2'>
@@ -95,7 +88,7 @@
 		{/if}
   </table>
 	<br />
-	
+
 	<div align="center">
    	<input type='submit' name='submit_update' value='Update' />
   </div>

@@ -37,7 +37,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class Order_Smarty {
 
   var $user_auth_id;
-  var $error;
 
   function Order_Smarty (&$smarty){
     global $_SHOP;
@@ -60,7 +59,7 @@ class Order_Smarty {
     $cart=$_SESSION['_SMART_cart'];
 
     if(!$handling or !$user_id or !$cart or !$cart->can_checkout()){
-      $this->error = con('reservate_failed');
+      addWarning('reservate_failed');
       return;
     }
      //compile order (order and tickets) from the shopping cart in order_func.php
@@ -73,22 +72,20 @@ class Order_Smarty {
 
       //put the order into database
       if(!$order_id=$order->save()){
-        $this->error = con('create_order_failed');
+        addWarning('create_order_failed');
         ShopDB::rollback('create_order_failed');
         $cart->iterate('_reset', $order);
         return;
       }
 
-
       //commit the transaction
       return (ShopDB::commit('Order created'))? $order: false;
     } else {
-      $this->error = con('cant_start_transaction');
+      addWarning('cant_start_transaction');
       return;
     }
 
   }
-
 
   function res_to_order($params,&$smarty){
       $order_id=$params['order_id'];

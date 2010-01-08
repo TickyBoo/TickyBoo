@@ -29,13 +29,8 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-{if $cart_error}
-  {include file="header.tpl" name=!shopping_cart!}
-  <div align='center' class='error'>{$cart_error}</div>
-{else}
-  {include file="header.tpl" name=!shopping_cart! header=!cart_cont_mess!}
-  {include file="cart_content.tpl" }
-{/if}
+{include file="header.tpl" name=!shopping_cart! header=!cart_cont_mess!}
+{include file="cart_content.tpl" }
 <br>
 <table class="table_midtone" width='100%'>
   <tr>

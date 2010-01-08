@@ -87,7 +87,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
     }
 
     $pmp = PlaceMapPart::loadFull($category['category_pmp_id']);
-
+    print_r($category);
     $cats = $pmp->categories;
     $zones = $pmp->zones;
 

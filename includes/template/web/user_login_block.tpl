@@ -66,7 +66,7 @@
   	</tr>
   	<tr>
   		<td class="login_content" style='padding-left:25px;'>
-        	<input type='input' name='username' size='20' style='font-size:10px;' > {printMsg key='username'}
+        	<input type='input' name='username' size='20' style='font-size:10px;' > {printMsg key='loginusername'}
       	</td>
   	</tr>
   	<tr>
@@ -74,7 +74,7 @@
   	</tr>
   	<tr>
 		<td class="login_content" style='padding-left:25px;'>
-        	<input type='password' name='password' size='20' style='font-size:10px;' />{printMsg key='password'}<br />
+        	<input type='password' name='password' size='20' style='font-size:10px;' />{printMsg key='loginpassword'}<br />
 			<input type='submit' value='{!login_button!}' style='font-size:10px;'/>
       	</td>
   	</tr>
