@@ -666,12 +666,16 @@ function addWarning($const) {
   return false;
 }
 
-function hasErrors(){
+function hasErrors($key=''){
   Global $_SHOP;
-  return (isset($_SHOP->Messages['__Errors__']) && count($_SHOP->Messages['__Errors__'])>0);
+  if ($key)  {
+    return (isset($_SHOP->Messages['__Errors__'][$key]) && count($_SHOP->Messages['__Errors__'][$key])>0);
+  } else {
+    return (isset($_SHOP->Messages['__Errors__']) && count($_SHOP->Messages['__Errors__'])>0);
+  }
 }
 
-function printMsg($key, $err = null) {
+function printMsg($key, $err = null, $addspan=true) {
   Global $_SHOP;
   $output ='';
   if (!is_array($err)){
@@ -687,17 +691,17 @@ function printMsg($key, $err = null) {
     foreach($err[$key] as $value){
       if(is_array($value)){
         foreach($value as $val){
-          $output .= $val. "</br>\n";
+          $output .= $val. "</br>";
         }
       }else{
-        $output .= $value. "</br>\n";
+        $output .= $value. "</br>";
       }
     }
 
   }elseif (isset($err[$key]) && is_string($err[$key])) {
-    $output .= $err[$key]. "</br>\n";
+    $output .= $err[$key]. "</br>";
   }
-  If ($output) {
+  If ($output && $addspan) {
     switch ($key) {
       case '__Warning__':
         $output = "<h4 class='error'>".$output. "</h4>";
@@ -710,7 +714,7 @@ function printMsg($key, $err = null) {
     }
   }
 
-  return $output;
+  return trim($output);
 }
 
 function showstr( $Text, $len = 20 ) {

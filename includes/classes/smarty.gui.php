@@ -67,7 +67,8 @@ class Gui_smarty {
   }
 
   function printMsg($params, &$smarty) {
-    return printMsg($params['key']);
+    $addspan     = is($params['addspan'],true);
+    return printMsg($params['key'],null, $addspan );
   }
 
   function url($params, $smarty, $skipnames){

@@ -58,9 +58,9 @@ class User extends Model{
     return $user;
   }
 
-  function login ($username, $password, &$err){
+  function login ($username, $password){
     if(!isset($username)|| !isset($password)){
-      $err['msg'] = con('mand_all');
+      addWarning('mand_all');
       return false;
     }
   	$sql = "SELECT *
@@ -71,14 +71,11 @@ class User extends Model{
         		LIMIT 1";
 
   	if(!$res=ShopDB::query_one_row($sql)){
-  		$err['msg'] =con('log_err_wrong_usr');
-  		$err['info'] =con('log_err_wrong_usr_info');
+  		addWarning('log_err_wrong_usr_info');
   		return false;
   	}
   	if($res['active']) {
-  		$err['msg'] =con('log_err_not_act');
-  		$err['info'] =con('log_err_not_act_info');
-  		$err['code'] = "notactive";
+  		addWarning('log_err_not_act_info');
   		return FALSE;
   	}
     unset($res['password']);
@@ -93,7 +90,7 @@ class User extends Model{
   }
 
 
-  function register ($status, $data, &$err, $mandatory=array(), $secure=0, $short=0){
+  function register ($status, $data, $mandatory=array(), $secure=0, $short=0){
     $user = new User();
     $data['user_status']=$status;
 
@@ -104,7 +101,6 @@ class User extends Model{
                 from auth
                 where username="._esc($data['user_email']);
         if($row = ShopDB::query_one_row($query) and $row['count']>0){
-          $err['user_email']=con('useralreadyexist');
           addError('user_email','useralreadyexist');
           return FALSE;
         }
@@ -131,13 +127,12 @@ class User extends Model{
                   _esc($active).")";
 
           if(!ShopDB::query($query)){
-            $err = con('cant_save_auth');
+            addWarning('cant_save_auth');
             return self::_abort('cant store auth');
           }
           $data['user_id'] = $user->user_id;
 
-          if (!User::sendActivationCode($data, $active, $myerror)) {
-            $err = $myerror;
+          if (!User::sendActivationCode($data, $active)) {
             return self::_abort('cant send activation code');
           }
         }
@@ -154,7 +149,7 @@ class User extends Model{
     return false;
   }
 
-	function updateEx (&$data, &$err, $mandatory=0, $short=0){
+	function updateEx (&$data, $mandatory=0, $short=0){
 
     	if(!empty($data['user_id'])) {
 
@@ -170,13 +165,13 @@ class User extends Model{
         		die('System error while changing user data.');
     		} elseif($user['user_status']==2) {
       		if (empty($data['old_password'])) {
-        		$err['old_password'] = con('mandatory');
+        		adderror('old_password','mandatory');
       		} elseif ($user['password']!==md5($data['old_password']) ) {
-    	  		$err['old_password']=con("incorrect_password");
-          } elseif ($user ['username']<> $data['user_email'] and !isset($err['user_email'])) {
+    	  		adderror('old_password',"incorrect_password");
+          } elseif ($user ['username']<> $data['user_email'] and !hasErrors('user_email')) {
       			$query="select count(*) as count from auth where username="._esc($data['user_email']);
-           if ($row=ShopDB::query_one_row($query) and $row['count']>0){
-				     $err['user_email']=con('alreadyexist') ;
+            if ($row=ShopDB::query_one_row($query) and $row['count']>0){
+				      adderror('user_email', 'alreadyexist') ;
       			}
       		}
     		}
@@ -209,20 +204,19 @@ class User extends Model{
         		}
             return ShopDb::Commit('Updated user');
     	   }
-    	  $err = $userup->errors();
     	  return false;
     	}else{
       		die("Missing user id. System halted.");
     	}
   	}
 
-  function activate($userdata, &$errors){
+  function activate($userdata){
     //echo $userdata, "<br>\n";
     if (strpos($userdata,'%')!==false) {
       $userdata = urldecode($userdata);
     }
     if (!is_base64_encoded($userdata)) {
-    	$errors =  con('act_uselink');
+    	addWarning('act_uselink');
     } else {
       	$userdata2 = base64_decode($userdata);
         //echo $userdata2, "<br>\n";
@@ -230,7 +224,7 @@ class User extends Model{
       	list($x,$z,$y) = explode('|', $userdata2, 3);
       	//echo $x ,' - ',$y , "<br>\n";
       	if (!isset($x) or !isset($y)) {
-        	$errors =  con('act_uselink');
+        	addWarning('act_uselink');
       	} else {
         	$x = (int)    $x;
         	$y = (string) $y;
@@ -240,41 +234,41 @@ class User extends Model{
           if (ShopDB::query($query) and shopDB::affected_rows() == 1) {
             return true;
           } else {
-        		$errors = con('act_error') ;
+        		addWarning('act_error') ;
           }
         } else {
-          $errors = con('act_uselink') ;
+          addWarning('act_uselink') ;
         }
       }
     }
     return false;
   }
 
-	function resend_activation($email, &$errors){
+	function resend_activation($email){
 		global $_SHOP;
 
 	    $query="SELECT auth.active, User.*
         			FROM auth LEFT JOIN User ON auth.user_id=User.user_id
         			WHERE auth.username="._esc($email);
 	    if (!$row=ShopDB::query_one_row($query)) {
-	  		$errors = con("log_err_wrong_usr");
+	  		addWarning("log_err_wrong_usr");
 	  	} elseif ($row['active']==null) {
-	  		$errors = con("log_err_isactive");
+	  		addWarning("log_err_isactive");
 	 	} else {
    		$active = md5(uniqid(rand(), true));
    		$query="UPDATE `auth` SET active='$active' WHERE username="._esc($row['user_email'])." LIMIT 1";
        	unset($row['active']);
 
    		if(ShopDB::query($query) and ShopDB::affected_rows()==1){
-         	User::sendActivationCode($row, $active, $errors);
+         	User::sendActivationCode($row, $active);
          	return true;
    		} else {
-   		    $errors = con("log_err_wrong_usr");
-        }
+   		  addWarning("log_err_wrong_usr");
+      }
    	}
 	}
 
-  public function sendActivationCode($row, $active, &$errors){
+  public function sendActivationCode($row, $active){
   	require_once('classes/model.template.php');
     global $_USER_ERROR, $_SHOP;
     // new part
@@ -290,7 +284,7 @@ class User extends Model{
     if(Template::sendMail($tpl,$row)){
       return true;
     } else {
-      $errors = con("log_err_mailnotsend");
+      addWarning("log_err_mailnotsend");
     }
   }
 
@@ -306,7 +300,6 @@ class User extends Model{
 
     if(!empty($data['user_email'])){
       if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $data['user_email'])){
-        $err['user_email']=con('not_valid_email');
         addError('user_email','not_valid_email');
       }
     }
@@ -362,10 +355,10 @@ class User extends Model{
   function check_NoSpam($secure, $data) {
     If (!empty($secure)) {
       if (empty($data[$secure])) {
-        $this->_errors[$secure] = con('mandatory');
+        addError($secure,'mandatory');
       }
       elseif ($_SESSION['_NoSpam'][$secure] <> md5(strtoupper ($data[$secure]))) {
-        $this->_errors[$secure] = con('invalid');
+        addError($secure,'invalid');
       }
     }
   }
@@ -394,10 +387,10 @@ class User extends Model{
       if(Template::sendMail($tpl,$row,"",$_SHOP->lang)){
         return true;
       } else {
-        echo 'cant send email:';
+        addWarning('cant send email');
       }
     } else {
-        echo 'cant set new password';
+        addWarning('cant set new password');
     }
   }
 

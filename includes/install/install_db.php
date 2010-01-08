@@ -53,6 +53,7 @@ $tbls['Admin']['key'] = array(
 $tbls['Admin']['engine'] = 'InnoDB';
 $tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
 
+/*
 $tbls['admingroups']['fields'] = array(
   'admingroup_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admingroup_name' => " varchar(50) NOT NULL DEFAULT ''",

@@ -29,23 +29,14 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-{php}
-  function utime (){
-    $time = explode( " ", microtime());
-    $usec = (double)$time[0];
-    $sec = (double)$time[1];
-    return $sec + $usec;
-  }
-  $ustart = utime();
-
-  global $smarty;
-  $_SESSION["ustart"] = $ustart;
-{/php}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
 		<title>FusionTicket</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<!-- link rel="stylesheet" type="text/css" href="css/formatting.css" media="screen"  -->
+		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+
 		<link rel='stylesheet' href='style.php' type='text/css' />
 		
 		<!-- Must be included in all templates -->
@@ -73,12 +64,37 @@
 		<meta scheme="countdown1" name="h_hidezero" content="1" />
 		<meta scheme="countdown1" name="m_hidezero" content="1" />
 		<meta scheme="countdown1" name="s_hidezero" content="1" />
-		<meta scheme="countdown1" name="event_msg" content="0! " />
+		<meta scheme="countdown1" name="event_msg"  content="0! " />
 		<meta scheme="countdown1" name="servertime" content="{$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'} GMT+00:00" />
 		
 		<!-- End Required Headers -->
+    {literal}
+			<script type="text/javascript">
+				$(document).ready(function(){
+        //  var msg = ' errors';
+          var msg = '{/literal}{printMsg key='__Warning__' addspan=false}{literal}';
+          if(msg) {
+            $("#error-text").html(msg);
+            $("#error-message").show();
+            setTimeout(function(){$("#error-message").hide();}, 5000);
+          }
+          var msg = '{/literal}{printMsg key='__Notice__' addspan=false}{literal}';
+          if(msg) {
+            $("#notice-text").html(msg);
+            $("#notice-message").show();
+            setTimeout(function(){$("#notice-message").hide();}, 5000);
+          }
+        });  
+        
+    </script>
+    {/literal}
 	</head>
 
+  {*
+            $("#error-message").hide();
+          $("#notice-message").hide();
+*}
+  
 	<body class='main_side'>   <center>
 		<div class="mainbody" align='left'>
 			<img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" />
@@ -101,13 +117,22 @@
   		<div align="right" style="vertical-align: top; width:100%; " >
   			<a href="?setlang=en">[en]</a>
   		</div>
-		</div>
-		
+		</div> 
+    <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="padding: 1em; margin-top: .7em; display:none;" >
+       <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+          <span id='error-text'>ffff</span>
+       </p>
+    </div>
+    <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-top: .7em; display:none;" >
+       <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+          <span id='notice-text'>fff</span>
+       </p>
+    </div>
 		<div class="maincontent">
 			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
   				<tr>
 					<td valign='top' align='left'>
-    {include file="Progressbar.tpl" name=$name}
+            {include file="Progressbar.tpl" name=$name}
 						<br />
   						{if $name}
     						<h1>{$name}</h1>

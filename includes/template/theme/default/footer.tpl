@@ -39,28 +39,6 @@
 </div>
 	<div class="footer">
 		<hr width="100%" />
-{php}
-
-GLOBAL $_SHOP;
-$link = ShopDB::$link;
-printf("System status: %s \n", mysqli_stat($link));
-
-//mysqli_close($link);
-if (function_exists('sys_getloadavg')) {
-    	$loadArray = sys_getloadavg();
-    	$load= "Load: ".$loadArray[0]." / ".$loadArray[1]." / ".$loadArray[2];
-    } else {
-    	$load=@file_get_contents('/proc/loadavg');
-    }
-    if($load) {
-      echo "Date: ".date('d.m.Y H:i:s')." ".$load;
-    }
-$start=$_SESSION["ustart"];
-$end = utime(); $run = $end - $start;
-echo " Page expelled in " . substr($run, 0, 5) . " secs.";
-echo "<hr>";
-{/php}
-
 		<table width="100%">
 		<tr>
 		<!-- To comply with our GPL please keep the following link in the footer of your site -->

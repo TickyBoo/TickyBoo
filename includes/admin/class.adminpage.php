@@ -150,7 +150,25 @@ class AdminPage extends AUIComponent {
             }
           }
         }
-      }
+      }";
+      echo '
+      $(document).ready(function(){
+        var msg = '."'".printMsg('__Warning__', null, false)."'".';
+        if(msg) {
+          $("#error-text").html(msg);
+          $("#error-message").show();
+          setTimeout(function(){$("#error-message").hide();}, 5000);
+        }
+        var msg = '."'".printMsg('__Notice__', null, false)."'".';
+        if(msg) {
+          $("#notice-text").html(msg);
+          $("#notice-message").show();
+          setTimeout(function(){$("#notice-message").hide();}, 5000);
+        }
+      });  
+      ';
+      echo "
+  
           -->
     </script>
   </head>
@@ -172,8 +190,17 @@ class AdminPage extends AUIComponent {
   //        }
   //        echo "</select>";
       echo"</td></tr></table></div><br>";
-      echo printMsg('__Warning__');
-      echo printMsg('__Notice__');
+      echo"
+          <div id=\"error-message\" title='{!order_error_message!}' class=\"ui-state-error ui-corner-all\" style=\"padding: 1em; margin-top: .7em; display:none;\" >
+             <p><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span>
+                <span id='error-text'>ffff</span>
+             </p>
+          </div>
+          <div id=\"notice-message\" title='{!order_notice_message!}' class=\"ui-state-highlight ui-corner-all\" style=\" padding: 1em; margin-top: .7em; display:none;\" >
+             <p><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span>
+                <div id='notice-text'>fff</div>
+             </p>
+          </div>";
   }
 
   function drawFoot() {

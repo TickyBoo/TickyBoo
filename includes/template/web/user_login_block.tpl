@@ -41,7 +41,7 @@
 		<td class="login_title" >{!member!}</td>
 	</tr>
   	<tr>
-		<td class="login_content">{!welcome!} <b>{user->user_firstname} {user->user_lastname}</b>!
+		<td class="login_content">{!welcome!} <b>{user->user_firstname|clean} {user->user_lastname|clean}</b>!
 			<br>
 			<li><a  href='index.php?personal_page=on'>{!pers_page!}</a></li>
 			<li><a  href='index.php?action=logout'>{!logout!}</a></li>
@@ -53,13 +53,6 @@
   	<tr>
   		<td class="login_title">{!member!}</td>
   	</tr>
-  {if $login_error}
-	<tr>
-    	<td class='TblHigher'>
-        	<div class='error'> {$login_error.msg}</div>
-    	</td>
-	</tr>
-  {/if}
     <form method='post' action='index.php' style='margin-top:0px;' id="user-login">
     <input type="hidden" name="action" value="login">
     <input type="hidden" name="type" value="block">
@@ -73,7 +66,7 @@
   	</tr>
   	<tr>
   		<td class="login_content" style='padding-left:25px;'>
-        	<input type='input' name='username' size='20' style='font-size:10px;' >
+        	<input type='input' name='username' size='20' style='font-size:10px;' > {printMsg key='username'}
       	</td>
   	</tr>
   	<tr>
@@ -81,7 +74,7 @@
   	</tr>
   	<tr>
 		<td class="login_content" style='padding-left:25px;'>
-        	<input type='password' name='password' size='20' style='font-size:10px;' /><br />
+        	<input type='password' name='password' size='20' style='font-size:10px;' />{printMsg key='password'}<br />
 			<input type='submit' value='{!login_button!}' style='font-size:10px;'/>
       	</td>
   	</tr>

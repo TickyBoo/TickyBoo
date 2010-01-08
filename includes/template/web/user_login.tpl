@@ -46,12 +46,6 @@
       <input type="hidden" name="uri" value="{$smarty.server.REQUEST_URI}">
     {/if}
     <center>
-      {if $login_error}
-        <div style="width:'80%';" class='error' align='left'>
-            {$login_error.msg}{$login_error.info}
-        </div>
-          <br>
-      {/if}
       <table border="0" cellpadding="3" class="login_table" bgcolor='white' width='80%'>
       	<tr>
       		<td width='30%' class="TblLower">{!email!}</td>

@@ -62,12 +62,11 @@ class User_Smarty {
   }
 
   function login ($params,&$smarty){
-  	$this->login_f($params['username'],$params['password'],$err);
-   	$smarty->assign("login_error",$err);
+  	$this->login_f($params['username'],$params['password']);
   }
 
-  function login_f ($username, $password, &$err){
-    if ($user = User::Login($username, $password, $err)) {
+  function login_f ($username, $password){
+    if ($user = User::Login($username, $password)) {
     	$this->_fill($user);
     	$this->logged=true;
     	$this->is_member  = true;
@@ -90,26 +89,22 @@ class User_Smarty {
     $this->_clean();
   }
 
-  function asarray(){
-    return (array)$this;
-  }
-
  /* User data gets subbmitted to here */
   function register ($params, &$smarty){
-    if(!$this->register_f($params['ismember'], $params['data'], $err, $params['mandatory'], $params['secure'],$params['short'] ) || hasErrors()){
+    if (!$this->register_f($params['ismember'], $params['data'], $params['mandatory'], $params['secure'],$params['short'] ) || hasErrors()) {
       $smarty->assign('user_errors',true);
     }
   }
 
 /*The next bit of code creates users */
-  function register_f ($ismember, &$member, &$err, $mandatory_l=0, $secure='', $short=0 ){
+  function register_f ($ismember, &$member, $mandatory_l=0, $secure='', $short=0 ){
     if (!isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
       $type =($ismember)?2:3;
     } else {
       $type = 4;
     }
 
-    if($res = User::register($type, $member, $err, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
+    if($res = User::register($type, $member, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */
       $_SESSION['_NEW_MEMBER']= $ismember;
       $this->load_f($res);
       $this->new_member = $ismember;
@@ -117,28 +112,23 @@ class User_Smarty {
     }
     $this->new_member = false;
     $_SESSION['_NEW_MEMBER']= false;
-
-
     return false;
-//    echo "error";
   }
 ///////////////////
 //Update Member Function!
 /////////////////////
 
   function update($params,&$smarty){
-  	if(!$this->update_f($params['data'],$err,$params['mandatory'],$params['short'])){
-  		$smarty->assign('user_errors',$err);
-	  }
+  	$this->update_f($params['data'],$params['mandatory'],$params['short']);
   }
 
-  	function update_f (&$member, &$err, $mandatory_l=0, $short=0){
-  		if ($this->user_id <> $member['user_id']) {
-      		die('System error while changing user data');
-    	}
-    	$mandatory = convMandatory($mandatory_l);
+  function update_f (&$member, $mandatory_l=0, $short=0){
+    if ($this->user_id <> $member['user_id']) {
+      die('System error while changing user data');
+    }
+    $mandatory = convMandatory($mandatory_l);
 
-		if (User::UpdateEx($member, $err, $mandatory_l=0, $short)) {
+		if (User::UpdateEx($member, $mandatory_l=0, $short)) {
       		$user = User::load($this->user_id);
       		$this->_fill($user);
       		$this->logged=true;
@@ -158,12 +148,12 @@ class User_Smarty {
     return User::forgot_password($email);
   }
 
-  	function resend_activation($params,&$smarty){
-  		$this->resend_activation_f($params['email']);
+  function resend_activation($params,&$smarty){
+  	$this->resend_activation_f($params['email']);
 	}
 
 	function resend_activation_f($email){
-    	return User::resend_activation($email,$err);
+   	return User::resend_activation($email);
 	}
 
   function _fill ($user){ ///????
@@ -184,17 +174,18 @@ class User_Smarty {
     }
   }
 
-
   function activate(){
     global $smarty;
     if (!isset($_REQUEST['uar'])) {
       return false;
     }
-    if (!User::activate($_REQUEST['uar'], $errors)) {
-      $smarty->assign('errors',$errors);
-      return false ;
+    return User::activate($_REQUEST['uar']);
     }
     return true;
+  }
+  
+  function asarray(){
+    return (array)$this;
   }
 }
 ?>

@@ -37,11 +37,6 @@
   {include file="header.tpl" name=!pers_info! header=!user_notice!}
   <form action='checkout.php' method='post' id="user-register" >
 {/if}
-  {if $user_errors}
-     <br/>
-     <div class='error'>{$user_errors._error}</div><br>
-
-  {/if}
 {*  <table width='100%'> <tr><td valign='top'> *}
     {ShowFormToken name='UserRegister'}
     <input type='hidden' name='action' value='register' />
@@ -79,7 +74,7 @@
         <td class='TblHigher'>
            <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />&nbsp;
            {!pwd_min!}
-           <div class='error'>{$user_errors.password}{printMsg key='password'}</div>
+           {printMsg key='password'}
         </td>
       </tr>
       <tr id='passwords_tr2'>
@@ -92,8 +87,7 @@
           <table cellpadding="0" cellspacing="0" width='400'>
             <tr>
               <td >
-                <input type='text' name='user_nospam' size='10' maxlength="10" value='' >
-				<sup> &nbsp;{!nospam_info!} </sup><span class='error'>{$user_errors.user_nospam}{printMsg key='user_nospam'}</span>
+                <input type='text' name='user_nospam' size='10' maxlength="10" value='' >	<sup> &nbsp;{!nospam_info!} </sup>{printMsg key='user_nospam'}
               </td>
               <td align='center'>
                 <img src="nospam.php?name=user_nospam" alt='' border=1>
@@ -105,8 +99,7 @@
       <tr>
         <td colspan='2' class='TblHigher'>
           <a  href='agb.php' target='cond' style="float:left; display:block;">{eval var=!agrement!}</a><span style="float:left;">&nbsp;*</span>  
-          <input type='checkbox' class='checkbox' name='check_condition' value='check'>
-          <div class='error'>{$user_errors.check_condition}{printMsg key='check_condition'}</div>
+          <input type='checkbox' class='checkbox' name='check_condition' value='check'>{printMsg key='check_condition'}
         </td>
       </tr>
 
