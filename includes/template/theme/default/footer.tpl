@@ -61,13 +61,13 @@
           if(msg) {
             $("#error-text").html(msg);
             $("#error-message").show();
-            setTimeout(function(){$("#error-message").hide();}, 5000);
+            setTimeout(function(){$("#error-message").hide();}, 10000);
           }
           var msg = '{/literal}{printMsg key='__Notice__' addspan=false}{literal}';
           if(msg) {
             $("#notice-text").html(msg);
             $("#notice-message").show();
-            setTimeout(function(){$("#notice-message").hide();}, 5000);
+            setTimeout(function(){$("#notice-message").hide();}, 7000);
           }
         });
 
