@@ -212,16 +212,16 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
     $l = $_SHOP->lang;
     switch ($pmp->pmp_scene) {
         case 'north':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle><img src='../images/scene_h_$l.png'></td></tr><tr><td align=center valign=middle>$res</td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle><img src='{$_SHOP->theme_dir}scene_h_$l.png'></td></tr><tr><td align=center valign=middle>$res</td></tr></table>";
             break;
         case 'south':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle>$res</td></tr><tr><td align=center valign=middle><img src='../images/scene_h_$l.png'></td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle>$res</td></tr><tr><td align=center valign=middle><img src='{$_SHOP->theme_dir}scene_h_$l.png'></td></tr></table>";
             break;
         case 'east':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle>$res</td><td align=center valign=middle><img src='../images/scene_v_$l.png'></td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle>$res</td><td align=center valign=middle><img src='{$_SHOP->theme_dir}scene_v_$l.png'></td></tr></table>";
             break;
         case 'west':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle><img src='../images/scene_v_$l.png'></td><td align=center valign=middle>$res</td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle><img src='{$_SHOP->theme_dir}scene_v_$l.png'></td><td align=center valign=middle>$res</td></tr></table>";
             break;
     }
 
