@@ -208,8 +208,10 @@ class Model {
       }
       $this->$name = null;
       $query = "update {$this->_tableName} set
-                  {$name} = NULL
-                where {$this->_idName} = {$this->id}";
+                  {$name} = NULL ";
+      if ($this->_idName {
+        $query = " where {$this->_idName} = {$this->id}";
+      }
       ShopDB::query($query);
     } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
       if (!preg_match('/\.(\w+)$/', $_FILES[$name]['name'], $ext)) {
@@ -235,8 +237,10 @@ class Model {
       @chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
       $this->$name = $doc_name;
       $query = "update {$this->_tableName} set
-                  {$name} = "._esc($doc_name)."
-                where {$this->_idName} = {$this->id}";
+                  {$name} = "._esc($doc_name);
+      if ($this->_idName {
+        $query = " where {$this->_idName} = {$this->id}";
+      }
       ShopDB::query($query);
 //
     }
