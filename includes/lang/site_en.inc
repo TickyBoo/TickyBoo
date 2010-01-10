@@ -219,7 +219,7 @@ define("template_admin","Templates");
 define("payment_admin","Order Handlings");
 define("search_order","Search");
 define("imp_export_admin", "Import /Export");
-define("garbage","Garbage");
+define("utils_admin","Utilities");
 
 //Home
 //System Information
@@ -1353,19 +1353,19 @@ define('order_notice_message','order_notice_message');
 define('file_not_exsist','file_not_exsist');
 ?>
 <?php
-define('orphan_tab','orphan_tab');
+define('orphan_tab','Orphans');
 ?>
 <?php
-define('Garbage_tab','Garbage_tab');
+define('garbage_tab','Garbage');
 ?>
 <?php
-define('emaillog_tab','emaillog_tab');
+define('emaillog_tab','Email log');
 ?>
 <?php
-define('backup_tab','backup_tab');
+define('backup_tab','Backup');
 ?>
 <?php
-define('email_log_title','email_log_title');
+define('email_log_title','Email_log list');
 ?>
 <?php
 define('English','English');
@@ -1380,26 +1380,54 @@ define('email_body','email_body');
 define('email_log_list_title','email_log_list_title');
 ?>
 <?php
-define('el_timestamp','el_timestamp');
+define('el_timestamp','Date');
 ?>
 <?php
-define('el_action','el_action');
+define('el_action','Action');
 ?>
 <?php
-define('el_email_to','el_email_to');
+define('el_email_to','TO email');
 ?>
 <?php
-define('el_failed','el_failed');
+define('el_failed','Failed');
 ?>
 <?php
-define('el_received','el_received');
+define('el_received','Received');
 ?>
 <?php
-define('el_log','el_log');
+define('el_log','Return Log');
 ?>
 <?php
-define('el_bad_emails','el_bad_emails');
+define('el_bad_emails','Bad Emails');
 ?>
 <?php
-define('el_email_message','el_email_message');
+define('el_email_message','Email Message');
+?><?php
+define('garbage','garbage');
+?><?php
+define('email_resSuccess - Template Compiled!','email_resSuccess - Template Compiled!');
+?>
+<?php
+define('forgot_passwdSuccess - Template Compiled!','forgot_passwdSuccess - Template Compiled!');
+?>
+<?php
+define('Invoice_pdf2Success - Template Compiled!','Invoice_pdf2Success - Template Compiled!');
+?>
+<?php
+define('Order_ConfirmedSuccess - Template Compiled!','Order_ConfirmedSuccess - Template Compiled!');
+?>
+<?php
+define('Receipt_pdf2Success - Template Compiled!','Receipt_pdf2Success - Template Compiled!');
+?>
+<?php
+define('Reserved_Invoice_AttachedSuccess - Template Compiled!','Reserved_Invoice_AttachedSuccess - Template Compiled!');
+?>
+<?php
+define('Signup_emailSuccess - Template Compiled!','Signup_emailSuccess - Template Compiled!');
+?>
+<?php
+define('Tickets_AttachedSuccess - Template Compiled!','Tickets_AttachedSuccess - Template Compiled!');
+?>
+<?php
+define('Ticket_pdf2Success - Template Compiled!','Ticket_pdf2Success - Template Compiled!');
 ?>

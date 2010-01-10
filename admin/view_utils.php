@@ -41,6 +41,6 @@ require_once ("admin/view.utilities.php");
 
 
 //print cart update
-$body=new GarbageView();
+$body=new UtilitiesView();
 $body->drawall();
 ?>

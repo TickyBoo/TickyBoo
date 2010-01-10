@@ -37,7 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 require_once("classes/OrphanCheck.php");
 
-class GarbageView extends AdminView{
+class UtilitiesView extends AdminView{
 
 	function garbage_list (){
 
@@ -121,7 +121,7 @@ class GarbageView extends AdminView{
 		}
     if(!$rowcount=ShopDB::query_one_row('SELECT FOUND_ROWS()', false)){return;}
 		$alt = 0;
-    echo "<table class='admin_list' border='0' width='$this->width' cellspacing='1' cellpadding='2'>\n";
+    echo "<table class='admin_list' border='0' width='".($this->width)."' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . con('email_log_list_title') . "</td>\n";
     echo "</tr>\n";
     print " <tr class='admin_list_header'>
@@ -159,28 +159,32 @@ class GarbageView extends AdminView{
   function emaillogView ($data) {
     global $_SHOP,  $_COUNTRY_LIST;
 
-    echo $query = "select SQL_CALC_FOUND_ROWS * from email_log
+    $query = "select * from email_log
               where el_id = "._esc((int)$data['el_id']);
 
 		if ( !$row = ShopDB::query_one_row($query) ) {
 			return ;
 		}
-    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+    echo "<table class='admin_form' width='".($this->width)."' cellspacing='1' cellpadding='4'>\n";
     $this->print_field('el_timestamp',$row);
     $this->print_field('el_action',$row);
     $this->print_field('el_email_to',print_r( unserialize($row["el_email_to"]), true));
     $this->print_field("el_failed",  $row);
     $this->print_field("el_received",  $row);
     echo "<tr><td colspan='2' class='admin_name'>" .con('el_log'). "</td></tr>";
-    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-          nl2br(htmlspecialchars($row['el_log'])) . "</td></tr>";
+    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;'>" .
+         " <div style='overflow: auto; height: 150px; width:97%;padding:10px;'>".
+
+          nl2br(htmlspecialchars($row['el_log'])) . "</div></td></tr>";
     echo "<tr><td colspan='2' class='admin_name'>" .con('el_bad_emails'). "</td></tr>";
-    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-          nl2br(htmlspecialchars($row['el_bad_emails'])) . "&nbsp;</td></tr>";
+    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;'>" .
+         " <div style='overflow: auto; height: 50px; width:97%;padding:10px;'>".
+          nl2br(htmlspecialchars($row['el_bad_emails'])) . "&nbsp;</div></td></tr>";
 
     echo "<tr><td colspan='2' class='admin_name'>" .con('el_email_message'). "</td></tr>";
-    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;padding:10px;'>" .
-          nl2br(htmlspecialchars($row['el_email_message'])) . "</td></tr>";
+    echo "<tr><td colspan='2' class='admin_value' style='border:#cccccc 2px dashed;'>" .
+         " <div style='overflow: auto; height: 250px; width:97%;padding:10px;'>".
+          nl2br(htmlspecialchars($row['el_email_message'])) . "</div></td></tr>";
    	echo "</table>\n";
 		echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}",'admin_list',3);
     return true;
@@ -194,7 +198,7 @@ class GarbageView extends AdminView{
       $_SESSION['_UTILS_tab'] = (int)$_REQUEST['tab'];
     }
 
-    $menu = array( con("orphan_tab")=>"?tab=0", con("Garbage_tab")=>'?tab=1',
+    $menu = array( con("orphan_tab")=>"?tab=0", con("garbage_tab")=>'?tab=1',
                    con("emaillog_tab")=>"?tab=2",  con("backup_tab")=>"?tab=3");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_UTILS_tab'], "left");
 

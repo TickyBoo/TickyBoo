@@ -56,7 +56,7 @@ class MenuAdmin extends AUIComponent {
 			"view_handling.php"	=> "payment_admin",
 			"view_search.php"	=> "search_order",
 			"view_impexp.php"	=> "imp_export_admin",
-			"view_garbage.php"	=> "garbage"
+			"view_utils.php"	=> "utils_admin"
 		);
 
 		// Begin drawing the menu table
