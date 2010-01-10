@@ -1344,3 +1344,6 @@ define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 4','Re-issu
 <?php
 define('delete_ticket 4','delete_ticket 4');
 ?>
+<?php
+define('admin_update_title','admin_update_title');
+?>

@@ -119,7 +119,8 @@ class AdminUserView extends AdminView{
         echo "</select></td></tr>\n";
 
     }
-    if ($_session['_SHOP_AUTH_USER_NAME']<>$data['admin_login']){
+   // var_dump($_SESSION);
+    if ($_SESSION['_SHOP_AUTH_USER_NAME']<>$data['admin_login']){
       $this->print_select_assoc('admin_inuse',$data,$err,array('No'=>'no','Yes'=>'yes'));
     }
 

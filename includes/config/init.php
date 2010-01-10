@@ -57,6 +57,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
 
   if (isset($_SERVER['SCRIPT_URI'])) {
+
     $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
   }
   if (isset($_SERVER['SCRIPT_URL'])) {
@@ -89,7 +90,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   session_name($_SHOP->session_name);
   session_start();
-
+  If (isset($_SHOP->secure_id) and (!isset($_SESSION['_SHOP_SYS_SECURE_ID']) || ($_SHOP->secure_id <> $_SESSION['_SHOP_SYS_SECURE_ID'] ) )) {
+    session_unset();
+    $_SESSION = array();
+    session_destroy(); echo 'new session_id';
+    session_start();
+    $_SESSION['_SHOP_SYS_SECURE_ID'] = $_SHOP->secure_id;
+  }
 // check the order system for outdated orders and reservations
   check_system();
 
@@ -222,13 +229,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $query="select * from `Admin` where `admin_login`="._esc($username);
     if($res=shopdb::query($query) and $data=shopdb::fetch_assoc($res)){
       unset($data[ $_shop->auth_password ]);
-      $_session['_SHOP_ORGANIZER_DATA']=$data;
+      $_SESSION['_SHOP_ORGANIZER_DATA']=$data;
     }	else {
       session_destroy();
      exit;
     }
 
-    $_session['_SHOP_AUTH_USER_NAME']=$username;
+    $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
    // echo ini_get("session.gc_maxlifetime");
   }
 
