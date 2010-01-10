@@ -209,8 +209,8 @@ class Model {
       $this->$name = null;
       $query = "update {$this->_tableName} set
                   {$name} = NULL ";
-      if ($this->_idName {
-        $query = " where {$this->_idName} = {$this->id}";
+      if ($this->_idName) {
+        $query .= " where {$this->_idName} = {$this->id}";
       }
       ShopDB::query($query);
     } elseif (!empty($_FILES[$name]) and !empty($_FILES[$name]['name']) and !empty($_FILES[$name]['tmp_name'])) {
@@ -238,8 +238,8 @@ class Model {
       $this->$name = $doc_name;
       $query = "update {$this->_tableName} set
                   {$name} = "._esc($doc_name);
-      if ($this->_idName {
-        $query = " where {$this->_idName} = {$this->id}";
+      if ($this->_idName) {
+        $query .= " where {$this->_idName} = {$this->id}";
       }
       ShopDB::query($query);
 //
