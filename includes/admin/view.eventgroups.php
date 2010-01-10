@@ -94,9 +94,7 @@ class EventGroupView extends AdminView{
    // $this->print_input('event_group_url',$data,$err,30,100);
    // $this->print_input('event_image',$data,$err,30,100);
     $this->print_file('event_group_image',$data,$err);
-    $this->form_foot();
-
-    echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>".con('admin_list')."</a></center>";
+    $this->form_foot(2,$_SERVER['PHP_SELF']);
   }
 
   function draw (){

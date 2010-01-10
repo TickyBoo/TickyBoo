@@ -38,108 +38,113 @@
  */
 class Auth_Frontend_Html {
 
-    // {{{ render()
+  // {{{ render()
 
-    /**
-     * Displays the login form
-     *
-     * @param object The calling auth instance
-     * @param string The previously used username
-     * @return void
-     */
-    function render(&$caller, $username = '') {
-        $loginOnClick = 'return true;';
+  /**
+   * Displays the login form
+   *
+   * @param object The calling auth instance
+   * @param string The previously used username
+   * @return void
+   */
+  function render(&$caller, $username = '') {
+    global $_SHOP;
+    $loginOnClick = 'return true;';
 
-        // Try To Use Challene response
-        // TODO javascript might need some improvement for work on other browsers
-        if($caller->advancedsecurity && $caller->storage->supportsChallengeResponse() ) {
+    // Try To Use Challene response
+    // TODO javascript might need some improvement for work on other browsers
+    if($caller->advancedsecurity && $caller->storage->supportsChallengeResponse() ) {
 
-            // Init the secret cookie
-            $caller->session['loginchallenege'] = md5(microtime());
+      // Init the secret cookie
+      $caller->session['loginchallenege'] = md5(microtime());
 
-            print "\n";
-            print '<script language="JavaScript">'."\n";
+      print "\n";
+      print '<script language="JavaScript">'."\n";
 
-            include 'Auth/Frontend/md5.js';
+      include 'Auth/Frontend/md5.js';
 
-            print "\n";
-            print ' function securePassword() { '."\n";
-            print '   var pass = document.getElementById(\''.$caller->getPostPasswordField().'\');'."\n";
-            print '   var secret = document.getElementById(\'authsecret\')'."\n";
-            //print '   alert(pass);alert(secret); '."\n";
+      print "\n";
+      print ' function securePassword() { '."\n";
+      print '   var pass = document.getElementById(\''.$caller->getPostPasswordField().'\');'."\n";
+      print '   var secret = document.getElementById(\'authsecret\')'."\n";
+      //print '   alert(pass);alert(secret); '."\n";
 
-            // If using md5 for password storage md5 the password before
-            // we hash it with the secret
-            // print '   alert(pass.value);';
-            if ($caller->storage->getCryptType() == 'md5' ) {
-                print '   pass.value = hex_md5(pass.value); '."\n";
-                #print '   alert(pass.value);';
-            }
+      // If using md5 for password storage md5 the password before
+      // we hash it with the secret
+      // print '   alert(pass.value);';
+      if ($caller->storage->getCryptType() == 'md5' ) {
+          print '   pass.value = hex_md5(pass.value); '."\n";
+          #print '   alert(pass.value);';
+      }
 
-            print '   pass.value = hex_md5(pass.value+\''.$caller->session['loginchallenege'].'\'); '."\n";
-            // print '   alert(pass.value);';
-            print '   secret.value = 1;'."\n";
-            print '   var doLogin = document.getElementById(\'doLogin\')'."\n";
-            print '   doLogin.disabled = true;'."\n";
-            print '   return true;';
-            print ' } '."\n";
-            print '</script>'."\n";;
-            print "\n";
+      print '   pass.value = hex_md5(pass.value+\''.$caller->session['loginchallenege'].'\'); '."\n";
+      // print '   alert(pass.value);';
+      print '   secret.value = 1;'."\n";
+      print '   var doLogin = document.getElementById(\'doLogin\')'."\n";
+      print '   doLogin.disabled = true;'."\n";
+      print '   return true;';
+      print ' } '."\n";
+      print '</script>'."\n";;
+      print "\n";
 
-            $loginOnClick = ' return securePassword(); ';
-        }
-
-        print '<center>'."\n";
-
-        $status = '';
-        if (!empty($caller->status) && $caller->status == AUTH_EXPIRED) {
-            $status = '<i>Your session has expired. Please login again!</i>'."\n";
-        } else if (!empty($caller->status) && $caller->status == AUTH_IDLED) {
-            $status = '<i>You have been idle for too long. Please login again!</i>'."\n";
-        } else if (!empty ($caller->status) && $caller->status == AUTH_WRONG_LOGIN) {
-            $status = '<i>Wrong login data!</i>'."\n";
-        } else if (!empty ($caller->status) && $caller->status == AUTH_SECURITY_BREACH) {
-            $status = '<i>Security problem detected. </i>'."\n";
-        }
-
-        print '<form method="post" action="'.$caller->server['PHP_SELF'].'?login=1" '
-            .'onSubmit="'.$loginOnClick.'">'."\n";
-        print '<table b style="border: #cccccc 1px solid;" cellpadding="5" cellespacing="0" '
-            .'summary="login form" align="center" >'."\n";
-        print '<tr>'."\n";
-        print '    <td colspan="2" bgcolor="#eeeeee"><strong>Login </strong>'
-            .$status.'</td>'."\n";
-        print '</tr>'."\n";
-        print '<tr>'."\n";
-        print '    <td>Username:</td>'."\n";
-        print '    <td><input type="text" id="'.$caller->getPostUsernameField()
-            .'" name="'.$caller->getPostUsernameField().'" value="' . $username
-            .'" /></td>'."\n";
-        print '</tr>'."\n";
-        print '<tr>'."\n";
-        print '    <td>Password:</td>'."\n";
-        print '    <td><input type="password" id="'.$caller->getPostPasswordField()
-            .'" name="'.$caller->getPostPasswordField().'" /></td>'."\n";
-        print '</tr>'."\n<tr><td>Language</td><td><select name='setlang'>";
-
-      	global $_SHOP;
-      	foreach($_SHOP->langs_names as $lang=>$name){
-      		echo"<option value='$lang'>$name</option>";
-      	}
-      	echo "</select></td></tr>";
-        print '<tr>'."\n";
-
-        //onClick=" '.$loginOnClick.' "
-        print '    <td colspan="2" bgcolor="#eeeeee"><input value="Login" '
-            .'id="doLogin" name="doLogin" type="submit" /></td>'."\n";
-        print '</tr>'."\n";
-        print '</table>'."\n";
-
-        // Might be a good idea to make the variable name variable
-        print '<input type="hidden" id="authsecret" name="authsecret" value="" />';
-        print '</form>'."\n";
-        print '</center>'."\n";
+      $loginOnClick = ' return securePassword(); ';
     }
+
+    print '<center>'."\n";
+
+    $status = '';
+    if (!empty($caller->status) && $caller->status == AUTH_EXPIRED) {
+        $status = '<i>Your session has expired. Please login again!</i>'."\n";
+    } else if (!empty($caller->status) && $caller->status == AUTH_IDLED) {
+        $status = '<i>You have been idle for too long. Please login again!</i>'."\n";
+    } else if (!empty ($caller->status) && $caller->status == AUTH_WRONG_LOGIN) {
+        $status = '<i>Wrong login data!</i>'."\n";
+    } else if (!empty ($caller->status) && $caller->status == AUTH_SECURITY_BREACH) {
+        $status = '<i>Security problem detected. </i>'."\n";
+    }
+
+    print '<form method="post" action="'.$caller->server['PHP_SELF'].'?login=1" '
+        .'onSubmit="'.$loginOnClick.'">'."\n";
+    print '<table b style="border: #cccccc 1px solid;" cellpadding="5" cellespacing="0" '
+        .'summary="login form" align="center" >'."\n";
+    print '<tr>'."\n";
+    print '    <td colspan="2" bgcolor="#eeeeee"><strong>'.con('login_'.$_SHOP->auth_status).'</strong></td>'."\n";
+    print '</tr>'."\n";
+    print '<tr>'."\n";
+    print '    <td>Username:</td>'."\n";
+    print '    <td><input type="text" id="'.$caller->getPostUsernameField()
+        .'" name="'.$caller->getPostUsernameField().'" value="' . $username
+        .'" /></td>'."\n";
+    print '</tr>'."\n";
+    print '<tr>'."\n";
+    print '    <td>Password:</td>'."\n";
+    print '    <td><input type="password" id="'.$caller->getPostPasswordField()
+        .'" name="'.$caller->getPostPasswordField().'" /></td>'."\n";
+    print '</tr>'."\n<tr><td>Language</td><td><select name='setlang'>";
+
+  	global $_SHOP;
+  	foreach($_SHOP->langs_names as $lang=>$name){
+  		echo"<option value='$lang'>$name</option>";
+  	}
+  	echo "</select></td></tr>";
+    if ($status) {
+      print '<tr align="center">'."\n";
+      print '    <td colspan="2" class="error">'.$status.'</td>'."\n";
+      print '</tr>'."\n";
+    }
+    print '<tr align="right">'."\n";
+
+    //onClick=" '.$loginOnClick.' "
+    print '    <td colspan="2" bgcolor="#eeeeee"><input value="Login" '
+        .'id="doLogin" name="doLogin" type="submit" /></td>'."\n";
+    print '</tr>'."\n";
+    print '</table>'."\n";
+
+    // Might be a good idea to make the variable name variable
+    print '<input type="hidden" id="authsecret" name="authsecret" value="" />';
+    print '</form>'."\n";
+    print '</center>'."\n";
+  }
 
     // }}}
 

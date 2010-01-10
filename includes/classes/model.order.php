@@ -120,7 +120,7 @@ class Order Extends Model {
     }elseif($order_id>0){
       return Order::_loadTickets($order_id);
     }else{
-      return "~~No Order ID for ticket loading";
+      addWarning("No Order ID for ticket loading");
     }
   }
 
@@ -133,7 +133,7 @@ class Order Extends Model {
             WHERE seat_order_id="._esc($order_id);
     $result = ShopDB::query($sql);
     if(!$result){
-      return "~~No Tickets for that event";
+      addWarning("No Tickets for that event");
     }
     $seats = array();
     while($seat = ShopDB::fetch_assoc($result)){

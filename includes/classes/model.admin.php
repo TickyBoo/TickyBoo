@@ -83,7 +83,7 @@ class Admins extends Model {
     }
     $data['user_lastname'] = $data['kasse_name'];
     $data['user_firstname'] = 'POS:';
-    return parent::CheckValues(&$data);
+    return parent::CheckValues($data);
   }
 
   function _fill($arr , $nocheck=true)  {

@@ -217,18 +217,18 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   $_SHOP->organizer_data=(object)$_SESSION['_SHOP_ORGANIZER_DATA'];
 
-  function logincallback ($username,$auth){
+  function logincallback ($username, $auth){
     global $_shop;
     $query="select * from `Admin` where `admin_login`="._esc($username);
     if($res=shopdb::query($query) and $data=shopdb::fetch_assoc($res)){
       unset($data[ $_shop->auth_password ]);
-      $_session['_shop_auth_user_data']=$data;
+      $_session['_SHOP_ORGANIZER_DATA']=$data;
     }	else {
       session_destroy();
      exit;
     }
 
-    $_session['_shop_auth_user_name']=$username;
+    $_session['_SHOP_AUTH_USER_NAME']=$username;
    // echo ini_get("session.gc_maxlifetime");
   }
 

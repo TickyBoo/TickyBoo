@@ -292,13 +292,13 @@ class TemplateView extends AdminView{
     }
 
     echo "
-      <tr>
-        <td colspan='5'><center>";
+      <tr align='right'>
+        <td colspan='5'>";
           echo $this->show_button("{$_SERVER['PHP_SELF']}?action=compile_all","compile_all",1);
           if($type=="swift" || $type=='email' || $type=='systm'){
             echo $this->show_button("{$_SERVER['PHP_SELF']}?action=sendtest","send_test",1);
           }
-    echo "</center></td></tr>\n";
+    echo "</td></tr>\n";
 
     echo "</table>\n";
 

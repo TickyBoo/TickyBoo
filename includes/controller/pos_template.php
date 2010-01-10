@@ -96,7 +96,7 @@ if ($fond) {
   $smarty->display( $fond . '.tpl' );
   orphanCheck();
   trace("End of pos \n\n\r");
-  print_r($_SHOP->Messages);
+   print_r($_SHOP->Messages);
 
 }
 

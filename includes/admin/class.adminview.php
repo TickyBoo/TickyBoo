@@ -86,14 +86,14 @@ class AdminView extends AUIComponent {
       }
   }
 
-  function form_foot($colspan = 2, $backlink='' ) {
+  function form_foot($colspan = 2, $backlink='', $submit='save' ) {
       echo "<tr  class='admin_value' ><td>";
       if ($backlink) {
         echo  $this->show_button($backlink,'admin_list',3);
       }
       $colspan = $colspan-1;
       echo "&nbsp;</td><td align='right' class='admin_value' colspan='{$colspan}'>";
-      echo $this->Show_button('submit','save',3);
+      echo $this->Show_button('submit',$submit,3);
       echo $this->Show_button('reset','res',3);
       echo "</table></form>\n";
   }

@@ -129,7 +129,7 @@ class HandlingView extends AdminView{
 		$this->print_input('handling_expires_min',$data,$err,10);
 		$this->print_input('handling_fee_fix',$data,$err,5,10);
 		$this->print_input('handling_fee_percent',$data,$err,5,10);
-    
+
     //print_r($data['handling_email_template']);
 
 		$temps=explode(",",$data['handling_email_template']);
@@ -173,7 +173,7 @@ class HandlingView extends AdminView{
         if(!$hand=Handling::load($_POST["handling_id"])){
           $hand= new Handling(true); $new = true;
         }
-        var_dump($ok = $hand->fillPost());
+        //var_dump($ok = $hand->fillPost());
         if(!$ok || !$hand->saveEx()){
     		  $this->form($_POST, null, con('handling_update_title')); //handling_add_title
     			return 0;
@@ -243,10 +243,10 @@ class HandlingView extends AdminView{
     echo "</select>";
     if ($inclPdf) {
       echo "</nowrap>".printMsg($name, $err)."</td></tr>\n";
-      
+
       echo "<tr><td class='admin_name'  width='40%'>".con($name."_incl_pdf")."</td>";
       echo "<td class='admin_value'>";
-      
+
       //Include Inv/Ord
       $checked = ($data["{$name}_incl_inv_pdf"]==1)?"selected":"";
       echo "&nbsp;&nbsp;".con("{$name}_incl_inv_pdf")."
@@ -254,7 +254,7 @@ class HandlingView extends AdminView{
                 <option value='0'>".con('confirm_no')."</option>\n
                 <option value='1' $checked>".con('confirm_yes')."</option>\n";
       echo "</select>";
-      
+
       //Include Tickets
       $checked = ($data["{$name}_incl_ticket_pdf"]==1)?"selected":"";
       echo "&nbsp;&nbsp;".con("{$name}_incl_ticket_pdf")."
@@ -262,7 +262,7 @@ class HandlingView extends AdminView{
                 <option value='0'>".con('confirm_no')."</option>\n
                 <option value='1' $checked>".con('confirm_yes')."</option>\n";
       echo "</select>";
-      
+
       echo "</td></tr>\n";
 
     }else{

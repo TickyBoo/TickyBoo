@@ -109,10 +109,10 @@ class PlaceMapView extends AdminView {
 		$this->print_field_o( 'ort_name', $data );
 		$this->print_input( 'pm_name', $data, $err, 30, 100 );
 		$this->print_file(  'pm_image', $data, $err, 'img' );
-		$this->form_foot();
   //	echo "<br>";
 
 		if ( $data['pm_id'] ) {
+  		$this->form_foot();
 			$pmp_view = new PlaceMapCategoryView( $this->width );
 			$pmp_view->table( $data['pm_id'], $live );
 			echo "<br>";
@@ -122,16 +122,16 @@ class PlaceMapView extends AdminView {
 			$pmp_view = new PlaceMapPartView( $this->width );
 			$pmp_view->table( $data['pm_id'], $live );
 
-		}
-		if ( $event ) {
-			echo "<br>";
-      require_once ( "admin/view.discounts.php" );
-			$dist_view = new DiscountView( $this->width );
-			$dist_view->table( $event->event_id, $live );
+  		if ( $event ) {
+  			echo "<br>";
+        require_once ( "admin/view.discounts.php" );
+  			$dist_view = new DiscountView( $this->width );
+  			$dist_view->table( $event->event_id, $live );
 
-			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}",'admin_list',3);
+  			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}",'admin_list',3);
+      }
 		} else {
-			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}",'admin_list',3);
+  		$this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}");
 		}
 	}
 
@@ -169,7 +169,7 @@ class PlaceMapView extends AdminView {
 		} elseif ( $_GET['action'] == 'add_pm' ) {
       $pm = new PlaceMap(true);
       $pm->pm_ort_id = $_REQUEST['pm_ort_id'];
-      var_dump($_REQUEST['pm_ort_id']);var_dump($_REQUEST);
+//    var_dump($_REQUEST['pm_ort_id']);var_dump($_REQUEST);
 			$this->form( (array)$pm, null, con('add_pm') );
     } elseif ( $_GET['action'] == 'edit_pm' and (int)$_GET['pm_id'] > 0 ) {
       $pm = PlaceMap::load($_GET['pm_id']);

@@ -269,12 +269,12 @@ function empt(&$arg , $default=null){
       return constant($name);
     } elseif ($value) {
       return $value;
-    } else {
-/*      if (is_writable($_SHOP->langfile)){
-
-        $addcon = "<?php\ndefine('$name','$name');\n?>\n";
-        file_put_contents($_SHOP->langfile, $addcon,FILE_APPEND);
-      } */
+    } elseif ($name) {
+      if (is_writable($_SHOP->langfile)){
+        $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
+        file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
+        define($name,$name);
+      }
       return $name;
     }
   }

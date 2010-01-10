@@ -88,7 +88,7 @@ class Ort Extends Model {
     $query = "SELECT count(event_name)
               FROM Event
               Where event_ort_id="._esc($this->ort_id);
-    if (!$res = ShopDB::query_one_record($query, false) || $res[0]) {
+    if (!$res = ShopDB::query_one_row($query, false) || $res[0]) {
       return addWarning('in_use');;
     }
 
@@ -101,7 +101,7 @@ class Ort Extends Model {
       if (!parent::delete()) {
         return self::_abort('cant delete venue');
       }
-      return ShopDB::commit('Ort deleted');
+      return ShopDB::commit('venue deleted');
     }
   }
 

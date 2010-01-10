@@ -114,7 +114,11 @@ select SQL_CALC_FOUND_ROWS *
     echo "<form action='{$_SERVER['PHP_SELF']}' method='POST' name='frmEvents'>";
     echo "<table class='admin_list' border='0' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . con(($history)?'event_history_title':'event_title') . "</td>\n";
-    echo "<td colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    if (!$history) {
+      echo "<td colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
+    } else {
+      echo "<td colspan='1' align='right'>&nbsp;</td>";
+    }
     echo "</tr>\n";
 
 		$img_pub = $this->fill_images();
@@ -306,12 +310,7 @@ select SQL_CALC_FOUND_ROWS *
 		$this->print_file( 'event_image', $data, $err, 'img', $main);
 		$this->print_file( 'event_mp3', $data, $err, 'mp3', $main );
         //recurrence
-
-
-		$this->form_foot();
-
-		echo "</form>\n";
-		echo "<br><center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') ."</a></center>";
+		$this->form_foot(2,$_SERVER['PHP_SELF']);
 	}
 
 

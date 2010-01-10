@@ -285,7 +285,7 @@ class OrderView extends AdminView{
 
     if(!$res=ShopDB::query($query)){
        user_error(shopDB::error());
-       return;
+       return true;
     }
     $data = "&action=details&order_id=".(int)$order_id;
     $menu = array( con("order_details_tickettab")=>"?subtab=0".$data,
@@ -380,6 +380,7 @@ class OrderView extends AdminView{
 
 
     }
+    return true;
   }
 
  function draw($noTab=false){

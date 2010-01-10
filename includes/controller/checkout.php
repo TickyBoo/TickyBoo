@@ -48,24 +48,22 @@ if (isset($_REQUEST['sor'])) {
 	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"sor")))) {
 		$smarty->display($fond . '.tpl');
 	}
- 	exit();
+ 	myExit();
 }elseif(isset($_REQUEST['cbr'])){
 	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"cbr")))) {
 		$smarty->display($fond . '.tpl');
 	}
- 	exit();
+ 	myExit();
 } elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
   	if ( !$_REQUEST['pos'] and
          !$user->logged and
 		     $action !== 'register' and
       	 $action !== 'login' ) {
     	$smarty->display('user_register.tpl');
-    	exit();
-	  }
-  	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
+	  } elseif (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
     	$smarty->display($fond . '.tpl');
   	}
-  	exit();
+  	myExit();
 }
 
 if ($action == 'useredit') {
@@ -74,10 +72,15 @@ if ($action == 'useredit') {
 } elseif(!$_REQUEST['pos']) {
 	redirect("index.php?action=cart_view",403);
 } else {
-   echo '~~'.con('noting_checkout');
+  addWarning('noting_checkout');
 }
 
-die();
+myExit();
+
+  function myExit(){
+    orphanCheck();
+    trace("End of checkout \n");
+  }
 
 	function getsecurecode($type='sor') {
 		if (isset($_POST[$type])) {
@@ -209,12 +212,12 @@ die();
 
   function posConfirmAction($smarty) {
   	global $order, $cart, $user;
-    
+
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected
-        echo "~~".con('No_handling_selected');//.print_r($_POST,true);
+        addWarning('No_handling_selected');//.print_r($_POST,true);
         return "";
     } elseif ($_POST['user_id']==-2) { //Checks that a user type is selected.
-        echo "~~".con('No_useraddress_selected');
+        addWarning('No_useraddress_selected');
         return "";
     } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
        $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
@@ -223,17 +226,17 @@ die();
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
       if (!$user_id || hasErrors() ) {
-        echo "~~";
-        echo printMsg('__Errors__');
+       // echo "~~";
+       // echo printMsg('__Errors__');
         return "";
       } else {
         $smarty->assign('newuser_id', $user_id);
       }
     } else {
-       $user_id = $_POST['user_id'];
+      $user_id = $_POST['user_id'];
     }
     $no_fee = is($_POST['no_fee'], 0);
-   
+
     //ob_start();
     //print_r($_SESSION['_SHOP_AUTH_USER_DATA']);
     unset($_SESSION['_SHOP_order']) ;
@@ -245,7 +248,7 @@ die();
     //$result = ob_get_contents();
     //ob_end_clean();
     if ($return == 'checkout_preview' ) {
-      echo '~~'.$order->error.'<br /><pre>'.$result.'</pre>';
+//      echo '~~'.$order->error.'<br /><pre>'.$result.'</pre>';
       return '';
     }else {
      // echo '~~'.$return.'<pre>'.$result.'</pre>';
@@ -411,9 +414,7 @@ die();
 			$order = null;
 			$hand->on_notify($order);
 		}
-  	}
+ 	}
 
-  orphanCheck();
-  trace("End of checkout \n");
 //session_write_close();
 ?>

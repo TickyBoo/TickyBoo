@@ -4,7 +4,7 @@ var eventData = new Object();
 
 var loadOrder = function(){
   $("#seat-chart").dialog({
-    bgiframe: false,autoOpen: false, 
+    bgiframe: false,autoOpen: false,
     height: 'auto',maxHeight: 400,
     width: 'auto',modal: true,
     buttons: {
@@ -13,7 +13,7 @@ var loadOrder = function(){
       }
     }
   });
-  
+
   $("#order_action").dialog({
     bgiframe: false,autoOpen: false,
     height: 'auto',width: 'auto',
@@ -23,7 +23,7 @@ var loadOrder = function(){
       refreshOrder();
     }
   });
-  
+
   $('#cart_table').jqGrid({
     url:'ajax.php?x=cart',
     datatype: 'json',
@@ -65,7 +65,7 @@ var loadOrder = function(){
   });
   //refreshOrder();
   updateEvents();
-    
+
     $('#event-from').datepicker({
       minDate:0, changeMonth: true,
       changeYear: true, dateFormat:'yy-mm-dd',
@@ -89,12 +89,12 @@ var loadOrder = function(){
       updateEvents();
     });
     $("#event-id").change(function(){
-      eventIdChange(); 
+      eventIdChange();
     });
     $("#event-id").keyup(function(event){
       if(event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40){
         eventIdChange();
-      } 
+      }
     });
    $("#cat-select").change(function(){
       if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
@@ -103,7 +103,7 @@ var loadOrder = function(){
          updateSeatChart();
       }
    });
-    
+
     //Creates a auto refreshing function.
     refreshTimer = setInterval(function(){refreshOrder();}, 120000);
     $("input:radio[name='handling_id']").click(function(){
@@ -112,19 +112,23 @@ var loadOrder = function(){
     $('#no_fee').click(function(){
       refreshOrder();
     });
-    
-    //Make sure all add ticket fields are added to this so when clearing selection 
+
+    //Make sure all add ticket fields are added to this so when clearing selection
     // All fields are reset.
     $('#clear-button').click(function(){
       clearOrder();
     });
-   
+
   $("#order-form").submit(function(){
     $("#error-message").hide();
     $(this).ajaxSubmit({
       data:{ajax:"yes",action:"addtocart"},
-      success: function(html){
-        if(html.substring(0,2) == '~~') {
+      success: function(html, status){
+          $("#error-text").html(html );
+          $("#error-message").show();
+          setTimeout(function(){$("#error-message").hide();}, 4000);
+
+        if(html.substring(0,2) == '!~~') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
           setTimeout(function(){$("#error-message").hide();}, 4000);
@@ -136,14 +140,14 @@ var loadOrder = function(){
     });
     return false;
    });
-   
+
    /**
    	* Sends the order information the POS Confirm action in controller/checkout.php.
    	*/
   $("#checkout").click(function(){
     var userdata = {ajax:"yes",pos:"yes",action:"posConfirm"};
     userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
-    
+
     //If user is being passed check its valid
     if(!$('#user_info_none').is(':checked')){
       if(!$('#pos-user-form').valid()){
@@ -153,9 +157,9 @@ var loadOrder = function(){
         return;
       }
     }
-    
+
     if($("input:checkbox[name='no_fee']").is(":checked")){
-      userdata['no_fee'] = 1;	
+      userdata['no_fee'] = 1;
     }else{
       userdata['no_fee'] = 0;
     }
@@ -169,7 +173,10 @@ var loadOrder = function(){
       dataType:   "HTML",
       data:      userdata,
       success:function(html, status){
-        if(html.substring(0,2) == '~~') {
+          $("#error-text").html('xxxx'+ status);
+          $("#error-message").show();
+
+        if(html.substring(0,2) == '!~~!') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();
           setTimeout(function(){$("#error-message").hide();}, 40000);
