@@ -79,7 +79,7 @@
 		<div class="mainbody" align='left'>
 			<img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" />
 			<br />
-			<img src="{$_SHOP_themeimages}fusion.png" align="bottom" />
+			<img src="{$_SHOP_images}logo.png" align="bottom" />
 			<br />
 
 		<div id="navbar">

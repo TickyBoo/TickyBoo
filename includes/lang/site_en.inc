@@ -1078,7 +1078,7 @@ define("preferences","Preferences");
 define("send_orders_printer","Send Orders to printer");
 
 define("select_country","Select Country");
-define("eph_cash_confirm","The order is created, press '".con('pay')."' to continue.");
+define("eph_cash_confirm","The order is created, press 'pay' to continue.");
 
 //------------------------------------------------------
 //Not quite sure about these.  8/26/09 Lou
@@ -1346,4 +1346,9 @@ define('delete_ticket 4','delete_ticket 4');
 ?>
 <?php
 define('admin_update_title','admin_update_title');
+?>
+<?php
+define('order_notice_message','order_notice_message');
+?><?php
+define('file_not_exsist','file_not_exsist');
 ?>
