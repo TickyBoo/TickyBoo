@@ -274,7 +274,7 @@ function empt(&$arg , $default=null){
         $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
         file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
         define($name,$name);
-      }
+      } else echo "****|";
       return "****{$name}****";
     }
   }
