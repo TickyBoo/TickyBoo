@@ -174,7 +174,7 @@ select SQL_CALC_FOUND_ROWS *
     }
 //        		<a class='link' href='view_event.php?action=add'>Add</a>
 		echo "</table>\n</form>\n";
-  $this->get_nav( $_REQUEST[page], $rowcount[0]);
+  $this->get_nav( $_REQUEST['page'], $rowcount[0]);
 //		echo "<br><center><a class='link' href='view_event.php?action=add'>" . con('add') .	"</a></center>";
 	}
 

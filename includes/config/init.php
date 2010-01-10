@@ -93,7 +93,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   If (isset($_SHOP->secure_id) and (!isset($_SESSION['_SHOP_SYS_SECURE_ID']) || ($_SHOP->secure_id <> $_SESSION['_SHOP_SYS_SECURE_ID'] ) )) {
     session_unset();
     $_SESSION = array();
-    session_destroy(); echo 'new session_id';
+    session_destroy(); //echo 'new session_id';
     session_start();
     $_SESSION['_SHOP_SYS_SECURE_ID'] = $_SHOP->secure_id;
   }
