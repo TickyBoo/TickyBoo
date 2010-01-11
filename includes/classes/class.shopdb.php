@@ -41,6 +41,16 @@ class ShopDB {
     static $db_trx_started = 0;
     // /
     // new SQLi extenstions
+    static function getport(& $DB_Hostname) {
+      $pos = strpos($DB_Hostname,':');
+      if ($pos!= false) {
+        $port = substr($DB_Hostname,$pos+1);
+        $DB_Hostname = substr($DB_Hostname,0, $pos);
+      } else {
+        $port = 3306;
+      }
+    }
+    
     static function init ($canDie=true) {
         global $_SHOP;
         unset($_SHOP->db_errno);
@@ -51,13 +61,7 @@ class ShopDB {
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {
             $DB_Hostname = $_SHOP->db_host;
-            $pos = strpos($DB_Hostname,':');
-            if ($pos!= false) {
-              $port = substr($DB_Hostname,$pos+1);
-              $DB_Hostname = substr($DB_Hostname,0, $pos);
-            } else {
-              $port = 3306;
-            }
+            $port = self::getport($DB_Hostname);
             $link = new mysqli($DB_Hostname, $_SHOP->db_uname, $_SHOP->db_pass, '', $port);
 
             $link->select_db($_SHOP->db_name);

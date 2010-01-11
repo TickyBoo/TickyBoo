@@ -190,8 +190,41 @@ class UtilitiesView extends AdminView{
     return true;
 	}
 
+  function backupview() {
+    global $_SHOP;
+    require_once(LIBS."dumper/sxd/index.php");
+    $sxd = new Sypex_Dumper();
+		include(LIBS."dumper/sxd/cfg.php");
+		$sxd->loadLang($CFG['lang']);
+		if (!ini_get('safe_mode') && function_exists('set_time_limit') && strpos(ini_get('disable_functions'), 'set_time_limit') === false) set_time_limit($CFG['time_web']);
+		elseif (ini_get('max_execution_time') < $CFG['time_web']) $CFG['time_web'] = ini_get('max_execution_time');
+		$sxd->CFG = &$CFG;
 
+		if (!ini_get('safe_mode') && function_exists('set_time_limit') && strpos(ini_get('disable_functions'), 'set_time_limit') === false) set_time_limit($CFG['time_web']);
+		elseif (ini_get('max_execution_time') < $CFG['time_web']) $CFG['time_web'] = ini_get('max_execution_time');
+		$sxd->try = false;
+		$sxd->virtualize = false;
+		$sxd->cron_mode = false;
 
+    $sxd->CFG['my_host'] = $_SHOP->db_host;
+    $sxd->CFG['my_user'] = $_SHOP->db_uname ;
+    $sxd->CFG['my_pass'] = $_SHOP->db_pass ;
+    $sxd->CFG['my_comp'] = 0;
+    $sxd->CFG['my_db']   = $_SHOP->db_name ;
+    $sxd->CFG['my_db']   = $_SHOP->db_name ;
+
+    $sxd->draw();
+    
+  }
+  
+	function drawall () {
+    if (((int)$_SESSION['_UTILS_tab'] == 3) && isset($_POST['ajax'])) {
+      $this->backupview();
+    } else {
+       parent::drawall ();
+    }
+  }
+	
 	function draw () {
 		global $_SHOP;
     if(isset($_REQUEST['tab'])) {
@@ -202,9 +235,9 @@ class UtilitiesView extends AdminView{
                    con("emaillog_tab")=>"?tab=2",  con("backup_tab")=>"?tab=3");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_UTILS_tab'], "left");
 
-    if($_GET['fix']){
+    if(isset($_GET['fix'])){
       Orphans::dofix($_GET['fix']);
-    } elseif($_GET['empty']){
+    } elseif(isset($_GET['empty'])){
 			$this->empty_trash();
 		} elseif ($_GET['action']=='el_view') {
       if ($this->emaillogView($_GET )) return;
@@ -227,7 +260,7 @@ class UtilitiesView extends AdminView{
 
       case 3:
      //    $this->barcodeForm($_POST);
-         echo 'Noting to see yet';
+         $this->backupview();
          break;
 
     }
