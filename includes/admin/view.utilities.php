@@ -32,6 +32,16 @@
  * clear to you.
  */
 
+// Encryption connect to MySQL
+// auto - automatic selection (set encoding table), cp1251 - windows-1251, etc.
+define('CHARSET', 'auto');
+// Limiting the size of the data for one get access to the database (in megabytes)
+// Need to limit the amount of memory dump when the server ate very voluminous tables
+define('LIMIT', 1);
+define('C_DEFAULT', 1);
+define('C_RESULT', 2);
+define('C_ERROR', 3);
+define('C_WARNING', 4);
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
@@ -190,41 +200,217 @@ class UtilitiesView extends AdminView{
     return true;
 	}
 
-  function backupview() {
+  function backupview($data) {
     global $_SHOP;
-    require_once(LIBS."dumper/sxd/index.php");
-    $sxd = new Sypex_Dumper();
-		include(LIBS."dumper/sxd/cfg.php");
-		$sxd->loadLang($CFG['lang']);
-		if (!ini_get('safe_mode') && function_exists('set_time_limit') && strpos(ini_get('disable_functions'), 'set_time_limit') === false) set_time_limit($CFG['time_web']);
-		elseif (ini_get('max_execution_time') < $CFG['time_web']) $CFG['time_web'] = ini_get('max_execution_time');
-		$sxd->CFG = &$CFG;
+		$comp_levels = array('9' => '9 (maximum)', '8' => '8', '7' => '7', '6' => '6', '5' => '5 (average)', '4' => '4', '3' => '3', '2' => '2', '1' => '1 (minimum)','0' => 'Without compression');
 
-		if (!ini_get('safe_mode') && function_exists('set_time_limit') && strpos(ini_get('disable_functions'), 'set_time_limit') === false) set_time_limit($CFG['time_web']);
-		elseif (ini_get('max_execution_time') < $CFG['time_web']) $CFG['time_web'] = ini_get('max_execution_time');
-		$sxd->try = false;
-		$sxd->virtualize = false;
-		$sxd->cron_mode = false;
+		if (function_exists("bzopen")) {
+		    $comp_methods[2] = 'BZip2';
+		}
+		if (function_exists("gzopen")) {
+		    $comp_methods[1] = 'GZip';
+		}
+		$comp_methods[0] = 'Without compression';
+		if (count($comp_methods) == 1) {
+		    $comp_levels = array('0' =>'Without compression');
+		}
 
-    $sxd->CFG['my_host'] = $_SHOP->db_host;
-    $sxd->CFG['my_user'] = $_SHOP->db_uname ;
-    $sxd->CFG['my_pass'] = $_SHOP->db_pass ;
-    $sxd->CFG['my_comp'] = 0;
-    $sxd->CFG['my_db']   = $_SHOP->db_name ;
-    $sxd->CFG['my_db']   = $_SHOP->db_name ;
-
-    $sxd->draw();
-    
+    echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>";
+    $this->print_hidden('action','backup');
+    $this->form_head(con('backup_title'));
+    $this->print_select_assoc('comp_method',$data ,$err , $comp_methods );
+    $this->print_select_assoc('comp_level',$data ,$err , $comp_levels );
+    $this->form_foot();
   }
-  
-	function drawall () {
-    if (((int)$_SESSION['_UTILS_tab'] == 3) && isset($_POST['ajax'])) {
-      $this->backupview();
-    } else {
-       parent::drawall ();
-    }
+
+  function backupExec($data) {
+    global $_SHOP;
+		$this->comp_method  = isset($_POST['comp_method']) ? intval($_POST['comp_method']) : 0;
+		$this->comp_level   = isset($_POST['comp_level']) ? intval($_POST['comp_level']) : 0;
+
+    preg_match("/^(\d+)\.(\d+)\.(\d+)/", mysqli_get_server_info(ShopDB::$link), $m);
+    $this->mysql_version = sprintf("%d%02d%02d", $m[1], $m[2], $m[3]);
+    $db = $_SHOP->db_name;
+    echo <<<HTML
+        <SCRIPT>
+        var WidthLocked = false;
+        function s(st, so){
+        	document.getElementById('st_tab').width = st ? st + '%' : '1';
+        	document.getElementById('so_tab').width = so ? so + '%' : '1';
+        }
+        function l(str, color){
+        	switch(color){
+        		case 2: color = 'navy'; break;
+        		case 3: color = 'red'; break;
+        		case 4: color = 'maroon'; break;
+        		default: color = 'black';
+        	}
+        	with(document.getElementById('logarea')){
+        		if (!WidthLocked){
+        			style.width = clientWidth;
+        			WidthLocked = true;
+        		}
+        		str = '<FONT COLOR=' + color + '>' + str + '</FONT>';
+        		innerHTML += innerHTML ? "<BR>\\n" + str : str;
+        		scrollTop += 14;
+        	}
+        }
+        </SCRIPT>
+HTML;
+    $this->form_head(con('backup_title'));
+    echo <<<HTML
+          <TR>
+            <TD class='admin_value' COLSPAN=2>
+              <DIV ID=logarea STYLE="width: 97%; height: 140px; border: 1px solid #7F9DB9; padding: 3px; overflow: auto;"></DIV>
+            </TD>
+          </TR>
+          <TR>
+            <TD class='admin_name' WIDTH=30%>Table status:</TD>
+            <TD class='admin_value' >
+              <TABLE WIDTH=100% BORDER=1 CELLPADDING=0 CELLSPACING=0>
+                <TR><TD BGCOLOR=#FFFFFF>
+                    <TABLE WIDTH=1 BORDER=0 CELLPADDING=0 CELLSPACING=0 BGCOLOR=#5555CC ID=st_tab STYLE="border-right: 1px solid #AAAAAA">
+                      <TR><TD HEIGHT=12></TD></TR>
+                    </TABLE>
+                </TD></TR>
+              </TABLE>
+            </TD>
+          </TR>
+          <TR>
+            <TD class='admin_name'>General status:</TD>
+            <TD class='admin_value'>
+              <TABLE WIDTH=100% BORDER=1 CELLSPACING=0 CELLPADDING=0>
+                <TR><TD BGCOLOR=#FFFFFF>
+                  <TABLE WIDTH=1 BORDER=0 CELLPADDING=0 CELLSPACING=0 BGCOLOR=#00AA00 ID=so_tab STYLE="border-right: 1px solid #AAAAAA">
+                    <TR><TD HEIGHT=12></TD></TR>
+                  </TABLE>
+                </TD></TR>
+              </TABLE>
+            </TD>
+          </TR>
+          <tr  class='admin_value' align=right><td COLSPAN=2>
+           	<A ID=save HREF='' STYLE='display: none;'>Download file</A> &nbsp; <INPUT ID=back TYPE=button VALUE='Back' DISABLED onClick="history.back();">
+          </td></tr>
+          </table>
+HTML;
+
+    $tables = ShopDB::TableList();
+		$tabs = count($tables);
+		// Determining the size of tables
+		$result = ShopDB::query("SHOW TABLE STATUS");
+		$tabinfo = array();
+		$tab_charset = array();
+		$tab_type = array();
+		$tabinfo[0] = 0;
+		$info = '';
+		while($item = ShopDB::fetch_assoc($result)){
+  		$item['Rows'] = empty($item['Rows']) ? 0 : $item['Rows'];
+  		$tabinfo[0] += $item['Rows'];
+  		$tabinfo[$item['Name']] = $item['Rows'];
+  		$this->size += $item['Data_length'];
+  		$tabsize[$item['Name']] = 1 + round(LIMIT * 1048576 / ($item['Avg_row_length'] + 1));
+  		if($item['Rows']) $info .= "|" . $item['Rows'];
+  		if (!empty($item['Collation']) && preg_match("/^([a-z0-9]+)_/i", $item['Collation'], $m)) {
+  			$tab_charset[$item['Name']] = $m[1];
+  		}
+  		$tab_type[$item['Name']] = isset($item['Engine']) ? $item['Engine'] : $item['Type'];
+		}
+		$show = 10 + $tabinfo[0] / 50;
+		$info = $tabinfo[0] . $info;
+		$name = $db . '_' . date("Y-m-d_H-i");
+    $fp = $this->fn_open($name, "w");
+		$this->tpl_l("Creating file with the backup database:<BR>\\n  -  {$this->filename}");
+		$this->fn_write($fp, "#SKD101|{$db}|{$tabs}|" . date("Y.m.d H:i:s") ."|{$info}\n\n");
+		$t=0;
+		$this->tpl_l(str_repeat("-", 60));
+		$result = ShopDb::query("SET SQL_QUOTE_SHOW_CREATE = 1");
+		// Encryption connections by default
+		if ($this->mysql_version > 40101 && CHARSET != 'auto') {
+			ShopDB::query("SET NAMES '" . CHARSET . "'") or trigger_error ("Failed to change the connection charset.<BR>" . mysqli_error(), E_USER_ERROR);
+			$last_charset = CHARSET;
+		}	else{
+			$last_charset = '';
+		}
+    foreach ($tables AS $table){
+			// Puting an encoding compounds encoded table
+			if ($this->mysql_version > 40101 && $tab_charset[$table] != $last_charset) {
+				if (CHARSET == 'auto') {
+					shopDB::query("SET NAMES '" . $tab_charset[$table] . "'") or trigger_error ("Failed to change the connection charset.<BR>" . mysqli_error(), E_USER_ERROR);
+					$this->tpl_l("Established the connection charset `" . $tab_charset[$table] . "`.", C_WARNING);
+					$last_charset = $tab_charset[$table];
+				}
+				else{
+					$this->tpl_l('Charset of connection and table charset does not match:', C_ERROR);
+					$this->tpl_l('Table `'. $table .'` -> ' . $tab_charset[$table] . ' (connection '  . CHARSET . ')', C_ERROR);
+				}
+			}
+			$this->tpl_l("Proccessing Table `{$table}` [" . fn_int($tabinfo[$table]) . "].");
+        	// Table creation
+			$result = ShopDB::query("SHOW CREATE TABLE `{$table}`");
+      $tab = ShopDB::fetch_array($result);
+			$tab = preg_replace('/(default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP|DEFAULT CHARSET=\w+|COLLATE=\w+|character set \w+|collate \w+)/i', '/*!40101 \\1 */', $tab);
+      $this->fn_write($fp, "DROP TABLE IF EXISTS `{$table}`;\n{$tab[1]};\n\n");
+    	// To check whether it is necessary to dump data
+    	// Determine the types of columns
+      $NumericColumn = array();
+      $result = ShopDB::query("SHOW COLUMNS FROM `{$table}`");
+      $field = 0;
+      while($col = ShopDB::fetch_row($result)) {
+      	$NumericColumn[$field++] = preg_match("/^(\w*int|year)/", $col[1]) ? 1 : 0;
+      }
+			$fields = $field;
+      $from = 0;
+			$limit = $tabsize[$table];
+			$limit2 = round($limit / 3);
+			if ($tabinfo[$table] > 0) {
+			if ($tabinfo[$table] > $limit2) {
+			  $this->tpl_s(0, $t / $tabinfo[0]);
+			}
+			$i = 0;
+			$this->fn_write($fp, "INSERT INTO `{$table}` VALUES");
+      while(($result = ShopDB::query("SELECT * FROM `{$table}` LIMIT {$from}, {$limit}")) && ($total = ShopDB::num_rows($result))){
+        while($row = ShopDB::fetch_row($result)) {
+         	$i++;
+    			$t++;
+					for($k = 0; $k < $fields; $k++){
+        		if ($NumericColumn[$k])
+        		    $row[$k] = isset($row[$k]) ? $row[$k] : "NULL";
+        		else
+        			$row[$k] = isset($row[$k]) ? "'" . ShopDB::escape_string($row[$k]) . "'" : "NULL";
+         	}
+
+					$this->fn_write($fp, ($i == 1 ? "" : ",") . "\n(" . implode(", ", $row) . ")");
+					if ($i % $limit2 == 0)
+						$this->tpl_s($i / $tabinfo[$table], $t / $tabinfo[0]);
+        }
+				ShopDB::free_result($result);
+				if ($total < $limit) {
+				   break;
+				}
+    		$from += $limit;
+      }
+
+			$this->fn_write($fp, ";\n\n");
+    	$this->tpl_s(1, $t / $tabinfo[0]);}
+		}
+		$this->tabs = $tabs;
+		$this->records = $tabinfo[0];
+		$this->comp = $this->SET['comp_method'] * 10 + $this->SET['comp_level'];
+    $this->tpl_s(1, 1);
+    $this->tpl_l(str_repeat("-", 60));
+    $this->fn_close($fp);
+		$this->tpl_l("Backup of DB `{$db}` is created.", C_RESULT);
+		$this->tpl_l("DB size:       " . round($this->size / 1048576, 2) . " Mb", C_RESULT);
+		$filesize = round(filesize($_SHOP->files_dir. DS. $this->filename) / 1048576, 2) . " Mb";
+		$this->tpl_l("File size: {$filesize}", C_RESULT);
+		$this->tpl_l("Tables processed: {$tabs}", C_RESULT);
+		$this->tpl_l("Lines processed:   " . fn_int($tabinfo[0]), C_RESULT);
+  //  echo $_SHOP->files_dir;
+		echo "<SCRIPT>with (document.getElementById('save')) {style.display = ''; innerHTML = 'Download file ({$filesize})'; href = '".$_SHOP->root .'files/' . $this->filename . "'; }document.getElementById('back').disabled = 0;</SCRIPT>";
+    return true;
   }
-	
+
+
 	function draw () {
 		global $_SHOP;
     if(isset($_REQUEST['tab'])) {
@@ -241,9 +427,9 @@ class UtilitiesView extends AdminView{
 			$this->empty_trash();
 		} elseif ($_GET['action']=='el_view') {
       if ($this->emaillogView($_GET )) return;
+    }elseif ($_GET['action']=='backup') {
+      if ($this->backupExec($_POST )) return;
     }
-
-
 
     switch ((int)$_SESSION['_UTILS_tab']) {
       case 0:
@@ -260,7 +446,7 @@ class UtilitiesView extends AdminView{
 
       case 3:
      //    $this->barcodeForm($_POST);
-         $this->backupview();
+         $this->backupview($_POST);
          break;
 
     }
@@ -308,5 +494,60 @@ class UtilitiesView extends AdminView{
 		User::cleanup(0,true);
 	}
 
+  function fn_open($name, $mode){
+    global $_SHOP;
+		if ($this->comp_method == 2) {
+			$this->filename = "{$name}.sql.bz2";
+		    return bzopen($_SHOP->files_dir.DS . $this->filename, "{$mode}b{$this->comp_level}");
+		} elseif ($this->comp_method == 1) {
+			$this->filename = "{$name}.sql.gz";
+		    return gzopen($_SHOP->files_dir.DS. $this->filename, "{$mode}b{$this->comp_level}");
+		} else{
+			$this->filename = "{$name}.sql";
+			return fopen($_SHOP->files_dir .DS. $this->filename, "{$mode}b");
+		}
+	}
+
+	function fn_write($fp, $str){
+		if ($this->comp_method == 2) {
+		    bzwrite($fp, $str);
+		} elseif ($this->comp_method == 1) {
+		    gzwrite($fp, $str);
+		}	else{
+			fwrite($fp, $str);
+		}
+	}
+
+	function fn_close($fp){
+		if ($this->comp_method == 2) {
+		    bzclose($fp);
+		}	elseif ($this->comp_method == 1) {
+		    gzclose($fp);
+		}	else {
+			fclose($fp);
+		}
+		@chmod($_SHOP->files_dir .DS. $this->filename, 0666);
+  }
+
+  function tpl_l($str, $color = C_DEFAULT){
+    $str = preg_replace("/\s{2}/", " &nbsp;", $str);
+    echo "<SCRIPT>l('{$str}', $color);</SCRIPT>";
+  }
+
+  function tpl_enableBack(){
+    echo "<SCRIPT>document.getElementById('back').disabled = 0;</SCRIPT>";
+  }
+
+  function tpl_s($st, $so){
+    $st = round($st * 100);
+    $st = $st > 100 ? 100 : $st;
+    $so = round($so * 100);
+    $so = $so > 100 ? 100 : $so;
+    echo "<SCRIPT>s({$st},{$so});</SCRIPT>";
+  }
 }
+function fn_int($num){
+	return number_format($num, 0, ',', ' ');
+}
+
 ?>

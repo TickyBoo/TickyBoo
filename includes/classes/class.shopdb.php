@@ -50,7 +50,7 @@ class ShopDB {
         $port = 3306;
       }
     }
-    
+
     static function init ($canDie=true) {
         global $_SHOP;
         unset($_SHOP->db_errno);
@@ -358,9 +358,9 @@ class ShopDB {
 //      }
     }
 
-    static function freeResult($result) {
+    static function free_Result($result) {
       if (isset(ShopDB::$link) and isset($result)) {
-        ShopDB::$link->free;
+        $result->free;
       }
     }
 

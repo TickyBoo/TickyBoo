@@ -1431,3 +1431,51 @@ define('Tickets_AttachedSuccess - Template Compiled!','Tickets_AttachedSuccess -
 <?php
 define('Ticket_pdf2Success - Template Compiled!','Ticket_pdf2Success - Template Compiled!');
 ?>
+<?php
+define('backup_title','backup_title');
+?>
+<?php
+define('comp_methods','comp_methods');
+?>
+<?php
+define('GZip','GZip');
+?>
+<?php
+define('Without compression','Without compression');
+?>
+<?php
+define('comp_levels','comp_levels');
+?>
+<?php
+define('9 (maximum)','9 (maximum)');
+?>
+<?php
+define('8','8');
+?>
+<?php
+define('7','7');
+?>
+<?php
+define('6','6');
+?>
+<?php
+define('5 (average)','5 (average)');
+?>
+<?php
+define('4','4');
+?>
+<?php
+define('3','3');
+?>
+<?php
+define('2','2');
+?>
+<?php
+define('1 (minimum)','1 (minimum)');
+?>
+<?php
+define('comp_method','comp_method');
+?>
+<?php
+define('comp_level','comp_level');
+?>

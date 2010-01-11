@@ -45,7 +45,7 @@ define('CHARSET', 'auto');
 define('RESTORE_CHARSET', 'utf-8');
 // Enable the save of preferences and past actions
 // For off select 0
-define('SC', 1);
+define('SC', 0);
 // The types of tables have been maintained only the structure, separated by a comma
 define('ONLY_CREATE', 'MRG_MyISAM,MERGE,HEAP,MEMORY');
 // Global Statistics
@@ -69,33 +69,14 @@ error_reporting(E_ALL);
 
 $auth = 0;
 $error = '';
-if (!empty($_POST['login']) && isset($_POST['pass'])) {
-	if (@mysql_connect(DBHOST, $_POST['login'], $_POST['pass'])){
-		setcookie("sxd", base64_encode("SKD101:{$_POST['login']}:{$_POST['pass']}"));
-		header("Location: dumper.php");
-		mysql_close();
-		exit;
-	}
-	else{
-		$error = '#' . mysql_errno() . ': ' . mysql_error();
-	}
-}
-elseif (!empty($_COOKIE['sxd'])) {
-    $user = explode(":", base64_decode($_COOKIE['sxd']));
-	if (@mysql_connect(DBHOST, $user[1], $user[2])){
+	if (@mysql_connect(DBHOST, 'root', '')){
 		$auth = 1;
 	}
 	else{
 		$error = '#' . mysql_errno() . ': ' . mysql_error();
 	}
-}
 
-if (!$auth || (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] == 'reload')) {
-	setcookie("sxd");
-	echo tpl_page(tpl_auth($error ? tpl_error($error) : ''), "<SCRIPT>if (jsEnabled) {document.write('<INPUT TYPE=submit VALUE=Apply>');}</SCRIPT>");
-	echo "<SCRIPT>document.getElementById('timer').innerHTML = '" . round(array_sum(explode(' ', microtime())) - $timer, 4) . " sec.'</SCRIPT>";
-	exit;
-}
+
 if (!file_exists(PATH) && !$is_safe_mode) {
     mkdir(PATH, 0777) || trigger_error("Failed to create directory for the backup", E_USER_ERROR);
 }

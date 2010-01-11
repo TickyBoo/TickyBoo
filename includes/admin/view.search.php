@@ -128,7 +128,8 @@ class SearchView extends AdminView{
       user_error(shopDB::error());
       return;
     }
-    echo "<tr><td class='admin_name'>".con('event_list')."</td><td class='admin_value'>
+    echo "<tr><td class='admin_name'>".con('event_list')."</td>
+              <td class='admin_value'>
           <select name='event_id'><option value='' selected>".con('choice_please')."</option>";
     while($event=shopDB::fetch_assoc($res)){
       $date=formatAdminDate($event["event_date"]);

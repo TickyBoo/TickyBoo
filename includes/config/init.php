@@ -67,7 +67,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   if (!defined('PHP_SELF'))
     define('PHP_SELF',$_SERVER['PHP_SELF']);
 
-
+ // print_r($_SERVER);
   $query="SELECT *, UNIX_TIMESTAMP() as current_db_time FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){

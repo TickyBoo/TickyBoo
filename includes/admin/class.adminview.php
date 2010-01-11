@@ -74,7 +74,7 @@ class AdminView extends AUIComponent {
     trace("End of page. \n\n\r");
   }
 
-  function list_head ($name, $colspan, $width = 0) {
+  function list_head ($name, $colspan=2, $width = 0) {
       echo "<table class='admin_list' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
       echo "<tr><td class='admin_list_title' colspan='$colspan' align='left'>$name</td></tr>\n";
   }
@@ -968,8 +968,9 @@ class AdminView extends AUIComponent {
   }
 
   function print_hidden ($name, $data=''){
-    echo "<input type='hidden' id='$name' name='$name' value='" . (is_array($data))?$data[$name]:$data . "'>\n";
+    echo "<input type='hidden' id='$name' name='$name' value='" . ((is_array($data))?$data[$name]:$data) . "'>\n";
   }
 }
+
 
 ?>
