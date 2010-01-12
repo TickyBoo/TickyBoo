@@ -529,12 +529,12 @@ $tbls['Payment_log']['key'] = array(
 $tbls['Payment_log']['engine'] = 'InnoDB';
 $tbls['Payment_log']['remove'] = array ()   ;
 
-$tbls['Sessions']['fields'] = array(
-  'Sessions_id' => " varchar(32) NOT NULL DEFAULT ''",
-  'Sessions_access' => " int(10) unsigned DEFAULT NULL",
-  'Sessions_data' => " text");
-$tbls['Sessions']['key'] = array(
-  "PRIMARY KEY (`Sessions_id`)");
-$tbls['Sessions']['remove'] = array ();
-$tbls['Sessions']['engine'] = 'InnoDB';
+$tbls['sessions']['fields'] = array(
+  'session_id' => " varchar(32) NOT NULL DEFAULT ''",
+  'session_access' => " int(10) unsigned DEFAULT NULL",
+  'session_data' => " longtext");
+$tbls['sessions']['key'] = array(
+  "PRIMARY KEY (`session_id`)");
+$tbls['sessions']['remove'] = array ('Sessions_id', 'Sessions_access','Sessions_data' );
+$tbls['sessions']['engine'] = 'InnoDB';
 ?>

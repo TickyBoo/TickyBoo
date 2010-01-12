@@ -485,7 +485,7 @@ function orphanCheck(){
   global $_SHOP, $orphancheck;
   if(is($_SHOP->trace_on,false)){
  //   trace("Start Orphan Check");
-    require_once("classes/OrphanCheck.php");
+    require_once("classes/redundantdatachecker.php");
     //Turn Off trace to run the Orphan check so we only get querys
     $_SHOP->trace_on=false;
     $data = Orphans::getlist($keys, false);

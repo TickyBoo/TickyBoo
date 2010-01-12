@@ -33,75 +33,68 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-session_set_save_handler(array('session',"_open"),
-                         array('session',"_close"),
-                         array('session',"_read"),
 
-                         array('session',"_write"),
-                         array('session',"_destroy"),
-                         array('session',"_clean"));
+$session_class = new Session;
+session_set_save_handler(array(&$session_class, '_open'),
+                         array(&$session_class, '_close'),
+                         array(&$session_class, '_read'),
+                         array(&$session_class, '_write'),
+                         array(&$session_class, '_destroy'),
+                         array(&$session_class, '_clean'));
 
-class session  {
-
-function _open()
-{
-  return ShopDB::init();
-}
-
-
-function _close()
-{
-  return true;
-}
-
-function _read($id)
-{
-  $sql = "SELECT data
-          FROM   sessions
-          WHERE  id = ". _esc($id);
-  if ($result = ShopDB::query($sql))
-  {
-    if (ShopDB::num_rows($result))
-    {
-      $record = ShopDB::fetch_assoc($result);
-
-      return $record['data'];
-    }
+class Session  {
+  protected $isnew= true;
+  function _open() {
+    return true;
   }
 
-  return '';
-}
+  function _close() {
+    return $this->_clean(ini_get('session.gc_maxlifetime'));
+  }
 
-function _write($id, $data)
-{
-  $access = time();
+  function _read($id) {
+    $sql = "SELECT session_data FROM sessions WHERE session_id = ". _esc($id);
+    if ($result = ShopDB::query_one_row($sql)){
+        $this->isnew= false;
+        return $result['session_data'];
+    }
+    return '';
+  }
 
-  $sql = "REPLACE
-          INTO    sessions
-          VALUES  ("._esc($id).", "._esc($access).", ". _esc($data).")";
+  function _write($id, $data) {
+    $access = time();
+    if ($this->isnew) {
+      $sql = "insert INTO sessions (session_id, session_access, session_data)
+              VALUES ("._esc($id).", "._esc($access).", ". _esc($data).")";
+    } else {
+      $sql = "update sessions set
+                session_access = "._esc($access).",
+                session_data   = ". _esc($data)."
+              where session_id = "._esc($id) ;
+    }
+    $this->isnew = false;
+    return ShopDB::query($sql);
+  }
 
-  return ShopDB::query($sql);
-}
+  function _destroy($id)  {
+    $sql = "DELETE FROM sessions WHERE session_id = "._esc($id);
+    return ShopDB::query($sql);
+  }
 
-function _destroy($id)
-{
-  echo "destroy session - ";
-  $sql = "DELETE
-          FROM   sessions
-          WHERE id = "._esc($id);
-  return ShopDB::query($sql);
-}
+  function _clean($max) {
 
-function _clean($max)
-{
+    $old = time() - $max;
 
-  $old = time() - $max;
+    $sql = "DELETE FROM sessions WHERE session_access < "._esc($old);
+    return ShopDB::query($sql);
+  }
 
-  $sql = "DELETE
-          FROM   sessions
-          WHERE  access < "._esc($old);
-  return ShopDB::query($sql);
-}
+  // ensure session data is written out before classes are destroyed
+  // (see http://bugs.php.net/bug.php?id=33772 for details)
+  function __destruct () {
+    @session_write_close();
+  } // __destruct
+
 }
 /*
 This requires an existing table named sessions, whose format is as follows:

@@ -126,7 +126,7 @@ where  (event_id is null)
 ";
 $orphancheck[]="
 select 'Spoint', SPoint.admin_id, 'user_id' , SPoint.admin_user_id, User.user_id
-from Admin SPoint left join User  on SPoint.user_id = User.user_id
+from Admin SPoint left join User  on SPoint.admin_user_id = User.user_id
 where  (User.user_id is null)
 and    admin_status = 'pos'
 ";

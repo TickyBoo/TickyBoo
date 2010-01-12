@@ -45,7 +45,7 @@ define('C_WARNING', 4);
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
-require_once("classes/OrphanCheck.php");
+require_once("classes/redundantdatachecker.php");
 
 class UtilitiesView extends AdminView{
 
