@@ -63,15 +63,15 @@ class Session  {
 
   function _write($id, $data) {
     $access = time();
-    if ($this->isnew) {
-      $sql = "insert INTO sessions (session_id, session_access, session_data)
+ //   if ($this->isnew) {
+      $sql = "REPLACE INTO sessions (session_id, session_access, session_data)
               VALUES ("._esc($id).", "._esc($access).", ". _esc($data).")";
-    } else {
-      $sql = "update sessions set
-                session_access = "._esc($access).",
-                session_data   = ". _esc($data)."
-              where session_id = "._esc($id) ;
-    }
+//    } else {
+ //     $sql = "update sessions set
+ //               session_access = "._esc($access).",
+ //               session_data   = ". _esc($data)."
+ //             where session_id = "._esc($id) ;
+ //   }
     $this->isnew = false;
     return ShopDB::query($sql);
   }

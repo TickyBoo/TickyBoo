@@ -45,18 +45,18 @@ function placeMapMargins($shift)
         $ml = $i % $shift;
         $mr = $shift - $ml - 1;
         if ($ml > 1) {
-            $tml = "<td colspan='$ml' class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
+            $tml = "<td colspan='$ml' class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width='5' height='10'></td>\n";
         } else
             if ($ml == 1) {
-                $tml = "<td class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
+                $tml = "<td class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width='5' height='10'></td>\n";
             } else {
                 $tml = "";
             }
             if ($mr > 1) {
-                $tmr = "<td colspan='$mr' class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
+                $tmr = "<td colspan='$mr' class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width='5' height='10'></td>\n";
             } else
                 if ($mr == 1) {
-                    $tmr = "<td class='pm_none'><img src='images/dot.gif' width='5' height='10'></td>\n";
+                    $tmr = "<td class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width='5' height='10'></td>\n";
                 } else {
                     $tmr = "";
                 }
@@ -110,11 +110,11 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
 
     if ($pmp->pmp_shift) {
         $cspan = 'colspan=2';
-        $ml[1] = $mr[0] = '<td class="pm_none"><img src="images/dot.gif" width=5 height=1></td>';
+        $ml[1] = $mr[0] = '<td class="pm_none"><img src="{$_SHOP->images_url}dot.gif" width=5 height=1></td>';
         $res .= '<tr>';
         $width2 = ($right - $left) * 2 + 1;
         for ($k = 0; $k <= $width2; $k++) {
-            $res .= '<td class="pm_none"><img src="images/dot.gif" width=5 height=1></td>';
+            $res .= '<td class="pm_none"><img src="{$_SHOP->images_url}dot.gif" width=5 height=1></td>';
         }
         $res .= '</tr>';
     }
@@ -145,7 +145,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                 } elseif ($seat[PM_LABEL_TYPE] == 'E') {
                     $res .= "<td $cspan class='label_E'>";
                 } else {
-                    $res .= "<td $cspan class='pm_none'><img src='images/dot.gif' width=10 height=10>";
+                    $res .= "<td $cspan class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
                 }
             } elseif ($seat[PM_ZONE] and $seat[PM_CATEGORY]) {
                 //Empty seats
@@ -165,7 +165,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                         }
                         $res .= "'>";
                     } else {
-                        $res .= "<td $cspan class='pm_free'><img src='images/dot.gif' width=10 height=10>";
+                        $res .= "<td $cspan class='pm_free'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
                     }
                     ////////////Reserved seats, they will only be selectable if you have area='pos' set in cat...tpl
                 } elseif ($seat[PM_STATUS] == PM_STATUS_RESP) {
@@ -185,19 +185,19 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                             }
                             $res .= "'>";
                         } else {
-                            $res .= "<td $cspan class='pm_resp'><img src='images/dot.gif' width=10 height=10>";
+                            $res .= "<td $cspan class='pm_resp'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
                         }
                     } else {
-                        $res .= "<td $cspan class='pm_occupied'><img src='images/dot.gif' width=10 height=10>";
+                        $res .= "<td $cspan class='pm_occupied'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
                     }
                     ////////////////////////////
                 } else {
-                    $res .= "<td $cspan class='pm_occupied'><img src='images/dot.gif' width=10 height=10>";
+                    $res .= "<td $cspan class='pm_occupied'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $res .= "<td $cspan class='pm_nosale'><img src='images/dot.gif' width=10 height=10>";
+                $res .= "<td $cspan class='pm_nosale'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
             } else {
-                $res .= "<td $cspan class='pm_none'><img src='images/dot.gif' width=10 height=10>";
+                $res .= "<td $cspan class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
             }
             $res .= "</td>\n";
         }

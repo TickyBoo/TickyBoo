@@ -40,7 +40,7 @@
 
 		<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
-    
+
 		<script type="text/javascript">
 			var lang = new Object();
 			lang.required = '{!mandatory!}';        lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
@@ -48,7 +48,7 @@
 			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
 			lang.not_number = '{!not_number!}';
 		</script>
-    
+
 		<script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 
@@ -93,7 +93,7 @@
 				<div class="loading">
 					<img src="{$_SHOP_themeimages}LoadingImageSmall.gif" width="16" height="16" alt="Loading data, please wait" />
 				</div>
-       		<img src='{$_SHOP_themeimages}logo.png'  border='0'/>
+       		<img src='{$_SHOP_images}logo.png'  border='0'/>
  				{!box_office!}
 			</div>
 			<div id="navbar">
