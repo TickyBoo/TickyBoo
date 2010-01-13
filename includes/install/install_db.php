@@ -534,7 +534,8 @@ $tbls['sessions']['fields'] = array(
   'session_access' => " int(10) unsigned DEFAULT NULL",
   'session_data' => " longtext");
 $tbls['sessions']['key'] = array(
-  "PRIMARY KEY (`session_id`)");
+  "PRIMARY KEY (`session_id`)",
+  "KEY `session_access` (`session_access`)");
 $tbls['sessions']['remove'] = array ('Sessions_id', 'Sessions_access','Sessions_data' );
 $tbls['sessions']['engine'] = 'InnoDB';
 ?>

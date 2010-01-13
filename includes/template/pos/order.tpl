@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div id="order-div" style="width:100%;">
    <br />
-  <form id="order-form" name='addtickets' action='index.php' method='post'>
+  <form id="order-form" name='addtickets' action='ajax.php?x=addtocart' method='post'>
 
     <table width="100%" cellpadding='2' cellspacing='2' bgcolor='white' >
   {*    <tr>

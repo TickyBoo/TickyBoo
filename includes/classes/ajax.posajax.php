@@ -46,7 +46,12 @@ class PosAjax {
 	function __construct($request, $action){
 		$this->request = $request;
 		$this->actionName = $action;
-		$this->action = "get".ucfirst(strtolower($action));
+    $other = substr($action,0,1);
+    if(strtolower($other) == '_'){
+      $this->action = strtolower($action);
+    }else{
+      $this->action = "get".ucfirst(strtolower($action));      
+    }
 		$this->json = array();
 	}
 	
@@ -446,15 +451,59 @@ class PosAjax {
 		
 		return smarty_function_placemap($params, $smarty); //return the placemap		
 	}
+  
+  /**
+	* @name add to cart function
+	*
+	* Used to add seats to the cart. Will check if the selected seats are free.
+	*
+	* @param event_id : required
+	* @param category_id : required
+	* @param seats : int[] (array) or int : required
+	* @param mode : where the order is being made options('mode_web'|'mode_kasse')
+	* @param reserved : set to true if you want to reserve only.
+	* @param discount_id
+	* @return boolean : will return true if that many seats are avalible.
+	*/
+  private function _addToCart() {
+    $event_id = is($this->request['event_id'],0);
+    $category_id = is($this->request['category_id'],0);
+    $mode='mode_pos';
+    $seats = $this->request['place'];
+    $reserved=false;
+    $discount_id = $this->request['discount_id'];
+    $force= false;
+    if($event_id <= 0){
+      $this->json['reason']=con('wrong_event_id');
+      $this->json['status']=false;
+      return true;
+    }
+    require_once "smarty.mycart.php";
+    $res = MyCart_Smarty::CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id,$force);
+    if($res){
+      $this->json['reason']=$res;
+      $this->json['status']=true;
+    	return true;
+    }else{
+      $this->json['reason']=printMsg('__Warning__');
+      $this->json['status']=false;
+    	return true;
+    }
+  }
 	
 	
-	public function callAction(){
-		if(is_callable(array($this,$this->action))){
-			$this->json = am($this->json,array("status" =>true, "reason" => ''));
-			$return = call_user_func(array($this,$this->action));
-			if($return){
-				echo json_encode($this->json);	
-			}else{
+  public function callAction(){
+    if(is_callable(array($this,$this->action))){
+		  $this->json = am($this->json,array("status" =>true, "reason" => ''));
+      //Instead of falling over in a heap at least return an error.
+      try{
+        $return = call_user_func(array($this,$this->action)); 
+      }catch(Exception $e){
+        $return = false;
+      }
+      if($return){
+        echo json_encode($this->json);
+      }else{
 				$object = array("status" => false, "reason" => 'function failed');
 				echo json_encode($object);
 			}

@@ -110,8 +110,7 @@ var loadOrder = function(){
       refreshOrder();
     });
     $('#no_fee').click(function(){
-      refreshOrder();
-    });
+      refreshOrder();});
 
     //Make sure all add ticket fields are added to this so when clearing selection
     // All fields are reset.
@@ -122,24 +121,27 @@ var loadOrder = function(){
   $("#order-form").submit(function(){
     $("#error-message").hide();
     $(this).ajaxSubmit({
-      data:{ajax:"yes",action:"addtocart"},
-      success: function(html, status){
-          $("#error-text").html(html );
+      data:{pos:"yes",action:"_addToCart"},
+      dataType: "json",
+      success: function(data, status){
+        //$("#error-text").html(data);
+        //$("#error-message").show();
+        setTimeout(function(){$("#error-message").hide();}, 4000);
+        
+        if(!data.status){
+          $("#error-text").html(data.reason);
           $("#error-message").show();
           setTimeout(function(){$("#error-message").hide();}, 4000);
-
-        if(html.substring(0,2) == '!~~') {
-          $("#error-text").html(html.substring(2));
-          $("#error-message").show();
-          setTimeout(function(){$("#error-message").hide();}, 4000);
+          
         } else {
           refreshOrder(); //Refresh Cart
           refreshCategories(); //Update ticket info (Free tickets etc)
+          
         }
       }
     });
     return false;
-   });
+  });
 
    /**
    	* Sends the order information the POS Confirm action in controller/checkout.php.
