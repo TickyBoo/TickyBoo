@@ -16,7 +16,7 @@
             {!date_from!} {!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
             {!date_to!} {!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
             <select id="event-id" name="event_id" size="1"></select>  
-            {!free!} {!seat!}: <input readonly="readonly" id="event-free-seats" size="4" style="text-align:center;">({!approx!})
+            {!free_seat!}: <input readonly="readonly" id="event-free-seats" size="4" style="text-align:center;">({!approx!})
           </td>
         </tr>
         <tr>
@@ -25,7 +25,7 @@
             <select name='category_id' id='cat-select' style="width:250px;">
               <option value='0'></option>
             </select> 
-            {!free!} {!seat!}: <input readonly="readonly" id="cat-free-seats" size="4" style="text-align:center;">({!approx!})
+            {!free_seat!}: <input readonly="readonly" id="cat-free-seats" size="4" style="text-align:center;">({!approx!})
           </td>
         </tr>
         <tr id='discount-name' {* style="display:none;" *}>

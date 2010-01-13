@@ -36,7 +36,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("shop_plugins".DS."function.placemap.php");
 
-class PosAjax { 
+class PosAjax {
 
 	private $request = array();
 	private $action = "";
@@ -50,21 +50,21 @@ class PosAjax {
     if(strtolower($other) == '_'){
       $this->action = 'do'.ucfirst(substr($action,1));
     }else{
-      $this->action = "get".ucfirst(strtolower($action));      
+      $this->action = "get".ucfirst(strtolower($action));
     }
 		$this->json = array();
 	}
-	
-	
+
+
 	/**
 	 * PosAjax::getEvents()
-	 * 
+	 *
 	 * @param datefrom ('yyyy-mm-dd') optional
 	 * @param dateto ('yyyy-mm-dd') optional
 	 * @param return_dates_only (true|false) If set to true, event_dates will only be returned.
-	 * 
+	 *
 	 * Will Return:
-	 * 	- events 
+	 * 	- events
 	 * 		| - id (event_id)
 	 *			| - html (option html)
 	 * 		  	- free_seats (tot free seats)
@@ -74,7 +74,7 @@ class PosAjax {
 	 * 		| - date ('yyyy-mm-dd')
 	 * 		  - date ...
 	 *
-	 * 
+	 *
 	 * @return boolean : if function returned anything sensisble.
 	 */
 	private function getEvents(){
@@ -89,7 +89,7 @@ class PosAjax {
 		}else{
 			$toDate = 'event_date';
 		}
-		
+
 		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, es_free
 				FROM Event,
 				Ort,
@@ -97,7 +97,7 @@ class PosAjax {
 				WHERE 1=1
 				AND ort_id = event_ort_id
 				AND event_id = es_event_id
-				AND event_date >= "._esc($fromDate)." 
+				AND event_date >= "._esc($fromDate)."
 				AND event_date <= ".$toDate."
 				and event_rep LIKE '%sub%'
 				AND event_status = 'pub'
@@ -113,21 +113,21 @@ class PosAjax {
 		while($evt = ShopDB::fetch_assoc($query)){
       		$date = formatDate($evt['event_date'],con('shortdate_format'));
       		$time = formatTime($evt['event_time']);
-      		
+
 			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date} - {$time}</option>";
-			
+
 			$this->json['events'][strval($evt['event_id'])] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}
 		return true;
 	}
-	
+
 	/**
 	 * PosAjax::getCategories()
 	 *
-	 * @param categories_only (true|false) will only return the categories if set true else grabs discounts too. 
-	 * 
+	 * @param categories_only (true|false) will only return the categories if set true else grabs discounts too.
+	 *
 	 * Will return:
-	 *  - categories 
+	 *  - categories
 	 * 		|- id (number)
 	 * 			|- html (category option)
 	 * 			|- numbering (true|false)
@@ -142,7 +142,7 @@ class PosAjax {
 	 * 			|- type (fixed|percent)
 	 * 			 - price (number)
 	 * 		|- id.. (number)
-	 * 
+	 *
 	 * @return boolean as to whether the JSON should be compiled or not.
 	 */
 	private function getCategories(){
@@ -154,7 +154,7 @@ class PosAjax {
 		if(!is_numeric($eventId)){
 	 		return false;
 		}
-			
+
 		$sql = "SELECT *
 			FROM Category c,
 			Category_stat cs
@@ -162,10 +162,10 @@ class PosAjax {
 			AND c.category_id = cs.cs_category_id
 			AND c.category_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
-		
+
 		//Load html and javascript in the json var.
 		$this->json['categories'] = array(); //assign a blank array.
-		
+
 		//Break down cats and array up with additional details.
 		while($cat = ShopDB::fetch_assoc($query)){
 			$option = "<option value='".$cat['category_id']."'>".$cat['category_name']." -  ".$cat['category_price']."</option>";
@@ -173,28 +173,28 @@ class PosAjax {
 			$placemap = ""; //leave placemap empty shouldnt be filled unless told to colect it.
 			if(strtolower($cat['category_numbering']) != 'none'){
 				$numbering = true; // If there should be a placemap set to true otherwise leave as false to show qty box.
-				
+
 				//Load Place Map
 				$placemap = $this->loadPlaceMap($cat);
 			}
-			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['cs_free']); 
+			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['cs_free']);
 		}
 		//Finish loading categories and there details lets grab the discounts to...
 		//If we only need the categories updating then just stop here.
 		if($this->request['categories_only']){
 			return true;
 		}
-		
+
 		//Select Events Discounts
 		$this->json['discount_sql'] = $sql = "select discount_id, discount_name, discount_value, discount_type
 			FROM Discount d
 			WHERE d.discount_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
-		
+
 		//We count the number of rows to see if we should bother running through discounts.
 		$numRows = ShopDB::num_rows($query);
-		
-//		if($numRows > 0){	
+
+//		if($numRows > 0){
 			//Define json array for discounts
 			$this->json['enable_discounts'] = false; //enable discounts.
 			$this->json['discounts'] = array(); //assign a blank array.
@@ -349,8 +349,8 @@ class PosAjax {
     $this->json['userdata']['can_order'] = $counter !== 0;
 		return true;
 	}
-	
-	
+
+
 	private function getPlaceMap(){
 		if(!isset($this->request['category_id'])){
 			return false;
@@ -360,7 +360,7 @@ class PosAjax {
 		if(!is_numeric($catId)){
 	 		return false;
 		}
-			
+
 		$sql = "SELECT *
 			FROM Category c,
 			Category_stat cs
@@ -368,14 +368,14 @@ class PosAjax {
 			AND c.category_id = cs.cs_category_id
 			AND c.category_id = "._esc($catId);
 		$result = ShopDB::query_one_row($sql);
-		
+
 		if(strtolower($cat['category_numbering']) != 'none'){
 			$placemap = $this->loadPlaceMap($result);
 			$this->json['placemap'] = $placemap;
 			return true;
 		}
 		return false;
-	}	
+	}
 
 	private function getUserSearch(){
    		$fields = ShopDB::fieldlist('User');
@@ -387,7 +387,7 @@ class PosAjax {
   			}
    		}
    		if (!$where) $where = '1=2';
-   			
+
 	   	$this->json['POST'] = $where;
 
 		$sql = "SELECT user_id, CONCAT_WS(', ',user_lastname, user_firstname) AS user_data,
@@ -418,7 +418,7 @@ class PosAjax {
             WHERE order_id="._esc($orderid);
     	$q = ShopDB::query_one_row($sql);
  	  	$this->json['status'] = $q['order_payment_status']=='payed';
-    
+
 		return true;
 	}
 
@@ -437,21 +437,21 @@ class PosAjax {
 
 	/**
 	 * PosAjax::loadPlaceMap()
-	 * 
+	 *
 	 * @param mixed $category
 	 * @return placemap html
 	 */
 	private function loadPlaceMap($category){
-		
+
 		//define vars...
 		$params = array();
 		$smarty = "";
-		
+
 		$params['category'] = $category; //add category details
-		
-		return smarty_function_placemap($params, $smarty); //return the placemap		
+
+		return smarty_function_placemap($params, $smarty); //return the placemap
 	}
-  
+
   /**
 	* @name add to cart function
 	*
@@ -490,14 +490,14 @@ class PosAjax {
     	return true;
     }
   }
-	
-	
+
+
   public function callAction(){
     if(is_callable(array($this,$this->action))){
 		  $this->json = am($this->json,array("status" =>true, "reason" => ''));
       //Instead of falling over in a heap at least return an error.
       try{
-        $return = call_user_func(array($this,$this->action)); 
+        $return = call_user_func(array($this,$this->action));
       }catch(Exception $e){
         addWarning($e->getMessage());
         $return = false;
@@ -506,12 +506,12 @@ class PosAjax {
 				$this->json = array("status" => false, "reason" => '');
 			}
       $this->loadMessages();
-  		echo json_encode($$this->json);
+  		echo json_encode($this->json);
 			return true;
 		}
 		return false;
 	}
-  
+
   private function loadMessages() {
     $this->json['messages']['warning'] = printMsg('__Warning__');
     $this->json['messages']['Notice'] = printMsg('__Notice__');
@@ -525,6 +525,6 @@ class PosAjax {
         $this->json['messages']['Error'][$key] = $output;
       }
     }
-  }  
+  }
 }
 ?>

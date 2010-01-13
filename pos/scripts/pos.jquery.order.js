@@ -124,7 +124,7 @@ var loadOrder = function(){
       data:{pos:"yes",action:"_addToCart"},
       dataType: "json",
       success: function(data, status){
-        
+        printMessages(data.messages);
         if(data.status){
           refreshOrder(); //Refresh Cart
           refreshCategories(); //Update ticket info (Free tickets etc)
@@ -166,9 +166,6 @@ var loadOrder = function(){
       dataType:   "HTML",
       data:      userdata,
       success:function(html, status){
-          $("#error-text").html('xxxx'+ status);
-          $("#error-message").show();
-
         if(html.substring(0,2) == '!~~!') {
           $("#error-text").html(html.substring(2));
           $("#error-message").show();

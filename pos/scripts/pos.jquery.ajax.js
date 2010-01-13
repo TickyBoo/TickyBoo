@@ -1,26 +1,16 @@
- $(document).ready(function(){
-	
+$(document).ready(function(){
 	$(document).checkboxAreaSelect();
-//	bindForms();
-//	bindLinks();
-	
-	
+
 	$().ajaxSend(function(evt, request, settings){
 		$(".loading").show();
-//		$("#order-div").block({message:"Loading"});
-		//$.blockUI(); 
 	});
-	
-	$().ajaxStop(function(evt, request, settings){  
+
+	$().ajaxStop(function(evt, request, settings){
 		$(".loading").fadeOut("fast");
-		//console.log("stop");
-//		bindForms();
-//		bindLinks();
-		//$.unblockUI();
-//		$("#order-div").unblock();
 	});
- });
- 
+
+});
+
 var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 	queue:true,
 	abortOld:true,
@@ -55,7 +45,7 @@ var bindLinks = function(){
     		return false;
     	}               alert('test me');
     	$("#seat-chart").each(function(){
-    		$(this).remove();	
+    		$(this).remove();
     	});
    		ajaxQManager.clear();
    		ajaxQManager.add({

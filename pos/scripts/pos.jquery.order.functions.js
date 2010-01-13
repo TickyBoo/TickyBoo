@@ -45,7 +45,7 @@ var eventIdChange = function(){
           $("#discount-name").hide();
           $("#discount-select").html("<option value='0'></option>"); //hide().
         }
-      }   
+      }
     });
     $("#event-free-seats").val(eventData.events[eventId].free_seats);
   }else{
@@ -60,11 +60,11 @@ var refreshOrder = function(){
   var data = $('#cart_table').getGridParam('postData');
   data['handling_id'] = $("input:radio[name='handling_id']:checked").val();
   if($("input:checkbox[name='no_fee']").is(":checked")){
-  	data['no_fee'] = 1;	
+  	data['no_fee'] = 1;
   }else{
   	data['no_fee'] = 0;
   }
-  
+
   $('#cart_table').setGridParam('postData', data);
   $('#cart_table').trigger("reloadGrid");
 }
@@ -73,7 +73,7 @@ var refreshOrder = function(){
 var refreshCategories = function(){
    if($("#event-id").val() > 0 ){
       var eventId = $("#event-id").val();
-      
+
       ajaxQManager.add({
          type:      "POST",
          url:      "ajax.php?x=cat2",
@@ -84,7 +84,7 @@ var refreshCategories = function(){
                catData.categories = data.categories; //set cat var
                updateSeatChart();
             }
-         }   
+         }
       });
    }
 }
@@ -107,7 +107,7 @@ var updateSeatChart = function(){
 var updateEvents = function(){
    var dateFrom = $('#event-from').val();
    var dateTo = $('#event-to').val();
-   
+
    ajaxQManager.add({
       type:      "POST",
       url:      "ajax.php?x=event",
@@ -123,7 +123,7 @@ var updateEvents = function(){
             });
             $("#event-id").show().change();
          }
-      }   
+      }
    });
 }
 var bindCheckoutSubmitForm = function(){
@@ -183,5 +183,4 @@ var printMessages = function(messages){
     $("#notice-message").show();
     setTimeout(function(){$("#error-notice").hide();}, 8000);
   }
-  
 }
