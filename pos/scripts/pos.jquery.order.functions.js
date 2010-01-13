@@ -171,3 +171,17 @@ var bindCartRemove = function(){
       return false;
    });
 }
+
+var printMessages = function(messages){
+  if (messages.warning) {
+    $("#error-text").html(messages.warning);
+    $("#error-message").show();
+    setTimeout(function(){$("#error-message").hide();}, 8000);
+  }
+  if (messages.notice) {
+    $("#notice-text").html(messages.notice);
+    $("#notice-message").show();
+    setTimeout(function(){$("#error-notice").hide();}, 8000);
+  }
+  
+}

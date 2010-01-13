@@ -48,7 +48,7 @@ class PosAjax {
 		$this->actionName = $action;
     $other = substr($action,0,1);
     if(strtolower($other) == '_'){
-      $this->action = strtolower($action);
+      $this->action = 'do'.ucfirst(substr($action,1));
     }else{
       $this->action = "get".ucfirst(strtolower($action));      
     }
@@ -465,7 +465,7 @@ class PosAjax {
 	* @param discount_id
 	* @return boolean : will return true if that many seats are avalible.
 	*/
-  private function _addToCart() {
+  private function doAddToCart() {
     $event_id = is($this->request['event_id'],0);
     $category_id = is($this->request['category_id'],0);
     $mode='mode_pos';
@@ -474,7 +474,7 @@ class PosAjax {
     $discount_id = $this->request['discount_id'];
     $force= false;
     if($event_id <= 0){
-      $this->json['reason']=con('wrong_event_id');
+      addWarning('wrong_event_id');
       $this->json['status']=false;
       return true;
     }
@@ -485,7 +485,7 @@ class PosAjax {
       $this->json['status']=true;
     	return true;
     }else{
-      $this->json['reason']=printMsg('__Warning__');
+      $this->json['reason']='';
       $this->json['status']=false;
     	return true;
     }
@@ -499,18 +499,32 @@ class PosAjax {
       try{
         $return = call_user_func(array($this,$this->action)); 
       }catch(Exception $e){
+        addWarning($e->getMessage());
         $return = false;
       }
-      if($return){
-        echo json_encode($this->json);
-      }else{
-				$object = array("status" => false, "reason" => 'function failed');
-				echo json_encode($object);
+      if(!$return){
+				$this->json = array("status" => false, "reason" => '');
 			}
+      $this->loadMessages();
+  		echo json_encode($$this->json);
 			return true;
 		}
 		return false;
 	}
-
+  
+  private function loadMessages() {
+    $this->json['messages']['warning'] = printMsg('__Warning__');
+    $this->json['messages']['Notice'] = printMsg('__Notice__');
+    if (isset($_SHOP->Messages['__Errors__'])) {
+      $err = $_SHOP->Messages['__Errors__'];
+      foreach ($err as $key => $value) {
+        $output = '';
+        foreach($value as $val){
+          $output .= $val. "</br>";
+        }
+        $this->json['messages']['Error'][$key] = $output;
+      }
+    }
+  }  
 }
 ?>

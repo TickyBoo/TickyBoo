@@ -147,7 +147,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 	  }
   }else if(isset($_SESSION['_SHOP_LANG'])){
     $_SHOP->lang=$_SESSION['_SHOP_LANG'] ;
-  }else if($_SERVER["HTTP_ACCEPT_LANGUAGE"]){
+  }else if(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && $_SERVER["HTTP_ACCEPT_LANGUAGE"]){
 		$lpat=implode($_SHOP->langs,"|");
     if(preg_match("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res)){
      $_SHOP->lang=$res[0];

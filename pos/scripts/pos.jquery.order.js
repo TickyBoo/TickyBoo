@@ -124,19 +124,10 @@ var loadOrder = function(){
       data:{pos:"yes",action:"_addToCart"},
       dataType: "json",
       success: function(data, status){
-        //$("#error-text").html(data);
-        //$("#error-message").show();
-        setTimeout(function(){$("#error-message").hide();}, 4000);
         
-        if(!data.status){
-          $("#error-text").html(data.reason);
-          $("#error-message").show();
-          setTimeout(function(){$("#error-message").hide();}, 4000);
-          
-        } else {
+        if(data.status){
           refreshOrder(); //Refresh Cart
           refreshCategories(); //Update ticket info (Free tickets etc)
-          
         }
       }
     });
