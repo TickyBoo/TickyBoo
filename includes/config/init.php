@@ -51,7 +51,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   require_once("classes/class.shopdb.php");
   require_once("classes/basics.php");
   require_once("classes/model.php");
-  require_once("classes/class.sessions.php");
+//  require_once("classes/class.sessions.php");
 
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
