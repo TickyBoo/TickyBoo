@@ -229,7 +229,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $query="select * from `Admin` where `admin_login`="._esc($username);
     if($res=shopdb::query($query) and $data=shopdb::fetch_assoc($res)){
       unset($data[ $_shop->auth_password ]);
-      $_SESSION['_SHOP_ORGANIZER_DATA']=$data;
+      $_SESSION['_SHOP_AUTH_USER_DATA']=$data;
     }	else {
       session_destroy();
      exit;
