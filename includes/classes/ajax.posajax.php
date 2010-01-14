@@ -231,14 +231,13 @@ class PosAjax {
     $data[]=array($event_item,$cat_item,$place_item);
   }
 
-	/*
+	/**
 	 * PosAjax::getCartInfo()
 	 *
 	 * @param categories_only (true|false) will only return the categories if set true else grabs discounts too.
 	 *
 	 * @return boolean as to whether the JSON should be compiled or not.
 	 */
-
 	private function getCartInfo(){
 	global $cart, $order;
 
@@ -289,7 +288,7 @@ class PosAjax {
       	} else {
       	    $col = $seat_item->ttl()." min.";          //"<img src='../images/clock.gif' valign='middle' align='middle'> ".
         }
-        $col ="<form id='remove' class='remove-cart-row' name='remove{$seat_item_id}' action='index.php' method='POST' >".
+        $col ="<form id='remove' class='remove-cart-row' name='remove{$seat_item_id}' action='ajax.php?x=removeitemcart' method='POST' >".
      		 		 "<input type='hidden' value='{$event_item->event_id}' name='event_id' />".
       		 	 "<input type='hidden' value='{$category_item->cat_id}' name='category_id' />".
       		 	 "<input type='hidden' value='{$seat_item_id}' name='item' />".
@@ -353,11 +352,13 @@ class PosAjax {
 
 	private function getPlaceMap(){
 		if(!isset($this->request['category_id'])){
+		  addWarning('bad_category_id');
 			return false;
 		}else{
 			$catId = &$this->request['category_id'];
 		}
 		if(!is_numeric($catId)){
+		  addWarning('bad_category_id');
 	 		return false;
 		}
 
@@ -374,6 +375,7 @@ class PosAjax {
 			$this->json['placemap'] = $placemap;
 			return true;
 		}
+    addWarning('not_placemap');
 		return false;
 	}
 
@@ -411,6 +413,7 @@ class PosAjax {
 		if($this->request['orderid']){
 			$orderid = $this->request['orderid'];
 		}else{
+		  addWarning('bad_order_id');
 			return false;
 		}
 		$sql = "SELECT order_payment_status
@@ -432,6 +435,7 @@ class PosAjax {
   	  $this->json['user'] = ShopDB::query_one_row($sql);
  			return true;
     }
+    addWarning('user_not_exsist');
 		return false;
 	}
 
@@ -468,28 +472,42 @@ class PosAjax {
   private function doAddToCart() {
     $event_id = is($this->request['event_id'],0);
     $category_id = is($this->request['category_id'],0);
-    $mode='mode_pos';
-    $seats = $this->request['place'];
-    $reserved=false;
-    $discount_id = $this->request['discount_id'];
-    $force= false;
     if($event_id <= 0){
       addWarning('wrong_event_id');
-      $this->json['status']=false;
-      return true;
+      return false;
     }
     require_once "smarty.mycart.php";
-    $res = MyCart_Smarty::CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id,$force);
+    $res = MyCart_Smarty::CartCheck($event_id,$category_id,$this->request['place'],'mode_pos',false,$this->request['discount_id'],false);
     if($res){
       $this->json['reason']=$res;
       $this->json['status']=true;
     	return true;
     }else{
-      $this->json['reason']='';
-      $this->json['status']=false;
-    	return true;
+    	return false;
     }
   }
+  
+  private function doRemoveItemCart (){
+    $event_id = is($this->request['event_id'],0);
+    $cat_id = is($this->request['category_id'],0);
+    $item = is($this->request['item'],0);
+    
+    if($event_id < 1 || $cat_id < 1 || !is_numeric($item)){
+      addWarning('wrong_input_ids');
+      return false;
+    }
+    
+    if($cart=$_SESSION['_SMART_cart']){
+
+      if($places=$cart->remove_place($event_id,$cat_id,$item)){
+        Seat::free(session_id(),$event_id,$cat_id,$places);
+      }
+      
+      $_SESSION['_SMART_cart']=$cart;
+    }
+    return true;
+  }
+
 
 
   public function callAction(){

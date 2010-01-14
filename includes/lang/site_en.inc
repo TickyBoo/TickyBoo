@@ -1485,3 +1485,12 @@ define('Bill','Bill');
 <?php
 define('Others','Others');
 ?>
+<?php
+define('free_seat','free_seat');
+?>
+<?php
+define('wrong_input_ids','wrong_input_ids');
+?>
+<?php
+define('bad_cart_item','bad_cart_item');
+?>

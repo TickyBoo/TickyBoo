@@ -161,15 +161,20 @@ var unBindSeatChart = function(){
 var bindCartRemove = function(){
   $(".remove-cart-row").unbind('submit');
   $(".remove-cart-row").submit(function(){
-      $(this).ajaxSubmit({
-         data:{ajax:"yes",action:"remove"},
-         success: function(html){
-            refreshOrder(); //Refresh Cart
-            refreshCategories(); //Update ticket info (Free tickets etc)
-         }
-      });
-      return false;
-   });
+    $(this).ajaxSubmit({
+      url: 'ajax.php?x=removeitemcart',
+      dataType: 'json',
+      data:{pos:"yes",action:"_removeitemcart"},
+      success: function(data){
+        printMessages(data.messages);
+        if(data.status){
+          refreshOrder(); //Refresh Cart
+          refreshCategories(); //Update ticket info (Free tickets etc)
+        }
+      }
+    });
+    return false;
+  });
 }
 
 var printMessages = function(messages){
