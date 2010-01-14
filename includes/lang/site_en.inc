@@ -1479,3 +1479,9 @@ define('comp_method','comp_method');
 <?php
 define('comp_level','comp_level');
 ?>
+<?php
+define('Bill','Bill');
+?>
+<?php
+define('Others','Others');
+?>
