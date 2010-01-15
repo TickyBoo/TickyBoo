@@ -28,7 +28,7 @@
  *
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
- * <html>
+ *}<html>
 <head>
 <title>{!pwd_forgot!}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
@@ -40,25 +40,32 @@
 
 </head>
 <body topmargin="0" leftmargin="0" style='align:left;'> <br>
-<center> 
-*}
-  <h2>{!forgot_password!}</h2>
-  <form action='index.php' method='post'>
-    {ShowFormToken name='resendpassword'}
-    {gui->hidden name='action value='resendpassword'}
-    <table border="0" cellpadding="5" cellspacing="5" width="100%" class="login_table"  >
-      <tr><td colspan='2'>{!pwd_note!}<br><br></td></tr>
-      <tr>
-        <td>{!user_email!}</td>
-        <td>
-          <input type='text' name='email' size='30'> &nbsp;
-          <input type='submit' name='submit' value="{!pwd_send!}">
-        </td>
-      </tr>
-    </table>
-  </form>
-{*
+<center>
+
+  <table border="0" cellpadding="5" cellspacing="5" width="600" class="login_table"  >
+    <tr>
+      <td colspan=2  class="TblLower">
+         <h2>{!forgot_password!}</h2>
+      </td>
+    </tr>
+    {if $smarty.post.email}
+      {$user->forgot_password_f($smarty.post.email) }
+      <button onclick="window.close();">{!close!}</button>
+    {else}
+      <form action='forgot_password.php' method='post'>
+        {ShowFormToken name='resendpassword'}
+        <tr><td colspan='2'>{!pwd_note!}<br><br></td></tr>
+        <tr>
+          <td>{!user_email!}</td>
+          <td>
+            <input type='text' name='email' size='30'> &nbsp;
+            <input type='submit' name='submit' value="{!pwd_send!}">
+          </td>
+        </tr>
+      </table>
+    </form>
+  {/if}
 </center>
 
 </body>
-</html> *}
+</html>

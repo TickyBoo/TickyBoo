@@ -61,7 +61,7 @@
       		</td>
       	</tr>
       	<tr>
-      		<td colspan=2 class="TblLower"> test: 
+      		<td colspan=2 class="TblLower">
       			<li><a target='forgotpass'  onclick='BasicPopup(this);' href='forgot_password.php'>{!forgot_pwd!}</a></li>
       		</td>
       	</tr>
