@@ -123,7 +123,7 @@ class UtilitiesView extends AdminView{
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
 		//echo $history,' => ',
     $query = "select SQL_CALC_FOUND_ROWS * from email_log
-              order by el_timestamp
+              order by el_timestamp decs
               limit {$recstart},{$this->page_length} ";
 
 		if ( !$res = ShopDB::query($query) ) {

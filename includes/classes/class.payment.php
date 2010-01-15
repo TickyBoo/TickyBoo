@@ -61,7 +61,7 @@ class Payment {
 
 	public function admin_view ( ){}
 
-  	public function admin_form ( ){}
+ 	public function admin_form ( ){}
 
 	function admin_init (){}
 
@@ -69,11 +69,13 @@ class Payment {
 	 * Used to check the manditory fields defined in the manditory array
 	 */
 	public function admin_check (&$data){
-  		foreach($this->mandatory as $field){
-  			if(empty($data[$field])){ddError($field, 'mandatory');}
-  		}
-    	return true;
-  	}
+		foreach($this->mandatory as $field){
+			if(empty($data[$field])){
+        addError($field, 'mandatory');
+      }
+		}
+  	return true;
+	}
 
 
 	function on_handle($order, $new_status, $old_status, $field){

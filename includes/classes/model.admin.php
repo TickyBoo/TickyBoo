@@ -121,8 +121,8 @@ class CustomAuthContainer extends Auth_Container {
                   from Admin
                   where admin_login = "._esc($username)."
                   and   (admin_status like '{$this->admin_status}'";
-        if ($this->admin_status == 'orginizer'){
-          $query = " or admin_status like 'admin')";
+        if ($this->admin_status == 'organizer'){
+          $query .= " or admin_status like 'admin')";
         }
         $res = ShopDB::query_one_row($query);
 

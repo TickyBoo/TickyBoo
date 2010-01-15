@@ -100,9 +100,10 @@ class EPH_authorize_aim Extends Payment{
 		($_POST['cc_exp_y']==($date['year']-2000) and $_POST['cc_exp_m']<$date['mon'])){
 			addError('cc_exp', 'invalid_date');
 		}
+    $_POST['cc_exp'] = $_POST['cc_exp_m'].$_POST['cc_exp_y'];
 
 //verify by mod10 formula
-		if(empty($_POST['cc_number']) or !$this->ccval($_POST['cc_number'])){
+		if(empty($_POST['cc_number']) or !$this->ccval($_POST['cc_number'],'xx',$_POST['cc_exp'])){
 			addError('cc_number', 'invalid_number');
 		}
 //verify...
@@ -113,10 +114,9 @@ class EPH_authorize_aim Extends Payment{
 	*/
 
 
-		if(!empty($err)){
+		if(hasErrors()){
 			return $this->on_confirm($order);
 		}
-    $_POST['cc_exp'] = $_POST['cc_exp_m'].$_POST['cc_exp_y'];
 		if($this->pm_authorize_aim_test){
 			$url="https://test.authorize.net/gateway/transact.dll";
 		}else{

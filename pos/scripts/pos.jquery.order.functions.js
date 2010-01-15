@@ -26,6 +26,7 @@ var eventIdChange = function(){
       dataType:   "json",
       data:      {"pos":true,"action":"categories","event_id":eventId},
       success:function(data, status){
+        printMessages(data.messages);
         catData = data; //set cat var
         //Fill Categories
         $("#cat-select").hide().html("");
@@ -80,6 +81,7 @@ var refreshCategories = function(){
          dataType:   "json",
          data:      {"pos":true,"action":"categories","categories_only":true,"event_id":eventId},
          success:function(data, status){
+            printMessages(data.messages);
             if(data.status){
                catData.categories = data.categories; //set cat var
                updateSeatChart();
@@ -114,6 +116,7 @@ var updateEvents = function(){
       dataType:   "json",
       data:      {pos:true,action:"events",datefrom:dateFrom,dateto:dateTo},
       success:function(data, status){
+         printMessages(data.messages);
          if(data.status){
             eventData = data//set event data
             //Fill Categories
@@ -131,7 +134,7 @@ var bindCheckoutSubmitForm = function(){
     data:{ajax:true},
     success:function(html, status){
           $("#order_action").html(html);
-          //$("#order_action").dialog('open');
+          $("#order_action").dialog('open');
     }
   });
 }
