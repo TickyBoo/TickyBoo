@@ -570,7 +570,6 @@ class PosAjax {
       ob_start();
       $smarty->display($return . '.tpl');
       $this->json['html'] = ob_get_contents();
-
       ob_end_clean();
 
       return true;
@@ -580,16 +579,17 @@ class PosAjax {
 
   public function callAction(){
     if(is_callable(array($this,$this->action))){
-		  $this->json = am($this->json,array("status" =>true, "reason" => ''));
+		  $this->json = am($this->json,array("status" =>true, "reason" => 'success'));
       //Instead of falling over in a heap at least return an error.
       try{
         $return = call_user_func(array($this,$this->action));
       }catch(Exception $e){
+        addWarning('Error!');
         addWarning($e->getMessage());
         $return = false;
       }
       if(!$return){
-				$this->json = array("status" => false, "reason" => '');
+				$this->json = array("status" => false, "reason" => 'reason unknown !!!');
 			}
       $this->loadMessages();
   		echo json_encode($this->json);

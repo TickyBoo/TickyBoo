@@ -1,8 +1,8 @@
 <?php
 
 class Checkout {
-  
-  
+
+
    /**
   	 * @name SetOrderValues
   	 *
@@ -40,12 +40,12 @@ class Checkout {
 
 	    $smarty->assign('order_seats_id',$seats);
 	}
-  
-  
+
+
   public static function reserveAction(&$smarty,$origin='www',$user_id=null) {
     global $order, $cart;
     $myorder = $order->make_f(1, $origin, NULL, $user_id);
-    
+
     if (!$myorder) {
       return "checkout_preview";
     } else {
@@ -55,17 +55,16 @@ class Checkout {
       return "checkout_result";
     }
   }
-  
+
   public static function confirmAction(&$smarty,$origin="www",$user_id=0, $no_fee=0) {
     global $order, $cart;
-    
+
     if (!isset($_SESSION['_SHOP_order'])) {
       $myorder = $order->make_f($_POST['handling_id'], $origin, 0, $user_id, $no_fee);
  	  } else {
 		  $myorder = $_SESSION['_SHOP_order'];
     }
     if (!$myorder) {
-      $smarty->assign('order_error', $order->error);
       return "checkout_preview";
     } else {
       Checkout::setordervalues($myorder, $smarty); //assign order vars
@@ -90,8 +89,8 @@ class Checkout {
       }
     }
   }
-  
-  
+
+
 }
 
 

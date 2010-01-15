@@ -57,7 +57,7 @@ class Order_Smarty {
     }
 
     $cart=$_SESSION['_SMART_cart'];
-    
+
     if(!$cart->can_checkout()){
       addWarning('cart_empty_or_invalid');
       return false;
@@ -492,7 +492,7 @@ class Order_Smarty {
       //$correct = ctype_alnum($nonum);
       if($correct) { return $nonum; }
       elseif(!$correct) {
-      echo "No Such Varible";
+        addWarning("No Such Variable");
         $nonum="This";
         return $nonum;
     }
