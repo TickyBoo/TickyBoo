@@ -57,6 +57,11 @@ class Order_Smarty {
     }
 
     $cart=$_SESSION['_SMART_cart'];
+    
+    if(!$cart->can_checkout()){
+      addWarning('cart_empty_or_invalid');
+      return false;
+    }
 
     if(!$handling or !$user_id or !$cart or !$cart->can_checkout()){
       addWarning('reservate_failed');

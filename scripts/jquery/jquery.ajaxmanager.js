@@ -1,23 +1,20 @@
 /**
  * @author alexander.farkas
  * 
- * @version 2.5.3
+ * @version 2.5.4
  * project site: http://plugins.jquery.com/project/AjaxManager
  */
 (function($){
 	$.support.ajax = !!(window.XMLHttpRequest);
-	var needActiveXFix = false;
 	if(window.ActiveXObject){
 		try{
 			new ActiveXObject("Microsoft.XMLHTTP");
 			$.support.ajax = true;
 		} catch(e){
-			$.support.ajax = false;
 			if(window.XMLHttpRequest){
 				$.ajaxSetup({xhr: function(){
 					return new XMLHttpRequest();
 				}});
-				$.support.ajax = true;
 			}
 		}
 	}

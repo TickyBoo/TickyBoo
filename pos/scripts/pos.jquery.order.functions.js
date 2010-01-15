@@ -178,6 +178,9 @@ var bindCartRemove = function(){
 }
 
 var printMessages = function(messages){
+  if(messages === undefined){
+    return;
+  }
   if (messages.warning) {
     $("#error-text").html(messages.warning);
     $("#error-message").show();

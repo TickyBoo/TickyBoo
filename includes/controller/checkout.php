@@ -40,7 +40,7 @@ if($_REQUEST['pos']) {
 } else {
   require_once ( 'template.php');
 }
-
+require_once ("classes/class.checkout.php");
 
 if (!$action) {$action = 'index';}
 
@@ -55,15 +55,15 @@ if (isset($_REQUEST['sor'])) {
 	}
  	myExit();
 } elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
-  	if ( !$_REQUEST['pos'] and
+  if ( !$_REQUEST['pos'] and
          !$user->logged and
 		     $action !== 'register' and
       	 $action !== 'login' ) {
-    	$smarty->display('user_register.tpl');
-	  } elseif (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
-    	$smarty->display($fond . '.tpl');
-  	}
-  	myExit();
+    $smarty->display('user_register.tpl');
+ 	} elseif (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
+ 	  $smarty->display($fond . '.tpl');
+  }
+  myExit();
 }
 
 if ($action == 'useredit') {
@@ -97,43 +97,7 @@ myExit();
     	return $return;
   	}
 
-  	/**
-  	 * @name SetOrderValues
-  	 *
-  	 * Used to set the order values using the smarty assign methods, which can then be used
-  	 * by the plugable payments.
-  	 *
-  	 * @author Niels
-  	 * @since 1.0
-  	 * @uses Smarty, Smarty_Order
-  	 * @param aorder : Order Object [required]
-  	 * @param smarty : Smarty Object [required]
-  	 * @return null loads the values to smarty vars
-  	 */
-  	function setordervalues($aorder, $smarty){
-      global $order;
-	    $order->obj = $aorder;
-
-    	if (!is_a  ( $aorder,'Order')) exit;
-    	if (isset($aorder) and isset($aorder->places)) {
-      		foreach($aorder->places as $ticket){
-        		$seats[$ticket->id]=TRUE;
-      		}
-    	}
-	    $smarty->assign('order_success',true);
-	    $smarty->assign('order_id',$aorder->order_id);
-	    $smarty->assign('order_fee',$aorder->order_fee);
-	    $smarty->assign('order_total_price',$aorder->order_total_price);
-	    $smarty->assign('order_partial_price',$aorder->order_partial_price);
-	    $smarty->assign('order_tickets_nr',$aorder->size());
-	    $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
-	    $smarty->assign('order_payment_mode',$aorder->order_payment_mode);
-
-	    $smarty->assign('shop_handling', (array)$aorder->order_handling);
-	    $smarty->assign('shop_order', (array)$aorder);
-
-	    $smarty->assign('order_seats_id',$seats);
-	}
+  	
 
   Function loginAction ($smarty){
     global $user;
@@ -197,101 +161,7 @@ myExit();
     return "checkout_preview";
   }
 
-  function reserveAction($smarty,$origin='www',$user_id=null) {
-    global $order, $cart;
-    $myorder = $order->make_f(1, $origin, NULL, $user_id);
-    if (!$myorder) {
-      return "checkout_preview";
-    } else {
-      setordervalues($myorder, $smarty);
-      $cart->destroy_f();
-      $smarty->assign('pm_return',array('approved'=>TRUE));
-      return "checkout_result";
-    }
-  }
-
-  function posConfirmAction($smarty) {
-  	global $order, $cart, $user;
-
-    if ((int)$_POST['handling_id']==0) { // Checks handling is selected
-        addWarning('No_handling_selected');//.print_r($_POST,true);
-        return "";
-    } elseif ($_POST['user_id']==-2) { //Checks that a user type is selected.
-        addWarning('No_useraddress_selected');
-        return "";
-    } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
-       $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
-       $user->load_f($user_id);
-    } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
-      $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
-      $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
-      if (!$user_id || hasErrors() ) {
-       // echo "~~";
-       // echo printMsg('__Errors__');
-        return "";
-      } else {
-        $smarty->assign('newuser_id', $user_id);
-      }
-    } else {
-      $user_id = $_POST['user_id'];
-    }
-    $no_fee = is($_POST['no_fee'], 0);
-
-    //ob_start();
-    //print_r($_SESSION['_SHOP_AUTH_USER_DATA']);
-    unset($_SESSION['_SHOP_order']) ;
-    if((int)$_POST['handling_id'] === 1){
-      $return = reserveAction($smarty,'pos',$user_id);
-    }else{
-      $return = confirmAction($smarty, 'pos', $user_id, $no_fee );
-    }
-    //$result = ob_get_contents();
-    //ob_end_clean();
-    if ($return == 'checkout_preview' ) {
-//      echo '~~'.$order->error.'<br /><pre>'.$result.'</pre>';
-      return '';
-    }else {
-     // echo '~~'.$return.'<pre>'.$result.'</pre>';
-      return $return;
-    }
-  }
-
-  function confirmaction($smarty,$origin="www",$user_id=0, $no_fee=0) {
-  	global $order, $cart;
-  	if (!isset($_SESSION['_SHOP_order'])) {
-    	$myorder = $order->make_f($_POST['handling_id'], $origin, 0, $user_id, $no_fee);
-   	} else {
-		  $myorder = $_SESSION['_SHOP_order'];
-	  }
-  	if (!$myorder) {
-    		$smarty->assign('order_error', $order->error);
-    		return "checkout_preview";
-  	} else {
-    		setordervalues($myorder, $smarty); //assign order vars
-    		$cart->destroy_f(); // destroy cart
-    		$hand = $myorder->order_handling; // get the payment handling object
-    		$confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
-
-    		if (is_array($confirmtext)) {
-
-      		$smarty->assign('pm_return',$confirmtext);
-      		if(!$confirmtext['approved']) {
-         			$myorder->order_delete($myorder->order_id,'payment_not_approved' );
-          }
-     			unset( $_SESSION['_SHOP_order']);
-      		return "checkout_result";
-    		} else {
-    			if ($hand->is_eph()) {
-      			$_SESSION['_SHOP_order'] = $myorder;
-    			}
-    			$order->obj = $myorder;
-      		$smarty->assign('confirmtext', $confirmtext);
-    			return "checkout_confirm";
-  		}
-		}
-	}
-
-  function  submitaction($smarty) {
+  function  submitAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
     if($test < 1) {
@@ -301,7 +171,7 @@ myExit();
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    setordervalues($myorder, $smarty);
+    Checkout::setordervalues($myorder, $smarty);
     $hand= $myorder->order_handling;
     $pm_return = $hand->on_submit($myorder,$errors);
     $smarty->assign('errors', $errors);
@@ -321,7 +191,7 @@ myExit();
     }
   }
 
-  function  printaction($smarty) {
+  function  printAction($smarty) {
     Global $order;
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
@@ -338,7 +208,7 @@ myExit();
     return;
   }
 
-  function acceptaction($smarty) {
+  function acceptAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],nil);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
     if($test < 1) {
@@ -350,7 +220,7 @@ myExit();
     }
  //   echo "accept ok ($test): $myorder->order_id\n". print_r($myorder, true);
     $hand=$myorder->order_handling;
-    setordervalues($myorder, $smarty);
+    Checkout::setordervalues($myorder, $smarty);
 
     $pm_return = $hand->on_return($myorder, true);
     $smarty->assign('pm_return',$pm_return);
@@ -373,7 +243,7 @@ myExit();
     }
   }
 
-  function  cancelaction($smarty) {
+  function  cancelAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, getsecurecode());
     if($test < 1) {
@@ -392,7 +262,7 @@ myExit();
     return "checkout_result";
   }
 
-	function  notifyaction($smarty, $type="sor") {
+	function  notifyAction($smarty, $type="sor") {
 		if($type == "sor"){
 			$myorder = is($_SESSION['_SHOP_order'], null);
 			$test = Order::DecodeSecureCode($myorder, getsecurecode($type), true);
@@ -415,6 +285,14 @@ myExit();
 			$hand->on_notify($order);
 		}
  	}
+  
+  function reserveAction($smarty,$origin='www',$user_id=null) {
+    return Checkout::reserveAction($smarty,$origin,$user_id);
+  }
+  
+  function confirmAction($smarty,$origin="www",$user_id=0, $no_fee=0) {
+    return Checkout::confirmAction($smarty,$origin,$user_id, $no_fee);  
+  }
 
 //session_write_close();
 ?>

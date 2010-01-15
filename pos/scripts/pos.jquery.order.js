@@ -138,15 +138,22 @@ var loadOrder = function(){
    	* Sends the order information the POS Confirm action in controller/checkout.php.
    	*/
   $("#checkout").click(function(){
-    var userdata = {ajax:"yes",pos:"yes",action:"posConfirm"};
+    var userdata = {ajax:"yes",pos:"yes",action:"_PosConfirm"};
+    
     userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
+    if(userdata['handling_id'] === undefined){
+      message = new Object();
+      message.warning = "Select a payment option.";
+      printMessages(message);
+      return;
+    }
 
     //If user is being passed check its valid
     if(!$('#user_info_none').is(':checked')){
       if(!$('#pos-user-form').valid()){
-        $("#error-text").html("Please fill missing fields!");
-        $("#error-message").show();
-        setTimeout(function(){$("#error-message").hide();}, 40000);
+        message = new Object();
+        message.warning = "Please fill missing fields!";
+        printMessages(message);
         return;
       }
     }
@@ -162,16 +169,13 @@ var loadOrder = function(){
     $("#error-message").hide();
     ajaxQManager.add({
       type:      "POST",
-      url:      "checkout.php?x=order",
-      dataType:   "HTML",
+      url:      "ajax.php?x=posconfirm",
+      dataType:   "json",
       data:      userdata,
-      success:function(html, status){
-        if(html.substring(0,2) == '!~~!') {
-          $("#error-text").html(html.substring(2));
-          $("#error-message").show();
-          setTimeout(function(){$("#error-message").hide();}, 40000);
-        } else {
-          $("#order_action").html(html);
+      success:function(data, status){
+        printMessages(data.messages);
+        if(data.status){
+          $("#order_action").html(data.html);
           $("#order_action").dialog('open');
           bindCheckoutSubmitForm();
         }
@@ -184,7 +188,7 @@ var loadOrder = function(){
      $("#error-message").hide();
      ajaxQManager.add({
         type:      "POST",
-        url:      "checkout.php?x=cancel",
+        url:      "checkout.php?x=poscancel",
         dataType:   "HTML",
         data:      {pos:"yes",action:"PosCancel"},
         success:function(html, status){
