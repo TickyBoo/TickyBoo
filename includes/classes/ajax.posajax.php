@@ -568,7 +568,7 @@ class PosAjax {
       return false;
     }else {
       ob_start();
-      $smarty->display($fond . '.tpl');
+      $smarty->display($return . '.tpl');
       $this->json['html'] = ob_get_contents();
 
       ob_end_clean();
