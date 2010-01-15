@@ -21,16 +21,16 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
+ * For pricing of this licence please contact us via e-mail to
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
- 
+
  *}
 
 <script type="text/javascript">
@@ -55,7 +55,7 @@
       <td class='user_item' colspan='2'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' >
           <tr>
-            <td class='user_item'  > &nbsp;
+            <td class='user_item' style='height:18;' > &nbsp;
               <input checked="checked" type='radio' id='user_info_none' class='checkbox_dark' name='user_info' value='0'>
               <label for='user_info_none'> {!none!} </label>
             </td>
@@ -89,7 +89,7 @@
       {gui->input name='user_fax' size='15' maxlength='50'}
       {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
       <tr><td colspan="2"><input type='hidden' id='user_id' name='user_id' value='-1' /></td></tr>
-      
+
     </tbody>
   </table>
   <div id="search-dialog" title="Personal Search dialog">

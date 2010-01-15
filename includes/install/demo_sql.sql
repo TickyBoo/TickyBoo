@@ -113,9 +113,9 @@ INSERT INTO `Seat` (`seat_id`, `seat_event_id`, `seat_category_id`, `seat_user_i
 (49, 2, 8, NULL, NULL, '0', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, 'free', NULL, NULL, NULL),
 (50, 2, 8, NULL, NULL, '0', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, 'free', NULL, NULL, NULL);
 
-INSERT INTO `Admin` (`admin_login`, `admin_password`,`admin_status`,`admin_user_id`) VALUES
-('demo', 'c514c91e4ed341f263e458d44b3bb0a7', 'pos',1);
-
 INSERT INTO `User` (`user_id`, `user_lastname`, `user_firstname`, `user_address`, `user_address1`, `user_zip`, `user_city`, `user_state`, `user_country`, `user_phone`, `user_fax`, `user_email`, `user_status`, `user_prefs`, `user_custom1`, `user_custom2`, `user_custom3`, `user_custom4`, `user_owner_id`, `user_lastlogin`, `user_order_total`, `user_current_tickets`, `user_total_tickets`) VALUES
 (1, 'Demo POS', '', '4321 Demo Street', '', '10000', 'Demo Town', 'DT', 'US', '(555) 555-1212', '(555) 555-1213', 'demo@demoserver.com', 1, 'pdf', '', NULL, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 0, 1),
 (2, 'Demolastname', 'Demofirstname', '1234 Anytown', '', '10000', 'Demotown', '', 'US', '', '', 'none@none.com', 4, NULL, '', NULL, 0, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 2, 0, 3);
+
+INSERT INTO `Admin` (`admin_login`, `admin_password`,`admin_status`,`admin_user_id`) VALUES
+('demo', 'c514c91e4ed341f263e458d44b3bb0a7', 'pos',1);

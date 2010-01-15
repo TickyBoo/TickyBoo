@@ -35,7 +35,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once('classes/class.payment.php');
 class EPH_authorize_aim Extends Payment{
-  public $extras = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey',// 'pm_authorize_aim_hash',  
+  public $extras = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey',// 'pm_authorize_aim_hash',
                           'pm_authorize_aim_test');
   public $mandatory = array ('pm_authorize_aim_login', 'pm_authorize_aim_txnkey');
                            //  'pm_authorize_aim_hash'
@@ -46,7 +46,7 @@ class EPH_authorize_aim Extends Payment{
 //	         "{gui->view name='pm_authorize_aim_hash'}".
 	         "{gui->view name='pm_authorize_aim_test'}";
 	}
-	
+
   function admin_form (){
 		//$docs=array('pm_authorize_aim_site'=>'<a class="link" href="https://www.authorize_aim.com/" target="_blank">PayPal</a>');
     return  "{gui->input name='pm_authorize_aim_login'}".
@@ -89,8 +89,8 @@ class EPH_authorize_aim Extends Payment{
             <INPUT type='submit' name='submit' value='{!pay!}' >
             </form>";
   }
-  
-  
+
+
   function on_submit(&$order, &$err){
 
 		global $_SHOP;
@@ -98,12 +98,12 @@ class EPH_authorize_aim Extends Payment{
 		$date = getdate();
 		if($_POST['cc_exp_y']<($date['year']-2000) or
 		($_POST['cc_exp_y']==($date['year']-2000) and $_POST['cc_exp_m']<$date['mon'])){
-			$err['cc_exp']= con('invalid_date');
+			addError('cc_exp', 'invalid_date');
 		}
-     
+
 //verify by mod10 formula
 		if(empty($_POST['cc_number']) or !$this->ccval($_POST['cc_number'])){
-			$err['cc_number']= con('invalid_number');
+			addError('cc_number', 'invalid_number');
 		}
 //verify...
 
@@ -129,11 +129,11 @@ class EPH_authorize_aim Extends Payment{
     $post['x_login']   = $this->pm_authorize_aim_login;
     $post['x_tran_key']= $this->pm_authorize_aim_txnkey;
     $post["x_type"]    = "AUTH_CAPTURE";
-    
+
 		if($this->pm_authorize_aim_test){
 		  $post['x_test_request']='TRUE';
 		}
-    
+
 		$post["x_version"]    = "3.1";
 		$post["x_delim_data"] = "TRUE";
 		$post["x_delim_char"] = "|";
@@ -152,11 +152,11 @@ class EPH_authorize_aim Extends Payment{
 
 		$post['x_cust_id'] = $order->user_id;
 		$post['x_first_name'] = $order->user_firstname;
-		$post['x_last_name'] = $order->user_lastname;
-		$post['x_address'] = $order->user_address.' '.$order->user_address1;
-		$post['x_city'] = $order->user_city;
-		$post['x_zip'] = $order->user_zip;
-    $post['x_state'] = $order->user_state;
+//		$post['x_last_name'] = $order->user_lastname;
+//		$post['x_address'] = $order->user_address.' '.$order->user_address1;
+//		$post['x_city'] = $order->user_city;
+//		$post['x_zip'] = $order->user_zip;
+//    $post['x_state'] = $order->user_state;
 		$post['x_country'] = $order->user_country;
 		$post['x_phone'] = $order->user_phone;
 		$post['x_fax'] = $order->user_fax;
@@ -170,7 +170,7 @@ class EPH_authorize_aim Extends Payment{
 
     $debug.="Order_id : $order_id\n";
     $debug.="Amount   : $order_total\n";
-    
+
     $debug .= print_r($post, true);
 		$result =$this->url_post($url,$post);
     $debug .= $result ."\n";
@@ -185,7 +185,7 @@ class EPH_authorize_aim Extends Payment{
 			$return['response']         = "{$res[3]}. ";
 			$return['transaction_id']   = $transaction_id ;
   	  $return['approved']         = false;
-  	  
+
 			if($response_code==1){
 				if($order->order_id == $order_id){
 					if($this->_check_order($order, $res)){
@@ -208,7 +208,7 @@ class EPH_authorize_aim Extends Payment{
     $handle=fopen($_SHOP->tmp_dir."authorize.log","a");
     fwrite($handle,$debug);
     fclose($handle);
-    
+
 		return $return ;
 	}
 

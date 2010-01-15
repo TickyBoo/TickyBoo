@@ -178,7 +178,7 @@ class install_execute {
       $query = "INSERT INTO `Admin` SET ".
          "admin_login = '{$row['login']}',
           admin_password = '{$row['password']}',
-          admin_user_id = {$row['user_id']},
+          admin_user_id = '{$row['user_id']}',
           admin_status = 'pos'";
       ShopDB::query($query);
     }
@@ -204,6 +204,5 @@ class install_execute {
 
 }
 ?>
-
 
 

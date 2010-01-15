@@ -34,7 +34,7 @@ var loadOrder = function(){
         {name:'Expire_in',  index:'Expire_in',  width:100, sortable:false },
         {name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
         {name:'Count',      index:'Count',      width: 55, sortable:false, resizable: false, align:'right' },
-        {name:'Tickets',    index:'Tickets',    width:190, sortable:false, resizable: false                },
+        {name:'Tickets',    index:'Tickets',    width:210, sortable:false, resizable: false                },
         {name:'Price',      index:'Price',      width: 70, sortable:false, resizable: false, align:'right' },
         {name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
     altRows: true,
@@ -139,7 +139,7 @@ var loadOrder = function(){
    	*/
   $("#checkout").click(function(){
     var userdata = {ajax:"yes",pos:"yes",action:"_PosConfirm"};
-    
+
     userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
     if(userdata['handling_id'] === undefined){
       message = new Object();
