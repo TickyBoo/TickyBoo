@@ -270,11 +270,13 @@ function empt(&$arg , $default=null){
     } elseif ($value) {
       return $value;
     } elseif ($name) {
-      if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
-        $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
-        file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
-        define($name,$name);
-      }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
+      if (isset($_SHOP->AutoDefineLangs)  and $_SHOP->AutoDefineLangs) {
+        if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
+          $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
+          file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
+          define($name,$name);
+        }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
+      }
       return $name;
     }
   }

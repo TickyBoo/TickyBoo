@@ -1563,3 +1563,6 @@ define('open_event','open_event');
 <?php
 define('order_madefinal','order_madefinal');
 ?>
+<?php
+define('username not found','username not found');
+?>

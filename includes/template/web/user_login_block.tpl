@@ -85,7 +85,7 @@
   	</tr>
   	<tr>
   		<td class="login_content">
-  			<li><a target='forgotpass' onclick='BasicPopup(this);' href='forgot_password.php'>{!forgot_pwd!}</a></li>
+  			<li><a id='forgot_password' href='#'>{!forgot_pwd!}</a></li>
   		</td>
   	</tr>
   </form>

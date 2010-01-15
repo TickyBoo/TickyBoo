@@ -1,3 +1,10 @@
+var ajaxQManager = $.manageAjax.create('ajaxQMan',{
+	queue:true,
+	abortOld:true,
+	maxRequests: 1,
+	cacheResponse: false
+});
+
 $(window).load(function(){
 
 	$("#update_user").validate({
@@ -91,6 +98,20 @@ $(window).load(function(){
     }
   });
   
+  $('#forgot_password').click(function(){
+    ajaxQManager.add({
+      type:      "POST",
+      url:      "forgot_password.php",
+      dataType:   "HTML",
+      data:      {},
+      success:function(data, status){
+          $("#showdialog").html(data); 
+          $("#showdialog").modal({
+            autoResize: true
+          });
+      }
+    });
+  });
 });
 
 var showPasswords = function(show){
@@ -102,3 +123,4 @@ var showPasswords = function(show){
     $('#passwords_tr2').hide();
   }
 }
+

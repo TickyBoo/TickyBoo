@@ -29,6 +29,10 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}{strip}{* include file="header.tpl" *}
+{if  $smarty.post.action eq 'resendpassword'}
+   {$user->forgot_password_f($smarty.post.email)}
+{/if}
+
 {if $smarty.request.action eq 'login' and $smarty.request.type != 'block'}
 	{include file="user_login.tpl"}
 
