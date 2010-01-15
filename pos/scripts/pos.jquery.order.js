@@ -174,6 +174,7 @@ var loadOrder = function(){
       data:      userdata,
       success:function(data, status){
         printMessages(data.messages);
+
         if(data.status){
           $("#order_action").html(data.html);
           $("#order_action").dialog('open');

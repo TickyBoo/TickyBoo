@@ -487,35 +487,35 @@ class PosAjax {
     	return false;
     }
   }
-  
+
   private function doRemoveItemCart (){
     $event_id = is($this->request['event_id'],0);
     $cat_id = is($this->request['category_id'],0);
     $item = is($this->request['item'],0);
-    
+
     if($event_id < 1 || $cat_id < 1 || !is_numeric($item)){
       addWarning('wrong_input_ids');
       return false;
     }
-    
+
     if($cart=$_SESSION['_SMART_cart']){
 
       if($places=$cart->remove_place($event_id,$cat_id,$item)){
         Seat::free(session_id(),$event_id,$cat_id,$places);
       }
-      
+
       $_SESSION['_SMART_cart']=$cart;
     }
     return true;
   }
 
-  
+
   private function doPosConfirm(){
     $fond=null;
     require ("controller/pos_template.php");
-    
+
     $checkoutRes = $this->_posConfirm($smarty);
-    if(is_string($checkoutRes)){ 
+    if(is_string($checkoutRes)){
       ob_start();
       $smarty->display($checkoutRes . '.tpl');
       $obOutput = ob_get_contents();
@@ -526,23 +526,23 @@ class PosAjax {
       return false;
     }
   }
-  
-  
+
+
   private function _posConfirm (&$smarty) {
   	global $order, $cart, $user;
 
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected
         addWarning('no_handling_selected');//.print_r($_POST,true);
         return false;
-        
+
     } elseif ($_POST['user_id']==-2) { //Checks that a user type is selected.
         addWarning('no_useraddress_selected');
         return false;
-        
+
     } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
       $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_user_id'];
       $user->load_f($user_id);
-       
+
     } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
@@ -558,25 +558,24 @@ class PosAjax {
     }
     $no_fee = is($_POST['no_fee'], 0);
 
-    //ob_start();
-    //print_r($_SESSION['_SHOP_AUTH_USER_DATA']);
-    
     unset($_SESSION['_SHOP_order']) ;
     if((int)$_POST['handling_id'] === 1){
       $return = Checkout::reserveAction($smarty,'pos',$user_id);
     }else{
       $return = Checkout::confirmAction($smarty, 'pos', $user_id, $no_fee );
     }
-    //$result = ob_get_contents();
-    //ob_end_clean();
     if ($return == 'checkout_preview' ) {
-//      echo '~~'.$order->error.'<br /><pre>'.$result.'</pre>';
       return false;
     }else {
-     // echo '~~'.$return.'<pre>'.$result.'</pre>';
-      return $return;
+      ob_start();
+      $smarty->display($fond . '.tpl');
+      $this->json['html'] = ob_get_contents();
+
+      ob_end_clean();
+
+      return true;
     }
-  }  
+  }
 
 
   public function callAction(){
