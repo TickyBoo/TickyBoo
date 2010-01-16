@@ -37,15 +37,52 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class OptionsView extends AdminView{
+  function option_form (&$data, $err=null){
+  	global $_SHOP;
+  	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');
+
+  	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+    echo "<input type='hidden' name='action' value='update'>\n";
+    $this->form_head(con('option_update_title'));
+  //	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+  	//echo "<tr><td class='admin_list_title' colspan='2'>".con('option_update_title')."</td></tr>";
+  //  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
+  //	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
+
+  	$this->print_input('shopconfig_lastrun_int',$data, $err,5,10);
+  	$this->print_input('shopconfig_restime',$data, $err,5,10);
+  //	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
+  	//this will tell the auto scripts to check POS orders or not.
+
+    $this->print_select_assoc('shopconfig_check_pos',$data,$err,$yesno);
+    $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
+    $this->print_select_assoc('shopconfig_delunpaid_pos',$data,$err,$yesno);
+
+  // 	echo "</table>\n<br>";
+  //	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
+  	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_others_title')."</td></tr>";
+      $this->print_select_assoc('shopconfig_user_activate',$data,$err,
+       array('-1'=>con('act_restrict_cart'),
+             '0'=>con('act_restrict_all'),
+             '1'=>con('act_restrict_later'),
+             '2'=>con('act_restrict_w_guest'),
+             '3'=>con('act_restrict_quest_only')));
+
+   	$this->print_input('shopconfig_maxres',$data, $err,5,10);
+  	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
+  	$this->print_input('res_delay' ,$data, $err, 5, 10);
+    $this->print_input('cart_delay',$data, $err, 5, 10);
+    $this->form_foot();
+
+  }
 
 	function draw () {
 	global $_SHOP;
 		if($_POST['action']=='update'){
-			if(!$this->options_check($_POST,$err)){
-				$this->option_form($_POST,$err);  print_r($err    ) ;
-				exit;
+			if(!$this->options_check($_POST)){
+				$this->option_form($_POST);
+				return;
 			}else{
-
 				$query="UPDATE `ShopConfig` SET
 	      		shopconfig_lastrun_int="._ESC($_POST['shopconfig_lastrun_int']).",
 	      		shopconfig_restime="._ESC($_POST['shopconfig_restime']).",
@@ -60,74 +97,37 @@ class OptionsView extends AdminView{
 	      		limit 1";
 
 				if(!ShopDB::query($query)){
-          echo "<div class='error'>".con('update_error')."</div>";
+          addWarning('update_error');
 				}
+        addNotice('Options_saved');
 			}
 
 		}
 		$query="SELECT * FROM `ShopConfig` limit 1";
-		if(!$row=ShopDB::query_one_row($query)){
-			return 0;
+		if($row=ShopDB::query_one_row($query)){
+  		$this->option_form($row);
 		}
-		$this->option_form($row,$err,con('option_update_title'),"update");
 		return;
   }
-function option_form (&$data, &$err){
-	global $_SHOP;
-	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');
 
-	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
-  echo "<input type='hidden' name='action' value='update'>\n";
-  $this->form_head(con('option_update_title'));
-//	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-	//echo "<tr><td class='admin_list_title' colspan='2'>".con('option_update_title')."</td></tr>";
-//  $data['shopconfig_user_activate'] = (int)$data['shopconfig_user_activate'];
-//	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
+  function options_check (&$data){
+  	global $_SHOP;
 
-	$this->print_input('shopconfig_lastrun_int',$data, $err,5,10);
-	$this->print_input('shopconfig_restime',$data, $err,5,10);
-//	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
-	//this will tell the auto scripts to check POS orders or not.
+  	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime', //'shopconfig_restime_remind',
+                  'shopconfig_posttocollect') as $check) {
+      if((!isset($data[$check]) || $data[$check]=='') ){
+         addError($check,'mandatory');
+      }elseif(!is_numeric($data[$check])){
+    		addError($check,'not_number');
+    	}elseif($data[$check]<'0'){
+    		addError($check,'too_low') ;
+      }
+   	}
+  	if ($data['res_delay'] < $data['cart_delay']) {
+    		addError('res_delay', 'res_delay_less_cart');
+     }
+  	return !hasErrors();
 
-  $this->print_select_assoc('shopconfig_check_pos',$data,$err,$yesno);
-  $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
-  $this->print_select_assoc('shopconfig_delunpaid_pos',$data,$err,$yesno);
-
-// 	echo "</table>\n<br>";
-//	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
-	echo "<tr><td class='admin_list_title' colspan='2'>".con('option_others_title')."</td></tr>";
-    $this->print_select_assoc('shopconfig_user_activate',$data,$err,
-     array('-1'=>con('act_restrict_cart'),
-           '0'=>con('act_restrict_all'),
-           '1'=>con('act_restrict_later'),
-           '2'=>con('act_restrict_w_guest'),
-           '3'=>con('act_restrict_quest_only')));
-
- 	$this->print_input('shopconfig_maxres',$data, $err,5,10);
-	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
-	$this->print_input('res_delay' ,$data, $err, 5, 10);
-  $this->print_input('cart_delay',$data, $err, 5, 10);
-  $this->form_foot();
-
-}
-function options_check (&$data, &$err){
-	global $_SHOP;
-
-	foreach(array('shopconfig_lastrun_int',    'shopconfig_maxres', 'shopconfig_restime', //'shopconfig_restime_remind',
-                'shopconfig_posttocollect') as $check) {
-    if(empty($data[$check])){
-       $err[$check]=con('mandatory');
-    }elseif(!is_numeric($data[$check])){
-  		$err[$check]=con('not_number');
-  	}elseif($data[$check]<'0'){
-  		$err[$check]=con('too_low') ;
-    }
- 	}
-	if ($data['res_delay'] < $data['cart_delay']) {
-  		$err['res_delay']=con('res_delay_less_cart');
-   }
-	return empty($err);
-
-}
+  }
 }
 ?>

@@ -49,6 +49,12 @@ class Update_Smarty {
     return  $_SHOP->shopconfig_run_as_demo;
   }
 
+  function can_reserve() {
+  	global $_SHOP; //print_r( $_SHOP  );
+    return  $_SHOP->shopconfig_restime;
+  }
+
+
 	//Used for returning results so a template can know if a button/item should be enabled
 	function view( $params, &$smarty ) {
     global $_SHOP;

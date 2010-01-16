@@ -107,8 +107,11 @@
           		{else}
              	<div class='error'><br/> For safety issues we have disabled the order button. </div>
           		{/if}
-          			{* update->view event_date=$min_date user=user->user_id *}
-          		{if $update_view.can_reserve}
+          		{* update->view event_date=$min_date user=user->user_id *}
+              {* TODO: chris check this code, i have no clue how it need to work exactly *}
+              {* for now i have an extra option maked that check shopconfig_restime      *}
+          		{* if $updateview.can_reserve() *}
+          		{if $update->can_reserve()}
                 {if !$update->is_demo()}
                   <form action='' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
               	    <input type='hidden' name='action' value='reserve' />
