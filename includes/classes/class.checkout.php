@@ -64,14 +64,13 @@ class Checkout {
  	  } else {
 		  $myorder = $_SESSION['_SHOP_order'];
     }
-    if (!$myorder) {
+     if (!$myorder) {
       return "checkout_preview";
     } else {
       Checkout::setordervalues($myorder, $smarty); //assign order vars
       $cart->destroy_f(); // destroy cart
     	$hand = $myorder->order_handling; // get the payment handling object
       $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
-
       if (is_array($confirmtext)) {
     	 $smarty->assign('pm_return',$confirmtext);
         if(!$confirmtext['approved']) {

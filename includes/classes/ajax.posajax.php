@@ -511,16 +511,13 @@ class PosAjax {
 
 
   private function doPosConfirm(){
+    global $smarty;
     $fond=null;
-    require ("controller/pos_template.php");
-
+//    require ("controller/pos_template.php");
+    if (!$smarty) addWarning('Smarty not set.');
     $checkoutRes = $this->_posConfirm($smarty);
     if(is_string($checkoutRes)){
-      ob_start();
-      $smarty->display($checkoutRes . '.tpl');
-      $obOutput = ob_get_contents();
-      ob_end_clean();
-      $this->json['html'] = $obOutput;
+      $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
       return true;
     }elseif(is_bool($checkoutRes) and !$checkoutRes){
       return false;
@@ -547,8 +544,6 @@ class PosAjax {
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
       if (!$user_id || hasErrors() ) {
-       // echo "~~";
-       // echo printMsg('__Errors__');
         return false;
       } else {
         $smarty->assign('newuser_id', $user_id);
@@ -567,12 +562,7 @@ class PosAjax {
     if ($return == 'checkout_preview' ) {
       return false;
     }else {
-      ob_start();
-      $smarty->display($return . '.tpl');
-      $this->json['html'] = ob_get_contents();
-      ob_end_clean();
-
-      return true;
+      return $return;
     }
   }
 
@@ -599,8 +589,8 @@ class PosAjax {
 	}
 
   private function loadMessages() {
-    $this->json['messages']['warning'] = printMsg('__Warning__');
-    $this->json['messages']['Notice'] = printMsg('__Notice__');
+    $this->json['messages']['warning'] = printMsg('__Warning__', false);
+    $this->json['messages']['Notice'] = printMsg('__Notice__', false);
     if (isset($_SHOP->Messages['__Errors__'])) {
       $err = $_SHOP->Messages['__Errors__'];
       foreach ($err as $key => $value) {

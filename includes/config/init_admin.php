@@ -39,7 +39,7 @@ require_once("init_common.php");
 $_SHOP->session_name = "AdminSession";
 //$_SHOP->is_admin = true;
 $_SHOP->auth_required = true;
-$_SHOP->auth_status="orginizer";
+$_SHOP->auth_status="organizer";
 $_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3' );
 
 require_once("init.php");

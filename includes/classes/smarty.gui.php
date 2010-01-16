@@ -231,7 +231,7 @@ class Gui_smarty {
 
   private function showlabel($name, $value, $nolabel=false,$options=array()) {
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr id='{$name}-tr' class='shop-tr'><th id='{$name}-label' class='{$this->gui_name}' width='40%'>" . con($name) . "</th>".
+      $return = "<tr id='{$name}-tr' class='shop-tr'><td id='{$name}-label' class='{$this->gui_name}' width='40%'>" . con($name) . "</td>".
                 "    <td id='{$name}-value' class='{$this->gui_value}'>{$value}";
       $return .= printMsg($name);
       return $return."</td></tr>\n";
@@ -289,6 +289,7 @@ class Gui_smarty {
 
   function inputTime ($params, &$smarty) //($name, &$data, &$err,  = '')
   {
+    require_once('class.datetimeselect.php');
     $name = is($params['name']    );
     $timeselect = new DateTimeSelect('t', $name, $this->guidata[$name],0);
     return $this->showlabel($name, $timeselect->selectbox);
@@ -296,6 +297,7 @@ class Gui_smarty {
 
   function inputDate ($params, &$smarty) //($name, &$data, &$err,  = '')
   {
+    require_once('class.datetimeselect.php');
     $name = is($params['name']    );
     $type = is($params['type'],'d' );
     $range = is($params['range'],5    );

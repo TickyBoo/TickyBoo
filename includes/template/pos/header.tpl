@@ -104,4 +104,11 @@
 
 				</ul>
 			</div>
+
+      <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-top: .7em; display:none;" >
+         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+            <span id='notice-text'>fff</span>
+         </p>
+      </div>
+
 			<div id="right">
