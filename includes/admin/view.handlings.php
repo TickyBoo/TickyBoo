@@ -173,11 +173,11 @@ class HandlingView extends AdminView{
         if(!$hand=Handling::load($_POST["handling_id"])){
           $hand= new Handling(true); $new = true;
         }
-        $ok = $hand->fillPost();
-        if(!$ok || !$hand->saveEx()){
+        if(!$hand->fillPost() || !$hand->saveEx()){
     		  $this->form($_POST, null, con('handling_update_title')); //handling_add_title
     			return 0;
         } elseif ($new){
+          $hand->admin_init();
           $this->form((array)$hand, null, con('handling_update_title'));
           return 0;
         }else{

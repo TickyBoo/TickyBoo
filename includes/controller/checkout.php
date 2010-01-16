@@ -80,6 +80,7 @@ myExit();
   function myExit(){
     orphanCheck();
     trace("End of checkout \n");
+    exit;
   }
 
 

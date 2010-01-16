@@ -59,6 +59,9 @@ class User_Smarty {
     $user = User::load($user_id);
     $this->_fill($user);
     $this->logged=($user)?true:false;
+    if ($this->active) {
+      $_SESSION['_NEW_MEMBER']= false;
+    }
   }
 
   function login ($params,&$smarty){
@@ -141,7 +144,7 @@ class User_Smarty {
 /////////////////
 /////////////////
   function forgot_password ($params,&$smarty){
-    $this->forgot_password_f($params['email']);
+    $smarty->assign('result',$this->forgot_password_f($params['email']));
   }
 
   function forgot_password_f ($email){
@@ -179,7 +182,11 @@ class User_Smarty {
     if (!isset($_REQUEST['uar'])) {
       return false;
     }
-    return User::activate($_REQUEST['uar']);
+    if ($actived = User::activate($_REQUEST['uar'])) {
+      $_SESSION['_NEW_MEMBER']= false;
+      $this->active = true;
+    }
+    return $actived;
   }
 
   function asarray(){

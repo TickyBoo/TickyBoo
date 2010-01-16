@@ -359,7 +359,10 @@ class User extends Model{
   function forgot_password($email){
     global $_SHOP;
     require_once('classes/model.template.php');
-
+    if (empty($email)) {
+      addError('email', 'mandatory');
+      return false;
+    }
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
       addWarning('username not found');
@@ -381,11 +384,12 @@ class User extends Model{
         addNotice('pwd_is_sent');
         return true;
       } else {
-        addWarning('cant send email');
+        addWarning('cant_ send_email');
       }
     } else {
-        addWarning('cant set new password');
+        addWarning('cant_set_new_password');
     }
+    return FALSE;
   }
 
   public function currentTickets($user_id,$status){

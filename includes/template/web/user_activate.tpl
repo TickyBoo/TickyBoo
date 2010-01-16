@@ -41,7 +41,7 @@
       </tr>
       <form action='{!PHP_SELF!}' method='post'>
         {ShowFormToken name='TryActivateUser'}
-        <input type='hidden' name='action' value='activate'>
+{*        <input type='hidden' name='action' value='activate'> *}
         <tr><td  colspan='2'>{!act_enter_code!}<br><br></td></tr>
         <tr>
           <td>{!act_code!}</td>
