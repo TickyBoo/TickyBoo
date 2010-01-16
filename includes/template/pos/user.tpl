@@ -55,7 +55,7 @@
       <td class='user_item' colspan='2'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' >
           <tr>
-            <td class='user_item' style='height:18;' > &nbsp;
+            <td class='user_item' style='height:22;' > &nbsp;
               <input checked="checked" type='radio' id='user_info_none' class='checkbox_dark' name='user_info' value='0'>
               <label for='user_info_none'> {!none!} </label>
             </td>

@@ -2,6 +2,20 @@
 
 class Checkout {
 
+	function getsecurecode($type='sor') {
+		if (isset($_POST[$type])) {
+     		$return = urldecode( $_POST[$type]);
+	 	} elseif (isset($_GET[$type])) {
+	    	$return = $_GET[$type];
+	    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
+	      	$return = substr($action, 1);
+	    } else {
+	      	print_r($_REQUEST); Print_r($_SERVER);
+	      	$return ='';
+	    }
+  	//  echo $return;
+    	return $return;
+  	}
 
    /**
   	 * @name SetOrderValues
@@ -64,7 +78,8 @@ class Checkout {
  	  } else {
 		  $myorder = $_SESSION['_SHOP_order'];
     }
-     if (!$myorder) {
+    if (!$myorder) {
+      addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
       Checkout::setordervalues($myorder, $smarty); //assign order vars
@@ -87,9 +102,36 @@ class Checkout {
    			return "checkout_confirm";
       }
     }
+
   }
+  function  submitAction($smarty) {
+    $myorder = is($_SESSION['_SHOP_order'],null);
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    if($test < 1) {
+  //    header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
+      ShopDB::dblogging("submit error ($test): $myorder->order_id\n". print_r($myorder, true));
 
-
+      unset( $_SESSION['_SHOP_order']);
+      return;
+    }
+    Checkout::setordervalues($myorder, $smarty);
+    $hand= $myorder->order_handling;
+    $pm_return = $hand->on_submit($myorder);
+    if (empty($pm_return)) {
+      return false;
+    } elseif (is_string($pm_return)) {
+      $order->obj = $myorder;
+      $smarty->assign('confirmtext', $pm_return);
+      return "checkout_confirm";
+    } else  {
+      $smarty->assign('pm_return',$pm_return);
+      if(!$pm_return['approved']){
+       	Order::delete($myorder->order_id,'payment_not_approved' );
+      }
+      unset( $_SESSION['_SHOP_order']);
+      return "checkout_result";
+    }
+  }
 }
 
 

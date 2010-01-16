@@ -82,22 +82,6 @@ myExit();
     trace("End of checkout \n");
   }
 
-	function getsecurecode($type='sor') {
-		if (isset($_POST[$type])) {
-     		$return = urldecode( $_POST[$type]);
-	 	} elseif (isset($_GET[$type])) {
-	    	$return = $_GET[$type];
-	    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
-	      	$return = substr($action, 1);
-	    } else {
-	      	print_r($_REQUEST); Print_r($_SERVER);
-	      	$return ='';
-	    }
-  	//  echo $return;
-    	return $return;
-  	}
-
-  	
 
   Function loginAction ($smarty){
     global $user;
@@ -162,39 +146,13 @@ myExit();
   }
 
   function  submitAction($smarty) {
-    $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, getsecurecode());
-    if($test < 1) {
-  //    header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
-      ShopDB::dblogging("submit error ($test): $myorder->order_id\n". print_r($myorder, true));
-
-      unset( $_SESSION['_SHOP_order']);
-      return;
-    }
-    Checkout::setordervalues($myorder, $smarty);
-    $hand= $myorder->order_handling;
-    $pm_return = $hand->on_submit($myorder,$errors);
-    $smarty->assign('errors', $errors);
-    if (empty($pm_return)) {
-      return '';
-    } elseif (is_string($pm_return)) {
-      $order->obj = $myorder;
-      $smarty->assign('confirmtext', $pm_return);
-      return "checkout_confirm";
-    } else  {
-      $smarty->assign('pm_return',$pm_return);
-      if(!$pm_return['approved']){
-       	$myorder->order_delete($myorder->order_id,'payment_not_approved' );
-      }
-      unset( $_SESSION['_SHOP_order']);
-      return "checkout_result";
-    }
+    return checkout::submitAction($smarty,$myorder );
   }
 
   function  printAction($smarty) {
     Global $order;
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
@@ -210,7 +168,7 @@ myExit();
 
   function acceptAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],nil);
-    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
       echo "accept error ($test): $myorder->order_id\n". print_r($myorder, true);
       //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -225,7 +183,7 @@ myExit();
     $pm_return = $hand->on_return($myorder, true);
     $smarty->assign('pm_return',$pm_return);
     If (!$pm_return['approved']) {
-       $myorder->order_delete($myorder->order_id,'payment_not_approved' );
+       Order::delete($myorder->order_id,'payment_not_approved' );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
 
     }
@@ -239,13 +197,13 @@ myExit();
  		$cart->destroy_f(); // destroy cart
     $myorder = is($_SESSION['_SHOP_order'],null);
     if ($myorder) {
-       $myorder->order_delete($myorder->order_id,'pos_manual_canceled' );
+       Order::delete($myorder->order_id,'pos_manual_canceled' );
     }
   }
 
   function  cancelAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("cancel error ($test): $myorder->order_id\n". print_r($myorder, true));
@@ -254,7 +212,7 @@ myExit();
     }
     setordervalues($myorder, $smarty);
     $hand=$myorder->order_handling;
-    $myorder->order_delete($myorder->order_id,'order_canceled_will_paying' );
+    Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
     $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
     $smarty->assign('pm_return',$pm_return);
@@ -265,7 +223,7 @@ myExit();
 	function  notifyAction($smarty, $type="sor") {
 		if($type == "sor"){
 			$myorder = is($_SESSION['_SHOP_order'], null);
-			$test = Order::DecodeSecureCode($myorder, getsecurecode($type), true);
+			$test = Order::DecodeSecureCode($myorder, checkout::getsecurecode($type), true);
 			if($test < 1) {
 		   		header('HTTP/1.1 502 Action not allowed', true, 502);
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
@@ -275,7 +233,7 @@ myExit();
 			$hand=$myorder->order_handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
-			$hand = Handling::decodeEPHCallback(getsecurecode($type), true);
+			$hand = Handling::decodeEPHCallback(checkout::getsecurecode($type), true);
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);
 				ShopDB::dblogging("notify error : ($hand)\n". print_r($hand, true));
@@ -285,13 +243,13 @@ myExit();
 			$hand->on_notify($order);
 		}
  	}
-  
+
   function reserveAction($smarty,$origin='www',$user_id=null) {
     return Checkout::reserveAction($smarty,$origin,$user_id);
   }
-  
+
   function confirmAction($smarty,$origin="www",$user_id=0, $no_fee=0) {
-    return Checkout::confirmAction($smarty,$origin,$user_id, $no_fee);  
+    return Checkout::confirmAction($smarty,$origin,$user_id, $no_fee);
   }
 
 //session_write_close();

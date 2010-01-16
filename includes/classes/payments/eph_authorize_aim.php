@@ -78,23 +78,20 @@ class EPH_authorize_aim Extends Payment{
       $_POST['cc_name'] = "{$order->user_firstname} {$order->user_lastname}";
     }
 		$order_id=$order->order_id;
-    return "<form id='payment-confirm-form' action='".$_SHOP->root_secured."checkout.php?".$order->EncodeSecureCode()."' method='POST' onsubmit='this.submit.disabled=true;return true;'>
-            <table class='cc_form' cellpadding='0'>
+    return "{gui->StartForm  width='100%' name='authorize_aim-form' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
             <input type='hidden' name='action' value='submit'>
+            <input type='hidden' name='sor' value='{$order->EncodeSecureCode(null,'')}'>
+
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}
             {gui->inputdate type='MY' name=cc_exp}
             {gui->input name='cc_code' size='4' lenght='4'}
-            </table>
-            <INPUT type='submit' name='submit' value='{!pay!}' >
-            </form>";
+            {gui->EndForm title=!pay! noreset=true}
+            ";
   }
 
-
-  function on_submit(&$order, &$err){
-
+  function on_submit(&$order){
 		global $_SHOP;
-
 		$date = getdate();
 		if($_POST['cc_exp_y']<($date['year']-2000) or
 		($_POST['cc_exp_y']==($date['year']-2000) and $_POST['cc_exp_m']<$date['mon'])){

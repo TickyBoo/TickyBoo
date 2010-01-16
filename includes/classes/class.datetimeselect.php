@@ -30,12 +30,12 @@
  ************************************************************************************************************/
 if (!defined('ft_check')) {die('System intrusion ');}
 class DateTimeSelect
-{ 
+{
 
 	private $month_arr = array();
 
 	private $day_arr;
-	
+
 	private $suffix = array('st','nd','rd','th');
 
 	private $selected;
@@ -123,21 +123,21 @@ class DateTimeSelect
   		//	print_r($this->selected);
 	}
 
-	
+
 /*********************************************************************************
 \* Date Functions                                                                *
  *********************************************************************************/
 	private function buildDateScript() {
     return "<script>\n".
            "function update_{$this->fieldname}_date() {\n".
-           "  var obj  = document.all['{$this->fieldname}']; \n".
-           "  var objd = document.all['{$this->fieldname}_d']; \n".
-           "  var objm = document.all['{$this->fieldname}_m']; \n".
-           "  var objy = document.all['{$this->fieldname}_y']; \n".
-           "  obj.value = '';\n".
-           "  if (objy) {obj.value = obj.value + objy.value +'-';}\n".
-           "  if (objm) {obj.value = obj.value + objm.value +'-';}\n".
-           "  if (objd) {obj.value = obj.value + objd.value;}\n".
+//           "  var obj  = document.all['{$this->fieldname}']; \n".
+//           "  var objd = document.all['{$this->fieldname}_d']; \n".
+//           "  var objm = document.all['{$this->fieldname}_m']; \n".
+//           "  var objy = document.all['{$this->fieldname}_y']; \n".
+//           "  obj.value = '';\n".
+//           "  if (objy) {obj.value = obj.value + objy.value +'-';}\n".
+//           "  if (objm) {obj.value = obj.value + objm.value +'-';}\n".
+//           "  if (objd) {obj.value = obj.value + objd.value;}\n".
            "  return 1; \n".
            " } </script> \n";
 	}
@@ -155,7 +155,7 @@ class DateTimeSelect
 		$string .= '</select>'."\n";
 		return $string;
 	}
-	
+
 	private function buildMonth($field)
 	{
 		$s = '';
@@ -204,10 +204,10 @@ class DateTimeSelect
 	private function buildTimeScript() {
     return "<script>\n".
            "function update_{$this->fieldname}_date() {\n".
-           "  var obj  = document.all['{$this->fieldname}']; \n".
-           "  var objh = document.all['{$this->fieldname}_h']; \n".
-           "  var objm = document.all['{$this->fieldname}_i']; \n".
-           "  obj.value = objh.value +':'+ objm.value;\n".
+//           "  var obj  = document.all['{$this->fieldname}']; \n".
+//           "  var objh = document.all['{$this->fieldname}_h']; \n".
+//           "  var objm = document.all['{$this->fieldname}_i']; \n".
+//           "  obj.value = objh.value +':'+ objm.value;\n".
            "  return 1; \n".
            " } </script> \n";
 	}
@@ -228,7 +228,7 @@ class DateTimeSelect
 		$string .= '</select>'."\n";
 		return $string;
 	}
-	
+
 	private function buildMinute()
 	{
 		$s = '';
@@ -238,7 +238,7 @@ class DateTimeSelect
 		{
 			$s = ($this->selected['minute'] === strval($v)) ? ' selected="selected"' : '';
 			$value = sprintf("%02d",$v);
-			$string .= '<option value="'.$value.'"'.$s.'>'.$value.'</option>'."\n";     
+			$string .= '<option value="'.$value.'"'.$s.'>'.$value.'</option>'."\n";
 		}
 		$string .= '</select>'."\n";
 		return $string;

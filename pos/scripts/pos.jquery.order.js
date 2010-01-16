@@ -50,16 +50,8 @@ var loadOrder = function(){
         $(this.index).html(this.value);
       });
       $('#total_price').html(data.total);
-      if (data.can_cancel) {
-        $('#cancel').show();
-      } else {
-        $('#cancel').hide();
-      }
-      if (data.can_order) {
-        $('#checkout').show();
-      } else {
-        $('#checkout').hide();
-      }
+      $('#cancel').attr("disabled", !data.can_cancel);
+      $('#checkout').attr("disabled", !data.can_order);
       bindCartRemove(); // This listens for cart remove button;
     }
   });

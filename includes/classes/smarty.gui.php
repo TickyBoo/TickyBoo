@@ -190,16 +190,17 @@ class Gui_smarty {
     If( isset($params['data'])) {
       $this->guidata = $params['data'];
     }
-    $return = "<table class='$class' width='$width' border=0 cellspacing='1' cellpadding='4'>\n";
-    if ($title) {
-      $return .= "<tr><th class='$class_title' colspan='2'>$title</th></tr>\n";
-    }
+    $return ='';
     If ($method <> 'node') {
-      $return .= "<form action='$url' name='$name' method='post' enctype='$enctype'";
+      $return .= "<form action='$url' id='$id' name='$name' method='$method' enctype='$enctype'";
       $return .= ($onsubmit)?" onsubmit ='$onsubmit'>":">";
       $return .= self::showFormToken( $params, $smarty);
       $this->FormDepth ++;
       $this->_ShowLabel = True;
+    }
+    $return .= "<table class='$class' width='$width' border=0 cellspacing='1' cellpadding='4'>\n";
+    if ($title) {
+      $return .= "<tr><th class='$class_title' colspan='2'>$title</th></tr>\n";
     }
     return $return;
   }

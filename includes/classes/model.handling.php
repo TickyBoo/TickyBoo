@@ -134,14 +134,14 @@ class Handling Extends Model {
     $ok=TRUE;
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
-      
+
       $tpl= &Template::getTemplate($template_name);
 
       $order_d=(array)$order;   //print_r( $order_d);
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
       $order_d['order_old_status'] = $old_state;
-      
+
       $handTemps=explode(",",$order->order_handling->handling_email_template);
       if(!is_array($handTemps)){
         $handTemps = array();
@@ -149,24 +149,24 @@ class Handling Extends Model {
       foreach($handTemps as $temp){
         $t=explode("=",$temp);
         $tempStatus = substr($t[0],0,strlen($new_state));
-        
+
         if(strcasecmp($tempStatus,$new_state)===0){
           $tempPdfName = substr($t[0],(strlen($tempStatus)+1));
-          
+
           if( empt($tempPdfName,false) ){
             $order_d["handling_{$tempPdfName}"] = $t[1];
           }
         }
       }
-      
+
       $order_d = array_merge($order_d,(array)$order->order_handling);
-      
+
       if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;
       }
     }
-    
+
     //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
     $status = strtolower($new_state);
     $manSend = strtolower($order->order_handling->handling_only_manual_send);
@@ -320,9 +320,9 @@ class Handling Extends Model {
     	return (is_array($return))?$return:$this->handling_html_template.'<br>'.$return;
   	}
 
-  function on_submit(&$order, &$errors) {
+  function on_submit(&$order) {
   	if($pm=$this->pment()){
-      return $pm->on_submit($order, $errors);
+      return $pm->on_submit($order);
   	}
   }
 

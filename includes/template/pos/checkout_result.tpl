@@ -40,13 +40,14 @@
     {/if}
   '>
   <table class='table_dark' cellpadding='5' bgcolor='white' width='500'>
-    {if !$pm_return.approved}
+    {if $pm_return.approved}
       <tr>
         <td colspan=2>{!pay_reg!}!</td>
       </tr>
     {/if}
+    {gui->view name=order_id value=$order_id}
     {if $shop_handling.handling_id eq 1}
-      {!reserve!} {!tickets!}
+      {!reserve_tickets!}
     {else}
       {eval var=$shop_handling.handling_text_payment assign=test}
       {gui->view name=payment value=$test}
@@ -55,7 +56,6 @@
     {/if}
     {gui->valuta value=$order_total_price assign=test}
     {gui->view name=total_price value=$test}
-    {gui->view name=order_id value=$order_id}
 
     {if $pm_return.transaction_id}
       <tr>
@@ -70,9 +70,9 @@
         </td>
       </tr>
     {/if}
-         
+
     {if $pm_return.approved}
-      <tr> 
+      <tr>
         <td>
           <a href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=2' target='_blank'>{!printinvoice!}</a>
         </td>
@@ -109,7 +109,7 @@
         });
       });
     {/literal}
-  {/if}  
+  {/if}
   {if $shop_order.order_handling->handling_shipment eq "sp"}
     {literal}
 
@@ -127,10 +127,10 @@
             } else {
               timerid = setTimeout('checkpaint()', 1000);
             }
-          }   
+          }
         });
-      } 
-      checkpaint();       
+      }
+      checkpaint();
     {/literal}
   {/if}
   </script>

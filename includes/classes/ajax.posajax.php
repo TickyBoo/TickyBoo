@@ -514,12 +514,23 @@ class PosAjax {
     global $smarty;
     $fond=null;
 //    require ("controller/pos_template.php");
-    if (!$smarty) addWarning('Smarty not set.');
+    if (!$smarty) addWarning('Smarty_not_set.');
     $checkoutRes = $this->_posConfirm($smarty);
     if(is_string($checkoutRes)){
       $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
       return true;
     }elseif(is_bool($checkoutRes) and !$checkoutRes){
+      return false;
+    }
+  }
+
+  private function doPosSubmit(){
+    global $smarty;
+    $checkoutRes = checkout::submitAction($smarty );
+    if(is_string($checkoutRes)){
+      $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
+      return true;
+    }else {
       return false;
     }
   }
@@ -541,7 +552,7 @@ class PosAjax {
       $user->load_f($user_id);
 
     } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
-      $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
+      $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
       if (!$user_id || hasErrors() ) {
         return false;
@@ -589,8 +600,9 @@ class PosAjax {
 	}
 
   private function loadMessages() {
-    $this->json['messages']['warning'] = printMsg('__Warning__', false);
-    $this->json['messages']['Notice'] = printMsg('__Notice__', false);
+    $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
+    $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
+    $this->json['messages']['Error']   = array();
     if (isset($_SHOP->Messages['__Errors__'])) {
       $err = $_SHOP->Messages['__Errors__'];
       foreach ($err as $key => $value) {

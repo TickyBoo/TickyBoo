@@ -88,7 +88,7 @@ class eph_ideal extends payment{
     //print_r($order);
 
     return "
-      {gui->StartForm name='iDealING' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
+      {gui->StartForm id='payment-confirm-form' name='iDealING' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
         {gui->hidden name='action' value='submit'}
         {gui->hidden name='sor' value='".Order::EncodeSecureCode($order,'')."'}
         {gui->selection name='ideal_issuer' options=\$ideal_issuers}

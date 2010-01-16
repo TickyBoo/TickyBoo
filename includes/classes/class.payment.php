@@ -88,7 +88,7 @@ class Payment {
 
   function on_confirm(&$order){return '';}
 
-  function on_submit(&$order, &$err ){}
+  function on_submit(&$order){}
 
   function on_return(&$order, $accepted ){
      return array('approved'=>$accepted,

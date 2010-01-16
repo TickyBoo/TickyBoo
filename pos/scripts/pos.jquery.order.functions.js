@@ -131,10 +131,15 @@ var updateEvents = function(){
 }
 var bindCheckoutSubmitForm = function(){
   $("#payment-confirm-form").ajaxForm({
-    data:{ajax:true},
-    success:function(html, status){
-          $("#order_action").html(html);
-          $("#order_action").dialog('open');
+    data:{ajax:true, pos:"yes", action:"_PosSubmit"},
+    url:      "ajax.php?x=_possubmit",
+    dataType: "json",
+    success:  function(data, status){
+        printMessages(data.messages);
+        $("#order_action").dialog('close');
+        $("#order_action").html(data.html);
+        bindCheckoutSubmitForm();
+        $("#order_action").dialog('open');
     }
   });
 }
