@@ -42,6 +42,29 @@ if($_REQUEST['pos']) {
 }
 require_once ("classes/class.checkout.php");
 
+GLOBAL $_SHOP;
+
+//var_dump($_SHOP);
+//print_r($_SERVER);
+//echo strtoupper(substr($_SHOP->root_secured, 0, 8)), '<br>';
+if ($_SHOP->secure_site) {
+  $url = $_SHOP->root_secured.basename($_SERVER['REQUEST_URI']);
+  if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+   //echo $url;
+    header("Location: $url");
+    echo "<script>window.location.href='$url';</script>";
+    exit;
+  }
+/*    //remove the www. to stop certificate errors.
+  if(("https://".$_SERVER['SERVER_NAME']."/") != ($_SHOP->root_secured)) {
+   // header("Location: $url");
+   // echo "<script>window.location.href='$url';</script>";
+    exit;
+  }  */
+} else {
+  addWarning('This_page_is_not_secure');
+}
+
 if (!$action) {$action = 'index';}
 
 if (isset($_REQUEST['sor'])) {

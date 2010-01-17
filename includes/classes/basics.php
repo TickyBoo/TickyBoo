@@ -204,6 +204,22 @@ function env($key){
    return null;
 }
 
+function constructBase($secure=null) {
+  if ($secure == null) $secure = env('HTTPS');
+  $dir = dirname(env('PHP_SELF'));
+  $file = basename($dir);
+  if (($file=='admin') ||  ($file=='pos')) {
+    $dir = dirname($dir);
+  }
+  $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME'). $dir;
+  if (substr($base, -1, 1) != '/') {
+    $base .= '/';
+  }
+  // . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '')
+  return $base;
+}
+
+
 
 /**
  * Merge a group of arrays
@@ -263,62 +279,52 @@ function empt(&$arg , $default=null){
   return $default;
 }
 
-  function con($name, $value='') {
-    global $_SHOP;
-    if (defined($name)) {
-      return constant($name);
-    } elseif ($value) {
-      return $value;
-    } elseif ($name) {
-      if (isset($_SHOP->AutoDefineLangs)  and $_SHOP->AutoDefineLangs) {
-        if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
-          $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
-          file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
-          define($name,$name);
-        }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
-      }
-      return $name;
+function con($name, $value='') {
+  global $_SHOP;
+  if (defined($name)) {
+    return constant($name);
+  } elseif ($value) {
+    return $value;
+  } elseif ($name) {
+    if (isset($_SHOP->AutoDefineLangs)  and $_SHOP->AutoDefineLangs) {
+      if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
+        $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
+        file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
+        define($name,$name);
+      }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
     }
+    return $name;
+  }
+}
+
+/**
+ * redirect to the given url. if relative the base-url to the framework is added.
+ * @param string url to redirect to
+ * @param int status http status-code to use for redirection (default 303=get the new url via GET even if this page was reached via POST)
+ */
+function Redirect($url, $status = 303) {
+  GLOBAL $_SHOP;
+  if (function_exists('session_write_close')) {
+    session_write_close();
   }
 
-  /**
-   * redirect to the given url. if relative the base-url to the framework is added.
-   * @param string url to redirect to
-   * @param int status http status-code to use for redirection (default 303=get the new url via GET even if this page was reached via POST)
-   */
-  function Redirect($url, $status = 303) {
-    GLOBAL $_SHOP;
-    if (function_exists('session_write_close')) {
-      session_write_close();
-    }
-
-    $pos = strpos($url, '://');
-    if ($pos === false) { // is relative url, construct rest
-      $url = $_SHOP->root . $url;
-    }
-    if ($status===true) {
-      echo   "<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($url)."';\n</script>";
-    }else{
-      if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
-        header('HTTP/1.1 ' . $status);
-      }
-      header('Location: ' . $url);
-    }
+  $pos = strpos($url, '://');
+  if ($pos === false) { // is relative url, construct rest
+    $url = $_SHOP->root . $url;
   }
-
-  function constructBase() {
-    $base = 'http' . (env('https') != '' ? 's' : '') . '://' .
-    env('SERVER_NAME') . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '') .
-    (dirname(env('PHP_SELF')));
-    if (substr($base, -1, 1) != '/') {
-      $base .= '/';
+  if ($status===true) {
+    echo   "<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($url)."';\n</script>";
+  }else{
+    if (is_numeric($status) && ($status >= 100) && ($status < 505)) {
+      header('HTTP/1.1 ' . $status);
     }
-    return $base;
+    header('Location: ' . $url);
   }
+}
 
-  function _esc ($str, $quote=true){
-    return shopDB::quote($str, $quote);
-  }
+function _esc ($str, $quote=true){
+  return shopDB::quote($str, $quote);
+}
 
 function check_event($event_date){
   require_once("classes/class.time.php");

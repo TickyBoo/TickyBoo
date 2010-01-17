@@ -245,7 +245,7 @@ class Seat  Extends Model {
     //some strange thing happens
     }else{
       ShopDB::rollback("unknown place_numbering $numbering category $category_id");
-      addWarning("unknown place_numbering $numbering category $category_id");
+      addWarning("unknown_place_numbering","$numbering category $category_id");
       return FALSE;
     }
 

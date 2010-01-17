@@ -85,12 +85,12 @@ class Template Extends Model {
     try{
       $tpl->write($swift, $order, $lang);
     }catch(exception $e){
-      addWarning(con('ClassCatch:').$e->getMessage());
+      addWarning('ClassCatch:',$e->getMessage());
       $err++;
     }
     if(!empty($tpl->errors)){
       foreach($tpl->errors as $error){
-        addWarning(con('Compile:').$error);
+        addWarning('Compile:', $error);
         $err++;
       }
     }
@@ -193,22 +193,22 @@ class Template Extends Model {
       return false;
     }
     $type = is($template->template_type,'swift');
-    
+
     //Create the email
     require_once('classes/email.swift.sender.php');
     $template->write($message,$data,$lang);
-    
+
     // Include Pdfs if told to.
     $includeInvoice = is($data['handling_incl_inv_pdf'],0) ;
     $includeTickets = is($data['handling_incl_ticket_pdf'],0) ;
-    
+
     if($includeInvoice==1){
       $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], '', 'data', FALSE, 2), "order_{$data['order_id']}_".con('invoice').".pdf", 'application/pdf'));
     }
     if($includeTickets==1){
       $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], '', 'data', FALSE, 1), "order_{$data['order_id']}_".con('tickets').".pdf", 'application/pdf'));
     }
-    
+
     //We want to log the email proccess so users can debug easier.
     $log = new EmailLog();
     $log->el_order_id = is($data['order_id']);

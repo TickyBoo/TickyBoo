@@ -50,8 +50,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
 //check if the site is online
   require_once("classes/class.shopdb.php");
   require_once("classes/basics.php");
-  require_once("classes/model.php");
-  //ini_set('session.save_handler','user');  
+  require_once("classes/class.model.php");
+  //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
 
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');

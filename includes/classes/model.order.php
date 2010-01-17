@@ -1011,14 +1011,14 @@ class Order Extends Model {
       if($tpl_id and ($subj & 1)){
         //load the template
         if(!$tpl =&Template::getTemplate($tpl_id)){
-          return addwarning(con('no_template').": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
+          return addwarning('no_template', ": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
         }
 //        echo $tpl_id,":";
 //        Print_r($tpl);
         $first_page=FALSE;
 
         //print the ticket
-        $tpl->write($pdf,array_merge($seat,$order), false);
+        $tpl->write($pdf, array_merge($seat,$order), false);
       }
     }
 
@@ -1033,7 +1033,7 @@ class Order Extends Model {
       }else if($mode=='stream'){
         $pdf->output($order_file_name, 'I');
         if($print){
-          $html2pdf->pdf->IncludeJS("print(false);");
+          $html2pdf->pdf->IncludeJS("print(true);");
         }
       }else if($mode=='data'){
         $pdf_data=$pdf->output($order_file_name, 'S');

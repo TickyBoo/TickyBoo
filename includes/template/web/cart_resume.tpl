@@ -96,7 +96,7 @@
         		</tr>
         		<tr>
         		  <td align='center' class='cart_content' colspan='2'>
-          			<form action="checkout.php" method='post'>
+          			<form action="{$_SHOP_root_secured}checkout.php" method='post'>
           			   {ShowFormToken name='ReservHandling'}
             			<input type="submit" name="go_pay" value="{!checkout!}">
           			</form>

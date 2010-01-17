@@ -187,12 +187,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
     echo "<a href='{$_SHOP->root}inst/index.php'>Upgrade me now!</a>";
     exit;
   }
+  include_once('classes/basics.php');
 
   $_SHOP->Messages = array();
+  if (!isset($_SHOP->root))         $_SHOP->root = constructBase(false);//
+  if (!isset($_SHOP->root_secured)) $_SHOP->root_secured = constructBase(isset($_SHOP->secure_site) && $_SHOP->secure_site);
 
-  $_SHOP->files_url=$_SHOP->root."files/";
-  $_SHOP->images_url=$_SHOP->root."images/";
+  $_SHOP->files_url=constructBase()."files/";
+  $_SHOP->images_url=constructBase()."images/";
 
-  include_once('classes/basics.php');
 
 ?>

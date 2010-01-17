@@ -57,7 +57,7 @@
 	<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE">
 	<br />
 	<center>
-		<form action="checkout.php" method='post'>
+		<form action="{$_SHOP_root_secured}checkout.php" method='post'>
 			{ShowFormToken name='UserUpdate'}
  			<input type='hidden' name='action' value='useredit' />
 {else}

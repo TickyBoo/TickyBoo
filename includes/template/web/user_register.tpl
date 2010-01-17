@@ -35,7 +35,7 @@
   <form action='index.php' method='post'  id="user-register">
 {else}
   {include file="header.tpl" name=!pers_info! header=!user_notice!}
-  <form action='checkout.php' method='post' id="user-register" >
+  <form action='{$_SHOP_root_secured}checkout.php' method='post' id="user-register" >
 {/if}
 {*  <table width='100%'> <tr><td valign='top'> *}
     {ShowFormToken name='UserRegister'}
@@ -98,7 +98,7 @@
       </tr>
       <tr>
         <td colspan='2' class='TblHigher'>
-          <a  href='agb.php' target='cond' style="float:left; display:block;">{eval var=!agrement!}</a><span style="float:left;">&nbsp;*</span>  
+          <a  href='agb.php' target='cond' style="float:left; display:block;">{eval var=!agrement!}</a><span style="float:left;">&nbsp;*</span>
           <input type='checkbox' class='checkbox' name='check_condition' value='check'>{printMsg key='check_condition'}
         </td>
       </tr>

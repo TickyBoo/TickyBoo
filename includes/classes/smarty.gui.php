@@ -74,7 +74,7 @@ class Gui_smarty {
   function url($params, $smarty, $skipnames){
     GLOBAL $_SHOP;
     if (isset($params['surl'])) {
-      return $_SHOP->root_secured.$params['url'];
+      return $_SHOP->root_secured.$params['surl'];
     } elseif (isset($params['url'])) {
       return $_SHOP->root.$params['url'];
     } else {

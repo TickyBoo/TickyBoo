@@ -124,7 +124,7 @@ class MyCart_Smarty {
     //We need eventid, catid, seats, mode,reserved, discount.
     if($order && $tickets){
       if($order->order_payment_status <> 'none'){
-        addWarning("Order Currently being paid for");
+        addWarning("order_currently_being_paid_for");
       }
       foreach($tickets as $ticket){
         $res[] = $this->add_item_f($ticket['event_id'],$ticket['category_id'], array($ticket['seat_id']),$mode,false,$ticket['discount_id'],true);
@@ -321,7 +321,7 @@ class MyCart_Smarty {
       }
       $newp = count($places);
     }else{
-      addWarning("unknown: category_numbering '{$category_numbering}' category_id '{$category_id}'");
+      addWarning("unknown_category_numbering", "{$category_numbering}' category_id '{$category_id}'");
       return FALSE;
     }
 

@@ -219,7 +219,7 @@ class Model {
       }
 
       if (($_FILES[$name]['error'] !== UPLOAD_ERR_OK)){
-         addwarning(file_upload_error_message($_FILES[$name]['error']));
+         addwarning('',file_upload_error_message($_FILES[$name]['error']));
          return addError($name,'img_loading_problem_error');
       }
 
@@ -308,7 +308,7 @@ class Model {
 
   function _myErrorHandler($errno, $errstr, $errfile, $errline) {
     if($errno!=2){
-      addWarning("$errno $errstr $errfil $errline");
+      addWarning('',"$errno $errstr $errfil $errline");
     }
   }
 

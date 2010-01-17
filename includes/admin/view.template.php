@@ -310,10 +310,10 @@ class TemplateView extends AdminView{
     require_once("classes/model.template.php");
 
     if(!Template::getTemplate($name, true)){
-      addWarning($name.con('compilation_failed'));
+      addWarning('compilation_failed', $name);
       return false;
    	}else{
-   	  addNotice($name.con('compilation_succeed'));
+   	  addNotice('compilation_succeed',$name);
   		return true;
    	}
   }

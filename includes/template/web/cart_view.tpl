@@ -45,7 +45,7 @@
     </td>
     <td align="right">
       {if $cart->can_checkout_f()}
-        <form action="checkout.php" method='post' >
+        <form action="{$_SHOP_root_secured}checkout.php" method='post' >
           {ShowFormToken name='checkout'}
           <input name="go_pay" value="{!checkout!}" type="submit">
         </form>

@@ -365,7 +365,7 @@ class User extends Model{
     }
     $query="SELECT * from auth left join User on auth.user_id=User.user_id where auth.username="._esc($email);
     if(!$row=ShopDB::query_one_row($query)){
-      addWarning('username not found');
+      addWarning('username_not_found');
       return FALSE;
     }
 
@@ -384,7 +384,7 @@ class User extends Model{
         addNotice('pwd_is_sent');
         return true;
       } else {
-        addWarning('cant_ send_email');
+        addWarning('cant_send_email');
       }
     } else {
         addWarning('cant_set_new_password');
