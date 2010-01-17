@@ -34,12 +34,12 @@
 					page [[page_cu]]/[[page_nb]]
 				</td>
 				<td style="width: 33%; text-align: right">
-					&copy;Spipu 2008-2009
+					&copy;Spipu 2008-2010
 				</td>
 			</tr>
 		</table>
 	</page_footer>
-	<bookmark title="Présentation" level="0" ></bookmark>	
+	<bookmark title="Présentation" level="0" ></bookmark>
 	<br><br><br><br><br><br><br><br>
 	<h1>HTML2PDF</h1>
 	<h3>v{!__CLASS_HTML2PDF__!}</h3><br>
@@ -61,9 +61,9 @@
 	</div>
 </page>
 <page pageset="old">
-	<bookmark title="Compatibilité" level="0" ></bookmark>	
-	<bookmark title="Balises HTML" level="1" ></bookmark>	
-	<bookmark title="Balises classiques" level="2" ></bookmark>	
+	<bookmark title="Compatibilité" level="0" ></bookmark>
+	<bookmark title="Balises HTML" level="1" ></bookmark>
+	<bookmark title="Balises classiques" level="2" ></bookmark>
 	<div class="note">
 		La liste des balises HTML utilisables est la suivante :<br>
 	</div>
@@ -93,7 +93,7 @@
 		<li>&lt;form&gt;, &lt;input&gt;, &lt;textarea&gt;, &lt;select&gt;, &lt;option&gt;</li>
 		<li>&lt;del&gt;, &lt;ins&gt;</li>
 	</ul>
-	<bookmark title="Balises spécifiques" level="2" ></bookmark>	
+	<bookmark title="Balises spécifiques" level="2" ></bookmark>
 	<div class="note">
 		Les balises spécifiques suivantes ont été ajoutées :<br>
 	</div>
@@ -108,7 +108,7 @@
 	</ul>
 </page>
 <page pageset="old">
-	<bookmark title="Styles CSS" level="1" ></bookmark>	
+	<bookmark title="Styles CSS" level="1" ></bookmark>
 	<div class="note">
 		La liste des styles CSS utilisables est la suivante :<br>
 	</div>
@@ -185,7 +185,7 @@
 			</td>
 		</tr>
 	</table>
-	<bookmark title="Propriétés" level="1" ></bookmark>	
+	<bookmark title="Propriétés" level="1" ></bookmark>
 	<div class="note">
 		La liste des propriétés utilisables est la suivante :<br>
 	</div>
@@ -197,7 +197,7 @@
 					<li>cellpadding</li>
 					<li>cellspacing</li>
 					<li>colspan</li>
-					<li>rowspan</li>	
+					<li>rowspan</li>
 					<li>width</li>
 					<li>height</li>
 				</ul>
@@ -216,7 +216,7 @@
 	</table>
 </page>
 <page pageset="old">
-	<bookmark title="Limitations" level="0" ></bookmark>	
+	<bookmark title="Limitations" level="0" ></bookmark>
 	<div class="note">
 		Cette librairie comporte des limitations :<br>
 	</div>

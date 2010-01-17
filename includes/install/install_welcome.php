@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_welcome {
@@ -47,21 +47,21 @@ class install_welcome {
     Install_Form_Open ($Install->return_pg,'');
     echo "<h2>Welcome to the FusionTicket Installation Wizard.</h2> ";
     echo "<p align='justify' style='font-size:15px;'>
-            FusionTicket is distributed under the GNU GPL v3 Licence. 
-            By installing this software you are agreeing to this licence.<br> 
-            The Software is \"AS IS\", FusionTicket will not be responsible for any damages or loss of 
+            FusionTicket is distributed under the GNU GPL v3 Licence.
+            By installing this software you are agreeing to this licence.<br>
+            The Software is \"AS IS\", FusionTicket will not be responsible for any damages or loss of
             profit caused by this software<br> or any other patch script included with this software.<br><br>
             You are <b>NOT</b> allowed to sell this script but are able to make money from <b>USING</b> it.<br>
             There may be a professional version in the future.<br><br>
-            If you need help performing the installation, please refer to the included 
+            If you need help performing the installation, please refer to the included
             <a href=\"../install.html\" target=\"_blank\">installation guide</a>.
           </p>
           <p align='justify'  style='font-size:16px;'>
-            This web based installer will help you install the software on your web server.<br> 
+            This web based installer will help you install the software on your web server.<br>
             To continue with the installation process click the 'Next' button below.
-          </p>\n";      
+          </p>\n";
     Install_Form_Buttons ();
     Install_Form_Close ();
-  }  
+  }
 }
 ?>

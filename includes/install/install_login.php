@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -31,30 +31,30 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_login {
   function precheck($Install) {
-    If ($_SESSION['ConfigExist']){ 
+    If ($_SESSION['ConfigExist']){
       include (ROOT."includes/config/init_config.php");
       $_SESSION['SHOP']  = (Array)$_SHOP;
       $link      = OpenDatabase();
-      
+
       if (!$result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
-        $_SESSION['DatabaseExist'] = false; 
+        $_SESSION['DatabaseExist'] = false;
       } elseif ( !$row = $result->fetch_assoc()) {
-        $_SESSION['DatabaseExist'] = false; 
+        $_SESSION['DatabaseExist'] = false;
       } elseif ( $row['rows']>0  ) {
-        $_SESSION['DatabaseExist'] = false; 
+        $_SESSION['DatabaseExist'] = false;
       } else {
-        $_SESSION['DatabaseExist'] = true; 
+        $_SESSION['DatabaseExist'] = true;
         $_SESSION['radio'] = 'UPGRADE';
-      } 
+      }
     }
     return  ($_SESSION['DatabaseExist']);
   }
-  
+
   function postcheck($Install) {
     $link      = OpenDatabase();
     if(!loginmycheck ($link, $_POST['username'], $_POST['password'])){
@@ -87,6 +87,6 @@ class install_login {
           </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();
-  }  
+  }
 }
 ?>

@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -34,14 +34,14 @@
 
 /**
  * AJAJ will return JSON only!
- * 
- * The class will follow strict rules and load the settings to see if a session is present 
+ *
+ * The class will follow strict rules and load the settings to see if a session is present
  * if not then will return false with a bad request status
- * 
+ *
  * JSON Requests should allways use json_encode(mixed, JSON_FORCE_OBJECT)
- * Its allways good practice to turn the var into an object as 
+ * Its allways good practice to turn the var into an object as
  * JSON is 'Object Notifaction'
- * 
+ *
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
@@ -52,7 +52,7 @@ if($_REQUEST['pos']) {
 } else {
   require_once ( 'template.php');
 }
-require_once("classes/jsonwrapper.php"); // Call the real php encoder built into 5.2+ 
+require_once("classes/jsonwrapper.php"); // Call the real php encoder built into 5.2+
 
 if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
 

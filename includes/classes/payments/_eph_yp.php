@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -43,7 +43,7 @@ class eph_yp extends Payment{
 	  return "{gui->view name='pm_yp_shop_id'} ".
 	         "{gui->view name='pm_yp_url'}";
 	}
-	
+
   function admin_form (){
 		return "{gui->input name='pm_yp_shop_id'}".
 		       "{gui->input name='pm_yp_url'}";

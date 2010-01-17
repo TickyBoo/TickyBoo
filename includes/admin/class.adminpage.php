@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -83,8 +83,8 @@ class AdminPage extends AUIComponent {
     }
     $this->drawChild($body);
     echo"</td></tr></table>\n";
-    
-    
+
+
     if(is_object($body)){
       $this->setJQuery($body->getJQuery());
     }
@@ -165,10 +165,10 @@ class AdminPage extends AUIComponent {
           $("#notice-message").show();
           setTimeout(function(){$("#notice-message").hide();}, 5000);
         }
-      });  
+      });
       ';
       echo "
-  
+
           -->
     </script>
   </head>
@@ -205,7 +205,7 @@ class AdminPage extends AUIComponent {
 
   function drawFoot() {
     global $_SHOP;
-    
+
     print_r($_SHOP->Messages);
     echo "
       <br><br>
@@ -214,7 +214,7 @@ class AdminPage extends AUIComponent {
           $(\"a[class*='has-tooltip']\").tooltip({
             delay:40,
             showURL:false,
-            bodyHandler: function() { 
+            bodyHandler: function() {
               if($(this).children('div').html() != ''){
                 return $(this).children('div').html();
               }else{

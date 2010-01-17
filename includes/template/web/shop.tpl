@@ -1,7 +1,7 @@
 {*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -51,7 +51,7 @@
 
 {elseif $smarty.request.action eq 'activate'}
   {include file="user_activate.tpl"}
-  
+
 {elseif $smarty.request.action eq 'resend_activation'}
   {include file="resend_activation.tpl"}
 {elseif $smarty.get.action eq "remove"}
@@ -74,16 +74,16 @@
 
 {elseif $smarty.request.action eq "view_cart"}
   {include file="cart_view.tpl"}
-  
+
 {elseif $smarty.request.category_id}
   {if $smarty.request.qty}
     {assign var='last_item' value=$cart->add_item_f($smarty.request.event_id,$smarty.request.category_id,$smarty.request.qty)}
-    {if $last_item}  
+    {if $last_item}
       {include file="discount.tpl"}
-    {else}                  
+    {else}
       {include file="event.tpl" event_id=$smarty.request.event_id}
     {/if}
-  {else}                            
+  {else}
     {include file="category.tpl"}
   {/if}
 
@@ -114,18 +114,18 @@
         {else}
 		      {include file="personal_page.tpl"}
         {/if}
-          
+
       {else}
         {include file="user_update.tpl"}
-      
+
       {/if}
-        
+
     {elseif $smarty.request.personal_page eq 'orders'}
       {if $smarty.request.action eq 'order_res'}
         {order->res_to_order order_id=$smarty.post.order_id handling_id=$smarty.post.handling}
   		  {if $order_success}
 				  {include file="personal_orders.tpl"}
- 		  	{else} 
+ 		  	{else}
 		      <div class='error'>Error</div>
  		  	{/if}
  		  {elseif $smarty.request.action eq 'reorder'}

@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -34,14 +34,14 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 class EmailLog Extends Model {
-  
+
   protected $_idName    = 'el_id';
   protected $_tableName = 'email_log';
   protected $_columns   = array('#el_id', '#el_order_id', '#el_user_id', 'el_failed',
                                 'el_received', 'el_timestamp', '*el_action',
                                 'el_email_uid', 'el_email_to', 'el_email_cc',
                                 'el_email_message', 'el_log');
-                                
+
   public function save (){
     if($this->$id>0){
       $id = $this->id;

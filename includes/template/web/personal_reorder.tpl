@@ -1,7 +1,7 @@
 {*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -138,9 +138,9 @@
           <input type='hidden' name='personal_page' value='orders' />
   			  <input type="hidden" name="order_id" value='{$shop_order.order_id}' />
 	  		  <input type='hidden' name='action' value='order_res' />
-          
+
           {ShowFormToken name='reorder'}
-          
+
           <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
 				    <tr>
 				      <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
@@ -149,9 +149,9 @@
 		        {order->tickets order_id=$shop_order.order_id min_date='on' }
               {assign var="event_date" value=$shop_ticket_min_date}
 				    {/order->tickets}
-            
+
             {handling www='on' event_date=$event_date}
-        
+
             <tr>
               <td class='payment_form'>
                 <input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}' />
@@ -167,11 +167,11 @@
                 {assign var=fee value="`$shop_handling.handling_fee_percent*$shop_order.order_total_price/100.00+$shop_handling.handling_fee_fix`"} + {$fee|string_format:"%.2f"} {$organizer_currency}
     				  </td>
     				</tr>
-    				
+
             {/handling}
-			  
+
           </table>
-          
+
           <br/>
           <input type='submit' name='submit_payment' value='{!order_it!}'/>
           </form>

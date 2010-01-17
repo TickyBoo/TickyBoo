@@ -3,7 +3,7 @@ Change Log
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2008 Christopher Jenkins. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -24,17 +24,17 @@ Change Log
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@noctem.co.uk if any conditions of this licencing isn't 
+ * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  */
- 
-//////////////////////////////////// 
+
+////////////////////////////////////
 // THIS FILE IS NOW DEPRICATED
 // IT IS ONLY KEEP FOR HISTORIC REASONS
 // FOR bug/feature tracking use http://mantis.fusionticket.org
 ////////////////////////////////////
 
- 
+
 Feedback:
 	- When users signup add in another email feild to check there email is the same as the first field.
 //TODO: FIX templates
@@ -200,7 +200,7 @@ Ver 1.3.2 Build 29
 Ver 1.3.2 Build 28
 - New Frount end for box office
 - Adding in new reservation system
-- Added new sql colums 
+- Added new sql colums
 - Added in seat status 'resp'
 - Added default reserve payment
 //TODO: Update standard MySQL Dump
@@ -210,7 +210,7 @@ Ver 1.3.2 Build 28
 
 
 27/01/2008
-Ver 1.3.2 
+Ver 1.3.2
 - Box office will now actualy show all orders created in the box office not one just created by the box office user.
 - Box office lists order status correctly.
 - Fixed Error with address form.
@@ -218,7 +218,7 @@ Ver 1.3.2
 
 
 
-RELEASE CANDIDATE 2 
+RELEASE CANDIDATE 2
 21/01/2008
 Ver 1.31 build 26
 - Fixed a problem with paypal IPN intergration... It was working how it should, it didnt think that it was being paid the correct amount, the paypal value had changed.
@@ -249,7 +249,7 @@ Ver 1.3 build 23
 	to the home page and wont be able to finish the purchase intill
 	they log's back in.
 - Personal Page has been redesigned and is nearly ready to update user info.
-- Personal info can now be changed need to enter password needs doing properly, currently 
+- Personal info can now be changed need to enter password needs doing properly, currently
 	it relog's the user.
 
 

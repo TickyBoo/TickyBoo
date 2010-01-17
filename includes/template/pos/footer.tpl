@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - Free Ticket Sales Box Office
- * Copyright (C) 2007-2009 Christopher Jenkins. All rights reserved.
+ * Copyright (C) 2007-2010 Christopher Jenkins. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -24,13 +24,13 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@fusionticket.com if any conditions of this licencing isn't 
+ * Contact info@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  * Please goto fusionticket.org for more info and help.
  */
  *}
 
- 
+
 			</div>
 
 			<div id="footer">

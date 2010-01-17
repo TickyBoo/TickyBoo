@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -33,7 +33,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 Class Xml2php {
-  
+
   /**
    * xml2array() will convert the given XML text to an array in the XML structure.
    * Link: http://www.bin-co.com/php/scripts/xml2array/
@@ -81,7 +81,7 @@ Class Xml2php {
 
         $result = array();
         $attributes_data = array();
-        
+
         if(isset($value)) {
             if($priority == 'tag') $result = $value;
             else $result['value'] = $value; //Put the value in a assoc array if we are in the 'Attribute' mode
@@ -113,7 +113,7 @@ Class Xml2php {
                 } else {//This section will make the value an array if multiple tags with the same name appear together
                     $current[$tag] = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
                     $repeated_tag_index[$tag.'_'.$level] = 2;
-                    
+
                     if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
                         $current[$tag]['0_attr'] = $current[$tag.'_attr'];
                         unset($current[$tag.'_attr']);
@@ -136,7 +136,7 @@ Class Xml2php {
 
                     // ...push the new element into that array.
                     $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-                    
+
                     if($priority == 'tag' and $get_attributes and $attributes_data) {
                         $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
                     }
@@ -147,11 +147,11 @@ Class Xml2php {
                     $repeated_tag_index[$tag.'_'.$level] = 1;
                     if($priority == 'tag' and $get_attributes) {
                         if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
-                            
+
                             $current[$tag]['0_attr'] = $current[$tag.'_attr'];
                             unset($current[$tag.'_attr']);
                         }
-                        
+
                         if($attributes_data) {
                             $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
                         }
@@ -164,7 +164,7 @@ Class Xml2php {
             $current = &$parent[$level-1];
         }
     }
-    
+
     return($xml_array);
   }
 

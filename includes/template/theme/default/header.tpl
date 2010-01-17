@@ -1,7 +1,7 @@
 {*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -46,7 +46,7 @@
 		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
-    
+
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
     <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.3.js'></script>

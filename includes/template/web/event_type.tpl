@@ -1,7 +1,7 @@
 {*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -64,7 +64,7 @@
     </td>
   </tr>
 </table>
-<br><br>  
+<br><br>
 {assign var='start_date' value=$smarty.now|date_format:"%Y-%m-%d"}
 {assign var="empty" value="1"}
 {event order="event_date,event_time"  start_date=$start_date main='on' ort='on' event_type=$smarty.get.event_type first=$smarty.get.first length=$length}

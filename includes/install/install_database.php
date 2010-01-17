@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_database {
@@ -62,9 +62,9 @@ class install_database {
                                  'Error code: '. @mysqli_connect_error($link) . @mysqli_error($link));
       if(@mysqli_errno ($link)==1049) $_SESSION['DB_Error'] = true;
       return true;
-    } 
-    
-   
+    }
+
+
     return true;
   }
 
@@ -77,24 +77,24 @@ class install_database {
       $tmp = str_replace(".", "_", $tmp);
       $_SESSION['SHOP']['db_name'] = $tmp;
     }
-    
+
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
               <td colspan=\"2\"><h2>Database Connection Settings</h2></td>
             </tr>
             <tr>
               <td colspan=\"2\">
-                Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br> 
+                Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br>
               </td>
             </tr>
             <tr>
               <td width='30%'>Hostname</td>
               <td><input type=\"text\" name=\"db_host\" value=\"".$_SESSION['SHOP']['db_host']."\" /></td>
-            </tr> 
+            </tr>
             <tr>
               <td>Database</td>
               <td><input type=\"text\" name=\"db_name\" value=\"".$_SESSION['SHOP']['db_name']."\" /></td>
-            </tr>       
+            </tr>
             <tr>
               <td>Username</td>
               <td><input type=\"text\" name=\"db_uname\" value=\"".$_SESSION['SHOP']['db_uname']."\" /></td>
@@ -111,10 +111,10 @@ class install_database {
             </tr>";
     }
     echo "</table>\n";
-      
+
     Install_Form_Buttons ();
-    Install_Form_Close ();    
-  
-  }  
+    Install_Form_Close ();
+
+  }
 }
 ?>

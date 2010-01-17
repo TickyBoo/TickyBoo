@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - Free Ticket Sales Box Office
- * Copyright (C) 2007-2009 Christopher Jenkins. All rights reserved.
+ * Copyright (C) 2007-2010 Christopher Jenkins. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system

@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -206,7 +206,7 @@ class EmailSwiftXMLCompiler {
 
     //TODO: Add check for new auto send methods.
     //if($data['handling_email_template_ord_incl_pdf'])
-    
+
     /*
 
     if(isset($res['order_pdf'])){

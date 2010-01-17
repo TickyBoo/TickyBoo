@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -37,16 +37,16 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once (LIBS.'swift'.DS.'swift_required.php');
 
 class EmailSwiftSender {
-  
+
   public function send(&$swiftMessage,$testEmail='',&$logger , &$failed){
     global $_SHOP;
-    
+
     //Add SMTP Mailer if defined.
     if(empt($_SHOP->mail_smtp_host,false)){
       $smtp = Swift_SmtpTransport::newInstance($_SHOP->mail_smtp_host,
         empt($_SHOP->mail_smtp_port,'25'),
         empt($_SHOP->mail_smtp_security,null));
-        
+
       if(empt($_SHOP->mail_smtp_username,false)){
         $smtp->setUsername($_SHOP->mail_smtp_username);
         $smtp->setPassword(empt($_SHOP->mail_smtp_password,''));
@@ -58,36 +58,36 @@ class EmailSwiftSender {
       $sendmail = Swift_SendmailTransport::newInstance(empt($_SHOP->mail_sendmail,'/usr/sbin/sendmail -bs'));
       $tranports[] = $sendmail;
     }
-    
+
     //Add mail as good measure to try and fall back on
     $mail = Swift_MailTransport::newInstance();
     $tranports[] = $mail;
-    
+
     //Add to fail over transport
     $transport = Swift_FailoverTransport::newInstance($tranports);
-    
+
     //Create Mailer
     $mailer = Swift_Mailer::newInstance($transport);
-    
+
     //Or to use the Echo Logger
     //$logger = new Swift_Plugins_Loggers_EchoLogger();
     //$mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
-    
+
     //Or to use the Normal Logger
     $logger = new Swift_Plugins_Loggers_ArrayLogger();
     $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
-    
+
     $ret = $mailer->send($swiftMessage,$failed);
-    
+
     if(!$ret || $ret < 1){
       Shopdb::dblogging("email '{$type}' errors:\n".print_r($email->errors,true));
       return false;
     }else{
       return $ret;
     }
-    
+
   }
-  
+
 }
 
 ?>

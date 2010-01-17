@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -31,14 +31,14 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_adminuser {
   function precheck($Install) {
     return  (!$_SESSION['DatabaseExist'] or $_SESSION['radio']=='NORMAL');
   }
-  
+
   function postcheck($Install) {
     Install_Request(Array('admin_login','admin_password'));
     if (strlen($_SESSION['admin_login']) < 3){
@@ -74,6 +74,6 @@ class install_adminuser {
           </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();
-  }  
+  }
 }
 ?>

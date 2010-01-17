@@ -1,7 +1,7 @@
 {*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -30,7 +30,7 @@
  * clear to you.
  *}
 <table width="150" border="0" cellspacing="0" cellpadding="0" class="menu_table">
-  <tr> 
+  <tr>
     <td  align='center' class="menu_title">
 	    {!event_groups!}
     </td>

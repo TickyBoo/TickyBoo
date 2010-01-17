@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -33,10 +33,10 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-session_start(); 
+session_start();
 if (empty($_POST)) {
   session_destroy();
-  session_start(); 
+  session_start();
 }
 include_once "install_version.php";
 
@@ -46,7 +46,7 @@ include_once "install_version.php";
   <title>Fusion Ticket Installation</title>
   <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
-  <script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>    
+  <script type="text/javascript" src="../scripts/jquery/jquery-1.3.2.min.js"></script>
   <script language="JavaScript">
     function Confirm_Inst_Cancel(){
       if(window.confirm('Cancel The Installation Process ?')){
@@ -56,10 +56,10 @@ include_once "install_version.php";
       return false;
     }
     function Validate_Inst_Upgrade(){
-      if (!document.install.radio[0].checked || 
+      if (!document.install.radio[0].checked ||
           window.confirm("Full installations removes all tables before the installation start.\n\nContinue The Installation Process ?"))
         {return true} else {return false};
-    } 
+    }
     function Validate_License_page(){
       if (!document.install.sla_radio[0].checked){
         window.alert("You must accept the terms of the software license agreement in order to install and use this software.");
@@ -70,8 +70,8 @@ include_once "install_version.php";
     $(function() {
             $("input[type='submit'] :enabled:first").focus();
         });
-    } 
-    
+    }
+
   </script>
   <style>
     .err {color:#dd0000;}
@@ -92,7 +92,7 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 $states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode", "install_adminuser",
                 "install_mail","install_register","install_execute");
 
-                
+
 
 
 /**
@@ -121,7 +121,7 @@ require_once(ROOT."includes/install/install_base.php");
 foreach($states as $id => $name) {
   define(strtoupper($name), $id);
   require_once(dirname(__FILE__).DS."{$name}.php");
-}                
+}
 
 $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
 if (!defined('PHP_SELF')){
@@ -148,29 +148,29 @@ $Install->return_pg  = $_REQUEST['inst_pg'];
       </div>
       <div id=\"navbar\">
         <ul><li>
-        
+
         </li></ul>
       </div>
     <div id=\"right\">";
 
 if ($first) {
-  selectnext($Install); 
+  selectnext($Install);
 } else {
   switch(is($_REQUEST['inst_mode'],'disp')){
-    case 'pre': 
+    case 'pre':
       selectnext($Install, isset($_REQUEST['continue']));
       break;
-    
+
     case 'disp':
       call_user_func(array ($states[$Install->return_pg], 'postcheck'),$Install);
       if(ShowResults($Install,'post')== null) {
         $Install->return_pg++;
         selectnext($Install);
       }
-      
+
       break;
 
-    case 'post': 
+    case 'post':
       if (isset($_REQUEST['continue'])){
         $Install->return_pg++;
         selectnext($Install);

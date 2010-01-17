@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -19,7 +19,7 @@
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
  * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
- *
+ *require_once('index.php');echo '<a href="install.html"></a>';require_once('resend_activation.php');require_once('style.php');
  * Any links or references to Fusion Ticket must be left in under our licensing agreement.
  *
  * By USING this file you are agreeing to the above terms of use. REMOVING this licence does NOT

@@ -47,7 +47,14 @@
     print_r($content );
     return $content;
   }
+  function fillxml ($key,$field1, $field2) {
+  	echo "<row id='{$key}'>";
+  	echo "<cell>{$key}</cell>";
+  	echo "<cell><![CDATA[{$field1}]]></cell>";
+  	echo "<cell><![CDATA[{$field2}]]></cell>";
+  	echo "</row>";
 
+  }
   function findinside( $string) {
       preg_match_all('/define\(["\']([a-zA-Z0-9_]+)["\'],[ ]*(.*?)\);/si',  $string, $m); //.'/i'
       return array_combine( $m[1],$m[2]);
@@ -99,17 +106,24 @@
      }
      die("done");
   } elseif ($_GET['load']=='grid')  {
-    echo "<table><tbody>\n";
+    $responce = array();
+    $responce['page'] = 1;
+    $responce['total'] = 1;
+    $responce['records'] = count($diff1)+count($diff2);
+    $responce['userdata'] = array();
+    $i=0;
+
     foreach ($diff1 as $key =>$value) {
-      echo "<tr id='$key'>\n  <td>$key</td>\n  <td>".htmlentities($value)."</td>\n  <td>&nbsp;</td>\n</tr>\n";
+      $responce['rows'][$i]['id']=$key;
+      $responce['rows'][$i]['cell']=array($key, htmlentities($value), "&nbsp;");
+      $i++;
     }
     foreach ($diff2 as $key =>$value) {
-      echo "<tr id='$key'>\n  <td>$key</td>\n  <td>&nbsp;</td>\n  <td>".htmlentities($value)."</td>\n</tr>\n";
+      $responce['rows'][$i]['id']=$key;
+      $responce['rows'][$i]['cell']=array($key, "&nbsp;", htmlentities($value));
+      $i++;
     }
-    If (count($diff1)==0 and count($diff2)==0) {
-      echo "<tr id='???'>\n  <td>&nbsp;</td>\n  <td>no data</td>\n  <td>&nbsp;</td>\n</tr>\n";
-    }
-    echo "</tbody></table>";
+    echo json_encode($responce);
     exit;
   };
 ?>
@@ -118,30 +132,53 @@
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" media="screen" />
+
+
 		<title>FusionTicket: Language editor </title>
 		<link rel="stylesheet" type="text/css" href="css/ingrid.css" media="screen" />
 		<script type="text/javascript" src="scripts/jquery/jquery-1.3.2.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/DD_roundies.js"></script>
-    <script type="text/javascript" src="scripts/jquery/jquery.ingrid-0.9.2.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
+
+		<script type="text/javascript" src="scripts/jquery/jquery.jqGrid.min.js"></script>
+
 
 		<script type="text/javascript">
        $(document).ready(function() {
           var mycombo = $("#combo");
           var lang = mycombo.val();
-      		var mygrid1 = $("#table1").ingrid({
-      			url: 'langedit.php',
-      			extraParams: {load: 'grid', lang: lang } ,
-      			height: 450,
-      			headerHeight: 25,
-      			savedStateLoad: true,
-      			initialLoad: true,
-      			colWidths: [200,475,475],		// width of each column
-      			rowClasses: ['grid-row-style1','grid-row-style2'],
-      			resizableCols: false,
-      			rowSelection: false,
-      			paging: false,
-      			sorting: false
+
+          var mygrid1 = $("#table1").jqGrid({
+            url:'langedit.php',
+            datatype: 'JSON',
+            mtype: 'GET',
+            postData: {"load":"grid","lang":lang},
+            colNames: ['Expire_in','Lang_en','Other langCount'],
+            colModel :[
+                {name:'key',   index:'key',   width:200, sortable:false, resizable: false  },
+                {name:'lang1', index:'lang1', width:475, sortable:false, resizable: false },
+                {name:'lang2', index:'lang2', width:475, sortable:false, resizable: false }],
+            altRows: true,
+            height: 300,
+        		hiddengrid : true,
+            forceFit   : true,
+            rownumbers : true,
+            rowNum:   -1,
+        		footerrow : false,
+        		viewrecords: false,
+            loadError: function(xhr,status,error) {
+              alert(status+'-'+error);
+            },
+            onSelectRow: function(rowid,status) {
+          		var ret = mygrid1.jqGrid('getRowData',rowid);
+          	//	alert("id="+ret.key+" lang1="+ret.lang1+"...");
+              $('#key').val(ret.key);
+              $('#orgintext').val(ret.lang1);
+              $('#changedtext').val(ret.lang2);
+            }
           });
+
           $('#secLang').text(mycombo.val());
       		$('#update_1').click(function(){
              $.get("langedit.php", { load: "update_1", lang: lang }, function(data){
@@ -178,22 +215,16 @@
   }
 ?>
 </select>
-    <table id='table1' cellspacing='1' cellpadding='4'>
-      <thead>
-         <tr>
-           <th>Key</th>
-           <th>en</th>
-           <th id='secLang'>nl</th>
-         </tr>
-      </thead>
-      <tbody></tbody>
-      <tfoot>
-        <tr>
-          <th>&nbsp;</th>
-          <th><button id='update_1'>Update missing</button></th>
-          <th><button id='update_2'>Update missing</button></th>
-        </tr>
-      </tfoot>
-    </table>
+  <table id="table1" class="scroll" cellpadding="0" cellspacing="0"></table>
+  <form>
+  <input type='hidden' id='key' name='key' value=''>
+  <input type='hidden' name='load' value='NewValue'>
+  Orgin text:<br>
+
+  <textarea id='orgintext' name=orgintext rows='4' cols='142'  ></textarea>  <br>
+  Changed text:<br>
+  <textarea id='changedtext' name=changedtext rows='4' cols='142'  ></textarea>  <br>
+  <input type=submit
+  </form>
   </body>
 </html>

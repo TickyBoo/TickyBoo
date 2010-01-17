@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_mode {
@@ -42,7 +42,7 @@ class install_mode {
   function postcheck($Install) {
     $_SESSION['radio']    = $_REQUEST['radio'];
     $_SESSION['db_demos'] = $_REQUEST['db_demos'];
-    
+
     return true;
   }
 
@@ -67,7 +67,7 @@ class install_mode {
             </tr>
             <tr>
               <td colspan=\"2\">
-                <input type=\"radio\" name=\"radio\" value=\"NORMAL\" id='doinstall'  {$chk['NORMAL']}/><label for='doinstall'>  Full (re)installation of your database</label> 
+                <input type=\"radio\" name=\"radio\" value=\"NORMAL\" id='doinstall'  {$chk['NORMAL']}/><label for='doinstall'>  Full (re)installation of your database</label>
               </td>\n
             </tr>
             <tr>
@@ -83,7 +83,7 @@ class install_mode {
           </table>\n";
     Install_Form_Buttons ();
     Install_Form_Close ();
- 
-  }  
+
+  }
 }
 ?>

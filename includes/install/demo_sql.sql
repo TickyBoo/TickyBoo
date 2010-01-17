@@ -30,9 +30,9 @@ INSERT INTO `Event_stat` (`es_event_id`, `es_total`, `es_free`) VALUES
 (2, 50, 46);
 
 INSERT INTO `Order` (`order_id`, `order_user_id`, `order_session_id`, `order_tickets_nr`, `order_total_price`, `order_date`, `order_shipment_status`, `order_payment_status`, `order_payment_id`, `order_handling_id`, `order_status`, `order_reemited_id`, `order_fee`, `order_place`, `order_owner_id`, `order_date_expire`, `order_responce`, `order_responce_date`, `order_note`, `order_lock`, `order_lock_time`, `order_lock_admin_id`) VALUES
-(1, 1, '81ab9c70d475786f6ede5c480a129725', 1, 0.01, '2009-09-28 03:24:10', 'send', 'payed', NULL, 2, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL),
-(2, 2, '81ab9c70d475786f6ede5c480a129725', 2, 0.02, '2009-09-28 03:28:29', 'none', 'none', NULL, 3, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL),
-(3, 2, 'f0431d512908695a8e6f0552bb55b8e4', 1, 7.50, '2009-09-28 16:38:09', 'none', 'none', NULL, 5, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL);
+(1, 1, '81ab9c70d475786f6ede5c480a129725', 1, 0.01, '2010-09-28 03:24:10', 'send', 'payed', NULL, 2, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL),
+(2, 2, '81ab9c70d475786f6ede5c480a129725', 2, 0.02, '2010-09-28 03:28:29', 'none', 'none', NULL, 3, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL),
+(3, 2, 'f0431d512908695a8e6f0552bb55b8e4', 1, 7.50, '2010-09-28 16:38:09', 'none', 'none', NULL, 5, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL);
 
 INSERT INTO `Ort` (`ort_id`, `ort_name`, `ort_phone`, `ort_plan_nr`, `ort_url`, `ort_image`, `ort_address`, `ort_address1`, `ort_zip`, `ort_city`, `ort_state`, `ort_country`, `ort_pm`, `ort_fax`) VALUES
 (1, 'Demo Theater', '(555) 555-1212', NULL, 'http://fusionticket.org', 'ort_image_1.png', '1234 Demo St', '', '10000', 'Demo Town', 'DT', 'US', '', '(555) 555-1213');

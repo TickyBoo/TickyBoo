@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
- 
+
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_license {
@@ -43,7 +43,7 @@ class install_license {
     } elseif (!is_writable(ROOT."includes/config/init_config.php")){
       array_push($Install->Errors, ROOT."includes/config/init_config.php should be temporarily writable by the webserver user.");
     } else {
-      $_SESSION['ConfigExist'] = file_exists(ROOT."includes/config/init_config.php") and 
+      $_SESSION['ConfigExist'] = file_exists(ROOT."includes/config/init_config.php") and
                                  (filesize(ROOT."includes/config/init_config.php")>100);
     }
     return true;
@@ -101,7 +101,7 @@ class install_license {
     if (!is_writable(ROOT."files")){
       array_push($Install->Errors,ROOT."files should be writable by the webserver user.");
     }
-    
+
   }
 
   function display($install) {
@@ -130,7 +130,7 @@ class install_license {
             </tr>
           </table>\n";
     Install_Form_Buttons ();
-    Install_Form_Close ();    
-  }  
+    Install_Form_Close ();
+  }
 }
 ?>

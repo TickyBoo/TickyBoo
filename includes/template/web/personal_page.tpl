@@ -1,7 +1,7 @@
 {*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2009 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -33,10 +33,10 @@
 <table width="100%" cellpadding="3" class="main">
   <tr>
     <td class="title">
-      <h3>{!personal!}</h3>      
+      <h3>{!personal!}</h3>
     </td>
     <td class="title">
-      <h3>{!pers_orders!}</h3>      
+      <h3>{!pers_orders!}</h3>
     </td>
   </tr>
   <tr>
@@ -45,7 +45,7 @@
   </tr>
   <tr>
     <td width="50%" valign="top">
-    
+
       <table class="table_dark shop-table">
         {gui->view name='user_firstname' value=$user->user_firstname|clean}
         {gui->view name='user_lastname' value=$user->user_lastname|clean}
@@ -59,10 +59,10 @@
         {gui->view name='user_fax' value=$user->user_fax|clean}
         {gui->view name='user_email' value=$user->user_email|clean}
       </table>
-      
+
 	  </td>
     <td valign="top">
-    
+
 		  <table class="table_dark shop-table">
         <thead>
           <tr>
