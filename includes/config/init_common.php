@@ -94,9 +94,9 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->tpl_dir=INC."template".DS;
 
   //Trace File settings
-  $_SHOP->trace_dir = INC."temp".DS;
+  $_SHOP->trace_dir  = INC."temp".DS;
   $_SHOP->trace_name = 'trace.log';
-  $_SHOP->trace_on = true;
+  $_SHOP->trace_on   = 'SEND';
 
   // this selects the theme that you like to use.
   $_SHOP->theme_name = "default";

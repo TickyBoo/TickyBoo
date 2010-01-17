@@ -237,7 +237,7 @@ class ShopDB {
   			}
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-        trace('=> '.$query);
+        trace($query, false, true);
         $query = ShopDB::replacePrefix($query);
         $res = ShopDB::$link->query($query);
         if (!$res) {

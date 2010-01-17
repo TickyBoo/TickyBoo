@@ -80,7 +80,7 @@ class PlaceMapPart Extends Model {
     return $all;
   }
 
-  function loadAll ($pm_id) {
+  function loadAll ($pm_id, $extended= false) {
     $query = "select *
               from PlaceMapPart
               where pmp_pm_id="._esc($pm_id)."
@@ -91,6 +91,10 @@ class PlaceMapPart Extends Model {
         $new_pmp = new PlaceMapPart;
         $new_pmp->_fill($data);
         $new_pmp->data = self::_unser_data($data['pmp_data'], $data['pmp_width'], $data['pmp_height']);
+        if ($extended) {
+           $new_pmp->zones = PlaceMapZone::loadAll($new_pmp->pmp_pm_id);
+           $new_pmp->categories = PlaceMapCategory::loadAll($new_pmp->pmp_pm_id);
+        }
 
         $all[] = $new_pmp;
       }
@@ -138,6 +142,7 @@ class PlaceMapPart Extends Model {
 
   function save (){
     If (!$this->data) {
+
       $this->data = array_fill(0, (int)$this->pmp_height, array_fill(0, (int)$this->pmp_width, array(0, 0, 0)));
     }
     $this->pmp_data  = $this->_ser_data();
