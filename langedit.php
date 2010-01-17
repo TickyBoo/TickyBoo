@@ -35,9 +35,8 @@
   include_once('includes/config/init_common.php');
 
   function load() {
-    global $_SHOP;
     $content = array();
-    $dir = $_SHOP->includes_dir.DS.'lang';
+    $dir = dirname(__FILE__)."/includes/lang";
 	  if ($handle = opendir($dir)) {
 		   while (false !== ($file = readdir($handle))) {
              if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^site_(.*?\w+).inc/", $file, $matches)&& $matches[1]!='en')
@@ -56,10 +55,13 @@
 
   if (isset($_GET['load'])) {
     $string1 = file_get_contents('includes/lang/site_en.inc');
-    $string2 = file_get_contents("includes/lang/site_{$_GET['lang']}.inc");
-
     $en = findinside($string1);
-    $du = findinside($string2);
+    if (file_exists( dirname(__FILE__)."/includes/lang/site_{$_GET['lang']}.inc")) {
+      $string2 = file_get_contents("includes/lang/site_{$_GET['lang']}.inc");
+      $du = findinside($string2);
+    } else {
+      $du = array();
+    }
 
     $diff1= array_diff_key($en, $du);
     $diff2= array_diff_key($du, $en);
@@ -92,8 +94,8 @@
        foreach ($diff1 as $key =>$value) {
          $string2 .= "define('$key', $value);\n";
        }
-       $string1 .= "?>";
-       file_put_contents("includes/lang/site_{$_GET['lang']}.inc",$string1, FILE_TEXT );
+       $string2 .= "?>";
+       file_put_contents("includes/lang/site_{$_GET['lang']}.inc",$string2, FILE_TEXT );
      }
      die("done");
   } elseif ($_GET['load']=='grid')  {
@@ -133,7 +135,7 @@
       			headerHeight: 25,
       			savedStateLoad: true,
       			initialLoad: true,
-      			colWidths: [150,475,475],		// width of each column
+      			colWidths: [200,475,475],		// width of each column
       			rowClasses: ['grid-row-style1','grid-row-style2'],
       			resizableCols: false,
       			rowSelection: false,
@@ -195,11 +197,3 @@
     </table>
   </body>
 </html>
-<?Php
-    print "<pre>";
-    print_r( $du);
-    print_r( $en);
-    print_r( $diff1= array_diff_key($en, $du));
-    print_r( $diff2= array_diff_key($du, $en));
-    print "</pre>";
-?>
