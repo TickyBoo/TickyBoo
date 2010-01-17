@@ -194,7 +194,7 @@ class eph_ideal extends payment{
         $order->set_payment_status('payed');
         return true;
       } elseif (in_array($status, array(IDEAL_TX_STATUS_CANCELLED, IDEAL_TX_STATUS_EXPIRED ))) {
-        $order->order_delete($order->order_id, $response->GetStatusText());
+        $order->delete($order->order_id, $response->GetStatusText());
         return true;
       }
     }

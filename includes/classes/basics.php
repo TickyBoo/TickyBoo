@@ -390,7 +390,7 @@ function check_system() {
       while ( $roword = shopDB::fetch_assoc($resultOrder) ) {
         if ( !Order::Check_payment($roword['order_id'])) {
           if ( $_SHOP->shopconfig_delunpaid_pos == 'Yes' or $roword['order_place'] != 'pos'){
-            Order::order_delete( $roword['order_id'], 'AutoCancel_paying');
+            Order::delete( $roword['order_id'], 'AutoCancel_paying');
           }
         }
       }

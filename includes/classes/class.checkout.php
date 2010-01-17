@@ -89,7 +89,7 @@ class Checkout {
       if (is_array($confirmtext)) {
     	 $smarty->assign('pm_return',$confirmtext);
         if(!$confirmtext['approved']) {
-          $myorder->order_delete($myorder->order_id,'payment_not_approved' );
+          $myorder->delete($myorder->order_id,'payment_not_approved' );
         }
      		unset( $_SESSION['_SHOP_order']);
       	return "checkout_result";
