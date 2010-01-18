@@ -29,7 +29,9 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
+ {if !$no_header}
 {include file="header.tpl" name=!order_reg! header=!tnx_order_mess!}
+{/if}
 
   <table class='table_dark' cellspacing='1' cellpadding='4' border=0 bgcolor='white' width='100%'>
     {eval var=$shop_handling.handling_text_payment assign=test}
@@ -42,5 +44,6 @@
   </table>
   {eval var=$confirmtext}
 
-
+{if !$no_footer}
  {include file="footer.tpl"}
+{/if}

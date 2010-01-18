@@ -37,7 +37,7 @@
   {assign var='next_order_id' value=$shop_order.order_id}
 {/order->order_list}
 <br>
-  <table width='100%' border=0>
+  <table width='100%' border='0'>
     {order->order_list order_id=$order_id handling=true}
       <tr>
         <td width='50%' valign='top'>
@@ -92,6 +92,8 @@
                 {/if}
               </td>
             </tr>
+            
+            {* New method, Leave disabled coming beta7 }
             {if $shop_order.order_status eq "res"}
               <form name='f' action='view.php' method='post'>
               <input type='hidden' name='action' value='reorder' />
@@ -106,6 +108,47 @@
               </tr>
             </form>
             {/if}
+            {* End of new method *}
+            
+            
+            {* Reserve to Order *}
+            {if $shop_order.order_status eq "res"}
+            
+            <tr>
+              <td colspan="2">
+                {update->countdown order_id=$shop_order.order_id reserved=true}
+                  {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+                  <br />
+      		        {!autocancel!}
+                {/update->countdown}
+              </td>
+    				</tr>
+    				<form name='f' action='view.php?order_id={$shop_order.order_id}' method='post'>
+    				<tr>
+              <td colspan="2" align="left">
+                <input type='hidden' name='personal_page' value='orders' />
+             		{ShowFormToken name='reorder'}
+                
+                {order->tickets order_id=$shop_order.order_id min_date='on' }
+                <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
+                {/order->tickets}
+                
+                <input type='hidden' name='action' value='reorder' />
+                <input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
+                <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+                
+                {!ordertickets!}<br />
+                <font color="red">{!reserv_cancel!}</font><br />
+                <center>
+                  <input type='submit' name='submit' value='Order' />
+                </center>
+              </td>
+            </tr>
+            </form>
+            {/if}
+            {* End Reserve to Order *}
+            
+            
             <tr>
               <td class="admin_info">{!paymentstatus!}</td>
               <td class="subtitle">
@@ -118,34 +161,67 @@
                 {/if}
               </td>
             </tr>
-   			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
-				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"
-				and $shop_order.handling_payment neq 'entrance' }
-			<tr>
-				<td colspan="2">
-			  		<font color="Black" ><b>{!payhere!}</b></font>
-			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
-						<input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
-					{/order->tickets}
-					{handling handling_id=$shop_order.order_handling_id}
-				  	{if $shop_order.order_payment_status eq 'none'}
-				  		{if $shop_handling.handling_html_template}
-				  			{eval var=$shop_handling.handling_html_template}
-						{else}
-							<form name='f' action='view.php' method='post'>
-						    	<input type="hidden" name="action" value="setpaid" />
-						        <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
-				          		<p>
-				          		<input type="submit" value="{!change_order_to_payed!}" />
-					      	<p>
-              </form>
-				  		{/if}
-
-				  	{/if}
-					{/handling}
-					      	</td>
-			</tr>
-			{/if}
+            
+            {* Pay for unpaid order *}
+            {if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
+    				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
+            <tr>
+              <td colspan="2">
+                <br />
+    			  	  <strong>
+                <span style="font-size:90%;">
+    			  		 {update->countdown order_id=$shop_order.order_id}
+              	   {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+    						  {/update->countdown}
+    						  {!autocancel!}
+    						  {!payhere!}
+                </span></strong>
+    			  		<br />
+    			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+                  <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
+                {/order->tickets}
+                <span style="font-size:90%;">
+                {literal}
+                <style>.table_dark { width:100% }</style>
+                {/literal}
+                {include file='checkout_payment.tpl' order_id=$shop_order.order_id}
+                </span>
+              </td>
+            </tr>
+            {/if}
+            {* End Pay unpaid order... Works better than i thought it would *}
+            
+            {* Old paid method..}
+       			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
+    				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"
+    				and $shop_order.handling_payment neq 'entrance' }
+      			<tr>
+      				<td colspan="2">
+      			  		<font color="Black" ><b>{!payhere!}</b></font>
+      			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+      						<input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
+      					{/order->tickets}
+      					{handling handling_id=$shop_order.order_handling_id}
+      				  	{if $shop_order.order_payment_status eq 'none'}
+      				  		{if $shop_handling.handling_html_template}
+      				  			{eval var=$shop_handling.handling_html_template}
+      						{else}
+      							<form name='f' action='view.php' method='post'>
+      						    	<input type="hidden" name="action" value="setpaid" />
+      						        <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+      				          		<p>
+      				          		<input type="submit" value="{!change_order_to_payed!}" />
+      					      	<p>
+                    </form>
+      				  		{/if}
+      
+      				  	{/if}
+      					{/handling}
+      					      	</td>
+      			</tr>
+      			{/if}
+            {* End Old paid method..*}
+            
             <tr>
               <td class="admin_info">{!shipmentstatus!}</td>
               <td class="subtitle">

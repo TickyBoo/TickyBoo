@@ -469,6 +469,13 @@ class Order_Smarty {
 
    Order::printOrder($params['order_id'],'', 'stream', $print, $mode);
   }
+  
+  function paymentForOrder($params, &$smarty){
+    require_once "classes/class.checkout.php";
+    $orderId = is($params['order_id'],0);
+    $return = Checkout::paymentAction($orderId,$smarty);
+    $smarty->assign('payment_tpl',$return);
+  }
 
   function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
     return Order::EncodeSecureCode($order, $item, $loging);

@@ -931,7 +931,7 @@ define("go_back","Click Here to Go Back");
 define("id","ID");
 define("zone","Zone");
 define("discount","Discount");
-define("paytimeleft","You Have ~MINS~ Mins and ~SECS~ Seconds to pay for your order!");
+define("paytimeleft","You have ~DAYS~ Days, ~HOURS~ Hours, ~MINS~ Mins and ~SECS~ Seconds to pay for your order!");
 
 //personal_orders.tpl
 define("pers_orders","Current / Previous Order");

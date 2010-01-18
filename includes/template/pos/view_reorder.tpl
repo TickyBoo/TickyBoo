@@ -31,9 +31,11 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't 
  * clear to you.
  *}
-<table width='700'>
+ {include file='header.tpl'}
+ <br />
+<table width='100%' border='0'>
   <tr>
-  	<td  width='50%' valign='top'>
+  	<td width='50%' valign='top'>
     	{order->order_list order_id=$smarty.request.order_id}
     	  <table  cellspacing='1' cellpadding='4' border='0'>
       		<tr>
@@ -109,7 +111,7 @@
   	<td width="50%" valign="top">
    	  <table width="100%">
   		<tr>
-  	 	  <td class="title" valign="top">{!personal}</td>
+  	 	  <td class="title" valign="top">{!personal!}</td>
   		  <td class="title" valign="top">&nbsp;</td>
   		</tr>
   	  	<tr>
@@ -125,11 +127,11 @@
   		  <td class="sub_title" valign="top">{$user_order.user_address}</td>
   	  	</tr>
   	  	<tr>
-  		  <td class="admin_info" valign="top">{!user_address1}</td>
+  		  <td class="admin_info" valign="top">{!user_address1!}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_address1}</td>
   	  	</tr>
   	  	<tr>
-  		  <td class="admin_info" valign="top">{!user_zip}</td>
+  		  <td class="admin_info" valign="top">{!user_zip!}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_zip}</td>
   	  	</tr>
   	  	<tr>
@@ -137,40 +139,39 @@
   		  <td class="sub_title" valign="top">{$user_order.user_city}</td>
   	  	</tr>
   	  	<tr>
-  		  <td class="admin_info" valign="top">{!user_state}</td>
+  		  <td class="admin_info" valign="top">{!user_state!}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_state}</td>
   	  	</tr>
   		<tr>
-  		  <td class="admin_info" valign="top">{!user_country}</td>
+  		  <td class="admin_info" valign="top">{!user_country!}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_country}</td>
   	  	</tr>
   	  	<tr>
-  		  <td class="admin_info" valign="top">{!user_phone}</td>
+  		  <td class="admin_info" valign="top">{!user_phone!}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_phone}</td>
   	  	</tr>
   	  	<tr>
-  		  <td class="admin_info" valign="top">{!user_email}</td>
+  		  <td class="admin_info" valign="top">{!user_email!}</td>
   		  <td class="sub_title" valign="top">{$user_order.user_email}</td>
   	  	</tr>
    	  </table>
   	</td>
-    </tr>
-    <tr>
-    	<td colspan="2">
-    	<form name='f' action='view.php' method='post'>
-  	  <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
-  	  <center>
-  		<tr>
-  		  <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
-  		  <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
-  		</tr>
-  		{handling sp='on'}
+  </tr>
+  <tr>
+    <td colspan="2">
+   	  <form name='f' action='view.php' method='post'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='1'style='padding:5px; border:#45436d 1px solid;'>
+  		  <tr>
+  		    <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
+  		    <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
+  		  </tr>
+  		  {handling sp='on'}
     		<tr>
     		  <td class='payment_form'>
     		  {if $shop_handling.handling_shipment eq 'sp'}
-    		  	<input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}'>
+    		  	<input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}'/>
     		  {else}
-    		  	<input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}'>
+    		  	<input style='border:0px;' type='radio' id='{$shop_handling.handling_id}_check' name='handling' value='{$shop_handling.handling_id}'/>
     		  {/if}
     		  </td>
     		  <td class='payment_form'><label for='{$shop_handling.handling_id}_check'>{!payment!}
@@ -183,13 +184,12 @@
     			{assign var=fee value="`$shop_handling.handling_fee_percent*$shop_order.order_total_price/100.00+$shop_handling.handling_fee_fix`"} + {$fee|string_format:"%.2f"} {$organizer_currency}
     		  </td>
     		</tr>
-  		{/handling}
-  	  </table>
-  	  <br>
-  	  <input type="hidden" name="order_id" value='{$shop_order.order_id}'>
-  	  <input type='submit' name='submit_payment' value='{!order_it!}'>
-  	  <input type='hidden' name='action' value='order_res'>
-  	  </center>
+  		  {/handling}
+      </table>
+  	  <br />
+  	  <input type="hidden" name="order_id" value='{$shop_order.order_id}' />
+  	  <input type='submit' name='submit_payment' value='{!order_it!}' />
+  	  <input type='hidden' name='action' value='order_res' />
   	  </form>
   	</td>
     </tr>
@@ -230,7 +230,9 @@
   		</tr>
   		{/order->tickets}
   	  </table>
-  	<br>
+  	<br />
   	</td>
   </tr>
 </table>
+
+{include file='footer.tpl'}

@@ -846,11 +846,13 @@ class Order Extends Model {
   }
 
   function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
-
-    if ($order == null) $order = $this;
+    
+    if ($order == null && ($this->obj instanceof Order)) { $order = $this->obj; 
+    } elseif ($order == null) { $order = $this; }
     if (is_numeric($order)) $order = self::load($order);
-    if ($order == null) return '';
+    if ($order == null) return ''; 
     if (!$order->order_tickets_nr ) $order->order_tickets_nr = $order->size();
+    
     $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
            $order->order_handling_id .':'. $order->order_total_price;
     $code = base64_encode(base_convert(time(),10,36).':'. base_convert($order->order_id,10,36).':'. md5($md5, true));

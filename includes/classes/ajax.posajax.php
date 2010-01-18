@@ -526,7 +526,7 @@ class PosAjax {
 
   private function doPosSubmit(){
     global $smarty;
-    $checkoutRes = checkout::submitAction($smarty );
+    $checkoutRes = Checkout::submitAction($smarty );
     if(is_string($checkoutRes)){
       $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
       return true;
@@ -548,8 +548,12 @@ class PosAjax {
         return false;
 
     } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
-      $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_user_id'];
+      $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_user_id']; // THis is the POS user that the admin account is linked too.
       $user->load_f($user_id);
+      if(!$user_id){
+        addWarning('admin_user_id_blank');
+        return false;
+      }
 
     } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'];

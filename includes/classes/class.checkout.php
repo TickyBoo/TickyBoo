@@ -104,6 +104,48 @@ class Checkout {
     }
 
   }
+  
+  /**
+   * Checkout::paymentAction()
+   * 
+   * For the recheckout methods with show just the payment method that you would see from 
+   * just checking out.
+   * 
+   * @param object $order 
+   * @param object $smarty
+   * @return boolean
+   */
+  public static function paymentAction($orderInput, $smarty){
+    global $order;
+    if(!$orderInput){
+      addWarning('invalid_order');
+      return false;
+    }
+    if(is_numeric($orderInput)){
+      $orderInput = Order::load($orderInput,true);
+      if(!is_object($orderInput)){ addWarning('invalid_order'); return false;}
+    }
+    Checkout::setordervalues($orderInput, $smarty); //assign order vars
+    $hand = $orderInput->order_handling; // get the payment handling object
+    $confirmtext = $hand->on_confirm($orderInput); // get the payment button/method...
+    
+    if (is_array($confirmtext)) {
+      $smarty->assign('pm_return',$confirmtext);
+      if(!$confirmtext['approved']) {
+        $orderInput->delete($orderInput->order_id,'payment_not_approved' );
+      }
+  		unset( $_SESSION['_SHOP_order']);
+      return "checkout_result";
+    } else {
+      if ($hand->is_eph()) {
+        $_SESSION['_SHOP_order'] = $orderInput;
+ 			}
+    	$order->obj = $orderInput;
+      $smarty->assign('confirmtext', $confirmtext);
+   		return "checkout_confirm";
+    }
+  }
+  
   function  submitAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());

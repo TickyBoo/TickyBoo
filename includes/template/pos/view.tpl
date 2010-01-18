@@ -19,7 +19,7 @@
 {elseif $smarty.post.action eq 'order_res'}
   {order->res_to_order order_id=$smarty.post.order_id handling_id=$smarty.post.handling place='pos'}
   {if $order_success}
-    {include file='order_confirm.tpl'}
+    {include file='process_select.tpl'}
   {else}
     <div class='error'>Error</div>
     {include file="process_select.tpl"}

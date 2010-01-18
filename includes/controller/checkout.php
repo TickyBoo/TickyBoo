@@ -267,6 +267,10 @@ myExit();
 			$hand->on_notify($order);
 		}
  	}
+  
+  function paymentAction($orderObject,$smarty){
+    return Checkout::paymentAction($orderObject,$smarty);
+  }
 
   function reserveAction($smarty,$origin='www',$user_id=null) {
     return Checkout::reserveAction($smarty,$origin,$user_id);
