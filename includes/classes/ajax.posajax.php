@@ -548,14 +548,16 @@ class PosAjax {
         return false;
 
     } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
-      $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_user_id']; // THis is the POS user that the admin account is linked too.
-      $user->load_f($user_id);
+      // THis is the POS user that the admin account is linked too.
+      $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_user_id'];
       if(!$user_id){
         addWarning('admin_user_id_blank');
         return false;
       }
+      $user->load_f($user_id);
 
-    } elseif ($_POST['user_id']==0) { //if new user selected put the pos user as the owner of the order
+    } elseif ($_POST['user_id']==0) {
+      //if new user selected put the pos user as the owner of the order
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'];
       $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
       if (!$user_id || hasErrors() ) {

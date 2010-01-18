@@ -1556,6 +1556,8 @@ define('BZip2','BZip2');
 ?>
 <?php
 define('OrderNotFound','OrderNotFound');
+define('orderDescription','Fusion ticket Order Description');
+
 ?>
 <?php
 define('open_event','open_event');

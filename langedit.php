@@ -193,6 +193,16 @@
                   mygrid1.g.load({lang: lang });
                 } else alert(data);}, "text");
       		});
+          $("#lang-form").submit(function(){
+            $(this).ajaxSubmit({
+              data:{load:"save"},
+              dataType: "json",
+              success: function(data, status){
+                alert('saved');
+              }
+            });
+            return false;
+          });
 
       		$('#combo').change(function(){
       			lang = mycombo.val();
@@ -216,7 +226,7 @@
 ?>
 </select>
   <table id="table1" class="scroll" cellpadding="0" cellspacing="0"></table>
-  <form>
+  <form id='lang-form'>
   <input type='hidden' id='key' name='key' value=''>
   <input type='hidden' name='load' value='NewValue'>
   Orgin text:<br>

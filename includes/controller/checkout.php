@@ -267,9 +267,17 @@ myExit();
 			$hand->on_notify($order);
 		}
  	}
-  
-  function paymentAction($orderObject,$smarty){
-    return Checkout::paymentAction($orderObject,$smarty);
+
+  function paymentAction($smarty){
+    $myorder = is($_SESSION['_SHOP_order'], null);
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    if($test < 1) {
+      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
+      ShopDB::dblogging("payment error ($test): $myorder->order_id\n". print_r($myorder, true));
+      unset( $_SESSION['_SHOP_order']);
+      return;
+    }
+    return Checkout::paymentAction($myorder, $smarty);
   }
 
   function reserveAction($smarty,$origin='www',$user_id=null) {
