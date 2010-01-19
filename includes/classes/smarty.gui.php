@@ -267,7 +267,7 @@ class Gui_smarty {
     $max  = is($params['maxlength'] ,100);
     $value  = is($params['value'],$this->guidata[$name]);
 
-    return $this->showlabel($name, "<input type='$text' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) .
+    return $this->showlabel($name, "<input type='$type' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) .
            "' size='$size' maxlength='$max'>");
   }
 

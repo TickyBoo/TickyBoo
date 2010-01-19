@@ -99,7 +99,7 @@
       <tr>
         <td colspan='2' class='TblHigher'>
           <a  href='agb.php' target='cond' style="float:left; display:block;">{eval var=!agrement!}</a><span style="float:left;">&nbsp;*</span>
-          <input type='checkbox' class='checkbox' name='check_condition' value='check'>{printMsg key='check_condition'}
+          <input type='checkbox' class='checkbox' name='check_condition' value='check' />{printMsg key='check_condition'}
         </td>
       </tr>
 

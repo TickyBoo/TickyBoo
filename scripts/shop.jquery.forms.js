@@ -6,8 +6,8 @@ var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 });
 
 $(window).load(function(){
-
-	$("#update_user").validate({
+  
+  updateUserRules = {
 		rules: {
 			user_firstname	: 	{ required :true },
 			user_lastname	:	{ required : true },
@@ -32,7 +32,13 @@ $(window).load(function(){
 		},
 		errorClass: "form-error",
 		success: "form-valid"
-	});
+	}
+  updateUserRulesAndPass = updateUserRules;
+  updateUserRulesAndPass.rules.password1 = { minlength : 6 };
+  updateUserRulesAndPass.rules.password2 = { minlength : 6, equalTo: "#password" } 
+
+	$("#update_user").validate(updateUserRulesAndPass);
+  
 	$("#user-register").validate({
  	rules: {
 			user_firstname	: 	{ required :true },
@@ -89,12 +95,12 @@ $(window).load(function(){
   $('#ismember-checkbox').click(function(){
     if($(this).is(':checked')){
       showPasswords(true);
-      $("input[name='password1']").rules("add",{ required : true });
-      $("input[name='password2']").rules("add",{ required : true });
+      $("input[name='password1']").rules("add",{ required : true, minlength : 6 });
+      $("input[name='password2']").rules("add",{ required : true , minlength : 6, equalTo: "#password" });
     }else{
       showPasswords(false);
-      $("input[name='password1']").rules("remove", "required");
-      $("input[name='password2']").rules("remove", "required");
+      $("input[name='password1']").rules("remove");
+      $("input[name='password2']").rules("remove");
     }
   });
   
@@ -113,7 +119,8 @@ $(window).load(function(){
     });
   });
 });
-
+var updateUserRulesAndPass = {};
+var updateUserRules = {};
 var showPasswords = function(show){
   if(show == true){
     $('#passwords_tr1').show();

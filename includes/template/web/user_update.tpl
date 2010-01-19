@@ -31,18 +31,24 @@
  *}
 <!-- user_update.tpl -->
 {if $usekasse}
-	{if $smarty.post.submit_update}
-	   	{if count($user_errors) eq 0}
-	    	<script>
-	        	window.opener.location.href = window.opener.location.href;
-	        	window.close();
-	      	</script>
-	   	{/if}
-    	{assign var='user_data' value=$smarty.post}
-  	{else}
-    	{assign var='user_data' value=$user->asarray()}
-  	{/if}
-
+  {if $smarty.post.submit_update}
+    {if count($user_errors) eq 0}
+   	  <script type="text/javascript">
+        window.opener.location.href = window.opener.location.href;
+	      window.close();
+      </script>
+      <script type="text/javascript">
+      {literal}
+      jQuery(document).ready(function(){
+      });
+      {/literal}
+      </script>
+   	{/if}
+    {assign var='user_data' value=$smarty.post}
+  {else}
+    {assign var='user_data' value=$user->asarray()}
+ 	{/if}
+{*
 <html>
 	<head>
 		<title></title>
@@ -56,40 +62,47 @@
 
 	<body topmargin="0" leftmargin="0" bgcolor="#FFE2AE">
 	<br />
-	<center>
-		<form action="{$_SHOP_root_secured}checkout.php" method='post'>
+  *}
+<div id="update-user-div" style="width:100%;">
+		<form action="{$_SHOP_root_secured}checkout.php" method='post' id="update_user">
 			{ShowFormToken name='UserUpdate'}
  			<input type='hidden' name='action' value='useredit' />
 {else}
 
   <form action="index.php" method='post' id="update_user">
-   	{ShowFormToken name='UserUpdate'}
-   	<input type='hidden' name='action' value='update' />
+    {ShowFormToken name='UserUpdate'}
+    <input type='hidden' name='action' value='update' />
    	<input type='hidden' name='personal_page' value='details' />
 {/if}
- 	<input type='hidden' name='user_id' value='{user->user_id}' />
-	<table cellpadding="3" class="main" bgcolor='white'>
-		{include file='user_form.tpl'}
-   	{if $user->is_member}
-      {gui->input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10'}
-     	{if !$usekasse}
+    <input type='hidden' name='user_id' value='{user->user_id}' />
+    <input type="hidden" name="submit_update" value="yes" />
+    
+    <table cellpadding="3" class="main" bgcolor='white'>
+		  {include file='user_form.tpl'}
+      
+      {if $user->is_member}
+        {gui->input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10'}
+        
+        {if !$usekasse}
         <tr id='passwords_tr1' >
           <td class='TblLower'>{!new_password!} (opt.)</td>
           <td class='TblHigher'>
-             <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
-             {!pwd_min!}{printMsg key='password'}
-          </td>
+            <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
+              {!pwd_min!}{printMsg key='password'}
+            </td>
         </tr>
         <tr id='passwords_tr2'>
           <td class='TblLower'> {!password2!}</td>
           <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
         </tr>
-      {/if}
-		{/if}
-  </table>
-	<br />
+        {/if}
+        
+		  {/if}
+    </table>
+    <br />
 
-	<div align="center">
-   	<input type='submit' name='submit_update' value='Update' />
+	<div style="text-align:center;">
+   	<input style="float:none;" type='submit' name='submit_update' value='Update' />
   </div>
-</form>
+  </form>
+</div>

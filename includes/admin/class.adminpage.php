@@ -117,7 +117,7 @@ class AdminPage extends AUIComponent {
     <link rel='stylesheet' href='../css/ui-lightness/jquery-ui-1.7.2.custom.css' />
     <link rel='stylesheet' href='../css/jquery.tooltip.css' />
     <link rel='stylesheet' href='admin.css' />
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.3.2.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.4.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>

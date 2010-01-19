@@ -30,9 +30,9 @@
  * clear to you.
  *}{include file="$_SHOP_theme/header.tpl" name=$name}
 {literal}
-<style>
+<style type="text/css">
   #simplemodal-overlay {background-color:#ffffff;}
-  #simplemodal-container {background-color:#fff0f0; border:2px solid #004088; padding:12px;}
+  #simplemodal-container {background-color:#ffffff; border:2px solid #004088; padding:12px;}
   #simplemodal-container a.modalCloseImg {
     background:url(images/unchecked.gif) no-repeat; /* adjust url as required */
     width:25px;
@@ -47,7 +47,7 @@
 
 </style>
 
-<script>
+<script type="text/javascript">
 function BasicPopup(a)
 {
 	var url = a.href;

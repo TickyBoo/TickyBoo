@@ -31,17 +31,52 @@
  *}
  {literal}
 <script  type="text/javascript">
+
+jQuery().ready(function(){
+  jQuery("#checkout_edit_user").click(function(e){
+    e.preventDefault();
+    
+    ajaxQManager.add({
+      url:  '?action=useredit',
+      dataType : 'html',
+      success: function(html){
+        jQuery("#showdialog").html(html).modal({
+          minWidth : 480,
+          onShow : contact.show
+        });
+      }
+    });
+    
+  });
+  var contact = {
+    'show': function (dialog) {
+      updateUserRules.submitHandler = function(form){
+        jQuery(form).ajaxSubmit({
+          dataType: "html",
+          type:'POST',
+          success: function(html, status){
+            jQuery.modal.close();
+
+          }
+        });
+        return false;
+      }
+      jQuery("#update_user").validate(updateUserRules);
+    }
+  };
+});
+/*
 function UserPopup(a)
 {
 	var url = a.href;
 	if (window.open(url, a.target || "_blank", 'toolbar=0,location=0,directories=0,status=0,menubar=0'.concat(
   	',width=', "640",	',height=',  "400",	',scrollbars=',  "1", ',resizable=', "1")))
 		{ return false; }
-}
+}*/
 </script>
 {/literal}
 
-<table border=0 cellpadding="3" bgcolor='white' width='90%'>
+<table border='0' cellpadding="3" bgcolor='white' width='90%'>
   <tr>
     {if $title eq "on"}
       <td class='TblHeader'>
@@ -68,7 +103,7 @@ function UserPopup(a)
   <tr><td class='TblHigher' nowrap>
      {user->user_email}</td></tr>
   <tr><td class='TblHigher' nowrap>
-     <div align='right'><a target='editaddress' href='?action=useredit' onclick="UserPopup(this);" >{!edit!}</a></div>
+     <div align='right'><a id="checkout_edit_user" target='editaddress' href='#'>{!edit!}</a></div>
 
   </td></tr>
 
