@@ -84,7 +84,7 @@ class EPH_authorize_aim Extends Payment{
 
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}
-            {gui->inputdate type='MY' name=cc_exp}
+            {gui->inputdate type='MY' name=cc_exp range=10}
             {gui->input name='cc_code' size='4' lenght='4'}
             {gui->EndForm title=!pay! noreset=true}
             ";

@@ -91,57 +91,77 @@ class install_mail {
 
     if (empty($_SESSION['SHOP']['mail_smtp_host'])) $_SESSION['SHOP']['mail_smtp_host'] = 'localhost';
     if (empty($_SESSION['SHOP']['mail_smtp_port'])) $_SESSION['SHOP']['mail_smtp_port'] = '25';
+    echo "<script>
+            $(document).ready(function(){
+              $('#mail_mode').change(function(){
+                var mode = $('#mail_mode').val();
 
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+                setmailmode(mode);
+              });
+              setmailmode('".$_SESSION['SHOP']['mail_mode']."');
+            });
+            var setmailmode = function(mode){
+              if (mode == 'SMTP') {
+                $('.SMTP').each(function(){
+                  $(this).show();
+                });
+              } else {
+                $('.SMTP').each(function(){
+                  $(this).hide();
+                });
+              }
+              if (mode == 'sendmail') {
+                $('.sendmail').each(function(){
+                  $(this).show();
+                });
+              } else {
+                $('.sendmail').each(function(){
+                  $(this).hide();
+                });
+              }
+            }
+         </script>";
+    echo "<table cellpadding=\"1\" cellspacing=\"3\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
                 <h2>Mail settings.</h2>
+                Config the mail server. You have the choice between the default linux-mail, sendmail and SMTP.<br>
               </td>
             </tr>
             <tr>
-              <td colspan=\"2\">
-                Config the mail server. You have the choice between the default linux-mail, sendmail and SMTP.<br><br>
-              </td>
-            </tr>
-            <tr>
-              <td valign='top'>Mailserver:</td>
+              <td width='40%' valign='top'>Mailserver:</td>
               <td>
-                <select name='mail_mode'>
+                <select id='mail_mode' name='mail_mode' size='3'>
                   <option value='' >Default linux-mail server</option>
-                  <option value='sendmail' {$chk['sendmail']}>SendMail server</option>
                   <option value='SMTP' {$chk['SMTP']}>SMTP server</option>
-                </select><br><br>
+                  <option value='sendmail' {$chk['sendmail']}>SendMail server</option>
+                </select><br>
               </td>
             </tr>
-            <tr>
-              <td width='30%'>SMTP Hostname</td>
+            <tr class='SMTP'>
+               <td colspan=\"2\" height='6px'></td>
+            </tr>
+            <tr class='SMTP'>
+              <td width='40%'>SMTP Hostname</td>
               <td><input type=\"text\" name=\"mail_smtp_host\" value=\"".$_SESSION['SHOP']['mail_smtp_host']."\" /></td>
             </tr>
-            <tr>
+            <tr class='SMTP'>
               <td width='30%'>SMTP Port</td>
               <td><input type=\"text\" name=\"mail_smtp_port\" value=\"".$_SESSION['SHOP']['mail_smtp_port']."\" /></td>
             </tr>
-            <tr>
+            <tr class='SMTP'>
                <td colspan=\"2\" width='30%' height='6px'></td>
             </tr>
-            <tr>
-              <td width='30%'>Need Authorisation</td>
-              <td><input type='checkbox' {$auth} name='mail_smtp_auth' value='1'></td>
-            </tr>
-            <tr>
+            <tr class='SMTP'>
               <td width='30%'>SMTP Username</td>
               <td><input type=\"text\" name=\"mail_smtp_user\" value=\"".$_SESSION['SHOP']['mail_smtp_user']."\" /></td>
             </tr>
-            <tr>
+            <tr class='SMTP'>
               <td width='30%'>SMTP Password</td>
               <td><input type=\"password\" name=\"mail_smtp_pass\" value=\"".$_SESSION['SHOP']['mail_smtp_pass']."\" /></td>
             </tr>
-            <tr>
-              <td width='30%' valign='top'>SMTP Helo code</td>
-              <td><input type=\"text\" name=\"mail_smtp_helo\" value=\"".$_SESSION['SHOP']['mail_smtp_helo']."\" /><br><br></td>
-            </tr>
 
-            <tr>
+            <tr class='sendmail'>
               <td valign='top'>Sendmail path:</td>
               <td><input type=\"text\" name=\"mail_sendmail\" value=\"".$_SESSION['SHOP']['mail_sendmail']."\" /></td>
               </td>

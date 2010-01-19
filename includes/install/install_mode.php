@@ -54,15 +54,13 @@ class install_mode {
     }
     $chk[$mode] = 'checked="checked"';
     $disabled = (!$_SESSION['DatabaseExist'])?'disabled':'';
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
                 <h2>Install Type</h2>
-              </td>
-            </tr>
-            <tr>
-              <td colspan=\"2\">
-                The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade. If you wish to leave your existing database unchanged select the \"UPGRADE\" option below, otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br /><br />
+                The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade.
+                If you wish to leave your existing database unchanged select the \"UPGRADE\" option below,
+                otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br />
               </td>
             </tr>
             <tr>

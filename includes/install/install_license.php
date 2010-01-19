@@ -107,14 +107,10 @@ class install_license {
   function display($install) {
     Install_Form_Open ($install->return_pg,'return(Validate_License_page());');
     $license = @file_get_contents(ROOT."LICENCE");
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+    echo "<table cellpadding=\"1\" cellspacing=\"4\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
                 <h2>Software License Agreement</h2>
-              </td>
-            </tr>
-            <tr>
-              <td colspan=\"2\">
                 <textarea rows=\"15\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;\">
                   {$license}
                 </textarea>

@@ -78,17 +78,13 @@ class install_register {
 
   function display($Install) {
     Install_Form_Open ($Install->return_pg,'Validate_Inst_Database()');
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
                 <h2>Register this copy.</h2>
-              </td>
-            </tr>
-            <tr>
-              <td colspan=\"2\">
                 Dear user,<br>To see how and where FusionTicket is used we like you to register this copy on our server.<br>
                 The only information we will register is the url that you use for your site and the information uw write below.<br><br>
-                Thanks for your support. <br><br>
+                Thanks for your support. <br>
               </td>
             </tr>
             <tr>

@@ -78,17 +78,15 @@ class install_database {
       $_SESSION['SHOP']['db_name'] = $tmp;
     }
 
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
-            <tr>
-              <td colspan=\"2\"><h2>Database Connection Settings</h2></td>
-            </tr>
+    echo "<table cellpadding=\"1\" cellspacing=\"4\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                Enter the required database connection information below to allow the installation process to create tables in the specified database.<br><br>
+                 <h2>Database Connection Settings</h2>
+                 Enter the required database connection information below to allow the installation process to create tables in the specified database.<br>
               </td>
             </tr>
             <tr>
-              <td width='30%'>Hostname</td>
+              <td width='40%'>Hostname</td>
               <td><input type=\"text\" name=\"db_host\" value=\"".$_SESSION['SHOP']['db_host']."\" /></td>
             </tr>
             <tr>

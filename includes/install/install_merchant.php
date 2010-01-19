@@ -33,26 +33,11 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
+require_once(dirname(dirname(__FILE__)).DS."admin".DS."class.adminview.php");
 
-class install_login {
+class install_merchant  {
   function precheck($Install) {
-    If ($_SESSION['ConfigExist']){
-      include (ROOT."includes/config/init_config.php");
-      $_SESSION['SHOP']  = (Array)$_SHOP;
-      $link      = OpenDatabase();
-
-      if (!$result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
-        $_SESSION['DatabaseExist'] = false;
-      } elseif ( !$row = $result->fetch_assoc()) {
-        $_SESSION['DatabaseExist'] = false;
-      } elseif ( $row['rows']>0  ) {
-        $_SESSION['DatabaseExist'] = false;
-      } else {
-        $_SESSION['DatabaseExist'] = true;
-        $_SESSION['radio'] = 'UPGRADE';
-      }
-    }
-    return  ($_SESSION['DatabaseExist']);
+    return  ($_SESSION['radio']=='NORMAL');
   }
 
   function postcheck($Install) {
@@ -64,23 +49,42 @@ class install_login {
   }
 
   function display($Install) {
+    define("organizer_name","Name");
+    define("organizer_address","Address");
+    define("organizer_plz","Zip");
+    define("organizer_ort","City");
+    define("organizer_state","State");
+    define("organizer_country","Country");
+    define("organizer_phone","Phone");
+    define("organizer_fax","Fax");
+    define("organizer_email","E-Mail");
+    define("organizer_currency","Currency");
+    define("organizer_logo","Merchant's Logo");
+    define("organizer_remove_image","Remove Logo");
+
     Install_Form_Open ($Install->return_pg,'Validate_Inst_Database()');
+  	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Login to update you system</h2>
-                 For security please login with your admin username and password. This is the one that you use to administer the system.<br /><br />
+                <h2>Merchant Detail Settings</h2>
+                Enter our required merchant details. This information can later be changed within the admin section.<br>
               </td>
-            </tr>
-            <tr>
-              <td width='40%'>Admin login:</td>
-              <td><input type=\"text\" name=\"username\" value=\"\" /></td>
-            </tr>
-            <tr>
-              <td>Admin password:</td>
-              <td><input type=\"password\" name=\"password\" value=\"\" /> (at least 6 letters)</td>
-            </tr>
-          </table>";
+            </tr>";
+
+    AdminView::print_input('organizer_name'   ,$_SESSION, $err,25,100);
+    AdminView::print_input('organizer_address',$_SESSION, $err,25,100);
+    AdminView::print_input('organizer_plz'    ,$_SESSION, $err,25,100);
+    AdminView::print_input('organizer_ort'    ,$_SESSION, $err,25,100);
+    AdminView::print_input('organizer_state'  ,$_SESSION, $err,25,100);
+    AdminView::print_countrylist('organizer_country', $_SESSION, $err);
+    AdminView::print_input('organizer_phone'  ,$_SESSION, $err,25,100 );
+    AdminView::print_input('organizer_fax'    ,$_SESSION, $err,25,100 );
+    AdminView::print_input('organizer_email'  ,$_SESSION, $err,25,100 );
+    AdminView::print_input('organizer_currency',$_SESSION, $err,4,3 );
+
+    AdminView::print_file('organizer_logo'     ,$_SESSION, $err);
+    echo " </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();
   }

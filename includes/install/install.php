@@ -80,7 +80,7 @@ include_once "install_version.php";
   </style>
 
 </head>
-<body onload="document.getElementsByTagName('install')[0].focus();">
+<body>
 <?php
 if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
   session_destroy();
@@ -90,7 +90,7 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 
 
 $states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode", "install_adminuser",
-                "install_mail","install_register","install_execute");
+                "install_merchant", "install_mail","install_register","install_execute");
 
 
 
