@@ -64,7 +64,7 @@ class install_login {
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'Validate_Inst_Database()');
+    Install_Form_Open ($Install->return_pg,'');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">

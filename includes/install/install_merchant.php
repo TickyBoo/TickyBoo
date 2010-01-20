@@ -62,7 +62,7 @@ class install_merchant  {
     define("organizer_logo","Merchant's Logo");
     define("organizer_remove_image","Remove Logo");
 
-    Install_Form_Open ($Install->return_pg,'Validate_Inst_Database()');
+    Install_Form_Open ($Install->return_pg,'');
   	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>

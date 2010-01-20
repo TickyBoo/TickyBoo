@@ -53,7 +53,7 @@ class install_database {
       if(!(@mysqli_connect_error($link) or @mysqli_error($link))){
         $link->select_db($_SESSION['SHOP']['db_name']);
         $_SESSION['radio']    = 'NORMAL';
-        $_SESSION['db_demos'] = $_REQUEST['db_demos'];
+//        $_SESSION['db_demos'] = $_REQUEST['db_demos'];
       }
     }
 
@@ -63,8 +63,31 @@ class install_database {
       if(@mysqli_errno ($link)==1049) $_SESSION['DB_Error'] = true;
       return true;
     }
-
-
+    $OrgExist = false;
+    if (ShopDB::tableExist('organizer')) {
+      $select = 'select * from Organizer LIMIT 0,1';
+      if ($Row = ShopDB::query_one_row($select)) {
+        $OrgExist = true;
+        foreach ($row as $key => $value) {
+           $_SESSION[$key] = $value;
+           
+        }
+      }
+    }
+    if ($OrgExist) {
+      $_SESSION['organizer_name'] ='Demo Owner';
+      $_SESSION['organizer_address'] = '5678 Demo St';
+      $_SESSION['organizer_ort'] = '11001';
+      $_SESSION['organizer_plz'] = 'Demo Town';
+      $_SESSION['organizer_state'] = 'DT';
+      $_SESSION['organizer_country'] = 'US';
+      $_SESSION['organizer_email'] = 'info@fusionticket.test';
+      $_SESSION['organizer_fax'] = '(555) 555-1215';
+      $_SESSION['organizer_phone'] = '(555) 555-1214';
+      $_SESSION['organizer_place'] = '';
+      $_SESSION['organizer_currency'] = 'USD';
+      $_SESSION['organizer_logo'] = 'organizer_logo_3.png';
+    }
     return true;
   }
 

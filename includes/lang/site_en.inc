@@ -1567,4 +1567,6 @@ define('order_madefinal','order_madefinal');
 ?>
 <?php
 define('username not found','username not found');
+?><?php
+define('This_page_is_not_secure','This_page_is_not_secure');
 ?>

@@ -85,7 +85,7 @@ class install_mail {
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'Validate_Inst_Database()');
+    Install_Form_Open ($Install->return_pg,'');
     $chk[$_SESSION['SHOP']['mail_mode']] = 'selected="selected"';
     $auth = ($_SESSION['SHOP']['mail_smtp_auth'])?"checked='checked'":'';
 
