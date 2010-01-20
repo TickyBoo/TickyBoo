@@ -30,6 +30,12 @@
  * clear to you.
  *}
 <!-- user_update.tpl -->
+  <div id="error-message-user" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="padding: 1em; margin-top: .7em; display:none;" >
+    <p>
+      <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+      <span id='error-text-user'>ffff</span>
+    </p>
+  </div>
 {if $usekasse}
   {if $smarty.post.submit_update}
     {if count($user_errors) eq 0}
@@ -68,7 +74,7 @@
 			{ShowFormToken name='UserUpdate'}
  			<input type='hidden' name='action' value='useredit' />
 {else}
-
+<div id="update-user-div" style="width:100%;">
   <form action="index.php" method='post' id="update_user">
     {ShowFormToken name='UserUpdate'}
     <input type='hidden' name='action' value='update' />

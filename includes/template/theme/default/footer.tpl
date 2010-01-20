@@ -53,26 +53,32 @@
 		</table>
 	</div>
 </div>
-    {literal}
-			<script type="text/javascript">
-				$(document).ready(function(){
-        //  var msg = ' errors';
-          var msg = '{/literal}{printMsg key='__Warning__' addspan=false}{literal}';
-          if(msg) {
-            $("#error-text").html(msg);
-            $("#error-message").show();
-            setTimeout(function(){$("#error-message").hide();}, 10000);
-          }
-          var msg = '{/literal}{printMsg key='__Notice__' addspan=false}{literal}';
-          if(msg) {
-            $("#notice-text").html(msg);
-            $("#notice-message").show();
-            setTimeout(function(){$("#notice-message").hide();}, 7000);
-          }
-        });
-
-    </script>
-    {/literal}
+  {literal}
+  <script type="text/javascript">
+  	$(document).ready(function(){
+    //  var msg = ' errors';
+      var emsg = "{/literal}{printMsg key='__Warning__' addspan=false}{literal}";
+      showErrorMsg(emsg);
+      var nmsg = "{/literal}{printMsg key='__Notice__' addspan=false}{literal}";
+      showNoticeMsg(nmsg);
+      
+    });
+    var showErrorMsg = function(msg){
+      if(msg) {
+        jQuery("#error-text").html(msg);
+        jQuery("#error-message").show();
+        setTimeout(function(){jQuery("#error-message").hide();}, 10000);
+      }
+    }
+    var showNoticeMsg = function(msg){
+      if(msg) {
+        jQuery("#notice-text").html(msg);
+        jQuery("#notice-message").show();
+        setTimeout(function(){jQuery("#notice-message").hide();}, 7000);
+      }
+    }
+  </script>
+  {/literal}
 
 </body>
 </html>

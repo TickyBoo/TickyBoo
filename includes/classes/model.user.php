@@ -162,6 +162,7 @@ class User extends Model{
               	WHERE User.user_id="._esc((int)$data['user_id']);
 
     		if (!$user=ShopDB::query_one_row($query)){
+    		    addWarning('failed_too_update_user');
         		die('System error while changing user data.');
     		} elseif($user['user_status']==2) {
       		if (empty($data['old_password'])) {
@@ -175,38 +176,42 @@ class User extends Model{
       			}
       		}
     		}
+        
+        if(is($data['user_status'],false)===false){ $data['user_status'] = $user['user_status']; }
     	  $status = $user['user_status'];
   	    $userup = new user();
 
     	  if ($userup->CheckValues($data, $status, $mandatory, 0, $short)){
-    	    $userup->_fill($data);
+          $userup->_fill($data);
     	    $userup->user_status = $status;
     	    if (ShopDB::Begin()){
-      	    if ($userup->save()){
-          		$set = array();
-         			if ($user ['username']<> $data['user_email']) {
-              		$set[] = "username="._esc($data['user_email']);
-            		}
-            		if (!empty($data['password1'])) {
-              		$set[] = "password="._esc(md5($data['password1']));
-            		}
+            if ($userup->save()){
+              $set = array();
+              if ($user ['username']<> $data['user_email']) {
+                $set[] = "username="._esc($data['user_email']);
+          		}
+            	if (!empty($data['password1'])) {
+                $set[] = "password="._esc(md5($data['password1']));
+           		}
 
-            		if ($set) {
-              		$set = implode(',',$set);
-            			$query="UPDATE auth SET
-                            $set
-                        	WHERE user_id="._esc((int)$user_id);
-            			if(!ShopDB::query($query)){
-            	  		return self::_abort('cant update auth');
-            			}
-            		}
-      	      }
-        		}
-            return ShopDb::Commit('Updated user');
-    	   }
+            	if ($set) {
+                $set = implode(',',$set);
+            		$query="UPDATE auth SET
+                          $set
+                       	WHERE user_id="._esc((int)$user_id);
+                if(!ShopDB::query($query)){
+         	  		  return self::_abort('cant update auth');
+           			}
+           		}
+            }
+          }
+          return ShopDB::Commit('Updated user');
+        }
+        addWarning('failed_too_update_user');
     	  return false;
-    	}else{
-      		die("Missing user id. System halted.");
+      }else{
+        addWarning('bad_user_id');
+        die("Missing user id. System halted.");
     	}
   	}
 

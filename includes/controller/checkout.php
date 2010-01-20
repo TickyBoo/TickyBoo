@@ -90,8 +90,8 @@ if (isset($_REQUEST['sor'])) {
 }
 
 if ($action == 'useredit') {
-	echo "<script>window.close();</script>";
-	echo 'closeme';
+  $array = array('status'=>false,'msg'=>con('checkout_expired'));
+  echo json_encode($array);
 } elseif(!$_REQUEST['pos']) {
 	redirect("index.php?action=cart_view",403);
 } else {
@@ -123,15 +123,13 @@ myExit();
     $smarty->assign('usekasse',true);
     if (isset($_POST['submit_update'])) {
       if ($user->update_f($_POST, $errors)) {
-        echo "
-          <script>
-             window.opener.location.href = window.opener.location.href;
-             window.close();
-          </script>";
-        die('The End');
+        $array = array('saved'=>true,'msg'=>con('user_details_saved_successfully'));
+        echo json_encode($array);
+        myExit();
       }
-      $smarty->assign('user_errors', $errors);
-      $smarty->assign('user_data',   $_POST);
+      $array = array('saved'=>false,'msg'=>printMsg('__Errors__',null,false).printMsg('__Warning__',null,false));
+      echo json_encode($array);
+      myExit();
     } else {
       $smarty->assign('user_data',   $user->asarray());
     }

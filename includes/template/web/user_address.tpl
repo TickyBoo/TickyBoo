@@ -37,11 +37,24 @@ jQuery().ready(function(){
     e.preventDefault();
     
     ajaxQManager.add({
+      dataType: 'HTML',
       url:  '?action=useredit',
-      dataType : 'html',
-      success: function(html){
+      success: function(data, status){
+        json = jQuery.trim(data);
+        try{
+          json = eval("( "+json+" )");
+        }catch(e){
+          json = new Object;
+        }
+        if(json.status == false){
+          showErrorMsg(json.msg);
+          return;
+        }else{
+          var html = data;
+        }
         jQuery("#showdialog").html(html).modal({
           minWidth : 480,
+          minHeight : 500,
           onShow : contact.show
         });
       }
@@ -52,11 +65,20 @@ jQuery().ready(function(){
     'show': function (dialog) {
       updateUserRules.submitHandler = function(form){
         jQuery(form).ajaxSubmit({
-          dataType: "html",
+          dataType: "json",
           type:'POST',
-          success: function(html, status){
-            jQuery.modal.close();
-
+          success: function(data, status){
+            if(data.saved){
+              jQuery.modal.close();
+              showNoticeMsg(data.msg);
+            }else{
+              jQuery("#error-text-user").html(data.msg);
+              jQuery("#error-message-user").show();
+              setTimeout(function(){jQuery("#error-message-user").hide();}, 10000);
+            }
+            if(data.status == false){
+              jQuery.modal.close();
+            }
           }
         });
         return false;

@@ -122,24 +122,28 @@ class User_Smarty {
 /////////////////////
 
   function update($params,&$smarty){
-  	$this->update_f($params['data'],$params['mandatory'],$params['short']);
+    if(!$this->update_f($params['data'],$params['mandatory'],$params['short'])){
+      $smarty->assign('user_errors',true);
+  	}
   }
 
   function update_f (&$member, $mandatory_l=0, $short=0){
     if ($this->user_id <> $member['user_id']) {
+      addWarning('bad_user_id');
       die('System error while changing user data');
     }
     $mandatory = convMandatory($mandatory_l);
 
 		if (User::UpdateEx($member, $mandatory_l=0, $short)) {
-      		$user = User::load($this->user_id);
-      		$this->_fill($user);
-      		$this->logged=true;
-      		return true;
-    	} else {
-      		return false;
-    	}
-  	}
+		  $user = User::load($this->user_id);
+      $this->_fill($user);
+      $this->logged=true;
+      addNotice('successfully_updated_user_details');
+      return true;
+   	} else {
+      return false;
+   	}
+ 	}
 
 /////////////////
 /////////////////
