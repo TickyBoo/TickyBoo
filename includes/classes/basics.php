@@ -481,7 +481,7 @@ function subtractDaysFromDate($date,$no_days) {
   function trace($content, $addDate=false, $addtrace=false){
     global $_SHOP;
 
-    if(is($_SHOP->trace_on,false)){
+    if(is($_SHOP->trace_on,false)){echo 'trace';
       if ($addtrace){
         $traceArr = debug_backtrace();
         if(isset($traceArr) && count($traceArr) > 3) {

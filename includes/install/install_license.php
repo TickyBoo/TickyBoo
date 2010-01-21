@@ -94,11 +94,22 @@ class install_license {
     if (ini_get('safe_mode')){
       array_push($Install->Warnings,"Your php is in 'SAFE MODE'. This can lead to problems during install (unable to create directory errors). Please read documentation.");
     }
-
-    if (!is_writable(ROOT."includes/temp")){
+    if (!file_exists(ROOT."includes/temp")){
+      mkdir (ROOT.'includes/temp');
+      chmod (ROOT.'includes/temp',775);
+    }
+    if (!file_exists(ROOT."includes/temp")){
+      array_push($Install->Errors,ROOT."includes/temp need to be created and writable by the webserver user.");
+    } elseif (!is_writable(ROOT."includes/temp")){
       array_push($Install->Errors,ROOT."includes/temp should be writable by the webserver user.");
     }
-    if (!is_writable(ROOT."files")){
+    if (!file_exists(ROOT."files")){
+      mkdir (ROOT.'files');
+      chmod (ROOT.'files',775);
+    }
+    if (!file_exists(ROOT."files")){
+      array_push($Install->Errors,ROOT."files need to be created and writable by the webserver user.");
+    } elseif (!is_writable(ROOT."files")){
       array_push($Install->Errors,ROOT."files should be writable by the webserver user.");
     }
 

@@ -89,8 +89,9 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 }
 
 
-$states = array("install_welcome", "install_license", "install_login", "install_orphans", "install_database", "install_mode",
-                "install_adminuser", "install_merchant", "install_mail","install_register","install_execute");
+$states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode",
+                "install_adminuser", "install_merchant", "install_mail","install_register","install_execute",
+                "install_orphans", 'install_finish');
 
 
 

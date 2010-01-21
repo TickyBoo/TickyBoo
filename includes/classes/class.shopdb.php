@@ -96,10 +96,13 @@ class ShopDB {
             //Time Zone should be "SET time_zone = -8" or "SET time_zone = 'London/Europe' ";
 
             return true;
-          } else {
+          } elseif ($canDie) {
              echo 'db init - ';
              Print_r($_SHOP);
              die ("No connection settings");
+          } else {
+            Print_r(debug_backtrace());die ("No connection settings");
+            return false;
           }
         }
         return true;

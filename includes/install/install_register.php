@@ -41,36 +41,25 @@ class install_register {
 
   function postcheck($Install) {
     if ($_REQUEST['do_send']) {
-      require_once(dirname(__FILE__) . '/../libs/rmail/RMail.php');
       $_REQUEST['forumname'] = clean($_REQUEST['forumname']);
       $_REQUEST['comments']  = clean($_REQUEST['comments']);
-      $email= new Rmail();
-      $type = is($_SESSION['SHOP']['mail_mode'],'mail');
-      $email->setSMTPParams($_SESSION['SHOP']['mail_smtp_host'],
-                            $_SESSION['SHOP']['mail_smtp_port'],
-                            $_SESSION['SHOP']['mail_smtp_helo'],
-                            $_SESSION['SHOP']['mail_smtp_auth'],
-                            $_SESSION['SHOP']['mail_smtp_user'],
-                            $_SESSION['SHOP']['mail_smtp_pass']);
-      if (!is_null($_SESSION['SHOP']['mail_sendmail'])) {
-        $email->setSendmailPath($_SESSION['SHOP']['mail_sendmail']);
-      }
-      $email->setTextCharset("UTF-8");
-      $email->setHtmlCharset("UTF-8");
-      $email->setHeadCharset("UTF-8");
-      $email->setSubject('Registerstation FusionTicket');
-      $email->setFrom('noreplay@fusionticket.com');
-      $email->setText("Version: ".INSTALL_VERSION."\n".
-                      "Website: ".BASE_URL."\n".
-                      "ForumUser: ". $_REQUEST['forumname']."\n".
-                      "Comment:\n".$_REQUEST['comments']);
-
-      $result = $email->send(array('lumensoh@xs4all.nl'),$type);
-    //  print_r($email);
-      if ($result) {
+      setmail();
+      //Create a message
+      $message = Swift_Message::newInstance('Registerstation FusionTicket by: '.$_SESSION['ORG']['organizer_name'] )
+        ->setFrom(array($_SESSION['ORG']['organizer_email'] => $_SESSION['ORG']['organizer_name']))
+        ->setTo(array('register@fusionticket.com'))
+        ->setBody("Version: ".INSTALL_VERSION."\n".
+                  "Website: ".BASE_URL."\n".
+                  'WebVersion: '.$_SERVER['SERVER_SOFTWARE']."\n".
+                  'PhpVersion: '.phpversion ()."\n".
+                  'MysqlVersion: '.ShopDB::GetServerInfo ()."\n".
+                  "ForumUser: ". $_REQUEST['forumname']."\n".
+                  "Comment:\n".$_REQUEST['comments'])
+        ;
+      if(!EmailSwiftSender::send($message,"",$logger,$failedAddr)){
+        array_push($Install->Errors,'Sorry the mail is not send, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
+      } else {
         array_push($Install->Warnings,'Thanks, The mail is send to us.');
-      }else{
-        array_push($Install->Warnings,'Sorry the mail is not send, check your mail settings.<br>'.var_dump($email->errors ) );
       }
     }
     return true;

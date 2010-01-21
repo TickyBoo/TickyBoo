@@ -140,22 +140,20 @@ class install_execute {
   }
 
   function display() {
-    Install_Form_Open (BASE_URL."/index.php",'', false);
-    echo "<h2>Installation Completed</h2>You are now ready to start using Fusion Ticket.<br />\n";
-    echo "For security reasons you should put the configuratin file and folder to read-only by webserver:<br>
-          - <i>includes/config/init_config.php</i>";
-    if (is_writable("$install_dir/includes/config")) {
-      echo "<br>-  <i>includes/config</i>";
-    }
+    Install_Form_Open ($Install->return_pg,'', 'Database installed/updated');
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
+            <tr>
+              <td colspan=\"2\">
+                The database and configuration file are (re)installed.
+              </td>
+            </tr>
+            <tr> <td height='6px'></td> </tr>
+            <tr>
+              <td width='30%'>Press [next] to continue
+              </td>
+            </tr>
 
-    echo "<div><br>You should also delete the <i>inst</i> folder.</div>
-          <br>
-          <ul>
-            <li><a href='".BASE_URL."/admin/index.php' target='_blank'>Go to Admin</a>.</li>
-            <li><a href='".BASE_URL."/pos/index.php' target='_blank'>Go to Box Office</a></li>
-            <li><a href='".BASE_URL."/control/index.php' target='_blank'>Go to Ticket Control Point</a></li>
-          </ul>";
-
+          </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();
 //        session_destroy();
@@ -204,4 +202,3 @@ class install_execute {
 
 }
 ?>
-

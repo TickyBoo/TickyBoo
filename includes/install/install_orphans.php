@@ -36,9 +36,12 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_orphans {
   function precheck($Install) {
-        $_SESSION['orphans'] = getophandata();
+    if (OpenDatabase()) {
+      $_SESSION['orphans'] = getophandata();
 
-    return $_SESSION['orphans'] !=='none';// $_SESSION['DatabaseExist'] ;
+      return $_SESSION['orphans'] !=='none';// $_SESSION['DatabaseExist'] ;
+    }
+    return false;
   }
 
   function postcheck($Install) {
@@ -54,6 +57,7 @@ class install_orphans {
   function display($Install) {
     global $_SHOP, $orphancheck;
     require_once(INC."classes/redundantdatachecker.php");
+    OpenDatabase();
     $data = Orphans::getlist($keys,false,"&inst_pg={$Install->return_pg}");
 
     $space = (count($keys)*60 < 780 -200)?1:0;
