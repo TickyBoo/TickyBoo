@@ -38,25 +38,32 @@ require_once (LIBS.'swift'.DS.'swift_required.php');
 
 class EmailSwiftSender {
 
-  public function send(&$swiftMessage,$testEmail='',&$logger , &$failed){
+  public function send(&$swiftMessage,$testEmail='',&$logger , &$failed, $manSet=array() ){
     global $_SHOP;
+    
+    $smtpHost = is($manSet['smtp_host'],$_SHOP->mail_smtp_host);
+    $smtpPort = is($manSet['smtp_port'],$_SHOP->mail_smtp_port);
+    $smtpSecurity = is($manSet['smtp_security'],$_SHOP->mail_smtp_security);
+    $smtpUsername = is($manSet['smtp_username'],$_SHOP->mail_smtp_username);
+    $smtpPassword = is($manSet['smtp_password'],$_SHOP->mail_smtp_password);
+    $sendmail = is($manSet['sendmail'],$_SHOP->mail_sendmail);
 
     //Add SMTP Mailer if defined.
-    if(empt($_SHOP->mail_smtp_host,false)){
-      $smtp = Swift_SmtpTransport::newInstance($_SHOP->mail_smtp_host,
-        empt($_SHOP->mail_smtp_port,'25'),
-        empt($_SHOP->mail_smtp_security,null));
+    if(empt($smtpHost,false)){
+      $smtp = Swift_SmtpTransport::newInstance($smtpHost,
+        empt($smtpPort,'25'),
+        empt($smtpSecurity,null));
 
-      if(empt($_SHOP->mail_smtp_username,false)){
-        $smtp->setUsername($_SHOP->mail_smtp_username);
-        $smtp->setPassword(empt($_SHOP->mail_smtp_password,''));
+      if(empt($smtpUsername,false)){
+        $smtp->setUsername($smtpUsername);
+        $smtp->setPassword(empt($smtpPassword,''));
       }
       $tranports[] = $smtp;
     }
     //Add sendmail
-    if(empt($_SHOP->mail_sendmail,false)){
-      $sendmail = Swift_SendmailTransport::newInstance(empt($_SHOP->mail_sendmail,'/usr/sbin/sendmail -bs'));
-      $tranports[] = $sendmail;
+    if(empt($sendmail,false)){
+      $sendMailTsprt = Swift_SendmailTransport::newInstance(empt($sendmail,'/usr/sbin/sendmail -bs'));
+      $tranports[] = $sendMailTsprt;
     }
 
     //Add mail as good measure to try and fall back on
