@@ -138,6 +138,7 @@ myExit();
   
   Function useraddressAction ($smarty){
     global $user;
+    $smarty->assign('title',   true);
     $smarty->assign('user_data',   $user->asarray());
     return "user_address";
   }
