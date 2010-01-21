@@ -34,7 +34,7 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 
-class install_execute {
+class install_finish {
   function precheck($Install) {
      return true;
   }

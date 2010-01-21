@@ -59,7 +59,7 @@ class install_execute {
     if ($errors = ShopDB::DatabaseUpgrade($tbls, true)){
       foreach ($errors as $data) {
         if ($data['error']) {
-          $Install->Errors[] = "<pre>".$data['changes']. $data['error']."<pre>";
+          $Install->Errors[] = "<pre>".$data['changes']. $data['error']."</pre>";
         } else {
          //  $Install->Warnings[] = "<pre>".$data['changes']."<pre>";
         }
@@ -67,11 +67,11 @@ class install_execute {
       if ($Install->Errors) return true;
     }
     if (ShopDB::Tableexists('SPoint')){
-         $Install->Warnings[] = "<pre>Migrated Spoint<pre>";
+         $Install->Warnings[] = "<pre>Migrated Spoint</pre>";
       self::MigrateSpoint();
     }
     if (ShopDB::Tableexists('Control')){
-         $Install->Warnings[] = "<pre>Migrated Control<pre>";
+         $Install->Warnings[] = "<pre>Migrated Control</pre>";
       self::MigrateControl();
     }
     if ($install_mode == 'NORMAL'){
