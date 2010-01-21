@@ -260,7 +260,7 @@ class orphans {
 
   );
 
-  function getlist(& $keys, $showlinks= true) {
+  function getlist(& $keys, $showlinks= true, $property='') {
     global $orphancheck, $_SHOP;
     $data = array();
     $keys = array();
@@ -297,8 +297,11 @@ class orphans {
             $z = substr($z, 1,-1);
             if (!empty($thisfix) and $showlinks) {
               $z = "<a title='{$thisfix}'
-                       href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}'>".$z."</a>\n";
+                       href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}{$property}'>".$z."</a>\n";
+            } elseif (!empty($thisfix) and !$showlinks) {
+              $z = "<span color='red' title='{$thisfix}'>".$z."</span>\n";
             }
+
             $r[$row[$x]] = $z;
           }
         }

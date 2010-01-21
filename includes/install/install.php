@@ -89,8 +89,8 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 }
 
 
-$states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode", "install_adminuser",
-                "install_merchant", "install_mail","install_register","install_execute");
+$states = array("install_welcome", "install_license", "install_login", "install_orphans", "install_database", "install_mode",
+                "install_adminuser", "install_merchant", "install_mail","install_register","install_execute");
 
 
 
@@ -109,6 +109,10 @@ if (!defined('ROOT')) {
 }
 require_once(ROOT."includes".DS."config".DS."defines.php");
 
+ if(function_exists("date_default_timezone_set") and
+    function_exists("date_default_timezone_get")) {
+   @date_default_timezone_set(@date_default_timezone_get());
+ }
 
 $root = "http://" . $_SERVER['HTTP_HOST'];
 $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
@@ -138,7 +142,7 @@ $_SESSION['is_started'] = True;
 $Install->Errors   = Array ();
 $Install->Warnings = Array ();
 $Install->return_pg  = $_REQUEST['inst_pg'];
-
+//print_r($Install);
 //echo $_REQUEST['inst_mode'],':',$_REQUEST['continue'];
   echo "
     <div id=\"wrap\">
@@ -146,12 +150,7 @@ $Install->return_pg  = $_REQUEST['inst_pg'];
         <img src=\"".BASE_URL."/images/logo.png\" border=\"0\"/>
         <h2>Installation Procedure <span style=\"color:red; font-size:14px;\"><i>[".INSTALL_VERSION."]</i></span></h2>
       </div>
-      <div id=\"navbar\">
-        <ul><li>
-
-        </li></ul>
-      </div>
-    <div id=\"right\">";
+";
 
 if ($first) {
   selectnext($Install);
@@ -198,9 +197,6 @@ function selectnext($Install,$continue = false) {
   }
 }
 ?>
-            </td>
-          </tr>
-        </table>
       </div>
       <div id="footer">
         Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office

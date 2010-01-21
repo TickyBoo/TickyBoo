@@ -105,17 +105,17 @@ class install_license {
   }
 
   function display($install) {
-    Install_Form_Open ($install->return_pg,'return(Validate_License_page());');
+    Install_Form_Open ($install->return_pg,'return(Validate_License_page());','Software License Agreement');
     $license = @file_get_contents(ROOT."LICENCE");
-    echo "<table cellpadding=\"1\" cellspacing=\"4\" width=\"100%\">
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Software License Agreement</h2>
-                <textarea rows=\"15\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;\">
+                <textarea rows=\"17\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;\">
                   {$license}
                 </textarea>
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
             <tr>
               <td colspan=\"2\">
                 <input type=\"radio\" name=\"sla_radio\" id=\"SLA_Agree_Yes\" value=\"1\" />

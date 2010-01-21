@@ -64,35 +64,35 @@ class install_database {
       return true;
     }
     $OrgExist = false;
-    if (ShopDB::tableExist('organizer')) {
+    if (ShopDB::tableExists('organizer')) {
       $select = 'select * from Organizer LIMIT 0,1';
-      if ($Row = ShopDB::query_one_row($select)) {
+      if ($row = ShopDB::query_one_row($select)) {
         $OrgExist = true;
         foreach ($row as $key => $value) {
-           $_SESSION[$key] = $value;
-           
+           $_SESSION['ORG'][$key] = $value;
+
         }
       }
     }
     if ($OrgExist) {
-      $_SESSION['organizer_name'] ='Demo Owner';
-      $_SESSION['organizer_address'] = '5678 Demo St';
-      $_SESSION['organizer_ort'] = '11001';
-      $_SESSION['organizer_plz'] = 'Demo Town';
-      $_SESSION['organizer_state'] = 'DT';
-      $_SESSION['organizer_country'] = 'US';
-      $_SESSION['organizer_email'] = 'info@fusionticket.test';
-      $_SESSION['organizer_fax'] = '(555) 555-1215';
-      $_SESSION['organizer_phone'] = '(555) 555-1214';
-      $_SESSION['organizer_place'] = '';
-      $_SESSION['organizer_currency'] = 'USD';
-      $_SESSION['organizer_logo'] = 'organizer_logo_3.png';
+      $_SESSION['ORG']['organizer_name'] ='Demo Owner';
+      $_SESSION['ORG']['organizer_address'] = '5678 Demo St';
+      $_SESSION['ORG']['organizer_ort'] = '11001';
+      $_SESSION['ORG']['organizer_plz'] = 'Demo Town';
+      $_SESSION['ORG']['organizer_state'] = 'DT';
+      $_SESSION['ORG']['organizer_country'] = 'US';
+      $_SESSION['ORG']['organizer_email'] = 'info@fusionticket.test';
+      $_SESSION['ORG']['organizer_fax'] = '(555) 555-1215';
+      $_SESSION['ORG']['organizer_phone'] = '(555) 555-1214';
+      $_SESSION['ORG']['organizer_place'] = '';
+      $_SESSION['ORG']['organizer_currency'] = 'USD';
+      $_SESSION['ORG']['organizer_logo'] = 'organizer_logo_3.png';
     }
     return true;
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'');
+    Install_Form_Open ($Install->return_pg,'','Database Connection Settings');
     if (!$_SESSION['SHOP']['db_host']) $_SESSION['SHOP']['db_host'] = 'localhost';
     if (!$_SESSION['SHOP']['db_name']){
       $tmp = strtolower( 'ft_'.INSTALL_VERSION);
@@ -101,15 +101,15 @@ class install_database {
       $_SESSION['SHOP']['db_name'] = $tmp;
     }
 
-    echo "<table cellpadding=\"1\" cellspacing=\"4\" width=\"100%\">
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                 <h2>Database Connection Settings</h2>
                  Enter the required database connection information below to allow the installation process to create tables in the specified database.<br>
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
             <tr>
-              <td width='40%'>Hostname</td>
+              <td width='30%'>Hostname</td>
               <td><input type=\"text\" name=\"db_host\" value=\"".$_SESSION['SHOP']['db_host']."\" /></td>
             </tr>
             <tr>

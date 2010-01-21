@@ -51,16 +51,16 @@ class install_adminuser {
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'');
+    Install_Form_Open ($Install->return_pg,'','New Admin login and password');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Admin login and password</h2>
-                 Please choose the username and the password for the Fusion Ticket super user.<br /><br />
+                 Please choose the username and the password for the Fusion Ticket super user.
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
             <tr>
-              <td width='40%'>Admin login:</td>
+              <td width='30%'>Admin login:</td>
               <td><input type=\"text\" name=\"admin_login\" value=\"".$_SESSION['admin_login']."\" /></td>
             </tr>
             <tr>

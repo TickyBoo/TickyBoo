@@ -33,9 +33,15 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true){
+function Install_Form_Open ($target_pg, $onsubmit='', $title=''){
   global $states; //{$states[$target_pg]}
-
+  echo "
+          <div id=\"navbar\">
+            <table width='100%'>
+              <tr><td>&nbsp;<b>{$title}</b></td></tr>
+            </table>
+          </div>
+         <div id=\"right\">";
   if (!is_numeric($target_pg)){
     echo "<form name='install' method=\"post\" action='$target_pg' onSubmit=\"".$onsubmit."\">\n";
   }else{
@@ -44,13 +50,14 @@ function Install_Form_Open ($target_pg, $onsubmit='', $ispage=true){
       echo "<input type='hidden' name=inst_pg value='{$target_pg}' /> \n";
     }
   }
-  echo "<table border=0 cellpadding=\"0\" cellspacing=\"0\" width='100%' style=\"height: 400\">";
-  echo "<tr ><td colspan=2 valign='top' height='100%' >\n"  ;
+  echo "<table border=0 cellpadding=\"0\" cellspacing=\"0\" width='100%' style=\"height: 400\">
+          <tr> <td height='6px'></td> </tr>
+          <tr ><td valign='top' height='100%' >\n"  ;
 }
 
 function Install_Form_Buttons (){
   echo "</td></tr><tr>\n";
-  echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
+  echo "<td  bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
           <input type=\"submit\" tabindex='1' value=\"Next\" name=\"do\" />
           &nbsp;
           <input type=\"button\" tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"Confirm_Inst_Cancel()\" />\n";
@@ -58,7 +65,7 @@ function Install_Form_Buttons (){
 
 function Install_Form_Rollback ($name='Back'){
   echo "</td></tr><tr>\n";
-  echo "<td  colspan=2 bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
+  echo "<td  bgcolor=\"#f5F5f5\" valign=\"bottom\" style='border-top:1px solid #c0c0c0;padding: 5px;' align=\"right\">
           <input type=\"submit\" tabindex='1' value=\"{$name}\"  name=\"do\"  />
           &nbsp;
           <input type=\"button\" tabindex='2' value=\"Cancel\" name=\"do\" onClick=\"return(Confirm_Inst_Cancel());\" />
@@ -66,7 +73,11 @@ function Install_Form_Rollback ($name='Back'){
 }
 
 function Install_Form_Close (){
-  echo "</td></tr></table></center></form>\n";
+  echo "
+        </td>
+      </tr>
+    </table>
+  </form>\n";
 }
 
 function Install_request($arr, $Sub=''){
@@ -198,5 +209,16 @@ function RemoveDir($dir, $DeleteMe) {
   if ($DeleteMe){
     @rmdir($dir);
   }
+}
+
+function setmail() {
+global $_SHOP;
+  $_SHOP->mail_smtp_host = is($_SESSION['SHOP']['mail_smtp_host'],null);
+  $_SHOP->mail_smtp_port = is($_SESSION['SHOP']['mail_smtp_port'],null);
+  $_SHOP->mail_smtp_user = is($_SESSION['SHOP']['mail_smtp_user'],null);
+  $_SHOP->mail_smtp_pass = is($_SESSION['SHOP']['mail_smtp_pass'],null);
+  $_SHOP->mail_smtp_security = is($_SESSION['SHOP']['mail_smtp_security'],null);
+  $_SHOP->mail_sendmail  = is($_SESSION['SHOP']['mail_sendmail'],null);
+  require_once (ROOT."includes/classes/email.swift.sender.php");
 }
 ?>

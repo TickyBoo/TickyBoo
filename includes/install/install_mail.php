@@ -40,132 +40,119 @@ class install_mail {
   }
 
   function postcheck($Install) {
-    Install_Request(Array('mail_mode','mail_sendmail','mail_smtp_host', 'mail_smtp_port', 'mail_smtp_auth',
-                          'mail_smtp_user', 'mail_smtp_pass', 'mail_smtp_helo'),'SHOP');
+    GLOBAL $_SHOP;
+    Install_Request(Array('mail_sendmail','mail_smtp_host', 'mail_smtp_port', 'mail_smtp_security',
+                          'mail_smtp_user', 'mail_smtp_pass'),'SHOP');
 
-    switch($_POST['mail_mode']) {
-      case 'sendmail':
-        if (empty($_POST['mail_sendmail'])) {
-          array_push($Install->Errors,'You need to fill the sendmail path to use sendmail.');
-        } else {
-          unset($_SESSION['SHOP']['mail_smtp_host']);// = null;
-          unset($_SESSION['SHOP']['mail_smtp_port']);// = null;
-          unset($_SESSION['SHOP']['mail_smtp_auth']);// = null;
-          unset($_SESSION['SHOP']['mail_smtp_user']);// = null;
-          unset($_SESSION['SHOP']['mail_smtp_pass']);// = null;
-          unset($_SESSION['SHOP']['mail_smtp_helo']);// = null;
-        }
-        break;
-      case 'SMTP':
-        if (empty($_POST['mail_smtp_host']) or empty($_POST['mail_smtp_port'])) {
-          array_push($Install->Errors,'You need to fill the Hostname and port to use SMTP.');
-        }else{
-          unset($_SESSION['SHOP']['mail_sendmail']);//  = null;
-        }
-
-        if (isset($_POST['mail_smtp_auth']) and (empty($_POST['mail_smtp_user']) or empty($_POST['mail_smtp_pass']) )) {
-          array_push($Install->Errors,'You need to fill the username and passwor to use SMTP with authrisation.');
-        }
-        break;
-    default:
-      unset($_SESSION['SHOP']['mail_mode']);//      = 'sendmail';
-
+    if (isset($_POST['usesendmail'])) {
+      if (empty($_POST['mail_sendmail'])) {
+        array_push($Install->Errors,'You need to fill the sendmail path to use sendmail.');
+      }
+    } else {
+      unset($_SESSION['SHOP']['mail_sendmail']);//  = null;
+    }
+    if (isset($_POST['usesmtp'])) {
+      if (empty($_POST['mail_smtp_host']) or empty($_POST['mail_smtp_port'])) {
+        array_push($Install->Errors,'You need to fill the Hostname and port to use SMTP.');
+      }
+    } else {
       unset($_SESSION['SHOP']['mail_smtp_host']);// = null;
       unset($_SESSION['SHOP']['mail_smtp_port']);// = null;
-      unset($_SESSION['SHOP']['mail_smtp_auth']);// = null;
       unset($_SESSION['SHOP']['mail_smtp_user']);// = null;
       unset($_SESSION['SHOP']['mail_smtp_pass']);// = null;
-      unset($_SESSION['SHOP']['mail_smtp_helo']);//= null;
+      unset($_SESSION['SHOP']['mail_smtp_security']);// = null;
+    }
+    // The next values are not used anymore so the can be removed when exist.
+    unset($_SESSION['SHOP']['mail_smtp_helo']);// = null;
+    unset($_SESSION['SHOP']['mail_smtp_auth']);// = null;
+    unset($_SESSION['SHOP']['mail_mode']);// = null;
 
-      unset($_SESSION['SHOP']['mail_sendmail']);//  = null;
-
+    if (!empty($_POST['testemail'])) {
+      setmail();
+      //Create a message
+      $message = Swift_Message::newInstance('Test email from: '.$_SESSION['ORG']['organizer_name'] )
+        ->setFrom(array($_SESSION['ORG']['organizer_email'] => $_SESSION['ORG']['organizer_name']))
+        ->setTo(array($_POST['testemail']))
+        ->setBody('This is a test mail create by the installation programm of Fusion Ticket.')
+        ;
+      if(!EmailSwiftSender::send($message,"",$logger,$failedAddr)){
+        array_push($Install->Errors,'Sorry the mail is not send, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
+      }
     }
     return true;
 
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'');
-    $chk[$_SESSION['SHOP']['mail_mode']] = 'selected="selected"';
-    $auth = ($_SESSION['SHOP']['mail_smtp_auth'])?"checked='checked'":'';
+    Install_Form_Open ($Install->return_pg,'','Mail settings.');
+    $chk[$_SESSION['SHOP']['mail_smtp_security']] = 'selected="selected"';
 
+    $transports =stream_get_transports();
     if (empty($_SESSION['SHOP']['mail_smtp_host'])) $_SESSION['SHOP']['mail_smtp_host'] = 'localhost';
     if (empty($_SESSION['SHOP']['mail_smtp_port'])) $_SESSION['SHOP']['mail_smtp_port'] = '25';
-    echo "<script>
-            $(document).ready(function(){
-              $('#mail_mode').change(function(){
-                var mode = $('#mail_mode').val();
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" border=0>
+            <tr>
+              <td colspan=\"4\">
+                Please configurate your mail server settings. You can now choice between sendmail and SMTP. <br>
+                The default linux-mail system will be used as failback.<br>
+              </td>
+            </tr>
+            <tr> <td colspan=\"2\" height='6px'></td> </tr>
+            <tr >
+               <td colspan=\"4\" ><input type=checkbox name='usesmtp' value='1'
+               ".is($_SESSION['usesmtp'],'')."> <b>Use SMTP transport:</b></td>
+            </tr>
+            <tr >
+              <td width='30%'>&nbsp;&nbsp;Hostname</td>
+              <td width='30%'><input type=\"text\"  size=40 name=\"mail_smtp_host\" value=\"".$_SESSION['SHOP']['mail_smtp_host']."\" /></td>
+              <td width='5%'>Port</td>
+              <td><input type=\"text\" size=6 name=\"mail_smtp_port\" value=\"".$_SESSION['SHOP']['mail_smtp_port']."\" /></td>
+            </tr>
+            <tr >
+              <td width='30%'>&nbsp;&nbsp;Username (opt.)</td>
+              <td colspan=\"3\" ><input type=\"text\" name=\"mail_smtp_user\" value=\"".$_SESSION['SHOP']['mail_smtp_user']."\" /></td>
+            </tr>
+            <tr >
+              <td width='30%'>&nbsp;&nbsp;Password (opt.)</td>
+              <td colspan=\"3\" ><input type=\"password\" name=\"mail_smtp_pass\" value=\"".$_SESSION['SHOP']['mail_smtp_pass']."\" /></td>
+            </tr>";
 
-                setmailmode(mode);
-              });
-              setmailmode('".$_SESSION['SHOP']['mail_mode']."');
-            });
-            var setmailmode = function(mode){
-              if (mode == 'SMTP') {
-                $('.SMTP').each(function(){
-                  $(this).show();
-                });
-              } else {
-                $('.SMTP').each(function(){
-                  $(this).hide();
-                });
-              }
-              if (mode == 'sendmail') {
-                $('.sendmail').each(function(){
-                  $(this).show();
-                });
-              } else {
-                $('.sendmail').each(function(){
-                  $(this).hide();
-                });
-              }
-            }
-         </script>";
-    echo "<table cellpadding=\"1\" cellspacing=\"3\" width=\"100%\">
-            <tr>
-              <td colspan=\"2\">
-                <h2>Mail settings.</h2>
-                Config the mail server. You have the choice between the default linux-mail, sendmail and SMTP.<br>
+        echo" <tr >
+              <td width='30%'>&nbsp;&nbsp;Security type</td>
+              <td colspan=\"3\">
+                <select name='mail_smtp_security'>
+                  <option value='' >None</option>";
+        if (in_array('ssl',$transports )){
+          echo" <option value='ssl' {$chk['SMTP']}>ssl</option>";
+        }
+        if (in_array('tls',$transports )){
+          echo" <option value='tls' {$chk['SMTP']}>tls</option>";
+        }
+        echo"</select>
               </td>
             </tr>
-            <tr>
-              <td width='40%' valign='top'>Mailserver:</td>
-              <td>
-                <select id='mail_mode' name='mail_mode' size='3'>
-                  <option value='' >Default linux-mail server</option>
-                  <option value='SMTP' {$chk['SMTP']}>SMTP server</option>
-                  <option value='sendmail' {$chk['sendmail']}>SendMail server</option>
-                </select><br>
-              </td>
-            </tr>
-            <tr class='SMTP'>
+            <tr >
                <td colspan=\"2\" height='6px'></td>
             </tr>
-            <tr class='SMTP'>
-              <td width='40%'>SMTP Hostname</td>
-              <td><input type=\"text\" name=\"mail_smtp_host\" value=\"".$_SESSION['SHOP']['mail_smtp_host']."\" /></td>
+
+            <tr >
+               <td colspan=\"4\" ><input type=checkbox name='usesendmail' value='1' ".is($_SESSION['usesendmail'],'')."> <b>Use sendmail transport:</b> </td>
             </tr>
-            <tr class='SMTP'>
-              <td width='30%'>SMTP Port</td>
-              <td><input type=\"text\" name=\"mail_smtp_port\" value=\"".$_SESSION['SHOP']['mail_smtp_port']."\" /></td>
+            <tr>
+              <td valign='top'>&nbsp;&nbsp;Sendmail path:</td>
+              <td colspan=\"3\"><input type=\"text\"  size=60  name=\"mail_sendmail\" value=\"".$_SESSION['SHOP']['mail_sendmail']."\" /><br></td>
             </tr>
-            <tr class='SMTP'>
-               <td colspan=\"2\" width='30%' height='6px'></td>
+            <tr >
+               <td colspan=\"2\" height='18px'></td>
             </tr>
-            <tr class='SMTP'>
-              <td width='30%'>SMTP Username</td>
-              <td><input type=\"text\" name=\"mail_smtp_user\" value=\"".$_SESSION['SHOP']['mail_smtp_user']."\" /></td>
+            <tr >
+               <td colspan=\"4\" ><b>Send a test email to:</b> </td>
             </tr>
-            <tr class='SMTP'>
-              <td width='30%'>SMTP Password</td>
-              <td><input type=\"password\" name=\"mail_smtp_pass\" value=\"".$_SESSION['SHOP']['mail_smtp_pass']."\" /></td>
+            <tr>
+              <td valign='top'>&nbsp;&nbsp;eMail address:</td>
+              <td colspan=\"3\"><input type=\"text\"  size=60  name=\"testemail\" value=\"".$_SESSION['testemail']."\" /></td>
             </tr>
 
-            <tr class='sendmail'>
-              <td valign='top'>Sendmail path:</td>
-              <td><input type=\"text\" name=\"mail_sendmail\" value=\"".$_SESSION['SHOP']['mail_sendmail']."\" /></td>
-              </td>
-            </tr>
           </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();

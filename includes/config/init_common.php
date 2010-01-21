@@ -156,14 +156,12 @@ if (!defined('ft_check')) {die('System intrusion ');}
                                   'opera','humour','music','other','cinema','party','exposition');
   $_SHOP->event_group_type_enum = array('','festival','tournee','theatre');
 
-  // 'mail', 'sendmail', 'smtp'
-  $_SHOP->mail_mode      = 'mail';
   $_SHOP->mail_smtp_host = null;
   $_SHOP->mail_smtp_port = null;
-  $_SHOP->mail_smtp_auth = null;
   $_SHOP->mail_smtp_user = null;
   $_SHOP->mail_smtp_pass = null;
-  $_SHOP->mail_smtp_helo = null;
+  $_SHOP->mail_smtp_security = null; // ""
+
 
   $_SHOP->mail_sendmail  = null;
 

@@ -48,7 +48,8 @@ class install_mode {
 
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'return(Validate_Inst_Upgrade());');
+
+    Install_Form_Open ($Install->return_pg,'return(Validate_Inst_Upgrade());', 'Install type');
     if (!$mode = $_SESSION['radio']){
       $mode = 'NORMAL';
     }
@@ -57,12 +58,12 @@ class install_mode {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Install Type</h2>
                 The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade.
                 If you wish to leave your existing database unchanged select the \"UPGRADE\" option below,
                 otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br />
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
             <tr>
               <td colspan=\"2\">
                 <input type=\"radio\" name=\"radio\" value=\"NORMAL\" id='doinstall'  {$chk['NORMAL']}/><label for='doinstall'>  Full (re)installation of your database</label>

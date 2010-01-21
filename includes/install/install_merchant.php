@@ -37,14 +37,13 @@ require_once(dirname(dirname(__FILE__)).DS."admin".DS."class.adminview.php");
 
 class install_merchant  {
   function precheck($Install) {
-    return  ($_SESSION['radio']=='NORMAL');
+    return  true;
   }
 
   function postcheck($Install) {
-    $link      = OpenDatabase();
-    if(!loginmycheck ($link, $_POST['username'], $_POST['password'])){
-      array_push($Install->Errors,"Admin User not found in database.");
-    }
+    Install_Request(Array('organizer_name','organizer_address', 'organizer_plz', 'organizer_ort', 'organizer_state', 'organizer_country',
+                          'organizer_phone','organizer_fax', 'organizer_currency', 'organizer_email'),'ORG');
+
     return true;
   }
 
@@ -59,31 +58,26 @@ class install_merchant  {
     define("organizer_fax","Fax");
     define("organizer_email","E-Mail");
     define("organizer_currency","Currency");
-    define("organizer_logo","Merchant's Logo");
-    define("organizer_remove_image","Remove Logo");
 
-    Install_Form_Open ($Install->return_pg,'');
-  	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+    Install_Form_Open ($Install->return_pg,'','Merchant Detail Settings');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
-              <td colspan=\"2\">
-                <h2>Merchant Detail Settings</h2>
-                Enter our required merchant details. This information can later be changed within the admin section.<br>
+                Enter the required merchant details. This information can later be changed within the admin section.<br>
               </td>
-            </tr>";
-
-    AdminView::print_input('organizer_name'   ,$_SESSION, $err,25,100);
-    AdminView::print_input('organizer_address',$_SESSION, $err,25,100);
-    AdminView::print_input('organizer_plz'    ,$_SESSION, $err,25,100);
-    AdminView::print_input('organizer_ort'    ,$_SESSION, $err,25,100);
-    AdminView::print_input('organizer_state'  ,$_SESSION, $err,25,100);
-    AdminView::print_countrylist('organizer_country', $_SESSION, $err);
-    AdminView::print_input('organizer_phone'  ,$_SESSION, $err,25,100 );
-    AdminView::print_input('organizer_fax'    ,$_SESSION, $err,25,100 );
-    AdminView::print_input('organizer_email'  ,$_SESSION, $err,25,100 );
-    AdminView::print_input('organizer_currency',$_SESSION, $err,4,3 );
-
-    AdminView::print_file('organizer_logo'     ,$_SESSION, $err);
+            </tr>
+            <tr> <td width='30%' height='6px'></td><td></td> </tr>
+";
+    AdminView::$labelwidth = '30%';
+    AdminView::print_input('organizer_name'   ,$_SESSION['ORG'], $err,25,100);
+    AdminView::print_input('organizer_address',$_SESSION['ORG'], $err,25,100);
+    AdminView::print_input('organizer_plz'    ,$_SESSION['ORG'], $err,25,100);
+    AdminView::print_input('organizer_ort'    ,$_SESSION['ORG'], $err,25,100);
+    AdminView::print_input('organizer_state'  ,$_SESSION['ORG'], $err,25,100);
+    AdminView::print_countrylist('organizer_country', $_SESSION['ORG'], $err);
+    AdminView::print_input('organizer_phone'  ,$_SESSION['ORG'], $err,25,100 );
+    AdminView::print_input('organizer_fax'    ,$_SESSION['ORG'], $err,25,100 );
+    AdminView::print_input('organizer_email'  ,$_SESSION['ORG'], $err,25,100 );
+    AdminView::print_input('organizer_currency',$_SESSION['ORG'], $err,4,3 );
     echo " </table>";
     Install_Form_Buttons ();
     Install_Form_Close ();

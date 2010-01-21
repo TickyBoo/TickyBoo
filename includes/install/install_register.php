@@ -77,22 +77,21 @@ class install_register {
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'');
+    Install_Form_Open ($Install->return_pg,'','Register this copy');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Register this copy.</h2>
-                Dear user,<br>To see how and where FusionTicket is used we like you to register this copy on our server.<br>
-                The only information we will register is the url that you use for your site and the information uw write below.<br><br>
-                Thanks for your support. <br>
+                We like to have an idea how and where FusionTicket is used. For this reason we like you to register this copy on our server.
+                The information we will register is the url, php/mysql version and the comments you write below.
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
             <tr>
-              <td>Forum login:</td>
-              <td><input type=\"text\" name=\"forumname\" value=\"\" /> Please fill her the name that you use on our website.</td>
+              <td width='30%'>Forum loginname:</td>
+              <td><input type=\"text\" name=\"forumname\" value=\"\" /> Please fill here the username that you use on our website.</td>
             </tr>
             <tr>
-              <td valign='top'>Extra comments:</td>
+              <td valign='top'>Comments:</td>
               <td >
                 <textarea rows=\"3\" name=\"comments\" cols=\"50\" >
                 </textarea>

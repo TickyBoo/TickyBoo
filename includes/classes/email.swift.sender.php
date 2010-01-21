@@ -38,9 +38,9 @@ require_once (LIBS.'swift'.DS.'swift_required.php');
 
 class EmailSwiftSender {
 
-  public function send(&$swiftMessage,$testEmail='',&$logger , &$failed, $manSet=array() ){
+  public function send(&$swiftMessage, $type='',&$logger , &$failed, $manSet=array() ){
     global $_SHOP;
-    
+
     $smtpHost = is($manSet['smtp_host'],$_SHOP->mail_smtp_host);
     $smtpPort = is($manSet['smtp_port'],$_SHOP->mail_smtp_port);
     $smtpSecurity = is($manSet['smtp_security'],$_SHOP->mail_smtp_security);
@@ -87,7 +87,7 @@ class EmailSwiftSender {
     $ret = $mailer->send($swiftMessage,$failed);
 
     if(!$ret || $ret < 1){
-      Shopdb::dblogging("email '{$type}' errors:\n".print_r($email->errors,true));
+      Shopdb::dblogging("email '{$type}' errors:\n".print_r($logger->dump(),true));
       return false;
     }else{
       return $ret;

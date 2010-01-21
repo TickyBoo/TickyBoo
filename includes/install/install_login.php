@@ -52,28 +52,38 @@ class install_login {
         $_SESSION['radio'] = 'UPGRADE';
       }
     }
+    if (!isset($_SESSION['SHOP']['mail_smtp_host'])) {
+      $_SESSION['SHOP']['mail_smtp_host'] = 'localhost';
+    } else $_SESSION['usesmtp']='checked';
+    if (!isset($_SESSION['SHOP']['mail_smtp_port'])) {
+      $_SESSION['SHOP']['mail_smtp_port'] = '25';
+    }
+    if (!isset($_SESSION['SHOP']['mail_sendmail']))  {
+      $_SESSION['SHOP']['mail_sendmail'] = '/usr/sbin/sendmail -bs';
+    } else $_SESSION['sendmail']='checked';
+
     return  ($_SESSION['DatabaseExist']);
   }
 
   function postcheck($Install) {
     $link      = OpenDatabase();
     if(!loginmycheck ($link, $_POST['username'], $_POST['password'])){
-      array_push($Install->Errors,"Admin User not found in database.");
+      array_push($Install->Errors,"Administrator not found in database.");
     }
     return true;
   }
 
   function display($Install) {
-    Install_Form_Open ($Install->return_pg,'');
+    Install_Form_Open ($Install->return_pg,'','Login to update you system');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <h2>Login to update you system</h2>
-                 For security please login with your admin username and password. This is the one that you use to administer the system.<br /><br />
+                 For security please login with your admin username and password. This is the one that you use to administer the system.
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
             <tr>
-              <td width='40%'>Admin login:</td>
+              <td width='30%'>Admin login:</td>
               <td><input type=\"text\" name=\"username\" value=\"\" /></td>
             </tr>
             <tr>
