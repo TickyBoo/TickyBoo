@@ -91,7 +91,7 @@ var loadOrder = function(){
    $("#cat-select").change(function(){
       if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
          var catId = $("#cat-select").val();
-         $("#cat-free-seats").val(catData.categories[catId].free_seats);
+         $("#ft-cat-free-seats").html(catData.categories[catId].free_seats);
          updateSeatChart();
       }
    });

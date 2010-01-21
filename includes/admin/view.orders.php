@@ -522,6 +522,7 @@ class OrderView extends AdminView{
       case 'send':  return "<font color='red'>".con('sended')."</font>";
       case 'payed': return "<font color='green'>".con('payed')."</font>";
       case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
+      case 'res':return "<font color='orange'>".con('reserved')."</font>";
       case 'reissue':return "<font color='#787878'>".con('reissued')."</font> (
       <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reissued_id']}'>
       {$order['order_reissued_id']}</a> )";

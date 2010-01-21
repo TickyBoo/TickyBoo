@@ -16,7 +16,7 @@
             {!date_from!} {!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
             {!date_to!} {!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
             <select id="event-id" name="event_id" size="1"></select>  
-            {!free_seat!}: <input readonly="readonly" id="event-free-seats" size="4" style="text-align:center;">({!approx!})
+            {!free_seat!}: <span id="ft-event-free-seats" >0</span> ({!approx!})
           </td>
         </tr>
         <tr>
@@ -25,7 +25,7 @@
             <select name='category_id' id='cat-select' style="width:250px;">
               <option value='0'></option>
             </select> 
-            {!free_seat!}: <input readonly="readonly" id="cat-free-seats" size="4" style="text-align:center;">({!approx!})
+            {!free_seat!}: <span id="ft-cat-free-seats" >0</span> ({!approx!})
           </td>
         </tr>
         <tr id='discount-name' {* style="display:none;" *}>
@@ -96,22 +96,25 @@
   <table width='100%'>
     <tr>
         <td class='title' align='left'>
-            {!ordertickets!}
+           {!ordertickets!}
         </td>
       </tr>
-
+      <tr>
+        <td style="text-align:center;">
+          <form id="ft-pos-order-form">
+            {* update->view event_date=$min_date user=user->user_id *}
+          {* if $update_view.can_reserve
+                   &nbsp;
+            <button type='button' id='reserved' name='action' value='PosReserved'>{!reserve!}</button>
+           /if
+                  *}
+            <button type='button' id='checkout' name='action' value='PosCheckout' style="float:none;">{!order_it!}</button>          
+            &nbsp;
+            <button type='button' id='cancel' name='action' value='PosCancel' style="float:none;">{!cancel!}</button>
+          </form>
+        </td>
+      </tr>
   </table>
-  <form >
-    <button type='button' id='checkout' name='action' value='PosCheckout'>{!order_it!}</button>
-  {* update->view event_date=$min_date user=user->user_id *}
-  {* if $update_view.can_reserve
-           &nbsp;
-    <button type='button' id='reserved' name='action' value='PosReserved'>{!reserve!}</button>
-   /if
-          *}
-    &nbsp;
-    <button type='button' id='cancel' name='action' value='PosCancel' >{!cancel!}</button>
-  </form>
 </div>
 <br> <br>
 <script type="text/javascript">

@@ -9,8 +9,8 @@ var clearOrder = function(){
   $("#seat-chart").html("");
   $("#date-from").val('');
   $("#date-to").val('');
-  $("#event-free-seats").val('');
-  $("#cat-free-seats").val('');
+  $("#ft-event-free-seats").html('');
+  $("#ft-cat-free-seats").html('');
   //$("#continue").attr("type","button");
   unBindSeatChart();
   updateEvents();
@@ -48,7 +48,7 @@ var eventIdChange = function(){
         }
       }
     });
-    $("#event-free-seats").val(eventData.events[eventId].free_seats);
+    $("#ft-event-free-seats").html(eventData.events[eventId].free_seats);
   }else{
     $("#cat-select").html("<option value='0'></option>");
     $("#discount-name").hide();
