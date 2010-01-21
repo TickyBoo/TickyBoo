@@ -63,7 +63,9 @@
         {/if}
         <table border='0' width='90%' cellpadding="5" bgcolor='white'>
    			  <tr>
-            <td colspan='3' class='TblHeader' align='left'>{!handlings!}</td>
+            <td colspan='3' class='TblHeader' align='left'>
+              <h2>{!handlings!}</h2>
+            </td>
      			</tr>
       		{assign var=min_date value=$cart->min_date_f()}
           {update->view event_date=$min_date}

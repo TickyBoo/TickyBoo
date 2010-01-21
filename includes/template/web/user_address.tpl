@@ -29,13 +29,11 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
- {literal}
+{literal}
 <script  type="text/javascript">
-
 jQuery().ready(function(){
-  jQuery("#checkout_edit_user").click(function(e){
+  jQuery("#ft-checkout-edit-user").live('click',function(e){
     e.preventDefault();
-    
     ajaxQManager.add({
       dataType: 'HTML',
       url:  '?action=useredit',
@@ -69,6 +67,13 @@ jQuery().ready(function(){
           type:'POST',
           success: function(data, status){
             if(data.saved){
+              ajaxQManager.add({
+                dataType: 'HTML',
+                url:  '?action=useraddress',
+                success: function(html, status){
+                  jQuery("#ft-user-details").html(jQuery(html).filter("#ft-user-details"));
+                }
+              });
               jQuery.modal.close();
               showNoticeMsg(data.msg);
             }else{
@@ -78,55 +83,67 @@ jQuery().ready(function(){
             }
             if(data.status == false){
               jQuery.modal.close();
+              showErrorMsg(data.msg);
             }
           }
         });
         return false;
       }
+      //We use the default updateValidation rules but we add our custom submit handler to it, clever eh?
       jQuery("#update_user").validate(updateUserRules);
     }
   };
 });
-/*
-function UserPopup(a)
-{
-	var url = a.href;
-	if (window.open(url, a.target || "_blank", 'toolbar=0,location=0,directories=0,status=0,menubar=0'.concat(
-  	',width=', "640",	',height=',  "400",	',scrollbars=',  "1", ',resizable=', "1")))
-		{ return false; }
-}*/
 </script>
 {/literal}
-
+<div id="ft-user-details">
 <table border='0' cellpadding="3" bgcolor='white' width='90%'>
   <tr>
     {if $title eq "on"}
       <td class='TblHeader'>
-        {!your_addr!}</td>
+        <h2>{!your_addr!}</h2>
+      </td>
     {/if}
   </tr>
-  <tr><td class='TblHigher' nowrap>
-     {user->user_firstname|clean} {user->user_lastname|clean}
+  <tr>
+    <td class='TblHigher' nowrap="" >
+      {user->user_firstname|clean} {user->user_lastname|clean}
+    </td>
   </tr>
-  <tr><td class='TblHigher' nowrap>
+  <tr>
+    <td class='TblHigher' nowrap="" >
      {user->user_address|clean}
+    </td>
   </tr>
+  
   {if $user->user_address1|clean}
-    <tr><td class='TblHigher' nowrap>
-       {user->user_address1|clean}
-    </tr>
+  <tr>
+    <td class='TblHigher' nowrap="" >
+      {user->user_address1|clean}
+    </td>
+  </tr>
   {/if}
-  <tr><td class='TblHigher' nowrap>
+  
+  <tr>
+    <td class='TblHigher' nowrap="" >
      {user->user_zip|clean} {user->user_city|clean}
+    </td>
   </tr>
-  <tr><td class='TblHigher' nowrap>
-    {gui->viewcountry value=$user->user_country|clean nolabel=true}
+  <tr>
+    <td class='TblHigher' nowrap="" >
+      {gui->viewcountry value=$user->user_country|clean nolabel=true}
+    </td>
   </tr>
-  <tr><td class='TblHigher' nowrap>
-     {user->user_email}</td></tr>
-  <tr><td class='TblHigher' nowrap>
-     <div align='right'><a id="checkout_edit_user" target='editaddress' href='#'>{!edit!}</a></div>
-
-  </td></tr>
+  <tr>
+    <td class='TblHigher' nowrap="" >
+     {user->user_email}
+    </td>
+  </tr>
+  <tr>
+    <td class='TblHigher' >
+      <div align='right'><a id="ft-checkout-edit-user" target='editaddress' href='#'>{!edit!}</a></div>
+    </td>
+  </tr>
 
 </table>
+</div>

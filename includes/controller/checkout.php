@@ -135,6 +135,12 @@ myExit();
     }
     return "user_update";
   }
+  
+  Function useraddressAction ($smarty){
+    global $user;
+    $smarty->assign('user_data',   $user->asarray());
+    return "user_address";
+  }
 
   /**
    * registerAction()
