@@ -220,7 +220,7 @@ select SQL_CALC_FOUND_ROWS *
                 <td class='admin_list_item'>$edate $etime</td>
                 <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
 
-			echo "<td class='admin_list_item' width=250 NOWRAP><nobr>xx";
+			echo "<td class='admin_list_item' width=250 NOWRAP><nobr>";
       $this->showbuttons($img_pub, $row, $history);
 			echo "
       </nobr></td></tr>\n\n";

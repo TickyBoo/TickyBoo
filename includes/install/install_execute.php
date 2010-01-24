@@ -98,6 +98,18 @@ class install_execute {
         return true;
       }
     }
+    Orphans::clearZeros('Category',     array('category_pm_id','category_event_id','category_pmp_id'));
+    Orphans::clearZeros('Event',        array('event_group_id','event_main_id'));
+    Orphans::clearZeros('Order',        array('order_owner_id'));
+    Orphans::clearZeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
+    Orphans::clearZeros('Seat',         array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
+                                              'seat_order_id'   ,'seat_pmp_id'  ,'seat_discount_id'));
+
+    shopDB::query("UPDATE Template set template_status='new'");
+    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='forgot_passwd'");
+    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='Signup_email'");
+    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
+
 
     install_execute::CreateConfig();
 
@@ -113,17 +125,6 @@ class install_execute {
     if (!$org->saveex()){
       array_push($Install->Warnings,"It was not possible to save the merchant data!".ShopDB::error());
     }
-
-    shopDB::query("UPDATE Template set template_status='new'");
-    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='forgot_passwd'");
-    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='Signup_email'");
-    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
-    Orphans::clearZeros('Category',     array('category_pm_id','category_event_id','category_pmp_id'));
-    Orphans::clearZeros('Event',        array('event_group_id','event_main_id'));
-    Orphans::clearZeros('Order',        array('order_owner_id'));
-    Orphans::clearZeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
-    Orphans::clearZeros('Seat',         array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
-                                              'seat_order_id'   ,'seat_pmp_id'  ,'seat_discount_id'));
 
     return false;
   }
