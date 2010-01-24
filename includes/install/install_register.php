@@ -43,6 +43,7 @@ class install_register {
     if ($_REQUEST['do_send']) {
       $_REQUEST['forumname'] = clean($_REQUEST['forumname']);
       $_REQUEST['comments']  = clean($_REQUEST['comments']);
+      OpenDatabase();
       setmail();
       //Create a message
       $message = Swift_Message::newInstance('Registerstation FusionTicket by: '.$_SESSION['ORG']['organizer_name'] )

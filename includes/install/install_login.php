@@ -40,12 +40,13 @@ class install_login {
       include (ROOT."includes/config/init_config.php");
       $_SESSION['SHOP']  = (Array)$_SHOP;
       $link      = OpenDatabase();
-      if (ShopDB::TableExists('Admin')) {
-        $table = 'Admin';
-      } elseif (ShopDB::TableExists('admin')) {
-        $table = 'admin';
+      if ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
+        //do nothing here;
+      } elseif ($result = $link->Query("SHOW TABLE STATUS LIKE 'admin'")) {
+        //do nothing here;
       }
-      if (!$result = $link->Query("SHOW TABLE STATUS LIKE `{$table}`")) {
+
+      if (!$result) {
         $_SESSION['DatabaseExist'] = false;
       } elseif ( !$row = $result->fetch_assoc()) {
         $_SESSION['DatabaseExist'] = false;

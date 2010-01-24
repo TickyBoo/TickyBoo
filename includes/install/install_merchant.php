@@ -34,6 +34,8 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once(dirname(dirname(__FILE__)).DS."admin".DS."class.adminview.php");
+require_once(dirname(dirname(__FILE__)).DS."classes".DS."class.model.php");
+require_once(dirname(dirname(__FILE__)).DS."classes".DS."model.organizer.php");
 
 class install_merchant  {
   function precheck($Install) {
@@ -43,8 +45,8 @@ class install_merchant  {
   function postcheck($Install) {
     Install_Request(Array('organizer_name','organizer_address', 'organizer_plz', 'organizer_ort', 'organizer_state', 'organizer_country',
                           'organizer_phone','organizer_fax', 'organizer_currency', 'organizer_email'),'ORG');
-
-    return true;
+    $org = new Organizer();
+    return $org->fillPost();
   }
 
   function display($Install) {

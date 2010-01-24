@@ -961,7 +961,7 @@ class AdminView extends AUIComponent {
    * @return mixed : false or the tooltip constant name.
    */
   protected function hasToolTip($constantName){
-    if(con($constantName."-tooltip") == $constantName."-tooltip" ){
+    if( defined($constantName."-tooltip")){
       return false;
     }else{
       return $constantName."-tooltip";

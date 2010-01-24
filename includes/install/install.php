@@ -34,7 +34,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 session_start();
-if (empty($_POST)) {
+if (empty($_REQUEST)) {
   session_destroy();
   session_start();
 }
@@ -91,7 +91,7 @@ if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
 
 $states = array("install_welcome", "install_license", "install_login", "install_database", "install_mode",
                 "install_adminuser", "install_merchant", "install_mail","install_register","install_execute",
-                "install_orphans", 'install_finish');
+                'install_finish');
 
 
 
@@ -162,9 +162,9 @@ if ($first) {
       break;
 
     case 'disp':
-      call_user_func(array ($states[$Install->return_pg], 'postcheck'),$Install);
-      if(ShowResults($Install,'post')== null) {
-        $Install->return_pg++;
+      $test = call_user_func(array ($states[$Install->return_pg], 'postcheck'),$Install);
+      if((ShowResults($Install,'post')== null) ) {
+        if ($test) $Install->return_pg++;
         selectnext($Install);
       }
 
@@ -185,7 +185,6 @@ function selectnext($Install,$continue = false) {
   global $states;
   $first = true;
   while ($first and $Install->return_pg <= count($states)) {
-    //echo $states[$Install->return_pg],':',$Install->return_pg,"<br>";
     if ($continue or call_user_func(array ($states[$Install->return_pg], 'precheck'),$Install)) {
       if(!ShowResults($Install,'pre')) {
         call_user_func(array ($states[$Install->return_pg], 'display'),$Install);
@@ -198,10 +197,18 @@ function selectnext($Install,$continue = false) {
   }
 }
 ?>
-      </div>
       <div id="footer">
         Powered by <a href="http://fusionticket.org">Fusion Ticket</a> - The Free Open Source Box Office
       </div>
+      </div>
     </div>
+    <div align=left>
+    <pre>
+<?PHP
+    print_r($_REQUEST);
+
+    print_r($_SESSION);
+?>
+  </pre></div>
   </body>
 </html>

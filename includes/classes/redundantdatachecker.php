@@ -341,7 +341,7 @@ class orphans {
                        where Category_id = {$fix[2]}") ;
         break;
       case 'Category~zeros':
-        Orphans::clear_zeros('Category', array('category_pm_id','category_event_id','category_pmp_id'));
+        Orphans::clearZeros('Category', array('category_pm_id','category_event_id','category_pmp_id'));
         break;
       // fix event issues
       case 'Discount~event_id':
@@ -457,11 +457,11 @@ class orphans {
         If ($fix[3] =='ort_id') {
           echo "<script> window.alert('Ord_id can not be cleared you need to change this from within database editor like phpmyadmin. Ask your system manager to help');</script>";
         } else {
-          Orphans::clear_zeros('Event', array('event_group_id','event_main_id'));
+          Orphans::clearZeros('Event', array('event_group_id','event_main_id'));
         }
         break;
       case 'Order~zeros':
-        Orphans::clear_zeros('Order', array('order_owner_id'));
+        Orphans::clearZeros('Order', array('order_owner_id'));
         break;
 
       case 'PlaceMap~event_id':
@@ -469,7 +469,7 @@ class orphans {
         break;
 
       case 'PlaceMapPart~zeros':
-        Orphans::clear_zeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
+        Orphans::clearZeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
         break;
 
       case 'Seat~event_id':
@@ -495,7 +495,7 @@ class orphans {
         break;
 
       case 'Seat~zeros':
-        Orphans::clear_zeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
+        Orphans::clearZeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
                                            'seat_order_id'   ,'seat_pmp_id'  ,'seat_discount_id'));
         break;
       case 'Order~owner_id':
@@ -519,7 +519,7 @@ class orphans {
 
     }
   }
-  function clear_zeros($table, $fields){
+  function clearZeros($table, $fields){
     $sql = "Update `$table` set ";
     $sets ='';
     foreach ($fields as $field) {

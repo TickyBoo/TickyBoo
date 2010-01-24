@@ -164,24 +164,29 @@ function callback($matches){
 
 Function ShowResults($Install,$inst_mode){
   If ((count($Install->Errors)>0 || count($Install->Warnings)>0)){
-    Install_Form_Open ($Install->return_pg,'');
+    Install_Form_Open ($Install->return_pg,'', 'Errors and Warnings');
     echo "<input type='hidden' name='inst_mode' value='{$inst_mode}' />\n";
+    echo "<div style='overflow: auto; height: 250px; width:100%'>";
+
     echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
     if(count($Install->Errors)>0){
-      echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Error</font></h2></td>\n</tr><tr><td>\n";
+//      echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Error</font></h2></td>\n</tr>";
+      echo "<tr><td>\n";
       echo "The installer encountered the following errors:<br><ul>\n";
-      for($i=0;$i<count($Install->Errors);$i++){echo "<li class='err'>".$Install->Errors[$i]."</li>\n";}
+      for($i=0;$i<count($Install->Errors);$i++){echo "<li type='square' class='err'>".$Install->Errors[$i]."</li>\n";}
       echo "</ul></td></tr>";
     }
     // Handle Warnings
     if(count($Install->Warnings)>0){
-      echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Warning !</font></h2></td>\n</tr><tr><td>\n";
+//      echo "<tr>\n<td colspan=\"2\"><h2><font color=\"#3366CC\">Warning !</font></h2></td>\n</tr><tr><td>\n";
+      echo "<tr><td>\n";
+      if(count($Install->Errors)>0){echo "<br>";}
       echo "The installer has issued the following warnings:<br><ul>\n";
 
-      for($i=0;$i<count($Install->Warnings);$i++){echo "<li class='warn'>".$Install->Warnings[$i]."</li>\n";}
+      for($i=0;$i<count($Install->Warnings);$i++){echo "<li type='circle' class='warn'>".$Install->Warnings[$i]."</li>\n";}
       echo "</ul></td></tr>";
     }
-    echo "</table>";
+    echo "</table></div>";
 
     If (count($Install->Errors)>0){
       Install_Form_Rollback (($inst_mode=='pre')?'Retry':'Back');

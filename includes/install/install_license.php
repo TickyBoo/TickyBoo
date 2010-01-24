@@ -57,11 +57,11 @@ class install_license {
 
     $ver = explode('.', phpversion());
 //    print_r($ver) ;
-    if ($ver[0] != 5){
+    if ((version_compare(PHP_VERSION, '5.1.0')<0) && (version_compare(PHP_VERSION, '5.4.0')>= 0)){
       array_push($Install->Errors,"FAILED: PHP version 5.2.x is required, You have php version " .phpversion() . ". Please update your server." );
-    }elseif ($ver[1] < 2){
+    }elseif (version_compare(PHP_VERSION, '5.2.1')<0){
       array_push($Install->Warnings,"WARNING: To take full advantage of the power of Fusion Ticket your server must have php 5.2.x .<br> You have php version " . phpversion() . ". Please update your server.");
-    }elseif ($ver[1] > 2 or $ver[2] > 10 or $ver[2] == 0){
+    }elseif (version_compare(PHP_VERSION, '5.3.0')>=0){
       array_push($Install->Warnings,"WARNING: this program works best with php version 5.2.x.<br> You have php version " . phpversion() . ". This shouldn't be a problem.");
     }
 

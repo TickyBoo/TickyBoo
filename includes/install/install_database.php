@@ -63,8 +63,25 @@ class install_database {
       if(@mysqli_errno ($link)==1049) $_SESSION['DB_Error'] = true;
       return true;
     }
+
+    if ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
+      //do nothing here;
+    } elseif ($result = $link->Query("SHOW TABLE STATUS LIKE 'admin'")) {
+      //do nothing here;
+    }
+    if (!$result) {
+      $_SESSION['DatabaseExist'] = false;
+    } elseif ( !$row = $result->fetch_assoc()) {
+      $_SESSION['DatabaseExist'] = false;
+    } elseif ( $row['rows']>0  ) {
+      $_SESSION['DatabaseExist'] = false;
+    } else {
+      $_SESSION['DatabaseExist'] = true;
+      $_SESSION['radio'] = 'UPGRADE';
+    }
+
     $OrgExist = false;
-    if (ShopDB::tableExists('organizer')) {
+    if (ShopDB::tableExists('Organizer')) {
       $select = 'select * from Organizer LIMIT 0,1';
       if ($row = ShopDB::query_one_row($select)) {
         $OrgExist = true;

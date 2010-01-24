@@ -33,17 +33,21 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
+require_once(INC."classes/redundantdatachecker.php");
+require_once(INC."classes".DS."class.model.php");
+require_once(INC."classes".DS."model.organizer.php");
+
 
 class install_execute {
+
   function precheck($Install) {
     global $_SHOP;
     RemoveDir(ROOT."includes/temp",false);
-
     $install_mode=$_SESSION['radio'];
 
     OpenDatabase();
     if (!ShopDB::$link) {
-      array_push($Install->Errors,"<div class=err>ERROR: can not connect to the database</div>");
+      array_push($Install->Errors,"Can not connect to the database.");
       return true;
     }
 
@@ -60,8 +64,6 @@ class install_execute {
       foreach ($errors as $data) {
         if ($data['error']) {
           $Install->Errors[] = "<pre>".$data['changes']. $data['error']."</pre>";
-        } else {
-         //  $Install->Warnings[] = "<pre>".$data['changes']."<pre>";
         }
       }
       if ($Install->Errors) return true;
@@ -96,18 +98,44 @@ class install_execute {
         return true;
       }
     }
-    shopDB::query("UPDATE Template set template_status='new'");
-    shopDB::query("UPDATE Template set template_type='systm' where template_name='forgot_passwd'");
-    shopDB::query("UPDATE Template set template_type='systm' where template_name='Signup_email'");
-    shopDB::query("UPDATE Template set template_type='systm' where template_name='email_res'");
+
     install_execute::CreateConfig();
 
+    if (getophandata()!=='none') {
+      array_push($Install->Warnings,'After the update the installer found some problems with your database.<br>'.
+                                    'To use with the new version we suggest to fix the database or create an new database.');
 
-    return true;
+      return true ;
+    }
+
+    $org = Organizer::load();
+    $org->_fill($_SESSION['ORG']);
+    if (!$org->saveex()){
+      array_push($Install->Warnings,"It was not possible to save the merchant data!".ShopDB::error());
+    }
+
+    shopDB::query("UPDATE Template set template_status='new'");
+    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='forgot_passwd'");
+    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='Signup_email'");
+    shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
+    Orphans::clearZeros('Category',     array('category_pm_id','category_event_id','category_pmp_id'));
+    Orphans::clearZeros('Event',        array('event_group_id','event_main_id'));
+    Orphans::clearZeros('Order',        array('order_owner_id'));
+    Orphans::clearZeros('PlaceMapPart', array('pmp_pm_id','pmp_ort_id','pmp_event_id'));
+    Orphans::clearZeros('Seat',         array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
+                                              'seat_order_id'   ,'seat_pmp_id'  ,'seat_discount_id'));
+
+    return false;
   }
 
   function postcheck($Install) {
-    return true;
+    if ($_POST['fixdatabase1']==2) {
+      renameTables(array('Category','Category_stat','Discount','Event','Event_group','Event_stat',
+                         'PlaceMap2','PlaceMapPart','PlaceMapZone','Seat','Order'));
+      array_push($Install->Warnings,"The next tables are renamed: Category, Category_stat, Discount, Event, Event_group, Event_stat,
+                                     PlaceMap2, PlaceMapPart, PlaceMapZone, Seat, Order. You can copy the data back yourself.");
+    }
+    return false;
   }
 
   function CreateConfig() {
@@ -139,25 +167,66 @@ class install_execute {
     return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);
   }
 
-  function display() {
-    Install_Form_Open ($Install->return_pg,'', 'Database installed/updated');
-    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
-            <tr>
-              <td colspan=\"2\">
-                The database and configuration file are (re)installed.
-              </td>
-            </tr>
+  function display($Install) {
+    global $_SHOP, $orphancheck;
+    OpenDatabase();
+    if(isset($_GET['fix'])){
+      Orphans::dofix($_GET['fix']);
+    }
+    $data = Orphans::getlist($keys,true,"&do=fix&inst_mode=post&inst_pg={$Install->return_pg}");
+
+    $space = (count($keys)*60 < 780 -200)?1:0;
+    Install_Form_Open ($Install->return_pg,'', 'Database Orphan check');
+
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width='100%'>
+            <tr><td>
+              The list below gives you a view of the orphans in your database. Look at the our website for instructions how to fix this or contact us on the forum or IRC.
+              To be on the save site, we suggest you to create a new database and import the common information in the new database. This can be done by the installer.
+            </td></tr>
             <tr> <td height='6px'></td> </tr>
-            <tr>
-              <td width='30%'>Press [next] to continue
-              </td>
-            </tr>
+            <tr> <td>
+               <input type=\"radio\" name=\"fixdatabase\" value=\"1\" id='fixdatabase1'  checked /><label for='fixdatabase1'> Fix tables manual </label>
+               <input type=\"radio\" name=\"fixdatabase\" value=\"2\" id='fixdatabase2' /><label for='fixdatabase2'>  Recreate tables </label>
+            </td> </tr>
 
           </table>";
+
+    echo "<div style='overflow: auto; height: 250px; width:100%; border: 1'>";
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width='100%'>";
+    print " <tr class='admin_list_header'>
+              <th width=130 align='left'>
+                Tablename
+              </th>
+              <th width=50 align='right'>
+                ID
+              </th>";
+    foreach ($keys as $key) {
+      print "<th width=60 align='center'> {$key}&nbsp;</th>";
+    }
+    if ($space) {
+      print "<th align='center'>&nbsp;</th>";
+    }
+
+    print "</tr>";
+    $alt =0;
+    foreach ($data as $row) {
+      print "<tr class='admin_list_row_$alt'>
+        <td class='admin_list_item'>{$row['_table']}</td>
+        <td class='admin_list_item' align='right'>{$row['_id']}</td>\n";
+      foreach ($keys as $key) {
+        print "<td align='center'>{$row[$key]}&nbsp;</td>\n";
+      }
+      if ($space) {
+        print "<th align='center'>&nbsp;</th>";
+      }
+      print "</tr>";
+      $alt = ($alt + 1) % 2;
+    }
+    echo "</table></div>\n";
     Install_Form_Buttons ();
     Install_Form_Close ();
-//        session_destroy();
   }
+
   function checkadmin($name) {
     $query="select Count(*) as count
             from Admin
@@ -200,5 +269,14 @@ class install_execute {
     ShopDB::query($sql);
   }
 
+  function renameTables($array) {
+    if (is_array($array)) {
+      foreach($array as $table) {
+        $sql = "RENAME TABLE `{$table}` TO `old_{$table}`"; // The MySQL way.
+        ShopDB::query($sql);
+      }
+    }
+  }
 }
 ?>
+

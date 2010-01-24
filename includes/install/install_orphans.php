@@ -36,11 +36,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_orphans {
   function precheck($Install) {
-    if (OpenDatabase()) {
-      $_SESSION['orphans'] = getophandata();
-
-      return $_SESSION['orphans'] !=='none';// $_SESSION['DatabaseExist'] ;
-    }
     return false;
   }
 
