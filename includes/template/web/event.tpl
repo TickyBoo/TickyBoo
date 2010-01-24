@@ -35,6 +35,8 @@
   {if $shop_event.event_rep neq 'main'}
     {include file="cat_description.tpl"}
   {/if}
+  {!shop_condition!}
 {/event}
-
-{!shop_condition!}
+{if $shop_event.event_id <= 0}
+  {include file="header.tpl" name=!event! header=!shop_no_event!}
+{/if}

@@ -54,7 +54,7 @@ class ImpExpView extends AdminView {
       $run=$_REQUEST[$this->runtype.'_type'];//
       if(in_array($run,$runlist)){
 			  $runclass = $this->runtype.'_'.$run;
-	  		require_once($_SHOP->includes_dir.DS.'admin'.DS.'transports'.DS."{$this->runtype}.{$run}.php");
+	  		require_once(INC.'admin'.DS.'transports'.DS."{$this->runtype}.{$run}.php");
 		  	$this->runobject = new $runclass;
 		  } else {
         addWarning($this->runtype.'_script_not_found');

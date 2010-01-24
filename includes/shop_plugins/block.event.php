@@ -155,7 +155,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
     $query="select $cfr * from $from $where $order_by $limit";
     $res=ShopDB::query($query);
 
-	  $part_count=shopDB::num_rows($res);
+	  $part_count=ShopDB::num_rows($res);
 
 		if($cfr){
 		  $query='SELECT FOUND_ROWS();';
@@ -166,7 +166,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 		  $tot_count=$part_count;
 		}
 
-    $event=shopDB::fetch_assoc($res);
+    $event=ShopDB::fetch_assoc($res);
 
   } else {
     $res_a=array_pop($smarty->_SHOP_db_res);
@@ -175,7 +175,7 @@ function smarty_block_event ($params, $content, &$smarty,&$repeat) {
 		$tot_count=$res_a[1];
 		$part_count=$res_a[2];
 
-    $event=shopDB::fetch_assoc($res);
+    $event=ShopDB::fetch_assoc($res);
   }
 
   $repeat=!empty($event);
