@@ -110,11 +110,11 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
 
     if ($pmp->pmp_shift) {
         $cspan = 'colspan=2';
-        $ml[1] = $mr[0] = '<td class="pm_none"><img src="{$_SHOP->images_url}dot.gif" width=5 height=1></td>';
+        $ml[1] = $mr[0] = '<td class="pm_none ft-pm-cell"><img src="{$_SHOP->images_url}dot.gif" style="width:50%;" height="1"></td>';
         $res .= '<tr>';
         $width2 = ($right - $left) * 2 + 1;
         for ($k = 0; $k <= $width2; $k++) {
-            $res .= '<td class="pm_none"><img src="{$_SHOP->images_url}dot.gif" width=5 height=1></td>';
+            $res .= '<td class="pm_none ft-pm-cell"><img src="{$_SHOP->images_url}dot.gif" style="width:50%;" height="1"></td>';
         }
         $res .= '</tr>';
     }
@@ -125,15 +125,15 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
         ///////////
         for ($k = $left; $k <= $right; $k++) {
             $seat = $pmp->data[$j][$k];
-            if ($seat[PM_ZONE] == 'L') {
+            if ($seat[PM_ZONE] === 'L') {
                 if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
-                    $res .= "<td $cspan class='label_RE'>$irow";
+                    $res .= "<td $cspan class='label_RE ft-pm-cell'>$irow";
                 } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->data[$j][$k - 1][PM_ROW]) {
-                    $res .= "<td $cspan class='label_RW'>$irow";
+                    $res .= "<td $cspan class='label_RW ft-pm-cell'>$irow";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SS' and $iseat = $pmp->data[$j + 1][$k][PM_SEAT]) {
-                    $res .= "<td $cspan class='label_SS'>$iseat";
+                    $res .= "<td $cspan class='label_SS ft-pm-cell'>$iseat";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SN' and $iseat = $pmp->data[$j - 1][$k][PM_SEAT]) {
-                    $res .= "<td $cspan class='label_SN'>$iseat";
+                    $res .= "<td $cspan class='label_SN ft-pm-cell'>$iseat";
                 } elseif (($seat[PM_LABEL_TYPE] == 'T') and !$seat[PM_LABEL_SIZE]) {
                     continue;
                 } elseif ($seat[PM_LABEL_TYPE] == 'T' and $seat[PM_LABEL_SIZE] > 0) {
@@ -141,11 +141,11 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                     if ($pmp->pmp_shift) {
                         $label_size *= 2;
                     }
-                    $res .= "<td class='label_T' colspan='$label_size'>{$seat[PM_LABEL_TEXT]}";
+                    $res .= "<td class='label_T ft-pm-cell' colspan='$label_size'>{$seat[PM_LABEL_TEXT]}";
                 } elseif ($seat[PM_LABEL_TYPE] == 'E') {
-                    $res .= "<td $cspan class='label_E'>";
+                    $res .= "<td $cspan class='label_E ft-pm-cell'>";
                 } else {
-                    $res .= "<td $cspan class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                    $res .= "<td $cspan class='pm_none ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
                 }
             } elseif ($seat[PM_ZONE] and $seat[PM_CATEGORY]) {
                 //Empty seats
@@ -153,7 +153,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                     if ($seat[PM_CATEGORY] == $cat_ident) {
                         $zone = $zones[$seat[PM_ZONE]];
                         //$res.= "<td $cspan class='pm_free'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' onmouseover='this.T_WIDTH=100;return escape(\"{$zone->pmz_name} {$seat[PM_ROW]}/{$seat[PM_SEAT]}\")'>";
-                        $res .= "<td $cspan class='pm_free'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' title='";
+                        $res .= "<td $cspan class='pm_free ft-pm-cell'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' title='";
                         if ($print_zone) {
                             $res .= $zone->pmz_name . ' ';
                         }
@@ -165,7 +165,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                         }
                         $res .= "'>";
                     } else {
-                        $res .= "<td $cspan class='pm_free'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                        $res .= "<td $cspan class='pm_free ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
                     }
                     ////////////Reserved seats, they will only be selectable if you have area='pos' set in cat...tpl
                 } elseif ($seat[PM_STATUS] == PM_STATUS_RESP) {
@@ -173,7 +173,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                         if ($seat[PM_CATEGORY] == $cat_ident) {
                             $zone = $zones[$seat[PM_ZONE]];
                             //$res.= "<td $cspan class='pm_free'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' onmouseover='this.T_WIDTH=100;return escape(\"{$zone->pmz_name} {$seat[PM_ROW]}/{$seat[PM_SEAT]}\")'>";
-                            $res .= "<td $cspan class='pm_resp'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' title='";
+                            $res .= "<td $cspan class='pm_resp ft-pm-cell'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' title='";
                             if ($print_zone) {
                                 $res .= $zone->pmz_name . ' ';
                             }
@@ -185,19 +185,19 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                             }
                             $res .= "'>";
                         } else {
-                            $res .= "<td $cspan class='pm_resp'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                            $res .= "<td $cspan class='pm_resp ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
                         }
                     } else {
-                        $res .= "<td $cspan class='pm_occupied'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                        $res .= "<td $cspan class='pm_occupied ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
                     }
                     ////////////////////////////
                 } else {
-                    $res .= "<td $cspan class='pm_occupied'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                    $res .= "<td $cspan class='pm_occupied ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $res .= "<td $cspan class='pm_nosale'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                $res .= "<td $cspan class='pm_nosale ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
             } else {
-                $res .= "<td $cspan class='pm_none'><img src='{$_SHOP->images_url}dot.gif' width=10 height=10>";
+                $res .= "<td $cspan class='pm_none ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
             }
             $res .= "</td>\n";
         }
@@ -212,16 +212,16 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
     $l = $_SHOP->lang;
     switch ($pmp->pmp_scene) {
         case 'north':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle><img src='{$_SHOP->images_url}scene_h_$l.png'></td></tr><tr><td align=center valign=middle>$res</td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align='center' valign='middle'><img src='{$_SHOP->images_url}scene_h_$l.png'></td></tr><tr><td align=center valign=middle>$res</td></tr></table>";
             break;
         case 'south':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle>$res</td></tr><tr><td align=center valign=middle><img src='{$_SHOP->images_url}scene_h_$l.png'></td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align='center' valign='middle'>$res</td></tr><tr><td align=center valign=middle><img src='{$_SHOP->images_url}scene_h_$l.png'></td></tr></table>";
             break;
         case 'east':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle>$res</td><td align=center valign=middle><img src='{$_SHOP->images_url}scene_v_$l.png'></td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align='center' valign='middle'>$res</td><td align=center valign=middle><img src='{$_SHOP->images_url}scene_v_$l.png'></td></tr></table>";
             break;
         case 'west':
-            $res = "<table border=0 class=pm_table_ext><tr><td align=center valign=middle><img src='{$_SHOP->images_url}scene_v_$l.png'></td><td align=center valign=middle>$res</td></tr></table>";
+            $res = "<table border=0 class=pm_table_ext><tr><td align='center' valign='middle'><img src='{$_SHOP->images_url}scene_v_$l.png'></td><td align='center' valign='middle' >$res</td></tr></table>";
             break;
     }
 

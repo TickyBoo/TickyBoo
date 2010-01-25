@@ -92,6 +92,20 @@
           <center>
             {placemap  category=$shop_category}
           </center>
+          {literal}
+          <script type="text/javascript">
+            jQuery(document).ready(function(){
+              jQuery(".pm_free").mouseleave(function(e){
+                if(e.shiftKey){
+                  jQuery('input.pm_check',this).attr('checked', true);
+                }
+                if(e.ctrlKey){
+                  jQuery('input.pm_check',this).attr('checked', false);
+                }
+              });
+            });
+          </script>
+          {/literal}
         {/if}
       <br />
       <center>
