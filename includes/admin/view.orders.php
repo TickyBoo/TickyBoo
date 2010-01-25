@@ -374,7 +374,7 @@ class OrderView extends AdminView{
       echo "</table>\n";
     } else {
       echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=savenote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
-      $this->form_head('Order_note_title');
+      $this->form_head(con('order_note_title'));
       $this->print_large_area('order_note',$order, $err);
       $this->form_foot();
 

@@ -59,8 +59,8 @@ class EPH_authorize_aim Extends Payment{
 	function admin_init (){
 		$form1= '
             <div class="cc_div">
-              To validate your order please introduce your payment information and
-              click on "Pay". <br> Once your payment is completed, you receive
+              To validate your order please enter your payment information and
+              click on "Pay". <br> Once payment is completed, you will receive
               your tickets.
              </div>';
 

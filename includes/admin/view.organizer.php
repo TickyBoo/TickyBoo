@@ -68,7 +68,7 @@ class OrganizerView extends AdminView{
         $org = $_POST;
       }
     }
-    $this->form((ARRAY)$org, null, con('organizer_update_title'));
+    $this->form((ARRAY)$org, null, con('merchant_update_title'));
   }
 }
 ?>
