@@ -241,7 +241,7 @@ define("index_ort_count","%d");
 
 //Merchant
 define("owner_tab","Merchant Details");
-define("organizer_update_title","Modify Merchant Information");
+define("merchant_update_title","Modify Merchant Information");
 define("organizer_name","Name");
 define("organizer_address","Address");
 define("organizer_plz","Zip");
@@ -284,31 +284,33 @@ define("res_delay_less_cart"," < Can not be less than Cart Timeout");
 define("admin_login","Login Name"); //used in admin, organizer, and spoint
 
 define("admin_user_tab","Admins");
+define("admin_id","Admin ID");
+define("admin_inuse","Admin Activated");
 define("admin_user_title","System Administrators");
-define("admin_user_update_title","Modify Administrator");
-	define("admin_user_add_title","Add System Administrator");
+define("admin_update_title","Modify Administrator");
+	define("admin_add_title","Add System Administrator");
 
 //Organizers
 define("organizer_tab","Organizers");
 define("organizer_user_title","Event Organizers");
-define("organizer_user_add_title","Add an Event Organizer");
-
-define("organizer_user_update_title","Modify Event Organizer");
+define("organizer_add_title","Add an Event Organizer");
+define("organizer_update_title","Modify Event Organizer");
 
 //Sale Points
 define("spoint_tab","Sale Points");
-define("spoint_title","Points of Sale");
-define("spoint_add_title","Add a Point of Sale");
-define("spoint_update_title","Modify Point of Sale");
+define("pos_user_title","Points of Sale");
+define("pos_add_title","Add a Point of Sale");
+define("pos_update_title","Modify Point of Sale");
 		define("kasse_name","POS Name");
 		define("user_prefs","Preferences");
 			define("user_prefs_pdf","Open Orders in Acrobat");
 			define("user_prefs_pdt","Send Orders to Printer");
 		define("user_nickname","Nickname");
 define("print_warning","When you want to directly print the PDF's, you need to setup our system.");
+
 //Ticket Takers
 define("control_tab","Ticket Takers");
-define("control_title","Ticket Takers");
+define("control_user_title","Ticket Takers");
 	define("control_view","Ticket Taker");
 	define("control_add_title","Add Ticket Taker");
 	define("control_update_title","Modify Ticket Taker");
@@ -341,6 +343,7 @@ define("ort_title","Venues");
 define("place_maps","Seat Charts");
 	define("edit_pm","Modify Seat Chart");
 	define("pm_id","Seat Chart ID");
+	define("pm_event_id","Event ID");
 	define("pm_name","Seat Chart Name");
 	define("pm_image","Seat Chart Image");
 
@@ -438,6 +441,7 @@ define("publish_event_group", "Publish Event Group");
 //Events
 define("event_tab","Events");
 define("history_tab","History");
+define("event_history_title","Previous Events");
 define("event_title","Events");
 define("checkbox_all","Check/Uncheck All");
 define("also_sub","Subevents also");
@@ -543,7 +547,7 @@ define("order_event_list_title","Orders by Event");
   define("order_details_notetab",'Note');
   define("order_statuslog",'Order status log');
   define("order_note",'Dont forget to save the note.');
-  define("Order_note_title",'Note');
+  define("order_note_title","Note");
 
 
 	//Action icons
@@ -564,7 +568,7 @@ define("order_event_list_title","Orders by Event");
 	define("sended","Sent");
 	define("payed_and_send","Paid and Sent");
 	define("canceled","Cancelled");
-	define("reissued","Re-issued");
+	define("reissue","Re-issued");
 
 	//Action menu
 	define("possible_actions","Possible Actions");
@@ -612,11 +616,16 @@ define("template_subject","Template language subject");
 define("template_text","Template language plain text");
 define("template_html","Template language HTML");
 define("send_test","Send Test Email");
+define('email_header','Email Header');
+define('email_body','Email Body');
+
 
 //Order Handling
 define("handling_title","Order Handlings");
 define("handling_add_title","Add an Order Handling");
 define("payment_update_title","Modify the Payment Type");
+define("handling_update_title","Modify the Payment Type");
+
 	define("handling_payment","Payment");
 		define("cash","Cash");
 		define("entrance","At the Entrance");
@@ -624,6 +633,8 @@ define("payment_update_title","Modify the Payment Type");
 		define("paypal","PayPal");
 		define("ideal","iDEAL");
 		define("Google","Google");
+		define("authorize_aim","AIM");
+		define("ebs","EBS");
 		define("email","Email");
 		define("post","Post");
 		define("google","Google");
@@ -654,13 +665,12 @@ define("payment_update_title","Modify the Payment Type");
   define("handling_email_template_ord_incl_ticket_pdf"," Ticket");
   define("handling_email_template_payed_incl_ticket_pdf"," Ticket");
   define("handling_email_template_send_incl_ticket_pdf"," Ticket");
-  define("handling_only_manual_send","Allways manually send sent email");
-
-
+  define("handling_only_manual_send","Always manually send email");
 
 	//paypal
 	define("pm_paypal_business","PayPal Account");
 	define("pm_paypal_test","PayPal Sandbox");
+
 	//ideal
 	define("pm_ideal_merchantid","Merchant ID");
 	define("pm_ideal_subid","Sub ID");
@@ -670,6 +680,7 @@ define("payment_update_title","Modify the Payment Type");
 	define("pm_ideal_keypass","Key Password");
 	define("pm_ideal_pcert","Pcert");
 	define("pm_ideal_certficate","Certificate");
+
 	//Google
 	define("pm_google_merchant_id","Merchant ID");
 	define("pm_google_merchant_key","Key");
@@ -678,6 +689,18 @@ define("payment_update_title","Modify the Payment Type");
 	define("pm_on_google_cancel_cancel_order","Google Cancellation");
 	define("pm_on_user_cancel_cancel_order","User Cancellation");
 	define("pm_on_refund_cancel_order","Refund");
+
+	//ebs
+	define("pm_ebs_accountid","Account ID");
+	define("pm_ebs_seckey","Security Key");
+	define("pm_ebs_test","EBS Test");
+	
+	//aim
+	define("pm_authorize_aim_login","AIM Login");
+	define("pm_authorize_aim_txnkey","Transaction Key"); 
+	define("pm_authorize_aim_test","AIM Test"); 
+
+
 
 //Search
 define("patron_tab","Patron");
@@ -742,11 +765,40 @@ define("import_langauge","Language Files");
 	define("import_csv_file","Import File Name");
 	define("langauge","New Language File Name");
 
-//Garbage
-define("empty_trash","Empty");
+//Utilities
+
+//Orphans
+define('orphan_tab','Orphans');
 define("Record_Orphan_Test","Orphaned Database Records");
+
+//Garbage
+define('garbage_tab','Garbage');
+define('garbage','Garbage');
+define("empty_trash","Empty");
 define("unused_guests","Unused Guests");
 define("order","Orders");
+
+//Email Log
+define('emaillog_tab','Email Log');
+define('email_log_list_title','Email List');
+define('el_timestamp','Date Sent');
+define('el_action','Action');
+define('el_email_to','Addressed To:');
+define('el_failed','Failed');
+define('el_received','Received');
+define('el_log','Return Log');
+define('el_bad_emails','Bad Emails');
+define('el_email_message','Email Message');
+
+
+//Backup
+define('backup_tab','Backup');
+define('backup_title','Back Up Database');
+define('comp_method','Compression Method');
+define('comp_level','Compression Level');
+define('BZip2','BZip2');
+define('GZip','GZip');
+define('Without compression','Without Compression');
 
 //---------------------------------------------------------
 //CONTROL
@@ -1029,7 +1081,12 @@ define("box_office","<h2>Box Office<span style='color:red; font-size:14px;'><i>[
 define("alert","Alert:");
 define("pos_booktickets","Book Tickets");//header.tpl
 define("seat_count","Seat Count:");
-define("pos_order_page","Order checkout");
+define("pos_order_page","Order Checkout");
+define('free_seat','Free Seat');
+
+
+//personal_order.tpl
+define('open_event','Open Event?');
 
 //process_list.tpl
 define("actions","Actions");
@@ -1149,8 +1206,8 @@ The unique bar code on this ticket allows only one entry per ticket.");
 
 
 define('login_pos','Login POS');
-define('login_orginizer','Login Administration');
-define('login_control','Login Tickettakker');
+define('login_organizer','Login Administration');
+define('login_control','Login Ticket Taker');
 
 define('add-tooltip','add-tooltip');
 define('view-tooltip','view-tooltip');
@@ -1158,416 +1215,53 @@ define('edit-tooltip','edit-tooltip');
 define('remove-tooltip','remove-tooltip');
 define('send_test-tooltip','send_test-tooltip');
 define('InfoMysqlDB','InfoMysqlDB');
-define('pos_user_title','pos_user_title');
-define('control_user_title','control_user_title');
 define('admin_list-tooltip','admin_list-tooltip');
-define('save-tooltip','save-tooltip');
-define('res-tooltip','res-tooltip');
-define('admin_id','admin_id');
-define('admin_inuse','admin_inuse');
-define('pos_update_title','pos_update_title');
-define('pos_add_title','pos_add_title');
-define('organizer_add_title','organizer_add_title');
-define('copy-tooltip','copy-tooltip');
 define('copy','copy');
 define('add_pm','add_pm');
-?><?php
-define('split_pm-tooltip','split_pm-tooltip');
-?>
-<?php
-define('pm_split','pm_split');
-?>
-<?php
-define('split_zones','split_zones');
-?>
-<?php
-define('publish-tooltip','publish-tooltip');
-?>
-<?php
-define('Published','Published');
-?>
-<?php
-define('Click to UnPublish-tooltip','Click to UnPublish-tooltip');
-?>
-<?php
-define('Click to UnPublish','Click to UnPublish');
-?>
-<?php
-define('place_map-tooltip','place_map-tooltip');
-?>
-<?php
-define('Archive-tooltip','Archive-tooltip');
-?>
-<?php
-define('Archive','Archive');
-?>
-<?php
-define('event_history_title','event_history_title');
-?>
-<?php
-define('reissue','reissue');
-?>
-<?php
-define('details-tooltip','details-tooltip');
-?>
-<?php
-define('details','details');
-?>
-<?php
-define('print-tooltip','print-tooltip');
-?>
-<?php
-define('print','print');
-?>
-<?php
-define('Change Status to Ordered?','Change Status to Ordered?');
-?>
-<?php
-define('set_status_ord-tooltip','set_status_ord-tooltip');
-?>
-<?php
-define('set_status_ord','set_status_ord');
-?>
-<?php
-define('Change Status to Sent?','Change Status to Sent?');
-?>
-<?php
-define('set_status_shipment_send-tooltip','set_status_shipment_send-tooltip');
-?>
-<?php
-define('set_status_shipment_send','set_status_shipment_send');
-?>
-<?php
-define('Change Status to Paid?','Change Status to Paid?');
-?>
-<?php
-define('set_status_payment_payed-tooltip','set_status_payment_payed-tooltip');
-?>
-<?php
-define('set_status_payment_payed','set_status_payment_payed');
-?>
-<?php
-define('Change Status to Not Paid?','Change Status to Not Paid?');
-?>
-<?php
-define('set_status_payment_none-tooltip','set_status_payment_none-tooltip');
-?>
-<?php
-define('set_status_payment_none','set_status_payment_none');
-?>
-<?php
-define('Update this order and re-issue with new tickets?','Update this order and re-issue with new tickets?');
-?>
-<?php
-define('reissue-tooltip','reissue-tooltip');
-?>
-<?php
-define('Are you sure to remove this order?','Are you sure to remove this order?');
-?>
-<?php
-define('delete-tooltip','delete-tooltip');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 54','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 54');
-?>
-<?php
-define('reissue_ticket-tooltip','reissue_ticket-tooltip');
-?>
-<?php
-define('delete_ticket','delete_ticket');
-?>
-<?php
-define('delete_ticket 54','delete_ticket 54');
-?>
-<?php
-define('delete_ticket-tooltip','delete_ticket-tooltip');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 55','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 55');
-?>
-<?php
-define('delete_ticket 55','delete_ticket 55');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 56','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 56');
-?>
-<?php
-define('delete_ticket 56','delete_ticket 56');
-?>
-<?php
-define('None','None');
-define('search-tooltip','search-tooltip');
-?><?php
-define('search_choice_one_field','search_choice_one_field');
-?>
-<?php
-define('search_choice_event','search_choice_event');
-?>
-<?php
-define('search_choice_seat_row_nr','search_choice_seat_row_nr');
-?>
-<?php
-define('Change Status to Not Sent?','Change Status to Not Sent?');
-?>
-<?php
-define('set_status_shipment_none-tooltip','set_status_shipment_none-tooltip');
-?>
-<?php
-define('set_status_shipment_none','set_status_shipment_none');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 2','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 2');
-?>
-<?php
-define('delete_ticket 2','delete_ticket 2');
-?>
-<?php
-define('approx','approx');
-?>
-<?php
-define('order_error_message','order_error_message');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 1','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 1');
-?>
-<?php
-define('delete_ticket 1','delete_ticket 1');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 3','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 3');
-?>
-<?php
-define('delete_ticket 3','delete_ticket 3');
-?>
-<?php
-define('Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 4','Re-issue the ticket (recalculate unique barcode)? Ticket Nr: 4');
-?>
-<?php
-define('delete_ticket 4','delete_ticket 4');
-?>
-<?php
-define('admin_update_title','admin_update_title');
-?>
-<?php
-define('order_notice_message','order_notice_message');
-?><?php
-define('file_not_exsist','file_not_exsist');
-?>
-<?php
-define('orphan_tab','Orphans');
-?>
-<?php
-define('garbage_tab','Garbage');
-?>
-<?php
-define('emaillog_tab','Email log');
-?>
-<?php
-define('backup_tab','Backup');
-?>
-<?php
-define('email_log_title','Email_log list');
-?>
-<?php
-define('English','English');
-?>
-<?php
-define('email_header','email_header');
-?>
-<?php
-define('email_body','email_body');
-?>
-<?php
-define('email_log_list_title','email_log_list_title');
-?>
-<?php
-define('el_timestamp','Date');
-?>
-<?php
-define('el_action','Action');
-?>
-<?php
-define('el_email_to','TO email');
-?>
-<?php
-define('el_failed','Failed');
-?>
-<?php
-define('el_received','Received');
-?>
-<?php
-define('el_log','Return Log');
-?>
-<?php
-define('el_bad_emails','Bad Emails');
-?>
-<?php
-define('el_email_message','Email Message');
-?><?php
-define('garbage','garbage');
-?><?php
-define('email_resSuccess - Template Compiled!','email_resSuccess - Template Compiled!');
-?>
-<?php
-define('forgot_passwdSuccess - Template Compiled!','forgot_passwdSuccess - Template Compiled!');
-?>
-<?php
-define('Invoice_pdf2Success - Template Compiled!','Invoice_pdf2Success - Template Compiled!');
-?>
-<?php
-define('Order_ConfirmedSuccess - Template Compiled!','Order_ConfirmedSuccess - Template Compiled!');
-?>
-<?php
-define('Receipt_pdf2Success - Template Compiled!','Receipt_pdf2Success - Template Compiled!');
-?>
-<?php
-define('Reserved_Invoice_AttachedSuccess - Template Compiled!','Reserved_Invoice_AttachedSuccess - Template Compiled!');
-?>
-<?php
-define('Signup_emailSuccess - Template Compiled!','Signup_emailSuccess - Template Compiled!');
-?>
-<?php
-define('Tickets_AttachedSuccess - Template Compiled!','Tickets_AttachedSuccess - Template Compiled!');
-?>
-<?php
-define('Ticket_pdf2Success - Template Compiled!','Ticket_pdf2Success - Template Compiled!');
-?>
-<?php
-define('backup_title','backup_title');
-?>
-<?php
-define('comp_methods','comp_methods');
-?>
-<?php
-define('GZip','GZip');
-?>
-<?php
-define('Without compression','Without compression');
-?>
-<?php
-define('comp_levels','comp_levels');
-?>
-<?php
-define('9 (maximum)','9 (maximum)');
-?>
-<?php
-define('8','8');
-?>
-<?php
-define('7','7');
-?>
-<?php
-define('6','6');
-?>
-<?php
-define('5 (average)','5 (average)');
-?>
-<?php
-define('4','4');
-?>
-<?php
-define('3','3');
-?>
-<?php
-define('2','2');
-?>
-<?php
-define('1 (minimum)','1 (minimum)');
-?>
-<?php
-define('comp_method','comp_method');
-?>
-<?php
-define('comp_level','comp_level');
-?>
-<?php
-define('Bill','Bill');
-?>
-<?php
-define('Others','Others');
-?>
-<?php
-define('free_seat','free_seat');
-?>
-<?php
-define('wrong_input_ids','wrong_input_ids');
-?>
-<?php
-define('bad_cart_item','bad_cart_item');
-?>
-<?php
-define('ClassCatch:','ClassCatch:');
-?>
-<?php
-define('ClassCatch:Address in mailbox given [] does not comply with RFC 2822, 3.6.2.','ClassCatch:Address in mailbox given [] does not comply with RFC 2822, 3.6.2.');
-?>
-<?php
-define('order_payed_already','order_payed_already');
-?>
-<?php
-define('order_payed_total','order_payed_total');
-?>
-<?php
-define('pay','pay');
-?>
-<?php
-define('compilation_failed','compilation_failed');
-?>
-<?php
-define('Order_Confirmedcompilation_failed','Order_Confirmedcompilation_failed');
-?>
-<?php
-define('Tickets_Attachedcompilation_failed','Tickets_Attachedcompilation_failed');
-?>
-<?php
-define('err_blank_or_allready','err_blank_or_allready');
-?>
-<?php
-define('select','select');
-?>
-<?php
-define('remove_group-tooltip','remove_group-tooltip');
-?>
-<?php
-define('en','en');
-?>
-<?php
-define('testcompilation_failed','testcompilation_failed');
-?>
-<?php
-define('testSuccess - Template Compiled!','testSuccess - Template Compiled!');
-?>
-<?php
-define('email_rescompilation_failed','email_rescompilation_failed');
-?>
-<?php
-define('forgot_passwdcompilation_failed','forgot_passwdcompilation_failed');
-?>
-<?php
-define('Reserved_Invoice_Attachedcompilation_failed','Reserved_Invoice_Attachedcompilation_failed');
-?>
-<?php
-define('Signup_emailcompilation_failed','Signup_emailcompilation_failed');
-?>
-<?php
-define('test2Success - Template Compiled!','test2Success - Template Compiled!');
-?>
-<?php
-define('BZip2','BZip2');
-?>
-<?php
-define('OrderNotFound','OrderNotFound');
-define('orderDescription','Fusion ticket Order Description');
 
-?>
-<?php
-define('open_event','open_event');
-?>
-<?php
-define('order_madefinal','order_madefinal');
-?>
-<?php
-define('username not found','username not found');
-?><?php
-define('This_page_is_not_secure','This_page_is_not_secure');
+define('pm_split','Split Placemap');
+define('split_zones','Split Zones');
+define('Published','Published');
+define('Archive','Archive');
+define('details','Details');
+define('print','Print');
+define('set_status_ord','Mark as Ordered');
+define('set_status_shipment_send','Mark as Sent');
+define('set_status_payment_payed','Mark as Paid');
+define('set_status_payment_none','Mark as Not Paid');
+define('delete_ticket','Delete Ticket');
+define('search_choice_one_field','search_choice_one_field');
+define('search_choice_event','search_choice_event');
+define('search_choice_seat_row_nr','search_choice_seat_row_nr');
+define('set_status_shipment_none','set_status_shipment None');
+define('approx','approx');
+define('order_error_message','order_error_message');
+define('order_notice_message','order_notice_message');
+
+define('English','English');
+
+
+
+
+define('order_payed_already','Order Already Paid');
+define('order_payed_total','Total Paid');
+define('pay','Pay');
+
+
+
+define('orderDescription','Fusion Ticket Order Description');
+
+
+
+//warn and notices
+define('This_page_is_not_secure','This page is not Secure!');
+define('order_madefinal','Order is Complete');
+define('OrderNotFound','Order NotFound');
+define('err_blank_or_allready','Error, Blank or already in use!');
+define('compilation_failed','Compilation Failed!');
+define('ClassCatch:','Class Catch:');
+define('wrong_input_ids','Wrong Input Id');
+define('file_not_exsist','File does Not Exist!');
+
+
 ?>

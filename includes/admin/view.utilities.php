@@ -135,11 +135,11 @@ class UtilitiesView extends AdminView{
     echo "<tr><td class='admin_list_title' colspan='4' align='left'>" . con('email_log_list_title') . "</td>\n";
     echo "</tr>\n";
     print " <tr class='admin_list_header'>
-              <th width=140 align='left'>Date </th>
-              <th align='left'>Action</th>
-              <th align='left'>TO email</th>
-              <th align='left'>Fail</th>
-              <th align='left' colspan='2' >Received</th>
+              <th width=140 align='left'>".con('el_timestamp')." </th>
+              <th align='left'>".con('el_action')."</th>
+              <th align='left'>".con('el_email_to')." </th>
+              <th align='left'>".con('el_failed')."</th>
+              <th align='left' colspan='2' >".con('el_received')."</th>
               ";
 
 		$alt = 0;
