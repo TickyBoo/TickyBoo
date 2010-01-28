@@ -94,9 +94,37 @@ class Admins extends Model {
   }
 
   function delete() {
+    if($this->isDeleteSelf() || $this->isLastAdmin()){
+      return false;
+    }
     if (parent::delete() and $this->user) {
       return $this->user->delete();
     }
+  }
+  
+  private function isLastAdmin(){
+    if(strcasecmp($this->admin_status,"admin") == 0){
+      $query="SELECT COUNT(*) AS admincount 
+        FROM Admin
+        WHERE admin_status='admin'
+          AND admin_id <> "._esc((int)$this->admin_id);
+      //Any other users apart from you?
+      if(!$res=ShopDB::query_one_row($query)){
+        user_error(ShopDB::error());
+      }elseif($res["admincount"]<1){
+        addWarning('last_admin');
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  private function isDeleteSelf(){
+    if($_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'] == $this->admin_id){
+      addWarning('cant_delete_self');
+      return true; 
+    }
+    return false;
   }
 }
 

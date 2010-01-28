@@ -482,7 +482,7 @@ class AdminView extends AUIComponent {
 
       }elseif(empt($options['tooltiptext'],false)){
         $toolTipText = $options['tooltiptext'];
-        $toolTipName = empt($toolTipName,$name."-tooltip");
+        $toolTipName = empt($toolTipName,$name."_tooltip");
 
       }elseif(!empt($toolTipName,false)){
         $hasTTClass = '';
@@ -961,10 +961,10 @@ class AdminView extends AUIComponent {
    * @return mixed : false or the tooltip constant name.
    */
   protected function hasToolTip($constantName){
-    if( defined($constantName."-tooltip")){
+    if(!defined($constantName."_tooltip")){
       return false;
     }else{
-      return $constantName."-tooltip";
+      return $constantName."_tooltip";
     }
   }
 

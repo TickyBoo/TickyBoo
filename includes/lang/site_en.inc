@@ -68,10 +68,11 @@ define("icon_nosal_alt","UnPublished");
 
 
 //TOOLTIPS COULD BE MOVED TO ANOTHER FILE
-//By default they use the name of the item plus _tooltip eg. add-tooltip
-
-define("add_venue-tooltip","Add Venue");
-define("compile_all-tooltip","This will (re)compile all the templates to check there all valid.");
+//By default they use the name of the item plus _tooltip eg. add_venue button would be add_venue_tooltip
+define("add_tooltip","Add");
+define("edit_tooltip","Edit item");
+define("add_venue_tooltip","Add a new Venue");
+define("compile_all_tooltip","This will (re)compile all the templates to check there all valid.");
 
 //NAVIGATION
 //should remain the same throughout all pages.
@@ -130,6 +131,7 @@ define("already_exist","This Name Already Exists. Choose Another!");
 define("useralreadyexist","This E-mail is Already Registered in the Database!");
 define("AutoCancel_order","Auto Cancel: Failed to Order!");
 define("AutoCancel_paying","Auto Cancel: Failed to Pay for Order!");
+define("cant_delete_self","You can not delete yourself!");
 define("cannot_find_seat","Cannot Find Seat!");
 define("cannot_seal","Internal Error: Cannot Seal Credit Card Info!");
 define("cannot_store","Internal Error: Cannot Store Credit Card Info!");
