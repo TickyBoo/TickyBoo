@@ -32,7 +32,7 @@ define("dts_day_arr", "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday"
 //for continuity all Buttons & Links should be defined the same if initiating the same action
 define("add","Add");
 define("add_row","Add");
-define("add_venue","Add");
+define("add_venue","Add ");
 define("add_tickets","Add Ticket(s)");
 define("admin_list","List");
 define("cancel","Cancel Order?");
@@ -70,9 +70,25 @@ define("icon_nosal_alt","UnPublished");
 //TOOLTIPS COULD BE MOVED TO ANOTHER FILE
 //By default they use the name of the item plus _tooltip eg. add_venue button would be add_venue_tooltip
 define("add_tooltip","Add");
-define("edit_tooltip","Edit item");
+define("edit_tooltip","Edit Item");
 define("add_venue_tooltip","Add a new Venue");
-define("compile_all_tooltip","This will (re)compile all the templates to check there all valid.");
+define("compile_all_tooltip","This will (re)compile all the templates to check they are valid.");
+define('copy','Copy');
+define('add_pm','Add Placemap');
+define('pm_split','Split Placemap');
+define('split_zones','Split Zones');
+define('Published','Published');
+define('Archive','Archive');
+define('details','Details');
+define('print','Print');
+define('set_status_ord','Set to Ordered');
+define('set_status_shipment_send','Set to Sent');
+define('set_status_shipment_none','Set to Not Sent');
+define('set_status_payment_payed','Set to Paid');
+define('set_status_payment_none','Set to Not Paid');
+define('delete_ticket','Delete Ticket');
+
+
 
 //NAVIGATION
 //should remain the same throughout all pages.
@@ -100,7 +116,7 @@ define("order_id","Order Number");
 define("remove_image","Remove Image");
 define("tickets","Tickets");
 define("welcome","Welcome");
-define("yes"," YES");
+define("yes"," Yes");
 
 //User Globals
 //basic user information not page specific.
@@ -205,6 +221,24 @@ define("too_low","Please Enter a Number Larger than 0 !");
 define("To_Trash","Sent to Garbage");
 define("undefined","Undefined!");
 
+define('This_page_is_not_secure','This page is not Secure!');
+define('order_madefinal','Order is Complete');
+define('OrderNotFound','Order Not Found');
+define('err_blank_or_allready','Error, Blank or already in use!');
+define('compilation_failed','Compilation Failed!');
+define('ClassCatch:','Class Catch:');
+define('wrong_input_ids','Wrong Input Id');
+define('file_not_exsist','File does Not Exist!');
+define('username_not_found','User Name Not Found!');
+define('order_error_message','Order Error Message');
+define('order_notice_message','Order Notice Message');
+define('search_choice_one_field','Choose a Field to Search!');
+define('search_choice_event','Choose an Event to Search!');
+define('search_choice_seat_row_nr','Choose a Seat/Row to Search!');
+define('order_payed_already','Order Already Paid');
+define('order_payed_total','Total Paid');
+
+
 //------------------------------------------------------
 //ADMIN
 //these defines are seperated by page and are page specific.
@@ -230,6 +264,7 @@ define("current_version",	"Version:");
 define("InfoWebVersion",	"Server Software");
 define("InfoPhpVersion",	"PHP Version");
 define("InfoMysqlVersion", 	"MySQL Version");
+define('InfoMysqlDB',		'Database');
 define("InfoUserCount",    	"User count:");
 define("InfoGroupCount",   	"Group count:");
 define("InfoVenueCount",   	"Venue count:");
@@ -958,7 +993,7 @@ define("pwd_forgot","Forgotten your Password?");
 define("forgot_password","Forgotten your Password?");
 define("pwd_err","User not found or other problem occured");
 define("pwd_is_sent","Your new password was sent to your e-mail");
-define("pwd_note","Enter your e-mail address here. Click on 'Send Password'and a new password will be emailed to you");
+define("pwd_note","Enter your e-mail address here. Click on 'Send Password' and a new password will be emailed to you");
 
 //help.tpl
 define("helpme","Help information");
@@ -1084,7 +1119,7 @@ define("alert","Alert:");
 define("pos_booktickets","Book Tickets");//header.tpl
 define("seat_count","Seat Count:");
 define("pos_order_page","Order Checkout");
-define('free_seat','Free Seat');
+define('free_seat','Seats Available:');
 
 
 //personal_order.tpl
@@ -1126,7 +1161,7 @@ define("shipmentstatus","Shipment Status");
 define("next_order_id","Next Order ID");
 //process_view.tpl; view.tpl; view_reorder.tpl
 define("cancel_ticket","Cancel Ticket");
-define("reissueted","Re-issued");
+define("reissued","Re-issued");
 
 //user.tpl
 define("exist_user","Existing");
@@ -1135,10 +1170,10 @@ define("new_partron","New Patron");
 //view_options.tpl
 define("open_with_acrobat","Open Orders in Acrobat");
 define("preferences","Preferences");
-define("send_orders_printer","Send Orders to printer");
+define("send_orders_printer","Send Orders to Printer");
 
 define("select_country","Select Country");
-define("eph_cash_confirm","The order is created, press 'pay' to continue.");
+define("eph_cash_confirm","The order is created, press 'Pay' to continue.");
 
 //------------------------------------------------------
 //Not quite sure about these.  8/26/09 Lou
@@ -1211,59 +1246,23 @@ define('login_pos','Login POS');
 define('login_organizer','Login Administration');
 define('login_control','Login Ticket Taker');
 
-define('add-tooltip','add-tooltip');
-define('view-tooltip','view-tooltip');
-define('edit-tooltip','edit-tooltip');
-define('remove-tooltip','remove-tooltip');
-define('send_test-tooltip','send_test-tooltip');
-define('InfoMysqlDB','InfoMysqlDB');
-define('admin_list-tooltip','admin_list-tooltip');
-define('copy','copy');
-define('add_pm','add_pm');
-
-define('pm_split','Split Placemap');
-define('split_zones','Split Zones');
-define('Published','Published');
-define('Archive','Archive');
-define('details','Details');
-define('print','Print');
-define('set_status_ord','Mark as Ordered');
-define('set_status_shipment_send','Mark as Sent');
-define('set_status_payment_payed','Mark as Paid');
-define('set_status_payment_none','Mark as Not Paid');
-define('delete_ticket','Delete Ticket');
-define('search_choice_one_field','search_choice_one_field');
-define('search_choice_event','search_choice_event');
-define('search_choice_seat_row_nr','search_choice_seat_row_nr');
-define('set_status_shipment_none','set_status_shipment None');
-define('approx','approx');
-define('order_error_message','order_error_message');
-define('order_notice_message','order_notice_message');
+define('approx','Approx');
 
 define('English','English');
 
-
-
-
-define('order_payed_already','Order Already Paid');
-define('order_payed_total','Total Paid');
 define('pay','Pay');
-
-
 
 define('orderDescription','Fusion Ticket Order Description');
 
 
-
-//warn and notices
-define('This_page_is_not_secure','This page is not Secure!');
-define('order_madefinal','Order is Complete');
-define('OrderNotFound','Order NotFound');
-define('err_blank_or_allready','Error, Blank or already in use!');
-define('compilation_failed','Compilation Failed!');
-define('ClassCatch:','Class Catch:');
-define('wrong_input_ids','Wrong Input Id');
-define('file_not_exsist','File does Not Exist!');
-
+//define('print-tooltip','Print');
+//define('unpublish-tooltip','Unpublish');
+//define('add-tooltip','add-tooltip');
+//define('view-tooltip','view-tooltip');
+//define('edit-tooltip','edit-tooltip');
+//define('details-tooltip','View Details');
+//define('remove-tooltip','remove-tooltip');
+//define('send_test-tooltip','send_test-tooltip');
+//define('admin_list-tooltip','admin_list-tooltip');
 
 ?>
