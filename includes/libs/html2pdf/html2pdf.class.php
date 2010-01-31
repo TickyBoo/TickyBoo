@@ -6,12 +6,12 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.27 - xx/12/2009
+ * @version		3.28 - 18/01/2010
  */
 
 if (!defined('__CLASS_HTML2PDF__'))
 {
-	define('__CLASS_HTML2PDF__', '3.27');
+	define('__CLASS_HTML2PDF__', '3.28');
 
 	require_once(dirname(__FILE__).'/_mypdf/mypdf.class.php');	// classe mypdf dérivé de fpdf de Olivier PLATHEY 
 	require_once(dirname(__FILE__).'/parsingHTML.class.php');	// classe de parsing HTML
@@ -295,6 +295,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->pdf->SetMargins($this->margeLeft, $this->margeTop, $this->margeRight);			
 			$this->pdf->cMargin = 0;
 			$this->pdf->SetAutoPageBreak(false, $this->margeBottom);
+			
+			$this->pageMarges = array();
+			$this->pageMarges[floor($this->margeTop*100)] = array($this->margeLeft, $this->pdf->w-$this->margeRight);
 		}
 		
 		/**
@@ -538,7 +541,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$this->SetPageFooter();
 			}
 			
-			$this->SetMargins();
+			$this->setMargins();
 			$this->pdf->y = $this->margeTop;			
 			
 			$this->setNewPositionForNewLine($curr);
@@ -3137,6 +3140,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			return true;
 		}	
 		function o_FONT($param)		{ return $this->o_SPAN($param, 'font');	}
+ 		function o_LABEL($param)	{ return $this->o_SPAN($param, 'label');}
 
 		/**
 		* balise : SPAN
@@ -3154,6 +3158,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			return true;
 		}
 		function c_FONT($param)		{ return $this->c_SPAN($param); }
+		function c_LABEL($param)	{ return $this->c_SPAN($param); }
 
 
 		/**
@@ -5720,7 +5725,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		* @param	$page page courante
 		* @return	null
 		*/	
-		function INDEX_NewPage(&$page = null)
+		function INDEX_NewPage(&$page)
 		{
 			if ($page)
 			{

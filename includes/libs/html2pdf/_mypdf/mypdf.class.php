@@ -6,7 +6,7 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.27 - xx/12/2009
+ * @version		3.28 - 18/01/2010
  */
 
 if (!defined('__CLASS_MYPDF__'))

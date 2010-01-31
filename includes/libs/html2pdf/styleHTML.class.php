@@ -6,7 +6,7 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.27 - xx/12/2009
+ * @version		3.28 - 18/01/2010
  */
  
 if (!defined('__CLASS_STYLEHTML__'))
@@ -688,7 +688,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 					
 					case 'text-align':
 						$val = strtolower($val);
-						if (!in_array($val, array('left', 'right', 'center', 'justify'))) $val = 'left';
+						if (!in_array($val, array('left', 'right', 'center', 'justify', 'li_right'))) $val = 'left';
 						$this->value['text-align'] = $val;
 						break;
 						
@@ -1657,7 +1657,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 						$content = preg_replace('/url\(([^\\\\][^)]*)\)/isU', 'url('.$url_self.'$1)', $content);
 						$content = preg_replace('/url\((\\\\[^)]*)\)/isU', 'url('.$url_main.'$1)', $content);
 					}
-
+					else
+					{
+// @todo
+//						$content = preg_replace('/url\(([^)]*)\)/isU', 'url('.dirname($url).'/$1)', $content);
+					}
 					$style.= $content."\n";
 				}
 			}
