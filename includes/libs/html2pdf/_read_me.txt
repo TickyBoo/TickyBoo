@@ -3,10 +3,10 @@
 ** for more information see file _LGPL.txt or          **
 ** http://www.gnu.org/licenses/lgpl.html               **
 **                                                    **
-**  Copyright 2000-2009 by Laurent Minguet            **
+**  Copyright 2000-2010 by Laurent Minguet             **
 *********************************************************
 *******************************
-* HTML2PDF v3.27 - 2009-12-xx *
+* HTML2PDF v3.28 - 2010-01-18 *
 *******************************
 
 How to use :

@@ -4,10 +4,10 @@
 ** http://www.gnu.org/licenses/lgpl.html             **
 ** pour en savoir plus.                              **
 **                                                   **
-**  Copyright 2000-2009 par Laurent Minguet          **
+**  Copyright 2000-2010 par Laurent Minguet          **
 *******************************************************
 *******************************
-* HTML2PDF v3.27 - xx/12/2009 *
+* HTML2PDF v3.28 - 18/01/2010 *
 *******************************
 
 Utilisation :
@@ -63,8 +63,8 @@ Utilisation :
  
     * <barcode></barcode>  (CF Exemples 0 et 9) :
          permet d'inserer des barcodes dans les pdfs, CF Exemples 0 et 9
-         Les types de codebar possible sont : EAN13, UPC_A, CODE39. Ceci utilise les
-         scripts de The-eh et Olivier 
+         Les types de codebar possible sont : EAN13, UPC_A, CODE39.
+         Ceci utilise les scripts de The-eh et Olivier 
 
      * <qrcode></qrcode> (CF Exemple 13) :
          permet d'inserer un codebar à 2 dimensions de type QRcode
@@ -87,14 +87,16 @@ Utilisation :
          
 Modification :
 -------------
+ 3.28 : ajout de la gestion de la balise label
+        correction pour compatibilité PHP4
  3.27 : correction sur page_header et page_footer
         ajout de la possibilité de pouvoir mettre l'index automatique dans la page que l'on veut
         correction sur la gestion du canal alpha pour les PNGs
         correction sur la gestion des border-radius (cf exemple radius) conforme au CSS3
         correction sur la gestion du background-color
         correction sur la gestion de thead, tfoot, et tbody
-        ajout du dessin verctoriel (cf exemples tigre et draw)
-        ajout de la propriété label="none/label" pour la balise barcode
+        ajout du dessin verctoriel (cf exemples draw, tigre, sapin)
+        ajout de la propriété label="none/label" pour la balise <barcode>
         nombreux petits correctifs
  3.26 : correction pour support des images générés en CGI
         ajout de la gestion du canal alpha pour les PNGs (nécessite GD2)

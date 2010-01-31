@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-function smarty_block_category ($params, $content, &$smarty,&$repeat) {
+function smarty_block_category ($params, $content, &$smarty, &$repeat) {
 
   if ($repeat) {
 
