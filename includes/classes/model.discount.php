@@ -42,7 +42,7 @@ class Discount  Extends Model {
     parent::__construct($filldefs);
     if ($filldefs) {
       $query="SELECT event_pm_id
-              FROM event where event_id="._esc($event_id);
+              FROM Event where event_id="._esc($event_id);
       if($row=ShopDB::query_one_row($query)){
         $row['discount_event_id'] = $event_id;
         $this->_fill($row);

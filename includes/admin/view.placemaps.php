@@ -138,7 +138,7 @@ class PlaceMapView extends AdminView {
 	function draw() {
 		global $_SHOP;
 		if ( preg_match('/_disc$/', $_REQUEST['action']) ) {
-			require_once ( "admin/view.discounts.php" );var_dump($_REQUEST);
+			require_once ( "admin/view.discounts.php" );
 			$pmp_view = new DiscountView( $this->width );
 			if ( $pmp_view->draw() ) {
 				$event = Event::load( $_REQUEST['discount_event_id'], false );
