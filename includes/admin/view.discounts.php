@@ -88,10 +88,10 @@ class DiscountView extends AdminView {
   function form ($data, $err, $title) {
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
 
-    echo "<input type='hidden' name='discount_event_id' value='{$data['discount_event_id']}'/>\n";
-    echo "<input type='hidden' name='action' value='save_disc'/>\n";
+    echo "<input type='hidden' name='discount_event_id' value='{$data['discount_event_id']}' />\n";
+    echo "<input type='hidden' name='action' value='save_disc' />\n";
     if ($data['discount_id']) {
-      echo "<input type='hidden' name='discount_id' value='{$data['discount_id']}'/>\n";
+      echo "<input type='hidden' name='discount_id' value='{$data['discount_id']}' />\n";
     }
 
     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
