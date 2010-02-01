@@ -109,7 +109,7 @@ class DiscountView extends AdminView {
   function draw (){
     if ($_GET['action'] == 'add_disc') {
         $disc = new Discount(true, $_GET['discount_event_id']);
-        $row = (array)$disc;
+        $row = (array)$disc; var_dump($disc);
         $this->form($row, null, con('discount_add_title'));
     } elseif ($_GET['action'] == 'edit_disc') {
         $row = Discount::load($_GET['discount_id']);
