@@ -319,11 +319,11 @@ select SQL_CALC_FOUND_ROWS *
 	// #######################################################
 	function draw($history = false) {
 		global $_SHOP;
-    var_dump($_REQUEST);
+
 		if ( preg_match('/_disc$/', $_REQUEST['action']) or preg_match('/_pmp$/', $_REQUEST['action']) or
     		 preg_match('/_pmz$/' , $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action']) or
   			 preg_match('/_pm$/'  , $_REQUEST['action']) ) {
-			require_once ( "admin/view.placemaps.php" );
+			require_once ( "admin/view.placemaps.php" );    var_dump($_REQUEST);
 			$pmp_view = new PlaceMapView( $this->width );
 			if ( !$pmp_view->draw($history) ) {
         $this->addJQuery($pmp_view->getJQuery());
