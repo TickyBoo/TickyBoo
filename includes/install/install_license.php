@@ -112,7 +112,7 @@ class install_license {
     } elseif (!is_writable(ROOT."files")){
       array_push($Install->Errors,ROOT."files should be writable by the webserver user.");
     }
-
+    return true;
   }
 
   function display($install) {
