@@ -26,7 +26,7 @@
  * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}<link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
-{if !$smarty.request.ajax}
+{if !$smarty.request.ajax and !$no_header}
   {strip}
     {include file='order.tpl' nofooter=true}
   {/strip}
@@ -42,7 +42,7 @@
   <table class='table_dark' cellpadding='5' bgcolor='white' width='500'>
     {if $pm_return.approved}
       <tr>
-        <td colspan=2>{!pay_reg!}!</td>
+        <td colspan='2'>{!pay_reg!}!</td>
       </tr>
     {/if}
     {gui->view name=order_id value=$order_id}
@@ -65,7 +65,7 @@
     {/if}
     {if $pm_return.response}
       <tr>
-        <td colspan=2 {if !$pm_return.approved}class='error'{/if}>
+        <td colspan='2' {if !$pm_return.approved}class='error'{/if}>
           {eval var=$pm_return.response}
         </td>
       </tr>
@@ -134,6 +134,6 @@
     {/literal}
   {/if}
   </script>
-{if !$smarty.request.ajax}
+{if !$smarty.request.ajax and !$no_footer}
     {include file="footer.tpl"}
 {/if}

@@ -2,5 +2,5 @@
 {if $payment_tpl}
   {include file="$payment_tpl.tpl" no_header=true no_footer=true}
 {else}
-  ERRORRRRRRR
+  {!error!}
 {/if}

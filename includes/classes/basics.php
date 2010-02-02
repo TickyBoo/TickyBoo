@@ -350,16 +350,19 @@ function check_system() {
 
   // NS: I moved the current_db_time to the init.php so we have lesser sql calls.
   // also i have moved the error messages to the language file. so the can be translated.
-
+  
+  /*
   if ($_SHOP->shopconfig_lastrun_int == 0) {
       return;
   } elseif ( $_SHOP->current_db_time <= $_SHOP->shopconfig_lastrun ) {
       return;
   }
-
-  //  print_r('run');
+  */
+  
+  //print_r('run');
   //Checks to see if res time is enabled anything more than 9 will delete
   if ( $_SHOP->shopconfig_restime >= 1 ) {
+    
     $query = "SELECT order_id FROM `Order`
               WHERE order_status = 'res'
               AND order_payment_status  = 'none'
@@ -367,7 +370,7 @@ function check_system() {
               AND order_date_expire <= NOW()";
     if ( $_SHOP->shopconfig_check_pos == 'No' ) {
       $query .= " AND order_place != 'pos' ";
-    }
+    }    
     if ( $res = ShopDB::query($query) ) {
       while ( $row = shopDB::fetch_assoc($res) ) {
         Order::delete( $row['order_id'], 'AutoCancel_order');
@@ -387,7 +390,8 @@ function check_system() {
 
     if($resultOrder=ShopDB::query($query)){
       //Cycles through orders to see if they should be canceled!
-      while ( $roword = shopDB::fetch_assoc($resultOrder) ) {
+      while ( $roword = ShopDB::fetch_assoc($resultOrder) ) {
+        print_r($roword);
         if ( !Order::Check_payment($roword['order_id'])) {
           if ( $_SHOP->shopconfig_delunpaid_pos == 'Yes' or $roword['order_place'] != 'pos'){
             Order::delete( $roword['order_id'], 'AutoCancel_paying');

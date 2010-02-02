@@ -176,7 +176,7 @@
     		  </td>
     		  <td class='payment_form'><label for='{$shop_handling.handling_id}_check'>{!payment!}
     		  {if $shop_handling.handling_text_payment}{eval var=$shop_handling.handling_text_payment}{/if}
-    		  <br>{!shipment!}
+    		  <br />{!shipment!}
     		  {if $shop_handling.handling_text_shipment}{eval var=$shop_handling.handling_text_shipment}{/if}
     		  </label>
     		  </td>

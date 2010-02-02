@@ -50,6 +50,7 @@
   {else}
     {include file="process_list.tpl" status="res"}
   {/if}
+  
 {elseif $TabBarid == 1} {*  eq "unpaid" *}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq "update_note"}
@@ -57,16 +58,19 @@
       <div class='success'>
         {$order_note}
       </div>
+      
     {elseif $smarty.post.action eq "setpaid"}
       {$order->set_payed_f($smarty.post.order_id) }
-      	<div class='success' style="text-align:center;">
-			{!order_status_changed!}
-      	</div>
+     	<div class='success' style="text-align:center;">
+        {!order_status_changed!}
+     	</div>
+        
   	{/if}
     {include file="process_view.tpl" status="ord" not_status="payed" place='' not_hand_payment='entrance'}    
   {else}
     {include file="process_list.tpl" status="ord" not_status="payed" place='' not_hand_payment='entrance'}
   {/if}
+  
 {elseif $TabBarid == 2} {*  eq "unsent" *}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq 'setsend'}

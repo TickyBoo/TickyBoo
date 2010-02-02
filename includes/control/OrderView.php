@@ -35,19 +35,23 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once("classes/AUIComponent.php");
 require_once("classes/smarty.gui.php");
+require_once("admin/class.adminview.php");
 
-class OrderView extends AUIComponent{
+class OrderView extends AdminView{
+  
   var $page_length=15;
+  
   function order_details ($order_id){
     global $_SHOP;
     $query="select * from `Order`,User where order_id="._esc($order_id)." and order_user_id=user_id";
+    
     if(!$order=ShopDB::query_one_row($query)){
       echo "<div class='error'>".con('order_not_found')." $order_id</div>";
       return;
     }
+    
     $status=$this->print_order_status($order);
     $order["order_status"]=$status;
-
 
     echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='2'>".con('order_nr')."  ".$order_id."</td></tr>";
@@ -65,25 +69,19 @@ class OrderView extends AUIComponent{
     $this->print_field('order_status',$order);
     echo "</table><br>\n";
 
-    $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,
-            Event,Category,PlaceMapZone where seat_order_id="._esc($order_id)."
-    	   AND seat_event_id=event_id AND
-  	   seat_category_id=category_id and
-  	   seat_zone_id=pmz_id";
-    if(!$res=ShopDB::query($query)){
-       user_error(shopDB::error());
+    if(!$seats=Order::loadTickets($order_id)){
        return;
     }
     echo "<table class='admin_form' width='100%' cellspacing='0' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='7'>".con('tickets')."</td></tr>";
     $alt=0;
-    while($ticket=shopDB::fetch_assoc($res)){
+    foreach($seats as $ticket){
       if((!$ticket["category_numbering"]) or $ticket["category_numbering"]=='both'){
         $place=$ticket["seat_row_nr"]."-".$ticket["seat_nr"];
       }else if($ticket["category_numbering"]=='rows'){
-        $place=place_row." ".$ticket["seat_row_nr"];
+        $place=con('place_row')." ".$ticket["seat_row_nr"];
       }else if($ticket["category_numbering"]=='seat'){
-        $place=place_seat." ".$ticket["seat_nr"];
+        $place=con('place_seat')." ".$ticket["seat_nr"];
       }else{
         $place='---';
       }
