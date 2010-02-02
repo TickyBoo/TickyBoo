@@ -428,9 +428,21 @@ class Order_Smarty {
     return Order::set_payed($order_id);
   }
 
+
+  /**
+   * Order_Smarty::set_send_f()
+   * 
+   * @deprecated beta6
+   * @return
+   */
   function set_send_f($order_id){
     global $_SHOP;
-  return Order::set_send($order_id, 0, $this->user_auth_id);
+    return Order::set_send($order_id, 0, $this->user_auth_id);
+  }
+  
+  function setStatusSent($order_id){
+    global $_SHOP;
+    return Order::set_send($order_id, 0, $this->user_auth_id);
   }
 
   function set_reserved ($params,&$smarty){

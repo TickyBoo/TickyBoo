@@ -70,11 +70,11 @@
 {elseif $TabBarid == 2} {*  eq "unsent" *}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq 'setsend'}
-    	{$order->set_status_f($smarty.post.order_id,'ord') }
-      	{$order->set_send_f($smarty.post.order_id) }
-      	<div class='success' style="text-align:center;">
-        	{!order_status_changed!}
-      	</div>
+    	{* $order->set_status_f($smarty.post.order_id,'ord') *}
+    	{$order->setStatusSent($smarty.post.order_id) }
+      <div class='success' style="text-align:center;">
+        {!order_status_changed!}
+      </div>
     {elseif $smarty.post.action eq "update_note"}
       {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
       <div class='success' style="text-align:center;">
