@@ -299,7 +299,7 @@ class orphans {
             if (!empty($thisfix) and $showlinks) {
               $z = "<a title='{$thisfix}'
                        href='{$_SERVER['PHP_SELF']}?fix={$fixit}~{$row[1]}~{$row[$x]}~{$row[$x+1]}{$property}'>".$z."</a>\n";
-            } elseif (!empty($thisfix) and !$showlinks) {
+            } elseif (!empty($thisfix) and $showlinks < 0) {
               $z = "<span color='red' title='{$thisfix}'>".$z."</span>\n";
             }
 
@@ -345,7 +345,7 @@ class orphans {
       // fix event issues
       case 'Discount~event_id':
         ShopDB::Query("delete from Discount
-                       where discount_event_id = '{$fix[2]}'") ;
+                       where discount_id = '{$fix[2]}'") ;
         break;
       case'Event_stat~event_id':
         ShopDB::Query("delete from Event_stat
