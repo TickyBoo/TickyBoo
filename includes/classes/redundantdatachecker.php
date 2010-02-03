@@ -496,7 +496,7 @@ class orphans {
       case 'Seat~disc_id':
         ShopDB::Query("update Seat set
                          seat_discount_id = null
-                       where seat_order_id = {$fix[4]}") ;
+                       where seat_id = {$fix[2]}") ;
         break;
       case 'Seat~zeros':
         Orphans::clearZeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
