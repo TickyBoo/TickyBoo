@@ -202,13 +202,5 @@ function selectnext($Install,$continue = false) {
       </div>
       </div>
     </div>
-    <div align=left>
-    <pre>
-<?PHP
-    print_r($_REQUEST);
-
-    print_r($_SESSION);
-?>
-  </pre></div>
   </body>
 </html>

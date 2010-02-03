@@ -150,7 +150,7 @@ class UtilitiesView extends AdminView{
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
 			echo "<td class='admin_list_item' >{$row["el_timestamp"]}</td>\n";
       echo "<td  class='admin_list_item' >{$row["el_action"]}</td>\n";
-      $email = print_r( unserialize($row["el_email_to"]), true);
+      $email = $this->emailList( unserialize($row["el_email_to"]), true);
 //      $email = $email[1].'&lt;'.$email[0].'&gt;';
       echo "<td  class='admin_list_item' >{$email}</td>\n";
       echo "<td  class='admin_list_item' >{$row["el_failed"]}</td>\n";
@@ -178,7 +178,7 @@ class UtilitiesView extends AdminView{
     echo "<table class='admin_form' width='".($this->width)."' cellspacing='1' cellpadding='4'>\n";
     $this->print_field('el_timestamp',$row);
     $this->print_field('el_action',$row);
-    $this->print_field('el_email_to',print_r( unserialize($row["el_email_to"]), true));
+    $this->print_field('el_email_to',$this->emailList( unserialize($row["el_email_to"])));
     $this->print_field("el_failed",  $row);
     $this->print_field("el_received",  $row);
     echo "<tr><td colspan='2' class='admin_name'>" .con('el_log'). "</td></tr>";
@@ -452,7 +452,14 @@ HTML;
     }
 	}
 
-
+  function emailList( $emails) {
+    $names = array();
+    foreach($emails as $key => $name) {
+      $name = (empty($name))?$key:$name;
+      $names[] = "<span title={$key}>{$name}</span>";
+    }
+    return implode(', ', $names);
+  }
 	function stats(){
 	  global $_SHOP;
 
@@ -551,3 +558,4 @@ function fn_int($num){
 }
 
 ?>
+

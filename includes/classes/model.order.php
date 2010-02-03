@@ -48,7 +48,7 @@ class Order Extends Model {
   public $tickets = array();
   public $no_fee = false;
   public $no_cost = false;
-  public $order_handling;
+  public $handling;
 
   function create ($order_user_id, $sid, $handling_id, $dummy, $no_fee, $no_cost, $place='www'){
     $order = new Order;
@@ -59,7 +59,7 @@ class Order Extends Model {
     $order->order_owner_id = ($place == 'pos')? $_SESSION['_SHOP_AUTH_USER_DATA']['user_id']: null;
     $order->no_fee =$no_fee;
     $order->no_cost=$no_cost;
-    $order->order_handling = &Handling::load($handling_id);
+    $order->handling = &Handling::load($handling_id);
     return $order;
   }
 
@@ -78,7 +78,7 @@ class Order Extends Model {
       if($order && $complete){
         if ($order->order_handling_id) {
           $order->handling= Handling::load($order->order_handling_id);
-          $order->order_handling = &$order->handling;
+          $order->handling = &$order->handling;
         }
       }
       if($order && $tickets){
@@ -106,7 +106,7 @@ class Order Extends Model {
           if($order and $complete){
             if ($order->order_handling_id) {
                 $order->handling= Handling::load($order->order_handling_id);
-                $order->order_handling= &$order->handling;
+                $order->handling= &$order->handling;
             }
       //$order->places = Seat::loadall($order_id);
            }
@@ -188,7 +188,7 @@ class Order Extends Model {
     $amount=$this->amount();
 
     if(!$this->no_fee){
-      $fee= $this->order_handling->calculate_fee($amount);
+      $fee= $this->handling->calculate_fee($amount);
     }else{
       $fee=0;
     }
@@ -208,15 +208,15 @@ class Order Extends Model {
 
     //$this->order_date_expire = null;
 
-    //var_dump($this->order_handling);
+    //var_dump($this->handling);
 
-    if($this->order_handling->handling_id=='1'){
+    if($this->handling->handling_id=='1'){
       $this->order_status="res";
       $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$_SHOP->shopconfig_restime.",CURRENT_TIMESTAMP()) ";
     }else{
       $this->order_status="ord";
-      if ($this->order_handling->handling_expires_min>10) {
-        $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$this->order_handling->handling_expires_min.",CURRENT_TIMESTAMP()) ";
+      if ($this->handling->handling_expires_min>10) {
+        $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$this->handling->handling_expires_min.",CURRENT_TIMESTAMP()) ";
       }
     }
 
@@ -246,7 +246,7 @@ class Order Extends Model {
         $ticket =& $this->places[$i];
         $ticket->order_id($this->order_id);
         // Tickets are saved here if handled==1 tickets are reserved instead of ordered.
-        if(!$ticket->save($this->order_handling->handling_id=='1')){
+        if(!$ticket->save($this->handling->handling_id=='1')){
           return self::_abort('Errors_commiting_ticket_save');
         }
         $event_stat[$ticket->seat_event_id]++;
@@ -266,7 +266,7 @@ class Order Extends Model {
       }
 
       $no_tickets=$this->size();
-      if($this->order_handling==1){
+      if($this->handling==1){
         $set = "SET user_order_total=user_order_total+1,
                     user_current_tickets=user_current_tickets+{$no_tickets},
                     user_total_tickets=user_total_tickets+{$no_tickets} ";
@@ -284,7 +284,7 @@ class Order Extends Model {
       $tmpOrdForDate = Order::load($this->order_id);
       $this->order_date = $tmpOrdForDate->order_date;
 
-      if($this->order_handling->handling_id=='1'){
+      if($this->handling->handling_id=='1'){
          $ok = $this->set_status('res',TRUE);
       }else{
          $ok = $this->set_status('ord',TRUE);
@@ -319,8 +319,8 @@ class Order Extends Model {
   function Check_payment($order_id){
     $order = Order::load($order_id, true);
     var_dump($order);
-    if ($order && $order->order_handling) {
-      return $order->order_handling->on_check($order);
+    if ($order && $order->handling) {
+      return $order->handling->on_check($order);
     } else {
       return true;
     }
@@ -725,10 +725,10 @@ class Order Extends Model {
           return self::_abort('Cant change status');;
         }
 
-        if(!$this->order_handling){
-          $this->order_handling=Handling::load($this->order_handling_id);
+        if(!$this->handling){
+          $this->handling=Handling::load($this->order_handling_id);
         }
-        $this->order_handling->handle($this,$new_status,$old_status,$field);
+        $this->handling->handle($this,$new_status,$old_status,$field);
       }
       $this->$field = $new_status;
 
@@ -846,13 +846,13 @@ class Order Extends Model {
   }
 
   function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
-    
-    if ($order == null && ($this->obj instanceof Order)) { $order = $this->obj; 
+
+    if ($order == null && ($this->obj instanceof Order)) { $order = $this->obj;
     } elseif ($order == null) { $order = $this; }
     if (is_numeric($order)) $order = self::load($order);
-    if ($order == null) return ''; 
+    if ($order == null) return '';
     if (!$order->order_tickets_nr ) $order->order_tickets_nr = $order->size();
-    
+
     $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
            $order->order_handling_id .':'. $order->order_total_price;
     $code = base64_encode(base_convert(time(),10,36).':'. base_convert($order->order_id,10,36).':'. md5($md5, true));

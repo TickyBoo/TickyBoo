@@ -69,13 +69,14 @@ class install_mail {
 
     if (!empty($_POST['testemail'])) {
       setmail();
+      Opendatabase();
       //Create a message
       $message = Swift_Message::newInstance('Test email from: '.$_SESSION['ORG']['organizer_name'] )
         ->setFrom(array($_SESSION['ORG']['organizer_email'] => $_SESSION['ORG']['organizer_name']))
         ->setTo(array($_POST['testemail']))
         ->setBody('This is a test mail create by the installation programm of Fusion Ticket.')
         ;
-      if(!EmailSwiftSender::send($message,"",$logger,$failedAddr)){
+      if(!EmailSwiftSender::send($message,"",$logger, $failedAddr,array('action' => 'test mail'))){
         array_push($Install->Errors,'Sorry the mail is not send, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
       }
     }

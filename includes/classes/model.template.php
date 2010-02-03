@@ -210,34 +210,8 @@ class Template Extends Model {
     }
 
     //We want to log the email proccess so users can debug easier.
-    $log = new EmailLog();
-    $log->el_order_id = is($data['order_id']);
-    $log->el_user_id = is($data['user_id']);
-    $log->el_action = is($data['action'],'unknown'); //need to add action to the data.
-    $log->el_email_uid = is($message->getId());
-    $log->el_email_to = serialize(is($message->getTo()));
-    $log->el_email_cc = serialize(is($message->getCc()));
-    $log->el_email_message = is($message->toString());
-    $log->el_bad_emails = '';
-    try{
-      if(EmailSwiftSender::send($message,"",$logger,$failedAddr)){
-        $log->el_failed = 'no';
-        $log->el_log = empt($logger->dump(),'');
-        $log->el_bad_emails = serialize(empt($failedAddr,''));
-        $log->save();
-        return true;
-      }
-      $log->el_failed = 'yes';
-      $log->el_log = empt($logger->dump(),'');
-      $log->el_bad_emails = serialize(empt($failedAddr,''));
-      $log->save();
-      return false;
-    }catch(Exception $e){
-      $log->el_log = empt($logger->dump(),'');
-      $log->el_failed = 'yes';
-      $log->save();
-      return false;
-    }
+    return EmailSwiftSender::send($message, "", $log, $failedAddr, $data);
+
   }
 
 }

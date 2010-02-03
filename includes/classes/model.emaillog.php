@@ -42,12 +42,17 @@ class EmailLog Extends Model {
                                 'el_email_uid', 'el_email_to', 'el_email_cc',
                                 'el_email_message', 'el_log');
 
-  public function save (){
-    if($this->$id>0){
-      $id = $this->id;
-    }else{
-      $id = null;
-    }
-    return parent::save($id, $exclude);
+
+  public function __construct($data, $message) {
+    parent::__construct();
+    $this->el_order_id = is($data['order_id']);
+    $this->el_user_id  = is($data['user_id']);
+    $this->el_action   = is($data['action'],'unknown'); //need to add action to the data.
+    $this->el_email_uid = is($message->getId());
+    $this->el_email_to  = serialize(is($message->getTo()));
+    $this->el_email_cc  = serialize(is($message->getCc()));
+    $this->el_email_message = is($message->toString());
+    $this->el_bad_emails = '';
+    $this->el_failed = 'unknown';
   }
 }

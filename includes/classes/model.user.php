@@ -176,7 +176,7 @@ class User extends Model{
       			}
       		}
     		}
-        
+
         if(is($data['user_status'],false)===false){ $data['user_status'] = $user['user_status']; }
     	  $status = $user['user_status'];
   	    $userup = new user();
@@ -277,6 +277,7 @@ class User extends Model{
     $activation = base64_encode("{$row['user_id']}|".date('c')."|$active");
     $row['link']=$_SHOP->root."activation.php?uar=".urlencode($activation);
     $row['activate_code'] = $activation;
+    $row['action']='Signup_email';
     //New Mailer
 
     if(Template::sendMail($tpl,$row)){
@@ -384,6 +385,7 @@ class User extends Model{
       $tpl=Template::getTemplate('forgot_passwd');
 //      $row = $this->values;
       $row['new_password']=$pwd;
+      $row['action']='forgot_passwd';
 
       if(Template::sendMail($tpl,$row,"",$_SHOP->lang)){
         addNotice('pwd_is_sent');

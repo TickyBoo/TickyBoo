@@ -57,7 +57,7 @@ class install_register {
                   "ForumUser: ". $_REQUEST['forumname']."\n".
                   "Comment:\n".$_REQUEST['comments'])
         ;
-      if(!EmailSwiftSender::send($message,"",$logger,$failedAddr)){
+      if(!EmailSwiftSender::send($message, "", $logger, $failedAddr, array('action' => 'ft register'))){
         array_push($Install->Errors,'Sorry the mail is not send, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
       } else {
         array_push($Install->Warnings,'Thanks, The mail is send to us.');

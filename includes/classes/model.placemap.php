@@ -69,6 +69,13 @@ class PlaceMap Extends Model {
     }
     return $pms;
   }
+  function save($id = null, $exclude=null){
+    if (!empty($this->pm_ort_id)) {
+      parent::save($id, $exclude);
+    } else {
+      addwarning('missing_pm_ord_id');
+    }
+  }
 
   function saveEx(){
     if($id = parent::saveEx()){

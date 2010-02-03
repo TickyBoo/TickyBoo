@@ -64,7 +64,7 @@ class Discount  Extends Model {
   //static
   function load ($id){
     $query="SELECT Discount.*, event_pm_id
-            FROM Discount left join event on event_id=discount_event_id
+            FROM Discount left join Event on event_id=discount_event_id
             WHERE discount_id="._esc($id);
     if($row=ShopDB::query_one_row($query)){
       $new = new Discount;

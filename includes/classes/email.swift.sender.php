@@ -38,7 +38,7 @@ require_once (LIBS.'swift'.DS.'swift_required.php');
 
 class EmailSwiftSender {
 
-  public function send(&$swiftMessage, $type='',&$logger , &$failed, $manSet=array() ){
+  public function send(&$swiftMessage, $type='',&$logger , &$failed, $data=array(), $manSet=array()){
     global $_SHOP;
 
     $smtpHost = is($manSet['smtp_host'],$_SHOP->mail_smtp_host);
@@ -83,11 +83,21 @@ class EmailSwiftSender {
     //Or to use the Normal Logger
     $logger = new Swift_Plugins_Loggers_ArrayLogger();
     $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+    $log = new EmailLog($data, $swiftMessage);
 
-    $ret = $mailer->send($swiftMessage,$failed);
+    try{
+      $ret = $mailer->send($swiftMessage,$failed);
+    }catch(Exception $e){
+      $ret = false;
+    }
+
+    $log->el_failed = ($ret)?'no': 'yes';
+    $log->el_log = empt($logger->dump(),'');
+    $log->el_bad_emails = serialize(empt($failedAddr,''));
+    $log->save();
 
     if(!$ret || $ret < 1){
-      Shopdb::dblogging("email '{$type}' errors:\n".print_r($logger->dump(),true));
+      Shopdb::dblogging("email '{$type}' errors:\n".$logger->dump());
       return false;
     }else{
       return $ret;

@@ -142,7 +142,7 @@ class Handling Extends Model {
       $order_d['order_link']=$link;
       $order_d['order_old_status'] = $old_state;
 
-      $handTemps=explode(",",$order->order_handling->handling_email_template);
+      $handTemps=explode(",",$order->handling->handling_email_template);
       if(!is_array($handTemps)){
         $handTemps = array();
       }
@@ -159,7 +159,8 @@ class Handling Extends Model {
         }
       }
 
-      $order_d = array_merge($order_d,(array)$order->order_handling);
+      $order_d = array_merge($order_d,(array)$order->handling);
+      $order_d['action']= is($order_d['action'],'handle:'.$template_name);
 
       if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
         user_error('error: '.print_r($email->errors,true));
@@ -169,8 +170,8 @@ class Handling Extends Model {
 
     //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
     $status = strtolower($new_state);
-    $manSend = strtolower($order->order_handling->handling_only_manual_send);
-    if($status=='payed' && $order->order_handling->handling_shipment=='email' && $manSend=='no'){
+    $manSend = strtolower($order->handling->handling_only_manual_send);
+    if($status=='payed' && $order->handling->handling_shipment=='email' && $manSend=='no'){
       $order2=Order::load($order->order_id,true);
       if ($order2) {
         $order2->set_shipment_status('send');

@@ -133,7 +133,8 @@ class install_execute {
     if ($_POST['fixdatabase1']==2) {
       renameTables(array('Category','Category_stat','Discount','Event','Event_group','Event_stat',
                          'PlaceMap2','PlaceMapPart','PlaceMapZone','Seat','Order'));
-      array_push($Install->Warnings,"The next tables are renamed: Category, Category_stat, Discount, Event, Event_group, Event_stat,
+      array_push($Install->Warnings,"The next tables are renamed:
+                                     Category, Category_stat, Discount, Event, Event_group, Event_stat,
                                      PlaceMap2, PlaceMapPart, PlaceMapZone, Seat, Order. You can copy the data back yourself.");
     }
     return false;
@@ -272,12 +273,14 @@ class install_execute {
 
   function renameTables($array) {
     if (is_array($array)) {
+
       foreach($array as $table) {
-        $sql = "RENAME TABLE `{$table}` TO `old_{$table}`"; // The MySQL way.
+        $no = '';
+        while (ShopDB::TableExists("old{$no}_{$table}")) { $no = (int)$no +1; }
+        $sql = "RENAME TABLE `{$table}` TO `old{$no}_{$table}`"; // The MySQL way.
         ShopDB::query($sql);
       }
     }
   }
 }
 ?>
-

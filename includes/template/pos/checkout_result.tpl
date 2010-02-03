@@ -77,7 +77,7 @@
           <a href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=2' target='_blank'>{!printinvoice!}</a>
         </td>
         <td align='right'>&nbsp;
-          {if $shop_order.order_handling->handling_shipment eq "sp"}
+          {if $shop_order.handling->handling_shipment eq "sp"}
             <a id='printticket' href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=1' style='display:none;' target='_blank'>{!printtickets!}</a>
             <div id="waiting">
               <img src="{$_SHOP_themeimages}LoadingImageSmall.gif" width="16" height="16" alt="Waiting for payment, please wait" />
@@ -110,7 +110,7 @@
       });
     {/literal}
   {/if}
-  {if $shop_order.order_handling->handling_shipment eq "sp"}
+  {if $shop_order.handling->handling_shipment eq "sp"}
     {literal}
 
       //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.

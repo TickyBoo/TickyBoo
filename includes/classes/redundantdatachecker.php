@@ -87,13 +87,13 @@ where  (category_id is null and event_status != 'unpub')
 ";
 /**/
 $orphancheck[]="
-select 'Discount', discount_id, 'event_id' l1 , discount_event_id, event_id
+select 'Discount', discount_id, 'event_id' , ifnull(discount_event_id,'null'), event_id
 from Discount left join Event on discount_event_id = event_id
 where  (event_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'Event', e.event_id,  'ort_id'   , e.event_ort_id,    ort_id
+select 'Event', e.event_id,  'ort_id'   , ifnull(e.event_ort_id,'null'),    ort_id
 from Event e left join Ort            on e.event_ort_id = ort_id
 where  (ort_id is null and e.event_ort_id is not null)
 ";
@@ -251,6 +251,7 @@ class orphans {
        'PlaceMap~event_id'=>'Remove this placemap, event is already removed',
        'PlaceMap~zeros'=>'Clear all zero identifiers in the PlaceMap table',
        'Seat~zeros'=>'Clear all zero identifiers in the seat table',
+       'Seat~disc_id'=>'Clear the discount_id in from this seat',
        'Seat~order_id'=>'Release the order lock from this seats',
        'Seat~event_id'=>'Remove the seats with the already deleted event',
        'Seat~user_id'=>'Recreate missing user info for this seats',
@@ -330,10 +331,8 @@ class orphans {
         PlaceMapCategory::create_stat($cat->category_id,$cat->category_size, $result[0]);
         break;
       case 'Category~event_id':
-        PlaceMapCategory::delete($fix[2]);
-        break;
       case 'Category~pm_id':
-        PlaceMapCategory::delete($fix[2]) ;
+        PlaceMapCategory::load($fix[2])->delete();
         break;
       case 'Category~pmp_id':
         ShopDB::Query("update Category set
@@ -369,8 +368,8 @@ class orphans {
         $pm_id = $result[0];
         $all = PlaceMapPart::loadAllFull( $pm_id);
 
-        echo "<pre>";
-         PRint_r($seats);
+//        echo "<pre>";
+//         PRint_r($seats);
         if ($all) {
           foreach($all as $pmp) {
            // print_r($pmp->categories);
@@ -386,7 +385,8 @@ class orphans {
 
                     if ($seat_id = Seat::publish($fix[2], $seat[PM_ROW], $seat[PM_SEAT],
                                                  $zone->pmz_id, $pmp->pmp_id, $category->category_id)) {
-                      echo $x,' ',$y,' ',$pmp->pmp_data[$x][$y][PM_ID] = $seat_id,'|';
+                      //echo $x,' ',$y,' ',
+                      $pmp->pmp_data[$x][$y][PM_ID] = $seat_id;//,'|';
                       $changed = True;
                     }
                   }
@@ -395,7 +395,7 @@ class orphans {
             }
             if ($changed) {
               $pmp->save();
-              echo "\n------------------------------------------------------------\n";
+//              echo "\n------------------------------------------------------------\n";
             }
           }
         }
@@ -407,11 +407,11 @@ class orphans {
           if($cat->event_status !== 'unpub' && $cat->category_numbering =='none' &&
              count($seats[$cat->category_id]) <> $cat->category_size ){//and $cat->category_size>0
             $stats[$cat->category_ident] = count($seats[$cat->category_id]);
-            print_r(count($seats[$cat->category_id]));
-            print_r($cat);
+//            print_r(count($seats[$cat->category_id]));//
+//            print_r($cat);
             for($i=count($seats[$cat->category_id]);$i<$cat->category_size;$i++){
               if($seat_id = Seat::publish($fix[2],null,0,null,null,$cat->category_id)) {
-                echo $seat_id,'|';
+  //              echo $seat_id,'|';
               }
               $stats[$cat->category_ident]++;
             }
@@ -431,7 +431,7 @@ class orphans {
         }
 */
 
-        echo "</pre>";
+//        echo "</pre>";
         break;
 
 
@@ -493,7 +493,11 @@ class orphans {
                          seat_status = 'free'
                        where seat_order_id = {$fix[4]}") ;
         break;
-
+      case 'Seat~disc_id':
+        ShopDB::Query("update Seat set
+                         seat_discount_id = null
+                       where seat_order_id = {$fix[4]}") ;
+        break;
       case 'Seat~zeros':
         Orphans::clearZeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
                                            'seat_order_id'   ,'seat_pmp_id'  ,'seat_discount_id'));

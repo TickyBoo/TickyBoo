@@ -121,13 +121,13 @@ class AdminView extends AUIComponent {
       $prefix = "{$name}";
     }
 
-    echo "<tr id='{$name}-tr' ><td class='admin_name' width='{self::$labelwidth}'>" , con($name) , "</td>
+    echo "<tr id='{$name}-tr' ><td class='admin_name' width='".self::$labelwidth."'>" , con($name) , "</td>
               <td class='admin_value' ><button id='{$name}-add' type='button'>".con('add_row')."</button> </td></tr>\n";
 
     $data[$name] = is($data[$name],array()); $i=0;
     foreach($data[$name] as $key=>$val){
       if(!$multiArr){
-        echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_name' width='{self::$labelwidth}'>".con($name)."</td>
+        echo "<tr id='{$name}-row-$i' class='{$name}-row'><td class='admin_name' width='".self::$labelwidth."'>".con($name)."</td>
                 <td class='admin_value'>
                   <input type='text' name='{$prefix}[$i][value]' value='" . htmlspecialchars($val, ENT_QUOTES) . "'>
                   <a class='{$name}-row-delete link' href='#'><img src=\"../images/trash.png\" border='0' alt='".con('remove')."' title='".con('remove')."'></a>
@@ -161,7 +161,7 @@ class AdminView extends AUIComponent {
       $script = "
           var {$name}Count = {$i};
           $('#{$name}-add').click(function(){
-            $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='{self::$labelwidth}'>".con($name)."</td>\"+
+            $('#{$name}-tr').after(\"<tr id='{$name}-row-\"+{$name}Count+\"' class='{$name}-row' ><td class='admin_name' width='".self::$labelwidth."'>".con($name)."</td>\"+
                 \"<td class='admin_value'>\"+
                   \"<input type='text' name='{$prefix}[\"+{$name}Count+\"][value]' value='' />\"+
                   \"<a class='{$name}-row-delete link' href=''><img src='../images/trash.png' border='0' alt='".con('remove')."' title='".con('remove')."'></a>\"+
@@ -210,7 +210,7 @@ class AdminView extends AUIComponent {
 
     echo "
       <tr id='{$name}-group-add-tr' >
-        <td class='admin_name' width='{self::$labelwidth}'>" , con($name) , "</td>
+        <td class='admin_name' width='".self::$labelwidth."'>" , con($name) , "</td>
         <td class='admin_value' >
           <button id='{$name}-group-add-button' type='button'>".con($name)." ".con('add_row')."</button>
           {$select}
@@ -220,7 +220,7 @@ class AdminView extends AUIComponent {
 
     echo "
       <tr id='{$name}-group-select-tr'>
-        <td class='admin_name'  width='{self::$labelwidth}'>".con($name)." ".con('select')."</td>
+        <td class='admin_name'  width='".self::$labelwidth."'>".con($name)." ".con('select')."</td>
         <td class='admin_value'>
           <select id='{$name}-group-select' name='{$name}_group_select'>\n</select> ".
           $this->show_button('button','remove_group',2,
@@ -288,7 +288,7 @@ class AdminView extends AUIComponent {
         $input = "</tr><tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td colspan='2' class='admin_value'><textarea rows='{$rows}' cols='{$cols}' name='{$prefix}[\"+newGroup+\"][{$field}]'> </textarea></td>";
         $colspan = 2;
       }
-      $inputs .= "\"<tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td colspan='{$colspan}' class='admin_name' width='{self::$labelwidth}'>".con($field)."</td>{$input}</tr>\"+";
+      $inputs .= "\"<tr id='{$name}-\"+newGroup+\"-{$field}-row' class='{$name}-row {$name}-group-row {$name}-\"+newGroup+\"-row' style='display:none;'><td colspan='{$colspan}' class='admin_name' width='".self::$labelwidth."'>".con($field)."</td>{$input}</tr>\"+";
     }
 
     $addScript = "$('#{$name}-group-add-button').click(function(){
@@ -323,7 +323,7 @@ class AdminView extends AUIComponent {
 
     function print_field ($name, &$data, $prefix='') {
 
-        echo "<tr id='{$name}-tr'><td class='admin_name' width='{self::$labelwidth}'>$prefix" , con($name) , "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name' width='".self::$labelwidth."'>$prefix" , con($name) , "</td>
               <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
     }
 
@@ -350,7 +350,7 @@ class AdminView extends AUIComponent {
       }else{
         $prefix = "{$name}";
       }
-      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='{self::$labelwidth}'>$suffix" . con($name) . "</td>
+      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input id='{$name}-input' type='text' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
             ".printMsg($name, $err)."
             </td></tr>\n";
@@ -363,7 +363,7 @@ class AdminView extends AUIComponent {
       }else{
         $prefix = "{$name}";
       }
-      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='{self::$labelwidth}'>$suffix" . con($name) . "</td>
+      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input id='{$name}-input' type='password' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
             ".printMsg($name, $err)."
             </td></tr>\n";
@@ -375,7 +375,7 @@ class AdminView extends AUIComponent {
 /*        if ($data[$name]) {
             $chk = 'checked';
         }
-        echo "<tr><td class='admin_name'  width='{self::$labelwidth}'>" . con($name) . "</td>
+        echo "<tr><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
                 <td class='admin_value'><input type='checkbox' name='$name' value='1' $chk>
                 ".printMsg($name, $err)."
                 </td></tr>\n";*/
@@ -649,7 +649,7 @@ class AdminView extends AUIComponent {
     }
 
     function print_url ($name, &$data, $prefix = ''){
-        echo "<tr id='{$name}-tr'><td class='admin_name' width='{self::$labelwidth}'>$prefix" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name' width='".self::$labelwidth."'>$prefix" . con($name) . "</td>
     <td class='admin_value'>
     <a id='{$name}-a' href='{$data[$name]}' target='blank'>{$data[$name]}</a>
     </td></tr>\n";
@@ -659,7 +659,7 @@ class AdminView extends AUIComponent {
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
 
-        echo "<tr id='{$name}-tr'><td class='admin_name'  width='{self::$labelwidth}'>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
               <td class='admin_value'>
                <select id='{$name}-select' name='$name' $actions>\n";
 
@@ -679,7 +679,7 @@ class AdminView extends AUIComponent {
             $mu = 'multiple';
         }
 
-        echo "<tr id='{$name}-tr'><td class='admin_name'  width='{self::$labelwidth}' $mu>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."' $mu>" . con($name) . "</td>
                 <td class='admin_value'> <select id='{$name}-select' name='$name'  $actions>\n";
 
         foreach($opt as $k => $v) {
@@ -690,7 +690,7 @@ class AdminView extends AUIComponent {
     }
 
     function print_color ($name, &$data, &$err) {
-        echo "<tr id='{$name}-tr'><td class='admin_name'  width='{self::$labelwidth}'>" . con($name) . "</td>
+        echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
         <td class='admin_value'>
         <select id='{$name}-select' name='$name'>\n";
 
@@ -715,7 +715,7 @@ class AdminView extends AUIComponent {
 
         if ($data[$name]) {
             $src = self::user_url($data[$name]);
-            echo "<tr id='{$name}-tr'><td class='admin_name'  width='{self::$labelwidth}'>$prefix" . con($name) . "</td>";
+            echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>$prefix" . con($name) . "</td>";
             if ($type == 'img') {
               echo "<td class='admin_value'>";
            		if(file_exists(ROOT.'files'.DS.$data[$name])){
@@ -741,12 +741,12 @@ class AdminView extends AUIComponent {
       $suffix = self::_check($name, $suffix,$data);
 
         if (!isset($data[$name]) || empty($data[$name])) {
-            echo "\n<tr id='{$name}-tr'><td class='admin_name'  width='{self::$labelwidth}'>$suffix" . con($name) . "</td>
+            echo "\n<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
             <td class='admin_value'><input type='file' name='$name'>".printMsg($name, $err)."</td></tr>\n";
         } else {
             $src = self::user_url($data[$name]);
 
-            echo "<tr id='{$name}-tr'><td class='admin_name' rowspan=3 valign='top' width='{self::$labelwidth}'>$suffix" . con($name) . "</td>
+            echo "<tr id='{$name}-tr'><td class='admin_name' rowspan=3 valign='top' width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
             <td class='admin_value'>";
 
             if ($type == 'img') {
@@ -792,7 +792,7 @@ class AdminView extends AUIComponent {
    	  if(empty($selected)){$selected='US';}
     }
 
-    echo "<tr id='{$name}-tr'><td class='admin_name'  width='{self::$labelwidth}'>" . con($name) . "</td>
+    echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
             <td class='admin_value'><select id='{$name}-select' name='$name'>";
     $si[$selected]=' selected';
     foreach ($_COUNTRY_LIST as $key=>$value){

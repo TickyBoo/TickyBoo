@@ -135,7 +135,7 @@ myExit();
     }
     return "user_update";
   }
-  
+
   Function useraddressAction ($smarty){
     global $user;
     $smarty->assign('title',   true);
@@ -206,7 +206,7 @@ myExit();
       return;
     }
  //   echo "accept ok ($test): $myorder->order_id\n". print_r($myorder, true);
-    $hand=$myorder->order_handling;
+    $hand=$myorder->handling;
     Checkout::setordervalues($myorder, $smarty);
 
     $pm_return = $hand->on_return($myorder, true);
@@ -240,7 +240,7 @@ myExit();
       return;
     }
     setordervalues($myorder, $smarty);
-    $hand=$myorder->order_handling;
+    $hand=$myorder->handling;
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
     $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
@@ -259,7 +259,7 @@ myExit();
 		   		return;
 			}
 			ShopDB::dblogging("notify action ($test): $myorder->order_id.\n");
-			$hand=$myorder->order_handling;
+			$hand=$myorder->handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
 			$hand = Handling::decodeEPHCallback(checkout::getsecurecode($type), true);

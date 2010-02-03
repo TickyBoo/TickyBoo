@@ -731,11 +731,11 @@ define("handling_update_title","Modify the Payment Type");
 	define("pm_ebs_accountid","Account ID");
 	define("pm_ebs_seckey","Security Key");
 	define("pm_ebs_test","EBS Test");
-	
+
 	//aim
 	define("pm_authorize_aim_login","AIM Login");
-	define("pm_authorize_aim_txnkey","Transaction Key"); 
-	define("pm_authorize_aim_test","AIM Test"); 
+	define("pm_authorize_aim_txnkey","Transaction Key");
+	define("pm_authorize_aim_test","AIM Test");
 
 
 
@@ -1265,4 +1265,5 @@ define('orderDescription','Fusion Ticket Order Description');
 //define('send_test-tooltip','send_test-tooltip');
 //define('admin_list-tooltip','admin_list-tooltip');
 
+define('missing_pm_ord_id','Error: this placemap cant be saved, venue is missing');
 ?>

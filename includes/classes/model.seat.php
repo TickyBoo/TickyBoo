@@ -362,7 +362,7 @@ class Seat  Extends Model {
 
   public function getCount($options){
 
-    $query = "SELECT count(seat_id) ticketcount FROM seat WHERE 1=1";
+    $query = "SELECT count(seat_id) ticketcount FROM Seat WHERE 1=1";
 
     if(is($options['seat_user_id'],false)){
       $query .= " AND seat_user_id="._esc($options['seat_user_id']);

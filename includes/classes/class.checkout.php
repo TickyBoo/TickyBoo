@@ -49,7 +49,7 @@ class Checkout {
 	    $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
 	    $smarty->assign('order_payment_mode',$aorder->order_payment_mode);
 
-	    $smarty->assign('shop_handling', (array)$aorder->order_handling);
+	    $smarty->assign('shop_handling', (array)$aorder->handling);
 	    $smarty->assign('shop_order', (array)$aorder);
 
 	    $smarty->assign('order_seats_id',$seats);
@@ -104,14 +104,14 @@ class Checkout {
     }
 
   }
-  
+
   /**
    * Checkout::paymentAction()
-   * 
-   * For the recheckout methods with show just the payment method that you would see from 
+   *
+   * For the recheckout methods with show just the payment method that you would see from
    * just checking out.
-   * 
-   * @param object $order 
+   *
+   * @param object $order
    * @param object $smarty
    * @return boolean
    */
@@ -126,9 +126,9 @@ class Checkout {
       if(!is_object($orderInput)){ addWarning('invalid_order'); return false;}
     }
     Checkout::setordervalues($orderInput, $smarty); //assign order vars
-    $hand = $orderInput->order_handling; // get the payment handling object
+    $hand = $orderInput->handling; // get the payment handling object
     $confirmtext = $hand->on_confirm($orderInput); // get the payment button/method...
-    
+
     if (is_array($confirmtext)) {
       $smarty->assign('pm_return',$confirmtext);
       if(!$confirmtext['approved']) {
@@ -145,7 +145,7 @@ class Checkout {
    		return "checkout_confirm";
     }
   }
-  
+
   function  submitAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
@@ -157,7 +157,7 @@ class Checkout {
       return;
     }
     Checkout::setordervalues($myorder, $smarty);
-    $hand= $myorder->order_handling;
+    $hand= $myorder->handling;
     $pm_return = $hand->on_submit($myorder);
     if (empty($pm_return)) {
       return false;
