@@ -345,7 +345,7 @@ class orphans {
       // fix event issues
       case 'Discount~event_id':
         ShopDB::Query("delete from Discount
-                       where discount_event_id = '{$fix[4]}'") ;
+                       where discount_event_id = '{$fix[2]}'") ;
         break;
       case'Event_stat~event_id':
         ShopDB::Query("delete from Event_stat
