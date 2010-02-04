@@ -43,7 +43,7 @@
 
 		<link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-		<script type="text/javascript" src="scripts/jquery/jquery-1.4.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery-1.4.1.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
     <script type="text/javascript" src="scripts/jquery/jquery.json-2.2.min.js"></script>

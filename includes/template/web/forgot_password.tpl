@@ -40,7 +40,7 @@
   <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
   <link rel='stylesheet' href='style.php' type='text/css' >
 
-  <script type="text/javascript" src="scripts/jquery/jquery-1.4.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery-1.4.1.min.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 
 

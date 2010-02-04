@@ -126,7 +126,14 @@ class Update_Smarty {
               AND order_status NOT IN ('cancel','trash') LIMIT 1";
 		if ( $result = ShopDB::query_one_row($query) ) {
 			$time  = Time::StringToTime( $result['order_date_expire'] );
-			$smarty->assign( "order_remain", Time::countdown( $time ));
+      $timeRemain = Time::countdown( $time );
+      if($result['order_date_expire'] == null){
+        $timeRemain['forever']=true; 
+      }
+      if ( $_SHOP->shopconfig_delunpaid_pos == 'No' && $params['pos']==true ){
+        $timeRemain['forever']=true; 
+      }
+			$smarty->assign( "order_remain", $timeRemain );
 		}
 	}
 

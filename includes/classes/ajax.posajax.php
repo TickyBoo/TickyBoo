@@ -515,7 +515,13 @@ class PosAjax {
     $fond=null;
 //    require ("controller/pos_template.php");
     if (!$smarty) addWarning('Smarty_not_set.');
-    $checkoutRes = $this->_posConfirm($smarty);
+    try{
+      $checkoutRes = $this->_posConfirm($smarty);
+    }catch(Exception $e){
+      addWarning('unknown_error',$e->getMessage());
+      return false;
+    }
+    
     if(is_string($checkoutRes)){
       $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
       return true;

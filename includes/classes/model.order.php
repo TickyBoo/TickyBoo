@@ -215,7 +215,7 @@ class Order Extends Model {
       $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$_SHOP->shopconfig_restime.",CURRENT_TIMESTAMP()) ";
     }else{
       $this->order_status="ord";
-      if ($this->handling->handling_expires_min>10) {
+      if ($this->handling->handling_expires_min>=10) {
         $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$this->handling->handling_expires_min.",CURRENT_TIMESTAMP()) ";
       }
     }
@@ -318,7 +318,7 @@ class Order Extends Model {
 
   function Check_payment($order_id){
     $order = Order::load($order_id, true);
-    var_dump($order);
+    //var_dump($order);
     if ($order && $order->handling) {
       return $order->handling->on_check($order);
     } else {
@@ -990,8 +990,9 @@ class Order Extends Model {
     $first_page = true;
     if($bill_template and ($subj & 2)){
       //loading the template
-      if($tpl =& Template::getTemplate($bill_template)){
-        $first_page=FALSE;// print_r(get_class_methods ($tpl));
+      if($tpl = Template::getTemplate($bill_template)){
+        $first_page=FALSE;
+        
         //applying the template
         $tpl->write($pdf, $order);
       }else{

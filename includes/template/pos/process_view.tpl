@@ -167,15 +167,18 @@
     				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
             <tr>
               <td colspan="2">
-                <br />
-    			  	  <strong>
-                <span style="font-size:90%;">
-    			  		 {update->countdown order_id=$shop_order.order_id}
-              	   {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
-    						  {/update->countdown}
-    						  {!autocancel!}
-    						  {!payhere!}
-                </span></strong>
+        
+                {update->countdown order_id=$shop_order.order_id pos=true}
+                {if !$order_remain.forever} {* Orders that dont expire wont complain about being cancelled *}
+                  <br />
+                  <strong>
+                  <span style="font-size:90%;">
+                    {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+        						{!autocancel!}
+        						{!payhere!}
+                  </span></strong>
+                {/if}
+                
     			  		<br />
     			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
                   <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />

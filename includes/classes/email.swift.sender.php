@@ -98,6 +98,7 @@ class EmailSwiftSender {
 
     if(!$ret || $ret < 1){
       Shopdb::dblogging("email '{$type}' errors:\n".$logger->dump());
+      addWarning('failed_send_to:',print_r($swiftMessage->getTo(),true));
       return false;
     }else{
       return $ret;
