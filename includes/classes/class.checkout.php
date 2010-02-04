@@ -84,10 +84,10 @@ class Checkout {
     } else {
       Checkout::setordervalues($myorder, $smarty); //assign order vars
       $cart->destroy_f(); // destroy cart
-      if(!$myorder->order_handling){
-        $myorder->order_handling = Handling::load($myorder->order_handling_id);
+      if(!$myorder->handling){
+        $myorder->handling = Handling::load($myorder->order_handling_id);
       }
-    	$hand = $myorder->order_handling; // get the payment handling object
+    	$hand = $myorder->handling; // get the payment handling object
       $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
       if (is_array($confirmtext)) {
     	 $smarty->assign('pm_return',$confirmtext);

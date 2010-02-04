@@ -40,7 +40,7 @@ class Update_Smarty {
 	function Update_Smarty( &$smarty ) {
 		global $_SHOP;
 
-		$smarty->register_object( "update", $this, array('view', 'countdown') );
+		$smarty->register_object( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
 		$smarty->assign_by_ref( "update", $this );
 	}
 
@@ -128,10 +128,10 @@ class Update_Smarty {
 			$time  = Time::StringToTime( $result['order_date_expire'] );
       $timeRemain = Time::countdown( $time );
       if($result['order_date_expire'] == null){
-        $timeRemain['forever']=true; 
+        $timeRemain['forever']=true;
       }
       if ( $_SHOP->shopconfig_delunpaid_pos == 'No' && $params['pos']==true ){
-        $timeRemain['forever']=true; 
+        $timeRemain['forever']=true;
       }
 			$smarty->assign( "order_remain", $timeRemain );
 		}

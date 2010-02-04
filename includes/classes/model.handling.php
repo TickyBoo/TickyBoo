@@ -163,8 +163,6 @@ class Handling Extends Model {
       $order_d['action']= is($order_d['action'],'handle:'.$template_name);
 
       if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
-        addWarning("failed_to_send_email",print_r($email->errors,true));
-        //user_error('error: '.print_r($email->errors,true));
         $ok=FALSE;
       }
     }
