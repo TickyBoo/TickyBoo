@@ -182,6 +182,7 @@ define("log_err_wrong_usr_info","<p>Please try again, remembering that the usern
 define("mand_all", "All Input Fields are Required!");
 define("mandatory"," Field Required!");
 define("MP3_loading_problem","Problem Loading MP3 File!");
+define('missing_pm_ord_id','Error: this placemap cant be saved, venue is missing');
 define("nosale_confirm_msg","Remove from Sale?");
 define("new_order_created","New Order Created");
 define("not_number","Enter a Number Without -()!");
@@ -208,6 +209,7 @@ define("pwd_to_short", "Password Too Short!");
 define("pub_confirm_msg","Publish Event?");
 define("reservate_failed","Internal Error: Impossible to Save Seats ");
 define("restart_success","Successfully Restarted!");
+define("save_successful","Changes Saved");
 define("save_failed","Internal Error: Impossible to Save the Order ");
 define("send_order_email","Send Order by E-mail and Change Status to 'Sent'");
 define("split_pm","Split Seat Chart");
@@ -682,7 +684,7 @@ define("handling_update_title","Modify the Payment Type");
 	define("handling_alt","Alt Handling Method");
 		define("handling_no_alt","None");
 	define("handling_alt_only","Only Alt Handling Method");
-	define("handling_expires_min","Minutes until Handling Expires");
+	define("handling_expires_min","Minutes until OH Cancels for<br> Non-Payment (0 = Never)");
 	define("handling_fee_fix","Fee Fixed");
 	define("handling_fee_percent","Fee Percent");
 	define("handling_email_template_ord","Email Template for Order");
@@ -910,7 +912,7 @@ define("minutes","min.");
 
 //cart_view.tpl
 define("shopping_cart","Your shopping cart");
-define("cart_cont_mess","Please check your order. You have 15 minutes before your reserved tickets are released back to sale. Please, either order more tickets or continue with your order.
+define("cart_cont_mess","Please check your order. You have a limited time before your reserved tickets are released back to sale. Please, either order more tickets or continue to checkout.
 	<br><br>To change your tickets 'Remove' the ones you have reserved and click 'Order More Tickets'.");
 
 //cat_description.tpl
@@ -1252,6 +1254,7 @@ define('English','English');
 
 define('pay','Pay');
 
+//model.order
 define('orderDescription','Fusion Ticket Order Description');
 
 
@@ -1265,5 +1268,4 @@ define('orderDescription','Fusion Ticket Order Description');
 //define('send_test-tooltip','send_test-tooltip');
 //define('admin_list-tooltip','admin_list-tooltip');
 
-define('missing_pm_ord_id','Error: this placemap cant be saved, venue is missing');
 ?>
