@@ -142,11 +142,10 @@ class XMLData {
 
   	if($res=ShopDB::query($query)){
 
-  	  $nf=shopDB::num_fields($res);
-  	  if(shopDB::num_rows($res)==0 || shopDB::num_rows($res)=='')
-  	  {
-  	  user_error('Cannot export. No results found!');
-  	  return;
+  	  $nf=shopDB::fieldCount($res);
+  	  if( empty($nr)){
+    	  user_error('Cannot export. No results found!');
+    	  return;
   	  }
 
   		$pc=-1;

@@ -50,7 +50,7 @@
         {gui->view name='user_firstname' value=$user->user_firstname|clean}
         {gui->view name='user_lastname' value=$user->user_lastname|clean}
         {gui->view name='user_address' value=$user->user_address|clean}
-        {gui->view name='user_address2' value=$user->user_address2|clean}
+        {gui->view name='user_address1' value=$user->user_address1|clean}
         {gui->view name='user_zip' value=$user->user_zip|clean}
         {gui->view name='user_city' value=$user->user_city|clean}
         {gui->view name='user_state' value=$user->user_state|clean}
