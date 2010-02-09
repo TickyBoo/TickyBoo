@@ -71,7 +71,7 @@ class PlaceMap Extends Model {
   }
   function save($id = null, $exclude=null){
     if (!empty($this->pm_ort_id)) {
-      parent::save($id, $exclude);
+      return parent::save($id, $exclude);
     } else {
       addwarning('missing_pm_ord_id');
     }
@@ -209,7 +209,8 @@ class PlaceMap Extends Model {
             $zone->save();
           }
         }
-      }
+      } else
+        return ShopDB::rollback('copied Placmap to event: '.$event_id);
       if (ShopDB::commit('copied Placmap to event: '.$event_id)){
         return $new_id;
       }

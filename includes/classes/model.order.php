@@ -215,7 +215,7 @@ class Order Extends Model {
       $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$_SHOP->shopconfig_restime.",CURRENT_TIMESTAMP()) ";
     }else{
       $this->order_status="ord";
-      if ($this->handling->handling_expires_min>=10) {
+      if ($this->handling->handling_expires_min>=1) {
         $this->order_date_expire = "TIMESTAMPADD(MINUTE,".$this->handling->handling_expires_min.",CURRENT_TIMESTAMP()) ";
       }
     }
@@ -992,7 +992,7 @@ class Order Extends Model {
       //loading the template
       if($tpl = Template::getTemplate($bill_template)){
         $first_page=FALSE;
-        
+
         //applying the template
         $tpl->write($pdf, $order);
       }else{
