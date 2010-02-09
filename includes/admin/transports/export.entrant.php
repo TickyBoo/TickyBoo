@@ -52,14 +52,14 @@ class export_entrant extends AdminView {
 		}
 
 		echo "<form action='{$_SERVER[PHP_SELF]}' method='get'>";
-		$this->form_head(export_entrant_title);
+		$this->form_head(con('export_entrant_title'));
 		$this->print_select_assoc('export_entrant_event',$data,$err,$event);
 		$this->print_checkbox('export_entrant_NotSended',$data,$err);
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
   		<input type='hidden' name='export_type' value='entrant'>
-		<input type='submit' name='submit' value='".export_xml_event_submit."'></td></tr>
+		<input type='submit' name='submit' value='".con('export_xml_event_submit')."'></td></tr>
 		</table></form>";
   }
 
@@ -68,6 +68,7 @@ class export_entrant extends AdminView {
 
     $workbook = new Spreadsheet_Excel_Writer();
     // sending HTTP headers
+    $workbook->setTempDir($_SHOP->tmp_dir);
     $workbook->send("Tickets_for_".$event.".xls");
     // Creating a worksheet
     $worksheet =& $workbook->addWorksheet('Tickets');
@@ -125,7 +126,7 @@ class export_entrant extends AdminView {
     $worksheet->setcolumn(0, 0,15);
     $worksheet->setcolumn(1, 2,25);
     $worksheet->setcolumn(4, 4,18);
-    $worksheet->write(0, 0, export_entrant_title, $format_header);
+    $worksheet->write(0, 0, con('export_entrant_title'), $format_header);
     $worksheet->write(0, 1, "", $format_header);
     $worksheet->write(0, 2, "", $format_header);
     $worksheet->write(0, 3, "", $format_header);
@@ -144,11 +145,11 @@ class export_entrant extends AdminView {
     $worksheet->write(2, 3, time." :",$format_bold);
     $worksheet->write(2, 4, formatTime($row['event_time']));
 
-    $worksheet->write(3, 0, order_id,$format_title);
-    $worksheet->write(3, 1, FullName,$format_title);
-    $worksheet->write(3, 2, city, $format_title);
-    $worksheet->write(3, 3, tickets,$format_title);
-    $worksheet->write(3, 4, price,$format_titler);
+    $worksheet->write(3, 0, con('export_entrant_order_id'),$format_title);
+    $worksheet->write(3, 1, con('export_entrant_FullName'),$format_title);
+    $worksheet->write(3, 2, con('export_entrant_city'), $format_title);
+    $worksheet->write(3, 3, con('export_entrant_tickets'),$format_title);
+    $worksheet->write(3, 4, con('export_entrant_price'),$format_titler);
 
     $totprice=0.0;
     $totseats=0;
@@ -162,13 +163,13 @@ class export_entrant extends AdminView {
       $totseats += $row['seat_count'];
       $price ='';
       If ($row['order_payment_status'] == 'payed') {
-        $price .= order_type_payed;
+        $price .= con('order_type_payed');
       } else {
         $price .= $row['seat_totall_price'];
         $totprice += $row['seat_totall_price'];
       }
       If ($row['order_shipment_status'] == 'send') {
-        $price .= ' ('.order_status_send.')';
+        $price .= ' ('.con('order_status_send').')';
       }
 
       $worksheet->write($i, 4,$price, $format_price);
@@ -176,7 +177,7 @@ class export_entrant extends AdminView {
     }
     $worksheet->write($i, 0, "");
     $worksheet->write($i, 1, "",$format_bold);
-    $worksheet->write($i, 2, total_price." :",$format_bold);
+    $worksheet->write($i, 2, con('export_entrant_totalprice')." :",$format_bold);
 
     $worksheet->write($i, 3, $totseats, $format_leftb);
     $worksheet->write($i, 4, $totprice, $format_priceb);

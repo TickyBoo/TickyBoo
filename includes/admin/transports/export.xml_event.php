@@ -49,7 +49,7 @@ class export_xml_event extends AdminView {
 		}
 
 		echo "<form action='{$_SERVER["PHP_SELF"]}' method='GET'>";
-		$this->form_head(export_xml_event_title);
+		$this->form_head(con('export_xml_event_title'));
 //function print_select_assoc ($name,&$data,&$err,$opt,$mult=false){
 
 		$this->print_select_assoc('export_xml_event_event',$data,$err,$event);
@@ -57,7 +57,7 @@ class export_xml_event extends AdminView {
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
   		<input type='hidden' name='export_type' value='xml_event'>
-		<input type='submit' name='submit' value='".export_xml_event_submit."'></td></tr>
+		<input type='submit' name='submit' value='".con('export_xml_event_submit')."'></td></tr>
 		</table></form>";
   }
 

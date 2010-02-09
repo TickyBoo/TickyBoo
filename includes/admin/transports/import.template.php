@@ -41,14 +41,14 @@ class import_template extends AdminView {
 
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 
-		$this->form_head(import_xml_title);
+		$this->form_head(con('import_xml_title'));
 		$this->print_file('import_xml_file', $data, $err, 'xml');
     $this->print_input('template_name', $data, $err);
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
   	<input type='hidden' name='import_type' value='template'>
-		<input type='submit' name='submit' value='".import_xml_submit."'></td></tr>
+		<input type='submit' name='submit' value='".con('import_xml_submit')."'></td></tr>
 		</table></form>
 		<center><span class='error'>{$err['main']}</span></center>";
   }
@@ -58,7 +58,7 @@ class import_template extends AdminView {
     global $_SHOP;
     if($_POST['submit']){
       if (empty($_POST['template_name'])){
-        $this->err['template_name'] = mandatory;
+        $this->err['template_name'] = con('mandatory');
         return 0;
       }
      // print_r($_FILES['import_xml_file']);
@@ -89,14 +89,14 @@ class import_template extends AdminView {
                   VALUES (" . _ESC($_POST['template_name']) . "," . _ESC($m[1]) . ",
                           " . _ESC($m[2]) . ",'new')";
         if (!ShopDB::query($query)){
-           $this->err['main'] = error.':'.$_SHOP->db_error;
+           $this->err['main'] = con('error').':'.$_SHOP->db_error;
            return 0;
         }
   			echo import_template_title." : ".$_FILES['import_template_file']['name']." ... ";
   			echo done;
   			return false;
       } else {
-        $this->err['import_xml_file'] = mandatory;
+        $this->err['import_xml_file'] = con('mandatory');
       }
     }
   }

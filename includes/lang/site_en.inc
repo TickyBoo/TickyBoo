@@ -787,7 +787,7 @@ define("export_xml_event_file","Filename");
 	define("export_cc","Credit Cards");
 		define("export_cc_title","Export Credit Card Numbers");
 		define("export_cc_count","Credit Card Count");
-	define("export_entrant","Orders");
+	define("export_entrant","Export Attendees");
 		define("export_entrant_title","Export Attendees");
 		define("export_entrant_event","Choose Event");
 		define("export_entrant_NotSended","'Not Sent' Orders only");

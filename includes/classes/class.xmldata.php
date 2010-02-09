@@ -41,7 +41,7 @@ class XMLData {
    * export mysql query results to xml format
    */
   function sql2xml($query,$table,$out=SQL2XML_OUT_RETURN,$pk=''){
-
+    $total  ='';
   	if(empty($query)){user_error('cannot export "'.$table.'": empty query');return;}
   	if($res=ShopDB::query($query)){
 
@@ -77,6 +77,8 @@ class XMLData {
   			else{echo $ret;}
   		}
   	}
+    return $total;
+
   }
 
   function sql2xml_all($what,$out=SQL2XML_OUT_RETURN){
@@ -138,12 +140,14 @@ class XMLData {
 
   function sql2xml_new($query,$table,$out=SQL2XML_OUT_RETURN,$pk=''){
     Global $_SHOP;
+    $total  ='';
+
   	if(empty($query)){user_error('cannot export "'.$table.'": empty query');return;}
 
   	if($res=ShopDB::query($query)){
 
   	  $nf=shopDB::fieldCount($res);
-  	  if( empty($nr)){
+  	  if( empty($nf)){
     	  user_error('Cannot export. No results found!');
     	  return;
   	  }
@@ -208,7 +212,9 @@ class XMLData {
   			else{echo $ret;}
   		}
   	}
+    return $total;
   }
+
   function sql2xml_all_new($what,$out=SQL2XML_OUT_RETURN){
   	$ret.='<?xml version="1.0" encoding="ISO-8859-1" ?>'."\n";
   	$ret.='<events>'."\n";

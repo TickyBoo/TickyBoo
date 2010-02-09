@@ -41,15 +41,15 @@ class export_xl extends AdminView {
   function xl_form (&$data,&$err){
     echo "<form method='get' action='{$_SERVER['PHP_SELF']}'>";
     echo "<table class='admin_list' border='0' width='$this->width' cellspacing='1' cellpadding='5'>";
-    echo "<tr><td colspan='2' class='admin_list_title'>".xl_view_title."</td></tr>";
+    echo "<tr><td colspan='2' class='admin_list_title'>".con('xl_view_title')."</td></tr>";
     $this->print_date('xl_start',$data,$err);
     $this->print_date('xl_end',$data,$err);
     echo "<tr><td align='center' class='admin_value' colspan='2'>
 
 		<input type='hidden' name='export_type' value='xl'>
 
-		<input type='submit' name='submit' value='".generate_xl."'>
-		<input type='reset' name='reset' value='".res."'></td></tr>";
+		<input type='submit' name='submit' value='".con('generate_xl')."'>
+		<input type='reset' name='reset' value='".con('res')."'></td></tr>";
     echo "</table></form>";
   }
 
@@ -59,24 +59,26 @@ class export_xl extends AdminView {
       $m=$data['xl_start-m'];
       $d=$data['xl_start-d'];
     }
-    if(!checkdate($m,$d,$y)){$err['xl_start']=invalid;}
+    if(!checkdate($m,$d,$y)){$err['xl_start']=con('invalid');}
     else{$data['xl_start']="$y-$m-$d 00:00:00";}
     if(isset($data['xl_end-y']) or isset($data['xl_end-m']) or isset($data['xl_end-d'])){
       $y=$data['xl_end-y'];
       $m=$data['xl_end-m'];
       $d=$data['xl_end-d'];
     }
-    if(!checkdate($m,$d,$y)){$err['xl_end']=invalid;}
+    if(!checkdate($m,$d,$y)){$err['xl_end']=con('invalid');}
     else{$data['xl_end']="$y-$m-$d 23:59:59";}
     return empty($err);
   }
 
   function generate_xl ($res,$start,$end){
+    GLOBAL $_SHOP;
     $start=substr($start,0,10);
     $end=substr($end,0,10);
     // Creating a workbook
     $workbook = new Spreadsheet_Excel_Writer();
     // sending HTTP headers
+    $workbook->setTempDir($_SHOP->tmp_dir);
     $workbook->send("ticket".$start."_".$end.".xls");
     // Creating a worksheet
     $worksheet =& $workbook->addWorksheet('Tickets Data');
