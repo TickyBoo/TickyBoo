@@ -350,17 +350,17 @@ function check_system() {
 
   // NS: I moved the current_db_time to the init.php so we have lesser sql calls.
   // also i have moved the error messages to the language file. so the can be translated.
-  
+
   if ($_SHOP->shopconfig_lastrun_int == 0) {
       return;
   } elseif ( $_SHOP->current_db_time <= $_SHOP->shopconfig_lastrun ) {
       return;
   }
-  
+
   //print_r('run');
   //Checks to see if res time is enabled anything more than 9 will delete
   if ( $_SHOP->shopconfig_restime >= 1 ) {
-    
+
     $query = "SELECT order_id FROM `Order`
               WHERE order_status = 'res'
               AND order_payment_status  = 'none'
@@ -368,7 +368,7 @@ function check_system() {
               AND order_date_expire <= NOW()";
     if ( $_SHOP->shopconfig_check_pos == 'No' ) {
       $query .= " AND order_place != 'pos' ";
-    }    
+    }
     if ( $res = ShopDB::query($query) ) {
       while ( $row = ShopDB::fetch_assoc($res) ) {
         Order::delete( $row['order_id'], 'AutoCancel_order');
@@ -594,6 +594,8 @@ function clean($string, $type='ALL') {
        return  htmlspecialchars_decode(wp_entities($string,0),ENT_QUOTES );
        break;
     case 'all'  : $string = strip_tags_in_big_string ($string);
+    case 'utf8' : $string = utf8_decode($string );
+
     case 'strip': $string = $string;
     case 'html' : $string = wp_entities(htmlentities($string, ENT_QUOTES));
   }

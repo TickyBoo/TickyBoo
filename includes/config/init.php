@@ -68,6 +68,18 @@ if (!defined('ft_check')) {die('System intrusion ');}
   if (!defined('PHP_SELF'))
     define('PHP_SELF',$_SERVER['PHP_SELF']);
 
+
+  if (isset($_REQUEST['action'])) {
+    $action=$_REQUEST['action'];
+  } elseif(!isset($action)){
+    $action=false;
+  }
+  $_REQUEST['action'] = $action;
+  $_GET['action']     = $action;
+  $_POST['action']    = $action;
+
+  trace( $_SERVER["PHP_SELF"]. " [{$action}]", true);
+  trace( '====================================================================');
  // print_r($_SERVER);
   $query="SELECT *, UNIX_TIMESTAMP() as current_db_time FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
@@ -100,15 +112,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   }
 // check the order system for outdated orders and reservations
   check_system();
-
-  if (isset($_REQUEST['action'])) {
-    $action=$_REQUEST['action'];
-  } elseif(!isset($action)){
-    $action=false;
-  }
-  $_REQUEST['action'] = $action;
-  $_GET['action']     = $action;
-  $_POST['action']    = $action;
 
 //authentifying (if needed)
   $accepted = true;
