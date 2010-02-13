@@ -6,7 +6,7 @@ var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 });
 
 $(window).load(function(){
-  
+
   updateUserRules = {
 		rules: {
 			user_firstname	: 	{ required :true },
@@ -33,12 +33,13 @@ $(window).load(function(){
 		errorClass: "form-error",
 		success: "form-valid"
 	}
+
   updateUserRulesAndPass = updateUserRules;
   updateUserRulesAndPass.rules.password1 = { minlength : 6 };
-  updateUserRulesAndPass.rules.password2 = { minlength : 6, equalTo: "#password" } 
+  updateUserRulesAndPass.rules.password2 = { minlength : 6, equalTo: "#password" }
 
 	$("#update_user").validate(updateUserRulesAndPass);
-  
+
 	$("#user-register").validate({
  	rules: {
 			user_firstname	: 	{ required :true },
@@ -86,24 +87,20 @@ $(window).load(function(){
 		},
 		messages : {
 			password : { required : " " },
-			username : { required : " ", email : " " }	
+			username : { required : " ", email : " " }
 		},
 		errorClass: "form-error"
-		
+
 	});
-  
+
   $('#ismember-checkbox').click(function(){
     if($(this).is(':checked')){
       showPasswords(true);
-      $("input[name='password1']").rules("add",{ required : true, minlength : 6 });
-      $("input[name='password2']").rules("add",{ required : true , minlength : 6, equalTo: "#password" });
     }else{
       showPasswords(false);
-      $("input[name='password1']").rules("remove");
-      $("input[name='password2']").rules("remove");
     }
   });
-  
+
   $('#forgot_password').click(function(){
     ajaxQManager.add({
       type:      "POST",
@@ -111,7 +108,7 @@ $(window).load(function(){
       dataType:   "HTML",
       data:      {},
       success:function(data, status){
-          $("#showdialog").html(data); 
+          $("#showdialog").html(data);
           $("#showdialog").modal({
             autoResize: true
           });
@@ -124,10 +121,12 @@ var updateUserRules = {};
 var showPasswords = function(show){
   if(show == true){
     $('#passwords_tr1').show();
-    $('#passwords_tr2').show(); 
+    $('#passwords_tr2').show();
+      $("input[name='password1']").rules("add",{ required : true, minlength : 6 });
+      $("input[name='password2']").rules("add",{ required : true , minlength : 6, equalTo: "#password" });
   }else{
     $('#passwords_tr1').hide();
     $('#passwords_tr2').hide();
-  }
+      $("input[name='password1']").rules("remove");
+      $("input[name='password2']").rules("remove");  }
 }
-

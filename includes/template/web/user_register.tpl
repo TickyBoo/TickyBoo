@@ -113,7 +113,9 @@
 <br />
 <br />
 <script  type="text/javascript">
-
+{literal}
+$(window).load(function(){
+{/literal}
   {if $user->mode() <= '1' or $ManualRegister}
     showPasswords(true);
   {elseif $user->mode() eq '2'}
@@ -121,7 +123,9 @@
   {else}
     showPasswords(false);
   {/if}
-
+{literal}
+});
+{/literal}
 </script>
 
 {if !$ManualRegister}
