@@ -784,13 +784,26 @@ define("export_xml_event_file","Filename");
 		define("xl_start","Start Date");
 		define("xl_end","End Date");
 		define("generate_xl","Generate Sales Worksheet");
+			define("seat_id","Seat ID");
+			define("seat_price","Seat Price");
+
 	define("export_cc","Credit Cards");
 		define("export_cc_title","Export Credit Card Numbers");
 		define("export_cc_count","Credit Card Count");
 	define("export_entrant","Export Attendees");
 		define("export_entrant_title","Export Attendees");
-		define("export_entrant_event","Choose Event");
+		define("export_entrant_event","Choose an Event");
 		define("export_entrant_NotSended","'Not Sent' Orders only");
+			define("export_entrant_order_id","Order ID");
+			define("export_entrant_FullName","FullName");
+			define("export_entrant_city","City");
+			define("export_entrant_tickets","Tickets");
+			define("export_entrant_price","Total Sale");
+			define("export_entrant_totalprice","Totals");
+			define("date","Date");
+			define("time","Time");
+
+
 
 //Import
 define("import_admin_title","Import Data");

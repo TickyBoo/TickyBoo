@@ -83,39 +83,38 @@ class export_xl extends AdminView {
     // Creating a worksheet
     $worksheet =& $workbook->addWorksheet('Tickets Data');
     // The actual data
-    $worksheet->write(0, 0, 'Seat ID');
-    $worksheet->write(0, 1, 'Order ID');
+    $worksheet->write(0, 0, con('seat_id'));
+    $worksheet->write(0, 1, con('order_id'));
+    $worksheet->write(0, 2, con('user_id'));
+    $worksheet->write(0, 3, con('user_lastname'));
+    $worksheet->write(0, 4, con('user_firstname'));
+    $worksheet->write(0, 5, con('user_address'));
+    $worksheet->write(0, 6, con('user_address1'));
+    $worksheet->write(0, 7, con('user_zip'));
+    $worksheet->write(0, 8, con('user_city'));
+    $worksheet->write(0, 9, con('user_country'));
+    $worksheet->write(0, 10, con('user_phone'));
+    $worksheet->write(0, 11, con('user_fax'));
+    $worksheet->write(0, 12, con('user_email'));
+    $worksheet->write(0, 13, con('user_status'));
 
-    $worksheet->write(0, 2, 'User_ID');
-    $worksheet->write(0, 3, 'User_LastName');
-    $worksheet->write(0, 4, 'User_FirstName');
-    $worksheet->write(0, 5, 'User_Address');
-    $worksheet->write(0, 6, 'User_Address1');
-    $worksheet->write(0, 7, 'User_ZIP');
-    $worksheet->write(0, 8, 'User_City');
-    $worksheet->write(0, 9, 'User_Country');
-    $worksheet->write(0, 10, 'User_Phone');
-    $worksheet->write(0, 11, 'User_Fax');
-    $worksheet->write(0, 12, 'User_Email');
-    $worksheet->write(0, 13, 'User_Status');
+    $worksheet->write(0, 14, con('event_id'));
 
-    $worksheet->write(0, 14, 'Event_ID');
+    $worksheet->write(0, 15, con('event_name'));
+    $worksheet->write(0, 16, con('event_date'));
+    $worksheet->write(0, 17, con('event_time'));
+    $worksheet->write(0, 18, con('ort_id'));
+    $worksheet->write(0, 19, con('ort_name'));
 
-    $worksheet->write(0, 15, 'Event_Name');
-    $worksheet->write(0, 16, 'Event_Date');
-    $worksheet->write(0, 17, 'Event_Time');
-    $worksheet->write(0, 18, 'Ort_id');
-    $worksheet->write(0, 19, 'Ort_Name');
+    $worksheet->write(0, 20, con('category_id'));
 
-    $worksheet->write(0, 20, 'Category_ID');
+    $worksheet->write(0, 21, con('category_name'));
+    $worksheet->write(0, 22, con('category_price'));
 
-    $worksheet->write(0, 21, 'Category_Name');
-    $worksheet->write(0, 22, 'Category_Price');
-
-    $worksheet->write(0, 23, 'Seat_Price');
-    $worksheet->write(0, 24, 'Discount_Name');
-    $worksheet->write(0, 25, 'Discount_Type');
-    $worksheet->write(0, 26, 'Discount_Value');
+    $worksheet->write(0, 23, con('seat_price'));
+    $worksheet->write(0, 24, con('discount_name'));
+    $worksheet->write(0, 25, con('discount_type'));
+    $worksheet->write(0, 26, con('discount_value'));
 
     $i=1;
     while($row=shopDB::fetch_assoc($res)){

@@ -146,10 +146,10 @@ class export_entrant extends AdminView {
     $worksheet->write(2, 4, formatTime($row['event_time']));
 
     $worksheet->write(3, 0, con('export_entrant_order_id'),$format_title);
-    $worksheet->write(3, 1, con('export_entrant_FullName'),$format_title);
+    $worksheet->write(3, 1, con('export_entrant_fullname'),$format_title);
     $worksheet->write(3, 2, con('export_entrant_city'), $format_title);
     $worksheet->write(3, 3, con('export_entrant_tickets'),$format_title);
-    $worksheet->write(3, 4, con('export_entrant_price'),$format_titler);
+    $worksheet->write(3, 4, con('export_entrant_price'),$format_title);
 
     $totprice=0.0;
     $totseats=0;
