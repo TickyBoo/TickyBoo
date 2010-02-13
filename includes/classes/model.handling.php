@@ -160,22 +160,23 @@ class Handling Extends Model {
       }
 
       $order_d = array_merge($order_d,(array)$order->handling);
-      $order_d['action']= is($order_d['action'],'handle:'.$template_name);
+      $order_d['action']= is($order_d['action'],'Handle: '.$new_state.'->'.$template_name);
 
-      if(!Template::sendMail($tpl,$order_d,"",$_SHOP->lang)){
+      if(!Template::sendMail($tpl, $order_d, "", $_SHOP->lang)){
         $ok=FALSE;
       }
-    }
-
-    //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
-    $status = strtolower($new_state);
-    $manSend = strtolower($order->handling->handling_only_manual_send);
-    if($status=='payed' && $order->handling->handling_shipment=='email' && $manSend=='no'){
-      $order2=Order::load($order->order_id,true);
-      if ($order2) {
-        $order2->set_shipment_status('send');
+      //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
+      $status = strtolower($new_state);
+      $manSend = strtolower($order->handling->handling_only_manual_send);
+      if($ok && $status=='payed' && $order->handling->handling_shipment=='email' && $manSend=='no'){
+  //      $order2=Order::load($order->order_id,true);
+  //      if ($order2) {
+          $order->set_shipment_status('send');
+          addNotice('order_is_set_to_send');
+  //      }
       }
     }
+
 
 		if($ok and $pm = $this->pment()){
 			if(method_exists($pm, 'on_handle')){
@@ -188,6 +189,9 @@ class Handling Extends Model {
 				$ok= $sm->on_handle($order,$new_state,$old_state,$field);
 			}
 		}
+    if (!$ok) {
+      addWarning('status_change_handling_error');
+    }
 		return ($ok);
   }
 

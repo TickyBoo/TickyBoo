@@ -183,7 +183,7 @@ class PlaceMap Extends Model {
 
     if(ShopDB::begin('copy Placmap to event: '.$event_id)){
       if($new_id=$this->save()){
-        self::dblogging($new_id);
+      //  ShopDB::dblogging($new_id);
         if($zones=PlaceMapZone::loadAll($old_id)){
           foreach($zones as $zone){
             unset($zone->pmz_id);

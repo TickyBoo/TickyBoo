@@ -135,7 +135,7 @@ class ShopDB {
             }
             if (ShopDB::$link->autocommit(false)) {
                 self::$db_trx_started = 1;
-                self::dblogging("[Begin {$name}]");
+                trace("[Begin {$name}]");
                 return true;
             } else {
                 $_SHOP->db_error= mysqli_error(ShopDB::$link);
@@ -145,7 +145,7 @@ class ShopDB {
             }
         } else {
             self::$db_trx_started++;
-            self::dblogging("[Begin {$name}] ".self::$db_trx_started);
+            trace("[Begin {$name}] ".self::$db_trx_started);
             return true;
         }
     }
@@ -160,9 +160,9 @@ class ShopDB {
             if (!$retaining){
               ShopDB::$link->autocommit(true);
               self::$db_trx_started = 0;
-              self::dblogging("[Commit {$name}]");
+              trace("[Commit {$name}]");
             } else {
-              self::dblogging("[Commitremaining {$name}]");
+              trace("[Commitremaining {$name}]");
             }
             return true;
           } else {
@@ -172,11 +172,11 @@ class ShopDB {
             return false;
           }
         } elseif (self::$db_trx_started > 1) {
-          self::dblogging("[Commit {$name}] ".self::$db_trx_started);
+          trace("[Commit {$name}] ".self::$db_trx_started);
           self::$db_trx_started--;
           return true;
         } else {
-          self::dblogging("[Commit {$name}] - no transaction");
+          trace("[Commit {$name}] - no transaction");
           return true;
         }
     }
