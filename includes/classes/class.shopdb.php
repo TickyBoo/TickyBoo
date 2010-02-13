@@ -177,7 +177,7 @@ class ShopDB {
           return true;
         } else {
           self::dblogging("[Commit {$name}] - no transaction");
-          return false;
+          return true;
         }
     }
     static function rollback ($name='')

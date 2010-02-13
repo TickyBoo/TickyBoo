@@ -183,12 +183,15 @@ class PlaceMap Extends Model {
 
     if(ShopDB::begin('copy Placmap to event: '.$event_id)){
       if($new_id=$this->save()){
+        self::dblogging($new_id);
         if($zones=PlaceMapZone::loadAll($old_id)){
           foreach($zones as $zone){
             unset($zone->pmz_id);
             $zone->pmz_pm_id=$new_id;
             $zone->pmz_event_id=$event_id;
-            $zone->save();
+            if (!$zone->save()) {
+              return ShopDB::rollback('copying zones Failed, event: '.$event_id);
+            }
           }
         }
 
@@ -197,7 +200,9 @@ class PlaceMap Extends Model {
             unset($zone->category_id);
             $zone->category_pm_id=$new_id;
             $zone->category_event_id=$event_id;
-            $zone->save();
+            if (!$zone->save()) {
+              return ShopDB::rollback('copying Categories Failed, event: '.$event_id);
+            }
           }
         }
 
@@ -206,7 +211,9 @@ class PlaceMap Extends Model {
             unset($zone->pmp_id);
             $zone->pmp_pm_id=$new_id;
             $zone->pmp_event_id=$event_id;
-            $zone->save();
+            if (!$zone->save()) {
+              return ShopDB::rollback('copying parts Failed, event: '.$event_id);
+            }
           }
         }
       } else

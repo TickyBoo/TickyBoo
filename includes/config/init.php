@@ -78,6 +78,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_GET['action']     = $action;
   $_POST['action']    = $action;
 
+  trace( '====================================================================');
   trace( $_SERVER["PHP_SELF"]. " [{$action}]", true);
   trace( '====================================================================');
  // print_r($_SERVER);
