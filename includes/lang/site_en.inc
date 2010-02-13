@@ -192,8 +192,14 @@ define("old_order_canceled","Old Order Cancelled!");
 define("order_allready_cancelled","Order Allready Cancelled!");
 define("order_canceled","Order Cancelled!");
 define("order_cannot_reissue","Can Not Re-Issue!");
+define('order_error_message','Order Error Message');
+define('order_madefinal','Order is Complete');
 define("order_not_found","Order Not Found!");
+define('OrderNotFound','Order Not Found');
 define("order_not_canceled","Order Not Cancelled!");
+define('order_notice_message','Order Notice Message');
+define('order_payed_already','Order Already Paid');
+define('order_payed_total','Total Paid');
 define("pass_not_egal","Passwords Do Not Match!");
 define("pass_match","Passwords Do Not Match!");
 define("pass_too_short","Password too Short!");
@@ -216,6 +222,7 @@ define("split_pm","Split Seat Chart");
 define("Status_is_pub","This Event is Published!");
 define("stop_success","Successfully Stopped!");
 define("system_halted","<b>SYSTEM IS HALTED!<b>");
+define('This_page_is_not_secure','This page is not Secure!');
 define("ticket_deleted","Ticket Deleted!");
 define("ticket_not_found","Ticket Not Found in Database!");
 define("tickets_printing","Tickets are Printing. Please Wait!");
@@ -223,23 +230,17 @@ define("too_low","Please Enter a Number Larger than 0 !");
 define("To_Trash","Sent to Garbage");
 define("undefined","Undefined!");
 
-define('This_page_is_not_secure','This page is not Secure!');
-define('order_madefinal','Order is Complete');
-define('OrderNotFound','Order Not Found');
 define('err_blank_or_allready','Error, Blank or already in use!');
 define('compilation_failed','Compilation Failed!');
 define('ClassCatch:','Class Catch:');
 define('wrong_input_ids','Wrong Input Id');
 define('file_not_exsist','File does Not Exist!');
 define('username_not_found','User Name Not Found!');
-define('order_error_message','Order Error Message');
-define('order_notice_message','Order Notice Message');
 define('search_choice_one_field','Choose a Field to Search!');
 define('search_choice_event','Choose an Event to Search!');
 define('search_choice_seat_row_nr','Choose a Seat/Row to Search!');
-define('order_payed_already','Order Already Paid');
-define('order_payed_total','Total Paid');
-
+define('Options_saved','Options Saved!');
+define('update_error','Update Error!');
 
 //------------------------------------------------------
 //ADMIN
@@ -795,12 +796,11 @@ define("export_xml_event_file","Filename");
 		define("export_entrant_event","Choose an Event");
 		define("export_entrant_NotSended","'Not Sent' Orders only");
 			define("export_entrant_order_id","Order ID");
-			define("export_entrant_FullName","FullName");
+			define("export_entrant_fullname","FullName");
 			define("export_entrant_city","City");
 			define("export_entrant_tickets","Tickets");
 			define("export_entrant_price","Total Sale");
 			define("export_entrant_totalprice","Totals");
-			define("date","Date");
 			define("time","Time");
 
 
