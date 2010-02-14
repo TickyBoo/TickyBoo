@@ -181,10 +181,10 @@ myExit();
   function  printAction($smarty) {
     Global $order;
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode(),true);
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
+      ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder));
       echo "print error $test" ; print_r($myorder);
       unset( $_SESSION['_SHOP_order']);
       return;
@@ -197,7 +197,7 @@ myExit();
 
   function acceptAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],nil);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode(),true);
     if($test < 1) {
       echo "accept error ($test): $myorder->order_id\n". print_r($myorder, true);
       //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -239,7 +239,7 @@ myExit();
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    setordervalues($myorder, $smarty);
+    Checkout::setordervalues($myorder, $smarty);
     $hand=$myorder->handling;
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
