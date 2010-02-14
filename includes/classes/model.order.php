@@ -853,9 +853,9 @@ class Order Extends Model {
     if ($order == null) return '';
     if (!$order->order_tickets_nr ) $order->order_tickets_nr = $order->size();
 
-    $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
-           $order->order_handling_id .':'. $order->order_total_price;
-    $code = base64_encode(base_convert(time(),10,36).':'. base_convert($order->order_id,10,36).':'. md5($md5, true));
+    $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
+           $order->order_handling_id .'~'. $order->order_total_price;
+    $code = base64_encode(base_convert(time(),10,36).'~'. base_convert($order->order_id,10,36).'~'. md5($md5, true));
 
     //    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.md5($md5));
     return $item. urlencode ($code); //  }
@@ -868,7 +868,7 @@ class Order Extends Model {
       //$code = urldecode( $code) ;
 //      print_r( $codestr );
       $text = base64_decode($codestr);
-      $code = explode(':',$text);
+      $code = explode('~',$text);
     //  print_r( $text );
       $code[0] = base_convert($code[0],36,10);
       $code[1] = base_convert($code[1],36,10);
@@ -879,13 +879,14 @@ class Order Extends Model {
       if (!is_object($order)) $order = self::load($code[1], true);
       if (!is_object($order)) return -1;
 
-      $md5 = $order->order_session_id.':'.$order->order_user_id .':'. $order->order_tickets_nr .':'.
-                  $order->order_handling_id .':'. $order->order_total_price;
+      $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
+                  $order->order_handling_id .'~'. $order->order_total_price;
 
       if ($loging) {
-        ShopDB::dblogging('decode:'.$text.'|'.$code[2].'='.md5($md5, true));
-        ShopDB::dblogging('Code:  '.print_r( $code, true));
-        ShopDB::dblogging('order: '.print_r( $order, true));
+        ShopDB::dblogging('Decode:'.$text);
+        ShopDB::dblogging('MD5:'.$code[2].'='.md5($md5, true));
+        ShopDB::dblogging('Code: '.print_r( $code, true));
+        ShopDB::dblogging('Order:'.print_r( $order, true));
       }
 //      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;
