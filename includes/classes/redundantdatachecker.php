@@ -155,39 +155,39 @@ where  (o.order_owner_id is not null and POS.user_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'PlaceMap', pm_id, 'ort_id'  l1 ,pm_ort_id, ort_id
+select 'PlaceMap', pm_id, 'ort_id' ,pm_ort_id, ort_id
 from `PlaceMap2` left join Ort on pm_ort_id = ort_id
 where  (ort_id is null)
 ";
 $orphancheck[]="
-select 'PlaceMap', pm_id, 'event_id' l2 ,pm_event_id, event_id
+select 'PlaceMap', pm_id, 'event_id' ,pm_event_id, event_id
 from `PlaceMap2` left join Event on pm_event_id = event_id
 where (pm_event_id is not null and event_id is null)
 ";
 $orphancheck[]="
-select 'PlaceMap', pm_id, 'shadow' l2 ,pm_event_id, null
+select 'PlaceMap', pm_id, 'shadow' ,pm_event_id, null
 from `PlaceMap2` left join Event on pm_event_id = event_id
 where (pm_event_id is not null and event_pm_id != pm_id)
 ";
 /**/
 $orphancheck[]="
-select 'PlaceMapPart', pmp_id,'pm_id'  l1 , pmp_pm_id, pm_id
+select 'PlaceMapPart', pmp_id,'pm_id' , pmp_pm_id, pm_id
 from `PlaceMapPart` left join PlaceMap2 on pmp_pm_id = pm_id
 where (pm_id is null)
 ";
 $orphancheck[]="
-select 'PlaceMapPart', 'ort_id'  l2 ,pmp_ort_id, ort_id
+select 'PlaceMapPart', pmp_id, 'ort_id' ,pmp_ort_id, ort_id
 from `PlaceMapPart` left join Ort on pmp_ort_id = ort_id
 where  (pmp_ort_id is not null  and ort_id is null)
 ";
 $orphancheck[]="
-select 'PlaceMapPart', pmp_id, 'event_id'  l3 ,pmp_event_id, event_id
+select 'PlaceMapPart', pmp_id, 'event_id' ,pmp_event_id, event_id
 from `PlaceMapPart` left join Event on pmp_event_id = event_id
 where  (pmp_event_id is not null and event_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'PlaceMapZone', pmz_id, 'pm_id' l1  ,pmz_pm_id, pm_id
+select 'PlaceMapZone', pmz_id, 'pm_id' ,pmz_pm_id, pm_id
 from `PlaceMapZone` left join PlaceMap2 on pmz_pm_id = pm_id
 where  (pm_id is null)
 ";

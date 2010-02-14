@@ -51,7 +51,6 @@ if ($_SHOP->secure_site) {
   $url = $_SHOP->root_secured.basename($_SERVER['REQUEST_URI']);
   if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
     header("Location: $url");
-    echo $url;
 //   echo "<script>window.location.href='$url';</script>";
     exit;
   }
@@ -92,8 +91,8 @@ if (isset($_REQUEST['sor'])) {
 if ($action == 'useredit') {
   $array = array('status'=>false,'msg'=>con('checkout_expired'));
   echo json_encode($array);
-} elseif(!$_REQUEST['pos']) {echo $_SHOP->root."index.php?action=cart_view";
-//	redirect($_SHOP->root."index.php?action=cart_view",403);
+} elseif(!$_REQUEST['pos']) {
+	redirect($_SHOP->root."index.php?action=cart_view",403);
 } else {
   addWarning('noting_checkout');
 }
@@ -181,10 +180,10 @@ myExit();
   function  printAction($smarty) {
     Global $order;
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode(),true);
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder));
+      ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
       echo "print error $test" ; print_r($myorder);
       unset( $_SESSION['_SHOP_order']);
       return;
@@ -197,7 +196,7 @@ myExit();
 
   function acceptAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],nil);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode(),true);
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
       echo "accept error ($test): $myorder->order_id\n". print_r($myorder, true);
       //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
