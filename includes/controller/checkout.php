@@ -50,9 +50,9 @@ GLOBAL $_SHOP;
 if ($_SHOP->secure_site) {
   $url = $_SHOP->root_secured.basename($_SERVER['REQUEST_URI']);
   if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-   //echo $url;
     header("Location: $url");
-    echo "<script>window.location.href='$url';</script>";
+    echo $url;
+//   echo "<script>window.location.href='$url';</script>";
     exit;
   }
 /*    //remove the www. to stop certificate errors.
@@ -92,8 +92,8 @@ if (isset($_REQUEST['sor'])) {
 if ($action == 'useredit') {
   $array = array('status'=>false,'msg'=>con('checkout_expired'));
   echo json_encode($array);
-} elseif(!$_REQUEST['pos']) {
-	redirect("index.php?action=cart_view",403);
+} elseif(!$_REQUEST['pos']) {echo $_SHOP->root."index.php?action=cart_view";
+//	redirect($_SHOP->root."index.php?action=cart_view",403);
 } else {
   addWarning('noting_checkout');
 }
