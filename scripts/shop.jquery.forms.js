@@ -47,7 +47,7 @@ $(window).load(function(){
 			user_address	:	{ required : true },
 			user_zip 	:	{ required : true },
 			user_city 	: 	{ required : true },
-			user_phone 	: 	{ digits : true, minlength : 9, maxlength : 14 },
+			user_phone 	: 	{ digits : true, minlength : 9, maxlength : 14 }, //We support addtional validation methods ie. phoneUS:true , check jquery.validation.add-methods.js
 			user_fax 	: 	{ digits : true, minlength : 9, maxlength : 14 },
 			user_email 	: 	{ required : true, email :true },
 			user_email2 	: 	{ required : true, email :true, equalTo : "#email" },

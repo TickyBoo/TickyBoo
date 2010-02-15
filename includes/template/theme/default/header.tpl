@@ -50,6 +50,7 @@
 
 		<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/jquery.validate.add-methods.js"></script>
     <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.3.js'></script>
     <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
 

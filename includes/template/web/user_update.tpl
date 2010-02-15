@@ -90,17 +90,17 @@
         {gui->input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10'}
         
         {if !$usekasse}
-        <tr id='passwords_tr1' >
-          <td class='TblLower'>{!new_password!} (opt.)</td>
-          <td class='TblHigher'>
-            <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
+          <tr id='passwords_tr1' >
+            <td class='TblLower'>{!new_password!} (opt.)</td>
+            <td class='TblHigher'>
+              <input autocomplete='off' type='password' name='password1' size='10' maxlength='10' id="password" />
               {!pwd_min!}{printMsg key='password'}
             </td>
-        </tr>
-        <tr id='passwords_tr2'>
-          <td class='TblLower'> {!password2!}</td>
-          <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
-        </tr>
+          </tr>
+          <tr id='passwords_tr2'>
+            <td class='TblLower'> {!password2!}</td>
+            <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
+          </tr>
         {/if}
         
 		  {/if}

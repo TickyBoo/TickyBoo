@@ -186,8 +186,9 @@ class User extends Model{
     	    $userup->user_status = $status;
     	    if (ShopDB::Begin()){
             if ($userup->save()){
+              addNotice("saved user");
               $set = array();
-              if ($user ['username']<> $data['user_email']) {
+              if ($user['username']<> $data['user_email']) {
                 $set[] = "username="._esc($data['user_email']);
           		}
             	if (!empty($data['password1'])) {
@@ -198,7 +199,7 @@ class User extends Model{
                 $set = implode(',',$set);
             		$query="UPDATE auth SET
                           $set
-                       	WHERE user_id="._esc((int)$user_id);
+                       	WHERE user_id="._esc((int)$userup->user_id);
                 if(!ShopDB::query($query)){
          	  		  return self::_abort('cant update auth');
            			}

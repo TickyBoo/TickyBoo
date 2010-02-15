@@ -106,7 +106,7 @@
       {assign var='user_data' value=$user->asarray()}
       {if $smarty.request.action eq 'update'}
   		  {if $smarty.post.submit_update}
-          {assign var='user_data' value=$smarty.post}
+          {*assign var='user_data' value=$smarty.post*}
     			{user->update data=$smarty.post}
      		{/if}
 			  {if $user_errors}
