@@ -191,7 +191,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 //  var_dump($_SHOP);
   if (!isset($_SHOP->root))         $_SHOP->root = constructBase(false);//
   if (!isset($_SHOP->root_secured)) $_SHOP->root_secured = constructBase(isset($_SHOP->secure_site) && $_SHOP->secure_site);
-  if ( substr($_SHOP->root_secured,0,5)=='HTTP:' ){
+  if ( strtoupper(substr($_SHOP->root_secured,0,5))=='HTTP:' ){
     $_SHOP->secure_site = '0';
   }
   $_SHOP->files_url=constructBase()."files/";

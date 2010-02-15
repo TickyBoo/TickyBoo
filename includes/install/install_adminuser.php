@@ -35,11 +35,11 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_adminuser {
-  function precheck($Install) {
+  static function precheck($Install) {
     return  (!$_SESSION['DatabaseExist'] or $_SESSION['radio']=='NORMAL');
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     Install_Request(Array('admin_login','admin_password'));
     if (strlen($_SESSION['admin_login']) < 3){
       array_push($Install->Errors,"You need to fill-in a real Admin login name.");
@@ -50,7 +50,7 @@ class install_adminuser {
     return true;
   }
 
-  function display($Install) {
+  static function display($Install) {
     Install_Form_Open ($Install->return_pg,'','New Admin login and password');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>

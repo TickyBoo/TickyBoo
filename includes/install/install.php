@@ -140,10 +140,12 @@ if(!isset($_SESSION['is_started']) or !isset($_REQUEST['inst_pg'])){
 
 $_SESSION['is_started'] = True;
 
+$Install = new stdClass();
 $Install->Errors   = Array ();
 $Install->Warnings = Array ();
 $Install->return_pg  = $_REQUEST['inst_pg'];
-//print_r($Install);
+
+//var_dump($Install);
 //echo $_REQUEST['inst_mode'],':',$_REQUEST['continue'];
   echo "
     <div id=\"wrap\">

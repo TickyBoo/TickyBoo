@@ -40,7 +40,7 @@ require_once(INC."classes".DS."model.organizer.php");
 
 class install_execute {
 
-  function precheck($Install) {
+  static function precheck($Install) {
     global $_SHOP;
     RemoveDir(ROOT."includes/temp",false);
     $install_mode=$_SESSION['radio'];
@@ -129,7 +129,7 @@ class install_execute {
     return false;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     if ($_POST['fixdatabase1']==2) {
       renameTables(array('Category','Category_stat','Discount','Event','Event_group','Event_stat',
                          'PlaceMap2','PlaceMapPart','PlaceMapZone','Seat','Order'));
@@ -140,7 +140,7 @@ class install_execute {
     return false;
   }
 
-  function CreateConfig() {
+  static function CreateConfig() {
     $config = "<?php\n";
     $config .= "/**\n";
     $config .= "%%%copyright%%%\n";
@@ -169,7 +169,7 @@ class install_execute {
     return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);
   }
 
-  function display($Install) {
+  static function display($Install) {
     global $_SHOP, $orphancheck;
     OpenDatabase();
     if(isset($_GET['fix'])){
@@ -216,7 +216,7 @@ class install_execute {
         <td class='admin_list_item'>{$row['_table']}</td>
         <td class='admin_list_item' align='right'>{$row['_id']}</td>\n";
       foreach ($keys as $key) {
-        print "<td align='center'>{$row[$key]}&nbsp;</td>\n";
+        print "<td align='center'>".((isset($row[$key]))?$row[$key]:'&nbsp;')."</td>\n";
       }
       if ($space) {
         print "<th align='center'>&nbsp;</th>";

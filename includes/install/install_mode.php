@@ -35,11 +35,11 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_mode {
-  function precheck($Install) {
+  static function precheck($Install) {
     return true;// $_SESSION['DatabaseExist'] ;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     $_SESSION['radio']    = $_REQUEST['radio'];
     $_SESSION['db_demos'] = $_REQUEST['db_demos'];
 
@@ -47,7 +47,7 @@ class install_mode {
   }
 
 
-  function display($Install) {
+  static function display($Install) {
 
     Install_Form_Open ($Install->return_pg,'return(Validate_Inst_Upgrade());', 'Installation mode.');
     if (!$mode = $_SESSION['radio']){

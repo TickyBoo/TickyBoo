@@ -38,18 +38,18 @@ require_once(dirname(dirname(__FILE__)).DS."classes".DS."class.model.php");
 require_once(dirname(dirname(__FILE__)).DS."classes".DS."model.organizer.php");
 
 class install_merchant  {
-  function precheck($Install) {
+  static function precheck($Install) {
     return  true;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     Install_Request(Array('organizer_name','organizer_address', 'organizer_plz', 'organizer_ort', 'organizer_state', 'organizer_country',
                           'organizer_phone','organizer_fax', 'organizer_currency', 'organizer_email'),'ORG');
     $org = new Organizer();
     return $org->fillPost();
   }
 
-  function display($Install) {
+  static function display($Install) {
     define("organizer_name","Name");
     define("organizer_address","Address");
     define("organizer_plz","Zip");

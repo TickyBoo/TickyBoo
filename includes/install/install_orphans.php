@@ -35,11 +35,11 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_orphans {
-  function precheck($Install) {
+  static function precheck($Install) {
     return false;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     if(isset($_GET['fix'])){
       Orphans::dofix($_GET['fix']);
       return false;
@@ -49,7 +49,7 @@ class install_orphans {
   }
 
 
-  function display($Install) {
+  static function display($Install) {
     global $_SHOP, $orphancheck;
     require_once(INC."classes/redundantdatachecker.php");
     OpenDatabase();

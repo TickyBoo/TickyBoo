@@ -35,11 +35,11 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_mail {
-  function precheck($Install) {
+  static function precheck($Install) {
     return true;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     GLOBAL $_SHOP;
     Install_Request(Array('mail_sendmail','mail_smtp_host', 'mail_smtp_port', 'mail_smtp_security',
                           'mail_smtp_user', 'mail_smtp_pass'),'SHOP');
@@ -84,7 +84,7 @@ class install_mail {
 
   }
 
-  function display($Install) {
+  static function display($Install) {
     Install_Form_Open ($Install->return_pg,'','Mail settings.');
     $chk[$_SESSION['SHOP']['mail_smtp_security']] = 'selected="selected"';
 

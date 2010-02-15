@@ -261,11 +261,11 @@ class orphans {
 
   );
 
-  function getlist(& $keys, $showlinks= true, $property='') {
+  static function getlist(& $keys, $showlinks= true, $property='') {
     global $orphancheck, $_SHOP;
     $data = array();
     $keys = array();
-    $trace = $_SHOP->trace_on;
+    $trace = is($_SHOP->trace_on,false);
     $_SHOP->trace_on=false;
 
     foreach( $orphancheck as $query) {
@@ -314,7 +314,7 @@ class orphans {
     return $data;
   }
 
-  function dofix($key) {
+  static function dofix($key) {
     $fix = explode('~',$key);
     $fixit = $fix[0].'~'.$fix[1];
     //print_r( debug_backtrace());
@@ -523,7 +523,8 @@ class orphans {
 
     }
   }
-  function clearZeros($table, $fields){
+
+  static function clearZeros($table, $fields){
     $sql = "Update `$table` set ";
     $sets ='';
     foreach ($fields as $field) {

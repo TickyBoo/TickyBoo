@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_login {
-  function precheck($Install) {
+  static function precheck($Install) {
     If ($_SESSION['ConfigExist']){
       include (ROOT."includes/config/init_config.php");
       $_SESSION['SHOP']  = (Array)$_SHOP;
@@ -70,7 +70,7 @@ class install_login {
     return  ($_SESSION['DatabaseExist']);
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     $link      = OpenDatabase();
     if(!loginmycheck ($link, $_POST['username'], $_POST['password'])){
       array_push($Install->Errors,"Administrator not found in database.");
@@ -78,7 +78,7 @@ class install_login {
     return true;
   }
 
-  function display($Install) {
+  static function display($Install) {
     Install_Form_Open ($Install->return_pg,'','Login to update you system');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>

@@ -35,15 +35,15 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_welcome {
-  function precheck($Install) {
+  static function precheck($Install) {
     return true;
   }
-  function postcheck($Install) {
+  static function postcheck($Install) {
 
     return true;
   }
 
-  function display($Install) {
+  static function display($Install) {
     Install_Form_Open ($Install->return_pg,'',"Welcome to the FusionTicket Installation Wizard.");
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" border=0>
             <tr>

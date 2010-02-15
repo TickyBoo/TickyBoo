@@ -35,11 +35,11 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_database {
-  function precheck($Install) {
+  static function precheck($Install) {
     return true; //(!$_SESSION['ConfigExist']) or ($_SESSION['DB_Error']) or ($_SESSION['radio'] == 'NORMAL');
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     Install_Request(Array('db_name','db_uname','db_pass', 'db_host', 'db_prefix'),'SHOP');
     if(empty($_SESSION['SHOP']['db_host']))
       {array_push($Install->Errors,'No database hostname specified.');}
@@ -91,7 +91,7 @@ class install_database {
         }
       }
     }
-    if ($OrgExist) {
+    if (!$OrgExist) {
       $_SESSION['ORG']['organizer_name'] ='Demo Owner';
       $_SESSION['ORG']['organizer_address'] = '5678 Demo St';
       $_SESSION['ORG']['organizer_ort'] = '11001';
@@ -108,7 +108,7 @@ class install_database {
     return true;
   }
 
-  function display($Install) {
+  static function display($Install) {
     Install_Form_Open ($Install->return_pg,'','Database Connection Settings');
     if (!$_SESSION['SHOP']['db_host']) $_SESSION['SHOP']['db_host'] = 'localhost';
     if (!$_SESSION['SHOP']['db_name']){

@@ -105,18 +105,21 @@ function urldecode_deep($value)
  *@param string $what string to write to the log
  *@param int $where log-level to log (default: KATA_DEBUG)
  */
-function writeLog($what, $where = FT_DEBUG)
-{
-   if (DEBUG < 0) { return; }
+function writeLog($what, $where = FT_DEBUG){
+  Global $_SHOP;
+   if ($where < 0) { return; }
 
    $logname = 'error';
    if ($where == FT_DEBUG) {
       $logname = 'debug';
    }
-
-   $h = fopen(INC . 'tmp' . DS . $logname . '.log', 'a');
+   if (!isset($_SHOP->hasloged[$where])){
+     $what = date('d.m.Y H:i ') ."--------------------------------\n". $what;
+     $_SHOP->hasloged[$where] =1;
+   }
+   $h = fopen(INC . 'temp' . DS . $logname . '.log', 'a');
    if ($h) {
-      fwrite($h, date('d.m.Y H:i ') . $what . "\n");
+      fwrite($h,$what . "\n");
       fclose($h);
    }
 }
@@ -527,6 +530,8 @@ function orphanCheck(){
     if ($_SHOP->TraceOrphan <> md5($text) || $_SHOP->trace_on =='ALL') {
       file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name, $_SHOP->tracelog."\n",FILE_APPEND);
       if ($_SHOP->TraceOrphan <> md5($text) && $_SHOP->trace_on =='SEND') {
+        error_log(file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name),1,'errorlog@fusionticket.log');
+
 //         call_our_server ( "cpanel.fusionticketr.com\addtracelog.php?traceid=".base64_decode(md5($_SHOP->secure_id).'|'. $_SHOP->root.'|'.now()));
         // only the first part need to be send back in the url call to admin/errortrace.php
       }
@@ -755,4 +760,31 @@ function showstr( $Text, $len = 20 ) {
 	return $Text;
 }
 
+function customError($errno, $errstr, $error_file, $error_line, $error_context) {
+  $errortype = array(
+    E_ERROR           => 'Error',
+    E_WARNING         => 'Warning',
+    E_PARSE           => 'Parsing error',
+    E_NOTICE          => 'Notice',
+    E_CORE_ERROR      => 'Core error',
+    E_CORE_WARNING    => 'Core warning',
+    E_COMPILE_ERROR   => 'Compile error',
+    E_COMPILE_WARNING => 'Compile warning',
+    E_USER_ERROR      => 'User error',
+    E_USER_WARNING    => 'User warning',
+    E_USER_NOTICE     => 'User notice');
+  if(defined('E_STRICT'))
+    $errortype[E_STRICT] = 'runtime notice';
+
+  $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE | E_ERROR | E_WARNING | E_STRICT;
+
+  //...blah...
+
+  if ($errno & $user_errors) {
+    writeLog( "{$errortype[$errno]}: $errstr, $error_file @ $error_line", FT_ERROR);
+  }
+  //  writeLog( print_r($error_context, true), FT_ERROR);
+}
+
+set_error_handler("customError");
 ?>

@@ -35,11 +35,11 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_register {
-  function precheck($Install) {
+  static function precheck($Install) {
     return true;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     if ($_REQUEST['do_send']) {
       $_REQUEST['forumname'] = clean($_REQUEST['forumname']);
       $_REQUEST['comments']  = clean($_REQUEST['comments']);
@@ -66,7 +66,7 @@ class install_register {
     return true;
   }
 
-  function display($Install) {
+  static function display($Install) {
     Install_Form_Open ($Install->return_pg,'','Register this copy');
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>

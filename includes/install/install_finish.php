@@ -35,16 +35,16 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_finish {
-  function precheck($Install) {
+  static function precheck($Install) {
      echo "lol it works test";
      return true;
   }
 
-  function postcheck($Install) {
+  static function postcheck($Install) {
     return true;
   }
 
-  function display() {
+  static function display() {
     Install_Form_Open (BASE_URL."/index.php",'', false);
     echo "<h2>Installation Completed</h2>You are now ready to start using Fusion Ticket.<br />\n";
     echo "For security reasons you should put the configuratin file and folder to read-only by webserver:<br>

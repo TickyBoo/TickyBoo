@@ -51,12 +51,12 @@ class Organizer  Extends Model {
     }
   }
 
-  function save() {
-    return parent::update();
+  function save($id = null, $exclude=null){
+    return parent::update($exclude);
   }
 
-  function saveEx(){
-    if($id = parent::saveEx()){
+  function saveEx($id = null, $exclude=null){
+    if($id = parent::saveEx($id, $exclude)){
       $this->fillFilename($_POST, 'organizer_logo');
     }
     return $id;
@@ -73,7 +73,7 @@ class Organizer  Extends Model {
     return parent::checkValues($arr);
   }
 
-  function _fill($arr, $nocheck=true){
+  function _fill(&$arr, $nocheck=true){
     return parent::_fill($arr, $nocheck);
   }
 

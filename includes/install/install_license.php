@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_license {
-  function precheck($Install) {
+  static function precheck($Install) {
     if (!file_exists(ROOT."includes/config/init_config.php")) {
       if (!is_writable(ROOT."includes/config")) {
         array_push($Install->Errors, ROOT."includes/config should be temporarily writable by the webserver user.");
@@ -49,7 +49,7 @@ class install_license {
     return true;
   }
 
-  function postcheck($Install) {//int_r($_REQUEST);
+  static function postcheck($Install) {//int_r($_REQUEST);
     if($_REQUEST['sla_radio']!=1){
       array_push($Install->Errors,"You must accept the terms of the software license agreement in order to install and use this software." );
       return true;
@@ -115,7 +115,7 @@ class install_license {
     return true;
   }
 
-  function display($install) {
+  static function display($install) {
     Install_Form_Open ($install->return_pg,'return(Validate_License_page());','Software License Agreement');
     $license = @file_get_contents(ROOT."LICENCE");
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">

@@ -175,8 +175,16 @@ class OrderView extends AdminView{
 
     if (!$type) {
       $where= "order_handling_id="._esc($id);
+      $type = "action=list_all&order_handling_id=$id".
+              "&order_status={$order_status}".
+              "&order_shipment_status={$order_shipment_status}".
+              "&order_payment_status={$order_payment_status}";
     } else {
       $where= "seat_event_id="._esc($id);
+      $type ="action=event_all&event_id={$id}".
+             "&order_status={$order_status}".
+             "&order_shipment_status={$order_shipment_status}".
+             "&order_payment_status={$order_payment_status}";
     }
 
     $info = '';
@@ -240,7 +248,7 @@ class OrderView extends AdminView{
 
     echo "</table>";
     echo "<br>".
-         $this->get_nav ($page,$count[0],"action=list_all&order_handling_id=$order_handling_id&order_status=$order_status&order_shipment_status=$order_shipment_status&order_payment_status=$order_payment_status");
+         $this->get_nav ($page,$count[0],"{$type}");
   }
 
   function view($order_id){
