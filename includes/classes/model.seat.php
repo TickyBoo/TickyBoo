@@ -448,7 +448,7 @@ class Seat  Extends Model {
             seat_event_id="._esc($seat_event_id).",
             seat_row_nr="._esc($seat_row_nr).",
             seat_nr="._esc($seat_nr).",
-            seat_zone_id="._esc($seat_pmp_id).",
+            seat_zone_id="._esc($seat_zone_id).",
             seat_pmp_id="._esc($seat_pmp_id).",
             seat_category_id="._esc($seat_category_id).",
             seat_status='free'";
