@@ -193,38 +193,38 @@ where  (pm_id is null)
 ";
 /**/
 $orphancheck[]="
-select 'Seat', seat_id, 'event_id' l0  ,seat_event_id, event_id
+select 'Seat', seat_id, 'event_id' ,seat_event_id, event_id
 from `Seat`      left join Event on seat_event_id = event_id
 where  (event_id is null)
 ";
 $orphancheck[]="
-select 'Seat', seat_id, 'cat_id'  l1 ,seat_category_id, category_id
+select 'Seat', seat_id, 'cat_id' ,seat_category_id, category_id
 from `Seat`      left join Category on seat_category_id = category_id
 where  (category_id is null)
 ";
 $orphancheck[]="
-select 'Seat', seat_id, 'user_id' l2 ,seat_user_id, user_id
+select 'Seat', seat_id, 'user_id' ,seat_user_id, user_id
 from `Seat`      left join User on seat_user_id = user_id
 where  (seat_user_id is not null and  user_id is null)
 ";
 $orphancheck[]="
-select 'Seat', seat_id, 'order_id'l3 , seat_order_id, order_id
+select 'Seat', seat_id, 'order_id' , seat_order_id, order_id
 from `Seat`      left join `Order` on seat_order_id = order_id
 where  (seat_order_id is not null and order_id is null)
 ";
 $orphancheck[]="
-select 'Seat', seat_id, 'pmz_id' l4 , seat_zone_id, pmz_id
-from `Seat`      left join PlaceMapZone on seat_zone_id = pmz_id
+select 'Seat', seat_id, 'pmz_id' , seat_zone_id, pmz_id
+from `Seat`      left join PlaceMapZone on seat_zone_id = pmz_id and pmz_event_id = seat_event_id
 where  (seat_zone_id is not null and  pmz_id is null)
 ";
 $orphancheck[]="
 select 'Seat', seat_id, 'pmp_id'  l5  , seat_pmp_id,pmp_id
-from `Seat`      left join PlaceMapPart on seat_pmp_id = pmp_id
+from `Seat`      left join PlaceMapPart on seat_pmp_id = pmp_id and pmp_event_id = seat_event_id
 where  (seat_pmp_id is not null and pmp_id is null)
 ";
 $orphancheck[]="
 select 'Seat', seat_id, 'disc_id' l6 , seat_discount_id, discount_id
-from `Seat`      left join Discount on seat_discount_id = discount_id
+from `Seat`      left join Discount on seat_discount_id = discount_id and discount_event_id = seat_event_id
 where  (seat_discount_id is not null and discount_id is null)
 ";
 
@@ -256,6 +256,7 @@ class orphans {
        'Seat~event_id'=>'Remove the seats with the already deleted event',
        'Seat~user_id'=>'Recreate missing user info for this seats',
        'Seat~cat_id'=>'Remove the seats with the deleted category',
+       'Seat~pmz_id'=>'Recalculate zones from placemapparts',
        'Spoint~user_id'=>'Recreate missing user info for this pos'
 
 
@@ -497,6 +498,11 @@ class orphans {
         ShopDB::Query("update Seat set
                          seat_discount_id = null
                        where seat_id = {$fix[2]}") ;
+        break;
+      case 'Seat~pmz_id':
+/*        ShopDB::Query("update Seat set
+                         seat_discount_id = null
+                       where seat_id = {$fix[2]}") ; */
         break;
       case 'Seat~zeros':
         Orphans::clearZeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,

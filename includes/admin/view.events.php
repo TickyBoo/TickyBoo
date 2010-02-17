@@ -527,7 +527,7 @@ select SQL_CALC_FOUND_ROWS *
         }
       }
     } else {
-      addWarning($result.'failure',$date);
+      addWarning($result.'_failure',$date);
     }
   }
 
@@ -557,6 +557,7 @@ select SQL_CALC_FOUND_ROWS *
             addWarning('correct_errors_first');
           } else {
             $this->state_confirm_button($state);
+            return true;
           }
         }
 
