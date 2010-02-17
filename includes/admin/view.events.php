@@ -132,23 +132,21 @@ select SQL_CALC_FOUND_ROWS *
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
       echo "<td colspan=2 class='admin_list_item' width=150 NOWRAP><nobr> ";
       if (!$history) {
-   		  echo "<input type='checkbox' name='cbxEvents[]'
-                 id='main_event_".$row['event_main_id']."'
-                 value='".$row['event_id']."'>";
+   		  echo "<input type='checkbox' name='cbxEvents[]' id='main_event_".$row['event_main_id']."' value='".$row['event_id']."'>";
       }
       echo  '&nbsp;'. showstr( $row['event_name'], 30 ) . "</nobr></td>\n";
 
 			if ( $row['event_rep'] == 'main') {
         if (!$history) {
   				echo "<td colspan=2 class='admin_list_item'>".
-               $this->show_button("{view_event.php?action=add_sub&event_main_id={$row['event_id']}",'add_multi',3) .
+               $this->show_button("view_event.php?action=add_sub&event_main_id={$row['event_id']}",'add_multi',3) .
                "</td>\n";
 		  	} else {
 				  echo "<td colspan=2 class='admin_list_item'>&nbsp;</td>\n";
         }
 			} else {
 				echo "<td width=120 class='admin_list_item'>$edate $etime</td>\n";
-				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"] ) . "</td> ";
+				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"] ) . "</td> \n";
 			}
 
 			echo "<td width=105 class='admin_list_item' nowrap='nowrap'><nobr>";
@@ -203,7 +201,7 @@ select SQL_CALC_FOUND_ROWS *
 
       echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >
                 <td class='admin_list_item' style='width:5;' bgcolor='white' >&nbsp;</td>
-                <td class='admin_list_item' width='130' ><nobr>";
+                <td class='admin_list_item' width='130' NOWRAP ><nobr>";
       if (!$history) {
         echo "<input type='checkbox' name='cbxEvents[]'
                  id='main_event_".$row['event_main_id']."'
@@ -217,10 +215,10 @@ select SQL_CALC_FOUND_ROWS *
       }
 
       echo "&nbsp;</nobr></td>
-                <td class='admin_list_item'>$edate $etime</td>
+                <td class='admin_list_item' NOWRAP>$edate $etime</td>
                 <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
 
-			echo "<td class='admin_list_item' width=250 NOWRAP><nobr>";
+			echo "<td class='admin_list_item' width=105 NOWRAP><nobr>";
       $this->showbuttons($img_pub, $row, $history);
 			echo "
       </nobr></td></tr>\n\n";

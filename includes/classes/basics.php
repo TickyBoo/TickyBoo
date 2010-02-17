@@ -776,7 +776,7 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
   if(defined('E_STRICT'))
     $errortype[E_STRICT] = 'runtime notice';
 
-  $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE | E_ERROR | E_WARNING | E_STRICT;
+  $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE | E_ERROR | E_WARNING;
 
   //...blah...
 
