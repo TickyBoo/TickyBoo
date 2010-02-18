@@ -958,7 +958,7 @@ define("payment","Payment"); //personal_order.tpl
 define("shipment","Shipment"); //personal_order.tpl
 define("limit","Unfortunately, you have exceeded the amount of allowed reserved tickets. To check your orders click <a href='index.php?personal_page=orders'>here</a>.");
 define("orclick"," Or Click to:");
-
+define('freeTicketCode', 'Discount Code:');
 //checkout_result.tpl
 define("pay_accept","Payment Method Accepted");
 define("pay_refused","Payment Method Not Accepted");

@@ -1018,11 +1018,16 @@ class Order Extends Model {
           return addwarning('no_template', ": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
         }
 //        echo $tpl_id,":";
-//        Print_r($tpl);
+//
         $first_page=FALSE;
 
         //print the ticket
-        $tpl->write($pdf, array_merge($seat,$order), false);
+        If (is_object($tpl)) {
+          $tpl->write($pdf, array_merge($seat,$order), false);
+        } else {
+          var_dump($tpl);
+          return addwarning('no_template', ": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
+        }
       }
     }
 

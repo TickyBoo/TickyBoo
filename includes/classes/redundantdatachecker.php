@@ -214,7 +214,7 @@ where  (seat_order_id is not null and order_id is null)
 ";
 $orphancheck[]="
 select 'Seat', seat_id, 'pmz_id' , seat_zone_id, pmz_id
-from `Seat`      left join PlaceMapZone on seat_zone_id = pmz_id and pmz_event_id = seat_event_id
+from `Seat`      left join PlaceMapZone on seat_zone_id = pmz_id
 where  (seat_zone_id is not null and  pmz_id is null)
 ";
 $orphancheck[]="

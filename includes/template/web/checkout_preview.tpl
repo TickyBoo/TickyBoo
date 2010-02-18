@@ -91,6 +91,22 @@
       		</tr>
 
    	      {/handling}
+          {if $update->can_freeTicketCode()}
+         		<tr class="{cycle values='TblHigher,TblLower'}">
+              <td colspan="3">
+                <table style='width:100%;'>
+               		<tr>
+                    <td>
+                      {!freeTicketCode!}
+                    </td>
+                    <td>
+                      <input type='text' name='FreeTicketCode'>
+                    </td>
+                	</tr>
+                </table>
+              </td>
+          	</tr>
+          {/if}
 
         	{if $update_view.currentres}
          		<tr class="{cycle values='TblHigher,TblLower'}">
@@ -105,9 +121,9 @@
           	  <input type='submit' name='submit' value='{!order_it!}'/>
 
               {if !$update->is_demo()}
-        		  </form>
+        	  	  </form>
           		{else}
-             	<div class='error'><br/> For safety issues we have disabled the order button. </div>
+               	<div class='error'><br/> For safety issues we have disabled the order button. </div>
           		{/if}
           		{* update->view event_date=$min_date user=user->user_id *}
               {* TODO: chris check this code, i have no clue how it need to work exactly *}
@@ -121,9 +137,8 @@
          			  {/if}
                 <input style="float:right; display:inline-block;" type='submit' name='submit_reserve' value='{!reserve!}'/>
    		  		    <span style="float:right; display:inline-block;">{!orclick!}</span>
-
       					{if !$update->is_demo()}
-      					 </form>
+      					  </form>
           			{/if}
        				{/if}
             </td>

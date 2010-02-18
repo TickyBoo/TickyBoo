@@ -49,7 +49,6 @@ class Order_Smarty {
   }
 
   function make_f ($handling, $place, $no_cost=0, $user_id =0 , $no_fee = 0){
-
     global $_SHOP;
 
     if(!$user_id){
@@ -66,6 +65,12 @@ class Order_Smarty {
     if(!$handling or !$user_id or !$cart or !$cart->can_checkout()){
       addWarning('reservate_failed');
       return;
+    }
+    // this code is Rain_ to allow people to get tickets for free.
+
+    if (isset($_SHOP->freeTicketCode) and !empty($_POST['FreeTicketCode']) and
+        $_SHOP->freeTicketCode == $_POST['FreeTicketCode']) {
+      $no_cost = true;
     }
      //compile order (order and tickets) from the shopping cart in order_func.php
 
@@ -431,7 +436,7 @@ class Order_Smarty {
 
   /**
    * Order_Smarty::set_send_f()
-   * 
+   *
    * @deprecated beta6
    * @return
    */
@@ -439,7 +444,7 @@ class Order_Smarty {
     global $_SHOP;
     return Order::set_send($order_id, 0, $this->user_auth_id);
   }
-  
+
   function setStatusSent($order_id){
     global $_SHOP;
     return Order::set_send($order_id, 0, $this->user_auth_id);
@@ -481,7 +486,7 @@ class Order_Smarty {
 
    Order::printOrder($params['order_id'],'', 'stream', $print, $mode);
   }
-  
+
   function paymentForOrder($params, &$smarty){
     require_once "classes/class.checkout.php";
     $orderId = is($params['order_id'],0);
