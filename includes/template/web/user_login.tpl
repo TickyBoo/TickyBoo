@@ -49,26 +49,26 @@
       <table border="0" cellpadding="3" class="login_table" bgcolor='white' width='80%'>
       	<tr>
       		<td width='30%' class="TblLower">{!email!}</td>
-      		<td class="TblHigher" ><input type='input' name='username' size=20 > {printMsg key='loginusername'}</td>
+      		<td class="TblHigher" ><input type='input' name='username' size='20' /> {printMsg key='loginusername'}</td>
       	</tr>
       	<tr>
       		<td  class="TblLower">{!password!}</td>
-      		<td class="TblHigher" ><input type='password' name='password' size=20 > {printMsg key='loginpassword'}</td>
+      		<td class="TblHigher" ><input type='password' name='password' size='20' /> {printMsg key='loginpassword'}</td>
       	</tr>
       	<tr>
-      		<td colspan=2 class="TblLower">
+      		<td colspan='2' class="TblLower">
       			<li><a  href='index.php?register_user=on'>{!register!}</a></li>
       		</td>
       	</tr>
       	<tr>
-      		<td colspan=2 class="TblLower">
-      			<li><a target='forgotpass'  onclick='BasicPopup(this);' href='forgot_password.php'>{!forgot_pwd!}</a></li>
+      		<td colspan='2' class="TblLower">
+      			<li><a target='forgotpass'  onclick='showDialog(this);return false;' href='forgot_password.php'>{!forgot_pwd!}</a></li>
       		</td>
       	</tr>
       </table>
       <table border="0" width='80%'>
       	<tr>
-      		<td align='right'> <input type='submit' value='{!login!}'>	</td>
+      		<td align='right'> <input type='submit' value='{!login!}'/>	</td>
       	</tr>
       </table>
     </center>

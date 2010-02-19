@@ -55,11 +55,11 @@
 </div>
   {literal}
   <script type="text/javascript">
-  	$(document).ready(function(){
-    //  var msg = ' errors';
-      var emsg = "{/literal}{printMsg key='__Warning__' addspan=false}{literal}";
+  	jQuery(document).ready(function(){
+      //var msg = ' errors';
+      var emsg = '{/literal}{printMsg|escape:'quotes' key='__Warning__' addspan=false}{literal}';
       showErrorMsg(emsg);
-      var nmsg = "{/literal}{printMsg key='__Notice__' addspan=false}{literal}";
+      var nmsg = '{/literal}{printMsg|escape:'quotes' key='__Notice__' addspan=false}{literal}';
       showNoticeMsg(nmsg);
       
     });

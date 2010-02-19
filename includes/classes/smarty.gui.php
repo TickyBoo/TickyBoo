@@ -213,10 +213,10 @@ class Gui_smarty {
     $class    = is($params['class'], $this->gui_value);
     $noreset  = is($params['noreset'], false);
     $onclick  = is($params['onclick'],'');
-    $return = "<tr class='$class' ><td align='$align' colspan='2'>\n".
-              "<input type='submit' name='$name' value='{$title}'>";
+    $return = "<tr class='$class' ><td colspan='2' style='text-align:{$align};'>\n".
+              "<input type='submit' name='$name' value='{$title}'  style='float:none;' >";
     if (!$noreset) {
-      $return .= "&nbsp; <input type='reset' name='reset' value='" . con('gui_reset','reset') . "'>\n";
+      $return .= "&nbsp; <input type='reset' name='reset' value='" . con('gui_reset','reset') . "' >\n";
     }
     $return .= "</td></tr>\n";
     if ($this->FormDepth) {

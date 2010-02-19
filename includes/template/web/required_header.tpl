@@ -46,7 +46,20 @@
   </style>
   
   <script type="text/javascript">
+    
+    var showDialog = function(element){
+      jQuery.get(jQuery(element).attr('href'),function(data){
+        jQuery("#showdialog").html(data);
+        jQuery("#showdialog").modal({
+          autoResize:true
+        });
+      });
+      return false;
+    } 
+  
     function BasicPopup(a) {
+      showDialog(a);
+      /*
       var url = a.href;
       if (win = window.open(url, a.target || "_blank", 'width=640,height=200,left=300,top=300,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0'))
       { 
@@ -54,6 +67,8 @@
         win.focus();
         return false;
       }
+      */
+      return false;
     }
   </script>
   {/literal}
