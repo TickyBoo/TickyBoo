@@ -57,7 +57,7 @@
   		</td>
     	<td valign='top' align="right">
         {if !$update->is_demo()}
-          <form method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+          <form method='post' name='handling' id="ft-order-handling">
           {ShowFormToken name='OrderHandling'}
           <input type='hidden' name='action' value='confirm' />
         {/if}
@@ -100,7 +100,7 @@
                       {!freeTicketCode!}
                     </td>
                     <td>
-                      <input type='text' name='FreeTicketCode'>
+                      <input type='text' name='FreeTicketCode' />
                     </td>
                 	</tr>
                 </table>
@@ -148,5 +148,21 @@
     	</td>
    	</tr>
   </table>
+  <script language="javascript" type="text/javascript">
+  {literal}
+  jQuery(document).ready(function(){
+    jQuery("form#ft-order-handling").submit(function(){
+      handlingRadio = $("input:radio[name='handling_id']:checked").val();
+      if(handlingRadio === undefined){
+        message = "Select a payment option.";
+        showErrorMsg(message);
+        return false;
+      }
+      jQuery(this).attr('disabled','true');
+      return true;    
+    });
+  });
+  {/literal}
+  </script>
   {/if}
   {include file="footer.tpl"}
