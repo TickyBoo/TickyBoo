@@ -855,9 +855,10 @@ class Order Extends Model {
 
     $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
            $order->order_handling_id .'~'. $order->order_total_price;
-    $code = base64_encode(base_convert(time(),10,36).'~'. base_convert($order->order_id,10,36).'~'. md5($md5, true));
+    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36));
+    $md5 = base_convert(md5($md5),16,36);
+    $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($order->order_id,10,36).'_'. $md5);
 
-    //    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.md5($md5));
     return $item. urlencode ($code); //  }
   }
 
@@ -868,7 +869,7 @@ class Order Extends Model {
       //$code = urldecode( $code) ;
 //      print_r( $codestr );
       $text = base64_decode($codestr);
-      $code = explode('~',$text);
+      $code = explode('_',$text);
     //  print_r( $text );
       $code[0] = base_convert($code[0],36,10);
       $code[1] = base_convert($code[1],36,10);
@@ -881,16 +882,25 @@ class Order Extends Model {
 
       $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
                   $order->order_handling_id .'~'. $order->order_total_price;
-
+      $md5 = base_convert(md5($md5),16,36);
       if ($loging) {
         ShopDB::dblogging('Decode:'.$text);
-        ShopDB::dblogging('MD5:'.$code[2].'='.md5($md5, true));
+        ShopDB::dblogging('MD5.a:'.$code[2]);
+        ShopDB::dblogging('MD5.b:'.$md5);
+
+        ShopDB::dblogging('code[2] <> $md5 = '.(($code[2] <> $md5)?'True':'false'));
+        ShopDB::dblogging('strcmp (code[2], $md5) = '.strcmp($code[2], $md5));
+
+
         ShopDB::dblogging('Code: '.print_r( $code, true));
-        ShopDB::dblogging('Order:'.print_r( $order, true));
+//        ShopDB::dblogging('Order:'.print_r( $order, true));
+
+
+
       }
 //      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;
-      if ($code[2] <> md5($md5, true)) return -4;
+      if ($code[2] <> $md5) return -4;
       return true;
     } else
       return -5;

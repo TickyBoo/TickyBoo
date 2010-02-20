@@ -509,7 +509,8 @@ class PlaceMapPart Extends Model {
             if ($seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
                                          $zone->pmz_id, $this->pmp_id, $category->category_id)) {
               $this->data[$j][$k][PM_ID] = $seat_id;
-            }
+            } else
+              return self::_abort('cant_create_seat_by_pmp');
           }
           $stats[$category->category_ident]++;
           $pmps[$category->category_ident] = $this->pmp_id;

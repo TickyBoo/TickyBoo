@@ -84,7 +84,7 @@ class PlaceMap Extends Model {
     return $id;
   }
 
-  function publish ($pm_id, $event_id, &$stats, &$pmps, $dry_run=FALSE){
+  function publish($pm_id, $event_id, &$stats, &$pmps, $dry_run=FALSE){
     if(!$dry_run){ShopDB::begin('Publish placemap');}
 
     $parts=PlaceMapPart::loadAll($pm_id, true);

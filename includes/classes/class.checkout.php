@@ -151,7 +151,7 @@ class Checkout {
 
   function  submitAction($smarty) {
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode(), true);
     if($test < 1) {
   //    header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
       ShopDB::dblogging("submit error ($test): $myorder->order_id\n". print_r($myorder, true));
