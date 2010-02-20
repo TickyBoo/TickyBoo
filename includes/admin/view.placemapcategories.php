@@ -55,7 +55,7 @@ class PlaceMapCategoryView extends AdminView {
 
         echo "<td class='admin_list_item' width=65 align=right>";
         echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_category&pm_id={$pm_id}&category_id={$category->category_id}","edit",2);
-        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&pm_id={$pm_id}&category_id={$category->category_id}\";}","remove",2,
+        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_category&pm_id={$pm_id}&category_id={$category->category_id}\";}","remove",2,
                                   array('tooltiptext'=>"Delete {$category->category_name}?",
                                         'disable'=>$live ));
         echo'</td></tr>';
@@ -71,10 +71,14 @@ class PlaceMapCategoryView extends AdminView {
     echo "<input type=hidden name=action value=save_category>";
     if ($data['category_id']) {
        echo "<input type=hidden name=category_id value={$data['category_id']}>";
+    } else {
+      $data['category_pm_id'] =(isset($data['category_pm_id']))?$data['category_pm_id']:$_REQUEST['pm_id'];
+      $pm = PlaceMap::load($_REQUEST['pm_id']);print_r($pm);
+      $data['category_event_id'] = $pm->pm_event_id;
     }
-    $data['category_pm_id'] =(isset($data['category_pm_id']))?$data['category_pm_id']:$_REQUEST['pm_id'];
     echo "<input type=hidden name=category_pm_id value={$data['category_pm_id']}>";
     echo "<input type=hidden name=pm_id value={$data['category_pm_id']}>";
+    echo "<input type=hidden name=category_event_id value={$data['category_event_id']}>";
 
     $this->form_head(con('categories'));
 
@@ -90,15 +94,11 @@ class PlaceMapCategoryView extends AdminView {
     if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
       $this->print_select('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
       $script = "
-      var category_size = 0;
       $('#category_numbering-select').change(function(){
         if($(this).val() == 'none'){
-          $('#category_size-input').val(category_size);
           $('#category_size-tr').show();
         }else{
           $('#category_size-tr').hide();
-          category_size = $('#category_size-input').val();
-          $('#category_size-input').val('0');
         }
       });
       $('#category_numbering-select').change();";

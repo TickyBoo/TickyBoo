@@ -35,36 +35,33 @@
 function smarty_block_category ($params, $content, &$smarty, &$repeat) {
 
   if ($repeat) {
+    $from = 'from Category';
 
     if($params['placemap']){
-      $from = 'from Category LEFT JOIN PlaceMap2 ON category_pm_id=pm_id';
-    }else{
-      $from = 'from Category';
-    }
-    $where = 'where 1=1';
-
-    if($params['category_id']){
-      $where .= " and category_id="._esc($params['category_id']);
-    }
-
-     if($params['order']){
-      $order_by="order by "._esc($params['order'],false);
-    }
-
-
-    if($params['event_id']){
-      $where .= " and category_event_id="._esc($params['event_id']);
+      $from .= " LEFT JOIN PlaceMap2 ON category_pm_id=pm_id \n";
     }
 
     if($params['stats']){
-      $from.=',Category_stat';
-      $where.=' and category_id=cs_category_id';
+      $from .= ' left join Category_stat on category_id=cs_category_id'."\n";
     }
 
-
     if($params['event']){
-      $from.=',Event,Ort';
-      $where.=' and event_id=category_event_id and event_ort_id=ort_id';
+      $from .= ' left join Event on event_id=category_event_id'."\n".
+               ' left join Ort   on event_ort_id=ort_id'."\n";
+    }
+
+    $where = 'where 1=1'."\n";
+
+    if($params['category_id']){
+      $where .= " and category_id="._esc($params['category_id'])."\n";
+    }
+
+    if($params['event_id']){
+      $where .= " and category_event_id="._esc($params['event_id'])."\n";
+    }
+
+    if($params['order']){
+      $order_by="order by "._esc($params['order'],false);
     }
 
     $query="select * $from $where $order_by";

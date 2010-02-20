@@ -555,10 +555,9 @@ select SQL_CALC_FOUND_ROWS *
             addWarning('correct_errors_first');
           } else {
             $this->state_confirm_button($state);
-            return true;
           }
+          return true;
         }
-
       } elseif (count($_POST['cbxEvents']) > 0) {
 		     $varNum = 0;
          $errs = false;

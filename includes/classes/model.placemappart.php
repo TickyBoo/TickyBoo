@@ -510,9 +510,9 @@ class PlaceMapPart Extends Model {
                                          $zone->pmz_id, $this->pmp_id, $category->category_id)) {
               $this->data[$j][$k][PM_ID] = $seat_id;
             }
-            $stats[$category->category_ident]++;
-            $pmps[$category->category_ident] = $this->pmp_id;
           }
+          $stats[$category->category_ident]++;
+          $pmps[$category->category_ident] = $this->pmp_id;
         }
       }
     }

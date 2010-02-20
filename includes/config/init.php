@@ -128,7 +128,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
         $testme = sha1 ($key.'~'.$_SESSION['tokens'][$name]['n'].'~'.$_SERVER["REMOTE_ADDR"]);
         if($testme !== $value ) {
           trace(print_r($_SESSION['tokens'], true));
-        	trace( "{$name}, \n {$value} , \n $testme;
+        	trace( "{$name}, \n {$value} , \n $testme");
           $accepted = false;
         }
       }
