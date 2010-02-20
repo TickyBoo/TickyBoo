@@ -122,9 +122,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
       $name = substr($key,0, strpos($key,'_'));
       if (!isset($_SESSION['tokens'][$name])) {
         $accepted = false;
+        trace(print_r($_SESSION['tokens'], true));
+      	echo $name;
       } else {
-        $testme = sha1 ($key.'-'.$_SESSION['tokens'][$name]['n'].'-'.$_SERVER["REMOTE_ADDR"]);
+        $testme = sha1 ($key.'~'.$_SESSION['tokens'][$name]['n'].'~'.$_SERVER["REMOTE_ADDR"]);
         if($testme !== $value ) {
+          trace(print_r($_SESSION['tokens'], true));
+        	trace( "{$name}, \n {$value} , \n $testme;
           $accepted = false;
         }
       }
