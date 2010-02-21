@@ -66,11 +66,11 @@ class Order Extends Model {
   function load ($order_id, $complete=false, $tickets=false){
     global $_SHOP;
 
-    ShopDB::dblogging(
+//    ShopDB::dblogging(
       $query="select *
               from `Order`
-              WHERE order_id = "._esc($order_id)
-    );
+              WHERE order_id = "._esc($order_id);
+ //   );
     if($data=ShopDB::query_one_row($query)){
       $order=new Order;
       $order->_fill($data);
@@ -875,28 +875,25 @@ class Order Extends Model {
       $code[1] = base_convert($code[1],36,10);
 //      print_r( $code );
 //      print_r( $order );
+      if ($loging) {
+        ShopDB::dblogging('Decode:'.$text);
+        ShopDB::dblogging('Code:'.print_r( $code, true));
+
+        ShopDB::dblogging('MD5.a:'.$code[2]);
+      }
 
       if (!is_object($order) and isset($this) and ($this instanceof Order)) $order = $this;
       if (!is_object($order)) $order = self::load($code[1], true);
       if (!is_object($order)) return -1;
 
       $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
-                  $order->order_handling_id .'~'. $order->order_total_price;
+             $order->order_handling_id .'~'. $order->order_total_price;
       $md5 = base_convert(md5($md5),16,36);
       if ($loging) {
-        ShopDB::dblogging('Decode:'.$text);
-        ShopDB::dblogging('MD5.a:'.$code[2]);
         ShopDB::dblogging('MD5.b:'.$md5);
 
         ShopDB::dblogging('code[2] <> $md5 = '.(($code[2] <> $md5)?'True':'false'));
         ShopDB::dblogging('strcmp (code[2], $md5) = '.strcmp($code[2], $md5));
-
-
-        ShopDB::dblogging('Code: '.print_r( $code, true));
-//        ShopDB::dblogging('Order:'.print_r( $order, true));
-
-
-
       }
 //      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;

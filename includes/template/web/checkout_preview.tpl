@@ -118,7 +118,7 @@
           {/if}
           <tr>
             <td colspan="3">
-          	  <input type='submit' name='submit' value='{!order_it!}'/>
+          	  <input type='submit' id='checkout-commit' name='submit' value='{!order_it!}'/>
 
               {if !$update->is_demo()}
         	  	  </form>
@@ -158,8 +158,8 @@
         showErrorMsg(message);
         return false;
       }
-      jQuery(this).attr('disabled','true');
-      return true;    
+      jQuery('#checkout-commit').attr('disabled','true');
+      return true;
     });
   });
   {/literal}
