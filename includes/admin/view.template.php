@@ -343,7 +343,7 @@ class TemplateView extends AdminView{
 
   function draw (){
     global $_SHOP;
-    $types = array('systm','email','swift','pdf2','pdf');
+    $types = array('systm','email', 'swift', 'pdf2','pdf');
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
    	}
@@ -354,7 +354,7 @@ class TemplateView extends AdminView{
     $menu = array(
       con("templ_System")=>"?tab=0",
       con("templ_email")=>'?tab=1',
-      con("templ_swift")=>'?tab=2',
+//      con("templ_swift")=>'?tab=2',  //the newshift system needs to be extended
       con("templ_pdf2")=>"?tab=3"
     );
 
