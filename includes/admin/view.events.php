@@ -605,6 +605,7 @@ select SQL_CALC_FOUND_ROWS *
 
 		return $img_pub;
 	}
+
   function print_select_pm ($name, &$data, &$err, $main = 'main') {
     global $_SHOP;
     $query = "SELECT pm_id,ort_id,pm_ort_id,pm_name,ort_name

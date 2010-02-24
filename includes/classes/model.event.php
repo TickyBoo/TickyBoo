@@ -73,13 +73,13 @@ class Event Extends Model {
     }
   }
 
-  function save($checkRecursion=true){
+  function save($id = null, $exclude=null){
     $new = $this->id;
     $new = empty($new);
   //  echo 'order_id ',$this->id,'  ', ($new)?1:0 ;
    // print_r(debug_backtrace());
     if (ShopDB::begin('Save event')) {
-      if ($checkRecursion && isset($data['event_recur_type']) && $data['event_recur_type'] != "nothing") {
+      if (isset($this->event_recur_type) && $this->event_recur_type != "nothing") {
          if (!$this->saveRecursion()) { return false;}
       } else {
         if(!$new){
@@ -122,25 +122,28 @@ class Event Extends Model {
 
   // #######################################################
   function saveRecursion () {
+    unset($this->event_recur_type);
     if ($this->event_rep == 'main') {
       if (!$id = $this->save(false)) {
         return self::_abort('Cant_create recursion record');
       }
- 			$this->event_rep     = 'sub';
- 			$this->event_main_id = $id;
-      if ($this->CheckValues ((array)$this)) {
-        return self::_abort('');
+ 			$_POST['event_rep'] = 'sub';
+
+      if (!$this->fillPost()) {
+        return self::_abort('not_all_all_values_set');
       }
+ 			$this->event_main_id = $id;
     }
- 	  $event_dates = $this->getEventRecurDates();
+ 	  $event_dates = $this->getRecurionDates();
 		foreach ($event_dates as $event_date) {
       $this->event_date = $event_date;
       $this->event_timestamp = $this->event_date." ".$this->event_time;
       unset($this->event_id);
-      if (!$this->save(false)) {
+      if (!$this->saveEx()) {
         return self::_abort('Cant_create recursion record');
       }
 		}
+    return true;
   }
 
   function getRecurionDates($invert= true) {

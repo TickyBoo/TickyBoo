@@ -1270,6 +1270,7 @@ define('pay','Pay');
 //model.order
 define('orderDescription','Fusion Ticket Order Description');
 
+define('not_all_all_values_set','not_all_all_values_set');
 
 //define('print-tooltip','Print');
 //define('unpublish-tooltip','Unpublish');

@@ -96,7 +96,7 @@ class install_license {
     }
     if (!file_exists(ROOT."includes/temp")){
       mkdir (ROOT.'includes/temp');
-      chmod (ROOT.'includes/temp',775);
+      chmod (ROOT.'includes/temp',"0775");
     }
     if (!file_exists(ROOT."includes/temp")){
       array_push($Install->Errors,ROOT."includes/temp need to be created and writable by the webserver user.");
