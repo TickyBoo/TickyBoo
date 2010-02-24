@@ -105,7 +105,7 @@ class install_license {
     }
     if (!file_exists(ROOT."files")){
       mkdir (ROOT.'files');
-      chmod (ROOT.'files',775);
+      chmod (ROOT.'files',"0775");
     }
     if (!file_exists(ROOT."files")){
       array_push($Install->Errors,ROOT."files need to be created and writable by the webserver user.");

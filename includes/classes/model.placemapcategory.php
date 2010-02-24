@@ -252,7 +252,8 @@ class PlaceMapCategory Extends Model {
   }
 
   function _fill(&$arr,$nocheck= true){
-    if ($arr['category_numbering']<>'none' && !$arr['category_pmp_id']) {
+    if ($arr['category_numbering']<>'none' && !$arr['category_pmp_id'] &&
+        isset($this->event_status) && $this->event_status == 'unpub') {
       $arr['category_size'] = 0;
     }
     if(!$arr['category_ident']){
