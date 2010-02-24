@@ -601,7 +601,7 @@ class Order Extends Model {
       //Selects Seats from old order using passed order_id from 'params'
       $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
       if(!$res=ShopDB::query($query)){
-        return Order::_abort(order_cannot_lock_seats);
+        return Order::_abort('order_cannot_lock_seats');
       }
       //Runs through each seat and gives it a new seat_code and the new order_id.
       $seats = Seat::loadAllOrder($order['order_id']);
@@ -614,6 +614,17 @@ class Order Extends Model {
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
         return Order::_abort('order_cannot_reissue_update_status');
+      }
+      
+      $handling = Handling::load($order['order_handling_id']);
+      if($handling->handling_shipment == 'email'){
+        
+        if($order['order_shipment_status']=='send'){
+          Order::set_send($order_id);
+        }
+        
+      }else{
+        addNotice('tickets_reissued_remember_to_send');
       }
 
       //Commit and finish
