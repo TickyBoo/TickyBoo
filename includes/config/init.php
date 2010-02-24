@@ -46,7 +46,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
    @date_default_timezone_set(@date_default_timezone_get());
  }
 
-
+ ini_set('memory_limit','64M');
+ 
 //check if the site is online
   require_once("classes/class.shopdb.php");
   require_once("classes/basics.php");
