@@ -206,7 +206,7 @@ class AdminPage extends AUIComponent {
   function drawFoot() {
     global $_SHOP;
 
-    print_r($_SHOP->Messages);
+   /// print_r($_SHOP->Messages);
     echo "
       <br><br>
       <script type=\"text/javascript\">

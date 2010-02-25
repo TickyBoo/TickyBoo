@@ -94,21 +94,21 @@ class install_license {
     if (ini_get('safe_mode')){
       array_push($Install->Warnings,"Your php is in 'SAFE MODE'. This can lead to problems during install (unable to create directory errors). Please read documentation.");
     }
+    //if (!file_exists(ROOT."includes/temp")){
+     // mkdir (ROOT.'includes/temp');
+    //  chmod (ROOT.'includes/temp',"0775");
+    //}
     if (!file_exists(ROOT."includes/temp")){
-      mkdir (ROOT.'includes/temp');
-      chmod (ROOT.'includes/temp',"0775");
-    }
-    if (!file_exists(ROOT."includes/temp")){
-      array_push($Install->Errors,ROOT."includes/temp need to be created and writable by the webserver user.");
+      array_push($Install->Errors,ROOT."includes/temp need to be created and made writable by the webserver user.");
     } elseif (!is_writable(ROOT."includes/temp")){
       array_push($Install->Errors,ROOT."includes/temp should be writable by the webserver user.");
     }
+//    if (!file_exists(ROOT."files")){
+//      mkdir (ROOT.'files');
+//      chmod (ROOT.'files',"0775");
+//    }
     if (!file_exists(ROOT."files")){
-      mkdir (ROOT.'files');
-      chmod (ROOT.'files',"0775");
-    }
-    if (!file_exists(ROOT."files")){
-      array_push($Install->Errors,ROOT."files need to be created and writable by the webserver user.");
+      array_push($Install->Errors,ROOT."files need to be created and made writable by the webserver user.");
     } elseif (!is_writable(ROOT."files")){
       array_push($Install->Errors,ROOT."files should be writable by the webserver user.");
     }
