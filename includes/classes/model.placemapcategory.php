@@ -109,6 +109,13 @@ class PlaceMapCategory Extends Model {
     return $cats;
   }
 
+  function save($id = null, $exclude=null){
+    if(!$this->category_ident){
+      $this->category_ident = $this->_find_ident($this->category_pm_id);
+    }
+    return parent::save($id, $exclude);
+  }  
+
   function delete (){
     $seats = shopDB::query_one_row("select count(*) from Seat
                                     where seat_category_id ="._esc($this->id), false);
@@ -255,9 +262,6 @@ class PlaceMapCategory Extends Model {
     if ($arr['category_numbering']<>'none' && !$arr['category_pmp_id'] &&
         isset($this->event_status) && $this->event_status == 'unpub') {
       $arr['category_size'] = 0;
-    }
-    if(!$arr['category_ident']){
-      $arr['category_ident']=$this->_find_ident($arr['category_pm_id']);
     }
     $arr['category_color'] = self::resetColor($arr['category_color']);
     return parent::_fill($arr, $nocheck);
