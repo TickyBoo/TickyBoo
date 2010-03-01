@@ -42,7 +42,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
     exit;
   }
 
-//$_SHOP->freeTicketCode  = 'TestMe';
  /*
 	if (ini_get('register_globals')) {
 

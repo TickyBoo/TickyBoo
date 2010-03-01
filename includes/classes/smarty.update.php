@@ -40,7 +40,7 @@ class Update_Smarty {
 	function Update_Smarty( &$smarty ) {
 		global $_SHOP;
 
-		$smarty->register_object( "update", $this, array('view', 'countdown','is_demo','can_reserve','can_freeTicketCode') );
+		$smarty->register_object( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
 		$smarty->assign_by_ref( "update", $this );
 	}
 
@@ -52,11 +52,6 @@ class Update_Smarty {
   function can_reserve() {
   	global $_SHOP; //print_r( $_SHOP  );
     return  $_SHOP->shopconfig_restime;
-  }
-
-  function can_freeTicketCode() {
-  	global $_SHOP; //print_r( $_SHOP  );
-    return  !empty($_SHOP->freeTicketCode);
   }
 
 	//Used for returning results so a template can know if a button/item should be enabled

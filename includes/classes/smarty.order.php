@@ -66,13 +66,7 @@ class Order_Smarty {
       addWarning('reservate_failed');
       return;
     }
-    // this code is Rain_ to allow people to get tickets for free.
-
-    if (isset($_SHOP->freeTicketCode) and !empty($_POST['FreeTicketCode']) and
-        $_SHOP->freeTicketCode == $_POST['FreeTicketCode']) {
-      $no_cost = true;
-    }
-     //compile order (order and tickets) from the shopping cart in order_func.php
+    //compile order (order and tickets) from the shopping cart in order_func.php
 
     $order = Order::create($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
 

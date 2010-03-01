@@ -91,22 +91,6 @@
       		</tr>
 
    	      {/handling}
-          {if $update->can_freeTicketCode()}
-         		<tr class="{cycle values='TblHigher,TblLower'}">
-              <td colspan="3">
-                <table style='width:100%;'>
-               		<tr>
-                    <td>
-                      {!freeTicketCode!}
-                    </td>
-                    <td>
-                      <input type='text' name='FreeTicketCode' />
-                    </td>
-                	</tr>
-                </table>
-              </td>
-          	</tr>
-          {/if}
 
         	{if $update_view.currentres}
          		<tr class="{cycle values='TblHigher,TblLower'}">
