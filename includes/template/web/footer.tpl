@@ -29,4 +29,6 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
+ {if !$noFooter}
  {include file="$_SHOP_theme/footer.tpl"}
+ {/if}

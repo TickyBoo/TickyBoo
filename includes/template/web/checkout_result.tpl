@@ -30,9 +30,9 @@
  * clear to you.
  *}
 {if $pm_return.approved}
-  {include file="header.tpl" name=!pay_accept! }
+  {include file="header.tpl" name=!pay_accept! noHeader=$no_header}
 {else}
-  {include file="header.tpl" name=!pay_refused! }
+  {include file="header.tpl" name=!pay_refused! noHeader=$no_header}
 {/if}
 <table class="table_midtone">
   <tr>
@@ -40,19 +40,19 @@
         {if $pm_return.approved}
           {!pay_reg!}!
         {/if}
-        <br>
+        <br />
 		    {!order_id!} <b>{$shop_order.order_id}</b><br>
 		    {if $pm_return.transaction_id}
           {!trx_id!}   <b>{$pm_return.transaction_id}</b><br>
         {/if}
-        <br> <br>
+        <br /> <br />
         {if !$pm_return.approved}
           <div class='error'>
   	    {else}
-          <br>
+          <br />
 
              <a href='?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
-          <br>
+          <br />
           <div>
         {/if}
         {if $pm_return.response}
@@ -63,4 +63,4 @@
     </td>
   </tr>
 </table>
-{include file="footer.tpl"}
+{include file="footer.tpl" noFooter=$no_footer}

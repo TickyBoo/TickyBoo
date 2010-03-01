@@ -28,5 +28,8 @@
  *
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
- *}{include file="$_SHOP_theme/header.tpl" name=$name}
+ *}
+{if !$noHeader}
+ {include file="$_SHOP_theme/header.tpl" name=$name}
 <div style="display:none" id='showdialog'>this is a nice dialog is it not?</div>
+{/if}
