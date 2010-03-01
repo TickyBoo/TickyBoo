@@ -60,7 +60,7 @@ if ($_SHOP->secure_site) {
    // echo "<script>window.location.href='$url';</script>";
     exit;
   }  */
-} else {
+} elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
   addWarning('This_page_is_not_secure');
 }
 

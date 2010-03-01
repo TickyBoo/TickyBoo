@@ -174,7 +174,10 @@ class PlaceMap Extends Model {
   }
 
   function copy ($event_id=''){
+    global $_SHOP;
     $old_id=$this->pm_id;
+    $old_img = $this->pm_image;
+    $this->pm_image = null;
     unset($this->pm_id);
 
     if($event_id){
@@ -183,7 +186,22 @@ class PlaceMap Extends Model {
 
     if(ShopDB::begin('copy Placmap to event: '.$event_id)){
       if($new_id=$this->save()){
-      //  ShopDB::dblogging($new_id);
+        if (!empty($old_img)) {
+
+          if (!preg_match('/\.(\w+)$/', $old_img, $ext)) {
+            addwarning('img_loading_problem_match');
+          } else {
+            print_r($ext);
+            $doc_name =  "pm_image_{$this->id}.{$ext[1]}";
+            if (!copy ($_SHOP->files_dir .DS. $old_img, $_SHOP->files_dir .DS. $doc_name)) {
+              addWarning($name,'img_loading_problem_copy');
+            } else {
+              @chmod($_SHOP->files_dir . DS . $doc_name, $_SHOP->file_mode);
+              $this->pm_image = $doc_name;
+              $this->save();
+            }
+          }
+        }
         if($zones=PlaceMapZone::loadAll($old_id)){
           foreach($zones as $zone){
             unset($zone->pmz_id);
