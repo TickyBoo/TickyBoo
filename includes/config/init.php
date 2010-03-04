@@ -47,7 +47,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
  }
 
  ini_set('memory_limit','64M');
- 
+
 //check if the site is online
   require_once("classes/class.shopdb.php");
   require_once("classes/basics.php");
@@ -119,17 +119,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $accepted = true;
   foreach ($_POST as  $key => $value) {
     if (substr($key,0,3) === '___') {
-      $key = substr($key,3) ;
-      $name = substr($key,0, strpos($key,'_'));
+      $key  = substr($key, 3) ;
+      $name = substr($key, 0, strpos($key,'_'));
       if (!isset($_SESSION['tokens'][$name])) {
         $accepted = false;
-        trace(print_r($_SESSION['tokens'], true));
-      	echo $name;
       } else {
         $testme = sha1 ($key.'~'.$_SESSION['tokens'][$name]['n'].'~'.$_SERVER["REMOTE_ADDR"]);
-        if($testme !== $value ) {
-          trace(print_r($_SESSION['tokens'], true));
-        	trace( "{$name}, \n {$value} , \n $testme");
+        if(strcmp($testme, $value )<>0 ) {
           $accepted = false;
         }
       }
@@ -137,6 +133,10 @@ if (!defined('ft_check')) {die('System intrusion ');}
     }
   }
   if (!$accepted) {
+     $tokens = print_r($_SESSION['tokens'], true);
+     trace('% Tokens '.(($tokens)?$tokens:'NOT FOUND !!!'));
+     trace("% Token {$name}, {$value}, {$testme}");
+     orphancheck();
      session_unset();
      session_destroy();
      die('Access Denied');

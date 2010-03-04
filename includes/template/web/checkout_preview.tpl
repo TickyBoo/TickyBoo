@@ -57,7 +57,7 @@
   		</td>
     	<td valign='top' align="right">
         {if !$update->is_demo()}
-          <form method='post' name='handling' id="ft-order-handling">
+          <form method='post' name='handling' id="ft-order-handling"  onsubmit='this.submit.disabled=true;return true;'>
           {ShowFormToken name='OrderHandling'}
           <input type='hidden' name='action' value='confirm' />
         {/if}

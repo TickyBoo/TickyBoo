@@ -66,7 +66,7 @@
   {if $smarty.post.submit AND $user->forgot_password_f($smarty.post.email) }
     <button onclick="jQuery.modal.close();">{!close!}</button>
   {else}
-    {gui->StartForm width="100%" id='ft-forgot-password-form' class="login_table" action='forgot_password.php' method='post' name='resendpassword'}
+    {gui->StartForm width="100%" id='ft-forgot-password-form' class="login_table" action='forgot_password.php' method='post' name='resendpassword' onsubmit='this.submit.disabled=true;return true;'}
       <tr>
         <td colspan='2'>{!pwd_note!}<br/><br/></td>
       </tr>

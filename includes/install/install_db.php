@@ -427,8 +427,8 @@ $tbls['PlaceMapPart']['fields'] = array(
   'pmp_height' => " int(11) NOT NULL DEFAULT '0'",
   'pmp_scene' => " enum('north','east','south','west','center') NOT NULL DEFAULT 'north'",
   'pmp_shift' => " enum('0','1') NOT NULL DEFAULT '0'",
-  'pmp_data' => " text NOT NULL",
-  'pmp_data_orig' => " text",
+  'pmp_data' => " longtext NOT NULL",
+  'pmp_data_orig' => " longtext",
   'pmp_expires' => " int(11) DEFAULT NULL");
 $tbls['PlaceMapPart']['key'] = array(
   "PRIMARY KEY (`pmp_id`)");
