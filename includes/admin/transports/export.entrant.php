@@ -55,6 +55,7 @@ class export_entrant extends AdminView {
 		$this->form_head(con('export_entrant_title'));
 		$this->print_select_assoc('export_entrant_event',$data,$err,$event);
 		$this->print_checkbox('export_entrant_NotSended',$data,$err);
+		$this->print_checkbox('export_entrant_withseats',$data,$err);
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
@@ -63,7 +64,7 @@ class export_entrant extends AdminView {
 		</table></form>";
   }
 
-  function generate_xl ($res, $event){
+  function generate_xl($res, $event){
     global $_SHOP;
 
     $workbook = new Spreadsheet_Excel_Writer();
@@ -114,7 +115,11 @@ class export_entrant extends AdminView {
     $format_leftb =&$workbook->addFormat(array('Align'=>'left'));
     $format_leftb->setBold();
 
-		$query = "select * from Event where event_id = {$event}";
+    $format_rightb =&$workbook->addFormat(array('Align'=>'right'));
+    $format_rightb->setBold();
+    $format_titler->setBgColor(26);
+
+    $query = "select * from Event where event_id = {$event}";
 
 		$row=ShopDB::query_one_row($query);
 //    $dta = print_r($row, true);
@@ -131,12 +136,17 @@ class export_entrant extends AdminView {
     $worksheet->write(0, 2, "", $format_header);
     $worksheet->write(0, 3, "", $format_header);
     $worksheet->write(0, 4, "", $format_header);
-
+    if (is($_GET['export_entrant_withseats'], false)) {
+      $worksheet->write(0, 5, "", $format_header);
+    }
     $worksheet->write(1, 0, $row['event_name'],$format_header2 );
     $worksheet->write(1, 1, "",$format_header2 );
     $worksheet->write(1, 2, "",$format_header2 );
     $worksheet->write(1, 3, "",$format_header2 );
     $worksheet->write(1, 4, "",$format_header2 );
+    if (is($_GET['export_entrant_withseats'], false)) {
+      $worksheet->write(1, 5, "", $format_header2);
+    }
 
 
     $worksheet->write(2, 1, date." :",$format_bold);
@@ -150,6 +160,9 @@ class export_entrant extends AdminView {
     $worksheet->write(3, 2, con('export_entrant_city'), $format_title);
     $worksheet->write(3, 3, con('export_entrant_tickets'),$format_title);
     $worksheet->write(3, 4, con('export_entrant_price'),$format_title);
+    if (is($_GET['export_entrant_withseats'], false)) {
+      $worksheet->write(3, 5, con('export_entrant_seats'),$format_title);
+    }
 
     $totprice=0.0;
     $totseats=0;
@@ -173,6 +186,27 @@ class export_entrant extends AdminView {
       }
 
       $worksheet->write($i, 4,$price, $format_price);
+
+      $seats = '';
+      if (is($_GET['export_entrant_withseats'], false)) {
+        $query="SELECT DISTINCT `seat_row_nr`, `seat_nr`, `category_numbering`
+                      FROM `seat` left join `category` on `seat_category_id` = `category_id`
+                      WHERE seat_order_id = {$row['order_id']}";
+        if ($res_seat=ShopDB::query($query)){
+          while($seat=shopDB::fetch_assoc($res_seat)){
+      //      $seats .= "|{$seat['category_numbering']}";
+            if ($seat['category_numbering'] == 'both') {
+              $seats .= "{$seat['seat_row_nr']}-{$seat['seat_nr']} ";
+            } elseif ($seat['category_numbering'] == 'seat') {
+              $seats .= "{$seat['seat_nr']} ";
+            } elseif ($seat['category_numbering'] == 'rows') {
+              $seats .= "{$seat['seat_row_nr']} ";
+            }
+          } //echo $seats;
+        }
+      }
+      $worksheet->write($i, 5, $seats, $format_left);
+
       $i++;
     }
     $worksheet->write($i, 0, "");
@@ -181,6 +215,7 @@ class export_entrant extends AdminView {
 
     $worksheet->write($i, 3, $totseats, $format_leftb);
     $worksheet->write($i, 4, $totprice, $format_priceb);
+
 /*
     for ($i  = 1; $i <= 65; $i++) {
       $worksheet->write($i, 7 ,$i,$workbook->addFormat(array('FgColor'=>$i, 'pattern'=>1)));
@@ -209,7 +244,7 @@ class export_entrant extends AdminView {
       if(!$res=ShopDB::query($this->query)){
         return 0;
       }
-    $this->generate_xl($res, $event_id);
+    $this->generate_xl($res, (int)$_GET['export_entrant_event']);
     return TRUE;
     }
   }

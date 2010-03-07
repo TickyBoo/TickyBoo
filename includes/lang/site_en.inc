@@ -162,6 +162,7 @@ define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
 define("email_badconfig","The program's mail configuration is incorrectly defined!");
 
+
 define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
 define("fax_short","The Fax Number is too Short!");
 define("fax_long","The Fax Number is too Long!");
@@ -676,6 +677,7 @@ define("handling_update_title","Modify the Payment Type");
 		define("authorize_aim","AIM");
 		define("ebs","EBS");
 		define("email","Email");
+
 		define("post","Post");
 		define("google","Google");
 	define("handling_shipment","Shipment");
@@ -801,6 +803,7 @@ define("export_xml_event_file","Filename");
 			define("export_entrant_tickets","Tickets");
 			define("export_entrant_price","Total Sale");
 			define("export_entrant_totalprice","Totals");
+      define("export_entrant_seats","Seats");
 			define("time","Time");
 
 
@@ -1028,6 +1031,7 @@ define("autocancel","After this time your order is automaticaly canceled!");
 define("ordertickets","To Order Tickets Click below:");
 define("reserv_cancel","WARNING Reservation is CANCELLED on Ordering!");
 define("notpaid","Not Paid");
+
 define("paid","Paid");
 define("payhere","<br><br>To Pay Now, Check Here:");
 define("notsent","Not Sent");
