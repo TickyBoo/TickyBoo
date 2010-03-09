@@ -187,7 +187,7 @@ class EPH_authorize_aim Extends Payment{
 				if($order->order_id == $order_id){
 					if($this->_check_order($order, $res)){
 						$order->order_payment_id=$transaction_id;
-      	    Order::set_payment_id($order->order_id,'auth_aim:'.$transactionID);
+      	    Order::set_payment_id($order->order_id,'auth_aim:'.$transaction_id);
 						$order->set_payment_status('payed');
 						$return['approved']=TRUE;
 					}else{

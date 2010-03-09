@@ -119,7 +119,7 @@ function writeLog($what, $where = FT_DEBUG){
    }
    $h = fopen(INC . 'temp' . DS . $logname . '.log', 'a');
    if ($h) {
-      fwrite($h,$what . "\n");
+      fwrite($h,utf8_encode($what . "\n"));
       fclose($h);
    }
 }
@@ -267,6 +267,7 @@ function is(&$arg, $default = null)
    }
    return $default;
 }
+
 
 function empt(&$arg , $default=null){
   if(is_string($arg)){
@@ -529,6 +530,7 @@ function orphanCheck(){
     trace("\n\nOrphan Check Dump: ".$text);
     if ($_SHOP->TraceOrphan <> md5($text) || $_SHOP->trace_on =='ALL') {
       file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name, $_SHOP->tracelog."\n",FILE_APPEND);
+
       if ($_SHOP->TraceOrphan <> md5($text) && $_SHOP->trace_on =='SEND') {
         error_log(file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name),1,'errorlog@fusionticket.log');
 

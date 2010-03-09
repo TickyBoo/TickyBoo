@@ -181,6 +181,7 @@ class Order Extends Model {
 
     global $_SHOP;
 
+
     if($this->order_id){
       return addWarning("This order is already saved!!!"); //already saved
     }
@@ -615,14 +616,14 @@ class Order Extends Model {
       if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
         return Order::_abort('order_cannot_reissue_update_status');
       }
-      
+
       $handling = Handling::load($order['order_handling_id']);
       if($handling->handling_shipment == 'email'){
-        
+
         if($order['order_shipment_status']=='send'){
           Order::set_send($order_id);
         }
-        
+
       }else{
         addNotice('tickets_reissued_remember_to_send');
       }
@@ -726,14 +727,14 @@ class Order Extends Model {
         $suppl = ", order_date_expire=NULL";
       }
       if($field=='order_payment_status' and  $new_status=='pending' and  $old_status !=='none'){ //and
-        return self::_abort('Cant change status');
+        return true; // just show the m
       }
 
       $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE order_id='{$this->order_id}'";
       if($dont_do_update || (ShopDB::query($query))){// and shopDB::affected_rows()==1)){
 
         if(!OrderStatus::statusChange($this->order_id,$new_status,NULL,'Order::_set_status',"Set $field to $new_status")){
-          return self::_abort('Cant change status');;
+          return self::_abort('Cant update orderstatus');;
         }
 
         if(!$this->handling){
@@ -945,6 +946,7 @@ class Order Extends Model {
                            left join PlaceMapZone on seat_zone_id = pmz_id
                            left join PlaceMapPart on seat_pmp_id = pmp_id
         WHERE seat_order_id = '._esc($order_id);
+
 
 
     if(!$order=ShopDB::query_one_row($orderqry)){

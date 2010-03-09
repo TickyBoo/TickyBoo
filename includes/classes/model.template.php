@@ -55,10 +55,11 @@ class Template Extends Model {
 
       if(class_exists($t_class_name)){
         $tpl = new $t_class_name;
+
         $tpl->sourcetext = $code['template_text'];
         $tpl->template_type = $code['template_type'];
         $_SHOP->templates[$name]=&$tpl;
-        if($test){
+        if($test and in_array($tpl->template_type,array('swift','systm','email'))){
           $tpl = self::tryBuildEmail($tpl);
           return $tpl;
         }else{
@@ -74,10 +75,6 @@ class Template Extends Model {
 
     $tpl = $orgTpl;
     $err=0;
-    if(!in_array($tpl->template_type,array('swift','systm','email'))){
-      return $orgTpl;
-      //return true; //Causes problems compiling pdfs... return the template instead like we do on successfull compile.
-    }
     include('admin/templatedata.php');
 
     $lang = is($_GET['lang'], $_SHOP->lang);
@@ -127,7 +124,7 @@ class Template Extends Model {
         return $tpl;
       }
     }
-    
+
     //no complied template, need to compile: loading compiler
     switch ($data['template_type']) {
       case 'systm':
