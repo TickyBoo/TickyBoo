@@ -115,7 +115,7 @@ class EPH_paypal extends payment{
 //     $url=$this->pm_paypal_url;
     $receiver_email=$this->pm_paypal_business;
     if (!isset($_POST['item_number']) or !is_numeric($_POST['item_number']) or ($_POST['item_number']<>$order->order_id)) {
-      ShopDB::dblogging("Notification error, order No missmatch: \n". print_r($_POST, true));
+      ShopDB::dblogging("Notification error, order_id mismatch: \n". print_r($_POST, true));
       return;
     }
     $debug ="date: ".date('r')."\n";
@@ -138,7 +138,7 @@ class EPH_paypal extends payment{
     $return = false;
   	if(stristr("VERIFIED",$result)===false) {
         $debug.="NOT OK\n";
-    } elseif(($_POST["receiver_email"]!=$receiver_email) or ($_POST["business"]!=$receiver_email)) {
+    } elseif(($_POST["receiver_email"] != $receiver_email) and ($_POST["receiver_id"]!=$receiver_email)) {
         $debug.="wrong receiver_email\n";
     } elseif($_POST["mc_gross"]+is($_POST["mc_gross"],0)<$order_total) {
         $debug.="Invalid payment\n";

@@ -127,11 +127,10 @@ class TemplateView extends AdminView{
 			  if($tpl =& Template::getTemplate($name)){
           $tpl->write($pdf, $order, false); //
         }else{
-          echo "<div class=err>".con('no_template')." : $name</div>";
-		      return FALSE;
+		      return addwarning("no_template");
 		    }
-		    $order_file_name = "pdf_".$data['template_name'].'.pdf';
-        $pdf->output($order_file_name, 'I');
+		    $order_file_name = "pdf_{$data['template_name']}.pdf";
+        $pdf->output($order_file_name, 'I'); 
 		    break;
       default:
         echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -204,7 +203,7 @@ class TemplateView extends AdminView{
     }
 
     $this->form_head($title);
-    $data['template_text'] = htmlspecialchars($data['template_text'], ENT_QUOTES);
+    $data['template_text'] = htmlspecialchars($data['template_text'], ENT_QUOTES, 'UTF-8');
 
     $this->print_field_o('template_id', $data);
     $this->print_field('template_type', $type );
@@ -405,7 +404,6 @@ class TemplateView extends AdminView{
      	}else{
     		$query = "UPDATE Template SET
 			   template_name=" . _esc($_POST['template_name']) . ",
-  		   template_type=" . _esc($type) . ",
   		   template_text=" . _esc($_POST['template_text']) . ",
   		   template_status='new'
   		   WHERE template_id="._esc((int)$_POST['template_id']);

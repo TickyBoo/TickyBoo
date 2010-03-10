@@ -176,7 +176,9 @@ class PosAjax {
 				$numbering = true; // If there should be a placemap set to true otherwise leave as false to show qty box.
 
 				//Load Place Map
-				$placemap = $this->loadPlaceMap($cat);
+      $placemap = "<div style='overflow: auto; height: 450px; width:800px;' align='center' valign='center'>";
+			$placemap .= $this->loadPlaceMap($cat);
+      $placemap .= "</div>";
 			}
 			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['cs_free']);
 		}
@@ -372,7 +374,9 @@ class PosAjax {
 		$result = ShopDB::query_one_row($sql);
 
 		if(strtolower($cat['category_numbering']) != 'none'){
-			$placemap = $this->loadPlaceMap($result);
+      $placemap = "<div style='overflow: auto; height: 450px; width:800px;' align='center' valign='center'>";
+			$placemap .= $this->loadPlaceMap($result);
+      $placemap .= "</div>";
 			$this->json['placemap'] = $placemap;
 			return true;
 		}
@@ -521,7 +525,7 @@ class PosAjax {
       addWarning('unknown_error',$e->getMessage());
       return false;
     }
-    
+
     if(is_string($checkoutRes)){
       $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
       return true;

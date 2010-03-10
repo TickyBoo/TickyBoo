@@ -113,6 +113,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $_SESSION['_SHOP_SYS_SECURE_ID'] = $_SHOP->secure_id;
   }
 // check the order system for outdated orders and reservations
+
   check_system();
 
 //authentifying (if needed)
@@ -171,15 +172,15 @@ if (!defined('ft_check')) {die('System intrusion ');}
   }
 
   $locale = get_loc($_SHOP->lang);
-  $old = setlocale(LC_ALL, NULL);
+  writeLog($old = setlocale(LC_TIME, NULL));
 
   if (!setlocale(LC_TIME,$locale,$locale.'.utf8',$locale.'.utf-8')) {
     $loc = $locale.'_'.strtoupper($locale);
     if (!setlocale(LC_TIME,$loc, $loc.'.utf8', $loc.'.utf-8')) {
       $loc = $locale.'-'.strtoupper($locale);
       if(!setlocale(LC_TIME,$loc, $loc.'.utf8', $loc.'.utf-8')){
-        if(!setlocale(LC_ALL, '')) {
-          setlocale(LC_ALL, $old);
+        if(!setlocale(LC_TIME, '')) {
+          setlocale(LC_TIME, $old);
         }
       }
     }

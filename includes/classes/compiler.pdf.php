@@ -35,9 +35,6 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 class PDF2TCompiler {
 
-  function PDF2TCompiler ($font_dir=''){
-  }
-
   function build ($pdf, $data, $testme=false){
     global $_SHOP;
     require_once("smarty/Smarty.class.php");
@@ -56,7 +53,6 @@ class PDF2TCompiler {
     $smarty->assign("OrderData",$data);
     $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
     $smarty->assign("_SHOP_images", $_SHOP->images_url);
-
 
     $smarty->my_template_source = $this->sourcetext;
     $htmlresult = $smarty->fetch("text:".get_class($this));

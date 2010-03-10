@@ -88,7 +88,7 @@
   {/if}
 
 {elseif $smarty.request.event_id}
-  {include file="event.tpl"  event_id=$smarty.get.event_id}
+  {include file="event.tpl"  event_id=$smarty.request.event_id}
 
 {elseif $smarty.request.event_group_id}
   {include file="event_group.tpl"}

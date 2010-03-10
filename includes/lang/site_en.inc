@@ -163,6 +163,7 @@ define("email_match","The Emails Do Not Match!");
 define("email_badconfig","The program's mail configuration is incorrectly defined!");
 
 
+
 define("event_order_limit_exceeded","Sorry, The number of seats that you can order for this event is limited!");
 define("fax_short","The Fax Number is too Short!");
 define("fax_long","The Fax Number is too Long!");
@@ -404,6 +405,7 @@ define("categories","Categories");
 			define("category_numbering_rows","Only Rows Numbered");
 			define("category_numbering_seat","Only Seats Numbered (No Rows)");
 			define("category_numbering_none","Seats w/o Numbers (Open Seating)");
+
 		define("category_size","Category Size");
 		define("number_taken","Seats Sold");
 		define("category_data","Category Data");
@@ -1275,7 +1277,7 @@ define('pay','Pay');
 define('orderDescription','Fusion Ticket Order Description');
 
 define('not_all_all_values_set','not_all_all_values_set');
-
+define('email_compile_error','Compile error: ');
 //define('print-tooltip','Print');
 //define('unpublish-tooltip','Unpublish');
 //define('add-tooltip','add-tooltip');

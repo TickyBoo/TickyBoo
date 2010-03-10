@@ -670,7 +670,7 @@ function valuta($value='', $code=null) {
   global $_SHOP;
   if (is_numeric($value)) { $value = number_format($value,2);}
   $code = is($code,$_SHOP->organizer_data->organizer_currency);
-  return (isset($_SHOP->valutas[$code]))?$_SHOP->valutas[$code].' '.$value :$value.' '.$code;
+  return (isset($_SHOP->valutas[$code]))?$_SHOP->valutas[$code].' '.$value :$value.' '.is($_SHOP->valutas["*$code"],$code);
 }
 
 ?>

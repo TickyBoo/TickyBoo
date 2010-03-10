@@ -88,10 +88,10 @@
                 </td>
               </tr>
             {/if}
-          </table><br /><br />
-          <center>
+          </table>
+          <div style='overflow: auto; height: 350px; width:595px;' align='center' valign='center'>
             {placemap  category=$shop_category}
-          </center>
+          </div>
           {literal}
           <script type="text/javascript">
             jQuery(document).ready(function(){
@@ -102,6 +102,7 @@
                 if(e.ctrlKey){
                   jQuery('input.pm_check',this).attr('checked', false);
                 }
+
               });
             });
           </script>

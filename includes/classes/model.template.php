@@ -89,7 +89,7 @@ class Template Extends Model {
     }
     if(!empty($tpl->errors)){
       foreach($tpl->errors as $error){
-        addWarning('Compile:', $error);
+        addWarning('email_compile_error', $error);
         $err++;
       }
     }
