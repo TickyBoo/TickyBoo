@@ -74,12 +74,13 @@
 			  		{/if}
 			  		</td>
 				</tr>
-        
+
         {* Reserve to Order *}
         {if $shop_order.order_status eq "res"}
-        
+
         <tr>
           <td colspan="2">
+
             {update->countdown order_id=$shop_order.order_id reserved=true}
               {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
               <br />
@@ -92,15 +93,15 @@
           <td colspan="2" align="left">
             <input type='hidden' name='personal_page' value='orders' />
          		{ShowFormToken name='reorder'}
-            
+
             {order->tickets order_id=$shop_order.order_id min_date='on' }
             <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
             {/order->tickets}
-            
+
             <input type='hidden' name='action' value='reorder' />
             <input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
             <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
-            
+
             {!ordertickets!}<br />
             <font color="red">{!reserv_cancel!}</font><br />
             <center>
@@ -121,15 +122,15 @@
   			  	{/if}
           </td>
         </tr>
-        
+
         {* Pay for unpaid order *}
         {if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
 				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
         <tr>
           <td colspan="2">
 			  	  <font color="Black" size="12px"><b>
-			  		 {update->countdown order_id=$shop_order.order_id}
-          	   {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+			  		  {update->countdown order_id=$shop_order.order_id}
+          	    {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
 						  {/update->countdown}
 						  {!autocancel!}
 						  {!payhere!}</b>
@@ -138,13 +139,13 @@
 			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
               <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
             {/order->tickets}
-            
+
             {include file='checkout_payment.tpl' order_id=$shop_order.order_id}
           </td>
         </tr>
         {/if}
-        
-        
+
+
 			<tr>
 			  <td class="user_info">{!shipment!} {!status!}</td>
 			  <td class="subtitle">
