@@ -142,7 +142,7 @@ class PlaceMap Extends Model {
         $seats = shopDB::query_one_row("select count(*) from Seat
                                        where seat_event_id ={$this->pm_event_id}", false);
         if ($seats[0]>0) {
-          return placemap::_abort('placemap_delete_failed_seats_exists');
+          return self::_abort('placemap_delete_failed_seats_exists');
         }
       }
 
@@ -156,17 +156,17 @@ class PlaceMap Extends Model {
               ON c.category_id = cs.cs_category_id
               WHERE c.category_pm_id={$this->pm_id}";
       if(!ShopDB::query($query)){
-        return placemap::_abort('Category_delete_failed');
+        return self::_abort('Category_delete_failed');
       }
 
       $query="delete from PlaceMapPart where pmp_pm_id={$this->pm_id} ";
       if(!ShopDB::query($query)){
-        return placemap::_abort('PlaceMapPart_delete_failed');
+        return self::_abort('PlaceMapPart_delete_failed');
       }
 
       $query="delete from PlaceMap2 where pm_id={$this->pm_id} limit 1";
       if(!ShopDB::query($query)){
-        return placemap::_abort('placemap_delete_failed');
+        return self::_abort('placemap_delete_failed');
       }
 
       RETURN ShopDB::commit('PlaceMap deleted');

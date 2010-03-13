@@ -160,8 +160,17 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $_SHOP->lang=$_SESSION['_SHOP_LANG'] ;
   }else if(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && $_SERVER["HTTP_ACCEPT_LANGUAGE"]){
 		$lpat=implode($_SHOP->langs,"|");
-    if(preg_match("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res)){
-     $_SHOP->lang=$res[0];
+    if(preg_match_all("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res )){
+      $newlang = '';
+      $langid = 9999;
+       foreach ($res[0] as $lang) {
+        $x =  array_search($lang, $_SHOP->langs );
+        if (($x < $langid) && file_exists(INC."lang".DS."site_". $lang.".inc")) {
+          $langid = $x;
+          $newlang = $lang;
+        }
+      }
+      $_SHOP->lang=$newlang;
     }else{
       $_SHOP->lang=$_SHOP->langs[0];
       $_SESSION['_SHOP_LANG']=$_SHOP->lang;
@@ -171,26 +180,23 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $_SESSION['_SHOP_LANG']=$_SHOP->lang;
   }
 
-  $locale = get_loc($_SHOP->lang);
-  writeLog($old = setlocale(LC_TIME, NULL));
-
-  if (!setlocale(LC_TIME,$locale,$locale.'.utf8',$locale.'.utf-8')) {
-    $loc = $locale.'_'.strtoupper($locale);
-    if (!setlocale(LC_TIME,$loc, $loc.'.utf8', $loc.'.utf-8')) {
-      $loc = $locale.'-'.strtoupper($locale);
-      if(!setlocale(LC_TIME,$loc, $loc.'.utf8', $loc.'.utf-8')){
-        if(!setlocale(LC_TIME, '')) {
-          setlocale(LC_TIME, $old);
-        }
-      }
-    }
-  }
   If (file_exists(INC."lang".DS."site_". $_SHOP->lang.".inc")){
     include_once(INC."lang".DS."site_". $_SHOP->lang.".inc");
     $_SHOP->langfile = INC."lang".DS."site_". $_SHOP->lang.".inc";
   }else {
     include_once(INC."lang".DS."site_en.inc");
     $_SHOP->langfile = INC."lang".DS."site_en.inc";
+  }
+
+  writeLog($old = setlocale(LC_TIME, NULL));
+
+  $loc = con('setlocale_ALL',' ');
+  if(!empty($loc)){
+    setlocale(LC_ALL,explode(';',$loc));
+  }
+  $loc = con('setlocale_TIME',' ');
+  if(!empty($loc)){
+    setlocale(LC_TIME,explode(';',$loc));
   }
 
   if(isset($_SHOP->auth_required)){

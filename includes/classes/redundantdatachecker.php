@@ -35,6 +35,42 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 $orphancheck = array();
 /**/
+$orphancheck[]="
+SELECT 'Category_stat', cs_category_id,
+   'Total',  CONCAT_WS('/', `cs_total`, (select count(*) from `Seat` where seat_category_id = cs_category_id)) seat_total, null
+ FROM `Category_stat`
+where `cs_total` - (select count(*) from `Seat` where seat_category_id = cs_category_id) <> 0
+";
+
+$orphancheck[]="
+SELECT 'Category_stat', cs_category_id,
+   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' )) seat_free, null
+ FROM `Category_stat`
+where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' ) <>0
+";
+$orphancheck[]="
+SELECT 'Event_stat',es_event_id,
+   'Total',  CONCAT_WS('/', `es_total`,(select count(*) from `seat` where seat_event_id = es_event_id)) seat_total, null
+ FROM `event_stat`
+where `es_total` - (select count(*) from `seat` where seat_event_id = es_event_id) <> 0
+";
+
+$orphancheck[]="
+SELECT 'Event_stat',es_event_id,
+   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' )) seat_free, null
+ FROM `event_stat`
+where `es_free`  - (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' ) <>0
+";
+
+$orphancheck[]="
+    SELECT 'Order', order_id, 'Seats', order_tickets_nr -  count( S.seat_id ) delta, null
+    FROM `Order`
+    LEFT JOIN `Seat` S ON order_id = S.seat_order_id
+    where order_status NOT IN ('reissue', 'cancel', 'trash')
+    GROUP BY order_id
+    HAVING delta <> 0
+    order by seat_event_id, order_id
+";
 
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null,
@@ -83,8 +119,16 @@ $orphancheck[]="
 select 'Category_stat', cs_category_id, 'cat_id' l1 , cs_category_id, category_id
 from Category_stat left join Category on category_id = cs_category_id
                    left join Event    on category_event_id = event_id
-where  (category_id is null and event_status != 'unpub')
+where  (category_id is null)
 ";
+/**/
+$orphancheck[]="
+select 'Category_stat', cs_category_id, 'cat_id' l1 , category_id, cs_category_id
+from Category_stat left join Category on category_id = cs_category_id
+                   left join Event    on category_event_id = event_id
+where  (category_id is null)
+";
+
 /**/
 $orphancheck[]="
 select 'Discount', discount_id, 'event_id' , ifnull(discount_event_id,'null'), event_id
@@ -118,12 +162,29 @@ from Event e left join Event me       on e.event_main_id = me.event_id
 where  (e.event_main_id is not null and me.event_id is null)
 ";
 /**/
-
 $orphancheck[]="
 select 'Event_stat', es_event_id, 'event_id' l1 , es_event_id, event_id
 from Event_stat left join Event  on es_event_id = event_id
 where  (event_id is null)
 ";
+$orphancheck[]="
+select 'Event_stat', es_event_id, 'event_id' l1, event_id , es_event_id
+from Event_stat left join Event  on es_event_id = event_id
+where  (event_id is null)
+";
+$orphancheck[]="
+SELECT 'Event_stat',es_event_id,
+   'Total',  CONCAT_WS('/', `es_total`,(select count(*) from `seat` where seat_event_id = es_event_id)) seat_total, null
+ FROM `event_stat`
+where `es_total` - (select count(*) from `seat` where seat_event_id = es_event_id) <> 0
+";
+$orphancheck[]="
+SELECT 'Event_stat',es_event_id,
+   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' )) seat_free, null
+ FROM `event_stat`
+where `es_free`  - (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' ) <>0
+";
+
 $orphancheck[]="
 select 'Spoint', SPoint.admin_id, 'user_id' , SPoint.admin_user_id, User.user_id
 from Admin SPoint left join User  on SPoint.admin_user_id = User.user_id
@@ -246,6 +307,7 @@ class orphans {
        'Event~pm_id'=>'Clear the link to the removed placemap',
        'Order~user_id'=>'Recreate missing user info for this order',
        'Order~owner_id'=>'Recreate missing POS login for this pos',
+       'Order~seats'=>'This order has less tickets then ordered!!!',
        'Order~zeros'=>'Clear all zero identifiers in the order table',
        'PlaceMapPart~zeros'=>'Clear all zero identifiers in the PlaceMapPart table',
        'PlaceMap~event_id'=>'Remove this placemap, event is already removed',
@@ -315,6 +377,7 @@ class orphans {
     return $data;
   }
 
+
   static function dofix($key) {
     $fix = explode('~',$key);
     $fixit = $fix[0].'~'.$fix[1];
@@ -338,6 +401,7 @@ class orphans {
       case 'Category~pmp_id':
         ShopDB::Query("update Category set
                          category_pmp_id = null
+
                        where Category_id = {$fix[2]}") ;
         break;
       case 'Category~zeros':
@@ -402,7 +466,7 @@ class orphans {
         }
         $cats=PlaceMapCategory::loadAll($pm_id);
         if(!$cats){
-          return $this->_abort('No Categories found');
+          return self::_abort('No Categories found');
         }
         foreach($cats as $cat_ident=>$cat){
           if($cat->event_status !== 'unpub' && $cat->category_numbering =='none' &&
@@ -427,7 +491,7 @@ class orphans {
           foreach($stats as $category_ident=>$cs_total){
             $cat=$cats[$category_ident];
             $cs=new Category_stat($cat->category_id,$cs_total);
-            if(!$dry_run){$cs->save() or $this->_abort('publish5');}
+            if(!$dry_run){$cs->save() or self::_abort('publish5');}
           }
         }
 */
@@ -459,6 +523,7 @@ class orphans {
           echo "<script> window.alert('Ord_id can not be cleared you need to change this from within database editor like phpmyadmin. Ask your system manager to help');</script>";
         } else {
           Orphans::clearZeros('Event', array('event_group_id','event_main_id'));
+
         }
         break;
       case 'Order~zeros':

@@ -4,7 +4,14 @@
 	//Date & Time Formats, Buttons & Links, Navigation, Passwords, Globals, and Warnings.
 
 //These defines are next and mostly page specific.
-	//Admin Pages, Control Pages, Web Templates, and POS Templates
+  //Admin Pages, Control Pages, Web Templates, and POS Templates
+
+// SetLocate settings:
+
+;
+  define('setlocale_ALL','en.utf8; en.utf-8;en_EN.utf8;en_EN.utf-8;en-EN.utf8;en-EN.utf-8;en;en_EN;en-EN');
+//  define('setlocale_TIME','en.utf8; en.utf-8;en_EN.utf8;en_EN.utf-8;en-EN.utf8;en-EN.utf-8;en;en_EN;en-EN');
+
 
 //DATE & TIME FORMATS
 //comment "//" out the format not used.
@@ -16,6 +23,7 @@
 	//	define("time_format","%H:%M");
 	// 12 hour
 		define("time_format","%I:%M %p");
+
 
 define("longdate_format","%Y-%m-%d %H:%M:%S");
 define("shortdate_format","%e %b %Y");
@@ -161,6 +169,7 @@ define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
 define("email_badconfig","The program's mail configuration is incorrectly defined!");
+
 
 
 
@@ -575,6 +584,7 @@ define("order_event_list_title","Orders by Event");
 	define("order_total_price","Total Price");
 	define("order_date","Order Date");
 	define("order_shipment_status","Shipment Status");
+
 		define("send","Sent");
 	define("order_payment_status","Payment Status");
 	define("order_payment_id","Payment ID");
@@ -891,6 +901,7 @@ define("act_enter_title","Place your Activation Code here:");
 define("act_enter_code","Complete your activation by entering the activation code, sent to you by Email, in the box below. Or click on the link in the Email.");
 define("act_code","Activation code:");
 define("act_send","Send");
+
 define("act_notarr","Activation Email still not arrived?");
 define("resend_activation","Resend Activation Email");
 define("act_is_sent","Your Activation Email has been sent to your Inbox!");

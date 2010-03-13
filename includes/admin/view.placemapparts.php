@@ -457,7 +457,7 @@ class PlaceMapPartView extends AdminView {
       // if($pmp->event_id){
       // echo "<a class='link' href='view_event.php?action=view&event_id={$pmp->event_id}'>".event."</a>";
       // }else{
-      if (!$view_only) {
+      if (!$view_only || $pmp->event_status != 'unpub') {
         echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$pmp->pm_id}",'admin_list',3);
       } else {
         echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit_pmp&pmp_id={$pmp->pmp_id}",'admin_list',3);

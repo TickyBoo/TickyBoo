@@ -548,30 +548,6 @@ function addDaysToDate($date,$no_days) {
   return date('Y-m-d', $res);
 }
 
-function get_loc($lang){
-  global $_SHOP;
-  if (isset($_SHOP->langs_locales[$lang])) {
-    return $_SHOP->langs_locales[$lang];
-  } else {
-/*    switch($lang){
-      case "de":
-        return "de_DE";
-        break;
-      case "fr":
-        return "fr_FR";
-        break;
-      case "it":
-        return "it_IT";
-        break;
-      case "nl":
-        return "nl_NL";
-        break;
-      default: */
-        return $lang;
-//    }
-  }
-}
-
 function strip_tags_in_big_string($textstring){
   $safetext = '';
   while (strlen($textstring) != 0)
@@ -761,6 +737,15 @@ function showstr( $Text, $len = 20 ) {
 	}
 	return $Text;
 }
+
+function list_system_locales(){
+    ob_start();
+    system('locale -a');
+    $str = ob_get_contents();
+    ob_end_clean();
+    return split("\\n", trim($str));
+}
+
 
 function customError($errno, $errstr, $error_file, $error_line, $error_context) {
   $errortype = array(

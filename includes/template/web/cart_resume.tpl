@@ -62,7 +62,7 @@
                  {literal}
                    <script>
                   $('#countdown1').countdown({ until: {/literal} +{$cart_overview.secttl}  {literal}, compact: true,
-                                               format: 'mS', description: 'sec' });
+                                               format: 'mS', description: 's' });
                   </script>
                  {/literal}
 
@@ -77,6 +77,7 @@
     	  <table>
         	{cart->items}
         	  {if not $seat_item->is_expired()}
+
           		<tr>
           		  <td class='cart_content' style='border-bottom:#cccccc 1px solid;padding-bottom:4px;padding-top:4px; font-size:10px;'>
             		  {$event_item->event_name}<br>

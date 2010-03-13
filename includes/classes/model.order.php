@@ -182,6 +182,7 @@ class Order Extends Model {
     global $_SHOP;
 
 
+
     if($this->order_id){
       return addWarning("This order is already saved!!!"); //already saved
     }
@@ -306,7 +307,7 @@ class Order Extends Model {
               WHERE order_status NOT IN ('trash','cancel')
               AND order_id="._esc($order_id);
       if(!$res=ShopDB::query($sql)){
-        return _abort("No such Order ID");
+        return self::_abort("No such Order ID");
       }
       return ShopDB::commit('order_note saved');
     }
@@ -512,7 +513,7 @@ class Order Extends Model {
 
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order_old['order_id'],'ord',null,'Order::reserve_to_order','Order Completed Reissue')){
-        return Order::_abort('order_cannot_reissue_update_status');
+        return self::_abort('order_cannot_reissue_update_status');
       }
 
       //returns cost of seats Adds up the seats with the same order id.
@@ -548,7 +549,7 @@ class Order Extends Model {
                   seat_status='com'
                 WHERE seat_id='{$seat['seat_id']}' ";
         if(!ShopDB::query($query)){
-          return order::_abort('order_cannot_reorder_update_seats');
+          return self::_abort('order_cannot_reorder_update_seats');
         }
       }
 
@@ -562,7 +563,7 @@ class Order Extends Model {
                 order_place="._esc($place)."
               WHERE order_id="._esc($order_id);
       if(!$res=ShopDB::query($query)){
-        return order::_abort('order_cannot_reorder_cant_up_old_ord');
+        return self::_abort('order_cannot_reorder_cant_up_old_ord');
       }
       //Commit and finish
       if(!ShopDB::commit('order reordered')){
@@ -585,43 +586,43 @@ class Order Extends Model {
               FROM `Order`
               WHERE order_id='$order_id' FOR UPDATE";
       if (!$order=ShopDB::query_one_row($query)){
-        return Order::_abort('order_not_found');
+        return self::_abort('order_not_found');
       }
 
       //checks to see if its an remitted or canceled order!
       if($order['order_status']=='cancel' or
        $order['order_status']=='reissue'){
-        return Order::_abort('order_already_reissue_canceled');
+        return self::_abort('order_already_reissue_canceled');
       }
 
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],'reissue',null,'Order::reissue','Order Reissue')){
-        return Order::_abort('order_cannot_reissue_update_status_1');
+        return self::_abort('order_cannot_reissue_update_status_1');
       }
 
       //Selects Seats from old order using passed order_id from 'params'
       $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
       if(!$res=ShopDB::query($query)){
-        return Order::_abort('order_cannot_lock_seats');
+        return self::_abort('order_cannot_lock_seats');
       }
       //Runs through each seat and gives it a new seat_code and the new order_id.
       $seats = Seat::loadAllOrder($order['order_id']);
       foreach($seats as $seat ){
         $seat->seat_code=Seat::generate_code(8);
         if (!$seat->save()){
-          return Order::_abort('order_cannot_change_seat');
+          return self::_abort('order_cannot_change_seat');
         }
       }
       //Update Status to let the admin know the order has been remitted.
       if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
-        return Order::_abort('order_cannot_reissue_update_status');
+        return self::_abort('order_cannot_reissue_update_status');
       }
 
       $handling = Handling::load($order['order_handling_id']);
       if($handling->handling_shipment == 'email'){
 
         if($order['order_shipment_status']=='send'){
-          Order::set_send($order_id);
+          self::set_send($order_id);
         }
 
       }else{
@@ -641,17 +642,17 @@ class Order Extends Model {
   }
 
   function set_send ($order_id){
-    $order=Order::load($order_id);
+    $order=self::load($order_id);
     $order->set_shipment_status('send');
   }
 
   function set_payed ($order_id){
-    $order=Order::load($order_id);
+    $order=self::load($order_id);
     $order->set_payment_status ('payed');
   }
 
   function set_reserved ($order_id){
-    $order=Order::load($order_id);
+    $order=self::load($order_id);
     $order->set_status ('res');
   }
 
@@ -666,7 +667,7 @@ class Order Extends Model {
    * @return boolean
    */
   public function set_payment_id($order_id, $payment_id=null){
-    $order=Order::load($order_id);
+    $order=self::load($order_id);
 
     if(ShopDB::begin('set_order_payment_id')){
       $query="UPDATE `Order` SET
@@ -759,7 +760,7 @@ class Order Extends Model {
               FOR UPDATE";
 
       if(!$res=ShopDB::query($query)){
-        return Order::_abort('cant_lock_order');
+        return self::_abort('cant_lock_order');
       }
 
       while($data=shopDB::fetch_assoc($res)){
@@ -782,7 +783,7 @@ class Order Extends Model {
               FOR UPDATE";
 
       if(!$res=ShopDB::query($query)){
-        return Order::_abort('cant_lock_order');
+        return self::_abort('cant_lock_order');
       }
 
       while($data=shopDB::fetch_assoc($res)){

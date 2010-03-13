@@ -148,8 +148,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
                             'nl'=>'Nederlands'
                            );
 
-	$_SHOP->langs_locales=array('sv'=>'sv_SE'
-                             );
 	$_SHOP->is_admin = false;
 	$_SHOP->event_type_enum = array('','classics','jazz','blues','funk','pop','rock','folklore','theater','sacred','ballet',
                                   'opera','humour','music','other','cinema','party','exposition');
