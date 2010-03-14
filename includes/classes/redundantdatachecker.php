@@ -35,32 +35,6 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 $orphancheck = array();
 /**/
-$orphancheck[]="
-SELECT 'Category_stat', cs_category_id,
-   'Total',  CONCAT_WS('/', `cs_total`, (select count(*) from `Seat` where seat_category_id = cs_category_id)) seat_total, null
- FROM `Category_stat`
-where `cs_total` - (select count(*) from `Seat` where seat_category_id = cs_category_id) <> 0
-";
-
-$orphancheck[]="
-SELECT 'Category_stat', cs_category_id,
-   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' )) seat_free, null
- FROM `Category_stat`
-where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' ) <>0
-";
-$orphancheck[]="
-SELECT 'Event_stat',es_event_id,
-   'Total',  CONCAT_WS('/', `es_total`,(select count(*) from `seat` where seat_event_id = es_event_id)) seat_total, null
- FROM `event_stat`
-where `es_total` - (select count(*) from `seat` where seat_event_id = es_event_id) <> 0
-";
-
-$orphancheck[]="
-SELECT 'Event_stat',es_event_id,
-   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' )) seat_free, null
- FROM `event_stat`
-where `es_free`  - (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' ) <>0
-";
 
 $orphancheck[]="
     SELECT 'Order', order_id, 'Seats', order_tickets_nr -  count( S.seat_id ) delta, null
@@ -128,6 +102,19 @@ from Category_stat left join Category on category_id = cs_category_id
                    left join Event    on category_event_id = event_id
 where  (category_id is null)
 ";
+$orphancheck[]="
+SELECT 'Category_stat', cs_category_id,
+   'Total',  CONCAT_WS('/', `cs_total`, (select count(*) from `Seat` where seat_category_id = cs_category_id)) seat_total, null
+ FROM `Category_stat`
+where `cs_total` - (select count(*) from `Seat` where seat_category_id = cs_category_id) <> 0
+";
+
+$orphancheck[]="
+SELECT 'Category_stat', cs_category_id,
+   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' )) seat_free, null
+ FROM `Category_stat`
+where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' ) <>0
+";
 
 /**/
 $orphancheck[]="
@@ -167,23 +154,20 @@ select 'Event_stat', es_event_id, 'event_id' l1 , es_event_id, event_id
 from Event_stat left join Event  on es_event_id = event_id
 where  (event_id is null)
 ";
+
 $orphancheck[]="
-select 'Event_stat', es_event_id, 'event_id' l1, event_id , es_event_id
-from Event_stat left join Event  on es_event_id = event_id
-where  (event_id is null)
+SELECT 'Event_stat',es_event_id,
+   'Total',  CONCAT_WS('/', `es_total`,(select count(*) from `Seat` where seat_event_id = es_event_id)) seat_total, null
+ FROM `Event_stat`
+where `es_total` - (select count(*) from `Seat` where seat_event_id = es_event_id) <> 0
 ";
 $orphancheck[]="
 SELECT 'Event_stat',es_event_id,
-   'Total',  CONCAT_WS('/', `es_total`,(select count(*) from `seat` where seat_event_id = es_event_id)) seat_total, null
- FROM `event_stat`
-where `es_total` - (select count(*) from `seat` where seat_event_id = es_event_id) <> 0
+   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status = 'free' )) seat_free, null
+ FROM `Event_stat`
+where `es_free`  - (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status = 'free' ) <>0
 ";
-$orphancheck[]="
-SELECT 'Event_stat',es_event_id,
-   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' )) seat_free, null
- FROM `event_stat`
-where `es_free`  - (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' ) <>0
-";
+
 
 $orphancheck[]="
 select 'Spoint', SPoint.admin_id, 'user_id' , SPoint.admin_user_id, User.user_id
@@ -298,10 +282,14 @@ class orphans {
        'Category~pmp_id'=>'Clear the link to the removed placemapPart',
        'Category~zeros'=>'Clear all zero identifiers in the Catagory table',
        'Category_stat~cat_id'=>'Remove ALL old category_stat records',
+       'Category_stat~Total'=>'Reset the category statics from seat count',
+       'Category_stat~Free'=>'Reset the category statics from seat count',
        'Discount~event_id'=>'Remove this Discount, event is already removed',
+       'Event_stat~event_id'=>'Remove ALL old Event_stat records',
+       'Event_stat~Total'=>'Reset the event statics from seat count',
+       'Event_stat~Free'=>'Reset the event statics from seat count',
        'Event~stat_id'=>'Recreate this missing stat record',
        'Event~group_id'=>'Clear the link to this removed eventgroup',
-       'Event_stat~event_id'=>'Remove ALL old Event_stat records',
        'Event~zeros'=>'Clear all zero identifiers in the event table',
        'Event~cat_id'=>'Recreate missing seats for this category',
        'Event~pm_id'=>'Clear the link to the removed placemap',
@@ -388,6 +376,13 @@ class orphans {
         ShopDB::Query("delete from Category_stat
                        where (select category_id from Category where category_id = cs_category_id) is null") ;
         break;
+      case'Category_stat~Free':
+      case'Category_stat~Total':
+        ShopDB::Query("update Category_stat set
+                          cs_total = (select count(*) from `seat` where seat_category_id = cs_category_id),
+                          cs_free = (select count(*) from `seat` where seat_category_id = cs_category_id and seat_status = 'free' )
+                       where cs_category_id ='{$fix[2]}'") ;
+        break;
       case 'Category~stat_id':
         $cat = PlaceMapCategory::load($fix[2]);
         $sql = "SELECT count(seat_id) FROM Seat s WHERE s.seat_category_id = {$cat->category_id} and seat_status = 'free'";
@@ -415,6 +410,13 @@ class orphans {
       case'Event_stat~event_id':
         ShopDB::Query("delete from Event_stat
                        where (select Event_id from Event where event_id = es_event_id) is null") ;
+        break;
+      case'Event_stat~Free':
+      case'Event_stat~Total':
+        ShopDB::Query("update Event_stat set
+                          es_total = (select count(*) from `seat` where seat_event_id = es_event_id),
+                          es_free = (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' )
+                       where es_event_id ='{$fix[2]}'") ;
         break;
       case'Event~cat_id':
         $sql = "SELECT seat_id, seat_category_id FROM Seat WHERE seat_event_id = {$fix[2]}";
