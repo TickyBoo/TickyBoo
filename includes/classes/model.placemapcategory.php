@@ -37,7 +37,7 @@ class PlaceMapCategory Extends Model {
   protected $_idName    = 'category_id';
   protected $_tableName = 'Category';
   protected $_columns   = array( '#category_id', '#category_event_id', 'category_price', 'category_name',
-                                 '*category_pm_id', '#category_pmp_id', '*category_ident', '*category_numbering',
+                                 '*category_pm_id', '#category_pmp_id', 'category_ident', '*category_numbering',
                                  'category_size', 'category_max', 'category_min', 'category_template',
                                  '*category_color', 'category_data');
 
@@ -114,7 +114,7 @@ class PlaceMapCategory Extends Model {
       $this->category_ident = $this->_find_ident($this->category_pm_id);
     }
     return parent::save($id, $exclude);
-  }  
+  }
 
   function delete (){
     $seats = shopDB::query_one_row("select count(*) from Seat

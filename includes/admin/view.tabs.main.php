@@ -167,9 +167,10 @@ class IndexView extends AdminView {
       return " - Could not check for new version.";
     }
     $matches = explode(' ', INSTALL_REVISION);
-   // print_r($matches);
+    $matches[1] = (int)$matches[1];
+ //   var_dump($matches); echo $currentOrder;
     if( $matches[1] > $currentOrder){
-      $string = " <span style='color:red; '> SVN Build </span>";
+      $string = " <span style='color:blue; '> SVN Build </span>";
     }elseif( $matches[1] < $currentOrder){
       $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
     }else{

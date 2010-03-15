@@ -57,6 +57,10 @@ require_once ( 'classes/smarty.update.php');
 require_once ( 'config/init.php');
 
 
+// remove the # below under linux to get a list of locale tags.
+
+#  print_r(list_system_locales());
+
 global $_SHOP;
 
 

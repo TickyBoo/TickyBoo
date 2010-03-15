@@ -51,8 +51,8 @@ class PDF2TCompiler {
     $smarty->assign((array)$_SHOP->organizer_data);
     $smarty->assign($data);
     $smarty->assign("OrderData",$data);
-    $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
-    $smarty->assign("_SHOP_images", $_SHOP->images_url);
+    $smarty->assign("_SHOP_files", ROOT.'files'.DS );//ROOT.'files'.DS
+    $smarty->assign("_SHOP_images", ROOT.'images'.DS);
 
     $smarty->my_template_source = $this->sourcetext;
     $htmlresult = $smarty->fetch("text:".get_class($this));

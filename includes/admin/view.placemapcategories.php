@@ -73,7 +73,7 @@ class PlaceMapCategoryView extends AdminView {
        echo "<input type=hidden name=category_id value={$data['category_id']}>";
     } else {
       $data['category_pm_id'] =(isset($data['category_pm_id']))?$data['category_pm_id']:$_REQUEST['pm_id'];
-      $pm = PlaceMap::load($_REQUEST['pm_id']);print_r($pm);
+      $pm = PlaceMap::load($_REQUEST['pm_id']);//print_r($pm);
       $data['category_event_id'] = $pm->pm_event_id;
     }
     echo "<input type=hidden name=category_pm_id value={$data['category_pm_id']}>";
@@ -128,6 +128,7 @@ class PlaceMapCategoryView extends AdminView {
 
 
   function draw () {
+    global $_SHOP;
     if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
       $pmc = new PlaceMapCategory(true);
       $this->form((Array)$pmc, null);
@@ -144,6 +145,7 @@ class PlaceMapCategoryView extends AdminView {
       } else {
         return true;
       }
+
 
     } elseif ($_GET['action'] == 'remove_category' and $_GET['category_id'] > 0) {
       if($pmc = PlaceMapCategory::load($_GET['category_id']))
@@ -162,6 +164,7 @@ class PlaceMapCategoryView extends AdminView {
         $this->form($data, null);
       }
     }
+ //   print_r($_SHOP->Messages);
   }
 
   // ################# petits fonctions speciales ##################
