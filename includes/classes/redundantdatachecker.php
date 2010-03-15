@@ -306,7 +306,7 @@ class orphans {
        'Seat~event_id'=>'Remove the seats with the already deleted event',
        'Seat~user_id'=>'Recreate missing user info for this seats',
        'Seat~cat_id'=>'Remove the seats with the deleted category',
-       'Seat~pmz_id'=>'Recalculate zones from placemapparts',
+       'Seat~pmz_id'=>'clear the seat_zone_id where the zone is deleted',
        'Spoint~user_id'=>'Recreate missing user info for this pos'
 
 
@@ -379,8 +379,8 @@ class orphans {
       case'Category_stat~Free':
       case'Category_stat~Total':
         ShopDB::Query("update Category_stat set
-                          cs_total = (select count(*) from `seat` where seat_category_id = cs_category_id),
-                          cs_free = (select count(*) from `seat` where seat_category_id = cs_category_id and seat_status = 'free' )
+                          cs_total = (select count(*) from `Seat` where seat_category_id = cs_category_id),
+                          cs_free = (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status = 'free' )
                        where cs_category_id ='{$fix[2]}'") ;
         break;
       case 'Category~stat_id':
@@ -414,8 +414,8 @@ class orphans {
       case'Event_stat~Free':
       case'Event_stat~Total':
         ShopDB::Query("update Event_stat set
-                          es_total = (select count(*) from `seat` where seat_event_id = es_event_id),
-                          es_free = (select count(*) from `seat` where seat_event_id = es_event_id and seat_status = 'free' )
+                          es_total = (select count(*) from `Seat` where seat_event_id = es_event_id),
+                          es_free = (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status = 'free' )
                        where es_event_id ='{$fix[2]}'") ;
         break;
       case'Event~cat_id':
@@ -567,9 +567,9 @@ class orphans {
                        where seat_id = {$fix[2]}") ;
         break;
       case 'Seat~pmz_id':
-/*        ShopDB::Query("update Seat set
-                         seat_discount_id = null
-                       where seat_id = {$fix[2]}") ; */
+        ShopDB::Query("update Seat set
+                         seat_zone_id = null
+                       where seat_zone_id = {$fix[4]}") ;
         break;
       case 'Seat~zeros':
         Orphans::clearZeros('Seat', array('seat_category_id','seat_zone_id' ,'seat_user_id' ,
