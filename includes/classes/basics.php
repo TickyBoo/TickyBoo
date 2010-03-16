@@ -577,10 +577,10 @@ function clean($string, $type='ALL') {
        return  htmlspecialchars_decode(wp_entities($string,0),ENT_QUOTES );
        break;
     case 'all'  : $string = strip_tags_in_big_string ($string);
-    case 'utf8' : $string = utf8_decode($string );
+//    case 'utf8' : $string = utf8_decode($string );
 
     case 'strip': $string = $string;
-    case 'html' : $string = wp_entities(htmlentities($string, ENT_QUOTES));
+    case 'html' : $string = wp_entities(htmlentities($string, ENT_QUOTES, "UTF-8"));
   }
   return $string;
 }
