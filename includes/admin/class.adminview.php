@@ -83,7 +83,7 @@ class AdminView extends AUIComponent {
   function form_head ($name, $width = 0, $colspan = 2) {
       echo "<table class='admin_form' width='" . ($width?$width:$this->width) . "' cellspacing='1' cellpadding='4'>\n";
       if ($name) {
-        echo "<tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr>";
+        echo "<thead><tr><td class='admin_list_title' colspan='$colspan' >$name</td></tr><thead>";
       }
   }
 
@@ -881,6 +881,39 @@ class AdminView extends AUIComponent {
 
   public function getJQuery(){
     return $this->jScript;
+  }
+  
+  
+  protected function getLatestVersion(){
+    require_once("classes/class.restservice.client.php");
+
+    //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
+    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
+    try{
+      $rsc->excuteRequest();
+      $array = $rsc->getArray();
+    //  print_r($array);
+      if(isset($array['versions']['version_attr']['version'])){
+        $currentVersion = $array['versions']['version_attr']['version'];
+        $currentOrder = $array['versions']['version_attr']['order'];
+      }else{
+        throw new Exception('Couldnt get version');
+      }
+    }catch(Exception $e){
+      return " - Could not check for new version.";
+    }
+    $matches = explode(' ', INSTALL_REVISION);
+    $matches[1] = (int)$matches[1];
+ //   var_dump($matches); echo $currentOrder;
+    if( $matches[1] > $currentOrder){
+      $string = " <span style='color:blue; '> SVN Build </span>";
+    }elseif( $matches[1] < $currentOrder){
+      $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
+    }else{
+      //$string = " - You have the latest Version";
+    }
+
+    return $string;
   }
 
   // make tab menus using html tables

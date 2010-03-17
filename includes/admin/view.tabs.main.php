@@ -37,6 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 require_once("admin/view.options.php");
 require_once("admin/view.organizer.php");
+require_once("admin/view.versionutil.php");
 
 class IndexView extends AdminView {
 
@@ -49,13 +50,16 @@ class IndexView extends AdminView {
     $menu[con("index_admin_tab")]= "?tab=0";
     $menu[con("owner_tab")]      = '?tab=1';
     $menu[con("shopconfig_tab")] = "?tab=2";
+    if($_SHOP->software_updater_enabled){
+      $menu[con("version_updater")] = "?tab=3";
+    }
 
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_INDEX_tab'], "left");
 
     switch ((int)$_SESSION['_INDEX_tab']){
       case 0:
         $licention = file_get_contents (ROOT."licence.txt");
-       	$this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->getLatestVersion(),$this->width,1);
+        $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->getLatestVersion(),$this->width,1);
         echo "<tr><td class='admin_value'>" ;
         echo "<p><pre>",htmlspecialchars($licention),'</pre></p>';
         echo "</td></tr>";
@@ -72,16 +76,19 @@ class IndexView extends AdminView {
 		    echo "</table>\n";
         break;
 
-       case 1:
-           $viewer = new OrganizerView($this->width);
-           $viewer->draw();
-           break;
+      case 1:
+        $viewer = new OrganizerView($this->width);
+        $viewer->draw();
+        break;
 
-       case 2:
-           $viewer = new OptionsView($this->width);
-           $viewer->draw();
-           break;
-
+      case 2:
+        $viewer = new OptionsView($this->width);
+        $viewer->draw();
+        break;
+      case 3:
+        $viewer = new VersionUtilView($this->width);
+        $viewer->draw(); 
+        break;
     }
   }
 
@@ -146,38 +153,6 @@ class IndexView extends AdminView {
 		}
 
     return vsprintf(con('index_admins_count'),$part);
-  }
-
-  function getLatestVersion(){
-    require_once("classes/class.restservice.client.php");
-
-    //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
-    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
-    try{
-      $rsc->excuteRequest();
-      $array = $rsc->getArray();
-    //  print_r($array);
-      if(isset($array['versions']['version_attr']['version'])){
-        $currentVersion = $array['versions']['version_attr']['version'];
-        $currentOrder = $array['versions']['version_attr']['order'];
-      }else{
-        throw new Exception('Couldnt get version');
-      }
-    }catch(Exception $e){
-      return " - Could not check for new version.";
-    }
-    $matches = explode(' ', INSTALL_REVISION);
-    $matches[1] = (int)$matches[1];
- //   var_dump($matches); echo $currentOrder;
-    if( $matches[1] > $currentOrder){
-      $string = " <span style='color:blue; '> SVN Build </span>";
-    }elseif( $matches[1] < $currentOrder){
-      $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
-    }else{
-      //$string = " - You have the latest Version";
-    }
-
-    return $string;
   }
 
 }

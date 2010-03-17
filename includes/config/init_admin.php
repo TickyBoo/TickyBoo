@@ -41,6 +41,7 @@ $_SHOP->session_name = "AdminSession";
 $_SHOP->auth_required = true;
 $_SHOP->auth_status="organizer";
 $_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3' );
+$_SHOP->software_updater_enabled = false;
 
 require_once("init.php");
 ?>
