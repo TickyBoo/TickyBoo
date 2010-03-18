@@ -561,26 +561,28 @@ function strip_tags_in_big_string($textstring){
 
 function wp_entities($string, $encode = 1){
   $a = (int) $encode;
-  $original = array("'"   ,"\""   ,"#"    ,"("    ,")","'"  );
-  $entities = array("&%39;","&%34;","&%35;","&#40;","&#41;","&apos;");
 
   if($a == 1) {
-    return str_replace($original, $entities, $string);
+    $original = array("'"=>"&%39;",  "\""=> "&%34;" ,"("=>"&#40;"    ,")"=> "&#41;", "`" =>"&apos;" );//,"#"=>"&%35;"
+    return strtr( $string, $original);
   } else {
+    $original = array("'"   ,"\""   ,"#"    ,"("    ,")", "`"  );
+    $entities = array("&%39;","&%34;","&%35;","&#40;","&#41;","&apos;");
     return str_replace($entities, $original, $string);
   }
 }
 
 function clean($string, $type='ALL') {
+
   switch (strtolower($type)) {
     case 'revert':
        return  htmlspecialchars_decode(wp_entities($string,0),ENT_QUOTES );
        break;
     case 'all'  : $string = strip_tags_in_big_string ($string);
-//    case 'utf8' : $string = utf8_decode($string );
+    case 'strip': $string = html_entity_decode($string, ENT_QUOTES,'UTF-8');
+    case 'html' : $string = htmlentities($string, ENT_QUOTES, "UTF-8");
+    case 'htmlz' : $string = wp_entities($string);
 
-    case 'strip': $string = $string;
-    case 'html' : $string = wp_entities(htmlentities($string, ENT_QUOTES, "UTF-8"));
   }
   return $string;
 }
@@ -635,6 +637,7 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
  * This function creates a md5 password code to allow login true WWW-Authenticate
  *
  */
+
 function sha1pass($user, $pass) {
   return '*'.sha1(md5($user.':'.AUTH_REALM.':'.$pass).'~'.$user);
 }

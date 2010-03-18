@@ -111,7 +111,7 @@
             {$shop_event.event_date|date_format:!date_format!} -
             {$shop_event.event_time|date_format:!time_format!} <br>
             {!venue!}:
-            {$shop_event.ort_name} - {$shop_event.ort_city} - {$shop_event.pm_name} <br>
+            <a onclick='showDialog(this);return false;' href='address.php?event_id={$shop_event.event_id}'>{$shop_event.ort_name}</a> - {$shop_event.ort_city} - {$shop_event.pm_name}  <br>
             {!doors_open!} {$shop_event.event_open|date_format:!time_format!}
           </span>
         {else}

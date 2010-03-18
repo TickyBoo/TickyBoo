@@ -69,6 +69,7 @@ class install_license {
       array_push($Install->Errors,"MySQL-Exstentions havent been enabled, this is required for security reasons, its should be fairly standard on any PHP 5 Build it will be taking over from standard mysql function.");
     }
     if (!function_exists('curl_init')){
+      $_SESSION['SHOP']['url_post_method'] ='fso';
       array_push($Install->Warnings,"<a href='http://ch2.php.net/manual/en/ref.curl.php'>cURL</a> is not compiled in your php. cURL is used by paypal or authorize.net payment methods - you will be unable to use those. Install curl, or configure another network library in <i>'includes/config/init_common.php'");
     }
     if (!function_exists('iconv')){

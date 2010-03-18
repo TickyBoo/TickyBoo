@@ -99,7 +99,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   // this selects the theme that you like to use.
   $_SHOP->theme_name = "default";
-  $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
 	//default paper size and orientation for pdf files
 	//paper size: 'a4', 'legal', etc..or  array(x0,y0,x1,y1), in points
   //or  array(width,height), in centimeters
@@ -126,18 +125,25 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->input_time_type = 24; //12; //
   $_SHOP->input_date_type = 'dmy'; // 'mdy'
 
-  ini_set("magic_quotes_runtime",0);
-  ini_set('allow_call_time_pass_reference',0);
+  ini_set("magic_quotes_runtime", 0);
+  ini_set('allow_call_time_pass_reference', 0);
 
 	//emulates magic_quotes_gpc off
-	function stripslashes_deep($value){
-		$value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
-		return $value;
- 	}
-	if (get_magic_quotes_gpc()) {
-	    $_POST = array_map('stripslashes_deep', $_POST);
-	    $_GET = array_map('stripslashes_deep', $_GET);
-	    $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+  function stripslashes_deep($value) {
+    if(is_array($value)) {
+        foreach($value as $k => $v) {
+            $return[$k] = $this->stripslashes_deep($v);
+        }
+    } elseif(isset($value)) {
+        $return = stripslashes($value);
+    }
+    return $return;
+  }
+
+  if (get_magic_quotes_gpc()) {
+	    $_POST    = array_map('stripslashes_deep', $_POST);
+	    $_GET     = array_map('stripslashes_deep', $_GET);
+	    $_COOKIE  = array_map('stripslashes_deep', $_COOKIE);
 	    $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
 	}
 
@@ -191,8 +197,11 @@ if (!defined('ft_check')) {die('System intrusion ');}
   if ( strtoupper(substr($_SHOP->root_secured,0,5))=='HTTP:' ){
     $_SHOP->secure_site = '0';
   }
+
   $_SHOP->files_url=constructBase()."files/";
   $_SHOP->images_url=constructBase()."images/";
+  $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
+
 
 
 ?>

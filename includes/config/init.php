@@ -47,6 +47,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
  }
 
  ini_set('memory_limit','64M');
+// mb_
 
 //check if the site is online
   require_once("classes/class.shopdb.php");

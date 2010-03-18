@@ -33,6 +33,6 @@
  */
 
 define('ft_check','shop');
-$fond='address';
+$fond='venue_address';
 require_once('includes/controller/template.php');
 ?>

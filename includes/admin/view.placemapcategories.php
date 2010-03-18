@@ -128,7 +128,6 @@ class PlaceMapCategoryView extends AdminView {
 
 
   function draw () {
-    global $_SHOP;
     if ($_GET['action'] == 'add_category' and $_GET['pm_id'] > 0) {
       $pmc = new PlaceMapCategory(true);
       $this->form((Array)$pmc, null);
@@ -164,7 +163,6 @@ class PlaceMapCategoryView extends AdminView {
         $this->form($data, null);
       }
     }
- //   print_r($_SHOP->Messages);
   }
 
   // ################# petits fonctions speciales ##################

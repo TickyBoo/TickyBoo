@@ -140,6 +140,24 @@ class install_execute {
     return false;
   }
 
+  static function fillConfig($array, $suffix, $isarray=false){
+    $config  ='';
+    foreach ($array as $key =>$value) {
+      if (is_int($key)) $key= '';
+      if ($isarray) { $key = "['$key']"; }
+      if (is_array($value)) {
+         $config .= self::fillConfig($value, $suffix .$key, true);
+         continue;
+      } elseif(is_bool($value)) {
+        $value = ($value)?'True':'False';
+      } elseif(is_string($value)) {
+        $value = _esc($value);
+      }
+      $config .= "  {$suffix}{$key} = {$value};\n";
+    }
+    return $config;
+  }
+
   static function CreateConfig() {
     $config = "<?php\n";
     $config .= "/**\n";
@@ -150,21 +168,17 @@ class install_execute {
     $config .= "global \$_SHOP;\n\n";
     $config .= "define(\"CURRENT_VERSION\",\"".INSTALL_VERSION."\");\n\n";
 
-    $_SESSION['SHOP']['root'] = BASE_URL."/";
+//    $_SESSION['SHOP']['root'] = BASE_URL."/";
 
     unset($_SESSION['SHOP']['install_dir']);
 
-    if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
-      $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
-    }
+//    if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
+  //    $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
+//   }
     if (!isset($_SESSION['SHOP']['secure_id'])) {
       $_SESSION['SHOP']['secure_id'] = sha1(AUTH_REALM. BASE_URL . uniqid());
     }
-    foreach ($_SESSION['SHOP'] as $key =>$value) {
-      $value = _esc($value);
-      $config .= "\$_SHOP->{$key} = {$value};\n";
-    }
-
+    $config .= self::fillConfig($_SESSION['SHOP'],'$_SHOP->');
     $config .= "\n?>";
     return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);
   }
@@ -181,6 +195,7 @@ class install_execute {
     Install_Form_Open ($Install->return_pg,'', 'Database Orphan check');
 
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width='100%'>
+
             <tr><td>
               The list below gives you a view of the orphans in your database. Look at the our website for instructions how to fix this or contact us on the forum or IRC.
               To be on the save site, we suggest you to create a new database and import the common information in the new database. This can be done by the installer.
