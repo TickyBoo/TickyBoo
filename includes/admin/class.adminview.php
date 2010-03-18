@@ -909,6 +909,7 @@ class AdminView extends AUIComponent {
       $string = " <span style='color:blue; '> SVN Build </span>";
     }elseif( $matches[1] < $currentOrder){
       $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
+      addNotice('new_version_available');
     }else{
       //$string = " - You have the latest Version";
     }

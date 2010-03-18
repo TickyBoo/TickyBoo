@@ -65,8 +65,10 @@ class VersionUtilView extends AdminView{
       if($_POST['are_you_sure']==1 && $_POST['action']=='reinstall'){
         $this->install_update(true);
       }
+    }else{
+      $this->view();  
     }
-    $this->view();
+    
   }
   
   private function view () {
@@ -112,12 +114,58 @@ class VersionUtilView extends AdminView{
   
   private function install_update($force = false){
     
+    //Download File
     $data = file_get_contents("http://localhost/pb62.zip");
-    print_r("Downloaded file!");
-    $name = "latest".md5(rand(0,100)).".zip";
-    file_put_contents(INC."temp".DS.$name, $data);
-    print_r("Saved!");
+    if(!$data){
+      echo con('file_download_failed');
+      return false;
+    }
+    echo con('file_downloaded');
     
+    //Create a unique name and path to save file
+    $name = "latest".md5(rand(0,100)).".zip";
+    $path = INC."temp".DS.$name;
+    
+    //Save File
+    file_put_contents($path, $data);
+    echo con('file_saved');
+    
+    //Get unzipper class
+    require_once(LIBS."zip".DS."unzip.lib.php");
+    $zip = new SimpleUnzip();
+    $entries = $zip->ReadFile($path);
+    
+    //Create Install directory (normaly root as your updating this install!)
+    $installDir = ROOT;    
+    mkdir($installDir);
+    echo con('install_dir')." : ".$installDir; 
+    
+    /* */
+    foreach ($entries as $entry){
+      mkdir($installDir.DS.$entry->Path);
+      $entryPath = $installDir.$entry->Path .DS.$entry->Name;
+      
+      echo $entryPath;
+      
+      if(!empty($entry->Data)){
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+        //$fh = fopen($entryPath, 'w', false);
+        //fwrite($fh,$entry->Data); //DO NOT!! COMMENT OUT, WITHOUT COMMENTING OUT THE LINE ABOVE! BAD THINGS HAPPEN!!!!!!
+        //fclose($fh);
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+        echo " .... ".con('updated')."<br />";
+      }else{
+        echo " ".con('not_updated')."<br />";
+      }
+    }
+    /* */
+    
+    if(!$err){
+      $this->addJQuery('window.location.replace("../inst/");');  
+    }
+    
+    unlink($path);
+    echo con("file_deleted");
   }
   
   

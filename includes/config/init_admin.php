@@ -42,7 +42,7 @@ $_SHOP->auth_required = true;
 $_SHOP->auth_status="organizer";
 $_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3' );
 if (!isset($_SHOP->software_updater_enabled)){
-  $_SHOP->software_updater_enabled = false;
+  $_SHOP->software_updater_enabled = true;
 }
 
 require_once("init.php");
