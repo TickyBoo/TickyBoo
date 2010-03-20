@@ -65,7 +65,7 @@ class install_settings {
             <tr> <td height='6px'></td> </tr>
             <tr>
                <td colspan=\"2\" class=\"admin_info\" >
-                 And by turning off the fixed root url (<i>\$_SHOP->root</i> or <i>\$_SHOP->root_secure</i>) fusion ticket will automatically set this values for you.
+                 By turning off the fixed root url (<i>\$_SHOP->root</i> or <i>\$_SHOP->root_secure</i>) fusion ticket will automatically set this values for you. <br> We stongly advice you to disable this.
               </td>
             </tr>
             <tr>
