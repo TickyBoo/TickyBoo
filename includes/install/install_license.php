@@ -51,7 +51,7 @@ class install_license {
 
   static function postcheck($Install) {//int_r($_REQUEST);
     if($_REQUEST['sla_radio']!=1){
-      array_push($Install->Errors,"You must accept the terms of the software license agreement in order to install and use this software." );
+      array_push($Install->Errors,"You must accept the terms of the software license agreement to install and use this software." );
       return true;
     }
 
@@ -62,11 +62,11 @@ class install_license {
     }elseif (version_compare(PHP_VERSION, '5.2.1')<0){
       array_push($Install->Warnings,"WARNING: To take full advantage of the power of Fusion Ticket your server must have php 5.2.x .<br> You have php version " . phpversion() . ". Please update your server.");
     }elseif (version_compare(PHP_VERSION, '5.3.0')>=0){
-      array_push($Install->Warnings,"WARNING: this program works best with php version 5.2.x.<br> You have php version " . phpversion() . ". This shouldn't be a problem.");
+      array_push($Install->Warnings,"WARNING: this program works best with php version 5.2.x.<br> You have php version " . phpversion() . ". This should not be a problem.");
     }
 
     if (!function_exists('mysqli_connect')){
-      array_push($Install->Errors,"MySQL-Exstentions havent been enabled, this is required for security reasons, its should be fairly standard on any PHP 5 Build it will be taking over from standard mysql function.");
+      array_push($Install->Errors,"MySQL-Exstentions have not been enabled, this is required for security reasons and should be fairly standard on any PHP 5 Build. It will be replacing standard mysql functions.");
     }
     if (!function_exists('curl_init')){
       $_SESSION['SHOP']['url_post_method'] ='fso';
@@ -88,8 +88,8 @@ class install_license {
     }
 
     if (ini_get('magic_quotes_gpc')){
-      array_push($Install->Warnings,"'magic_quotes_gpc' should be 'OFF' to use fusion ticket safely. All the quoting will be done ".
-                                    "insite the program itself. Read documentation for explanations.");
+      array_push($Install->Warnings," 'magic_quotes_gpc' should be 'OFF' to use fusion ticket safely. All quoting will be done ".
+                                    "inside the program. Read documentation for explanations.");
     }
 
     if (ini_get('safe_mode')){

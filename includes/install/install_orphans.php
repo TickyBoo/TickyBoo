@@ -60,8 +60,8 @@ class install_orphans {
 
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width='100%'>
             <tr><td>
-              The list below gives you a view of the orphans in your database. Look at the our website for instructions how to fix this or contact us on the forum or IRC.<br>
-              To be on the save site, we suggest you to create a new database and import the common information in the new database. This can be done by the installer.
+              The list below is a view of the orphans in your database. Look on our website for instructions how to fix this or contact us on the forum or IRC.<br>
+              To be on the safe side, we suggest you create a new database and import the common information into the new database. This can be done by the installer.
             </td></tr>
             <tr> <td height='6px'></td> </tr>
           </table>";

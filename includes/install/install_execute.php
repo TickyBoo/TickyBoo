@@ -115,7 +115,7 @@ class install_execute {
 
     if (getophandata()!=='none') {
       array_push($Install->Warnings,'After the update the installer found some problems with your database.<br>'.
-                                    'To use with the new version we suggest to fix the database or create an new database.');
+                                    'To use with the new version we suggest fixing the database or create an new database.');
 
       return true ;
     }
@@ -179,7 +179,7 @@ class install_execute {
     $config .= "%%%copyright%%%\n";
     $config .= file_get_contents (ROOT."licence.txt")."\n";
     $config .= "*/\n\n";
-    $config .= "// The following settings are automatic filled by the installation procedure:\n\n";
+    $config .= "// The following settings are automatically filled by the installation procedure:\n\n";
     $config .= "global \$_SHOP;\n\n";
     $config .= "define(\"CURRENT_VERSION\",\"".INSTALL_VERSION."\");\n\n";
 
@@ -217,8 +217,8 @@ class install_execute {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width='100%'>
 
             <tr><td>
-              The list below gives you a view of the orphans in your database. Look at the our website for instructions how to fix this or contact us on the forum or IRC.
-              To be on the save site, we suggest you to create a new database and import the common information in the new database. This can be done by the installer.
+              The list below gives you a view of the orphans in your database. Look at our website for instructions how to fix this or contact us on the forum or IRC.
+              To be safe, we suggest creating a new database and importing the common information. This can be done by the installer.
             </td></tr>
             <tr> <td height='6px'></td> </tr>
             <tr> <td>

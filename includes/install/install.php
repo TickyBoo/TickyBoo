@@ -62,12 +62,12 @@ include_once 'install_version.php';
     }
     function Validate_Inst_Upgrade(){
       if (!document.install.radio[0].checked ||
-          window.confirm("Full installations removes all tables before the installation start.\n\nContinue The Installation Process ?"))
+          window.confirm("Full installation removes all tables before the installation starts.\n\nContinue The Installation Process ?"))
         {return true} else {return false};
     }
     function Validate_License_page(){
       if (!document.install.sla_radio[0].checked){
-        window.alert("You must accept the terms of the software license agreement in order to install and use this software.");
+        window.alert("You must accept the terms of the software license agreement to install and use this software.");
         return false;
       } else {
         return true;

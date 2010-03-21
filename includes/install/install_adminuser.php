@@ -55,7 +55,7 @@ class install_adminuser {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                 Please choose the username and the password for the Fusion Ticket super user.
+                 Please choose a username and password for the Fusion Ticket super user.
               </td>
             </tr>
             <tr> <td height='6px'></td> </tr>

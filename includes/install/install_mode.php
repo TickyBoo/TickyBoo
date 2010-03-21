@@ -58,9 +58,9 @@ class install_mode {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                The installation process can optionally leave your existing database in-tact in the event you are performing an upgrade.
-                If you wish to leave your existing database unchanged select the \"UPGRADE\" option below,
-                otherwise select the \"FULL INSTALL\" option to continue with a normal installation.<br />
+                The installation process can optionally leave your existing database intact if you are performing an upgrade.
+                If you wish to leave your existing database unchanged select the \"UPGRADE\" option below;
+                otherwise, select the \"FULL INSTALL\" option to continue with a normal installation.<br />
               </td>
             </tr>
             <tr> <td height='6px'></td> </tr>

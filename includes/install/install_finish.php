@@ -45,8 +45,8 @@ class install_finish {
 
   static function display() {
     Install_Form_Open (BASE_URL."/index.php",'', false);
-    echo "<h2>Installation Completed</h2>You are now ready to start using Fusion Ticket.<br />\n";
-    echo "For security reasons you should put the configuratin file and folder to read-only by webserver:<br>
+    echo "<h2>Installation Completed!</h2>  You are now ready to start using Fusion Ticket.<br />\n";
+    echo "For security reasons you should set the configuration file and folder to read-only by the webserver user:<br>
           - <i>includes/config/init_config.php</i>";
     if (is_writable("$install_dir/includes/config")) {
       echo "<br>-  <i>includes/config</i>";

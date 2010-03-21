@@ -58,9 +58,9 @@ class install_register {
                   "Comment:\n".$_REQUEST['comments'])
         ;
       if(!EmailSwiftSender::send($message, "", $logger, $failedAddr, array('action' => 'ft register'))){
-        array_push($Install->Errors,'Sorry the mail is not send, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
+        array_push($Install->Errors,'Sorry the mail is not sent, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
       } else {
-        array_push($Install->Warnings,'Thanks, The mail is send to us.');
+        array_push($Install->Warnings,'Thanks, the mail is sent to us.');
       }
     }
     return true;
@@ -71,14 +71,14 @@ class install_register {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                We like to have an idea how and where FusionTicket is used. For this reason we like you to register this copy on our server.
-                The information we will register is the url, php/mysql version and the comments you write below.
+                We would like to have an idea how and where FusionTicket is used. For this reason we ask you to register this copy on our server.
+                The only information we will register is the url, php/mysql version and any comments you write below.
               </td>
             </tr>
             <tr> <td height='6px'></td> </tr>
             <tr>
               <td width='30%'>Forum loginname:</td>
-              <td><input type=\"text\" name=\"forumname\" value=\"\" /> Please fill here the username that you use on our website.</td>
+              <td><input type=\"text\" name=\"forumname\" value=\"\" /> Please enter the username you use on our website.</td>
             </tr>
             <tr>
               <td valign='top'>Comments:</td>

@@ -51,11 +51,11 @@ class install_settings {
     $secure    = ($_SESSION['SHOP']['secure_site'])?"checked='checked'":'';
     $fixed_url = ($_SESSION['SHOP']['root'])?"checked='checked'":'';
     $selectedzone = is($_SESSION['SHOP']['timezone'], date_default_timezone_get());
-    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
+    echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" class=\"admin_info\">
             <tr>
                <td colspan=\"2\" class=\"admin_info\" >
-                 Fusion ticket is designed to be used with SSL certificated (HTTPS) checkout pages. We strongly suggest to enable this on your site.
-                 When You have no SSL on your site then you can turn this off.
+                 Fusion ticket is designed to be used with SSL certified (HTTPS) checkout pages. We strongly suggest enabling this on your site.
+                 If you do not have SSL on your site you can turn this off.
               </td>
             </tr>
             <tr>
@@ -75,7 +75,7 @@ class install_settings {
             <tr> <td height='6px'></td> </tr>
             <tr>
               <td colspan=\"2\" class=\"admin_info\" >
-                 On of the extra think we will us is the possiblity to set the right timezone where you host your system. Please set your timezone below.
+                 One of the extra things we will us is the possiblity to set the timezone where you host your system. Please set your timezone below.
               </td>
             </tr>
             <tr>
@@ -85,7 +85,7 @@ class install_settings {
             <tr> <td height='6px'></td> </tr>
             <tr>
               <td colspan=\"2\" class=\"admin_info\" >
-                 You can help us a lot by automaticly sending trace log's. To get better idea of the possible problems we have created this trace log in our system. We do like te opportunity to get those logs when the system find a new problem.
+                 You can help us by automatically sending trace log's.  Trace logs help us diagnose possible problems in the program.  We would like to receive those logs if or when the system detects a problem.
               </td>
             </tr>
             <tr>

@@ -77,7 +77,7 @@ class install_mail {
         ->setBody('This is a test mail create by the installation programm of Fusion Ticket.')
         ;
       if(!EmailSwiftSender::send($message,"",$logger, $failedAddr,array('action' => 'test mail'))){
-        array_push($Install->Errors,'Sorry the mail is not send, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
+        array_push($Install->Errors,'Sorry the mail was not sent, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
       }
     }
     return true;
@@ -94,8 +94,8 @@ class install_mail {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" border=0>
             <tr>
               <td colspan=\"4\">
-                Please configurate your mail server settings. You can now choice between sendmail and SMTP. <br>
-                The default linux-mail system will be used as failback.<br>
+                Please configure your mail server settings. You can now choose between sendmail and SMTP. <br>
+                The default linux-mail system will be used as a backup.<br>
               </td>
             </tr>
             <tr> <td colspan=\"2\" height='6px'></td> </tr>
