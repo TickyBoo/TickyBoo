@@ -244,7 +244,7 @@ class Gui_smarty {
   function view($params, &$smarty) //$name, &$data, $prefix = ''*/)
   {
     $name = is($params['name']);
-    $Option = is($params['option']);
+    $Option = is($params['option'], false);
     $value  = is($params['value'],$this->guidata[$name]);
     $nolabel  = is($params['nolabel'],false);
     If (!$Option or $this->values[$name]) {
@@ -664,13 +664,6 @@ class Gui_smarty {
 
 function smarty_modifier_clean($string, $type='ALL') {
   return clean($string, $type);
-}
-
-function valuta($value='', $code=null) {
-  global $_SHOP;
-  if (is_numeric($value)) { $value = number_format($value,2);}
-  $code = is($code,$_SHOP->organizer_data->organizer_currency);
-  return (isset($_SHOP->valutas[$code]))?$_SHOP->valutas[$code].' '.$value :$value.' '.is($_SHOP->valutas["*$code"],$code);
 }
 
 ?>

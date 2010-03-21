@@ -124,6 +124,7 @@ class Handling Extends Model {
 
 // Calculates fee for tickets
   function calculate_fee ($total){
+
     return round($this->handling_fee_fix+($total/100.00)*$this->handling_fee_percent,2);
   }
 
@@ -321,7 +322,7 @@ class Handling Extends Model {
                    'transaction_id'=>false,
                    'response'=> $this->handling_html_template);
     	}
-    	return (is_array($return))?$return:$this->handling_html_template.'<br>'.$return;
+    	return (is_array($return))?$return:$return.'<br>'.$this->handling_html_template;
   	}
 
   function on_submit(&$order) {

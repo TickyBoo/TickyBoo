@@ -45,6 +45,7 @@ class Checkout {
 	    $smarty->assign('order_fee',$aorder->order_fee);
 	    $smarty->assign('order_total_price',$aorder->order_total_price);
 	    $smarty->assign('order_partial_price',$aorder->order_partial_price);
+	    $smarty->assign('order_discount_price',$aorder->order_discount_price);
 	    $smarty->assign('order_tickets_nr',$aorder->size());
 	    $smarty->assign('order_shipment_mode',$aorder->order_shipment_mode);
 	    $smarty->assign('order_payment_mode',$aorder->order_payment_mode);

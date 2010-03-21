@@ -261,25 +261,34 @@ class OrderView extends AdminView{
 
     $com = implode('',$this->order_commands($order,FALSE));;
 
-    $order["order_status"]        =$this->print_order_status($order);
-    $order['order_responce_date'] =($order['order_responce_date']== '0000-00-00 00:00:00')?'':$order['order_responce_date'];
-
-    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
+    $order["order_status"]        = $this->print_order_status($order);
+    $order['order_responce_date'] = ($order['order_responce_date']== '0000-00-00 00:00:00')?'':$order['order_responce_date'];
+    $order['order_partial_price'] = ($order['order_discount_price'] + $order['order_total_price']) - $order['order_fee'];
+    $order['order_partial_price'] = number_format($order['order_partial_price'] , 2, '.', '');
+     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title'>".con('order_nr')."  ".$order_id."</td>
               <td align='right'>{$com}</td></tr>";
 
     $this->print_field('order_tickets_nr',$order);
-    $this->print_field('order_fee',$order);
+    if ($order['order_discount_price'] <>0.0 || $order['order_fee'] <> 0.0) {
+      $this->print_field_o('order_partial_price',$order);
+    }
+    if ($order['order_fee'] <> 0.0) {
+      $this->print_field_o('order_fee',$order);
+    }
+    if ($order['order_discount_price'] <>0.0) {
+      $this->print_field_o('order_discount_price',$order);
+    }
     $this->print_field('order_total_price',$order);
     $this->print_field('order_date',$order);
 
     $order['order_shipment_status']=con($order['order_shipment_status']);
     $order['order_payment_status'] =con($order['order_payment_status']);
 
+    $this->print_field('order_status',$order);
     $this->print_field('order_shipment_status',$order);
     $this->print_field('order_payment_status',$order);
     $this->print_field_o('order_payment_id',$order);
-    $this->print_field('order_status',$order);
     $this->print_field_o('order_responce',con($order['order_responce']));
     $this->print_field_o('order_responce_date',$order);
  //   $this->print_field_o('order_note',clean($order['order_note']));

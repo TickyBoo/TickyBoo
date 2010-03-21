@@ -41,12 +41,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   global $_SHOP;
 
- if(function_exists("date_default_timezone_set") and
-    function_exists("date_default_timezone_get")) {
-   @date_default_timezone_set(@date_default_timezone_get());
- }
+  if(function_exists("date_default_timezone_set")) {
+    @date_default_timezone_set($_SHOP->timezone);
+  }
 
- ini_set('memory_limit','64M');
+  ini_set('memory_limit','64M');
+  ini_set('"magic_quotes_runtime', 0);
+  ini_set('allow_call_time_pass_reference', 0);
+
 // mb_
 
 //check if the site is online
@@ -55,6 +57,26 @@ if (!defined('ft_check')) {die('System intrusion ');}
   require_once("classes/class.model.php");
   //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
+
+	//emulates magic_quotes_gpc off
+  function stripslashes_deep($value) {
+    if(is_array($value)) {
+        foreach($value as $k => $v) {
+            $return[$k] = $this->stripslashes_deep($v);
+        }
+    } elseif(isset($value)) {
+        $return = stripslashes($value);
+    }
+    return $return;
+  }
+
+  if (get_magic_quotes_gpc()) {
+	    $_POST    = array_map('stripslashes_deep', $_POST);
+	    $_GET     = array_map('stripslashes_deep', $_GET);
+	    $_COOKIE  = array_map('stripslashes_deep', $_COOKIE);
+	    $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
+	}
+
 
   $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
   $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
@@ -87,6 +109,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $query="SELECT *, UNIX_TIMESTAMP() as current_db_time FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
     if($_SHOP->is_admin){
+
       $_SHOP->system_status_off=TRUE;
 
     }else{

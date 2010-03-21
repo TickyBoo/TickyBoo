@@ -165,6 +165,7 @@ define("correct_errors_first","Correct Errors First!");
 define("delete_confirm_msg","Delete This Event?");
 define("delete_item","Delete?");
 define("deleted_all_tickets","Deleted All Tickets!");
+
 define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
@@ -1298,5 +1299,10 @@ define('email_compile_error','Compile error: ');
 //define('remove-tooltip','remove-tooltip');
 //define('send_test-tooltip','send_test-tooltip');
 //define('admin_list-tooltip','admin_list-tooltip');
+
+define ('order_discount_price','Discount amount');
+define ('order_partial_price','Partial amount');
+define ('discount_promo','Discount promo code');
+define ('Global_discounts','Global Discounts');
 
 ?>

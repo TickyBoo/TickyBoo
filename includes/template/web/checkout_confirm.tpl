@@ -39,6 +39,22 @@
     {eval var=$shop_handling.handling_text_shipment  assign=test}
     {gui->view name=shipment value=$test }
     {gui->view name=order_id value=$order_id}
+
+    {if $order_discount_price  neq 0.0|| $order_fee neq 0.0}
+    {gui->valuta value=$order_partial_price assign=test}
+    {gui->view name=order_partial_price value=$test}
+    {/if}
+
+    {if $order_fee neq 0.0}
+      {gui->valuta value=$order_fee assign=test}
+      {gui->view name=order_fee value=$test}
+    {/if}
+
+    {if $order_discount_price  neq 0.0}
+      {gui->valuta value=$order_discount_price assign=test}
+      {gui->view name=order_discount_price value=$test}
+    {/if}
+
     {gui->valuta value=$order_total_price assign=test}
     {gui->view name=total_price value=$test}
   </table>

@@ -86,10 +86,11 @@ class ShopDB {
               }
 
             ShopDB::$link = $link;
-       //     ShopDB::checkdatabase(true, false);
+            ShopDB::checkdatabase(true, false);
 
             //Set Session Time Zone.
-            //This does not work:             ShopDB::query("SET time_zone = '-8'");
+            //This does not work:
+            ShopDB::query("SET time_zone = '".date('P')."'");
             //2009-10-24T13:17:46+02:00 [Error: 1298] SET time_zone = '-8'
             //2009-10-24T13:17:46+02:00 Unknown or incorrect time zone: '-8'
 
@@ -262,6 +263,7 @@ class ShopDB {
                 self::$db_trx_started = 0;
             }
         } elseif (is_object($res)) {
+
           //TODO: Check this line - Warning: Attempt to assign property of non-object classes\ShopDB.php
           $res->query = $query;
         }
@@ -296,6 +298,7 @@ class ShopDB {
     }
 
     static function affected_rows() {
+
       global $_SHOP;
         if (!isset(ShopDB::$link)) {
             self::init();
@@ -619,7 +622,9 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
     }
 
 
+
     /*
+
     * $DB_Struction needs to be a array with the tablename as key and a second array with fields/index's
     * like: Array(name, $definition)
     *   => Array('ID', 'int(11) NOT NULL auto_increment');

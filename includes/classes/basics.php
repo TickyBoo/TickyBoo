@@ -633,6 +633,13 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
   return $result;
 }
 
+function valuta($value='', $code=null) {
+  global $_SHOP;
+  if (is_numeric($value)) { $value = number_format($value,2);}
+  $code = is($code,$_SHOP->organizer_data->organizer_currency);
+  return (isset($_SHOP->valutas[$code]))?$_SHOP->valutas[$code].' '.$value :$value.' '.is($_SHOP->valutas["*$code"],$code);
+}
+
 /**
  * This function creates a md5 password code to allow login true WWW-Authenticate
  *

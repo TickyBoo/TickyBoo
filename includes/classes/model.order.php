@@ -43,7 +43,7 @@ class Order Extends Model {
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '~order_date_expire', 'order_responce', 'order_responce_date',
-                                'order_note', 'order_lock', 'order_lock_time', '#order_lock_admin_id');
+                                'order_note', 'order_discount_price'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
   public $places=array();
   public $tickets = array();
   public $no_fee = false;
@@ -183,6 +183,7 @@ class Order Extends Model {
 
 
 
+
     if($this->order_id){
       return addWarning("This order is already saved!!!"); //already saved
     }
@@ -200,7 +201,16 @@ class Order Extends Model {
     }else{
       $total=$amount+$fee;
     }
+    if (isset($this->discount)) {
+      $this->order_discount_price = $this->discount->value ($total);
+      If ($this->order_discount_price < $total) {
+        $this->order_discount_price = $total;
+      }
+      $total = $total - $this->order_discount_price;
+      $this->order_discount_price = number_format($this->order_discount_price, 2, '.', '');
+    }
 
+    $amount=number_format($amount, 2, '.', '');
     $fee=number_format($fee, 2, '.', '');
     $total=number_format($total, 2, '.', '');
 
@@ -243,6 +253,10 @@ class Order Extends Model {
       if(!OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order")){
         return false;
       }
+      if (isset($this->discount)) {
+        $this->discount->isUsed();
+        OrderStatus::statusChange($this->order_id,$this->discount->discount_name, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
+      }
 
       foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
@@ -275,6 +289,7 @@ class Order Extends Model {
       }else{
         $set = "SET user_order_total=user_order_total+1,
                     user_total_tickets=user_total_tickets+{$no_tickets} ";
+
       }
       $query="UPDATE `User`
                 $set

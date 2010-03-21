@@ -140,25 +140,40 @@ class install_execute {
     return false;
   }
 
-  static function fillConfig($array, $suffix, $isarray=false){
-    $config  ='';
+  static function fillConfig($array, $suffix, $eq=' = ',$isarray=false){
+    $arr_type = array('langs_names','valutas','event_group_type_enum','event_type_enum');
+    $config  =($isarray!==2)?'':array();
     foreach ($array as $key =>$value) {
       if (is_int($key)) $key= '';
-      if ($isarray) { $key = "['$key']"; }
+      if ($isarray===1) { $key = "['$key']"; }
+      if ($isarray===2) { $key = "'$key'"; }
       if (is_array($value)) {
-         $config .= self::fillConfig($value, $suffix .$key, true);
+         $x = (!$isarray and !in_array($key,$arr_type ))?2:(($isarray)?$isarray:1);
+         if ($x==1) {
+           $config .= self::fillConfig($value, $suffix .$key, $eq,  $x);
+         } else {
+           $config .= "{$suffix}{$key} {$eq} array(";
+           $item    = self::fillConfig($value, '', '=>',  $x);
+           $config .= implode(",\n          " ,$item );
+           $config .= ");\n";
+         }
          continue;
       } elseif(is_bool($value)) {
         $value = ($value)?'True':'False';
       } elseif(is_string($value)) {
         $value = _esc($value);
       }
-      $config .= "  {$suffix}{$key} = {$value};\n";
+      If ($isarray!==2) {
+        $config .= "{$suffix}{$key} {$eq} {$value};\n";
+      } else
+        $config[] = "{$suffix}{$key} {$eq} {$value}";
     }
+
     return $config;
   }
 
   static function CreateConfig() {
+
     $config = "<?php\n";
     $config .= "/**\n";
     $config .= "%%%copyright%%%\n";
@@ -168,16 +183,21 @@ class install_execute {
     $config .= "global \$_SHOP;\n\n";
     $config .= "define(\"CURRENT_VERSION\",\"".INSTALL_VERSION."\");\n\n";
 
-//    $_SESSION['SHOP']['root'] = BASE_URL."/";
-
     unset($_SESSION['SHOP']['install_dir']);
+    if ($_SESSION['fixed_url']) {
+       $_SESSION['SHOP']['root'] = BASE_URL."/";
 
-//    if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
-  //    $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
-//   }
+       if (!isset($_SESSION['SHOP']['root_secured']) or empty($_SESSION['SHOP']['root_secured'])) {
+         $_SESSION['SHOP']['root_secured'] = $_SESSION['SHOP']['root'];
+      }
+    } else {
+      unset ($_SESSION['SHOP']['root']);
+      unset ($_SESSION['SHOP']['root_secured']);
+    }
     if (!isset($_SESSION['SHOP']['secure_id'])) {
       $_SESSION['SHOP']['secure_id'] = sha1(AUTH_REALM. BASE_URL . uniqid());
     }
+    ksort($_SESSION['SHOP']);
     $config .= self::fillConfig($_SESSION['SHOP'],'$_SHOP->');
     $config .= "\n?>";
     return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);

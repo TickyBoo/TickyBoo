@@ -200,7 +200,10 @@ $tbls['Discount']['fields'] = array(
   'discount_event_id' => " int(11) DEFAULT NULL",
   'discount_name' => " varchar(50) NOT NULL DEFAULT ''",
   'discount_type' => " varchar(7) NOT NULL DEFAULT ''",
-  'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'");
+  'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
+  'discount_promo' => " varchar(15) DEFAULT ''",
+  'discount_used' => " int(11) DEFAULT '0'"
+  );
 $tbls['Discount']['key'] = array(
   "PRIMARY KEY (`discount_id`)");
 $tbls['Discount']['engine'] = 'InnoDB';
@@ -316,6 +319,7 @@ $tbls['Order']['fields'] = array(
   'order_session_id' => " varchar(32) NOT NULL DEFAULT ''",
   'order_tickets_nr' => " int(11) NOT NULL DEFAULT '0'",
   'order_total_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
+  'order_discount_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'order_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'order_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'order_shipment_status' => " enum('none','send') NOT NULL DEFAULT 'none'",
@@ -334,6 +338,7 @@ $tbls['Order']['fields'] = array(
   'order_lock' => "enum('0','1') NOT NULL DEFAULT '0'",
   'order_lock_time' => "timestamp NULL DEFAULT '0000-00-00 00:00:00'",
   'order_lock_admin_id' => "int(11) DEFAULT NULL");
+
 $tbls['Order']['key'] = array(
   "PRIMARY KEY (`order_id`)",
   "UNIQUE KEY `order_payments` (`order_handling_id`,`order_payment_id`)",

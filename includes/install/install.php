@@ -33,8 +33,9 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-$states = array("install_welcome",   "install_license",  "install_login", "install_database", "install_mode", "install_settings",
-                "install_adminuser", "install_merchant", "install_mail",  "install_register", "install_execute",'install_finish');
+$states = array('install_welcome',   'install_license',  'install_login', 'install_database', 'install_mode',
+                'install_adminuser', 'install_merchant', 'install_settings', 'install_mail',  'install_register',
+                'install_execute',   'install_finish');
 
 session_start();
 if (empty($_REQUEST)) {
@@ -42,7 +43,7 @@ if (empty($_REQUEST)) {
   session_start();
 }
 
-include_once "install_version.php";
+include_once 'install_version.php';
 
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
