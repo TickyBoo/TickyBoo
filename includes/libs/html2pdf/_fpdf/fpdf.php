@@ -897,10 +897,6 @@ function Ln($h=null)
 		$this->y+=$h;
 }
 /*
- * en commentaire car erreur PHP : 
- * Strict Standards: Declaration of FPDF_Alpha::Image() should be compatible with that of FPDF::Image()
- */
-/*
 function Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='')
 {
 	//Put an image on the page
