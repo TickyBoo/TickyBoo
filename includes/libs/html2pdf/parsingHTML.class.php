@@ -6,31 +6,34 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.28 - 18/01/2010
+ * @version		3.29
  */
  
-if (!defined('__CLASS_PARSINGHTML__'))
-{
-	define('__CLASS_PARSINGHTML__', true);
-	
 	class parsingHTML
 	{
 		var $html	= '';			// code HTML à parser
-		var $code	= array();		// code HTML parsé
 		var $num	= 0;			// numéro de table
 		var $level	= 0;			// niveaux de table
+	var $encoding	= '';				// encodage
+	var $code		= array();			// code HTML parsé
 		
 		/**
 		 * Constructeur
 		 *
 		 * @return	null
 		 */
-		function parsingHTML()
+	function parsingHTML($encoding = 'ISO-8859-15')
 		{
 			$this->num		= 0;
 			$this->level	= array($this->num);
 			$this->html		= '';
 			$this->code		= array();	
+		$this->setEncoding($encoding);
+	}
+	
+	function setEncoding($encoding)
+	{
+		$this->encoding = $encoding;
 		}
 		
 		/**
@@ -77,47 +80,12 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			$todos = array();
 			foreach($tmp as $part)
 			{
-				// si c'est un texte
-				if ($part[0]=='txt')
-				{
-					// enregistrer l'action correspondante
-					if (!$pre_in)
-					{
-//						if (trim($part[1])!=='')
-//						{
-							// remplacer tous les espaces, tabulations, saufs de ligne multiples par de simples espaces
-							$part[1] = preg_replace('/([\s]+)/is', ' ', $part[1]);
-					
-							$todos[] = array(
-											'name'	=> 'write',
-											'close'	=> false,
-											'param' => array('txt' => $part[1]),
-										);
-//						}
-					}
-					else
-					{
-						$part[1] = str_replace("\r", '', $part[1]);
-						$part[1] = explode("\n", $part[1]);
-						
-						foreach($part[1] as $k => $txt)
-						{
-							$txt = str_replace("\t", '        ', $txt);
-							$txt = str_replace(' ', '&nbsp;', $txt);
-							if ($k>0) $todos[] = $pre_br;
-
-								$todos[] = array(
-											'name'	=> 'write',
-											'close'	=> false,
-											'param' => array('txt' => $txt),
-										);
-						}
-					}
-				}
-				// sinon, analyser le code
-				else
+			// si c'est un code
+			if ($part[0]=='code')
 				{
 					$res = $this->analiseCode($part[1]);
+				
+				// si le code est bien un code analisable
 					if ($res)
 					{
 						$res['html_pos'] = $part[2];
@@ -150,6 +118,43 @@ if (!defined('__CLASS_PARSINGHTML__'))
 						
 						$todos[] = $res;
 					}
+				// sinon (code non analisable) => on le transforme en texte
+				else
+				{
+					$part[0]='txt';
+				}
+			}
+			// sinon si c'est un texte
+			if ($part[0]=='txt')
+			{
+				// enregistrer l'action correspondante
+				if (!$pre_in)
+				{
+					// remplacer tous les espaces, tabulations, saufs de ligne multiples par de simples espaces
+					$todos[] = array(
+									'name'	=> 'write',
+									'close'	=> false,
+									'param' => array('txt' => $this->prepareTxt($part[1])),
+								);
+				}
+				else
+				{
+					$part[1] = str_replace("\r", '', $part[1]);
+					$part[1] = explode("\n", $part[1]);
+					
+					foreach($part[1] as $k => $txt)
+					{
+						$txt = str_replace("\t", '        ', $txt);
+						$txt = str_replace(' ', '&nbsp;', $txt);
+						if ($k>0) $todos[] = $pre_br;
+
+						$todos[] = array(
+										'name'	=> 'write',
+										'close'	=> false,
+										'param' => array('txt' => $this->prepareTxt($txt, false)),
+									);
+					}
+				}
 				}	
 			}
 
@@ -182,7 +187,21 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			if (count($parents)) @HTML2PDF::makeError(5, __FILE__, __LINE__, $parents);
 			
 			// liste des actions sauvée
-			$this->code = array_values($todos);;
+		$this->code = array_values($todos);
+	}
+	
+	/**
+	 * preparer le texte une seule fois pour gagner du temps. vient de o_WRITE
+	 *
+	 * @param	string texte
+	 * @return	string texte
+	 */
+	function prepareTxt($txt, $spaces = true)
+	{
+		if ($spaces) $txt = preg_replace('/\s+/is', ' ', $txt);
+		$txt = str_replace('&euro;', '€', $txt);
+		$txt = html_entity_decode($txt, ENT_QUOTES, $this->encoding);
+		return $txt;
 		}
 		
 		/**
@@ -238,7 +257,9 @@ if (!defined('__CLASS_PARSINGHTML__'))
 		{
 			// nom de la balise et ouverture ou fermeture
 			$balise = '<([\/]{0,1})([_a-z0-9]+)([\/>\s]+)';
-			preg_match('/'.$balise.'/isU', $code, $match);
+		if (!preg_match('/'.$balise.'/isU', $code, $match))
+			return null;
+
 			$close	= ($match[1]=='/' ? true : false);
 			$autoclose = preg_match('/\/>$/isU', $code);
 			$name	= strtolower($match[2]);
@@ -370,6 +391,11 @@ if (!defined('__CLASS_PARSINGHTML__'))
 				unset($this->level[count($this->level)-1]);			
 			} 
 
+		if (isset($param['value']))	$param['value']	= $this->prepareTxt($param['value']);
+		if (isset($param['alt']))	$param['alt']	= $this->prepareTxt($param['alt']);
+		if (isset($param['title']))	$param['title']	= $this->prepareTxt($param['title']);
+		if (isset($param['class']))	$param['class']	= $this->prepareTxt($param['class']);
+		
 			// retour de l'action identifiée
 			return array('name' => $name, 'close' => $close ? 1 : 0, 'autoclose' => $autoclose, 'param' => $param);
 		}
@@ -378,14 +404,14 @@ if (!defined('__CLASS_PARSINGHTML__'))
 		function getLevel($k)
 		{
 			// si le code n'existe pas : fin
-			if (!isset($this->code[$k])) return '';
+		if (!isset($this->code[$k])) return array();
 			
 			// quelle balise faudra-t-il détecter
 			$detect = $this->code[$k]['name'];
 			
 			$level = 0;		// niveau de profondeur
 			$end = false;	// etat de fin de recherche
-			$code = '';		// code extrait
+		$code = array();	// code extrait
 			
 			// tant que c'est pas fini, on boucle
 			while (!$end)
@@ -396,7 +422,7 @@ if (!defined('__CLASS_PARSINGHTML__'))
 				// si write => on ajoute le texte
 				if ($row['name']=='write')
 				{
-					$code.= $row['param']['txt'];	
+				$code[] = $row;
 				}
 				// sinon, c'est une balise html
 				else
@@ -414,23 +440,8 @@ if (!defined('__CLASS_PARSINGHTML__'))
 					// si on doit prendre en compte la balise courante
 					if (!$not)
 					{
-						// ecriture du code HTML de la balise
-						$code.= '<'.($row['close'] ? '/' : '').$row['name'];
-						foreach($row['param'] as $key => $val)
-						{
-							if ($key=='style')
-							{
-								$tmp = '';
-								if (isset($val['text-align'])) unset($val['text-align']);
-								foreach($val as $ks => $vs) $tmp.= $ks.':'.$vs.'; ';
-								if (trim($tmp)) $code.= ' '.$key.'="'.$tmp.'"';
-							}
-							else
-							{
-								$code.= ' '.$key.'="'.$val.'"';
-							}	
-						}
-						$code.= '>';
+					if (isset($row['style']['text-align'])) unset($row['style']['text-align']);
+					$code[] = $row;
 					}
 				}
 				
@@ -441,8 +452,8 @@ if (!defined('__CLASS_PARSINGHTML__'))
 					$end = true;	
 			}
 			
-			// retourne la position finale et le code HTML extrait
-			return array($k, $code);
+		// retourne le code extrait
+		return $code;
 		}
 		
 		function getHtmlErrorCode($pos)
@@ -450,4 +461,3 @@ if (!defined('__CLASS_PARSINGHTML__'))
 			return substr($this->html, $pos-30, 70);
 		}
 	}
-}

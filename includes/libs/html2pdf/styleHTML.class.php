@@ -6,24 +6,21 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.28 - 18/01/2010
+ * @version		3.29
  */
  
-if (!defined('__CLASS_STYLEHTML__'))
-{
-	define('__CLASS_STYLEHTML__', true);
-	
 	class styleHTML
 	{
-		var $css		= array();		// tableau des CSS
-		var $css_keys	= array();		// tableau des clefs CSS, pour l'ordre d'execution
-		var $value		= array();		// valeurs actuelles
-		var $table		= array();		// tableau d'empilement pour historisation des niveaux
 		var $pdf		= null;			// référence au PDF parent
 		var $htmlColor	= array();		// liste des couleurs HTML
 		var $onlyLeft	= false;		// indique si on est dans un sous HTML et qu'on bloque à gauche
 		var $defaultFont = null;		// fonte par défaut si la fonte demandée n'existe pas
 
+	var $value			= array();		// valeurs actuelles
+	var $css			= array();		// tableau des CSS
+	var $css_keys		= array();		// tableau des clefs CSS, pour l'ordre d'execution
+	var $table			= array();		// tableau d'empilement pour historisation des niveaux
+	
 		/**
 		 * Constructeur
 		 *
@@ -33,9 +30,25 @@ if (!defined('__CLASS_STYLEHTML__'))
 		function styleHTML(&$pdf)
 		{
 			$this->init();		// initialisation
+		$this->setPdfParent($pdf);
+	}
+	
+	function setPdfParent(&$pdf)
+	{
 			$this->pdf = &$pdf;
 		}
 		
+	function setOnlyLeft()
+	{
+		$this->value['text-align'] = 'left';
+		$this->onlyLeft = true;
+	}
+
+	function getOldValues()
+	{
+		return isset($this->table[count($this->table)-1]) ? $this->table[count($this->table)-1] : $this->value;
+	}
+	
  		/**
 		* définit la fonte par défaut si aucun fonte n'est spécifiée, ou si la fonte demandée n'existe pas
 		*
@@ -376,9 +389,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 		function FontSet()
 		{
 			$family = strtolower($this->value['font-family']);
+		
 			$b = ($this->value['font-bold']			? 'B' : '');
 			$i = ($this->value['font-italic']		? 'I' : '');
 			$u = ($this->value['font-underline']	? 'U' : '');
+		$d = '';
 			
 			if ($this->defaultFont)
 			{
@@ -389,11 +404,15 @@ if (!defined('__CLASS_STYLEHTML__'))
 					$style='';
 					
 				$fontkey = $family.$style;
-				if (!isset($this->pdf->fonts[$fontkey]))
-					if (!isset($this->pdf->CoreFonts[$fontkey]))
+			if (!$this->pdf->isLoadedFont($fontkey))
 						$family = $this->defaultFont;
 			}
 					
+		if($family=='arial')
+			$family='helvetica';
+		elseif($family=='symbol' || $family=='zapfdingbats')
+			$style='';
+		
 			// taille en mm, à ramener en pt
 			$size = $this->value['font-size'];
 			$size = 72 * $size / 25.4;
@@ -402,7 +421,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->pdf->setLinethrough($this->value['font-linethrough']);
 			
 			// application de la fonte 
-			$this->pdf->SetFont($family, $b.$i.$u, $this->value['mini-size']*$size);
+		$this->pdf->SetFont($family, $b.$i.$u.$d, $this->value['mini-size']*$size);
 			$this->pdf->setMyTextColor($this->value['color']);
 			if ($this->value['background']['color'])
 				$this->pdf->setMyFillColor($this->value['background']['color']);
@@ -434,13 +453,15 @@ if (!defined('__CLASS_STYLEHTML__'))
 			}
 		}
 
-		function restorePosition(&$current_x, &$current_y)
+	function restorePosition()
 		{
-			if ($this->value['y']==$current_y) $current_y = $this->value['yc'];
+		if ($this->value['y']==$this->pdf->getY()) $this->pdf->setY($this->value['yc'], false);
 		}
 		
-		function setPosition(&$current_x, &$current_y)
+	function setPosition()
 		{
+		$current_x = $this->pdf->getX();
+		$current_y = $this->pdf->getY();
 			$this->value['xc'] = $current_x;
 			$this->value['yc'] = $current_y;
 			
@@ -487,8 +508,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 				if ($this->value['margin']['t'])	$this->value['y']+= $this->value['margin']['t'];
 			}
 			
-			$current_x = $this->value['x'];
-			$current_y = $this->value['y'];
+		$this->pdf->setXY($this->value['x'], $this->value['y']);
 		}
 
  		/**
@@ -508,7 +528,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			
 			// lecture de la propriete classe
 			$class = array();
-			$tmp	= isset($param['class'])	? preg_replace('/[\s]+/', ' ', strtolower($param['class']))	: '';
+		$tmp	= isset($param['class'])	? strtolower(trim($param['class'])) : '';
 			$tmp = explode(' ', $tmp);
 			foreach($tmp as $k => $v)
 			{
@@ -524,6 +544,16 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['id_lst']		= array();
 			$this->value['id_lst'][] = '*';
 			$this->value['id_lst'][] = $balise;
+		if (!isset($this->value['svg']))
+		{
+			$this->value['svg'] = array(
+				'stroke' 		=> null,
+				'stroke-width'	=> $this->ConvertToMM('1pt'),
+				'fill'			=> null,
+				'fill-opacity'	=> null,
+			);
+		}
+		
 			if (count($class))
 			{
 				foreach($class as $v)
@@ -546,15 +576,12 @@ if (!defined('__CLASS_STYLEHTML__'))
 			// on ajoute le style propre à la balise
 			$styles = array_merge($styles, $param['style']);
 			
-			$styles['stroke']		= isset($styles['stroke'])			? $this->ConvertToColor($styles['stroke'],	$res)	: null;
-			$styles['fill']			= isset($styles['fill'])			? $this->ConvertToColor($styles['fill'],	$res)	: null;
-			$styles['stroke-width']	= isset($styles['stroke-width'])	? $this->ConvertToMM($styles['stroke-width'])		: null;
-			$styles['fill-opacity']	= isset($styles['fill-opacity'])	? 1.*$styles['fill-opacity']		: null;
-
-			if (!$styles['stroke-width'])	$styles['stroke']		= null;	
-			if (!$styles['stroke'])			$styles['stroke-width']	= null;	
+		if (isset($styles['stroke']))		$this->value['svg']['stroke']		= $this->ConvertToColor($styles['stroke'],	$res);
+		if (isset($styles['stroke-width']))	$this->value['svg']['stroke-width']	= $this->ConvertToMM($styles['stroke-width']);
+		if (isset($styles['fill']))			$this->value['svg']['fill']			= $this->ConvertToColor($styles['fill'],	$res);
+		if (isset($styles['fill-opacity']))	$this->value['svg']['fill-opacity']	= 1.*$styles['fill-opacity'];
 			
-			return $styles;
+		return $this->value['svg'];
 		}
 		
 		/**
@@ -574,7 +601,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 
 			// lecture de la propriete classe
 			$class = array();
-			$tmp	= isset($param['class'])	? preg_replace('/[\s]+/', ' ', strtolower($param['class']))	: '';
+		$tmp	= isset($param['class'])	? strtolower(trim($param['class']))	: '';
 			$tmp = explode(' ', $tmp);
 			foreach($tmp as $k => $v)
 			{
@@ -1146,7 +1173,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 					return $w;
 				}
 			}
-			return $this->pdf->w - $this->pdf->lMargin - $this->pdf->rMargin;
+		return $this->pdf->getW() - $this->pdf->getlMargin() - $this->pdf->getrMargin();
 		}
 
  		/**
@@ -1169,7 +1196,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 					return $h;
 				}
 			}
-			return $this->pdf->h - $this->pdf->tMargin - $this->pdf->bMargin;
+		return $this->pdf->getH() - $this->pdf->gettMargin() - $this->pdf->getbMargin();
 		}
 		
 		function getFloat()
@@ -1193,7 +1220,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			{
 				if ($this->table[$k-1]['x'] && $this->table[$k-1]['position']) return $this->table[$k-1]['x'];
 			}
-			return $this->pdf->lMargin;
+		return $this->pdf->getlMargin();
 		}
 		
 		function getLastAbsoluteY()
@@ -1202,7 +1229,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			{
 				if ($this->table[$k-1]['y'] && $this->table[$k-1]['position']) return $this->table[$k-1]['y'];
 			}
-			return $this->pdf->tMargin;
+		return $this->pdf->gettMargin();
 		}
 		
 		/**
@@ -1299,8 +1326,10 @@ if (!defined('__CLASS_STYLEHTML__'))
 			{
 				if ($key=='none' || $key=='hidden') return $none;
 				
-				if ($this->ConvertToMM($key)!==null)							$width = $this->ConvertToMM($key);	
-				else if (in_array($key, array('solid', 'dotted', 'dashed')))	$type = $key;	
+			if ($this->ConvertToMM($key)!==null)
+				$width = $this->ConvertToMM($key);	
+			else if (in_array($key, array('solid', 'dotted', 'dashed', 'double')))
+				$type = $key;
 				else
 				{
 					$tmp = $this->ConvertToColor($key, $res);
@@ -1682,4 +1711,3 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->analyseStyle($style);
 		}
 	}
-}

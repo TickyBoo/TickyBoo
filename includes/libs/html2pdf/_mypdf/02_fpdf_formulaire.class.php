@@ -141,6 +141,7 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 			if (!isset($prop['textSize']))		$prop['textSize']		= $this->FontSizePt;
 			if (!isset($prop['strokeColor']))	$prop['strokeColor']	= 'ltGray';
 			if (isset($prop['value'])) 			$prop['value']			= str_replace('"', '', $prop['value']);
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
 
 			$this->SetFillColor(240);
 			if ($w>0 && $h>0)
@@ -155,15 +156,15 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 			
 			// the followind avoid fields duplication after saving the document
 			$this->javascript .= "if(this.getField('pdfoldsaved') && this.getField('pdfoldsaved').value != 'saved') {";
-			$this->javascript .= sprintf("f".$name."=this.addField('%s','%s',%d,[%.2F,%.2F,%.2F,%.2F]);", $name, $type, $this->PageNo()-1, $x*$this->k, ($this->h-$y)*$this->k+1, ($x+$w)*$this->k, ($this->h-$y-$h)*$this->k+1)."\n";
-			$this->javascript .= 'f'.$name.'.textSize='.$this->FontSizePt.";\n";
+			$this->javascript .= sprintf("f".$name_field."=this.addField('%s','%s',%d,[%.2F,%.2F,%.2F,%.2F]);", $name, $type, $this->PageNo()-1, $x*$this->k, ($this->h-$y)*$this->k+1, ($x+$w)*$this->k, ($this->h-$y-$h)*$this->k+1)."\n";
+			$this->javascript .= 'f'.$name_field.'.textSize='.$this->FontSizePt.";\n";
 			while (list($key, $val) = each($prop))
 			{
 				if (strcmp(substr($key, -5), 'Color') == 0)
 					$val = $this->_JScolor($val);
 				else
 					$val = '"'.$val.'"';
-				$this->javascript .= 'f'.$name.'.'.$key.'='.$val.";\n";
+				$this->javascript .= 'f'.$name_field.'.'.$key.'='.$val.";\n";
 			}
 			
 			$this->javascript .= '}';
@@ -177,6 +178,7 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 		
 		function form_InputHidden($name, $value)
 		{
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
 			$prop = array('value' => $value);
 			$js_after = '';
 			$this->_addfield('checkbox', $name, 0, 0, 0.1, 0.1, $prop, $js_after);
@@ -184,6 +186,8 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 		
 		function form_InputCheckBox($name, $x, $y, $w, $checked)
 		{
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
+			
 			$prop = array();
 			$prop['value'] = ($checked ? 'Yes' : 'Off');
 			$js_after = '';
@@ -192,6 +196,8 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 		
 		function form_InputRadio($name, $x, $y, $w)
 		{
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
+			
 			$prop = array();
 			$js_after = '';
 			$this->_addfield('radiobutton', $name, $x, $y, $w, $w, $prop, $js_after);
@@ -199,28 +205,34 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 		
 		function form_InputText($name, $x, $y, $w, $h, $prop)
 		{
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
+			
 			$js_after = '';
 			$this->_addfield('text', $name, $x, $y, $w, $h, $prop, $js_after);
 		}
 		
 		function form_InputButton($name, $x, $y, $w, $h, $caption, $action, $prop)
 		{
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
+			
 			if (!isset($prop['borderStyle']))	$prop['borderStyle']	= 'beveled';
 			if (!isset($prop['fillColor']))		$prop['fillColor']		= 'ltGray';
 			if (!isset($prop['strokeColor']))	$prop['strokeColor']	= 'black';
 
-			$js_after = 'f'.$name.".buttonSetCaption('".addslashes($caption)."');\n";
-			$js_after.= 'f'.$name.".setAction('MouseUp','".addslashes($action)."');\n";
-			$js_after.= 'f'.$name.".highlight='push';\n";
-			$js_after.= 'f'.$name.".print=false;\n";
+			$js_after = 'f'.$name_field.".buttonSetCaption('".addslashes($caption)."');\n";
+			$js_after.= 'f'.$name_field.".setAction('MouseUp','".addslashes($action)."');\n";
+			$js_after.= 'f'.$name_field.".highlight='push';\n";
+			$js_after.= 'f'.$name_field.".print=false;\n";
 			$this->_addfield('button', $name, $x, $y, $w, $h, $prop, $js_after);
 		}
 
 		function form_Select($name, $x, $y, $w, $h, $values, $multiligne, $prop)
 		{
+			$name_field = preg_replace('/[^a-zA-Z0-9_]/isU', '_', $name);
+			
 			$type = ($multiligne ? 'listbox' : 'combobox');				
 			$s = ''; foreach ($values as $value) { $s .= ($s ? ',' : '')."'".addslashes($value)."'"; }
-			$js_after = 'f'.$name.'.setItems(['.$s."]);\n";
+			$js_after = 'f'.$name_field.'.setItems(['.$s."]);\n";
 			$this->_addfield($type, $name, $x, $y, $w, $h, $prop, $js_after);
 		}
 	}

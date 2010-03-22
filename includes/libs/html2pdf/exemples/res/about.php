@@ -82,7 +82,7 @@
 		<li>&lt;font&gt;, &lt;span&gt; :	<font style="color: #000066; font-family: times">Exemple d'utilisation</font></li>
 		<li>&lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;h4&gt;, &lt;h5&gt;, &lt;h6&gt;</li>
 		<li>&lt;hr&gt; :	barre horizontale</li>
-		<li>&lt;img&gt; :	<img src="../_fpdf/tutorial/logo_pb.png" style="width: 10mm"></li>
+		<li>&lt;img&gt; :	<img src="./res/logo_fpdf.png" style="height: 3mm"></li>
 		<li>&lt;p&gt; :		Ecrire dans un paragraphe</li>
 		<li>&lt;s&gt; :		Texte <s>barré</s></li>
 		<li>&lt;small&gt; :	Ecrire plus <small>petit</small>.</li>
@@ -108,6 +108,7 @@
 		<li>&lt;nobreak&gt;</li>
 		<li>&lt;barcode&gt;</li>
 		<li>&lt;bookmark&gt;</li>
+		<li>&lt;qrcode&gt;</li>
 	</ul>
 </page>
 <page pageset="old">
@@ -219,6 +220,7 @@
 					<li>bordercolor</li>
 					<li>border</li>
 					<li>type</li>
+					<li>value</li>
 				</ul>
 			</td>
 		</tr>
@@ -232,7 +234,7 @@
 		<li>Les float ne sont gérés que pour la balise IMG.</li>
 		<li>Elle ne permet généralement pas la conversion directe d'une page HTML en PDF, ni la conversion du résultat d'un WYSIWYG en PDF.</li>
 		<li>Cette librairie est là pour faciliter la génération de documents PDF, pas pour convertir n'importe quelle page HTML.</li>
-		<li>Les formulaires ne marchent qu'à partir de la version <b>9</b> de <b>Adobe Reader</b>.</li>
+		<li>Les formulaires ne marchent pas avec tous les viewers PDFs...</li>
 		<li>Lisez bien le wiki : <a href="http://wiki.spipu.net/doku.php?id=html2pdf:Accueil">http://wiki.spipu.net/doku.php?id=html2pdf:Accueil</a>.</li>
 	</ul>
 </page>

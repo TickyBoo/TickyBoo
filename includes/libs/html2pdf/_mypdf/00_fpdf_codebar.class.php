@@ -49,14 +49,14 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			$this->FPDF($sens, $unit, $format);
 		}
 		
-		function BARCODE_EAN13($x,$y,$barcode,$h=10,$w=.35, $label=true)
+		function BARCODE_EAN13($x,$y,$w,$h, $barcode,$label=true)
 		{
-			return $this->Barcode($x,$y,$barcode,$h,$w,13,$label);
+			return $this->Barcode($x,$y,$w,$h, $barcode,13,$label);
 		}
 		
-		function BARCODE_UPC_A($x,$y,$barcode,$h=10,$w=.35, $label=true)
+		function BARCODE_UPC_A($x,$y,$w,$h, $barcode,$label=true)
 		{
-			return $this->Barcode($x,$y,$barcode,$h,$w,12,$label);
+			return $this->Barcode($x,$y,$w,$h, $barcode,12,$label);
 		}
 		
 		function GetCheckDigit($barcode)
@@ -84,7 +84,7 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			return ($sum+$barcode{12})%10==0;
 		}
 		
-		function Barcode($x,$y,$barcode,$h,$w,$len, $label=true)
+		function Barcode($x,$y,$code_w,$code_h,$barcode,$len, $label=true)
 		{
 			//Padding
 			$barcode=str_pad($barcode,$len-1,'0',STR_PAD_LEFT);
@@ -128,39 +128,32 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 				$code.=$codes['C'][$barcode{$i}];
 			$code.='101';
 			//Draw bars
+			if (strlen($code))
+			{
+				$w = $code_w / strlen($code);
 			for($i=0;$i<strlen($code);$i++)
 			{
 				if($code{$i}=='1')
-					$this->Rect($x+$i*$w,$y,$w,$h,'F');
+						$this->Rect($x+$i*$w,$y,$w,$code_h,'F');
 			}
 			
-			$code_w = strlen($code)*$w;
 			$code_t = substr($barcode,-$len);
-			
 			$code_f = $code_w/strlen($code_t)*$this->k/0.60;
 			
 			if ($label)
 			{
-			//Print text uder barcode
-				$code_h = $h+$code_f/$this->k;
 			$this->SetFont('Arial','',$code_f);
-			$this->Text($x,$y+$h+0.90*$code_f/$this->k,$code_t);
+					$this->Text($x,$y+$code_h+0.90*$code_f/$this->k,$code_t);
+					//Print text uder barcode
+					$code_h+= $code_f/$this->k;
 			}
-			else
-			{
-				$code_h = $h;
 			}
 
 			return array($code_w, $code_h);
 		}
 		
-		function BARCODE_CODE39($xpos, $ypos, $code,$height=10, $baseline=0.5, $label=true)
+		function BARCODE_CODE39($x,$y,$w,$h, $barcode, $label=true)
 		{
-		
-			$wide = $baseline;
-			$narrow = $baseline / 3 ; 
-			$gap = $narrow;
-		
 			$barChar['0'] = 'nnnwwnwnn';
 			$barChar['1'] = 'wnnwnnnnw';
 			$barChar['2'] = 'nnwwnnnnw';
@@ -206,42 +199,48 @@ if (!defined('__CLASS_FPDF_CODEBAR__'))
 			$barChar['+'] = 'nwnnnwnwn';
 			$barChar['%'] = 'nnnwnwnwn';
 		
-			$xpos_dep = $xpos;
-			$code = '*'.strtoupper($code).'*';
-			for($i=0; $i<strlen($code); $i++){
-				$char = $code{$i};
-				if(!isset($barChar[$char])){
+			$barcode = '*'.strtoupper($barcode).'*';
+			$code = '';
+			$w_wide=3; $w_narrow=1; $w_gap=1; $nb_w = 0;
+			for($i=0; $i<strlen($barcode); $i++)
+			{
+				$char = $barcode{$i};
+				if(!isset($barChar[$char]))
 					$this->Error('Invalid character in barcode: '.$char);
-				}
+				
 				$seq = $barChar[$char];
-				for($bar=0; $bar<9; $bar++){
-					if($seq{$bar} == 'n'){
-						$lineWidth = $narrow;
-					}else{
-						$lineWidth = $wide;
-					}
-					if($bar % 2 == 0){
-						$this->Rect($xpos, $ypos, $lineWidth, $height, 'F');
-					}
-					$xpos += $lineWidth;
+				$code.= $seq;
+				
+				for($bar=0; $bar<9; $bar++)
+					$nb_w+= ($seq{$bar}=='n' ? $w_narrow : $w_wide);
+
+				$nb_w+= $w_gap;
 				}
-				$xpos += $gap;
+			
+			$w_wide		= $w/$nb_w*$w_wide;
+			$w_narrow	= $w/$nb_w*$w_narrow;
+			$w_gap		= $w/$nb_w*$w_gap;
+			$xt = $x;
+			for($i=0; $i<strlen($code); $i++)
+			{
+				$j = $i%9;
+				$w_line = ($code{$i}=='n' ? $w_narrow : $w_wide);
+				if(!($j%2)) $this->Rect($xt, $y, $w_line, $h, 'F');
+				$xt+= $w_line;
+				if ($j==8) $xt+= $w_gap;
 			}
 			
-			$code_w = $xpos-$xpos_dep;
-			$code_t = $code;
-			$code_f = $code_w/strlen($code_t)*$this->k/0.60/3;
+			$code_w = $xt-$x;
+			$code_h = $h;
+			$code_t = $barcode;
+			$code_f = $code_w/strlen($code_t)*$this->k/0.60/2.5;
 			
 			if ($label)
 			{
 			//Print text uder barcode
-				$code_h = $height+$code_f/$this->k;		
+				$code_h+= $code_f/$this->k;		
 			$this->SetFont('Arial','',$code_f);
-			$this->Text($xpos_dep,$ypos+$height+0.90*$code_f/$this->k,$code_t);
-			}
-			else
-			{
-				$code_h = $height;		
+				$this->Text($x,$y+$h+0.90*$code_f/$this->k,$code_t);
 			}
 
 			return array($code_w, $code_h);

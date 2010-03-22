@@ -2,11 +2,11 @@
 /**
  * Logiciel : HTML2PDF - classe MyPDF
  * 
- * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
+ * Convertisseur HTML => PDF, utilise FPDF
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.28 - 18/01/2010
+ * @version		3.29
  */
 
 if (!defined('__CLASS_MYPDF__'))
@@ -18,11 +18,11 @@ if (!defined('__CLASS_MYPDF__'))
 	class MyPDF extends FPDF_Protection
 	{
 		var $footer_param = array();
+		var $overline		= false;
+		var $transf			= array();
 		
 		var $underline		= false;
-		var $overline		= false;
 		var $linethrough	= false;
-		var $transf			= array();
 			
 		function MyPDF($sens = 'P', $unit = 'mm', $format = 'A4')
 		{
@@ -37,10 +37,10 @@ if (!defined('__CLASS_MYPDF__'))
 		
 		function SetMyFooter($page = null, $date = null, $heure = null, $form = null)
 		{
-			if ($page===null)	$page	= null;
-			if ($date===null)	$date	= null;
-			if ($heure===null)	$heure	= null;
-			if ($form===null)	$form	= null;
+			$page	= ($page ? true : false);
+			$date	= ($date ? true : false);
+			$heure	= ($heure ? true : false);
+			$form	= ($form ? true : false);
 			
 			$this->footer_param = array('page' => $page, 'date' => $date, 'heure' => $heure, 'form' => $form);	
 		}
@@ -54,6 +54,8 @@ if (!defined('__CLASS_MYPDF__'))
 			if (!$this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(@HTML2PDF::textGET('pdf02'));
 			if ($this->footer_param['page'])	$txt.= ($txt ? ' - ' : '').(@HTML2PDF::textGET('pdf04'));
 			
+			if (strlen($txt)>0)
+			{
 			$txt = str_replace('[[date_d]]',	date('d'),			$txt);
 			$txt = str_replace('[[date_m]]',	date('m'),			$txt);
 			$txt = str_replace('[[date_y]]',	date('Y'),			$txt);
@@ -63,12 +65,10 @@ if (!defined('__CLASS_MYPDF__'))
 			$txt = str_replace('[[current]]',	$this->PageNo(),	$txt);
 			$txt = str_replace('[[nb]]',		'{nb}',				$txt);
 
-			if (strlen($txt)>0)
-			{
-			 	$this->SetY(-11);
+				parent::SetY(-11);
 			 	$this->setOverline(false);
 			 	$this->setLinethrough(false);
-				$this->SetFont('Arial','I',8);
+        		$this->SetFont('helvetica', 'I', 8);
 				$this->Cell(0, 10, $txt, 0, 0, 'R');
 			}
 		}
@@ -123,12 +123,6 @@ if (!defined('__CLASS_MYPDF__'))
 			if($this->ColorFlag)
 				$s='q '.$this->TextColor.' '.$s.' Q';
 			$this->_out($s);
-		}
-
-		function setWordSpacing($ws=0.)
-		{
-			$this->ws = $ws;
-			$this->_out(sprintf('%.3F Tw',$ws*$this->k));
 		}
 
 		// redéfinition de la methode Cell de FPDF afin de rajouter la gestion des overline et linethrough
@@ -250,6 +244,34 @@ if (!defined('__CLASS_MYPDF__'))
 			$p_h = -$ut/1000*$this->FontSizePt;
 			
 			return sprintf('%.2F %.2F %.2F %.2F re f',$p_x,$p_y,$p_w,$p_h);
+		}
+		
+		function cloneFontFrom(&$pdf)
+		{
+			$this->fonts			= &$pdf->getFonts();
+			$this->FontFiles		= &$pdf->getFontFiles();
+			$this->diffs			= &$pdf->getDiffs();
+		}
+		
+		function &getFonts() 		{ return $this->fonts; }
+		function &getFontFiles()		{ return $this->FontFiles; }
+		function &getDiffs() 		{ return $this->diffs; }
+		
+		function isLoadedFont($fontkey)
+		{
+			if (isset($this->fonts[$fontkey]))
+				return true;
+				
+			if (isset($this->CoreFonts[$fontkey]))
+				return true;
+				
+			return false;
+		}
+		
+		function setWordSpacing($ws=0.)
+		{
+			$this->ws = $ws;
+			$this->_out(sprintf('%.3F Tw',$ws*$this->k));
 		}
 		
 		function clippingPathOpen($x = null, $y = null, $w = null, $h = null, $coin_TL=null, $coin_TR=null, $coin_BL=null, $coin_BR=null)
@@ -462,7 +484,6 @@ if (!defined('__CLASS_MYPDF__'))
 			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0],$tm[1],$tm[2],$tm[3],$tm[4],$tm[5]));
 		}
 
-		
 		function setRotation($angle, $x='', $y='')
 		{
 			if($x === '') $x=$this->x;
@@ -482,57 +503,58 @@ if (!defined('__CLASS_MYPDF__'))
 			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0],$tm[1],$tm[2],$tm[3],$tm[4],$tm[5]));
 		}
 	
-		function setMyDrawColor($c)
-		{
-			$c = $this->setMyColor($c, true);
-			if (!$c) return false;
-
-			$this->DrawColor=$c;
-			if($this->page>0) $this->_out($this->DrawColor);
-		}
-		
-		function setMyFillColor($c)
-		{
-			$c = $this->setMyColor($c);
-			if (!$c) return false;
-
-			$this->FillColor=$c;
-			$this->ColorFlag=($this->FillColor!=$this->TextColor);
-			if($this->page>0) $this->_out($this->FillColor);
-		}
-			
-		function setMyTextColor($c)
-		{
-			$c = $this->setMyColor($c);
-			if (!$c) return false;
-
-			$this->TextColor=$c;
-			$this->ColorFlag=($this->FillColor!=$this->TextColor);
-		}
-		
-		function setMyColor($c, $mode = false)
-		{
-			if (!is_array($c))		return sprintf('%.3F ',$c).($mode ? 'G' : 'g');
-			elseif (count($c)==3)	return sprintf('%.3F %.3F %.3F ',$c[0],$c[1],$c[2]).($mode ? 'RG' : 'rg');
-			elseif (count($c)==4)	return sprintf('%.3F %.3F %.3F %.3F ',$c[0],$c[1],$c[2],$c[3]).($mode ? 'K' : 'k');
-			return null;
-		}
-		
 		function SetX($x)
 		{
 			$this->x=$x;
 		}
 		
-		function SetY($y)
+		function SetY($y, $resetx=true)
 		{
-			$this->x=$this->lMargin;
+			if ($resetx)
+				$this->x=$this->lMargin;
+
 			$this->y=$y;
 		}
-		
+			
 		function SetXY($x, $y)
 		{
 			$this->x=$x;
 			$this->y=$y;
+		}
+		
+		function getK() { return $this->k; }
+		function getW() { return $this->w; }
+		function getH() { return $this->h; }
+		function getPage() { return $this->page; }
+		function getlMargin() { return $this->lMargin; }
+		function getrMargin() { return $this->rMargin; }
+		function gettMargin() { return $this->tMargin; }
+		function getbMargin() { return $this->bMargin; }
+		function setbMargin($v) { $this->bMargin=$v; }
+		function setcMargin($v) { $this->cMargin=$v; }
+		function setPage($v) { $this->page=$v; }
+		
+		function svgSetStyle($styles)
+		{
+			$style = '';
+		
+			if ($styles['fill'])
+		{
+				$this->setMyFillColor($styles['fill']);
+				$style.= 'F';
+		}
+			if ($styles['stroke'] && $styles['stroke-width'])
+		{
+				$this->SetMyDrawColor($styles['stroke']);
+				$this->SetLineWidth($styles['stroke-width']);
+				$style.= 'D';
+		}
+			if ($styles['fill-opacity'])
+		{
+//				$this->SetAlpha($styles['fill-opacity']);
+			}
+			
+			return $style;
 		}
 
 		function svgRect($x, $y, $w, $h, $style)
@@ -886,6 +908,42 @@ if (!defined('__CLASS_MYPDF__'))
 		{
 			array_pop($this->transf);
 //			echo 'un-'.count($this->transf).'<br>';
+		}
+		
+		function setMyDrawColor($c)
+		{
+			$c = $this->setMyColor($c, true);
+			if (!$c) return false;
+
+			$this->DrawColor=$c;
+			if($this->page>0) $this->_out($this->DrawColor);
+		}
+		
+		function setMyFillColor($c)
+		{
+			$c = $this->setMyColor($c);
+			if (!$c) return false;
+
+			$this->FillColor=$c;
+			$this->ColorFlag=($this->FillColor!=$this->TextColor);
+			if($this->page>0) $this->_out($this->FillColor);
+		}
+			
+		function setMyTextColor($c)
+		{
+			$c = $this->setMyColor($c);
+			if (!$c) return false;
+
+			$this->TextColor=$c;
+			$this->ColorFlag=($this->FillColor!=$this->TextColor);
+		}
+		
+		function setMyColor($c, $mode = false)
+		{
+			if (!is_array($c))		return sprintf('%.3F ',$c).($mode ? 'G' : 'g');
+			elseif (count($c)==3)	return sprintf('%.3F %.3F %.3F ',$c[0],$c[1],$c[2]).($mode ? 'RG' : 'rg');
+			elseif (count($c)==4)	return sprintf('%.3F %.3F %.3F %.3F ',$c[0],$c[1],$c[2],$c[3]).($mode ? 'K' : 'k');
+			return null;
 		}
 	}
 }
