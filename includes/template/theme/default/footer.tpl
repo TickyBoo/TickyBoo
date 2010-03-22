@@ -37,20 +37,12 @@
   </tr>
 </table>
 </div>
-	<div class="footer">
+	<div class="footer"  valign="top">
 		<hr width="100%" />
-		<table width="100%">
-		<tr>
 		<!-- To comply with our GPL please keep the following link in the footer of your site -->
-  		<td width='27'>
-	  		<img src="{$_SHOP_themeimages}atom.png" height='20' width='23' />
-		  </td>
-		  <td  class="copy" valign="top">
-        Copyright 2010<br />
-		    Powered By <a href="http://www.fusionticket.org"> Fusion Ticket</a> - Free Open Source Online Box Office
-		  </td>
-		</tr>
-		</table>
+    <!-- Failure to abide by these rules may result in the loss of all support and/or site status. -->
+    Copyright 2010<br />
+    Powered By <a href="http://www.fusionticket.org"> Fusion Ticket</a> - Free Open Source Online Box Office
 	</div>
 </div>
   {literal}
@@ -61,7 +53,7 @@
       showErrorMsg(emsg);
       var nmsg = '{/literal}{printMsg|escape:'quotes' key='__Notice__' addspan=false}{literal}';
       showNoticeMsg(nmsg);
-      
+
     });
     var showErrorMsg = function(msg){
       if(msg) {

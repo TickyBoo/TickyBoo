@@ -36,6 +36,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 $states = array('install_welcome',   'install_license',  'install_login', 'install_database', 'install_mode',
                 'install_adminuser', 'install_merchant', 'install_settings', 'install_mail',  'install_register',
                 'install_execute',   'install_finish');
+  ini_set('magic_quotes_runtime', 0);
 
 session_start();
 if (empty($_REQUEST)) {
@@ -81,6 +82,7 @@ include_once 'install_version.php';
   <style>
     .err {color:#dd0000;}
     .warn {color:#cc9900;}
+
     .ok {color:#00dd00;}
   </style>
 

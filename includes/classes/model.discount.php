@@ -101,6 +101,10 @@ class Discount  Extends Model {
       $disc->save();
     }
   }
+	function CheckValues($data){
+ 		if(empty($data['discount_event_id']) && empty($data['discount_promo']) ){addError('discount_promo','mandatory');}
+		return parent::CheckValues($data);
+	}
 
   function apply_to ($price){
     if($this->discount_type=='fixe'){

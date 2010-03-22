@@ -46,7 +46,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   }
 
   ini_set('memory_limit','64M');
-  ini_set('"magic_quotes_runtime', 0);
+  ini_set('magic_quotes_runtime', 0);
   ini_set('allow_call_time_pass_reference', 0);
 
 // mb_
@@ -62,7 +62,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   function stripslashes_deep($value) {
     if(is_array($value)) {
         foreach($value as $k => $v) {
-            $return[$k] = $this->stripslashes_deep($v);
+            $return[$k] = stripslashes_deep($v);
         }
     } elseif(isset($value)) {
         $return = stripslashes($value);
@@ -264,6 +264,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 	}
 
   $_SHOP->organizer_data=(object)$_SESSION['_SHOP_ORGANIZER_DATA'];
+
 
   function logincallback ($username, $auth){
     global $_shop;
