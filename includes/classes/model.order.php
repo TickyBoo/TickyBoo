@@ -43,7 +43,7 @@ class Order Extends Model {
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '~order_date_expire', 'order_responce', 'order_responce_date',
-                                'order_note', 'order_discount_price'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
+                                'order_note', 'order_discount_price', 'order_discount_promo'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
   public $places=array();
   public $tickets = array();
   public $no_fee = false;
@@ -255,6 +255,7 @@ class Order Extends Model {
       }
       if (isset($this->discount)) {
         $this->discount->isUsed();
+        $this->order_discount_promo = $this->discount->discount_promo;
         OrderStatus::statusChange($this->order_id,$this->discount->discount_name, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
 
@@ -300,6 +301,7 @@ class Order Extends Model {
 
       $tmpOrdForDate = Order::load($this->order_id);
       $this->order_date = $tmpOrdForDate->order_date;
+
 
       if($this->handling->handling_id=='1'){
          $ok = $this->set_status('res',TRUE);
@@ -485,10 +487,22 @@ class Order Extends Model {
           $fee=$hand->calculate_fee($total);
           $total+=$fee;
         }
+        ;
+        if (empty($this->order_discount_promo) && $discount = Discount::LoadGlobal($this->order_discount_promo)) {
+          $discount = $discount->value ($total);
+          If ($discount < $total) {
+            $discount = $total;
+          }
+          $total = $total - $discount;
+          $discount = number_format($discount, 2, '.', '');
+        }
+        $fee=number_format($fee, 2, '.', '');
+        $total=number_format($total, 2, '.', '');
 
         $query="update `Order` set
                   order_tickets_nr=(order_tickets_nr-1),
                   order_total_price={$total},
+                  order_discount_price = {$discount},
                   order_fee={$fee}
                 where order_id="._esc($order_id)." LIMIT 1";
 
@@ -839,6 +853,7 @@ class Order Extends Model {
       if($order_handling_id>0){
         $handling_cond = "and order_handling_id = "._esc($order_handling_id);
         $fields[' AND order_handling_id']= $order_handling_id;
+
       }
 
       $query = "SELECT * FROM `Order`

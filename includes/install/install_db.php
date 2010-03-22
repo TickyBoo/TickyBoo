@@ -319,6 +319,7 @@ $tbls['Order']['fields'] = array(
   'order_session_id' => " varchar(32) NOT NULL DEFAULT ''",
   'order_tickets_nr' => " int(11) NOT NULL DEFAULT '0'",
   'order_total_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
+  'order_discount_promo' => " varchar(15) DEFAULT ''",
   'order_discount_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'order_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'order_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
