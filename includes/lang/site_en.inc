@@ -166,6 +166,7 @@ define("delete_confirm_msg","Delete This Event?");
 define("delete_item","Delete?");
 define("deleted_all_tickets","Deleted All Tickets!");
 
+
 define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
@@ -1304,5 +1305,13 @@ define ('order_discount_price','Discount amount');
 define ('order_partial_price','Partial amount');
 define ('discount_promo','Discount promo code');
 define ('Global_discounts','Global Discounts');
+define ('down_install_again','Install new version');
+define ('version_checker','Install new version');
+define ('avaliable_version','Avaliable version');
+define ('curr_ver','Current version');
+define ('curr_build','Current build');
+define ('version_missing','missing');
+define ('are_you_sure','Are you sure?');
+define ('version_updater','Update');
 
 ?>

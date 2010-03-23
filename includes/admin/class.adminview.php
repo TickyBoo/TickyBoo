@@ -882,9 +882,9 @@ class AdminView extends AUIComponent {
   public function getJQuery(){
     return $this->jScript;
   }
-  
-  
-  protected function getLatestVersion(){
+
+
+  protected function hasNewVersion(){
     require_once("classes/class.restservice.client.php");
 
     //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
@@ -915,6 +915,27 @@ class AdminView extends AUIComponent {
     }
 
     return $string;
+  }
+
+  protected function getLatestVersion($showsvn=true){
+    require_once("classes/class.restservice.client.php");
+
+    //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
+    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
+    try{
+      $rsc->excuteRequest();
+      $array = $rsc->getArray();
+    //  print_r($array);
+      if(isset($array['versions']['version_attr']['version'])){
+        $currentVersion = $array['versions']['version_attr']['version'];
+        $currentOrder = $array['versions']['version_attr']['order'];
+        return $currentVersion.'  <b>Build:</b> '.$currentOrder;
+      }else{
+        throw new Exception('Couldnt get version');
+      }
+    }catch(Exception $e){
+      return " - Could not check for new version.";
+    }
   }
 
   // make tab menus using html tables

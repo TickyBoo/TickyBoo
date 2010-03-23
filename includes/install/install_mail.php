@@ -43,6 +43,7 @@ class install_mail {
     GLOBAL $_SHOP;
     Install_Request(Array('mail_sendmail','mail_smtp_host', 'mail_smtp_port', 'mail_smtp_security',
                           'mail_smtp_user', 'mail_smtp_pass'),'SHOP');
+    Install_Request(Array('usesendmail','usesmtp'));
 
     if (isset($_POST['usesendmail'])) {
       if (empty($_POST['mail_sendmail'])) {
@@ -80,6 +81,17 @@ class install_mail {
         array_push($Install->Errors,'Sorry the mail was not sent, check your mail settings.<br>'."<pre>".$logger->dump()."</pre>" );
       }
     }
+    if (!isset($_POST['usesendmail'])) {
+      unset($_SESSION['SHOP']['mail_sendmail']);//  = null;
+    }
+    if (!isset($_POST['usesmtp'])) {
+      unset($_SESSION['SHOP']['mail_smtp_host']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_port']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_user']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_pass']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_security']);// = null;
+    }
+
     return true;
 
   }

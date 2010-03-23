@@ -59,7 +59,7 @@ class IndexView extends AdminView {
     switch ((int)$_SESSION['_INDEX_tab']){
       case 0:
         $licention = file_get_contents (ROOT."licence.txt");
-        $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->getLatestVersion(),$this->width,1);
+        $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->hasNewVersion(),$this->width,1);
         echo "<tr><td class='admin_value'>" ;
         echo "<p><pre>",htmlspecialchars($licention),'</pre></p>';
         echo "</td></tr>";
@@ -87,7 +87,7 @@ class IndexView extends AdminView {
         break;
       case 3:
         $viewer = new VersionUtilView($this->width);
-        $viewer->draw(); 
+        $viewer->draw();
         break;
     }
   }

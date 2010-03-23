@@ -158,6 +158,8 @@ class install_execute {
            $config .= ");\n";
          }
          continue;
+      } elseif(is_null($value)) {
+        $value = 'null';
       } elseif(is_bool($value)) {
         $value = ($value)?'True':'False';
       } elseif(is_string($value)) {

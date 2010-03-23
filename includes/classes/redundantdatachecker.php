@@ -120,7 +120,7 @@ where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_cate
 $orphancheck[]="
 select 'Discount', discount_id, 'event_id' , ifnull(discount_event_id,'null'), event_id
 from Discount left join Event on discount_event_id = event_id
-where  (event_id is null)
+where  (event_id is null and event_promo is null)
 ";
 /**/
 $orphancheck[]="

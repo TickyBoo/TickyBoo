@@ -63,6 +63,18 @@ class install_register {
         array_push($Install->Warnings,'Thanks, the mail is sent to us.');
       }
     }
+    if (!isset($_SESSION['usesendmail'])) {
+      unset($_SESSION['SHOP']['mail_sendmail']);//  = null;
+    }
+    if (!isset($_SESSION['usesmtp'])) {
+      unset($_SESSION['SHOP']['mail_smtp_host']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_port']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_user']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_pass']);// = null;
+      unset($_SESSION['SHOP']['mail_smtp_security']);// = null;
+    }
+
+
     return true;
   }
 

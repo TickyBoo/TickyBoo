@@ -129,6 +129,8 @@ class PlaceMapView extends AdminView {
   			$dist_view->table( $event->event_id, $live );
 
   			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?event_id={$data['pm_event_id']}",'admin_list',3);
+      } else {
+  			echo "<br>".$this->show_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}",'admin_list',3);
       }
 		} else {
   		$this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit&ort_id={$data['pm_ort_id']}");
