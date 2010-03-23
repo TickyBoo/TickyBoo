@@ -44,22 +44,26 @@ class install_welcome {
   }
 
   static function display($Install) {
-    Install_Form_Open ($Install->return_pg,'',"Welcome to the FusionTicket Installation Wizard.");
+    Install_Form_Open ($Install->return_pg,'',"Welcome to the Fusion Ticket Installation Wizard.");
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" border=0>
             <tr>
               <td>
-            FusionTicket is distributed under the GNU GPL v3 Licence.
-            By installing this software you are agreeing to this licence. The Software is \"AS IS\",
-            FusionTicket will not be responsible for any damages or loss of
-            profit caused by this software or any other patch script included with this software.
+            Fusion Ticket is distributed under the GNU GPL v3 Licence.
+            By installing this software you are agreeing to this licence. 
+			The Software is \"AS IS\",
+            Fusion Ticket is not responsible for any damages or loss of profit caused by this software or any other patch script included with this software.
               </td>
             </tr>
-            <tr> <td height='6px'></td> </tr>
+			            <tr> <td height='6px'></td> </tr>
+            <tr> 
+				<td><b>TERMS OF USE</b><br></td> 
+			</tr>
             <tr>
                <td>
             You are <b>NOT</b> allowed to sell this script but are able to make money from <b>USING</b> it.<br>
-            There may be a professional version in the future.
-              </td>
+            You are <b>NOT</b> allowed to change the copyright notice without the express permission of Fusion Ticket.<br>
+			Failure to abide by these rules may result in the loss of all support and/or site status.<br>
+	           </td>
             </tr>
             <tr> <td height='6px'></td> </tr>
             <tr>
