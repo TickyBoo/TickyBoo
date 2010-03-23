@@ -63,26 +63,34 @@ class RestServiceClient {
 
 	public function excuteRequest() {
     global $_SHOP;
+    
     $this->siteUrl = $_SHOP->root;
     $this->siteVersion = CURRENT_VERSION;
+    
+    if(!empty($_SHOP->shopconfig_ftusername) && !empty($_SHOP->shopconfig_ftpassword)){
+      $this->josUsername = $_SHOP->shopconfig_ftusername;
+      $this->josPassword = $_SHOP->shopconfig_ftpassword;
+      //print_r(base64_decode($_SHOP->shopconfig_ftpassword));
+    }
    
 		//work ok the URI we are calling
-		//$uri = $this->url . $this->getQueryString();
+		$uri = $this->url; 
     $postData = $this->getPostData();
     
     //set timeout so that you wont be waiting forever if our server is under heavy load.
     $ctx = stream_context_create(array(
       'http' => array(
-        'timeout' => 1,
         'method' => 'POST',
-        'header'  => 'Content-type: application/x-www-form-urlencoded',
-        'content' => $postData
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n". 
+          "Content-Length: " . strlen($postData) . "\r\n",
+        'content' => $postData,
+        'timeout' => 5,
         )
       )
     );
     
 		//get the URI trapping errors
-		$result = @file_get_contents($uri,0,$ctx);
+		$result = @file_get_contents($uri,false,$ctx);
 
 		// Retrieve HTTP status code
 		list($httpVersion, $httpStatusCode, $httpMessage) = explode(' ', $http_response_header[0], 3);
@@ -136,10 +144,10 @@ class RestServiceClient {
     $queryArray = array();
     
     foreach ($this->data as $var => $val) {
-      $queryArray[$var] = $val;
+      $queryArray["{$var}"] = $val;
 		}
     
-    return http_build_query($queryArray);
+    return http_build_query($queryArray,null,"&");
   }
 }
 ?>

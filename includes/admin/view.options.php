@@ -72,6 +72,9 @@ class OptionsView extends AdminView{
   	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
   	$this->print_input('res_delay' ,$data, $err, 5, 10);
     $this->print_input('cart_delay',$data, $err, 5, 10);
+    echo "<tr><td class='admin_list_title' colspan='2'>".con('option_ftorg_title')."</td></tr>";
+    $this->print_input('shopconfig_ftusername',$data, $err);
+  	$this->print_password('shopconfig_ftpassword',$data, $err);
     $this->form_foot();
 
   }
@@ -84,17 +87,21 @@ class OptionsView extends AdminView{
 				return;
 			}else{
 				$query="UPDATE `ShopConfig` SET
-	      		shopconfig_lastrun_int="._ESC($_POST['shopconfig_lastrun_int']).",
-	      		shopconfig_restime="._ESC($_POST['shopconfig_restime']).",
-	      		shopconfig_check_pos="._ESC($_POST['shopconfig_check_pos']).",
-	      		shopconfig_delunpaid="._ESC($_POST['shopconfig_delunpaid']).",
-	      		shopconfig_delunpaid_pos="._ESC($_POST['shopconfig_delunpaid_pos']).",
-	      		shopconfig_posttocollect="._ESC($_POST['shopconfig_posttocollect']).",
-	      		shopconfig_user_activate="._ESC((int)$_POST['shopconfig_user_activate']).",
-	      		res_delay="._ESC((int)$_POST['res_delay']).",
-	      		cart_delay="._ESC((int)$_POST['cart_delay']).",
-	      		shopconfig_maxres="._ESC($_POST['shopconfig_maxres'])."
-	      		limit 1";
+	      		shopconfig_lastrun_int="._esc($_POST['shopconfig_lastrun_int']).",
+	      		shopconfig_restime="._esc($_POST['shopconfig_restime']).",
+	      		shopconfig_check_pos="._esc($_POST['shopconfig_check_pos']).",
+	      		shopconfig_delunpaid="._esc($_POST['shopconfig_delunpaid']).",
+	      		shopconfig_delunpaid_pos="._esc($_POST['shopconfig_delunpaid_pos']).",
+	      		shopconfig_posttocollect="._esc($_POST['shopconfig_posttocollect']).",
+	      		shopconfig_user_activate="._esc((int)$_POST['shopconfig_user_activate']).",
+	      		res_delay="._esc((int)$_POST['res_delay']).",
+	      		cart_delay="._esc((int)$_POST['cart_delay']).",
+	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres']).", 
+            shopconfig_ftusername="._esc($_POST['shopconfig_ftusername']) ;
+            if(isset($_POST['shopconfig_ftpassword'])){ 
+              $query .= " , shopconfig_ftpassword="._esc(base64_encode($_POST['shopconfig_ftpassword'])); 
+            } 
+	      		$query .= " limit 1 ";
 
 				if(!ShopDB::query($query)){
           addWarning('update_error');
@@ -105,6 +112,7 @@ class OptionsView extends AdminView{
 		}
 		$query="SELECT * FROM `ShopConfig` limit 1";
 		if($row=ShopDB::query_one_row($query)){
+		  unset($row['shopconfig_ftpassword']);
   		$this->option_form($row);
 		}
 		return;

@@ -925,7 +925,6 @@ class AdminView extends AUIComponent {
     try{
       $rsc->excuteRequest();
       $array = $rsc->getArray();
-    //  print_r($array);
       if(isset($array['versions']['version_attr']['version'])){
         $currentVersion = $array['versions']['version_attr']['version'];
         $currentOrder = $array['versions']['version_attr']['order'];
@@ -934,6 +933,7 @@ class AdminView extends AUIComponent {
         throw new Exception('Couldnt get version');
       }
     }catch(Exception $e){
+      print_r($e->getMessage());
       return " - Could not check for new version.";
     }
   }
