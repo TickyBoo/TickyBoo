@@ -132,6 +132,7 @@ class Event Extends Model {
       if (!$this->fillPost()) {
         return self::_abort('not_all_all_values_set');
       }
+      unset($this->event_recur_type);
  			$this->event_main_id = $id;
     }
  	  $event_dates = $this->getRecurionDates();

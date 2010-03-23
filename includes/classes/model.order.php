@@ -178,17 +178,21 @@ class Order Extends Model {
    * @updated 1.0 beta6
    */
   function save () {
-
     global $_SHOP;
 
-
-
-
     if($this->order_id){
-      return addWarning("This order is already saved!!!"); //already saved
+      return addWarning('order_already_crated'); //already saved
     }
 
     $amount=$this->amount();
+    $this->order_discount_price = 0.0;
+    if (isset($this->discount) and $this->no_fee) {
+      $this->order_discount_price = $this->discount->value ($amount);
+      If ($this->order_discount_price > $amount) {
+        $this->order_discount_price = $amount;
+      }
+      $amount = $amount - $this->order_discount_price;
+    }
 
     if(!$this->no_fee){
       $fee= $this->handling->calculate_fee($amount);
@@ -197,26 +201,16 @@ class Order Extends Model {
     }
 
     if($this->no_cost) {
+      $this->order_discount_price = $amount+$fee;
       $total=0;
-    }else{
+    }else {
       $total=$amount+$fee;
     }
-    if (isset($this->discount)) {
-      $this->order_discount_price = $this->discount->value ($total);
-      If ($this->order_discount_price < $total) {
-        $this->order_discount_price = $total;
-      }
-      $total = $total - $this->order_discount_price;
-      $this->order_discount_price = number_format($this->order_discount_price, 2, '.', '');
-    }
 
-    $amount=number_format($amount, 2, '.', '');
-    $fee=number_format($fee, 2, '.', '');
-    $total=number_format($total, 2, '.', '');
-
-    $this->order_partial_price=$amount;
-    $this->order_total_price=$total;
-    $this->order_fee=$fee;
+    $this->order_discount_price = number_format($this->order_discount_price, 2, '.', '');
+    $this->order_partial_price=number_format($amount, 2, '.', '');;
+    $this->order_total_price=number_format($total, 2, '.', '');;
+    $this->order_fee=number_format($fee, 2, '.', '');;
 
     //$this->order_date_expire = null;
 
@@ -483,11 +477,6 @@ class Order Extends Model {
         $total=$res['total'];
 
         //recalculates cost as when placing a new order
-        if($hand=Handling::load($order['order_handling_id'])){
-          $fee=$hand->calculate_fee($total);
-          $total+=$fee;
-        }
-        ;
         if (empty($this->order_discount_promo) && $discount = Discount::LoadGlobal($this->order_discount_promo)) {
           $discount = $discount->value ($total);
           If ($discount < $total) {
@@ -496,6 +485,12 @@ class Order Extends Model {
           $total = $total - $discount;
           $discount = number_format($discount, 2, '.', '');
         }
+
+        if($hand=Handling::load($order['order_handling_id'])){
+          $fee=$hand->calculate_fee($total);
+          $total+=$fee;
+        }
+
         $fee=number_format($fee, 2, '.', '');
         $total=number_format($total, 2, '.', '');
 

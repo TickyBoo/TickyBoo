@@ -167,6 +167,7 @@ define("delete_item","Delete?");
 define("deleted_all_tickets","Deleted All Tickets!");
 
 
+
 define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
@@ -1313,5 +1314,6 @@ define ('curr_build','Current build');
 define ('version_missing','missing');
 define ('are_you_sure','Are you sure?');
 define ('version_updater','Update');
+define ('order_already_crated',"This order is already saved!!!");
 
 ?>
