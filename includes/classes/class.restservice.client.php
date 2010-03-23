@@ -62,17 +62,25 @@ class RestServiceClient {
 	}
 
 	public function excuteRequest() {
+    global $_SHOP;
+    $this->siteUrl = $_SHOP->root;
+    $this->siteVersion = CURRENT_VERSION;
+   
 		//work ok the URI we are calling
-		$uri = $this->url . $this->getQueryString();
-
+		//$uri = $this->url . $this->getQueryString();
+    $postData = $this->getPostData();
+    
     //set timeout so that you wont be waiting forever if our server is under heavy load.
     $ctx = stream_context_create(array(
       'http' => array(
-        'timeout' => 1
+        'timeout' => 1,
+        'method' => 'POST',
+        'header'  => 'Content-type: application/x-www-form-urlencoded',
+        'content' => $postData
         )
       )
     );
-
+    
 		//get the URI trapping errors
 		$result = @file_get_contents($uri,0,$ctx);
 
@@ -109,11 +117,6 @@ class RestServiceClient {
 
 	//turn our array of variables to send into a query string
 	protected function getQueryString() {
-    global $_SHOP;
-
-    $this->siteUrl = $_SHOP->root;
-    $this->siteVersion = CURRENT_VERSION;
-
 		$queryArray = array();
 
 		foreach ($this->data as $var => $val) {
@@ -124,5 +127,19 @@ class RestServiceClient {
 
 		return '?' . $queryString;
 	}
+  
+  /**
+   * @author Christopher Jenkins
+   * used for posting data
+   */
+  protected function getPostData(){
+    $queryArray = array();
+    
+    foreach ($this->data as $var => $val) {
+      $queryArray[$var] = $val;
+		}
+    
+    return http_build_query($queryArray);
+  }
 }
 ?>
