@@ -43,6 +43,7 @@ class VersionUtilView extends AdminView{
 
  	  $this->form_head( con('version_checker'), $this->width, 2);
     echo "<tr><td class='admin_name'>".con('avaliable_version')."</td><td class='admin_value'>".$this->getLatestVersion()."</td></tr>";
+    echo "<tr><td class='admin_name'>".con('donator_avaliable_version')."</td><td class='admin_value'>".$this->getLatestVersion(true)."</td></tr>";
     $this->print_field('curr_ver', $data);
     $this->print_field('curr_build',str_replace('$','',INSTALL_REVISION));
     $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);

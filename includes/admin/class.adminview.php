@@ -917,11 +917,15 @@ class AdminView extends AUIComponent {
     return $string;
   }
 
-  protected function getLatestVersion($showsvn=true){
+  protected function getLatestVersion($donatorVersion=false){
     require_once("classes/class.restservice.client.php");
 
     //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
-    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
+    if($donatorVersion){
+      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latestdonator.xml');  
+    }else{
+      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml'); 
+    }
     try{
       $rsc->excuteRequest();
       $array = $rsc->getArray();
