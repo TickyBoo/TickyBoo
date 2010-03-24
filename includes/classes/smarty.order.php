@@ -49,7 +49,7 @@ class Order_Smarty {
   }
 
   function can_freeTicketCode() {
-  	global $_SHOP; //print_r( $_SHOP  );
+  	global $_SHOP; ///print_r( $_SHOP  );
     return  !empty($_SHOP->freeTicketCode) || Discount::hasGlobals();
   }
 
@@ -72,6 +72,7 @@ class Order_Smarty {
       return;
     }
 
+    $no_cost = false;
     // this code is Rain_ to allow people to get tickets for free.
     if (isset($_SHOP->freeTicketCode) and !empty($_POST['FreeTicketCode']) and
         $_SHOP->freeTicketCode == $_POST['FreeTicketCode']) {
@@ -87,7 +88,7 @@ class Order_Smarty {
     if(ShopDB::begin('Make order')){
 
       // apply Global discount over the total price.
-      if (!empty($_POST['FreeTicketCode'])) {
+      if (!empty($_POST['FreeTicketCode']) and !$no_cost) {
         if (!($order->discount =Discount::LoadGlobal($_POST['FreeTicketCode']))) {
           addWarning('FreeTicketCode_notfound');
           ShopDB::rollback('FreeTicketCode_notfound');
@@ -159,6 +160,7 @@ class Order_Smarty {
       return Order::delete_ticket($order_id,$ticket_id,0,$this->user_auth_id);
     }
   }
+
 
 
   /**
@@ -277,6 +279,8 @@ class Order_Smarty {
           }
           $where .= " AND order_status NOT IN ( {$notIn} )";
         }
+
+
       }
 
       if($params['order']){
@@ -459,6 +463,8 @@ class Order_Smarty {
    * @return
    */
   function set_send_f($order_id){
+
+
     global $_SHOP;
     return Order::set_send($order_id, 0, $this->user_auth_id);
   }

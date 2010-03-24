@@ -159,7 +159,7 @@ $tbls['Category']['fields'] = array(
   'category_min' => " int(11) DEFAULT NULL",
   'category_template' => " varchar(30) DEFAULT NULL",
   'category_color' => " varchar(10) DEFAULT NULL",
-  'category_data' => " tinytext");
+  'category_data' => " text");
 $tbls['Category']['key'] = array(
   "PRIMARY KEY (`category_id`)",
   "KEY `category_event_id` (`category_event_id`)");
@@ -323,6 +323,7 @@ $tbls['Order']['fields'] = array(
   'order_discount_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'order_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'order_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
+  'order_order_set' => " set('nofee','nocost') DEFAULT ''",
   'order_shipment_status' => " enum('none','send') NOT NULL DEFAULT 'none'",
   'order_payment_status' => " enum('none','pending','payed') NOT NULL DEFAULT 'none'",
   'order_payment_id' => " varchar(255) DEFAULT NULL",

@@ -40,7 +40,7 @@ class Order Extends Model {
   protected $_tableName = 'Order';
   protected $_columns   = array('#order_id', '*order_user_id', 'order_session_id', '*order_tickets_nr',
                                 '*order_total_price', '*~order_date','order_timestamp', '*order_shipment_status',
-                                '*order_payment_status', 'order_payment_id', 'order_handling_id',
+                                '*order_payment_status', 'order_payment_id', 'order_handling_id','order_order_set',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '~order_date_expire', 'order_responce', 'order_responce_date',
                                 'order_note', 'order_discount_price', 'order_discount_promo'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
@@ -73,6 +73,8 @@ class Order Extends Model {
  //   );
     if($data=ShopDB::query_one_row($query)){
       $order=new Order;
+
+
       $order->_fill($data);
 
       if($order && $complete){
@@ -193,20 +195,22 @@ class Order Extends Model {
       }
       $amount = $amount - $this->order_discount_price;
     }
-
+    $order_set =array();
     if(!$this->no_fee){
       $fee= $this->handling->calculate_fee($amount);
     }else{
       $fee=0;
+      $order_set[] ='nofee';
     }
 
     if($this->no_cost) {
       $this->order_discount_price = $amount+$fee;
+      $order_set[] ='nocost';
       $total=0;
     }else {
       $total=$amount+$fee;
     }
-
+    $this->order_order_set = implode(',',$order_set);
     $this->order_discount_price = number_format($this->order_discount_price, 2, '.', '');
     $this->order_partial_price=number_format($amount, 2, '.', '');;
     $this->order_total_price=number_format($total, 2, '.', '');;
@@ -471,6 +475,7 @@ class Order Extends Model {
         $query="SELECT SUM(seat_price) AS total
                 FROM `Seat`
                 WHERE seat_order_id="._esc($order_id);
+
         if(!$res=ShopDB::query_one_row($query)){
           return self::_abort('cannot_delete_ticket_2');
         }
@@ -483,14 +488,21 @@ class Order Extends Model {
             $discount = $total;
           }
           $total = $total - $discount;
-          $discount = number_format($discount, 2, '.', '');
-        }
 
-        if($hand=Handling::load($order['order_handling_id'])){
+        }
+        if ((strpos($order['order_order_set'], 'nofee') === false) and
+            ($hand=Handling::load($order['order_handling_id']))){
           $fee=$hand->calculate_fee($total);
           $total+=$fee;
+        } else {
+          $fee = 0;
+        }
+        if (strpos($order['order_order_set'], 'nocost') !== false) {
+          $discount = $total;
+          $total=0;
         }
 
+        $discount = number_format($discount, 2, '.', '');
         $fee=number_format($fee, 2, '.', '');
         $total=number_format($total, 2, '.', '');
 
@@ -787,6 +799,7 @@ class Order Extends Model {
         return self::_abort('cant_lock_order');
       }
 
+
       while($data=shopDB::fetch_assoc($res)){
         //print_r($data);
         if($data['order_tickets_nr']==$data['count']){
@@ -1014,6 +1027,7 @@ class Order Extends Model {
       }else{
         $order['bill'][$key]['qty']++;
       }
+
       $seats[] = $data;
     }
     //calculating the sub-total
@@ -1073,6 +1087,7 @@ class Order Extends Model {
         } else {
           var_dump($tpl);
           return addwarning('no_template', ": name: {$tpl_id} cat: {$seat['category_id']}, event: {$seat['event_id']}");
+
         }
       }
     }

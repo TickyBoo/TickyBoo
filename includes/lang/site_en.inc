@@ -168,6 +168,7 @@ define("deleted_all_tickets","Deleted All Tickets!");
 
 
 
+
 define("delete_subs_first","Delete Sub-Events First!");
 define("email_valid","Please Enter a Valid Email Address!");
 define("email_match","The Emails Do Not Match!");
@@ -683,6 +684,7 @@ define("payment_update_title","Modify the Payment Type");
 define("handling_update_title","Modify the Payment Type");
 
 	define("handling_payment","Payment");
+
 		define("cash","Cash");
 		define("entrance","At the Entrance");
 		define("invoice","Invoice");
@@ -1315,5 +1317,6 @@ define ('version_missing','missing');
 define ('are_you_sure','Are you sure?');
 define ('version_updater','Update');
 define ('order_already_crated',"This order is already saved!!!");
-
+define ('Select_handling_option','Select a payment option.');
+define ('FreeTicketCode_notfound','FreeTicketCode not found. Try again');
 ?>

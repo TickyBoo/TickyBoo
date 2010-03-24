@@ -40,7 +40,9 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
   global $_SHOP;
-
+  if(function_exists("mb_internal_encoding")) {
+    mb_internal_encoding("UTF-8");
+  }
   if(function_exists("date_default_timezone_set")) {
     @date_default_timezone_set($_SHOP->timezone);
   }
@@ -128,6 +130,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 //starting a new session
 
   session_name($_SHOP->session_name);
+
   session_start();
   If (isset($_SHOP->secure_id) and (!isset($_SESSION['_SHOP_SYS_SECURE_ID']) || ($_SHOP->secure_id <> $_SESSION['_SHOP_SYS_SECURE_ID'] ) )) {
     session_unset();

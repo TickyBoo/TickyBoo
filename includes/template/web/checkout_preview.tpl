@@ -57,7 +57,7 @@
   		</td>
     	<td valign='top' align="right">
         {if !$update->is_demo()}
-          <form method='post' name='handling' id="ft-order-handling"  onsubmit='this.submit.disabled=true;return true;'>
+          <form method='post' name='handling' id="ft-order-handling"> {*   onsubmit='this.submit.disabled=true;return true;' *}
           {ShowFormToken name='OrderHandling'}
           <input type='hidden' name='action' value='confirm' />
         {/if}
@@ -70,25 +70,24 @@
       		{assign var=min_date value=$cart->min_date_f()}
           {update->view event_date=$min_date}
 
-          {handling www='on' event_date=$min_date }
-{* checked="checked" *}
-				  <tr class="{cycle name='payments' values='TblHigher,TblLower'}">
-            <td class='payment_form'>
-              <input  type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
-		  		  </td>
-          	<td class='payment_form'>
-	  			    <label for='{$shop_handling.handling_id}_check'>
-                {!payment!}: {eval var=$shop_handling.handling_text_payment}<br/>
-            		{!shipment!}: {eval var=$shop_handling.handling_text_shipment}
-   		  			</label>
-        		</td>
-            <td class='payment_form' align='right'>
-              {assign var=fee value="`$total*$shop_handling.handling_fee_percent/100.00+$shop_handling.handling_fee_fix`"}
-              {if  $fee}
-                + {gui->valuta value=$fee|string_format:"%.2f"}
-              {/if}&nbsp;
-            </td>
-      		</tr>
+          {handling www='on' event_date=$min_date }   {* checked="checked" *}
+  				  <tr class="{cycle name='payments' values='TblHigher,TblLower'}">
+              <td class='payment_form'>
+                <input  type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
+  		  		  </td>
+            	<td class='payment_form'>
+  	  			    <label for='{$shop_handling.handling_id}_check'>
+                  {!payment!}: {eval var=$shop_handling.handling_text_payment}<br/>
+              		{!shipment!}: {eval var=$shop_handling.handling_text_shipment}
+     		  			</label>
+          		</td>
+              <td class='payment_form' align='right'>
+                {assign var=fee value="`$total*$shop_handling.handling_fee_percent/100.00+$shop_handling.handling_fee_fix`"}
+                {if  $fee}
+                  + {gui->valuta value=$fee|string_format:"%.2f"}
+                {/if}&nbsp;
+              </td>
+        		</tr>
 
    	      {/handling}
           {if $order->can_freeTicketCode()}
@@ -131,7 +130,7 @@
           		{* if $updateview.can_reserve() *}
           		{if $update->can_reserve()}
                 {if !$update->is_demo()}
-                  <form action='' method='post' name='handling' onsubmit='this.submit.disabled=true;return true;'>
+                  <form action='' method='post' name='handling'>
               	    <input type='hidden' name='action' value='reserve' />
                 		{ShowFormToken name='ReservHandling'}
          			  {/if}
@@ -154,7 +153,7 @@
     jQuery("form#ft-order-handling").submit(function(){
       handlingRadio = $("input:radio[name='handling_id']:checked").val();
       if(handlingRadio === undefined){
-        message = "Select a payment option.";
+        message = "{/literal}{!Select_handling_option!}{literal}";
         showErrorMsg(message);
         return false;
       }
