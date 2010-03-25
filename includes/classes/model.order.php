@@ -75,6 +75,7 @@ class Order Extends Model {
       $order=new Order;
 
 
+
       $order->_fill($data);
 
       if($order && $complete){
@@ -188,7 +189,7 @@ class Order Extends Model {
 
     $amount=$this->amount();
     $this->order_discount_price = 0.0;
-    if (isset($this->discount) and $this->no_fee) {
+    if (isset($this->discount) and !$this->no_cost) {
       $this->order_discount_price = $this->discount->value ($amount);
       If ($this->order_discount_price > $amount) {
         $this->order_discount_price = $amount;
@@ -797,6 +798,7 @@ class Order Extends Model {
 
       if(!$res=ShopDB::query($query)){
         return self::_abort('cant_lock_order');
+
       }
 
 
