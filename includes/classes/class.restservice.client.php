@@ -72,16 +72,19 @@ class RestServiceClient {
     $postData = $this->getPostData();
     
     //set timeout so that you wont be waiting forever if our server is under heavy load.
-    $ctx = stream_context_create(array(
+    $ctxOpt = array(
       'http' => array(
         'method' => 'POST',
         'header'  => "Content-type: application/x-www-form-urlencoded\r\n". 
           "Content-Length: " . strlen($postData) . "\r\n",
         'content' => $postData,
-        'timeout' => 5,
+        'timeout' => 5
         )
-      )
-    );
+      );
+    if(!empty($_SHOP->shopconfig_proxyaddress) && !empty($_SHOP->shopconfig_proxyport)){
+      $ctxOpt['http']['proxy'] = "tcp://".$_SHOP->shopconfig_proxyaddress.":".$_SHOP->shopconfig_proxyport; 
+    }
+    $ctx = stream_context_create($ctxOpt);
     
 		//get the URI trapping errors
 		$result = @file_get_contents($uri,false,$ctx);

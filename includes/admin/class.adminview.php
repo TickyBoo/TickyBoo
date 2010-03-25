@@ -938,7 +938,14 @@ class AdminView extends AUIComponent {
       $array = $rsc->getArray();
       
       if($dlLink){
-        if(isset($array['versions']['version_attr']['version']) && isset($array['versions']['version_attr']['download_link'])){
+        $rev = explode(" ",INSTALL_REVISION);
+        if($array['versions']['version_attr']['order'] < (int)$rev[1]){
+          addWarning('download_older_than_curr');
+          return false;
+        }elseif($array['versions']['version_attr']['order'] == (int)$rev[1]){
+          addWarning('download_same_as_curr');
+          return false;
+        }elseif(isset($array['versions']['version_attr']['version']) && isset($array['versions']['version_attr']['download_link'])){
           return $array['versions']['version_attr']['download_link'];
         }elseif(!empty($array['versions']['version_attr']['reason'])){
           addWarning('error',$array['versions']['version_attr']['reason']);

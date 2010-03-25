@@ -68,15 +68,25 @@ class VersionUtilView extends AdminView{
     echo '</table><br/>';
 
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
-    $this->form_head(con('down_install_again'),$this->width,2);
+    $this->form_head(con('download_update'),$this->width,2);
     $this->print_hidden('reinstall','true');
     $this->print_hidden('action','reinstall');
-    $data['are_you_sure'] = '0';
-    $this->print_checkbox('are_you_sure',$data,$err);
     $this->print_input('shopconfig_ftusername',$data, $err);
   	$this->print_password('shopconfig_ftpassword',$data, $err);
     $this->print_checkbox('shopconfig_keepdetails',$data, $err);
-  //  echo "<tr><td colspan=\"2\" >".$this->show_button('submit',',1)."</td></tr>";
+    $data['are_you_sure'] = '0';
+    $this->print_checkbox('are_you_sure',$data,$err);
+    $data['are_you_sure_apply_update'] = '0';
+    $this->print_checkbox('are_you_sure_apply_update',$data,$err);
+    //  echo "<tr><td colspan=\"2\" >".$this->show_button('submit',',1)."</td></tr>";
+    require_once(LIBS."file".DS."filescan.class.php");
+    echo "<tr><td colspan=\"2\" class='admin_name' >".con('downloaded_update_files')."</td></tr>";
+    echo "<tr><td colspan=\"2\" >";
+    $files = FileScan::scanDirRec(UPDATES,"zip");
+    foreach($files as $file){
+      echo $file['name']."<br />";
+    }
+    echo "</td></tr>";
 
     $this->form_foot(2,null,'update');
   }
@@ -111,7 +121,7 @@ class VersionUtilView extends AdminView{
         }
 			}
       
-      if($_POST['are_you_sure']==1 && $_POST['action']=='reinstall'){
+      if($_POST['are_you_sure']==='1' && $_POST['action']=='reinstall'){
         $query="SELECT * FROM `ShopConfig` limit 1";
         $row=ShopDB::query_one_row($query);
         $ftu = $ftp = null;
@@ -140,9 +150,17 @@ class VersionUtilView extends AdminView{
   private function install_update($force = false, $ftu=null, $ftp=null){
     
     $dlLink = $this->getLatestVersion(false,true,$ftu,$ftp);
-
+    
+    //Set options for file download
+    $ctxOpt['http'] = array();
+    if(!empty($_SHOP->shopconfig_proxyaddress) && !empty($_SHOP->shopconfig_proxyport)){
+      $ctxOpt['http']['proxy'] = "tcp://".$_SHOP->shopconfig_proxyaddress.":".$_SHOP->shopconfig_proxyport; 
+    }
+    $ctx = stream_context_create($ctxOpt);
     //Download File
-    $data = file_get_contents($dlLink);
+    $data = file_get_contents($dlLink,false,$ctx);
+    
+    
     if(!$data){
       addWarning('file_download_failed');
       return false;
@@ -151,46 +169,51 @@ class VersionUtilView extends AdminView{
 
     //Create a unique name and path to save file
     $name = "latest".md5(rand(0,100)).".zip";
-    $path = INC."temp".DS.$name;
+    mkdir(UPDATES);
+    $path = UPDATES.$name;
 
     //Save File
     file_put_contents($path, $data);
     addNotice('file_saved');
-
-    //Get unzipper class
-    require_once(LIBS."zip".DS."unzip.lib.php");
-    $zip = new SimpleUnzip();
-    $entries = $zip->ReadFile($path);
-
-    //Create Install directory (normaly root as your updating this install!)
-    $installDir = ROOT;
-    mkdir($installDir);
-    addNotice('install_dir'," : ".$installDir);
-
-    /* */
-    foreach ($entries as $entry){
-      mkdir($installDir.DS.$entry->Path);
-      $entryPath = $installDir.$entry->Path .DS.$entry->Name;
-
-      echo $entryPath;
-
-      if(!empty($entry->Data)){
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-        //$fh = fopen($entryPath, 'w', false);
-        //fwrite($fh,$entry->Data); //DO NOT!! COMMENT OUT, WITHOUT COMMENTING OUT THE LINE ABOVE! BAD THINGS HAPPEN!!!!!!
-        //fclose($fh);
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-        echo " .... ".con('updated')."<br />";
-      }else{
-        echo " ".con('not_updated')."<br />";
+    
+    
+    // If user wants to blankly overwrite there site with update.
+    if(isset($_POST['are_you_sure_apply_update']) && $_POST['are_you_sure_apply_update'] === '1'){
+      
+      //Get unzipper class
+      require_once(LIBS."zip".DS."unzip.lib.php");
+      $zip = new SimpleUnzip();
+      $entries = $zip->ReadFile($path);
+  
+      //Create Install directory (normaly root as your updating this install!)
+      $installDir = ROOT;
+      mkdir($installDir);
+      addNotice('install_dir'," : ".$installDir);
+  
+      /* */
+      foreach ($entries as $entry){
+        mkdir($installDir.$entry->Path);
+        $entryPath = $installDir.$entry->Path .DS.$entry->Name;
+  
+        echo $entryPath;
+  
+        if(!empty($entry->Data)){
+          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+          $fh = fopen($entryPath, 'w', false);
+          fwrite($fh,$entry->Data); //DO NOT!! COMMENT OUT, WITHOUT COMMENTING OUT THE LINE ABOVE! BAD THINGS HAPPEN!!!!!!
+          fclose($fh);
+          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+          echo " .... ".con('updated')."<br />";
+        }else{
+          echo " ".con('not_updated')."<br />";
+        }
       }
+      /* */
+  
+      unlink($path);
+      addNotice("file_deleted");
     }
-    /* */
-
-    unlink($path);
-    addNotice("file_deleted");
+    
   }
-
-
 }
 ?>

@@ -69,9 +69,25 @@ if (!defined('INC')) {
 if (!defined('LIBS')) {
 
 	/**
-	 * includes dir
+	 * libs dir
 	 */
 	 define('LIBS',INC.'libs'.DS);
+}
+
+if (!defined('TEMP')) {
+
+	/**
+	 * temp dir
+	 */
+	 define('TEMP',INC.'temp'.DS);
+}
+
+if (!defined('UPDATES')) {
+
+	/**
+	 * updates dir
+	 */
+	 define('UPDATES',TEMP."updates".DS);
 }
 
 if (!defined('CLASSES')) {
