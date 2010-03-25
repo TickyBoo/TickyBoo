@@ -147,7 +147,7 @@ class Discount  Extends Model {
 
   static function hasGlobals() {
     $query = "SELECT count(*) count
-              from discount
+              from Discount
               where discount_event_id is null";
     $count = ShopDB::query_one_row($query);
     return (is($count['count'], 0) != 0);

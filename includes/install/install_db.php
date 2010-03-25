@@ -327,7 +327,7 @@ $tbls['Order']['fields'] = array(
   'order_shipment_status' => " enum('none','send') NOT NULL DEFAULT 'none'",
   'order_payment_status' => " enum('none','pending','payed') NOT NULL DEFAULT 'none'",
   'order_payment_id' => " varchar(255) DEFAULT NULL",
-  'order_handling_id' => " int(11) NOT NULL DEFAULT '0'",
+  'order_handling_id' => " int(11) DEFAULT NULL",
   'order_status' => " enum('ord','cancel','reemit','reissue','trash','res','pros') NOT NULL DEFAULT 'ord'", //only got reemit for legacy tables
   'order_reemited_id' => " int(11) DEFAULT NULL",
   'order_fee' => " decimal(10,2) DEFAULT NULL",
@@ -539,6 +539,7 @@ $tbls['Payment_log']['key'] = array(
   "PRIMARY KEY (`payment_log_id`)",
   "KEY `payment_log_order_id` (`payment_log_order_id`)");
 $tbls['Payment_log']['engine'] = 'InnoDB';
+
 $tbls['Payment_log']['remove'] = array ()   ;
 
 $tbls['sessions']['fields'] = array(

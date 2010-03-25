@@ -37,7 +37,7 @@ $orphancheck = array();
 /**/
 
 $orphancheck[]="
-    SELECT 'Order', order_id, 'Seats', order_tickets_nr -  count( S.seat_id ) delta, null
+    SELECT 'Order', order_id, 'Seats', CONCAT_WS('/', order_tickets_nr ,  count( S.seat_id )) , (order_tickets_nr - count( S.seat_id )) delta
     FROM `Order`
     LEFT JOIN `Seat` S ON order_id = S.seat_order_id
     where order_status NOT IN ('reissue', 'cancel', 'trash')
@@ -48,10 +48,10 @@ $orphancheck[]="
 
 $orphancheck[]="
 	SELECT 'Event', event_id, 'cat_id', category_id, null,
-                            category_numbering,  category_size -(SELECT count(seat_id)
+                            category_numbering,  CONCAT_WS('/',category_size ,(SELECT count(seat_id)
                                                                  FROM Seat s
                                                                  WHERE s.seat_event_id = e.event_id
-                                                                 and s.seat_category_id = category_id ) , null
+                                                                 and s.seat_category_id = category_id )) , null
 	FROM Event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
 		AND lower(e.event_status) != 'unpub'
@@ -185,7 +185,7 @@ where  (u.user_id is null)
 $orphancheck[]="
 select 'Order', o.order_id, 'handling_id' l2 , o.order_handling_id, handling_id
 from `Order` o left join Handling on o.order_handling_id = handling_id
-where  (handling_id is null)
+where  (handling_id is null) and o.order_handling_id is not null
 ";
 $orphancheck[]="
 select 'Order', o.order_id, 'reemited_id' l3 , o.order_reemited_id, o2.order_id
@@ -295,7 +295,8 @@ class orphans {
        'Event~pm_id'=>'Clear the link to the removed placemap',
        'Order~user_id'=>'Recreate missing user info for this order',
        'Order~owner_id'=>'Recreate missing POS login for this pos',
-       'Order~seats'=>'This order has less tickets then ordered!!!',
+       'Order~handling_id'=>'Clear the handling fields, we dont know what orderhandler it was.',
+       'Order~Seats'=>'This order has less tickets then ordered!!!',
        'Order~zeros'=>'Clear all zero identifiers in the order table',
        'PlaceMapPart~zeros'=>'Clear all zero identifiers in the PlaceMapPart table',
        'PlaceMap~event_id'=>'Remove this placemap, event is already removed',
@@ -332,11 +333,12 @@ class orphans {
 
         for( $x=2;$x< count($row); $x+=3) {
           $z = var_export ((!is_null($row[$x+1]) and $row[$x+2]===$row[$x+1])?'':$row[$x+1], true);
-          if ($z !='NULL' and $z !="''" )  {
-            if (!in_array($row[$x],$keys)){
+          if (!in_array($row[$x],$keys)){
                $keys[] = $row[$x];
             }
-            if ($z == "'0'") {
+
+          if ($z !='NULL' and $z !="''" )  {
+                if ($z == "'0'") {
               $thisfix =  Orphans::$fixes["{$row[0]}~zeros"];
               $fixit = "{$row[0]}~zeros";
             } elseif(isset(Orphans::$fixes["{$row[0]}~{$row[$x]}"])) {
@@ -355,6 +357,8 @@ class orphans {
             }
 
             $r[$row[$x]] = $z;
+          } else {
+            $r[$row[$x]] = "<span color='Blue'>".$row[$x+2]."</span>\n";
           }
         }
         $data[$row[0].$row[1]] = $r;
@@ -528,10 +532,28 @@ class orphans {
 
         }
         break;
+      case 'Order~handling_id':
+        ShopDB::Query("update `Order` set
+                         order_handling_id = null
+                       where order_handling_id = {$fix[4]}") ;
+
+        break;
       case 'Order~zeros':
-        Orphans::clearZeros('Order', array('order_owner_id'));
+        Orphans::clearZeros('Order', array('order_handling_id','order_owner_id'));
         break;
 
+      case 'Order~Seats':
+        ShopDB::Query("update `Order` set
+                         order_tickets_nr = (select count( S.seat_id ) FROM `Seat` S where  S.seat_order_id = order_id)
+                       where order_id = {$fix[2]}") ;
+        $sql = "SELECT order_tickets_nr FROM `Order` where order_id = {$fix[2]}";
+        $resultx = ShopDB::Query_one_row($sql, false);
+        var_dump($resultx);
+        if ($resultx[0] === 0) {
+          $ord = Order::load($fix[2]);
+          $ord->delete ($fix[2], 'Cleaned up bvy orpahe checker. There where no tickets.');
+        }
+         break;
       case 'PlaceMap~event_id':
         PlaceMap::delete($fix[2]);
         break;
