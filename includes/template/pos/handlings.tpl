@@ -23,7 +23,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@noctem.co.uk if any conditions of this licencing isn't 
+ * Contact info@noctem.co.uk if any conditions of this licencing isn't
  * clear to you.
  *}
 
@@ -67,7 +67,16 @@
         <input type='checkbox' class='checkbox' name='no_fee' id='no_fee' value='1'>
       </td>
     </tr>
-
+  {*
+    <tr>
+      <td class='user_item' height='16' colspan='2'>
+         {!without_cost!}
+      </td>
+      <td  class='user_value'>
+        <input type='checkbox' class='checkbox' name='no_cost' id='no_cost' value='1'>
+      </td>
+    </tr>
+*}
   	{if !$update_view.currentres}
       {assign var=errstyle value='style="display:none;"'}
   	{/if}

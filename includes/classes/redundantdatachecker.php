@@ -126,7 +126,7 @@ where  (event_id is null and discount_promo is null)
 $orphancheck[]="
 select 'Event', e.event_id,  'ort_id'   , ifnull(e.event_ort_id,'null'),    ort_id
 from Event e left join Ort            on e.event_ort_id = ort_id
-where  (ort_id is null and e.event_ort_id is not null)
+where  (ort_id is null and e.event_ort_id is not null  and e.event_rep !='main' )
 ";
 $orphancheck[]="
 select 'Event', e.event_id,  'pm_id'    , e.event_pm_id,     pm_id
@@ -433,25 +433,26 @@ class orphans {
         $sql = "SELECT event_pm_id FROM Event e WHERE e.event_id = "._esc($fix[2]);
         $result = ShopDB::Query_one_row($sql, false);
         if (!$result) {
-          echo "cant find selected order placmap";
+          addwarning('', "cant find selected order placmap");
           exit;
         }
         $pm_id = $result[0];
         $all = PlaceMapPart::loadAllFull( $pm_id);
 
 //        echo "<pre>";
-//         PRint_r($seats);
         if ($all) {
           foreach($all as $pmp) {
            // print_r($pmp->categories);
             $changed = false;
-            foreach($pmp->pmp_data as $x =>&$pmp_row) {
+            foreach($pmp->data as $x =>&$pmp_row) {
               foreach ($pmp_row as $y=>&$seat) {
                 $zone = $pmp->zones[$seat[PM_ZONE]];
                 $category = $pmp->categories[$seat[PM_CATEGORY]];
+                if (!isset($stats[$category->category_id])) {$stats[$category->category_id]=0;}
+
                 if ($seat[PM_ZONE] > 0 && $seat[PM_CATEGORY] &&
                     $category->category_numbering != 'none'){
-
+                  $stats[$category->category_id]++;
                   if (!in_array($seat[PM_ID], $seats[$category->category_id])){
 
                     if ($seat_id = Seat::publish($fix[2], $seat[PM_ROW], $seat[PM_SEAT],
@@ -461,6 +462,7 @@ class orphans {
                       $changed = True;
                     }
                   }
+
                 }
               }
             }
@@ -471,25 +473,27 @@ class orphans {
           }
         }
         $cats=PlaceMapCategory::loadAll($pm_id);
+
         if(!$cats){
           return self::_abort('No Categories found');
         }
+     //   print_r($cats);
         foreach($cats as $cat_ident=>$cat){
-          if($cat->event_status !== 'unpub' && $cat->category_numbering =='none' &&
-             count($seats[$cat->category_id]) <> $cat->category_size ){//and $cat->category_size>0
-            $stats[$cat->category_ident] = count($seats[$cat->category_id]);
-//            print_r(count($seats[$cat->category_id]));//
-//            print_r($cat);
-            for($i=count($seats[$cat->category_id]);$i<$cat->category_size;$i++){
-              if($seat_id = Seat::publish($fix[2],null,0,null,null,$cat->category_id)) {
-  //              echo $seat_id,'|';
+
+          if($cat->event_status !== 'unpub' && $cat->category_numbering =='none') {
+            $stats[$cat->category_id]=$cat->category_size;
+            if(count($seats[$cat->category_id]) <> $cat->category_size ){//and $cat->category_size>0
+              $stats[$cat->category_id] = count($seats[$cat->category_id]);
+              for($i=count($seats[$cat->category_id]);$i<$cat->category_size;$i++){
+                if($seat_id = Seat::publish($fix[2],null,0,null,null,$cat->category_id)) {
+                  $stats[$cat->category_id]++;
+                }
               }
-              $stats[$cat->category_ident]++;
             }
-            if ($cat->category_size <> $stats[$cat->category_ident]) {
-              $cat->category_size = $stats[$cat->category_ident];
-              $cat->save();
-            }
+          }
+          if ($cat->category_size <> $stats[$cat->category_id]) {
+            $cat->category_size = $stats[$cat->category_id];
+            $cat->save();
           }
         }
 /*

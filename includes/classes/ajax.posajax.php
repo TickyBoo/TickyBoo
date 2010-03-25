@@ -578,13 +578,13 @@ class PosAjax {
     } else {
       $user_id = $_POST['user_id'];
     }
-    $no_fee = is($_POST['no_fee'], 0);
-
-    unset($_SESSION['_SHOP_order']) ;
+    $no_fee  = is($_POST['no_fee'], 0);
+    $no_cost = is($_POST['no_cost'], 0);
+        unset($_SESSION['_SHOP_order']) ;
     if((int)$_POST['handling_id'] === 1){
       $return = Checkout::reserveAction($smarty,'pos',$user_id);
     }else{
-      $return = Checkout::confirmAction($smarty, 'pos', $user_id, $no_fee );
+      $return = Checkout::confirmAction($smarty, 'pos', $user_id, $no_fee, $no_cost);
     }
     if ($return == 'checkout_preview' ) {
       return false;

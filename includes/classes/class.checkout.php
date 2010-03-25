@@ -71,11 +71,11 @@ class Checkout {
     }
   }
 
-  public static function confirmAction(&$smarty,$origin="www",$user_id=0, $no_fee=0) {
+  public static function confirmAction(&$smarty,$origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
     global $order, $cart;
 
     if (!isset($_SESSION['_SHOP_order'])) {
-      $myorder = $order->make_f($_POST['handling_id'], $origin, 0, $user_id, $no_fee);
+      $myorder = $order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
  	  } else {
 		  $myorder = $_SESSION['_SHOP_order'];
     }

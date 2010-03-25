@@ -140,7 +140,7 @@ class Discount  Extends Model {
   }
 
   function isUsed() {
-    $query = "update Discount set discount_used = discount_used +1;
+    $query = "update Discount set discount_used = discount_used +1
               where discount_id="._esc($this->id);
     ShopDB::query($query);
   }
