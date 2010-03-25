@@ -37,7 +37,7 @@ require_once("admin/class.adminview.php");
 
 class VersionUtilView extends AdminView{
 
-  private function view() {
+  private function view($data) {
     global $_SHOP;
     $data['curr_ver'] = CURRENT_VERSION;
 
@@ -73,34 +73,81 @@ class VersionUtilView extends AdminView{
     $this->print_hidden('action','reinstall');
     $data['are_you_sure'] = '0';
     $this->print_checkbox('are_you_sure',$data,$err);
+    $this->print_input('shopconfig_ftusername',$data, $err);
+  	$this->print_password('shopconfig_ftpassword',$data, $err);
+    $this->print_checkbox('shopconfig_keepdetails',$data, $err);
   //  echo "<tr><td colspan=\"2\" >".$this->show_button('submit',',1)."</td></tr>";
 
-    $this->form_foot(2,null,'reinstall');
+    $this->form_foot(2,null,'update');
   }
 
   function draw () {
   ///  print_r($_POST);
     if(isset($_POST['are_you_sure']) && isset($_POST['action']) ){
+			if($_POST['shopconfig_keepdetails']==='1' && !empty($_POST['shopconfig_ftusername']) && !empty($_POST['shopconfig_ftpassword'])){
+				$query="UPDATE `ShopConfig` SET
+            shopconfig_keepdetails='1',  
+            shopconfig_ftusername="._esc($_POST['shopconfig_ftusername']) ;
+            if(isset($_POST['shopconfig_ftpassword'])){ 
+              $query .= " , shopconfig_ftpassword="._esc(base64_encode($_POST['shopconfig_ftpassword'])); 
+            } 
+	      		$query .= " limit 1 ";
+
+				if(!ShopDB::query($query)){
+          addWarning('update_error');
+				}else{
+          addNotice('Options_saved');
+        }
+			}elseif($_POST['shopconfig_keepdetails']==='0'){
+        $query="UPDATE `ShopConfig` SET 
+            shopconfig_ftusername='', 
+            shopconfig_ftpassword='', 
+            shopconfig_keepdetails='0'  
+        		limit 1 ";
+        if(!ShopDB::query($query)){
+          addWarning('update_error');
+        }else{
+          addNotice('Options_saved');
+        }
+			}
+      
       if($_POST['are_you_sure']==1 && $_POST['action']=='reinstall'){
-        $this->install_update(true);
+        $query="SELECT * FROM `ShopConfig` limit 1";
+        $row=ShopDB::query_one_row($query);
+        $ftu = $ftp = null;
+    		if($row && !empty($row['shopconfig_ftusername']) && !empty($row['shopconfig_ftpassword'])){
+    		  $ftu = $row['shopconfig_ftusername'];
+          $ftp = $row['shopconfig_ftpassword'];
+    		}
+        if(!empty($_POST['shopconfig_ftusername']) && !empty($_POST['shopconfig_ftpassword'])){
+          $ftu = $_POST['shopconfig_ftusername'];
+          $ftp = base64_encode($_POST['shopconfig_ftpassword']);
+        }
+        
+        $this->install_update(true,$ftu,$ftp);
       }
-    }else{
-      $this->view();
     }
+    $query="SELECT * FROM `ShopConfig` limit 1";
+		if($row=ShopDB::query_one_row($query)){
+		  unset($row['shopconfig_ftpassword']);
+		}
+    $this->view($row);
 
   }
 
 
 
-  private function install_update($force = false){
+  private function install_update($force = false, $ftu=null, $ftp=null){
+    
+    $dlLink = $this->getLatestVersion(false,true,$ftu,$ftp);
 
     //Download File
-    $data = file_get_contents("http://localhost/pb62.zip");
+    $data = file_get_contents($dlLink);
     if(!$data){
-      addwarning('file_download_failed');
+      addWarning('file_download_failed');
       return false;
     }
-    addwarning('file_downloaded');
+    addNotice('file_downloaded');
 
     //Create a unique name and path to save file
     $name = "latest".md5(rand(0,100)).".zip";
@@ -108,7 +155,7 @@ class VersionUtilView extends AdminView{
 
     //Save File
     file_put_contents($path, $data);
-    echo con('file_saved');
+    addNotice('file_saved');
 
     //Get unzipper class
     require_once(LIBS."zip".DS."unzip.lib.php");
@@ -118,7 +165,7 @@ class VersionUtilView extends AdminView{
     //Create Install directory (normaly root as your updating this install!)
     $installDir = ROOT;
     mkdir($installDir);
-    echo con('install_dir')." : ".$installDir;
+    addNotice('install_dir'," : ".$installDir);
 
     /* */
     foreach ($entries as $entry){
@@ -140,12 +187,8 @@ class VersionUtilView extends AdminView{
     }
     /* */
 
-    if(!$err){
-      $this->addJQuery('window.location.replace("../inst/");');
-    }
-
     unlink($path);
-    echo con("file_deleted");
+    addNotice("file_deleted");
   }
 
 

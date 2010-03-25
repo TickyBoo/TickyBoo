@@ -917,18 +917,38 @@ class AdminView extends AUIComponent {
     return $string;
   }
 
-  protected function getLatestVersion($donatorVersion=false){
+  protected function getLatestVersion($donatorVersion=false,$dlLink=false,$ftu=null,$ftp=null){
     require_once("classes/class.restservice.client.php");
 
     //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
-    if($donatorVersion){
+    if($dlLink){
+      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/download.xml');
+    }elseif($donatorVersion){
       $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latestdonator.xml');  
     }else{
       $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml'); 
     }
     try{
+      if(!empty($ftu) && !empty($ftp)){
+        $rsc->josUsername = $ftu;
+        $rsc->josPassword = $ftp;
+        //print_r(base64_decode($_SHOP->shopconfig_ftpassword));
+      }
       $rsc->excuteRequest();
       $array = $rsc->getArray();
+      
+      if($dlLink){
+        if(isset($array['versions']['version_attr']['version']) && isset($array['versions']['version_attr']['download_link'])){
+          return $array['versions']['version_attr']['download_link'];
+        }elseif(!empty($array['versions']['version_attr']['reason'])){
+          addWarning('error',$array['versions']['version_attr']['reason']);
+          return false;
+        }else{
+          addWarning('download_link_failed');
+          return false;
+        }
+      }
+      
       if(isset($array['versions']['version_attr']['version'])){
         $currentVersion = $array['versions']['version_attr']['version'];
         $currentOrder = $array['versions']['version_attr']['order'];

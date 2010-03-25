@@ -66,12 +66,6 @@ class RestServiceClient {
     
     $this->siteUrl = $_SHOP->root;
     $this->siteVersion = CURRENT_VERSION;
-    
-    if(!empty($_SHOP->shopconfig_ftusername) && !empty($_SHOP->shopconfig_ftpassword)){
-      $this->josUsername = $_SHOP->shopconfig_ftusername;
-      $this->josPassword = $_SHOP->shopconfig_ftpassword;
-      //print_r(base64_decode($_SHOP->shopconfig_ftpassword));
-    }
    
 		//work ok the URI we are calling
 		$uri = $this->url; 

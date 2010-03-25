@@ -505,6 +505,7 @@ $tbls['ShopConfig']['fields'] = array(
   'cart_delay' => " int(11) NOT NULL DEFAULT '600'",
   'shopconfig_ftusername' => " varchar(60) NOT NULL DEFAULT ''",
   'shopconfig_ftpassword' => " varchar(100) NOT NULL DEFAULT ''",
+  'shopconfig_keepdetails' => " tinyint(1) NOT NULL DEFAULT '0'",
   'shopconfig_run_as_demo' => " int(3) NOT NULL DEFAULT '0'" );
 $tbls['ShopConfig']['engine'] = 'InnoDB';
 $tbls['ShopConfig']['remove'] = array ('run_as_demo','shopconfig_organizer_id','shopconfig_id');

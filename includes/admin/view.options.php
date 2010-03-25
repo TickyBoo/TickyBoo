@@ -72,9 +72,6 @@ class OptionsView extends AdminView{
   	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
   	$this->print_input('res_delay' ,$data, $err, 5, 10);
     $this->print_input('cart_delay',$data, $err, 5, 10);
-    echo "<tr><td class='admin_list_title' colspan='2'>".con('option_ftorg_title')."</td></tr>";
-    $this->print_input('shopconfig_ftusername',$data, $err);
-  	$this->print_password('shopconfig_ftpassword',$data, $err);
     $this->form_foot();
 
   }
