@@ -532,7 +532,7 @@ function orphanCheck(){
       file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name, $_SHOP->tracelog."\n",FILE_APPEND);
 
       if ($_SHOP->TraceOrphan <> md5($text) && $_SHOP->trace_on =='SEND') {
-        error_log(file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name),1,'errorlog@fusionticket.log');
+        error_log(file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name),1,'errorlog@fusionticket.com');
 
 //         call_our_server ( "cpanel.fusionticketr.com\addtracelog.php?traceid=".base64_decode(md5($_SHOP->secure_id).'|'. $_SHOP->root.'|'.now()));
         // only the first part need to be send back in the url call to admin/errortrace.php

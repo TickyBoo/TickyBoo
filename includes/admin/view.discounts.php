@@ -79,8 +79,13 @@ class DiscountView extends AdminView {
     while ($row = shopDB::fetch_assoc($res)) {
         echo "<tr class='admin_list_row_$alt'>";
      //  echo "<td class='admin_list_item'>{$row['discount_id']}</td>\n";
-        echo "<td class='admin_list_item' width=10'>&nbsp;</td>\n";
-        echo "<td class='admin_list_item'>{$row['discount_name']}</td>\n";
+        if (!is_null($discount_event_id)) {
+          echo "<td class='admin_list_item' width=10'>&nbsp;</td>\n";
+          echo "<td class='admin_list_item'>{$row['discount_name']}</td>\n";
+        } else {
+          echo "<td class='admin_list_item'>{$row['discount_name']}</td>\n";
+          echo "<td class='admin_list_item'>{$row['discount_promo']}</td>\n";
+        }
         if ($row['discount_type'] == 'percent') {
             $type = "{$row['discount_value']}%";
         } else if ($row['discount_type'] == 'fixe') {
