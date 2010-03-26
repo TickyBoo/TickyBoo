@@ -25,12 +25,12 @@ if (!defined('__CLASS_HTML2PDF__'))
 		var	$pdf				= null;		// objet PDF
 		var	$style				= null;		// objet de style
 		var	$parsing			= null;		// objet de parsing
-		
+
 		var $langue			= 'fr';		// langue des messages
 		var $sens			= 'P';		// sens d'affichage Portrait ou Landscape
 		var $format			= 'A4';		// format de la page : A4, A3, ...
 		var	$encoding			= '';		// charset encoding
-		
+
 		var $background		= array();	// informations sur le background
 		var $testTDin1page	= true;		// activer le test de TD ne devant pas depasser une page
 		var $testIsImage	= true;		// test si les images existes ou non
@@ -107,7 +107,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->sens			= $sens;
 			$this->format		= $format;
 			$this->encoding		= 'ISO-8859-15';
-			
+
 			$this->firstPage	= true;
 			$this->langue		= strtolower($langue);
 
@@ -124,7 +124,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			// initialisations diverses
 			$this->setTestIsImage(false);
-			$this->setTestIsImage(true);
+
 			$this->setDefaultFont(null);
 
 			// initialisation du parsing
@@ -583,7 +583,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 //				$this->pdf->setWordSpacing(0);
 				return null;
 			}
-*/			
+*/
 			$sub = null;
 			$this->createSubHTML($sub);
 			$sub->saveMargin(0, 0, $sub->pdf->getW()-$wMax);
@@ -620,7 +620,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$this->pdf->setX($rx-$w-0.01);
 			else
 				$this->pdf->setX($lx);
-			
+
 			$this->currentH = $h;
 /*
 			if ($this->style->value['text-align']=='justify' &&  $e>1)
@@ -659,6 +659,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 
 			// interpretation des paramètres
+
 			if ($dest===false)	$dest = 'I';
 			if ($dest===true)	$dest = 'S';
 			if ($dest==='')		$dest = 'I';
@@ -698,7 +699,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			}
 			else
 				$marge = $this->margeLeft+$this->margeRight;
-			
+
 			//clonage
 			$sub_html = new HTML2PDF(
 										$this->sens,
@@ -714,7 +715,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$sub_html->style->css			= $this->style->css;
 			$sub_html->style->css_keys		= $this->style->css_keys;
 			$sub_html->pdf->cloneFontFrom($this->pdf);
-			
+
 			$sub_html->style->table			= $this->style->table;
 			$sub_html->style->value			= $this->style->value;
 			$sub_html->style->setOnlyLeft();
@@ -727,22 +728,22 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$sub_html->maxH = 0;
 			$sub_html->pdf->setXY(0, 0);
 		}
-		
+
 		/**
 		* initialise le sous HTML2PDF. Ne pas utiliser directement. seul la fonction createSubHTML doit l'utiliser
 		*
 		* @return	null
-		*/	
+		*/
 		function initSubHtml($marge, $page, $defLIST)
 		{
 			$this->saveMargin(0, 0, $marge);
 			$this->defLIST = $defLIST;
-			
+
 			$this->page = $page;
 			$this->pdf->setXY(0, 0);
 			$this->style->FontSet();
 		}
-		
+
 		function setIsSubPart()
 		{
 			$this->isSubPart  = true;
@@ -857,6 +858,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$str = $this->listeArab2Rom($nb);
 
 					return array('helvetica', false, ($up ? strtoupper($str) : $str).'.');
+
 
 				case 'decimal':
 					return array('helvetica', false, $nb.'.');
@@ -1303,6 +1305,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->subSTATES['y']	= $this->pdf->getY();
 			$this->subSTATES['s']	= $this->style->value;
 			$this->subSTATES['t']	= $this->style->table;
+
 			$this->subSTATES['ml']	= $this->margeLeft;
 			$this->subSTATES['mr']	= $this->margeRight;
 			$this->subSTATES['mt']	= $this->margeTop;
@@ -1596,7 +1599,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 				if (
 						($h < ($this->pdf->getH() - $this->pdf->gettMargin()-$this->pdf->getbMargin())) &&
-						($this->pdf->getY() + $h>=($this->pdf->getH() - $this->pdf->getbMargin())) && 
+						($this->pdf->getY() + $h>=($this->pdf->getH() - $this->pdf->getbMargin())) &&
 						!$this->isInOverflow
 					)
 					$this->setNewPage();
@@ -1765,7 +1768,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($this->style->value['position']!='absolute')
 			{
 				// position
-				$this->pdf->setXY($x+$w, $y); 	
+				$this->pdf->setXY($x+$w, $y);
 
 				// position MAX
 				$this->maxX = max($this->maxX, $x+$w);
@@ -1775,7 +1778,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			else
 			{
 				// position
-				$this->pdf->setXY($this->style->value['xc'], $this->style->value['yc']); 	
+				$this->pdf->setXY($this->style->value['xc'], $this->style->value['yc']);
 
 				$this->loadMax();
 			}
@@ -1811,7 +1814,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$lst_barcode['EAN13']	= 'EAN13';
 			$lst_barcode['UPCA']	= 'UPC_A';
 			$lst_barcode['C39']		= 'CODE39';
-			
+
 			// pour compatibilité < 3.29
 			$lst_barcode['UPC_A']	= 'UPC_A';
 			$lst_barcode['CODE39']	= 'CODE39';
@@ -1819,7 +1822,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$param['type'] = strtoupper($param['type']);
 			if (!isset($lst_barcode[$param['type']])) $param['type']=='C39';
 			$param['type'] = $lst_barcode[$param['type']];
-		
+
 			if (!isset($param['style']['color'])) $param['style']['color'] = '#000000';
 			$param['style']['background-color'] = $param['style']['color'];
 
@@ -1905,7 +1908,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$background[0] = floor($background[0]*255.);
 			$background[1] = floor($background[1]*255.);
 			$background[2] = floor($background[2]*255.);
-			
+
   			require_once(dirname(__FILE__).'/qrcode/qrcode.class.php');
   			$qrcode = new QRcode($param['value'], $ec);
   			if ($noborder) $qrcode->disableBorder();
@@ -1913,7 +1916,7 @@ if (!defined('__CLASS_HTML2PDF__'))
   				$qrcode->displayFPDF($this->pdf, $x, $y, $s, $background, $color);
   			$size = $s*$qrcode->getQrSize();
   			unset($qrcode);
-			
+
 			// position maximale globale
 			$this->maxX = max($this->maxX, $x+$size);
 			$this->maxY = max($this->maxY, $y+$size);
@@ -1976,10 +1979,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			if ($this->sub_part || $this->isSubPart || !$this->currentH || $this->currentH<$h)
 				return 0;
-				
+
 			return ($this->currentH-$h)*0.8;
 		}
-		
+
 		/**
 		* balise : WRITE
 		* mode : OUVERTURE
@@ -2036,7 +2039,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$words[$k] = array($word, $this->pdf->GetStringWidth($word));
 				$w+= $words[$k][1];
 			}
-			
+
 			$space = $this->pdf->GetStringWidth(' ');
 			$w+= $space*(count($words)-1);
 
@@ -2046,7 +2049,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$x = $this->pdf->getX();						// position du texte
 			$y = $this->pdf->getY();
 			$dy = $this->getElementY($lh);
-						
+
 			list($left, $right) = $this->getMargins($y);	// marges autorisees
 			$nb = 0;										// nbr de lignes découpées
 
@@ -2060,7 +2063,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				while(($x+$str[1])<$right)
 				{
 					$i++;
-					
+
 					array_shift($words);
 					$old = $str;
 
@@ -2158,7 +2161,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 */
 				$this->pdf->setXY($this->pdf->getX(), $y+$dh+$dy);
 				$this->pdf->Cell(($align=='L' ? $w : $this->style->value['width']), $h, $txt, 0, 0, $align, $fill, $this->inLink);
-				$this->pdf->setXY($this->pdf->getX(), $y);	
+				$this->pdf->setXY($this->pdf->getX(), $y);
 				$this->maxH = max($this->maxH, $lh);
 				$this->maxE+= count($words);
 			}
@@ -2247,7 +2250,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			// si l'image ne rentre pas dans la page => nouvelle page
 			if (
-					($y + $h>$this->pdf->getH() - $this->pdf->getbMargin()) && 
+					($y + $h>$this->pdf->getH() - $this->pdf->getbMargin()) &&
 					!$this->isInOverflow
 				)
 			{
@@ -2832,7 +2835,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			{
 				$pt1 = $pt;
 				$pt2 = $pt;
-				
+
 				if (count($pt)==12)
 				{
 					$pt1[0] = ($pt[0]-$pt[10])*0.33 + $pt[10];
@@ -3320,7 +3323,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			$this->style->load();
 			$this->style->FontSet();
-			$this->makeBR($h); 
+			$this->makeBR($h);
 
 			return true;
 		}
@@ -3932,7 +3935,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->style->FontSet();
 
 			$this->isInForm = isset($param['action']) ? $param['action'] : '';
-			
+
 			return true;
 		}
 
@@ -3966,12 +3969,12 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($this->forOneLine) return false;
 				$this->o_BR(array());
 			}
-			
+
 			if ($this->forOneLine)
 			{
 				$this->maxE++;
 				$this->maxX = $this->pdf->getW() - $this->pdf->getlMargin() - $this->pdf->getrMargin();
-				return false;		
+				return false;
 			}
 
 			$this->maxH = 0;
@@ -4344,6 +4347,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$this->makeHTMLcode();
 					$this->isInThead = false;
 
+
 					$this->parse_pos = 	$OLD_parse_pos;
 					$this->parsing->code = $OLD_parse_code;
 					$HTML2PDF_TABLEAU[$param['num']]['tr_curr'] = $tmp_tr;
@@ -4669,7 +4673,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			// si on est dans un sub_html
 			if ($this->sub_part)
 			{
-				if ($this->testTDin1page && $this->sub_html->pdf->getPage()>1) @HTML2PDF::makeError(7, __FILE__, __LINE__); 
+				if ($this->testTDin1page && $this->sub_html->pdf->getPage()>1) @HTML2PDF::makeError(7, __FILE__, __LINE__);
 
 				// dimentions de cette case
 				$w0 = $this->sub_html->maxX + $marge['l'] + $marge['r'];
@@ -4968,7 +4972,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			// on extrait tout ce qui est contenu dans l'option
 			$level = $this->parsing->getLevel($this->parse_pos);
-			$this->parse_pos+= count($level); 
+			$this->parse_pos+= count($level);
 			$value = isset($param['value']) ? $param['value'] : 'auto_opt_'.(count($this->lstSelect)+1);
 
 			$this->lstSelect['options'][$value] = isset($level[0]['param']['txt']) ? $level[0]['param']['txt'] : '';
@@ -5154,19 +5158,19 @@ if (!defined('__CLASS_HTML2PDF__'))
 					break;
 
 				case 'submit':
-					$w = $this->style->value['width'];	if (!$w) $w = 40; 
+					$w = $this->style->value['width'];	if (!$w) $w = 40;
 					$h = $this->style->value['height'];	if (!$h) $h = $f*1.3;
 					$action =  'this.submitForm("'.$this->isInForm.'", false);';
 					$this->pdf->form_InputButton($name, $x, $y, $w, $h, $param['value'], $action, array());
 					break;
-					
+
 				case 'reset':
-					$w = $this->style->value['width'];	if (!$w) $w = 40; 
+					$w = $this->style->value['width'];	if (!$w) $w = 40;
 					$h = $this->style->value['height'];	if (!$h) $h = $f*1.3;
 					$action =  'this.resetForm();';
 					$this->pdf->form_InputButton($name, $x, $y, $w, $h, $param['value'], $action, array());
 					break;
-					
+
 				case 'button':
 					$w = $this->style->value['width'];	if (!$w) $w = 40;
 					$h = $this->style->value['height'];	if (!$h) $h = $f*1.3;
@@ -5235,7 +5239,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 				if (
 						($h < ($this->pdf->getH() - $this->pdf->gettMargin()-$this->pdf->getbMargin())) &&
-						($this->pdf->getY() + $h>=($this->pdf->getH() - $this->pdf->getbMargin())) && 
+						($this->pdf->getY() + $h>=($this->pdf->getH() - $this->pdf->getbMargin())) &&
 						!$this->isInOverflow
 					)
 					$this->setNewPage();
@@ -5827,8 +5831,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 		function createIndex($titre = 'Index', $size_title = 20, $size_bookmark = 15, $bookmark_title = true, $display_page = true, $on_page = null, $font_name = 'helvetica')
 		{
 			$old_page = $this->INDEX_NewPage($on_page);
-			$this->pdf->createIndex($this, $titre, $size_title, $size_bookmark, $bookmark_title, $display_page, $on_page, $font_name);				
-			if ($old_page) $this->pdf->setPage($old_page);	
+			$this->pdf->createIndex($this, $titre, $size_title, $size_bookmark, $bookmark_title, $display_page, $on_page, $font_name);
+			if ($old_page) $this->pdf->setPage($old_page);
 		}
 
 		/**
@@ -5858,7 +5862,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 		/**
 		* chargement du fichier de langue
-		* 
+		*
 		* @param	string langue
 		* @return	null
 		*/
@@ -5866,7 +5870,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			global $HTML2PDF_TEXTES;
 			if (count($HTML2PDF_TEXTES)) return true;
-			
+
 			if (!preg_match('/^([a-z0-9]+)$/isU', $langue))
 			{
 				echo 'ERROR : language code <b>'.$langue.'</b> incorrect.';
@@ -5894,13 +5898,13 @@ if (!defined('__CLASS_HTML2PDF__'))
 				if ($t_k && $t_v) $texte[$t_k] = $t_v;
 			}
 			$HTML2PDF_TEXTES = $texte;
-			
+
 			return true;
 		}
 
 		/**
 		* recuperer un texte precis
-		* 
+		*
 		* @param	string code du texte
 		* @return	null
 		*/
@@ -5914,7 +5918,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 		/**
 		* generer une erreur HTML2PDF
-		* 
+		*
 		* @param	int		numero de l'erreur
 		* @param	string	nom du fichier ou c'est produit l'erreur
 		* @param	int		numero de la ligne ou c'est produit l'erreur
