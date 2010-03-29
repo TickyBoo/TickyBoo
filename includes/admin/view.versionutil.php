@@ -74,6 +74,8 @@ class VersionUtilView extends AdminView{
     $this->print_input('shopconfig_ftusername',$data, $err);
   	$this->print_password('shopconfig_ftpassword',$data, $err);
     $this->print_checkbox('shopconfig_keepdetails',$data, $err);
+    $this->print_input('shopconfig_proxyaddress',$data, $err);
+    $this->print_input('shopconfig_proxyport',$data, $err,7,5);
     $data['are_you_sure'] = '0';
     $this->print_checkbox('are_you_sure',$data,$err);
     $data['are_you_sure_apply_update'] = '0';
@@ -88,38 +90,57 @@ class VersionUtilView extends AdminView{
     }
     echo "</td></tr>";
 
-    $this->form_foot(2,null,'update');
+    $this->form_foot(2,null,'update_save');
   }
 
   function draw () {
   ///  print_r($_POST);
-    if(isset($_POST['are_you_sure']) && isset($_POST['action']) ){
-			if($_POST['shopconfig_keepdetails']==='1' && !empty($_POST['shopconfig_ftusername']) && !empty($_POST['shopconfig_ftpassword'])){
-				$query="UPDATE `ShopConfig` SET
-            shopconfig_keepdetails='1',  
-            shopconfig_ftusername="._esc($_POST['shopconfig_ftusername']) ;
-            if(isset($_POST['shopconfig_ftpassword'])){ 
-              $query .= " , shopconfig_ftpassword="._esc(base64_encode($_POST['shopconfig_ftpassword'])); 
-            } 
-	      		$query .= " limit 1 ";
+    $this->doUpdate();
+    $query="SELECT * FROM `ShopConfig` limit 1";
+		if($row=ShopDB::query_one_row($query)){
+		  unset($row['shopconfig_ftpassword']);
+		}
+    $this->view($row);
 
-				if(!ShopDB::query($query)){
-          addWarning('update_error');
-				}else{
-          addNotice('Options_saved');
-        }
-			}elseif($_POST['shopconfig_keepdetails']==='0'){
-        $query="UPDATE `ShopConfig` SET 
-            shopconfig_ftusername='', 
-            shopconfig_ftpassword='', 
-            shopconfig_keepdetails='0'  
-        		limit 1 ";
-        if(!ShopDB::query($query)){
-          addWarning('update_error');
-        }else{
-          addNotice('Options_saved');
-        }
-			}
+  }
+  
+  private function doUpdate(){
+    //Save Details
+    if($_POST['shopconfig_keepdetails']==='1' && 
+        !empty($_POST['shopconfig_ftusername']) && 
+        !empty($_POST['shopconfig_ftpassword'])){
+ 			
+      $query="UPDATE `ShopConfig` SET
+              shopconfig_keepdetails='1', 
+              shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).", 
+              shopconfig_proxyport="._esc($_POST['shopconfig_proxyport']).", 
+              shopconfig_ftusername="._esc($_POST['shopconfig_ftusername']) ;
+        if(isset($_POST['shopconfig_ftpassword'])){ 
+          $query .= " , shopconfig_ftpassword="._esc(base64_encode($_POST['shopconfig_ftpassword'])); 
+        } 
+        $query .= " limit 1 ";
+  
+      if(!ShopDB::query($query)){
+        addWarning('update_error');
+		  }else{
+        addNotice('Options_saved');
+      }
+		}elseif($_POST['shopconfig_keepdetails']==='0'){
+      $query="UPDATE `ShopConfig` SET 
+              shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).", 
+              shopconfig_proxyport="._esc($_POST['shopconfig_proxyport']).", 
+              shopconfig_ftusername='', 
+              shopconfig_ftpassword='', 
+              shopconfig_keepdetails='0' 
+        		  limit 1 ";
+      if(!ShopDB::query($query)){
+        addWarning('update_error');
+      }else{
+        addNotice('Options_saved');
+      }
+		}
+    // Sure you want to download?
+    if(isset($_POST['are_you_sure']) && isset($_POST['action']) ){
       
       if($_POST['are_you_sure']==='1' && $_POST['action']=='reinstall'){
         $query="SELECT * FROM `ShopConfig` limit 1";
@@ -137,22 +158,30 @@ class VersionUtilView extends AdminView{
         $this->install_update(true,$ftu,$ftp);
       }
     }
-    $query="SELECT * FROM `ShopConfig` limit 1";
-		if($row=ShopDB::query_one_row($query)){
-		  unset($row['shopconfig_ftpassword']);
-		}
-    $this->view($row);
-
   }
 
-
-
   private function install_update($force = false, $ftu=null, $ftp=null){
-    
+    //Get Download link
     $dlLink = $this->getLatestVersion(false,true,$ftu,$ftp);
+    if(!$dlLink){return false;} //If download link is bad dont try to download (waste of time)
     
+    
+    //Check for username/password
+    $queryArray = array();
+    if(!empty($ftu) && !empty($ftp)){
+        $queryArray = array('josUsername'=>$ftu,'josPassword'=>$ftp);
+    }
     //Set options for file download
-    $ctxOpt['http'] = array();
+    //set timeout so that you wont be waiting forever if our server is under heavy load.
+    $ctxOpt = array(
+      'http' => array(
+        'method' => 'POST',
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n". 
+          "Content-Length: " . strlen($postData) . "\r\n",
+        'content' => http_build_query($queryArray,null,"&"),
+        'timeout' => 2
+      )
+    );
     if(!empty($_SHOP->shopconfig_proxyaddress) && !empty($_SHOP->shopconfig_proxyport)){
       $ctxOpt['http']['proxy'] = "tcp://".$_SHOP->shopconfig_proxyaddress.":".$_SHOP->shopconfig_proxyport; 
     }

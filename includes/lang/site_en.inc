@@ -1314,7 +1314,26 @@ define ('avaliable_version','Avaliable version');
 define ('curr_ver','Current version');
 define ('curr_build','Current build');
 define ('version_missing','missing');
-define ('are_you_sure','Are you sure?');
+define ('are_you_sure','Do you want to download update?');
+define ('are_you_sure_update','Do you want to download update?');
+define ('are_you_sure_apply_update','Do you want to apply update? YOU WILL LOOSE CUSTOM CHANGES!');
+define ('shopconfig_ftusername','fusionticket.org Username');
+define ('shopconfig_ftpassword','fusionticket.org Password');
+define ('shopconfig_keepdetails','Save User/Pass/Proxy Settings?');
+define ('download_update','Update Settings and Applier');
+define ('shopconfig_proxyaddress','Updater optional proxy address.');
+define ('shopconfig_proxyport','Updater proxy port.');
+define ('downloaded_update_files','Downloaded Update Files:');
+define ('download_older_than_curr','Avalible Update is older than currently installed!');
+define ('download_same_as_curr','Avalible Update is same as currently installed!');
+define ('download_link_failed','Could not get download link');
+define ('file_download_failed','Failed to download file, try again later');
+define ('file_downloaded','Update.zip downloaded');
+define ('file_saved','Update.zip Saved');
+define ('file_deleted','Finished with Update.zip, removed.');
+define ('update_save','Update and/or Save Details');
+
+
 define ('version_updater','Update');
 define ('order_already_crated',"This order is already saved!!!");
 define ('Select_handling_option','Select a payment option.');

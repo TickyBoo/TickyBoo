@@ -78,7 +78,7 @@ class RestServiceClient {
         'header'  => "Content-type: application/x-www-form-urlencoded\r\n". 
           "Content-Length: " . strlen($postData) . "\r\n",
         'content' => $postData,
-        'timeout' => 5
+        'timeout' => 2
         )
       );
     if(!empty($_SHOP->shopconfig_proxyaddress) && !empty($_SHOP->shopconfig_proxyport)){

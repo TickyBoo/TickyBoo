@@ -72,9 +72,6 @@ class OptionsView extends AdminView{
   	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
   	$this->print_input('res_delay' ,$data, $err, 5, 10);
     $this->print_input('cart_delay',$data, $err, 5, 10);
-    echo "<tr><td class='admin_list_title' colspan='2'>".con('option_connection_title')."</td></tr>";
-    $this->print_input('shopconfig_proxyaddress',$data, $err);
-    $this->print_input('shopconfig_proxyport',$data, $err,7,5);
     $this->form_foot();
 
   }
@@ -96,9 +93,7 @@ class OptionsView extends AdminView{
 	      		shopconfig_user_activate="._esc((int)$_POST['shopconfig_user_activate']).",
 	      		res_delay="._esc((int)$_POST['res_delay']).",
 	      		cart_delay="._esc((int)$_POST['cart_delay']).",
-	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres']).", 
-            shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).", 
-            shopconfig_proxyport="._esc($_POST['shopconfig_proxyport'])."   
+	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres'])." 
 	      		limit 1 ";
 
 				if(!ShopDB::query($query)){
