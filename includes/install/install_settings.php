@@ -54,7 +54,7 @@ class install_settings {
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" >
             <tr>
                <td colspan=\"2\" >
-                 This page helps you setup some default settings. Move your mouse above the label to see what the option is about.
+                 This page helps you setup some default settings. Move your mouse over the label for more info on the setting.
               </td>
             </tr>
             <tr> <td height='6px'></td> </tr>
