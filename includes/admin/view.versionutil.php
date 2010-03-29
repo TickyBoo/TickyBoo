@@ -36,6 +36,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class VersionUtilView extends AdminView{
+  
+  private $upPath = UPDATES;
 
   private function view($data) {
     global $_SHOP;
@@ -86,7 +88,9 @@ class VersionUtilView extends AdminView{
     echo "<tr><td colspan=\"2\" >";
     $files = FileScan::scanDirRec(UPDATES,"zip");
     foreach($files as $file){
-      echo $file['name']."<br />";
+      echo $file['name'];
+      echo " - <a href=\"{$_SERVER['PHP_SELF']}?removefile={$file['name']}\" >".con('file_remove')."</a>";
+      echo "<br />";
     }
     echo "</td></tr>";
 
@@ -96,6 +100,9 @@ class VersionUtilView extends AdminView{
   function draw () {
   ///  print_r($_POST);
     $this->doUpdate();
+    if(isset($_GET['removefile'])){
+      $this->removeFile($_GET['removefile']);
+    }
     $query="SELECT * FROM `ShopConfig` limit 1";
 		if($row=ShopDB::query_one_row($query)){
 		  unset($row['shopconfig_ftpassword']);
@@ -165,31 +172,17 @@ class VersionUtilView extends AdminView{
     $dlLink = $this->getLatestVersion(false,true,$ftu,$ftp);
     if(!$dlLink){return false;} //If download link is bad dont try to download (waste of time)
     
-    
-    //Check for username/password
-    $queryArray = array();
-    if(!empty($ftu) && !empty($ftp)){
-        $queryArray = array('josUsername'=>$ftu,'josPassword'=>$ftp);
-    }
-    //Set options for file download
-    //set timeout so that you wont be waiting forever if our server is under heavy load.
-    $ctxOpt = array(
-      'http' => array(
-        'method' => 'POST',
-        'header'  => "Content-type: application/x-www-form-urlencoded\r\n". 
-          "Content-Length: " . strlen($postData) . "\r\n",
-        'content' => http_build_query($queryArray,null,"&"),
-        'timeout' => 2
-      )
-    );
-    if(!empty($_SHOP->shopconfig_proxyaddress) && !empty($_SHOP->shopconfig_proxyport)){
-      $ctxOpt['http']['proxy'] = "tcp://".$_SHOP->shopconfig_proxyaddress.":".$_SHOP->shopconfig_proxyport; 
-    }
-    $ctx = stream_context_create($ctxOpt);
     //Download File
-    $data = file_get_contents($dlLink,false,$ctx);
+    $rsc = new RestServiceClient($dlLink);
+    //Check for username/password
+    if(!empty($ftu) && !empty($ftp)){
+      $rsc->josUsername = $ftu;
+      $rsc->josPassword = $ftp;
+    }    
+    $rsc->excuteRequest();
+    $data = $rsc->getResponse();
     
-    
+    //Check Data.
     if(!$data){
       addWarning('file_download_failed');
       return false;
@@ -197,7 +190,7 @@ class VersionUtilView extends AdminView{
     addNotice('file_downloaded');
 
     //Create a unique name and path to save file
-    $name = "latest".md5(rand(0,100)).".zip";
+    $name = "latest".date('d-m-Y').".zip";
     mkdir(UPDATES);
     $path = UPDATES.$name;
 
@@ -242,7 +235,18 @@ class VersionUtilView extends AdminView{
       unlink($path);
       addNotice("file_deleted");
     }
+  }
+  
+  private function removeFile($name){
+    $name = str_replace('..','',$name); //Stops users trying to go up the tree.
+    if(file_exists($this->upPath.$name)){
+      unlink($this->upPath.$name);
+      addNotice('file_deleted');
+    }else{
+      addWarning('file_not_exist');
+    }
     
   }
+  
 }
 ?>
