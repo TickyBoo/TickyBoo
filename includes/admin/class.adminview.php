@@ -398,7 +398,7 @@ class AdminView extends AUIComponent {
 
 
     /**
-     * AdminView::print_button()
+     * AdminView::show_button()
      *
      * NEEDS TO BE ECHO'D ON RETURN!
      *
@@ -924,9 +924,9 @@ class AdminView extends AUIComponent {
     if($dlLink){
       $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/download.xml');
     }elseif($donatorVersion){
-      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latestdonator.xml');  
+      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latestdonator.xml');
     }else{
-      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml'); 
+      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
     }
     try{
       if(!empty($ftu) && !empty($ftp)){
@@ -936,7 +936,7 @@ class AdminView extends AUIComponent {
       }
       $rsc->excuteRequest();
       $array = $rsc->getArray();
-      
+
       if($dlLink){
         $rev = explode(" ",INSTALL_REVISION);
         if($array['versions']['version_attr']['order'] < (int)$rev[1]){
@@ -955,7 +955,7 @@ class AdminView extends AUIComponent {
           return false;
         }
       }
-      
+
       if(isset($array['versions']['version_attr']['version'])){
         $currentVersion = $array['versions']['version_attr']['version'];
         $currentOrder = $array['versions']['version_attr']['order'];

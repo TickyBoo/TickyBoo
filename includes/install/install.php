@@ -52,7 +52,12 @@ include_once 'install_version.php';
   <title>Fusion Ticket Installation</title>
   <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+  <link rel='stylesheet' href='../css/jquery.tooltip.css' />
   <script type="text/javascript" src="../scripts/jquery/jquery-1.4.1.min.js"></script>
+  <script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript" src="../scripts/jquery/jquery.dimensions.min.js"></script>
+  <script type="text/javascript" src="../scripts/jquery/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../scripts/jquery/jquery.caret.js"></script>
   <script language="JavaScript">
     function Confirm_Inst_Cancel(){
       if(window.confirm('Cancel The Installation Process ?')){
@@ -78,7 +83,21 @@ include_once 'install_version.php';
         });
     }
 
+    $(document).ready(function(){
+      $("label[class*='has-tooltip']").tooltip({
+        delay:40,
+        showURL:false,
+        bodyHandler: function() {
+          if($(this).children('div').html() != ''){
+            return $(this).children('div').html();
+          }else{
+            return false;
+          }
+        }
+      });
+    });
   </script>
+
   <style>
     .err {color:#dd0000;}
     .warn {color:#cc9900;}
