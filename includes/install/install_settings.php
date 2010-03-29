@@ -57,51 +57,64 @@ class install_settings {
                  This page helps you setup some default settings. Move our mouse above the label to see what the option is about.
               </td>
             </tr>
+            <tr> <td height='6px'></td> </tr>
+            <tr>
+              <td colspan=\"2\">
+                <b>Site URL's setup:</b>
+              </td>
+            </tr>
             <tr>
               <td width='30%' class='has-tooltip'>
-                <label title=''>
-                  Use secure checkout:
-                 </label>
-                 <div style='display:none;'>
+                  &nbsp;&nbsp;Use secure checkout:
+                  <div id='secureCheckout' style='display:none;'>
                      Fusion ticket is designed to be used with SSL certified (HTTPS) checkout pages.<br>
                      We strongly recommend enabling this on your site.<br>
-                     If you do not have SSL on your site you can turn this off by the option unchecked..
-                 </div>
+                     If you do not have SSL on your site you can turn this off by unchecking the option.
+                   </div>
               </td>
               <td><input type='checkbox' {$secure} name='secure_site' value='1'></td>
             </tr>
-            <tr> <td height='6px'></td> </tr>
-            <tr>
+             <tr>
               <td width='30%' class='has-tooltip'>
-                <label title='' >
-                  fixed root url:
-                 </label>
-                 <div style='display:none;'>
+                  &nbsp;&nbsp;Save root url in init_config:
+                  <div id='secureCheckout' style='display:none;'>
                       Use of fixed root url (<i>\$_SHOP->root</i> or <i>\$_SHOP->root_secure</i>) is strongly recommended.<br>
                       If you do not require to use fixed root then the option should be left unchecked and<br>
                       Fusion Ticket will automatically calculate the root values for you.
-                 </div>
+                   </div>
+              </td>
               <td><input type='checkbox' {$fixed_url} name='fixed_url' value='1'></td>
             </tr>
-            
             <tr> <td height='6px'></td> </tr>
             <tr>
-              <td colspan=\"2\" class=\"admin_info\" >
-                 One of the extra things we will us is the possiblity to set the timezone where you host your system. Please set your timezone below.
+              <td colspan=\"2\">
+              <b>Timezone setup:</b>
               </td>
             </tr>
             <tr>
-              <td>Timezone:</td>
+              <td class='has-tooltip'>
+                  &nbsp;&nbsp;Timezone:
+                  <div id='secureCheckout' style='display:none;'>
+                    Future versions will require the time zone where your hostserver is located. Please enter the time zone.
+                  </div>
+              </td>
               <td><select name=\"timezone\">".self::timezonechoice($selectedzone)."'</select></td>
             </tr>
             <tr> <td height='6px'></td> </tr>
             <tr>
-              <td colspan=\"2\" class=\"admin_info\" >
-                 You can help us by automatically sending trace log's.  Trace logs help us diagnose possible problems in the program.  We would like to receive those logs if or when the system detects a problem.
+              <td colspan=\"2\"  >
+                <b>Help Use finding problems:</b>
               </td>
             </tr>
             <tr>
-              <td>Trace log:</td>
+              <td class='has-tooltip'>
+                  &nbsp;&nbsp;Create a trace log:
+                  <div id='secureCheckout' style='display:none;'>
+                    You can help us by automatically sending trace logs.<br>
+                    Trace logs help us diagnose possible problems in the program.<br>
+                    We would like to receive these logs if or when the system detects a problem.
+                  </div>
+               </td>
               <td><select name=\"trace_on\"><option value='SEND'>eMail orphan errors</option><option value='ALL'>Alway log traces</option><option value='0'>Disable (faster response)</option> </select></td>
             </tr>
           </table>";
