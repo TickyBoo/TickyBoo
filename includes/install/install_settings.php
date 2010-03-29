@@ -58,32 +58,32 @@ class install_settings {
               </td>
             </tr>
             <tr>
-              <td width='30%'>
-                <label title='' class='has-tooltip'>
+              <td width='30%' class='has-tooltip'>
+                <label title=''>
                   Use secure checkout:
-                  <div id='secureCheckout' style='display:none;'>
+                 </label>
+                 <div style='display:none;'>
                      Fusion ticket is designed to be used with SSL certified (HTTPS) checkout pages.<br>
                      We strongly recommend enabling this on your site.<br>
                      If you do not have SSL on your site you can turn this off by the option unchecked..
-                   </div>
-                 </label>
+                 </div>
               </td>
               <td><input type='checkbox' {$secure} name='secure_site' value='1'></td>
             </tr>
             <tr> <td height='6px'></td> </tr>
             <tr>
-              <td width='30%'>
-                <label title='' class='has-tooltip'>
+              <td width='30%' class='has-tooltip'>
+                <label title='' >
                   fixed root url:
-                  <div id='secureCheckout' style='display:none;'>
+                 </label>
+                 <div style='display:none;'>
                       Use of fixed root url (<i>\$_SHOP->root</i> or <i>\$_SHOP->root_secure</i>) is strongly recommended.<br>
                       If you do not require to use fixed root then the option should be left unchecked and<br>
                       Fusion Ticket will automatically calculate the root values for you.
-                   </div>
-                 </label>
-
+                 </div>
               <td><input type='checkbox' {$fixed_url} name='fixed_url' value='1'></td>
             </tr>
+            
             <tr> <td height='6px'></td> </tr>
             <tr>
               <td colspan=\"2\" class=\"admin_info\" >

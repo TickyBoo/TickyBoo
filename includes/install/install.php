@@ -84,9 +84,10 @@ include_once 'install_version.php';
     }
 
     $(document).ready(function(){
-      $("label[class*='has-tooltip']").tooltip({
+      $("td[class*='has-tooltip']").tooltip({
         delay:40,
         showURL:false,
+        opacity: 0,
         bodyHandler: function() {
           if($(this).children('div').html() != ''){
             return $(this).children('div').html();
