@@ -37,7 +37,7 @@
     {eval var=$shop_handling.handling_text_payment assign=test}
     {gui->view name=payment value=$test}
     {eval var=$shop_handling.handling_text_shipment  assign=test}
-    {gui->view name=shipment value=$test }
+    {gui->view name=shipment value=$test}
     {gui->view name=order_id value=$order_id}
 
     {if $order_discount_price  neq 0.0|| $order_fee neq 0.0}

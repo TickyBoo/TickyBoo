@@ -3,11 +3,11 @@
 *}
 
 {if $smarty.get.action eq 'cancel_order'}
-  {$order->cancel_f($smarty.get.order_id,$smarty.get.place) }
+  {$order->cancel_f($smarty.get.order_id,$smarty.get.place)}
   {include file="process_select.tpl"}
 
 {elseif $smarty.get.action eq 'cancel_ticket'}
-  {$order->delete_ticket_f($smarty.get.order_id,$smarty.get.ticket_id) }
+  {$order->delete_ticket_f($smarty.get.order_id,$smarty.get.ticket_id)}
   {include file="process_select.tpl"}
 
 {elseif $smarty.post.action eq 'confirm'}

@@ -29,7 +29,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-{include file='header.tpl' name=!act_name! }
+{include file='header.tpl' name=!act_name!}
 {if !$user->activate()}
    {include file="user_registred.tpl"}
    <br>

@@ -47,7 +47,7 @@
                 {!order_id!} {$shop_order.order_id}
               </td>
               <td class='title'  align='right'>&nbsp;
-                {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue" }
+                {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"}
                   <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
                     <img border='0' src='{$_SHOP_images}printer.gif'>
                   </a>
@@ -92,8 +92,8 @@
                 {/if}
               </td>
             </tr>
-            
-            {* New method, Leave disabled coming beta7 }
+
+            {* New method, Leave disabled coming beta7}
             {if $shop_order.order_status eq "res"}
               <form name='f' action='view.php' method='post'>
               <input type='hidden' name='action' value='reorder' />
@@ -109,11 +109,11 @@
             </form>
             {/if}
             {* End of new method *}
-            
-            
+
+
             {* Reserve to Order *}
             {if $shop_order.order_status eq "res"}
-            
+
             <tr>
               <td colspan="2">
                 {update->countdown order_id=$shop_order.order_id reserved=true}
@@ -128,15 +128,15 @@
               <td colspan="2" align="left">
                 <input type='hidden' name='personal_page' value='orders' />
              		{ShowFormToken name='reorder'}
-                
-                {order->tickets order_id=$shop_order.order_id min_date='on' }
+
+                {order->tickets order_id=$shop_order.order_id min_date='on'}
                 <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
                 {/order->tickets}
-                
+
                 <input type='hidden' name='action' value='reorder' />
                 <input type="hidden" name="user_id" value="{$shop_order.order_user_id}" />
                 <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
-                
+
                 {!ordertickets!}<br />
                 <font color="red">{!reserv_cancel!}</font><br />
                 <center>
@@ -147,8 +147,8 @@
             </form>
             {/if}
             {* End Reserve to Order *}
-            
-            
+
+
             <tr>
               <td class="admin_info">{!paymentstatus!}</td>
               <td class="subtitle">
@@ -161,13 +161,13 @@
                 {/if}
               </td>
             </tr>
-            
+
             {* Pay for unpaid order *}
             {if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
-    				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
+    				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"}
             <tr>
               <td colspan="2">
-        
+
                 {update->countdown order_id=$shop_order.order_id pos=true}
                 {if !$order_remain.forever} {* Orders that dont expire wont complain about being cancelled *}
                   <br />
@@ -178,9 +178,9 @@
         						{!payhere!}
                   </span></strong>
                 {/if}
-                
+
     			  		<br />
-    			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+    			  		{order->tickets order_id=$shop_order.order_id min_date='on'}
                   <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
                 {/order->tickets}
                 <span style="font-size:90%;">
@@ -193,15 +193,15 @@
             </tr>
             {/if}
             {* End Pay unpaid order... Works better than i thought it would *}
-            
+
             {* Old paid method..}
        			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
     				and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"
-    				and $shop_order.handling_payment neq 'entrance' }
+    				and $shop_order.handling_payment neq 'entrance'}
       			<tr>
       				<td colspan="2">
       			  		<font color="Black" ><b>{!payhere!}</b></font>
-      			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+      			  		{order->tickets order_id=$shop_order.order_id min_date='on'}
       						<input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
       					{/order->tickets}
       					{handling handling_id=$shop_order.order_handling_id}
@@ -217,14 +217,14 @@
       					      	<p>
                     </form>
       				  		{/if}
-      
+
       				  	{/if}
       					{/handling}
       					      	</td>
       			</tr>
       			{/if}
             {* End Old paid method..*}
-            
+
             <tr>
               <td class="admin_info">{!shipmentstatus!}</td>
               <td class="subtitle">
@@ -237,7 +237,7 @@
             </tr>
            	{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
 				and $shop_order.order_payment_status eq "payed" and $shop_order.order_shipment_status neq "send"
-				and ($shop_order.handling_shipment eq 'sp' or $shop_order.handling_shipment eq 'post') }
+				and ($shop_order.handling_shipment eq 'sp' or $shop_order.handling_shipment eq 'post')}
 			<tr>
 				<td colspan="2" style="text-align:center;">
 					<form name='f' action='view.php' method='post'>
@@ -329,7 +329,7 @@
 
 				{if $not_status eq "payed"}
               		<a href="view.php?order_id={$next_order_id}">{!pos_nextunpaid!}</a>
-  				{elseif $not_status eq "send" }
+  				{elseif $not_status eq "send"}
   					<a href="view.php?order_id={$next_order_id}">{!pos_nextunsent!}</a>
 				{else}
 					<a href="view.php?order_id={$next_order_id}">{!pos_nextorder!}</a>

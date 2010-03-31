@@ -31,7 +31,7 @@
  *}
 {eval var=!cart_cont_mess! assign='cart_cont_mess'}
 {include file="header.tpl" name=!shopping_cart! header=$cart_cont_mess}
-{include file="cart_content.tpl" }
+{include file="cart_content.tpl"}
 <br>
 <table class="table_midtone" width='100%'>
   <tr>
@@ -50,6 +50,7 @@
           {ShowFormToken name='checkout'}
           <input name="go_pay" value="{!checkout!}" type="submit">
         </form>
+
       {/if}
     </td>
   </tr>

@@ -45,7 +45,7 @@
     </table>
  	{/if}
 
-  {include file="cart_content.tpl" check_out="on" }
+  {include file="cart_content.tpl" check_out="on"}
   {assign var=total value=$cart->total_price_f()}
 
 	<br />
@@ -70,7 +70,7 @@
       		{assign var=min_date value=$cart->min_date_f()}
           {update->view event_date=$min_date}
 
-          {handling www='on' event_date=$min_date }   {* checked="checked" *}
+          {handling www='on' event_date=$min_date}   {* checked="checked" *}
   				  <tr class="{cycle name='payments' values='TblHigher,TblLower'}">
               <td class='payment_form'>
                 <input  type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
@@ -152,6 +152,7 @@
   jQuery(document).ready(function(){
     jQuery("form#ft-order-handling").submit(function(){
       handlingRadio = $("input:radio[name='handling_id']:checked").val();
+
       if(handlingRadio === undefined){
         message = "{/literal}{!Select_handling_option!}{literal}";
         showErrorMsg(message);

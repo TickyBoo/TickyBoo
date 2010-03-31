@@ -87,7 +87,7 @@
       {gui->selectcountry name='user_country' mandatory=true DefaultEmpty=true}
       {gui->input name='user_phone' size='15' maxlength='50'}
       {gui->input name='user_fax' size='15' maxlength='50'}
-      {gui->input name='user_email' mandatory=true size='30' maxlength='50' }
+      {gui->input name='user_email' mandatory=true size='30' maxlength='50'}
       <tr><td colspan="2"><input type='hidden' id='user_id' name='user_id' value='-1' /></td></tr>
 
     </tbody>

@@ -97,7 +97,7 @@
 
             {if $shop_order.order_status eq "cancel"}
               <tr class='admin_order_{$shop_order.order_status}'>
-            {elseif $shop_order.order_status eq "reissue" or $shop_order.order_status eq "reemit" } {* Legacy support for older orders. *}
+            {elseif $shop_order.order_status eq "reissue" or $shop_order.order_status eq "reemit"} {* Legacy support for older orders. *}
               <tr class='admin_order_{$shop_order.order_status}'>
             {elseif $shop_order.order_status eq "res"}
               <tr class='admin_order_{$shop_order.order_status}'>

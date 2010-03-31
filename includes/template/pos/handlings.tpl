@@ -31,7 +31,7 @@
     {capture name='total_price'}
       {cart->total_price}
     {/capture}
-  	{handling sp='on' event_date=$min_date }
+  	{handling sp='on' event_date=$min_date}
       {assign var='total_price' value=$smarty.capture.total_price}
 
   		<tr class="{cycle name='payments' values='admin_list_row_0, admin_list_row_1'}">

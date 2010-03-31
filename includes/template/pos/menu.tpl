@@ -21,26 +21,26 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
+ * For pricing of this licence please contact us via e-mail to
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
- 
+
  *}<table width="150" border="0" cellspacing="0" cellpadding="0" >
 {event_group group_status='pub'}
-   <tr> 
+   <tr>
      <td height="24" style="padding-left:10px;padding-bottom:10px; ">
      <a class='shop_link' href='shop.tpl?event_group_id={$shop_event_group.event_group_id}'>
      {$shop_event_group.event_group_name}<img src="{$_SHOP_themeimages}link.png" valign='bottom' border='0'></a></td>
    </tr>
 {/event_group}
  </table>
-			
+
 <table width="150" border="0" cellspacing="0" cellpadding="0" class='menu'>
 <tr> <td height="24" class="menu_td">
      <a class='shop_link' href='calendar.tpl'>
@@ -60,13 +60,13 @@
      <img src="{$_SHOP_themeimages}link.png" border='0' valign='bottom'></a>
 </td></tr>
 <tr> <td height="24" class="menu_td">
-     <a class='shop_link' href='about.tpl'>    
+     <a class='shop_link' href='about.tpl'>
     {!posmenu_about!}
 <img src="{$_SHOP_themeimages}link.png" border='0' valign='bottom'></a>
 </td></tr>
 
 <tr> <td height="24" class="menu_td">
-     <a class='shop_link' href='contact.tpl'>    
+     <a class='shop_link' href='contact.tpl'>
     {!posmenu_contact!}
 <img src="{$_SHOP_themeimages}link.png" border='0' valign='bottom'></a>
 </td></tr>
@@ -100,52 +100,52 @@
    <tr><td colspan=2 align='center'><input type='submit' value='{!login!}'></td></tr>
 </table>
 </form>
-{/if} 
+{/if}
 
 
 {* *****Panier****** *}
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0" style='border-top:#45436d 1px solid; padding-top:5px;padding-bottom:5px;'>
-  <tr> 
+  <tr>
     <td class='cart_menu_title' align='left' style='padding-left:10px;'>
-    {if $cart->is_empty_f() }
+    {if $cart->is_empty_f()}
       <img src="{$_SHOP_themeimages}caddie.png">
-    {else} 
+    {else}
       <a href='shop.tpl?action=view_cart' class='shop_link'>
       <img src="{$_SHOP_themeimages}caddie_full.png" border='0'>
     {/if}
     {!shoppingcart!}</a>
     </td>
   </tr>
-  <tr> 
-    
-   {if $cart->is_empty_f() }
+  <tr>
+
+   {if $cart->is_empty_f()}
        <td valign="top" class='cart_menu'>{!Cart empty!}</td>
    {else}
-      {assign var="cart_overview" value=$cart->overview_f() }
-       
-       
+      {assign var="cart_overview" value=$cart->overview_f()}
+
+
        <td valign="top" class='cart_menu'>
-    {if $cart_overview.valid }  
+    {if $cart_overview.valid}
        <img src='{$_SHOP_themeimages}ticket-valid.png'> {$cart_overview.valid}
      {/if}
      {if $cart_overview.expired}
      <img src='{$_SHOP_themeimages}ticket-expired.png'> {$cart_overview.expired}
-     {/if}  
-    {if $cart_overview.valid }  
+     {/if}
+    {if $cart_overview.valid}
        <img src='{$_SHOP_themeimages}clock.gif'> {$cart_overview.minttl}'
      {/if}
-      
+
        </td>
     {/if}
   </tr>
 </table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="5" class='menu_langs'>
-  <tr> 
+  <tr>
     <td>
       <div align="center">
-        <a href='shop.tpl?setlang=de' class='langs_link'>[de]</a> 
+        <a href='shop.tpl?setlang=de' class='langs_link'>[de]</a>
       	<a href='shop.tpl?setlang=fr' class='langs_link'>[fr]</a>
       	<a href='shop.tpl?setlang=en' class='langs_link'>[en]</a>
       	<a href='shop.tpl?setlang=it' class='langs_link'>[it]</a>

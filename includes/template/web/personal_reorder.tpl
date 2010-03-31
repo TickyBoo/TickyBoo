@@ -34,7 +34,7 @@
     <td colspan="5" class="title"><h3>{!pers_orders!}</h3></td>
     </tr>
     {* if $user->logged}
-      {order->vieworder user_id=$user->user_id }
+      {order->vieworder user_id=$user->user_id}
     {/if *}
     {order->order_list user_id=$user->user_id order_id=$smarty.post.order_id length='1'}
       <tr>
@@ -98,7 +98,7 @@
 			  {/if}
 			  </td>
 			</tr>
-			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") or $shop_order.order_payment_status eq "payed" }
+			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") or $shop_order.order_payment_status eq "payed"}
 			<tr>
 			  <td colspan="2">
 			  		<font color="Black" size="12px"><b>
@@ -146,7 +146,7 @@
 				      <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
 				      <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
 				    </tr>
-		        {order->tickets order_id=$shop_order.order_id min_date='on' }
+		        {order->tickets order_id=$shop_order.order_id min_date='on'}
               {assign var="event_date" value=$shop_ticket_min_date}
 				    {/order->tickets}
 
@@ -186,6 +186,7 @@
   	  </tr>
   	  <tr>
   	  	<td>
+
   	  	  <table width='100%' cellspacing='1' cellpadding='4'>
 			<tr>
 		  	  <td class='title' colspan='8'>{!tickets!}<br></td>

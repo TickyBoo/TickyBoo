@@ -35,7 +35,7 @@
     	<td colspan="5" class="title"><h3>{!orders!}</h3></td>
   	</tr>
     {* if $user->logged}
-    {order->vieworder user_id=$user->user_id }
+    {order->vieworder user_id=$user->user_id}
     {/if *}
 	{order->order_list user_id=$user->user_id order_id=$smarty.get.id limit='1'}
 	<tr>
@@ -94,7 +94,7 @@
             <input type='hidden' name='personal_page' value='orders' />
          		{ShowFormToken name='reorder'}
 
-            {order->tickets order_id=$shop_order.order_id min_date='on' }
+            {order->tickets order_id=$shop_order.order_id min_date='on'}
             <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
             {/order->tickets}
 
@@ -125,7 +125,7 @@
 
         {* Pay for unpaid order *}
         {if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
-				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending" }
+				  and $shop_order.order_payment_status eq "none" and $shop_order.order_payment_status neq "pending"}
         <tr>
           <td colspan="2">
 			  	  <font color="Black" size="12px"><b>
@@ -136,7 +136,7 @@
 						  {!payhere!}</b>
             </font>
 			  		<br />
-			  		{order->tickets order_id=$shop_order.order_id min_date='on' }
+			  		{order->tickets order_id=$shop_order.order_id min_date='on'}
               <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
             {/order->tickets}
 

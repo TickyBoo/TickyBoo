@@ -35,7 +35,7 @@
   <tr>
   	<td class="cart_title">
   	  {!shopcart!}&nbsp;
-  	  {if $cart->is_empty_f() }
+  	  {if $cart->is_empty_f()}
   	  	<img src="{$_SHOP_themeimages}caddie.gif">
   	  {else}
     		<img src="{$_SHOP_themeimages}caddie_full.png" border='0'>
@@ -43,21 +43,21 @@
   	</td>
   </tr>
   <tr>
-  	{if $cart->is_empty_f() }
+  	{if $cart->is_empty_f()}
 	    <td valign="top" class='cart_content' align="center">{!no_tick_res!}</td>
 	  {else}
-    	{assign var="cart_overview" value=$cart->overview_f() }
+    	{assign var="cart_overview" value=$cart->overview_f()}
     	<td valign="top" class='cart_content' align='left' >
     	  <table>
       		<tr>
       		  <td class="cart_content">
-        		  {if $cart_overview.valid }
+        		  {if $cart_overview.valid}
         		  	<img src='{$_SHOP_themeimages}ticket-valid.png'> {!valid_tickets!} {$cart_overview.valid}<br><br>
         		  {/if}
         		  {if $cart_overview.expired}
         		  	<img src='{$_SHOP_themeimages}ticket-expired.png'> {!expired_tickets!} {$cart_overview.expired}<br><br>
         		  {/if}
-        		  {if $cart_overview.valid }
+        		  {if $cart_overview.valid}
           			<img src='{$_SHOP_themeimages}clock.gif'> {!tick_exp_in!} <span id="countdown1"></span>
                  {literal}
                    <script>
@@ -92,7 +92,7 @@
           		</tr>
             {/if}
        		{/cart->items}
-      		{if $cart_overview.valid }
+      		{if $cart_overview.valid}
         		<tr>
         		  <td align='center' class='cart_content' colspan='2'>
           			<br>

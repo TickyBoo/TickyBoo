@@ -52,7 +52,7 @@
       {eval var=$shop_handling.handling_text_payment assign=test}
       {gui->view name=payment value=$test}
       {eval var=$shop_handling.handling_text_shipment  assign=test}
-      {gui->view name=shipment value=$test }
+      {gui->view name=shipment value=$test}
     {/if}
     {gui->valuta value=$order_total_price assign=test}
     {gui->view name=total_price value=$test}

@@ -69,7 +69,7 @@
 {elseif $smarty.request.action eq "adddiscount"}
   {cart->set_discounts event_id=$smarty.post.event_id
     category_id=$smarty.post.category_id item_id=$smarty.post.item_id
-    discounts=$smarty.post.discount }
+    discounts=$smarty.post.discount}
   {include file="cart_view.tpl"}
 
 {elseif $smarty.request.action eq "view_cart"}
