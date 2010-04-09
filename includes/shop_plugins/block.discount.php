@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-function smarty_block_discount ($params, $content, &$smarty, &$repeat)
+function smarty_block_discount ($params, $content, $smarty, &$repeat)
 {
     if ($repeat) {
         $from = 'from Discount';

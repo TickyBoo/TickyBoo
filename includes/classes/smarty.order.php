@@ -38,10 +38,10 @@ class Order_Smarty {
 
   var $user_auth_id;
 
-  function Order_Smarty (&$smarty){
+  function Order_Smarty ($smarty){
     global $_SHOP;
-    $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
-    $smarty->assign_by_ref("order",$this);
+    $smarty->register->templateObject("order",$this,null,true,array("order_list","tickets"));
+    $smarty->assignByRef("order",$this);
 
     if(isset($_SESSION['_SHOP_USER_AUTH']['user_id'])) {
       $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];
@@ -116,7 +116,7 @@ class Order_Smarty {
 
   }
 
-  function res_to_order($params,&$smarty){
+  function res_to_order($params,$smarty){
       $order_id=$params['order_id'];
       $handling_id=$params['handling_id'];
 
@@ -141,7 +141,7 @@ class Order_Smarty {
   }
 
 
-  function cancel ($params,&$smarty){
+  function cancel ($params,$smarty){
     $this->cancel_f($params['order_id'],$params['reason']);
   }
 
@@ -151,7 +151,7 @@ class Order_Smarty {
     }
   }
 
-  function delete_ticket ($params, &$smarty){
+  function delete_ticket ($params, $smarty){
     $this->delete_ticket_f($params['order_id'],$params['ticket_id']);
   }
 
@@ -179,7 +179,7 @@ class Order_Smarty {
    * 	order = comma delimied order by
    * 	order_id = id
    */
-  function order_list ($params, $content, &$smarty,&$repeat){
+  function order_list ($params, $content, $smarty,&$repeat){
 
     if ($repeat) {
       $from='FROM `Order`';
@@ -368,7 +368,7 @@ class Order_Smarty {
     return $content;
   }
 
-	function tickets ($params, $content, &$smarty,&$repeat){
+	function tickets ($params, $content, $smarty,&$repeat){
 
 		if ($repeat) {
       		if(!$params['order_id']){
@@ -474,7 +474,7 @@ class Order_Smarty {
     return Order::set_send($order_id, 0, $this->user_auth_id);
   }
 
-  function set_reserved ($params,&$smarty){
+  function set_reserved ($params,$smarty){
     $this->set_reserved_f($params['order_id']);
   }
 
@@ -485,12 +485,12 @@ class Order_Smarty {
 
   // added for manual Pepper system - Legacy
 
-  function save_order_note($params,&$smarty){
+  function save_order_note($params,$smarty){
     $ret=Order::save_order_note($params['order_id'],$params['note']);
     $smarty->assign('order_note',$ret);
   }
 
-  function set_payed ($params,&$smarty){
+  function set_payed ($params,$smarty){
     $this->set_payed_f($params['order_id']);
   }
 
@@ -498,7 +498,7 @@ class Order_Smarty {
     return Order::set_payed($order_id);
   }
 
-  function order_print ($params, &$smarty){
+  function order_print ($params, $smarty){
 
     if($params['print_prefs']=='pdf'){
       $print=FALSE;
@@ -511,7 +511,7 @@ class Order_Smarty {
    Order::printOrder($params['order_id'],'', 'stream', $print, $mode);
   }
 
-  function paymentForOrder($params, &$smarty){
+  function paymentForOrder($params, $smarty){
     require_once "classes/class.checkout.php";
     $orderId = is($params['order_id'],0);
     $return = Checkout::paymentAction($orderId,$smarty);

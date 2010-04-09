@@ -42,8 +42,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->auth_required=TRUE;
   $_SHOP->auth_status="control";
 
-
-
   require_once("init.php");
   $_SHOP->event_ids=$_SESSION['_SHOP_AUTH_USER_DATA']['control_event_ids'];
   $_SHOP->currency=$_SESSION['_SHOP_AUTH_USER_DATA']['organizer_currency'];

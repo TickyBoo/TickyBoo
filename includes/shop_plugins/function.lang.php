@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-function smarty_function_lang ($params,&$smarty) {
+function smarty_function_lang ($params, $smarty) {
   global $_SHOP;
 
   if($params['assign']){

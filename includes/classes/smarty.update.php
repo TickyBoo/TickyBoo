@@ -37,11 +37,11 @@ require_once ( "classes/class.time.php" );
 
 class Update_Smarty {
 
-	function Update_Smarty( &$smarty ) {
+	function Update_Smarty( $smarty ) {
 		global $_SHOP;
 
-		$smarty->register_object( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
-		$smarty->assign_by_ref( "update", $this );
+		$smarty->register->templateObject( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
+		$smarty->assignByRef( "update", $this );
 	}
 
   function is_demo() {
@@ -55,7 +55,7 @@ class Update_Smarty {
   }
 
 	//Used for returning results so a template can know if a button/item should be enabled
-	function view( $params, &$smarty ) {
+	function view( $params, $smarty ) {
     global $_SHOP;
 
 		//check if reserving is enabled
@@ -115,7 +115,7 @@ class Update_Smarty {
 	 * @version BETA4
 	 * @since 1.3.4
 	 */
-	function countdown( $params, &$smarty ) {
+	function countdown( $params, $smarty ) {
 		global $_SHOP;
 
 		$order_id = $this->secure_url_param( $params['order_id'] );

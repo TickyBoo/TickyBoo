@@ -38,9 +38,9 @@ require_once("classes/class.mycart.php");
 
 class MyCart_Smarty {
 
-  function MyCart_Smarty (&$smarty){
-    $smarty->register_object("cart",$this,null,true,array("items"));
-    $smarty->assign_by_ref("cart",$this);
+  function MyCart_Smarty ($smarty){
+    $smarty->register->templateObject("cart",$this,null,true,array("items"));
+    $smarty->assignByRef("cart",$this);
   }
 
 
@@ -49,7 +49,7 @@ class MyCart_Smarty {
     return !isset($cart) or $cart->is_empty();
   }
 
-  function is_empty ($params,&$smarty) {
+  function is_empty ($params,$smarty) {
     return $this->is_empty_f();
   }
 
@@ -65,12 +65,12 @@ class MyCart_Smarty {
     }
   }
 
-  function total_seats ($params,&$smarty){
+  function total_seats ($params,$smarty){
     return $this->total_seats_f($params['event_id'],$params['category_id'],$params['only_valid']);
   }
 
 
-  function add_item ($params, &$smarty){
+  function add_item ($params, $smarty){
     $this->add_item_f($params['event_id'],$params['category_id'],$params['seats'],$params['mode']);
   }
 
@@ -99,7 +99,7 @@ class MyCart_Smarty {
     }
 	}
 
-  function remove_item ($params, &$smarty){
+  function remove_item ($params, $smarty){
     $this->remove_item_f($params['event_id'],$params['category_id'],$params['item_id']);
   }
 
@@ -134,7 +134,7 @@ class MyCart_Smarty {
 
   }
 
-  function total_price ($params, &$smarty){
+  function total_price ($params, $smarty){
     return $this->total_price_f();
   }
 
@@ -144,7 +144,7 @@ class MyCart_Smarty {
     }
   }
 
-  	function use_alt ($params, &$smarty){
+  	function use_alt ($params, $smarty){
     	return $this->use_alt_f();
   	}
 
@@ -159,7 +159,7 @@ class MyCart_Smarty {
     	}
   	}
 
-  function can_checkout ($params, &$smarty){
+  function can_checkout ($params, $smarty){
     return $this->can_checkout_f();
   }
 
@@ -169,7 +169,7 @@ class MyCart_Smarty {
     }
   }
 
-  function overview ($params, &$smarty){
+  function overview ($params, $smarty){
     return $this->overview_f();
   }
 
@@ -179,7 +179,7 @@ class MyCart_Smarty {
     }
   }
 
-  function items ($params, $content, &$smarty, &$repeat){
+  function items ($params, $content, $smarty, &$repeat){
     if($repeat){
       $cart=$_SESSION['_SMART_cart'];
 
@@ -198,16 +198,16 @@ class MyCart_Smarty {
     }
 
     if($cart_row=&$this->cart_list[$this->cart_index++]){
-      $smarty->assign_by_ref("event_item",$cart_row[0]);
+      $smarty->assignbyref("event_item",$cart_row[0]);
 
 
-      $smarty->assign_by_ref("category_item",$cart_row[1]);
+      $smarty->assignbyref("category_item",$cart_row[1]);
 
 
 
       $seat_item=$cart_row[2];
 
-      $smarty->assign_by_ref("seat_item",$seat_item);
+      $smarty->assignbyref("seat_item",$seat_item);
       $smarty->assign("seat_item_id",$seat_item->id);
       $smarty->assign("seats_id",$seat_item->places_id);
       $smarty->assign("seats_nr",$seat_item->places_nr);
@@ -239,11 +239,11 @@ class MyCart_Smarty {
     unset($_SESSION['_SMART_cart']);
   }
 
-  function destroy ($params,&$smarty){
+  function destroy ($params,$smarty){
     unset($_SESSION['_SMART_cart']);
   }
 
-  function set_discounts ($params,&$smarty){
+  function set_discounts ($params,$smarty){
 
     $this->set_discounts_f($params['event_id'],$params['category_id'],$params['item_id'],$params['discounts']);
   }

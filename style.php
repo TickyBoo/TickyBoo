@@ -31,7 +31,7 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-
+header('Content-Type: text/css');
 define('ft_check','shop');
 require_once('includes/config/init_common.php');
 global $_SHOP;

@@ -546,7 +546,7 @@ class PosAjax {
   }
 
 
-  private function _posConfirm (&$smarty) {
+  private function _posConfirm ($smarty) {
   	global $order, $cart, $user;
 
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected

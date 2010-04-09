@@ -31,11 +31,11 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
+if (!defined('ft_check')) {die('System intrusion ');}
 
-function smarty_block_fr ($params, $content, &$smarty,&$repeat) {
-  global $_SHOP;
-  if($_SHOP->lang=='fr'){
-    return $content;
-  }
-}
+global $_SHOP;
+require_once("init_common.php");
+
+$_SHOP->session_name = "ShopSession";
+require_once("init.php");
 ?>

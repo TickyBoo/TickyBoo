@@ -53,20 +53,20 @@ class Gui_smarty {
 	var $gui_name_width  = '30%';
   public $guidata = array();
 
-  function __construct  (&$smarty){
+  function __construct  ($smarty){
 
-    $smarty->register_object("gui",$this);
-    $smarty->assign_by_ref("gui",$this);
+    $smarty->register->templateObject("gui", $this);
+    $smarty->assignbyref("gui",$this);
 
-    $smarty->register_function('ShowFormToken', array($this,'showFormToken'));
-    $smarty->register_function('valuta', array($this,'valuta'));
-    $smarty->register_function('print_r', array($this,'print_r'));
-    $smarty->register_function('printMsg', array($this,'printMsg'));
-    $smarty->register_modifier('clean', 'smarty_modifier_clean');
+    $smarty->register->templateFunction('ShowFormToken', array($this,'showFormToken'));
+    $smarty->register->templateFunction('valuta', array($this,'valuta'));
+    $smarty->register->templateFunction('print_r', array($this,'print_r'));
+    $smarty->register->templateFunction('printMsg', array($this,'printMsg'));
+    $smarty->register->modifier('clean', 'smarty_modifier_clean');
 
   }
 
-  function printMsg($params, &$smarty) {
+  function printMsg($params, $smarty) {
     $addspan     = is($params['addspan'],true);
     return printMsg($params['key'],null, $addspan );
   }
@@ -94,11 +94,11 @@ class Gui_smarty {
     }
   }
 
-  function print_r($params,&$smarty) {
+  function print_r($params, $smarty) {
     return '<pre>'.print_r($params['var'],true).'</pre>';
   }
 
-  function fillArr($params,&$smarty)
+  function fillArr($params, $smarty)
   {
       if (!isset($params['var'])) {
           $compiler->_syntax_error("assign: missing 'var' parameter", E_USER_WARNING);
@@ -130,7 +130,7 @@ class Gui_smarty {
   }
 
 
-  function showFormToken ($params, &$smarty) {
+  function showFormToken ($params, $smarty) {
     $name = str_replace('_','', is($params['name'],'FormToken'));
     if (!isset($_SESSION['tokens'][$name])) {
       $_SESSION['tokens'][$name]['n'] = md5(mt_rand());
@@ -161,7 +161,7 @@ class Gui_smarty {
     return str_replace(array('"',"\n","\r"),array('\\"',"\\n",""), $s);
 	}
 
-   function setData($params, &$smarty) //($name, $width = 0, $colspan = 2)
+   function setData($params, $smarty) //($name, $width = 0, $colspan = 2)
   {
     If( isset($params['data'])) {
       $this->guidata = $params['data'];
@@ -176,7 +176,7 @@ class Gui_smarty {
       $this->gui_name_width = $params['namewidth'] ;
     }
   }
-  function StartForm($params, &$smarty) //($name, $width = 0, $colspan = 2)
+  function StartForm($params, $smarty) //($name, $width = 0, $colspan = 2)
   {
     $name     = is($params['name']);
     $id       = is($params['id']);
@@ -205,7 +205,7 @@ class Gui_smarty {
     return $return;
   }
 
-  function EndForm($params, &$smarty) //($colspan = 2)
+  function EndForm($params, $smarty) //($colspan = 2)
   {
     $name     = is($params['name'],'submit');
     $align    = is($params['align'],'right');
@@ -226,7 +226,7 @@ class Gui_smarty {
     return $return. "</table>\n";
   }
 
-  function setShowLabel($params, &$smarty) {
+  function setShowLabel($params, $smarty) {
     $this->_ShowLabel =is($params['set'],$this->_ShowLabel);
   }
 
@@ -241,7 +241,7 @@ class Gui_smarty {
     }
   }
 
-  function view($params, &$smarty) //$name, &$data, $prefix = ''*/)
+  function view($params, $smarty) //$name, &$data, $prefix = ''*/)
   {
     $name = is($params['name']);
     $Option = is($params['option'], false);
@@ -252,14 +252,14 @@ class Gui_smarty {
     }
   }
 
-  function hidden ($params, &$smarty) //$name, &$data, $size = 30, $max = 100)
+  function hidden ($params, $smarty) //$name, &$data, $size = 30, $max = 100)
   {
     $name = is($params['name'] );
     $value  = is($params['value'],$this->guidata[$name]);
     return "<input type='hidden' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) ."'>\n";
   }
 
-  function input ($params, &$smarty) //$name, &$data, $size = 30, $max = 100)
+  function input ($params, $smarty) //$name, &$data, $size = 30, $max = 100)
   {
     $name = is($params['name'] );
     $type = is($params['type'], 'text');
@@ -271,7 +271,7 @@ class Gui_smarty {
            "' size='$size' maxlength='$max'>");
   }
 
-  function checkbox ($params, &$smarty) //($name, &$data, &$err, $size = '', $max = '')
+  function checkbox ($params, $smarty) //($name, &$data, &$err, $size = '', $max = '')
   {
     $name = is($params['name']    );
     if ($this->guidata[$name]) {
@@ -280,7 +280,7 @@ class Gui_smarty {
     return $this->showlabel($name, "<input type='checkbox' id='$name' name='$name' value='1' $chk>");
   }
 
-  function area ($params, &$smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
+  function area ($params, $smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
   {
     $name = is($params['name']   );
     $rows = is($params['rows'], 6);
@@ -288,7 +288,7 @@ class Gui_smarty {
     return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
   }
 
-  function inputTime ($params, &$smarty) //($name, &$data, &$err,  = '')
+  function inputTime ($params, $smarty) //($name, &$data, &$err,  = '')
   {
     require_once('class.datetimeselect.php');
     $name = is($params['name']    );
@@ -296,7 +296,7 @@ class Gui_smarty {
     return $this->showlabel($name, $timeselect->selectbox);
   }
 
-  function inputDate ($params, &$smarty) //($name, &$data, &$err,  = '')
+  function inputDate ($params, $smarty) //($name, &$data, &$err,  = '')
   {
     require_once('class.datetimeselect.php');
     $name = is($params['name']    );
@@ -306,13 +306,13 @@ class Gui_smarty {
     return $this->showlabel($name, $timeselect->selectbox);
   }
 
-  function viewUrl ($params, &$smarty) //($name, &$data,  = '')
+  function viewUrl ($params, $smarty) //($name, &$data,  = '')
   {
     $name = is($params['name']    );
     return $this->showlabel($name, "<a href='{$this->guidata[$name]}' target='blank'>{$this->guidata[$name]}</a>",$params['nolabel']);
   }
 
-  function selection ($params, &$smarty) //($name, &$data, &$err, $opt)
+  function selection ($params, $smarty) //($name, &$data, &$err, $opt)
   {
     $name = is($params['name']);
     $opt  = is($params['options']);
@@ -364,7 +364,7 @@ class Gui_smarty {
     return $_COUNTRY_LIST[$val];
   }
 
-  function viewCountry($params, &$smarty){
+  function viewCountry($params, $smarty){
     global $_SHOP, $_COUNTRY_LIST;
     $this->Loadcountrys();
     if (!isset($params['value'])){
@@ -377,7 +377,7 @@ class Gui_smarty {
     return $this->view($params,$smarty);
   }
 
-  function selectCountry($params, &$smarty) { //($sel_name, $selected, &$err){
+  function selectCountry($params, $smarty) { //($sel_name, $selected, &$err){
     global $_SHOP,  $_COUNTRY_LIST;
     $this->Loadcountrys();
     if (isset($params['DefaultEmpty'])) {
@@ -397,7 +397,7 @@ class Gui_smarty {
     }
   }
 
-  function viewState($params, &$smarty){
+  function viewState($params, $smarty){
     global $_SHOP, $_STATE_LIST;
     $this->LoadStates();
     $name     = is($params['name']);
@@ -412,7 +412,7 @@ class Gui_smarty {
   }
 
 
-  function selectState($params, &$smarty) { //($sel_name, $selected, &$err){
+  function selectState($params, $smarty) { //($sel_name, $selected, &$err){
     global $_SHOP,  $_STATE_LIST;
     $this->LoadStates();
     if (isset($_STATE_LIST)) {
@@ -423,7 +423,7 @@ class Gui_smarty {
     }
   }
 
-  function selectColor ($params, &$smarty) //($name, &$data, &$err)
+  function selectColor ($params, $smarty) //($name, &$data, &$err)
   {
     $name = is($params['name']);
 
@@ -447,7 +447,7 @@ class Gui_smarty {
     return $this->showlabel($name, $return."</select>");
   }
 
-  function viewFile ($params, &$smarty) //($name, &$data, &$err, $type = 'img',  = '')
+  function viewFile ($params, $smarty) //($name, &$data, &$err, $type = 'img',  = '')
   {
     $name = is($params['name']);
     $type = is($params['type'],'img');
@@ -464,7 +464,7 @@ class Gui_smarty {
     }
   }
 
-  function inputFile ($params, &$smarty) //($name, &$data, &$err, $type = 'img',  = '')
+  function inputFile ($params, $smarty) //($name, &$data, &$err, $type = 'img',  = '')
   {
     $name = is($params['name']);
     $type = is($params['type'],'img');
@@ -492,7 +492,7 @@ class Gui_smarty {
     }
   }
 
-  function Navigation($params, &$smarty) { //($offset, $matches, $url, $stepsize=10)
+  function Navigation($params, $smarty) { //($offset, $matches, $url, $stepsize=10)
     $name     = is($params['name'],'offset');
     $offset   = is($params['offset'],0);
     $matches  = is($params['count'],0);
@@ -517,6 +517,7 @@ class Gui_smarty {
       $output .= con('nav_first')."&nbsp;";
       $output .= con('nav_prev')."&nbsp;";
       }
+
 
     $offpages=intval($offset/$stepsize);
     if ($offset%$stepsize) {$offpages++;}
@@ -561,7 +562,7 @@ class Gui_smarty {
   }
 
 
-  function tabBar($params , &$smarty) {
+  function tabBar($params , $smarty) {
     require_once('admin'.DS.'class.adminview.php');
 
     $TabBarid = is($params['TabBarid'],'TabBarid');
@@ -587,7 +588,7 @@ class Gui_smarty {
     return  AdminView::PrintTabMenu($menu, $_SESSION[$TabBarid], $menuAlign);
   }
 
-  function captcha($params, &$smarty) //($name)
+  function captcha($params, $smarty) //($name)
   {
     //print_r($smarty);
     $name = is($params['name']);
@@ -603,7 +604,7 @@ class Gui_smarty {
            "</table>\n");
   }
 
-  function delayedLocation($params, &$smarty) { //($url){
+  function delayedLocation($params, $smarty) { //($url){
       $url = $this->view->_URL($params);
       return "<SCRIPT LANGUAGE='JavaScript'>
             <!-- Begin
@@ -614,7 +615,7 @@ class Gui_smarty {
             // End -->\n</SCRIPT>\n";
   }
 
-  function valuta ($params,&$smarty){
+  function valuta ($params, $smarty){
     global $_SHOP;
 
     $valuta = valuta($params['value'], $params['code']);
@@ -626,7 +627,7 @@ class Gui_smarty {
     }
   }
 
-  function print_set ($params, &$smarty) //($name, &$data, $table_name, $column_name, $key_name, $file_name)
+  function print_set ($params, $smarty) //($name, &$data, $table_name, $column_name, $key_name, $file_name)
   {
       $ids = explode(",", $this->guidata);
       $set = array();

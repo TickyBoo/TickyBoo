@@ -31,8 +31,8 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-error_reporting(E_ALL);
 define('ft_check','shop');
-$fond='shop';
-require_once('includes/controller/template.php');
+require_once('includes/classes/class.router.php');
+router::draw('shop');
+
 ?>

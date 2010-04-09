@@ -35,5 +35,7 @@
 define('ft_check','shop');
 $fond='shop';
 $_REQUEST['action'] = 'activate';
-require_once('includes/controller/template.php');
+require_once('includes/classes/class.router.php');
+router::draw($fond);
+
 ?>

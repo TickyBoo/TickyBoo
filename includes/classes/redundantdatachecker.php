@@ -54,7 +54,7 @@ $orphancheck[]="
                                                                  and s.seat_category_id = category_id )) , null
 	FROM Event e  left join Category c on category_event_id = event_id
 	WHERE e.event_id > 0
-		AND lower(e.event_status) != 'unpub'
+		AND lower(e.event_status) not in ('unpub','trash')
 		AND lower(e.event_rep) LIKE ('%sub%')
 		AND category_size != (SELECT count(seat_id)
                           FROM Seat s
@@ -67,16 +67,19 @@ select 'Category', category_id, 'event_id' l1 , category_event_id, event_id
 from Category left join Event         on category_event_id = event_id
 where  (category_event_id is not null and event_id is null)
 ";
+
 $orphancheck[]="
 select 'Category', category_id, 'pm_id'    l2 , category_pm_id, pm_id
 from Category left join PlaceMap2     on category_pm_id    = pm_id
 where  (pm_id is null)
 ";
+
 $orphancheck[]="
 select 'Category', category_id, 'pmp_id'   l3 , category_pmp_id, pmp_id
 from Category left join PlaceMapPart  on category_pmp_id   = pmp_id
 where  (category_pmp_id is not null and pmp_id is null)
 ";
+
 $orphancheck[]="
 select 'Category', category_id, 'stat_id'  i4 , category_id, cs_category_id
 from Category left join Category_stat on category_id       = cs_category_id
@@ -106,14 +109,14 @@ $orphancheck[]="
 SELECT 'Category_stat', cs_category_id,
    'Total',  CONCAT_WS('/', `cs_total`, (select count(*) from `Seat` where seat_category_id = cs_category_id)) seat_total, null
  FROM `Category_stat`
-where `cs_total` - (select count(*) from `Seat` where seat_category_id = cs_category_id) <> 0
+ where `cs_total` - (select count(*) from `Seat` where seat_category_id = cs_category_id) <> 0
 ";
 
 $orphancheck[]="
 SELECT 'Category_stat', cs_category_id,
-   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free') )) seat_free, null
+   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') )) seat_free, null
  FROM `Category_stat`
-where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free') ) <>0
+where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') ) <>0
 ";
 
 /**/
@@ -163,9 +166,9 @@ where `es_total` - (select count(*) from `Seat` where seat_event_id = es_event_i
 ";
 $orphancheck[]="
 SELECT 'Event_stat',es_event_id,
-   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free') )) seat_free, null
+   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free','trash') )) seat_free, null
  FROM `Event_stat`
-where `es_free`  - (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free') ) <>0
+where `es_free`  - (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free','trash') ) <>0
 ";
 
 

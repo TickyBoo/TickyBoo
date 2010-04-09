@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-function smarty_function_placemap($params, &$smarty){
+function smarty_function_placemap($params, $smarty){
 
     $pz = preg_match(strtolower('/no|0|false/'), $params['print_zone']);
     return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area']);

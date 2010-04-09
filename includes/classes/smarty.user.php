@@ -38,20 +38,20 @@ class User_Smarty {
 
   var $logged;
 
-  function User_Smarty (&$smarty)
+  function User_Smarty ($smarty)
   {
     if(isset($_SESSION['_SHOP_USER'])){
       $this->load_f($_SESSION['_SHOP_USER']);
     }
-    $smarty->register_object("user",$this);
-    $smarty->assign_by_ref("user",$this);
+    $smarty->register->templateObject("user",$this);
+    $smarty->assignByRef("user",$this);
   }
   function mode(){
     global $_SHOP;
     return (int)$_SHOP->shopconfig_user_activate;
   }
 
-  function load($params,&$smarty){
+  function load($params,$smarty){
    $this->load_f($params['user_id']);
   }
 
@@ -64,7 +64,7 @@ class User_Smarty {
     }
   }
 
-  function login ($params,&$smarty){
+  function login ($params,$smarty){
   	$this->login_f($params['username'],$params['password']);
   }
 
@@ -81,7 +81,7 @@ class User_Smarty {
     }
   }
 
-  function logout ($params,&$smarty){
+  function logout ($params,$smarty){
     $this->logout_f();
   }
 
@@ -93,7 +93,7 @@ class User_Smarty {
   }
 
  /* User data gets subbmitted to here */
-  function register ($params, &$smarty){
+  function register ($params, $smarty){
     if (!$this->register_f($params['ismember'], $params['data'], $params['mandatory'], $params['secure'],$params['short'] ) || hasErrors()) {
       $smarty->assign('user_errors',true);
     }
@@ -121,7 +121,7 @@ class User_Smarty {
 //Update Member Function!
 /////////////////////
 
-  function update($params,&$smarty){
+  function update($params,$smarty){
     if(!$this->update_f($params['data'],$params['mandatory'],$params['short'])){
       $smarty->assign('user_errors',true);
   	}
@@ -147,7 +147,7 @@ class User_Smarty {
 
 /////////////////
 /////////////////
-  function forgot_password ($params,&$smarty){
+  function forgot_password ($params,$smarty){
     $smarty->assign('result',$this->forgot_password_f($params['email']));
   }
 
@@ -155,7 +155,7 @@ class User_Smarty {
     return User::forgot_password($email);
   }
 
-  function resend_activation($params,&$smarty){
+  function resend_activation($params,$smarty){
   	$this->resend_activation_f($params['email']);
 	}
 

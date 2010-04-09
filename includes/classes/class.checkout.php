@@ -30,7 +30,7 @@ class Checkout {
   	 * @param smarty : Smarty Object [required]
   	 * @return null loads the values to smarty vars
   	 */
-  	public static function setordervalues($aorder, &$smarty){
+  	public static function setordervalues($aorder, $smarty){
       global $order;
 	    $order->obj = $aorder;
 
@@ -57,7 +57,7 @@ class Checkout {
 	}
 
 
-  public static function reserveAction(&$smarty,$origin='www',$user_id=null) {
+  public static function reserveAction($smarty,$origin='www',$user_id=null) {
     global $order, $cart;
     $myorder = $order->make_f(1, $origin, NULL, $user_id);
 
@@ -71,7 +71,7 @@ class Checkout {
     }
   }
 
-  public static function confirmAction(&$smarty,$origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
+  public static function confirmAction($smarty,$origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
     global $order, $cart;
 
     if (!isset($_SESSION['_SHOP_order'])) {

@@ -514,14 +514,15 @@ $tbls['ShopConfig']['remove'] = array ('run_as_demo','shopconfig_organizer_id','
 
 $tbls['Template']['fields'] = array(
   'template_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'template_name' => " varchar(30) NOT NULL DEFAULT ''",
   'template_type' => " varchar(5) NOT NULL DEFAULT ''",
+  'template_context' => " varchar(10) NOT NULL DEFAULT 'shop'",
+  'template_name' => " varchar(30) NOT NULL DEFAULT ''",
   'template_text' => " longtext NOT NULL",
   'template_ts' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
   'template_status' => " varchar(5) NOT NULL DEFAULT 'new'");
 $tbls['Template']['key'] = array(
   "PRIMARY KEY (`template_id`)",
-  "UNIQUE KEY `template_name` (`template_name`)");
+  "UNIQUE KEY `template_name` (`template_name`,`template_context`)");
 $tbls['Template']['engine'] = 'InnoDB';
 $tbls['Template']['remove'] = array ('template_organizer_id')   ;
 //$tbls['Template']['AUTO_INCREMENT'] = 21;
@@ -551,4 +552,5 @@ $tbls['sessions']['key'] = array(
   "KEY `session_access` (`session_access`)");
 $tbls['sessions']['remove'] = array ('Sessions_id', 'Sessions_access','Sessions_data' );
 $tbls['sessions']['engine'] = 'InnoDB';
+
 ?>

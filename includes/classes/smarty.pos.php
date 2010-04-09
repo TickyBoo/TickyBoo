@@ -38,7 +38,7 @@ class POS_Smarty {
 
   var $logged;
 
-  function POS_Smarty (&$smarty){
+  function POS_Smarty ($smarty){
     if(isset($_SESSION['_SHOP_POS_USER'])){
       $user=$_SESSION['_SHOP_POS_USER'];
     }else{
@@ -46,8 +46,8 @@ class POS_Smarty {
        $_SESSION['_SHOP_POS_USER']=$user;
     }
 
-    $smarty->register_object("pos",$this);
-    $smarty->assign_by_ref("pos",$this);
+    $smarty->register->templateObject("pos",$this);
+    $smarty->assignByRef("pos", $this);
     $this->logged=false;
 
     if($user){
@@ -100,7 +100,7 @@ class POS_Smarty {
 		return $options;
 	}
 
-  function set_prefs ($params,&$smarty){
+  function set_prefs ($params,$smarty){
     $this->set_prefs_f($params['prefs']);
   }
 

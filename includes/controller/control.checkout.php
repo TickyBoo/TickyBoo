@@ -35,12 +35,8 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 $fond = null;
 
-if($_REQUEST['pos']) {
-  require_once ( 'pos_template.php');
-} else {
-  require_once ( 'template.php');
-}
-require_once ("classes/class.checkout.php");
+
+require_once ("control.web.php");
 
 GLOBAL $_SHOP;
 
@@ -64,81 +60,74 @@ if ($_SHOP->secure_site) {
   addWarning('This_page_is_not_secure');
 }
 
-if (!$action) {$action = 'index';}
-
-if (isset($_REQUEST['sor'])) {
-	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"sor")))) {
-		$smarty->display($fond . '.tpl');
-	}
- 	myExit();
-}elseif(isset($_REQUEST['cbr'])){
-	if (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty,"cbr")))) {
-		$smarty->display($fond . '.tpl');
-	}
- 	myExit();
-} elseif ($cart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
-  if ( !$_REQUEST['pos'] and
-         !$user->logged and
-		     $action !== 'register' and
-      	 $action !== 'login' ) {
-    $smarty->display('user_register.tpl');
- 	} elseif (is_callable($action.'action') and ($fond = call_user_func_array($action.'action',array($smarty)))) {
- 	  $smarty->display($fond . '.tpl');
+class control_checkout extends control_web {
+  public function __construct($context='web') {
+    parent::__construct($context);
+    require_once ("classes/class.checkout.php");
   }
-  myExit();
-}
 
-if ($action == 'useredit') {
-  $array = array('status'=>false,'msg'=>con('checkout_expired'));
-  echo json_encode($array);
-} elseif(!$_REQUEST['pos']) {
-	redirect($_SHOP->root."index.php?action=cart_view",403);
-} else {
-  addWarning('noting_checkout');
-}
+  static function draw($action, $context) {
+    GLOBAL $_SHOP;
+    if (!$action) {$action = 'index';}
+    $ctrl = new control_web($context);
 
-myExit();
-
-  function myExit(){
+    if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
+    	if (is_callable(array($ctrl,'action_'.$action)) and ($fond = call_user_func_array(array($ctrl,'action_'.$action)))) {
+    		$ctrl->display($fond . '.tpl');
+    	}
+    } elseif ($ctrl->helper->mycart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
+      if ( !$_REQUEST['pos'] and
+             !$user->logged and
+    		     $action !== 'register' and
+          	 $action !== 'login' ) {
+        $ctrl->display('user_register.tpl');
+     	} elseif (is_callable(array($ctrl,'action_'.$action)) and ($fond = call_user_func_array(array($ctrl,'action_'.$action)))) {
+     	  $ctrl->display($fond . '.tpl');
+      }
+    } else {
+      if ($action == 'useredit') {
+        $array = array('status'=>false,'msg'=>con('checkout_expired'));
+        echo json_encode($array);
+      } elseif(!$_REQUEST['pos']) {
+      	redirect($_SHOP->root."index.php?action=cart_view",403);
+      } else {
+        addWarning('noting_checkout');
+      }
+    }
     orphanCheck();
-    trace("End of checkout \n");
-    exit;
+    trace("End of shop \n\n\r");
   }
 
-
-  Function loginAction ($smarty){
-    global $user;
+  Function Action_login (){
     if (!$user->logged) {
-  	  If (! $user->login_f($_POST['username'], $_POST['password'], $errors)) {
-  	    $smarty->assign('login_error',$errors);
+  	  If (! $this->helper->user->login_f($_POST['username'], $_POST['password'], $errors)) {
+  	    $this->assign('login_error',$errors);
   	    return "user_register";
       }
     }
     return "checkout_preview";
   }
 
-  Function usereditAction ($smarty){
-    global $user;
-    $smarty->assign('usekasse',true);
+  Function Action_useredit (){
+    $this->assign('usekasse',true);
     if (isset($_POST['submit_update'])) {
-      if ($user->update_f($_POST, $errors)) {
+      if ($this->helper->user->update_f($_POST, $errors)) {
         $array = array('saved'=>true,'msg'=>con('user_details_saved_successfully'));
         echo json_encode($array);
         myExit();
       }
-      $array = array('saved'=>false,'msg'=>printMsg('__Errors__',null,false).printMsg('__Warning__',null,false));
+      $array = array('saved'=>false,'msg'=>printMsg('__Errors__', null, false).printMsg('__Warning__', null, false));
       echo json_encode($array);
       myExit();
     } else {
-      $smarty->assign('user_data',   $user->asarray());
+      $this->assign('user_data',   $this->helper->user->asarray());
     }
     return "user_update";
   }
 
-  Function useraddressAction ($smarty){
-    global $user;
-    $smarty->assign('title',   true);
-    $smarty->assign('user_data',   $user->asarray());
+  Function Action_useraddress (){
+    $this->assign('title',   true);
+    $this->assign('user_data',   $this->helper->user->asarray());
     return "user_address";
   }
 
@@ -147,37 +136,36 @@ myExit();
    *
    * @return String : SmartyPage
    */
-  function registerAction ($smarty){
-    global $user;
+  function Action_register (){
 
     //if registerasmemeber field is not set, the user doenst want to be a member
     $type = is($_POST['ismember'],false);
 
     //Try and Register
-    $user_id = $user->register_f($type, $_POST, $errors, 0, 'user_nospam');
+    $user_id = $this->helper->user->register_f($type, $_POST, $errors, 0, 'user_nospam');
 
     //If errors return to user registration.
     if (!$user_id || hasErrors() ) {
-      $smarty->assign('user_data',   $_POST);
-      $smarty->assign('reg_type',    $type);
+      $this->assign('user_data',   $_POST);
+      $this->assign('reg_type',    $type);
       return "user_register";
     } else {
-      $smarty->assign('newuser_id', $user_id);
+      $this->assign('newuser_id', $user_id);
     }
     return "checkout_preview";
   }
 
 
-  function indexAction($smarty) {
+  function Action_index () {
     unset( $_SESSION['_SHOP_order']);
     return "checkout_preview";
   }
 
-  function  submitAction($smarty) {
-    return checkout::submitAction($smarty,$myorder );
+  function Action_submit () {
+    return checkout::submitAction($this,$myorder );
   }
 
-  function  printAction($smarty) {
+  function  Action_print () {
     Global $order;
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
@@ -194,7 +182,7 @@ myExit();
     return;
   }
 
-  function acceptAction($smarty) {
+  function Action_accept () {
     $myorder = is($_SESSION['_SHOP_order'],nil);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
@@ -206,30 +194,29 @@ myExit();
     }
  //   echo "accept ok ($test): $myorder->order_id\n". print_r($myorder, true);
     $hand=$myorder->handling;
-    Checkout::setordervalues($myorder, $smarty);
+    Checkout::setordervalues($myorder, $this);
 
     $pm_return = $hand->on_return($myorder, true);
-    $smarty->assign('pm_return',$pm_return);
     If (!$pm_return['approved']) {
        Order::delete($myorder->order_id,'payment_not_approved' );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
 
     }
+    $this->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
   }
 
-  function  PosCancelaction($smarty) {
-  	global $cart;
+  function  Action_PosCancel () {
 
- 		$cart->destroy_f(); // destroy cart
+ 		$this->helper->mycart->destroy_f(); // destroy cart
     $myorder = is($_SESSION['_SHOP_order'],null);
     if ($myorder) {
        Order::delete($myorder->order_id,'pos_manual_canceled' );
     }
   }
 
-  function  cancelAction($smarty) {
+  function  Action_cancel () {
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
@@ -238,17 +225,17 @@ myExit();
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    Checkout::setordervalues($myorder, $smarty);
+    Checkout::setordervalues($myorder, $this);
     $hand=$myorder->handling;
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
     $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
-    $smarty->assign('pm_return',$pm_return);
+    $this->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
   }
 
-	function  notifyAction($smarty, $type="sor") {
+	function  Action_notify ( $type="sor") {
 		if($type == "sor"){
 			$myorder = is($_SESSION['_SHOP_order'], null);
 			$test = Order::DecodeSecureCode($myorder, checkout::getsecurecode($type), true);
@@ -257,7 +244,7 @@ myExit();
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
 		   		return;
 			}
-			ShopDB::dblogging("notify action ($test): $myorder->order_id.\n");
+			ShopDB::dblogging("notify  ($test): $myorder->order_id.\n");
 			$hand=$myorder->handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
@@ -272,7 +259,7 @@ myExit();
 		}
  	}
 
-  function paymentAction($smarty){
+  function Action_payment (){
     $myorder = is($_SESSION['_SHOP_order'], null);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
@@ -281,16 +268,16 @@ myExit();
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    return Checkout::paymentAction($myorder, $smarty);
+    return Checkout::paymentAction($myorder, $this);
   }
 
-  function reserveAction($smarty,$origin='www',$user_id=null) {
-    return Checkout::reserveAction($smarty,$origin,$user_id);
+  function Action_reserve ($origin='www',$user_id=null) {
+    return Checkout::reserveAction($this,$origin,$user_id);
   }
 
-  function confirmAction($smarty,$origin="www",$user_id=0, $no_fee=0) {
-    return Checkout::confirmAction($smarty,$origin,$user_id, $no_fee);
+  function Action_confirm ( $origin="www",$user_id=0, $no_fee=0) {
+    return Checkout::confirmAction($this,$origin,$user_id, $no_fee);
   }
-
+}
 //session_write_close();
 ?>

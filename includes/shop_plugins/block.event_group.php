@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-function smarty_block_event_group ($params, $content, &$smarty,&$repeat) {
+function smarty_block_event_group ($params, $content, $smarty, &$repeat) {
 	global $_SHOP;
 
 

@@ -41,7 +41,7 @@ if (!isset($_COUNTRY_LIST)) {
   }
 }
 
-function smarty_block_countries ($params, $content, &$smarty, &$repeat) {
+function smarty_block_countries ($params, $content, $smarty, &$repeat) {
 global $_COUNTRY_LIST;
   if ($repeat) {
     $data = array();
