@@ -59,15 +59,9 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
             list($_open_tag, $_data) = array_pop($this->_tag_stack);
             $this->trigger_template_error("unclosed {" . $_open_tag . "} tag");
         } 
-
-        if (!$this->compile_error) {
             // return compiled code
             // return str_replace(array("? >\n<?php","? ><?php"), array('',''), $this->parser->retvalue);
             return $this->parser->retvalue;
-        } else {
-            // compilation error
-            return false;
-        } 
     } 
 } 
 

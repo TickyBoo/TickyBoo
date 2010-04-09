@@ -3,7 +3,7 @@
 /**
  * Project:     Smarty: the PHP compiling template engine
  * File:        Smarty.class.php
- * SVN:         $Id: Smarty.class.php 3543 2010-03-29 15:41:01Z Uwe.Tews $
+ * SVN:         $Id: Smarty.class.php 3546 2010-03-31 16:23:01Z Uwe.Tews $
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -129,6 +129,8 @@ class Smarty extends Smarty_Internal_Data {
     public $force_compile = false; 
     // check template for modifications?
     public $compile_check = true; 
+    // locking concurrent compiles
+    public $compile_locking = true; 
     // use sub dirs for compiled/cached files?
     public $use_sub_dirs = false; 
     // compile_error?

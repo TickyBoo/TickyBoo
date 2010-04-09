@@ -68,7 +68,7 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
     // required plugins
     public $required_plugins = array('compiled' => array(), 'nocache' => array());
     public $security = false;
-    public $saved_modifer = null;
+    public $saved_modifier = null;
     public $smarty = null;
     /**
     * Create template data object
@@ -256,18 +256,28 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             $this->smarty->loadPlugin($this->resource_object->compiler_class);
             $this->compiler_object = new $this->resource_object->compiler_class($this->resource_object->template_lexer_class, $this->resource_object->template_parser_class, $this->smarty);
         }
+        // compile locking
+        if ($this->smarty->compile_locking && !$this->resource_object->isEvaluated) {
+            if ($saved_timestamp = $this->getCompiledTimestamp()) {
+                touch($this->getCompiledFilepath());
+            } 
+        } 
         // call compiler
-        if ($this->compiler_object->compileTemplate($this)) {
+        try {
+            $this->compiler_object->compileTemplate($this);
+        } 
+        catch (Exception $e) {
+            // restore old timestamp in case of error
+            if ($this->smarty->compile_locking && !$this->resource_object->isEvaluated && $saved_timestamp) {
+                touch($this->getCompiledFilepath(), $saved_timestamp);
+            } 
+            throw $e;
+        }
             // compiling succeded
             if (!$this->resource_object->isEvaluated) {
                 // write compiled template
                 Smarty_Internal_Write_File::writeFile($this->getCompiledFilepath(), $this->compiled_template, $this->smarty);
             }
-        } else {
-            // error compiling template
-            throw new Exception("Error compiling template {$this->getTemplateFilepath ()}");
-            return false;
-        }
         if ($this->smarty->debugging) {
             Smarty_Internal_Debug::end_compile($this);
         }

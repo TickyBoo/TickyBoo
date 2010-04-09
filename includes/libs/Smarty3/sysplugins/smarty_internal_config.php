@@ -205,18 +205,26 @@ class Smarty_Internal_Config {
                 // load compiler
                 $this->compiler_object = new Smarty_Internal_Config_File_Compiler($this->smarty);
             } 
+        // compile locking
+        if ($this->smarty->compile_locking) {
+            if ($saved_timestamp = $this->getCompiledTimestamp()) {
+                touch($this->getCompiledFilepath());
+            } 
+        } 
             // call compiler
-            if ($this->compiler_object->compileSource($this)) {
+        try {
+            $this->compiler_object->compileSource($this);
+        } 
+        catch (Exception $e) {
+            // restore old timestamp in case of error
+            if ($this->smarty->compile_locking && $saved_timestamp) {
+                touch($this->getCompiledFilepath(), $saved_timestamp);
+            } 
+            throw $e;
+        } 
                 // compiling succeded
                 // write compiled template
                 Smarty_Internal_Write_File::writeFile($this->getCompiledFilepath(), $this->getCompiledConfig(), $this->smarty); 
-                // make template and compiled file timestamp match
-                touch($this->getCompiledFilepath(), $this->getTimestamp());
-            } else {
-                // error compiling template
-                throw new Exception("Error compiling template {$this->getConfigFilepath ()}");
-                return false;
-            } 
         } 
 
         /*
