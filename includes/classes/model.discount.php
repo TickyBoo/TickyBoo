@@ -82,7 +82,7 @@ class Discount  Extends Model {
       $query = "SELECT count(*) count
                 from Seat
                 where seat_discount_id="._esc($this->id);
-      if (!$count = ShopDB::query_one_row($query) || $count['count'] != 0) {
+      if (!($count = ShopDB::query_one_row($query)) || (int)$count['count']) {
         return addWarning('in_use');
       }
       if (!parent::delete()){

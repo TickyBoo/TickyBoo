@@ -75,7 +75,7 @@ class Eventgroup Extends Model {
     $query = "SELECT count(event_name)
               FROM Event
               Where event_group_id="._esc($this->id);
-    if (!$res = ShopDB::query_one_row($query, false) || $res[0]>0) {
+    if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
       return addWarning('in_use');
     }
     return parent::delete();

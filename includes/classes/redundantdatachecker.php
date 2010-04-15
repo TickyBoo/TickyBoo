@@ -145,6 +145,7 @@ $orphancheck[]="
 select 'Event', e.event_id,  'stat_id'  , e.event_id,        es.es_event_id
 from Event e left join Event_stat es  on e.event_id = es.es_event_id
 where  (es.es_event_id is null and e.event_status !='unpub' and e.event_rep !='main')
+and e.event_pm_id is not null
 ";
 $orphancheck[]="
 select 'Event', e.event_id,  'main_id'  , e.event_main_id,  me.event_id  main_id
@@ -301,6 +302,7 @@ class orphans {
        'Order~handling_id'=>'Clear the handling fields, we dont know what orderhandler it was.',
        'Order~Seats'=>'This order has less tickets then ordered!!!',
        'Order~zeros'=>'Clear all zero identifiers in the order table',
+       'PlaceMapPart~event_id'=>'Remove this placemapPart, event is already removed',
        'PlaceMapPart~zeros'=>'Clear all zero identifiers in the PlaceMapPart table',
        'PlaceMap~event_id'=>'Remove this placemap, event is already removed',
        'PlaceMap~zeros'=>'Clear all zero identifiers in the PlaceMap table',
@@ -562,7 +564,16 @@ class orphans {
         }
          break;
       case 'PlaceMap~event_id':
-        PlaceMap::delete($fix[2]);
+        trace('PlaceMap~event_id',true,true);
+        $map = PlaceMap::load($fix[2]);
+        $map->delete();
+        orphanCheck();
+
+        break;
+
+      case 'PlaceMapPart~event_id':
+        $map = PlaceMapPart::load($fix[2]);
+        $map->delete();
         break;
 
       case 'PlaceMapPart~zeros':

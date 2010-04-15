@@ -44,7 +44,7 @@ class Ort Extends Model {
       '#ort_fax', 'ort_image', 'ort_url', 'ort_pm');
 
   function load ($ort_id){
-    $query="select * from Ort where ort_id=$ort_id";
+    $query="select * from Ort where ort_id="._esc($ort_id);
     if($res=ShopDB::query_one_row($query)){
 
       $ort=new Ort;
@@ -85,11 +85,12 @@ class Ort Extends Model {
 
   function delete () {
 
-    $query = "SELECT count(event_name)
+    $query = "SELECT count(*)
               FROM Event
               Where event_ort_id="._esc($this->ort_id);
-    if (!$res = ShopDB::query_one_row($query, false) || $res[0]) {
-      return addWarning('in_use');;
+    //var_dump($res = ShopDB::query_one_row($query, false));
+    if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
+      return addWarning('venue_in_use');
     }
 
     If (ShopDB::begin('Delete Ort')) {

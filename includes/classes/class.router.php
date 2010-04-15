@@ -69,6 +69,7 @@ class router {
 			$c = new $classname($module);
       $c->draw($action, $module, $isAjax);
   }
+
 /**
  * start the actual mvc-machinery
  * 1. constructs all needed params by calling constructParams
