@@ -68,7 +68,7 @@ function placeMapMargins($shift)
 function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
 {
     global $_SHOP;
-    $imagesize = 14;
+    $imagesize = 16;
     $l_row = ' '.con('place_row').' ';
     $l_seat = ' '.con('place_seat').' ';
 

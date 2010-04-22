@@ -315,6 +315,14 @@ class MyCart_Smarty {
     }else if($category_numbering=='rows' or
              $category_numbering=='both' or
 	           $category_numbering=='seat') {
+      if(is_array($places)) {
+        $placesx = $places;
+
+        $places = array();
+        foreach($placesx as $x) {
+          if ($x) $places[] = $x;
+        }
+      }
       if(!is_array($places) or empty($places)){
         addWarning('places_empty');
         return FALSE;
