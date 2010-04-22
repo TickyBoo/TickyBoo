@@ -33,6 +33,6 @@
  */
 
 define('ft_check','shop');
-require_once('includes/classes/class.router.php');
-router::draw('forgot_password');
+$fond='forgot_password';
+require_once('includes/controller/template.php');
 ?>

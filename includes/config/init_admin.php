@@ -40,7 +40,7 @@ $_SHOP->session_name = "AdminSession";
 //$_SHOP->is_admin = true;
 $_SHOP->auth_required = true;
 $_SHOP->auth_status="organizer";
-$_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3' );
+$_SHOP->allowed_uploads = array('.jpg', '.jpeg', '.png', '.gif', '.mp3' );
 if (!isset($_SHOP->software_updater_enabled)){
   $_SHOP->software_updater_enabled = true;
 }

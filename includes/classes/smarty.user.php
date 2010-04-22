@@ -43,8 +43,8 @@ class User_Smarty {
     if(isset($_SESSION['_SHOP_USER'])){
       $this->load_f($_SESSION['_SHOP_USER']);
     }
-    $smarty->register->templateObject("user",$this);
-    $smarty->assignByRef("user",$this);
+    $smarty->register_object("user",$this);
+    $smarty->assign_by_ref("user",$this);
   }
   function mode(){
     global $_SHOP;

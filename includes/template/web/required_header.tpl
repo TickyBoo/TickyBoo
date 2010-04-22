@@ -1,10 +1,10 @@
   <!-- Required Header .tpl Start -->
-  <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="css/flick/jquery-ui-1.8.custom.css" media="screen" />
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-  <script type="text/javascript" src="scripts/jquery/jquery-1.4.1.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.custom.min.js"></script>
 
   <script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery.json-2.2.min.js"></script>
@@ -15,6 +15,8 @@
   <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.3.js'></script>
   <script type='text/javascript' src='scripts/jquery/jquery.countdown.pack.js'></script>
   <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
+
+  <script type='text/javascript' src='scripts/jquery/roundies.js'></script>
 
   <script type="text/javascript">
   	var lang = new Object();
@@ -41,12 +43,14 @@
   <script type="text/javascript">
 
     var showDialog = function(element){
-      jQuery.get(jQuery(element).attr('href'),function(data){
+      jQuery.get(jQuery(element).attr('href'),
+        function(data){
         jQuery("#showdialog").html(data);
         jQuery("#showdialog").modal({
           autoResize:true
         });
-      });
+        }
+      );
       return false;
     }
 

@@ -39,8 +39,8 @@ require_once("classes/class.mycart.php");
 class MyCart_Smarty {
 
   function MyCart_Smarty ($smarty){
-    $smarty->register->templateObject("cart",$this,null,true,array("items"));
-    $smarty->assignByRef("cart",$this);
+    $smarty->register_object("cart",$this,null,true,array("items"));
+    $smarty->assign_by_ref("cart",$this);
   }
 
 
@@ -198,16 +198,16 @@ class MyCart_Smarty {
     }
 
     if($cart_row=&$this->cart_list[$this->cart_index++]){
-      $smarty->assignbyref("event_item",$cart_row[0]);
+      $smarty->assign_by_ref("event_item",$cart_row[0]);
 
 
-      $smarty->assignbyref("category_item",$cart_row[1]);
+      $smarty->assign_by_ref("category_item",$cart_row[1]);
 
 
 
       $seat_item=$cart_row[2];
 
-      $smarty->assignbyref("seat_item",$seat_item);
+      $smarty->assign_by_ref("seat_item",$seat_item);
       $smarty->assign("seat_item_id",$seat_item->id);
       $smarty->assign("seats_id",$seat_item->places_id);
       $smarty->assign("seats_nr",$seat_item->places_nr);

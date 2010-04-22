@@ -43,5 +43,4 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   $_SHOP->root .= 'pos/';
   $_SHOP->root_secured .= 'pos/';
-  require_once("init.php");
 ?>

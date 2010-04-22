@@ -215,7 +215,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $_SHOP->langfile = INC."lang".DS."site_en.inc";
   }
 
-  writeLog($old = setlocale(LC_TIME, NULL));
+ // writeLog($old = setlocale(LC_TIME, NULL));
 
   $loc = con('setlocale_ALL',' ');
   if(!empty($loc)){

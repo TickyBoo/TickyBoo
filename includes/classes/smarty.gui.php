@@ -55,14 +55,14 @@ class Gui_smarty {
 
   function __construct  ($smarty){
 
-    $smarty->register->templateObject("gui", $this);
-    $smarty->assignbyref("gui",$this);
+    $smarty->register_object("gui",$this);
+    $smarty->assign_by_ref("gui",$this);
 
-    $smarty->register->templateFunction('ShowFormToken', array($this,'showFormToken'));
-    $smarty->register->templateFunction('valuta', array($this,'valuta'));
-    $smarty->register->templateFunction('print_r', array($this,'print_r'));
-    $smarty->register->templateFunction('printMsg', array($this,'printMsg'));
-    $smarty->register->modifier('clean', 'smarty_modifier_clean');
+    $smarty->register_function('ShowFormToken', array($this,'showFormToken'));
+    $smarty->register_function('valuta', array($this,'valuta'));
+    $smarty->register_function('print_r', array($this,'print_r'));
+    $smarty->register_function('printMsg', array($this,'printMsg'));
+    $smarty->register_modifier('clean', 'smarty_modifier_clean');
 
   }
 

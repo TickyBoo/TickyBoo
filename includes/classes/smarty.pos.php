@@ -46,8 +46,8 @@ class POS_Smarty {
        $_SESSION['_SHOP_POS_USER']=$user;
     }
 
-    $smarty->register->templateObject("pos",$this);
-    $smarty->assignByRef("pos", $this);
+    $smarty->register_object("pos",$this);
+    $smarty->assign_by_ref("pos",$this);
     $this->logged=false;
 
     if($user){

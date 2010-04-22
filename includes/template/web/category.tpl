@@ -89,7 +89,7 @@
               </tr>
             {/if}
           </table>
-          <div style='overflow: auto; height: 350px; width:595px;' align='center' valign='center'>
+          <div style='overflow: auto; height: 350px; width:595px;' align='center' valign='middle'>
             {placemap  category=$shop_category}
           </div>
           {literal}

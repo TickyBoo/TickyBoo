@@ -35,7 +35,7 @@
 function smarty_resource_text_source ($tpl_name, &$tpl_source, $smarty_obj)
 {
   $tpl_source = $smarty_obj->my_template_source;
-  writeLog('7.'.print_r ($smarty_obj,true));
+ // writeLog('7.'.print_r ($smarty_obj,true));
   return true;
 }
 

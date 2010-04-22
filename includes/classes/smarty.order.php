@@ -40,8 +40,8 @@ class Order_Smarty {
 
   function Order_Smarty ($smarty){
     global $_SHOP;
-    $smarty->register->templateObject("order",$this,null,true,array("order_list","tickets"));
-    $smarty->assignByRef("order",$this);
+    $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
+    $smarty->assign_by_ref("order",$this);
 
     if(isset($_SESSION['_SHOP_USER_AUTH']['user_id'])) {
       $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];

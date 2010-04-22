@@ -260,6 +260,7 @@ class User extends Model{
 
    		if(ShopDB::query($query) and ShopDB::affected_rows()==1){
          	User::sendActivationCode($row, $active);
+          addNotice('act_email_sent');
          	return true;
    		} else {
    		  addWarning("log_err_wrong_usr");

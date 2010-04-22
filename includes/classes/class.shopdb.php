@@ -86,7 +86,7 @@ class ShopDB {
               }
 
             ShopDB::$link = $link;
-            ShopDB::checkdatabase(true, false);
+          //  ShopDB::checkdatabase(true, false);
 
             //Set Session Time Zone.
             //This does not work:
@@ -750,7 +750,7 @@ admin_list_title{font-size:16px; font-weight:bold;color:#555555;}
             }
           }
           if ($fields['engine'] <> $tblFields['engine'] ) {
-            $datainfo .= "mod $tablename enigne to ".$fields['engine']."\n";
+            $datainfo .= "mod $tablename enigne from {$tblFields['engine']} to ".$fields['engine']."\n";
             $sql .= ', ENGINE = '.$fields['engine'] ."\n";
             $update = true;
           }

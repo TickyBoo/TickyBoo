@@ -1,0 +1,2803 @@
+.book-navigation .menu {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 3em; PADDING-RIGHT: 0px; BORDER-TOP: #888 1px solid; PADDING-TOP: 1em
+}
+.book-navigation .page-links {
+	BORDER-BOTTOM: #888 1px solid; TEXT-ALIGN: center; PADDING-BOTTOM: 0.5em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; BORDER-TOP: #888 1px solid; PADDING-TOP: 0.5em
+}
+.book-navigation .page-previous {
+	TEXT-ALIGN: left; WIDTH: 42%; DISPLAY: block; FLOAT: left
+}
+.book-navigation .page-up {
+	MARGIN: 0px 5%; WIDTH: 4%; DISPLAY: block; FLOAT: left
+}
+.book-navigation .page-next {
+	TEXT-ALIGN: right; WIDTH: 42%; DISPLAY: block; FLOAT: right
+}
+.field .field-label {
+	FONT-WEIGHT: bold
+}
+.field .field-label-inline {
+	FONT-WEIGHT: bold
+}
+.field .field-label-inline-first {
+	FONT-WEIGHT: bold
+}
+.field .field-label-inline {
+	DISPLAY: inline
+}
+.field .field-label-inline-first {
+	DISPLAY: inline
+}
+.field .field-label-inline {
+	VISIBILITY: hidden
+}
+.node-form .number {
+	WIDTH: auto; DISPLAY: inline
+}
+.toboggan-container {
+	TEXT-ALIGN: center
+}
+.toboggan-login-link {
+	TEXT-ALIGN: left
+}
+.toboggan-login-link A {
+	TEXT-DECORATION: none
+}
+.toboggan-block-message {
+	TEXT-ALIGN: left
+}
+.user-login-block {
+	TEXT-ALIGN: left
+}
+.user-login-block A {
+	TEXT-ALIGN: left
+}
+.node-unpublished {
+	BACKGROUND-COLOR: #fff4f4
+}
+.preview .node {
+	BACKGROUND-COLOR: #ffffea
+}
+#node-admin-filter UL {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 100%; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+#node-admin-buttons {
+	FLOAT: left; MARGIN-LEFT: 0.5em; CLEAR: right
+}
+TD.revision-current {
+	BACKGROUND: #ffc
+}
+.node-form .form-text {
+	WIDTH: 95%; DISPLAY: block
+}
+.node-form .container-inline .form-text {
+	WIDTH: auto; DISPLAY: inline
+}
+.node-form .standard {
+	CLEAR: both
+}
+.node-form TEXTAREA {
+	WIDTH: 95%; DISPLAY: block
+}
+.node-form .attachments FIELDSET {
+	DISPLAY: block; FLOAT: none
+}
+FIELDSET {
+	PADDING-BOTTOM: 0.5em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; MARGIN-BOTTOM: 1em; PADDING-TOP: 0.5em
+}
+FORM {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+HR {
+	BORDER-BOTTOM: gray 1px solid; BORDER-LEFT: gray 1px solid; HEIGHT: 1px; BORDER-TOP: gray 1px solid; BORDER-RIGHT: gray 1px solid
+}
+IMG {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; BORDER-TOP: 0px; BORDER-RIGHT: 0px
+}
+TABLE {
+/*	BORDER-COLLAPSE: collapse */
+}
+TH {
+	BORDER-BOTTOM: #ccc 3px solid; TEXT-ALIGN: left; PADDING-RIGHT: 1em
+}
+.clear-block:after {
+	DISPLAY: block; HEIGHT: 0px; VISIBILITY: hidden; CLEAR: both; CONTENT: "."
+}
+.clear-block {
+	DISPLAY: inline-block
+}
+* HTML .clear-block {
+	HEIGHT: 1%
+}
+.clear-block {
+	DISPLAY: block
+}
+TH.active IMG {
+	DISPLAY: inline
+}
+TR.even {
+	BORDER-BOTTOM: #ccc 1px solid; PADDING-BOTTOM: 0.1em; BACKGROUND-COLOR: #eee; PADDING-LEFT: 0.6em; PADDING-RIGHT: 0.6em; PADDING-TOP: 0.1em
+}
+TR.odd {
+	BORDER-BOTTOM: #ccc 1px solid; PADDING-BOTTOM: 0.1em; BACKGROUND-COLOR: #eee; PADDING-LEFT: 0.6em; PADDING-RIGHT: 0.6em; PADDING-TOP: 0.1em
+}
+TD.active {
+	BACKGROUND-COLOR: #ddd
+}
+TBODY {
+	BORDER-TOP: #ccc 1px solid
+}
+TBODY TH {
+	BORDER-BOTTOM: #ccc 1px solid
+}
+THEAD TH {
+	BORDER-BOTTOM: #ccc 3px solid; TEXT-ALIGN: left; PADDING-RIGHT: 1em
+}
+.breadcrumb {
+	PADDING-BOTTOM: 0.5em
+}
+.error {
+	COLOR: #f00
+}
+DIV.error {
+	BORDER-BOTTOM: #d77 1px solid; BORDER-LEFT: #d77 1px solid; BORDER-TOP: #d77 1px solid; BORDER-RIGHT: #d77 1px solid
+}
+DIV.error {
+	BACKGROUND: #fcc; COLOR: #200
+}
+TR.error {
+	BACKGROUND: #fcc; COLOR: #200
+}
+DIV.warning {
+	BACKGROUND: #ffd
+}
+TR.warning {
+	BACKGROUND: #ffd
+}
+DIV.ok {
+	BACKGROUND: #dfd
+}
+TR.ok {
+	BACKGROUND: #dfd
+}
+.item-list .icon {
+	PADDING-LEFT: 0.25em; FLOAT: right; COLOR: #555; CLEAR: right
+}
+.item-list .title {
+	FONT-WEIGHT: bold
+}
+.item-list UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 0px 0.75em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.item-list UL LI {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: disc; MARGIN: 0px 0px 0.25em 1.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.form-item {
+	MARGIN-TOP: 1em; MARGIN-BOTTOM: 1em
+}
+TR.odd .form-item {
+	MARGIN-TOP: 0px; WHITE-SPACE: nowrap; MARGIN-BOTTOM: 0px
+}
+TR.even .form-item {
+	MARGIN-TOP: 0px; WHITE-SPACE: nowrap; MARGIN-BOTTOM: 0px
+}
+TR.merge-down {
+	BORDER-BOTTOM-WIDTH: 0px !important
+}
+TR.merge-down TD {
+	BORDER-BOTTOM-WIDTH: 0px !important
+}
+TR.merge-down TH {
+	BORDER-BOTTOM-WIDTH: 0px !important
+}
+TR.merge-up {
+	BORDER-TOP-WIDTH: 0px !important
+}
+TR.merge-up TD {
+	BORDER-TOP-WIDTH: 0px !important
+}
+TR.merge-up TH {
+	BORDER-TOP-WIDTH: 0px !important
+}
+.form-item INPUT.error {
+	BORDER-BOTTOM: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-TOP: red 2px solid; BORDER-RIGHT: red 2px solid
+}
+.form-item TEXTAREA.error {
+	BORDER-BOTTOM: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-TOP: red 2px solid; BORDER-RIGHT: red 2px solid
+}
+.form-item SELECT.error {
+	BORDER-BOTTOM: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-TOP: red 2px solid; BORDER-RIGHT: red 2px solid
+}
+.form-item .description {
+	FONT-SIZE: 0.85em
+}
+.form-item LABEL {
+	DISPLAY: block; FONT-WEIGHT: bold
+}
+.form-item LABEL.option {
+	DISPLAY: inline; FONT-WEIGHT: normal
+}
+.form-checkboxes {
+	MARGIN: 1em 0px
+}
+.form-radios {
+	MARGIN: 1em 0px
+}
+.form-checkboxes .form-item {
+	MARGIN-TOP: 0.4em; MARGIN-BOTTOM: 0.4em
+}
+.form-radios .form-item {
+	MARGIN-TOP: 0.4em; MARGIN-BOTTOM: 0.4em
+}
+.marker {
+	COLOR: #f00
+}
+.form-required {
+	COLOR: #f00
+}
+.more-link {
+	TEXT-ALIGN: right
+}
+.more-help-link {
+	TEXT-ALIGN: right; FONT-SIZE: 0.85em
+}
+.nowrap {
+	WHITE-SPACE: nowrap
+}
+.pager {
+	TEXT-ALIGN: center; CLEAR: both
+}
+.pager A {
+	PADDING-BOTTOM: 0.5em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.5em
+}
+.pager STRONG.pager-current {
+	PADDING-BOTTOM: 0.5em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.5em
+}
+.tips {
+	PADDING-BOTTOM: 0px; MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; FONT-SIZE: 0.9em; PADDING-TOP: 0px
+}
+DL.multiselect DD.b {
+	WIDTH: 14em; FONT-FAMILY: inherit; FONT-SIZE: inherit
+}
+DL.multiselect DD.b .form-item {
+	WIDTH: 14em; FONT-FAMILY: inherit; FONT-SIZE: inherit
+}
+DL.multiselect DD.b SELECT {
+	WIDTH: 14em; FONT-FAMILY: inherit; FONT-SIZE: inherit
+}
+DL.multiselect DD.a {
+	WIDTH: 8em
+}
+DL.multiselect DD.a .form-item {
+	WIDTH: 8em
+}
+DL.multiselect DT {
+	PADDING-BOTTOM: 0px; LINE-HEIGHT: 1.75em; MARGIN: 0px 1em 0px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+DL.multiselect DD {
+	PADDING-BOTTOM: 0px; LINE-HEIGHT: 1.75em; MARGIN: 0px 1em 0px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+DL.multiselect .form-item {
+	MARGIN: 0px; HEIGHT: 1.75em
+}
+.container-inline DIV {
+	DISPLAY: inline
+}
+.container-inline LABEL {
+	DISPLAY: inline
+}
+UL.menu {
+	BORDER-BOTTOM: medium none; TEXT-ALIGN: left; BORDER-LEFT: medium none; LIST-STYLE-TYPE: none; BORDER-TOP: medium none; LIST-STYLE-IMAGE: none; BORDER-RIGHT: medium none
+}
+UL.menu LI {
+	MARGIN: 0px 0px 0px 0.5em
+}
+LI.expanded {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: circle; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0.5em; LIST-STYLE-IMAGE: url(menu-expanded.png); PADDING-TOP: 0.2em
+}
+LI.collapsed {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: disc; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0.5em; LIST-STYLE-IMAGE: url(menu-collapsed.png); PADDING-TOP: 0.2em
+}
+LI.leaf {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: square; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0.5em; LIST-STYLE-IMAGE: url(menu-leaf.png); PADDING-TOP: 0.2em
+}
+LI A.active {
+	COLOR: #000
+}
+TD.menu-disabled {
+	BACKGROUND: #ccc
+}
+UL.links {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.inline.links {
+	DISPLAY: inline
+}
+UL.links LI {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; DISPLAY: inline; PADDING-TOP: 0px
+}
+.block UL {
+	PADDING-BOTTOM: 0.25em; MARGIN: 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.primary {
+	BORDER-BOTTOM: #bbb 1px solid; PADDING-BOTTOM: 0px; LINE-HEIGHT: normal; LIST-STYLE-TYPE: none; MARGIN: 5px; PADDING-LEFT: 1em; PADDING-RIGHT: 0px; BORDER-COLLAPSE: collapse; WHITE-SPACE: nowrap; HEIGHT: auto; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+UL.primary LI {
+	DISPLAY: inline
+}
+UL.primary LI A {
+	BORDER-BOTTOM: #bbb 1px; BORDER-LEFT: #bbb 1px solid; PADDING-BOTTOM: 0px; BACKGROUND-COLOR: #ddd; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; HEIGHT: auto; BORDER-TOP: #bbb 1px solid; MARGIN-RIGHT: 0.5em; BORDER-RIGHT: #bbb 1px solid; TEXT-DECORATION: none; PADDING-TOP: 0px
+}
+UL.primary LI.active A {
+	BORDER-BOTTOM: #fff 1px solid; BORDER-LEFT: #bbb 1px solid; BACKGROUND-COLOR: #fff; BORDER-TOP: #bbb 1px solid; BORDER-RIGHT: #bbb 1px solid
+}
+UL.primary LI A:hover {
+	BORDER-BOTTOM-COLOR: #eee; BACKGROUND-COLOR: #eee; BORDER-TOP-COLOR: #ccc; BORDER-RIGHT-COLOR: #ccc; BORDER-LEFT-COLOR: #ccc
+}
+UL.secondary {
+	BORDER-BOTTOM: #bbb 1px solid; PADDING-BOTTOM: 0.5em; MARGIN: 5px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 0.5em
+}
+UL.secondary LI {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; DISPLAY: inline; BORDER-RIGHT: #ccc 1px solid; PADDING-TOP: 0px
+}
+UL.secondary A {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 0px
+}
+UL.secondary A.active {
+	BORDER-BOTTOM: #999 4px solid
+}
+#autocomplete {
+	Z-INDEX: 100; BORDER-BOTTOM: 1px solid; POSITION: absolute; BORDER-LEFT: 1px solid; OVERFLOW: hidden; BORDER-TOP: 1px solid; BORDER-RIGHT: 1px solid
+}
+#autocomplete UL {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+#autocomplete LI {
+	WHITE-SPACE: pre; BACKGROUND: #fff; COLOR: #000; CURSOR: default
+}
+#autocomplete LI.selected {
+	BACKGROUND: #0072b9; COLOR: #fff
+}
+HTML.js INPUT.form-autocomplete {
+	BACKGROUND-IMAGE: url(throbber.gif); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: 100% 2px
+}
+HTML.js INPUT.throbbing {
+	BACKGROUND-POSITION: 100% -18px
+}
+HTML.js FIELDSET.collapsed {
+	BORDER-RIGHT-WIDTH: 0px; MARGIN-BOTTOM: 0px; BORDER-BOTTOM-WIDTH: 0px; HEIGHT: 1em; BORDER-LEFT-WIDTH: 0px
+}
+HTML.js FIELDSET.collapsed * {
+	DISPLAY: none
+}
+HTML.js FIELDSET.collapsed LEGEND {
+	DISPLAY: block
+}
+HTML.js FIELDSET.collapsible LEGEND A {
+	PADDING-LEFT: 15px; BACKGROUND: url(menu-expanded.png) no-repeat 5px 75%
+}
+HTML.js FIELDSET.collapsed LEGEND A {
+	BACKGROUND-IMAGE: url(menu-collapsed.png); BACKGROUND-POSITION: 5px 50%
+}
+* HTML.js FIELDSET.collapsed LEGEND {
+	DISPLAY: inline
+}
+* HTML.js FIELDSET.collapsed LEGEND * {
+	DISPLAY: inline
+}
+* HTML.js FIELDSET.collapsed TABLE * {
+	DISPLAY: inline
+}
+HTML.js FIELDSET.collapsible LEGEND A {
+	DISPLAY: block
+}
+HTML.js FIELDSET.collapsible .fieldset-wrapper {
+	OVERFLOW: auto
+}
+.resizable-textarea {
+	WIDTH: 95%
+}
+.resizable-textarea .grippie {
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; BACKGROUND: url(grippie.png) #eee no-repeat center 2px; HEIGHT: 9px; OVERFLOW: hidden; BORDER-TOP: #ddd 0px solid; CURSOR: s-resize; BORDER-RIGHT: #ddd 1px solid
+}
+HTML.js .resizable-textarea TEXTAREA {
+	WIDTH: 100%; DISPLAY: block; MARGIN-BOTTOM: 0px
+}
+.progress {
+	FONT-WEIGHT: bold
+}
+.progress .bar {
+	BORDER-BOTTOM: #00375a 1px solid; BORDER-LEFT: #00375a 1px solid; MARGIN-TOP: 0.2em; BACKGROUND: url(progress.gif) #fff; HEIGHT: 1.5em; BORDER-TOP: #00375a 1px solid; BORDER-RIGHT: #00375a 1px solid
+}
+.progress .filled {
+	BORDER-BOTTOM: #004a73 0.5em solid; WIDTH: 0%; BACKGROUND: #0072b9; HEIGHT: 1em
+}
+.progress .percentage {
+	FLOAT: right
+}
+#first-time STRONG {
+	PADDING-BOTTOM: 0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; PADDING-TOP: 1.5em
+}
+TR.selected TD {
+	BACKGROUND: #ffc
+}
+#TB_window {
+	FONT: 12px Arial, Helvetica, sans-serif; COLOR: #333333
+}
+#TB_secondLine {
+	FONT: 10px Arial, Helvetica, sans-serif; COLOR: #666666
+}
+#TB_window A:link {
+	COLOR: #666666
+}
+#TB_window A:visited {
+	COLOR: #666666
+}
+#TB_window A:hover {
+	COLOR: #000
+}
+#TB_window A:active {
+	COLOR: #666666
+}
+#TB_window A:focus {
+	COLOR: #666666
+}
+#TB_overlay {
+	Z-INDEX: 100; POSITION: fixed; FILTER: alpha(opacity=75); BACKGROUND-COLOR: #000; WIDTH: 100%; HEIGHT: 100%; TOP: 0px; LEFT: 0px; -moz-opacity: 0.75; opacity: 0.75
+}
+* HTML #TB_overlay {
+	POSITION: absolute
+}
+#TB_window {
+	Z-INDEX: 102; BORDER-BOTTOM: #525252 4px solid; POSITION: fixed; TEXT-ALIGN: left; BORDER-LEFT: #525252 4px solid; DISPLAY: none; BACKGROUND: #ffffff; COLOR: #000000; BORDER-TOP: #525252 4px solid; TOP: 50%; BORDER-RIGHT: #525252 4px solid; LEFT: 50%
+}
+* HTML #TB_window {
+	POSITION: absolute
+}
+#TB_window IMG#TB_Image {
+	BORDER-BOTTOM: #ccc 1px solid; BORDER-LEFT: #666 1px solid; MARGIN: 15px 0px 0px 15px; DISPLAY: block; BORDER-TOP: #666 1px solid; BORDER-RIGHT: #ccc 1px solid
+}
+#TB_caption {
+	PADDING-BOTTOM: 10px; PADDING-LEFT: 25px; PADDING-RIGHT: 30px; FLOAT: left; HEIGHT: 25px; PADDING-TOP: 7px
+}
+#TB_closeWindow {
+	PADDING-BOTTOM: 10px; PADDING-LEFT: 0px; PADDING-RIGHT: 25px; FLOAT: right; HEIGHT: 25px; PADDING-TOP: 11px
+}
+#TB_closeAjaxWindow {
+	TEXT-ALIGN: right; PADDING-BOTTOM: 5px; PADDING-LEFT: 0px; PADDING-RIGHT: 10px; MARGIN-BOTTOM: 1px; FLOAT: right; PADDING-TOP: 7px
+}
+#TB_ajaxWindowTitle {
+	PADDING-BOTTOM: 5px; PADDING-LEFT: 10px; PADDING-RIGHT: 0px; MARGIN-BOTTOM: 1px; FLOAT: left; PADDING-TOP: 7px
+}
+#TB_title {
+	BACKGROUND-COLOR: #e8e8e8; HEIGHT: 27px
+}
+#TB_ajaxContent {
+	TEXT-ALIGN: left; PADDING-BOTTOM: 15px; LINE-HEIGHT: 1.4em; PADDING-LEFT: 15px; PADDING-RIGHT: 15px; CLEAR: both; OVERFLOW: auto; PADDING-TOP: 2px
+}
+.TB_modal#TB_ajaxContent {
+	PADDING-BOTTOM: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px; PADDING-TOP: 15px
+}
+#TB_ajaxContent P {
+	PADDING-BOTTOM: 5px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 5px
+}
+#TB_load {
+	Z-INDEX: 103; POSITION: fixed; MARGIN: -6px 0px 0px -104px; WIDTH: 208px; DISPLAY: none; BACKGROUND: url(images/theme/default/loading_animation.gif); HEIGHT: 13px; TOP: 50%; LEFT: 50%
+}
+* HTML #TB_load {
+	POSITION: absolute
+}
+#TB_HideSelect {
+	Z-INDEX: 99; BORDER-BOTTOM: medium none; POSITION: fixed; FILTER: alpha(opacity=0); BORDER-LEFT: medium none; BACKGROUND-COLOR: #fff; WIDTH: 100%; HEIGHT: 100%; BORDER-TOP: medium none; TOP: 0px; BORDER-RIGHT: medium none; LEFT: 0px; -moz-opacity: 0; opacity: 0
+}
+* HTML #TB_HideSelect {
+	POSITION: absolute
+}
+#TB_iframeContent {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; MARGIN-TOP: 1px; MARGIN-BOTTOM: -1px; CLEAR: both; BORDER-TOP: medium none; BORDER-RIGHT: medium none; _margin-bottom: 1px
+}
+.options {
+	DISPLAY: inline
+}
+#option_key TD:first-child {
+	WIDTH: 26%
+}
+.combinations TD:first-child {
+	WIDTH: 12%
+}
+.combinations TD:first-child + TD {
+	WIDTH: 12%
+}
+.order-overview-form {
+	PADDING-BOTTOM: 0em; PADDING-LEFT: 0em; PADDING-RIGHT: 2em; FLOAT: left; PADDING-TOP: 0em
+}
+.order-overview-form .form-item {
+	MARGIN-BOTTOM: 0em
+}
+.order-overview-form #uc-order-select-form {
+	MARGIN-BOTTOM: 0em
+}
+.order-overview-form #uc-order-admin-sort-form {
+	MARGIN-BOTTOM: 0em
+}
+.uc-orders-table {
+	WIDTH: 100%; CLEAR: both
+}
+.uc-orders-table THEAD TH {
+	WHITE-SPACE: nowrap
+}
+.uc-orders-table TR.odd:hover {
+	BACKGROUND-COLOR: #ddd
+}
+.uc-orders-table TR.even:hover {
+	BACKGROUND-COLOR: #ddd
+}
+.uc-orders-table IMG {
+	FLOAT: left; MARGIN-RIGHT: 0.5em
+}
+.order-admin-icons {
+	MARGIN-LEFT: 2px
+}
+.order-admin-icons IMG {
+	POSITION: relative; PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; TOP: 3px; PADDING-TOP: 0px
+}
+.order-pane {
+	BORDER-BOTTOM: #bbb 1px solid; BORDER-LEFT: #bbb 1px solid; PADDING-BOTTOM: 0.5em; LINE-HEIGHT: 1.1em; MARGIN: 0.5em; PADDING-LEFT: 0.5em; WIDTH: auto; PADDING-RIGHT: 0.5em; BORDER-TOP: #bbb 1px solid; BORDER-RIGHT: #bbb 1px solid; PADDING-TOP: 0.5em
+}
+.order-pane THEAD {
+	BACKGROUND-COLOR: #ddd
+}
+.order-pane TBODY {
+	BORDER-TOP: 0px
+}
+.order-pane-title {
+	PADDING-BOTTOM: 0.5em; FONT-WEIGHT: bold
+}
+.pos-left {
+	FLOAT: left
+}
+.abs-left {
+	CLEAR: left
+}
+.pos-right {
+	FLOAT: right
+}
+.abs-right {
+	FLOAT: right; CLEAR: right
+}
+.text-right {
+	TEXT-ALIGN: right
+}
+.text-center {
+	TEXT-ALIGN: center
+}
+.full-width {
+	WIDTH: 100%
+}
+.order-pane-table {
+	WIDTH: 100%
+}
+.order-pane-table .order-pane-table-heading {
+	BORDER-BOTTOM: #bbb 2px solid; BORDER-LEFT: #bbb 0px solid; BACKGROUND-COLOR: #ddd; BORDER-TOP: #bbb 0px solid; FONT-WEIGHT: bold; BORDER-RIGHT: #bbb 0px solid
+}
+.order-pane-table THEAD TH {
+	BORDER-BOTTOM: #bbb 2px solid; BORDER-LEFT: #bbb 0px solid; PADDING-BOTTOM: 4px; BACKGROUND-COLOR: #ddd; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; BORDER-TOP: #bbb 0px solid; FONT-WEIGHT: bold; BORDER-RIGHT: #bbb 0px solid; PADDING-TOP: 4px
+}
+.order-pane-table TR {
+	BORDER-BOTTOM: #bbb 1px solid; BORDER-LEFT: #bbb 0px solid; BORDER-TOP: #bbb 0px solid; BORDER-RIGHT: #bbb 0px solid
+}
+.order-pane-table TR.odd TD {
+	PADDING-BOTTOM: 4px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; PADDING-TOP: 4px
+}
+.order-pane-table TR.even TD {
+	PADDING-BOTTOM: 4px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; PADDING-TOP: 4px
+}
+.order-edit-table {
+	WIDTH: auto
+}
+.order-edit-table .oet-label {
+	TEXT-ALIGN: right; FONT-WEIGHT: bold
+}
+.order-edit-table .form-item {
+	DISPLAY: inline
+}
+.address-select-box {
+	BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #ddd; PADDING-LEFT: 1em; WIDTH: auto; MARGIN-BOTTOM: 1em; BORDER-TOP: #999 1px solid; BORDER-RIGHT: #999 1px solid
+}
+.customer-select-box {
+	BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #ddd; MARGIN-TOP: 1em; PADDING-LEFT: 1em; WIDTH: auto; PADDING-RIGHT: 1em; BORDER-TOP: #999 1px solid; BORDER-RIGHT: #999 1px solid; PADDING-TOP: 1em
+}
+.product-select-box {
+	BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; BACKGROUND-COLOR: #ddd; WIDTH: auto; MARGIN-BOTTOM: 1em; BORDER-TOP: #999 1px solid; MARGIN-RIGHT: auto; BORDER-RIGHT: #999 1px solid
+}
+.product-select-box2 {
+	BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #ddd; PADDING-LEFT: 1em; WIDTH: auto; MARGIN-BOTTOM: 1em; BORDER-TOP: #999 1px solid; MARGIN-RIGHT: auto; BORDER-RIGHT: #999 1px solid
+}
+.line-item-table {
+	WIDTH: 100%
+}
+.line-item-table TD {
+	PADDING-BOTTOM: 2px; PADDING-LEFT: 2px; PADDING-RIGHT: 2px; PADDING-TOP: 2px
+}
+.line-item-table .li-title {
+	TEXT-ALIGN: right; WIDTH: 100%; FONT-WEIGHT: bold
+}
+.line-item-table .li-amount {
+	TEXT-ALIGN: right
+}
+.line-item-table .form-item {
+	DISPLAY: inline
+}
+.order-review-table TBODY {
+	BORDER-TOP: 0px
+}
+.product-options {
+	FONT-SIZE: 0.7em
+}
+.order-pane #uc-credit-order-view-form {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0em
+}
+#uc-credit-order-view-form .form-submit {
+	MARGIN: 0em
+}
+.order-pane #uc-order-view-update-form {
+	MARGIN-BOTTOM: 1em
+}
+.update-controls {
+	PADDING-TOP: 1em
+}
+.update-controls DIV {
+	PADDING-RIGHT: 1em
+}
+.update-controls DIV {
+	DISPLAY: inline
+}
+.update-controls LABEL {
+	DISPLAY: inline
+}
+.update-controls .form-submit {
+	MARGIN: 0em
+}
+.address-select-box #uc-order-address-book-form {
+	MARGIN-BOTTOM: 0em
+}
+.abs-left.order-pane .form-submit {
+	MARGIN: 0.5em 0.5em 0.5em 0em
+}
+.order-pane #customer-select FORM {
+	MARGIN-BOTTOM: 0em
+}
+.product_image {
+	TEXT-ALIGN: center; BORDER-LEFT: 1px solid; PADDING-LEFT: 4px; FLOAT: right; MARGIN-LEFT: 4px; CLEAR: right; PADDING-TOP: 4px
+}
+.display_price {
+	TEXT-ALIGN: center; PADDING-BOTTOM: 4px; PADDING-LEFT: 4px; WIDTH: 100px; FLOAT: right; CLEAR: right; FONT-SIZE: 1.3em; FONT-WEIGHT: bold
+}
+.model {
+	DISPLAY: inline; FONT-WEIGHT: bold; MARGIN-RIGHT: 2em
+}
+H3.title {
+	MARGIN-TOP: 1em
+}
+.node-form .product-field TABLE {
+	MARGIN: 0px; WIDTH: auto
+}
+.node-form .product-field TD {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 6px; PADDING-TOP: 3px
+}
+.node-form TBODY {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; MARGIN: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none
+}
+.node-form .product-field TABLE .form-item {
+	MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px
+}
+.node-form .product-field .form-text {
+	WIDTH: auto; DISPLAY: inline
+}
+.product-ubrowser {
+	BORDER-BOTTOM: #999999 1px solid; BORDER-LEFT: #999999 1px solid; BACKGROUND-COLOR: #dddddd; MARGIN-TOP: 1em; WIDTH: auto; BORDER-TOP: #999999 1px solid; MARGIN-RIGHT: 2em; BORDER-RIGHT: #999999 1px solid
+}
+.product-buffer {
+	BORDER-BOTTOM: #999999 1px solid; BORDER-LEFT: #999999 1px solid; BACKGROUND-COLOR: #dddddd; MARGIN-TOP: 1em; WIDTH: auto; BORDER-TOP: #999999 1px solid; MARGIN-RIGHT: 2em; BORDER-RIGHT: #999999 1px solid
+}
+.product-ubrowser {
+	PADDING-LEFT: 1em
+}
+.product-buffer {
+	PADDING-BOTTOM: 1em; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 1em
+}
+.product-buffer .form-submit {
+	MARGIN: 0em
+}
+#products-selector TABLE {
+	MARGIN: 0em
+}
+#products-selector TD {
+	PADDING-BOTTOM: 0em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0em
+}
+DIV#products-selector FORM {
+	MARGIN-BOTTOM: 0em
+}
+#products-selector DIV.form-item {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em
+}
+#buffer-images {
+	MARGIN-BOTTOM: 1em
+}
+#buffer-images IMG {
+	MARGIN: 0.5em
+}
+TABLE.product-list {
+	CLEAR: both
+}
+.add-feature DIV {
+	PADDING-RIGHT: 1em
+}
+.add-feature DIV {
+	DISPLAY: inline
+}
+.add-feature LABEL {
+	DISPLAY: inline
+}
+.sales-year {
+	DISPLAY: inline
+}
+.sales-year .form-item {
+	DISPLAY: inline
+}
+.sales-year .form-item LABEL {
+	DISPLAY: inline
+}
+.sales-year .form-submit {
+	MARGIN: 0px
+}
+.uc-sales-table TR.odd:hover {
+	BACKGROUND-COLOR: #dddddd
+}
+.uc-sales-table TR.even:hover {
+	BACKGROUND-COLOR: #dddddd
+}
+.uc-sales-table TD {
+	VERTICAL-ALIGN: top
+}
+.report-date-table {
+	WIDTH: auto
+}
+.report-submit {
+	FLOAT: right
+}
+.report-date-table TD {
+	VERTICAL-ALIGN: bottom
+}
+.report-date-table TD DIV {
+	MARGIN: 0px
+}
+FORM.uc-reports-customize-report-form FIELDSET.collapsible .fieldset-wrapper {
+	OVERFLOW: visible
+}
+.uc-stock-table TR.odd:hover {
+	BACKGROUND-COLOR: #dddddd
+}
+.uc-stock-table TR.even:hover {
+	BACKGROUND-COLOR: #dddddd
+}
+TBODY TR.uc-stock-below-threshold {
+	BACKGROUND-COLOR: #dddddd
+}
+#store-links {
+	Z-INDEX: 1000; TEXT-ALIGN: left; PADDING-BOTTOM: 0px; LINE-HEIGHT: 1.75em; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+#store-links UL {
+	Z-INDEX: 1000; TEXT-ALIGN: left; PADDING-BOTTOM: 0px; LINE-HEIGHT: 1.75em; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+#store-links A {
+	Z-INDEX: 1000; PADDING-LEFT: 4px; WIDTH: 14em; DISPLAY: block
+}
+#store-links A IMG.uc-store-icon {
+	MARGIN: 3px 6px 3px 2px; FLOAT: left; TEXT-DECORATION: none
+}
+#store-links LI {
+	BACKGROUND-IMAGE: none; Z-INDEX: 1000; BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; PADDING-BOTTOM: 0px; BACKGROUND-COLOR: #ffffff !important; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 14em; PADDING-RIGHT: 0px; FLOAT: left; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; PADDING-TOP: 0px
+}
+#store-links LI UL {
+	Z-INDEX: 1000; POSITION: absolute; MARGIN: -1.75em 0px 0px 14em; WIDTH: 14em; DISPLAY: none
+}
+#sidebar-right DIV #store-links LI UL {
+	MARGIN: -1.75em 0pt 0pt -14em
+}
+#store-links LI:hover UL UL {
+	DISPLAY: none
+}
+#store-links LI:hover UL UL UL {
+	DISPLAY: none
+}
+#store-links LI.sfhover UL UL {
+	DISPLAY: none
+}
+#store-links LI.sfhover UL UL UL {
+	DISPLAY: none
+}
+#store-links LI:hover UL {
+	DISPLAY: block
+}
+#store-links LI LI:hover UL {
+	DISPLAY: block
+}
+#store-links LI LI LI:hover UL {
+	DISPLAY: block
+}
+#store-links LI.sfhover UL {
+	DISPLAY: block
+}
+#store-links LI LI.sfhover UL {
+	DISPLAY: block
+}
+#store-links LI LI LI.sfhover UL {
+	DISPLAY: block
+}
+.uc-store-admin-table {
+	BORDER-BOTTOM: #bbb 1px dashed; BORDER-LEFT: #bbb 1px dashed; MARGIN: 1em auto; BORDER-TOP: #bbb 1px dashed; BORDER-RIGHT: #bbb 1px dashed
+}
+.uc-store-admin-table TBODY {
+	BORDER-TOP: 0px
+}
+.uc-store-admin-panel {
+	PADDING-BOTTOM: 1em; MARGIN: 1em; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 1em
+}
+.uc-store-admin-panel .uc-store-icon {
+	FLOAT: left; MARGIN-RIGHT: 1em
+}
+.uc-store-admin-panel .panel-title {
+	WIDTH: 100%; FONT-SIZE: 1.5em; PADDING-TOP: 4px
+}
+.uc-store-admin-panel .panel-show-link A {
+	CURSOR: pointer
+}
+.uc-customer-table .uc-store-icon {
+	FLOAT: left; MARGIN-RIGHT: 0.5em
+}
+.uc-customer-table TR.odd:hover {
+	BACKGROUND-COLOR: #ddd
+}
+.uc-customer-table TR.even:hover {
+	BACKGROUND-COLOR: #ddd
+}
+.uc-cust-orders-table TR.odd:hover {
+	BACKGROUND-COLOR: #ddd
+}
+.uc-cust-orders-table TR.even:hover {
+	BACKGROUND-COLOR: #ddd
+}
+.uc-cust-orders-table .uc-store-icon {
+	FLOAT: left; MARGIN-RIGHT: 0.5em
+}
+#store-footer {
+	TEXT-ALIGN: center; WIDTH: 100%; CLEAR: both; FONT-SIZE: x-small
+}
+TABLE.settings-overview {
+
+	WIDTH: auto
+}
+TABLE.settings-overview TD {
+	PADDING-BOTTOM: 0.5em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.5em
+}
+TABLE.settings-overview TBODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; BORDER-TOP: 0px; BORDER-RIGHT: 0px
+}
+TABLE.settings-overview TR.section {
+	BORDER-BOTTOM: #bbb 1px dashed; BORDER-LEFT: #bbb 1px dashed; BORDER-TOP: #bbb 1px dashed; BORDER-RIGHT: #bbb 1px dashed
+}
+.section-title {
+	FONT-WEIGHT: bold
+}
+TABLE.section-items {
+	WIDTH: auto
+}
+TABLE.section-items TD {
+	PADDING-BOTTOM: 0.25em; PADDING-LEFT: 0.25em; PADDING-RIGHT: 0.25em; PADDING-TOP: 0.25em
+}
+.settings-icon {
+	POSITION: relative; TOP: 1px; LEFT: 1px
+}
+TR.section {
+	CURSOR: pointer
+}
+TR.section:hover {
+	BACKGROUND-COLOR: #ddd
+}
+#uc-country-import-form .form-item {
+	DISPLAY: inline; FLOAT: left; MARGIN-RIGHT: 1em
+}
+#uc-country-import-form .form-item LABEL {
+	DISPLAY: inline; FLOAT: left; MARGIN-RIGHT: 1em
+}
+#uc-country-import-form .form-submit {
+
+	MARGIN-TOP: 1em; FLOAT: left
+}
+#uc-country-import-form TABLE {
+	CLEAR: left
+}
+.ubrowser-div {
+	BORDER-BOTTOM: #bbb 1px dashed; BORDER-LEFT: #bbb 1px dashed; PADDING-BOTTOM: 2px; PADDING-LEFT: 2px; WIDTH: auto; PADDING-RIGHT: 2px; FLOAT: left; BORDER-TOP: #bbb 1px dashed; BORDER-RIGHT: #bbb 1px dashed; PADDING-TOP: 2px
+}
+.ubrowser-table {
+	WIDTH: auto; MARGIN-LEFT: 1em; MARGIN-RIGHT: 1em
+}
+.ubrowser-table TBODY {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; BORDER-TOP: medium none; BORDER-RIGHT: medium none
+}
+#ubrowser-tree .form-item {
+	MARGIN-RIGHT: 1em
+}
+.ubrowser-tree {
+	BORDER-BOTTOM: #ccc 2px dashed; BORDER-LEFT: #ccc 2px dashed; PADDING-BOTTOM: 4px; PADDING-LEFT: 4px; PADDING-RIGHT: 4px; DISPLAY: inline; BORDER-TOP: #ccc 2px dashed; BORDER-RIGHT: #ccc 2px dashed; PADDING-TOP: 4px
+}
+.ubrowser-nodes {
+	BORDER-BOTTOM: #ccc 2px dashed; BORDER-LEFT: #ccc 2px dashed; PADDING-BOTTOM: 4px; PADDING-LEFT: 4px; PADDING-RIGHT: 4px; DISPLAY: inline; MARGIN-LEFT: 1em; BORDER-TOP: #ccc 2px dashed; BORDER-RIGHT: #ccc 2px dashed; PADDING-TOP: 4px
+}
+#permissions TD.module {
+	FONT-WEIGHT: bold
+}
+#permissions TD.permission {
+	PADDING-LEFT: 1.5em
+}
+#access-rules .access-type {
+	FLOAT: left; MARGIN-RIGHT: 1em
+}
+#access-rules .rule-type {
+	FLOAT: left; MARGIN-RIGHT: 1em
+}
+#access-rules .access-type .form-item {
+	MARGIN-TOP: 0px
+}
+#access-rules .rule-type .form-item {
+	MARGIN-TOP: 0px
+}
+#access-rules .mask {
+	CLEAR: both
+}
+#user-login-form {
+	TEXT-ALIGN: center
+}
+#user-admin-filter UL {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 100%; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+#user-admin-buttons {
+	FLOAT: left; MARGIN-LEFT: 0.5em; CLEAR: right
+}
+.profile {
+	MARGIN: 1em 0px; CLEAR: both
+}
+.profile .picture {
+	MARGIN: 0px 1em 1em 0px; FLOAT: right
+}
+.profile DT {
+	MARGIN: 1em 0px 0.2em; FONT-WEIGHT: bold
+}
+.profile DD {
+	MARGIN: 0px
+}
+DIV.fieldgroup {
+	MARGIN: 0.5em 0px 1em
+}
+DIV.fieldgroup .content {
+	PADDING-LEFT: 1em
+}
+#block-cart-icon {
+	PADDING-RIGHT: 1em
+}
+#block-cart-title-bar {
+	WHITE-SPACE: nowrap; CURSOR: pointer
+}
+#block-cart-title-arrow {
+	PADDING-RIGHT: 2px; PADDING-TOP: 5px
+}
+.cart-help-text {
+	POSITION: relative; FONT-SIZE: x-small; TOP: -5px
+}
+#block-cart-title-image {
+	PADDING-RIGHT: 5px
+}
+.block-cart-title-bar {
+	WHITE-SPACE: nowrap
+}
+.cart-block-toggle {
+	CURSOR: pointer
+}
+#block-cart-title-arrow {
+	POSITION: relative; TOP: -5px; RIGHT: -23px
+}
+.cart-block-table {
+	BORDER-BOTTOM: 2px; PADDING-BOTTOM: 2px; PADDING-LEFT: 2px; PADDING-RIGHT: 2px; PADDING-TOP: 2px
+}
+.cart-block-tbody {
+	BORDER-TOP: 0px
+}
+.cart-block-item {
+	VERTICAL-ALIGN: top
+}
+.cart-block-item-qty {
+
+}
+.cart-block-item-title {
+	WIDTH: 100%
+}
+.cart-block-item-price {
+	TEXT-ALIGN: right; WHITE-SPACE: nowrap
+}
+.cart-block-summary-table {
+	PADDING-BOTTOM: 2px; PADDING-LEFT: 2px; PADDING-RIGHT: 2px; PADDING-TOP: 2px
+}
+.cart-block-summary-tbody {
+	BORDER-TOP: 0px
+}
+.cart-block-summary-tr {
+	VERTICAL-ALIGN: top
+}
+.cart-block-summary-items {
+	WHITE-SPACE: nowrap
+}
+.cart-block-summary-total {
+	TEXT-ALIGN: right; WIDTH: 100%
+}
+.cart-block-summary-checkout {
+	TEXT-ALIGN: right
+}
+#block-cart-contents UL.cart-options {
+	PADDING-BOTTOM: 0.25em; MARGIN: 0pt; PADDING-LEFT: 1em; PADDING-RIGHT: 0pt; PADDING-TOP: 0pt
+}
+#block-cart-contents .cart-options LI {
+	PADDING-BOTTOM: 0pt; MARGIN: 0pt; FONT-SIZE: 0.7em; PADDING-TOP: 0pt
+}
+BODY {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px/170% Verdana; BACKGROUND: #edf5fa; COLOR: #494949; PADDING-TOP: 0px
+}
+INPUT {
+	FONT: 12px/100% "Verdana"; COLOR: #494949
+}
+TEXTAREA {
+	FONT: 12px/160% "Verdana"; COLOR: #494949
+}
+SELECT {
+	FONT: 12px/160% "Verdana"; COLOR: #494949
+}
+H1 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H2 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H3 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H4 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H5 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H6 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H1 {
+	FONT-SIZE: 170%
+}
+H2 {
+	LINE-HEIGHT: 130%; FONT-SIZE: 160%
+}
+H3 {
+	FONT-SIZE: 140%
+}
+H4 {
+	FONT-SIZE: 130%
+}
+H5 {
+	FONT-SIZE: 120%
+}
+H6 {
+	FONT-SIZE: 110%
+}
+UL {
+	MARGIN: 0.5em 0px
+}
+quote {
+	MARGIN: 0.5em 0px
+}
+CODE {
+	MARGIN: 0.5em 0px
+}
+FIELDSET {
+	MARGIN: 0.5em 0px
+}
+P {
+	PADDING-BOTTOM: 0px; MARGIN: 0.6em 0px 1.2em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+A:link {
+	COLOR: #027ac6; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #027ac6; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #0062a0; TEXT-DECORATION: underline
+}
+A:active {
+	COLOR: #5895be
+}
+A.active {
+	COLOR: #5895be
+}
+HR {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: #5294c1; HEIGHT: 1px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px
+}
+UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0.5em 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL LI {
+	MARGIN: 0.4em 0px 0.4em 0.5em
+}
+UL.menu {
+	PADDING-BOTTOM: 0px; MARGIN: 0.35em 0px 0px -0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.item-list UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0.35em 0px 0px -0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.menu UL {
+	MARGIN-LEFT: 0em
+}
+.item-list UL UL {
+	MARGIN-LEFT: 0em
+}
+UL LI {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+UL.menu LI {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+.item-list UL LI {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+LI.leaf {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+UL LI {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+UL.menu LI {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+.item-list UL LI {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+LI.leaf {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+UL LI.expanded {
+	BACKGROUND: url(menu-expanded.gif) no-repeat 1px 0.35em
+}
+UL LI.collapsed {
+	BACKGROUND: url(menu-collapsed.gif) no-repeat 0px 0.35em
+}
+UL LI.leaf A {
+	DISPLAY: block
+}
+UL LI.expanded A {
+	DISPLAY: block
+}
+UL LI.collapsed A {
+	DISPLAY: block
+}
+UL.inline LI {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+FIELDSET UL.clear-block LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DL {
+	MARGIN: 0.5em 0px 1em 1.5em
+}
+DL DT {
+
+}
+DL DD {
+	MARGIN: 0px 0px 0.5em 1.5em
+}
+IMG {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; BORDER-TOP: medium none; BORDER-RIGHT: medium none
+}
+A IMG {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; BORDER-TOP: medium none; BORDER-RIGHT: medium none
+}
+TABLE {
+	MARGIN: 1em 0px; WIDTH: 100%
+}
+THEAD TH {
+	BORDER-BOTTOM: #d3e7f4 2px solid; COLOR: #494949; FONT-WEIGHT: bold
+}
+TH A:link {
+	COLOR: #6f9dbd
+}
+TH A:visited {
+	COLOR: #6f9dbd
+}
+TD {
+	PADDING-BOTTOM: 0.3em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.3em
+}
+TH {
+	PADDING-BOTTOM: 0.3em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.3em
+}
+TR.even {
+	BORDER-BOTTOM: #d3e7f4 1px solid; BORDER-LEFT: #d3e7f4 0px solid; BORDER-TOP: #d3e7f4 1px solid; BORDER-RIGHT: #d3e7f4 0px solid
+}
+TR.odd {
+	BORDER-BOTTOM: #d3e7f4 1px solid; BORDER-LEFT: #d3e7f4 0px solid; BORDER-TOP: #d3e7f4 1px solid; BORDER-RIGHT: #d3e7f4 0px solid
+}
+TBODY TH {
+	BORDER-BOTTOM: #d3e7f4 1px solid; BORDER-LEFT: #d3e7f4 0px solid; BORDER-TOP: #d3e7f4 1px solid; BORDER-RIGHT: #d3e7f4 0px solid
+}
+TR.odd {
+	BACKGROUND-COLOR: #edf5fa
+}
+TR.info {
+	BACKGROUND-COLOR: #edf5fa
+}
+TR.even {
+	BACKGROUND-COLOR: #fff
+}
+TR.odd TD.active {
+	BACKGROUND-COLOR: #ddecf5
+}
+TR.even TD.active {
+	BACKGROUND-COLOR: #e6f1f7
+}
+TD.region {
+	BORDER-BOTTOM: #b4d7f0 1px solid; BACKGROUND-COLOR: #d4e7f3; COLOR: #455067; BORDER-TOP: #fff 1.5em solid; FONT-WEIGHT: bold
+}
+TD.module {
+	BORDER-BOTTOM: #b4d7f0 1px solid; BACKGROUND-COLOR: #d4e7f3; COLOR: #455067; BORDER-TOP: #fff 1.5em solid; FONT-WEIGHT: bold
+}
+TD.container {
+	BORDER-BOTTOM: #b4d7f0 1px solid; BACKGROUND-COLOR: #d4e7f3; COLOR: #455067; BORDER-TOP: #fff 1.5em solid; FONT-WEIGHT: bold
+}
+TR:first-child TD.region {
+	BORDER-TOP-WIDTH: 0px
+}
+TR:first-child TD.module {
+	BORDER-TOP-WIDTH: 0px
+}
+TR:first-child TD.container {
+	BORDER-TOP-WIDTH: 0px
+}
+SPAN.form-required {
+	COLOR: #ffae00
+}
+SPAN.submitted {
+	COLOR: #898989; FONT-SIZE: 0.92em
+}
+.description {
+	COLOR: #898989; FONT-SIZE: 0.92em
+}
+.description {
+	LINE-HEIGHT: 150%; MARGIN-BOTTOM: 0.75em; COLOR: #898989
+}
+.messages {
+	PADDING-BOTTOM: 0.5em; MARGIN: 0.75em 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 0.5em
+
+}
+.preview {
+	PADDING-BOTTOM: 0.5em; MARGIN: 0.75em 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 0.5em
+}
+.messages UL {
+	MARGIN: 0px
+}
+.form-checkboxes {
+	MARGIN: 0.25em 0px
+}
+.form-radios {
+	MARGIN: 0.25em 0px
+}
+.form-checkboxes .form-item {
+	MARGIN: 0.25em 0px
+}
+.form-radios .form-item {
+	MARGIN: 0.25em 0px
+}
+#center FORM {
+	MARGIN-BOTTOM: 2em
+}
+.form-button {
+	MARGIN: 2em 0.5em 1em 0px
+}
+.form-submit {
+	MARGIN: 2em 0.5em 1em 0px
+}
+#watchdog-form-overview .form-submit {
+	MARGIN: 0px
+}
+.confirmation .form-submit {
+	MARGIN: 0px
+}
+.search-form .form-submit {
+	MARGIN: 0px
+}
+.poll .form-submit {
+	MARGIN: 0px
+}
+FIELDSET .form-button {
+	MARGIN: 0px
+}
+FIELDSET .form-submit {
+	MARGIN: 0px
+}
+.sidebar .form-button {
+	MARGIN: 0px
+}
+.sidebar .form-submit {
+	MARGIN: 0px
+}
+TABLE .form-button {
+	MARGIN: 0px
+}
+TABLE .form-submit {
+	MARGIN: 0px
+}
+.box {
+	MARGIN-BOTTOM: 2.5em
+}
+#header-region {
+	MIN-HEIGHT: 1em; BACKGROUND: url(bg-navigation.png) #d2e6f3 repeat-x 50% 100%
+}
+#header-region .block {
+	MARGIN: 0px 1em; DISPLAY: block
+}
+#header-region .block-region {
+	POSITION: relative; PADDING-BOTTOM: 0.5em; MARGIN: 0px 0.5em 1em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; DISPLAY: block; TOP: 0.5em; PADDING-TOP: 0.5em
+}
+#header-region * {
+	LINE-HEIGHT: 1.5em; MARGIN-TOP: 0px; DISPLAY: inline; MARGIN-BOTTOM: 0px
+}
+#header-region SCRIPT {
+	DISPLAY: none
+}
+#header-region P {
+	MARGIN-TOP: 0.5em
+}
+#header-region IMG {
+	MARGIN-TOP: 0.5em
+}
+#header-region H2 {
+	MARGIN: 0px 1em 0px 0px
+}
+#header-region H3 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+#header-region LABEL {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+#header-region LI {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+#wrapper {
+	BACKGROUND: url(body.png) #edf5fa repeat-x 50% 0px
+}
+#wrapper #container {
+	PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-LEFT: 20px; PADDING-RIGHT: 20px; MAX-WIDTH: 1270px; PADDING-TOP: 0px
+}
+#wrapper #container #header {
+	HEIGHT: 80px
+}
+#wrapper #container #header #logo-floater {
+	POSITION: absolute
+}
+#wrapper #container #header H1 {
+	Z-INDEX: 2; POSITION: relative; LINE-HEIGHT: 120px; WHITE-SPACE: nowrap
+}
+#wrapper #container #header H1 A:link {
+	Z-INDEX: 2; POSITION: relative; LINE-HEIGHT: 120px; WHITE-SPACE: nowrap
+}
+#wrapper #container #header H1 A:visited {
+	Z-INDEX: 2; POSITION: relative; LINE-HEIGHT: 120px; WHITE-SPACE: nowrap
+}
+#wrapper #container #header H1 SPAN {
+	FONT-WEIGHT: bold
+}
+#wrapper #container #header H1 IMG {
+	PADDING-RIGHT: 20px; FLOAT: left; PADDING-TOP: 16px
+}
+BODY.sidebars {
+	MIN-WIDTH: 980px
+}
+BODY.sidebar-left {
+	MIN-WIDTH: 780px
+}
+BODY.sidebar-right {
+	MIN-WIDTH: 780px
+}
+#wrapper #container #center {
+	WIDTH: 100%; FLOAT: left
+}
+BODY.sidebar-left #center {
+	MARGIN-LEFT: -210px
+}
+BODY.sidebar-right #center {
+	MARGIN-RIGHT: -210px
+}
+BODY.sidebars #center {
+	MARGIN: 0px -210px
+}
+BODY.sidebar-left #squeeze {
+	MARGIN-LEFT: 210px
+}
+BODY.sidebar-right #squeeze {
+	MARGIN-RIGHT: 210px
+}
+BODY.sidebars #squeeze {
+	MARGIN: 0px 210px
+}
+#wrapper #container .sidebar {
+	Z-INDEX: 2; POSITION: relative; MARGIN: 60px 0px 5em; WIDTH: 210px; FLOAT: left
+}
+#wrapper #container .sidebar .block {
+	MARGIN: 0px 0px 1.5em
+}
+#sidebar-left .block {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 15px; PADDING-TOP: 0px
+}
+#sidebar-right .block {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 15px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.block .content {
+	MARGIN: 0.5em 0px
+}
+#sidebar-left .block-region {
+	MARGIN: 0px 15px 0px 0px
+}
+#sidebar-right .block-region {
+	MARGIN: 0px 0px 0px 15px
+}
+.block-region {
+	BORDER-BOTTOM: #b4d7f0 2px dashed; TEXT-ALIGN: center; BORDER-LEFT: #b4d7f0 2px dashed; PADDING-BOTTOM: 1em; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; FONT-SIZE: 1.3em; BORDER-TOP: #b4d7f0 2px dashed; BORDER-RIGHT: #b4d7f0 2px dashed; PADDING-TOP: 1em
+}
+#wrapper #container #center #squeeze {
+	POSITION: relative; BACKGROUND: url(bg-content.png) #fff repeat-x 50% 0px
+}
+#wrapper #container #center .right-corner {
+	POSITION: relative; BACKGROUND: url(bg-content-right.png) no-repeat 100% 0px; LEFT: 10px
+}
+#wrapper #container #center .right-corner .left-corner {
+	POSITION: relative; PADDING-BOTTOM: 5em; MIN-HEIGHT: 400px; PADDING-LEFT: 35px; PADDING-RIGHT: 25px; BACKGROUND: url(bg-content-left.png) no-repeat 0px 0px; MARGIN-LEFT: -10px; PADDING-TOP: 60px; LEFT: -10px
+}
+#wrapper #container #footer {
+	TEXT-ALIGN: center; MARGIN: 4em 0px -3em; FLOAT: none; COLOR: #898989; CLEAR: both
+}
+#wrapper #container .breadcrumb {
+	Z-INDEX: 3; POSITION: absolute; TOP: 15px; LEFT: 35px
+}
+BODY.sidebar-left #footer {
+	MARGIN-LEFT: -210px
+}
+BODY.sidebar-right #footer {
+	MARGIN-RIGHT: -210px
+}
+BODY.sidebars #footer {
+	MARGIN: 0px -210px
+}
+#wrapper #container #header H1 {
+	COLOR: #fff; FONT-SIZE: 1.5em; FONT-WEIGHT: normal; text-shadow: #1659ac 0px 1px 3px
+}
+#wrapper #container #header H1 A:link {
+	COLOR: #fff; FONT-SIZE: 1.5em; FONT-WEIGHT: normal; text-shadow: #1659ac 0px 1px 3px
+}
+#wrapper #container #header H1 A:visited {
+	COLOR: #fff; FONT-SIZE: 1.5em; FONT-WEIGHT: normal; text-shadow: #1659ac 0px 1px 3px
+}
+#wrapper #container #header H1 A:hover {
+	TEXT-DECORATION: none
+}
+#wrapper #container .breadcrumb {
+	FONT-SIZE: 0.92em
+}
+#wrapper #container .breadcrumb {
+	COLOR: #529ad6
+}
+#wrapper #container .breadcrumb A {
+	COLOR: #529ad6
+}
+#mission {
+	BORDER-BOTTOM: #e0e5fb 1px solid; BORDER-LEFT: #e0e5fb 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #fff; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; MARGIN-BOTTOM: 2em; BORDER-TOP: #e0e5fb 1px solid; BORDER-RIGHT: #e0e5fb 1px solid; PADDING-TOP: 1em
+}
+UL.primary-links {
+	Z-INDEX: 4; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: right; PADDING-TOP: 0px
+}
+UL.primary-links LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+UL.primary-links LI A {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: url(bg-navigation-item.png) no-repeat 50% 0px; COLOR: #fff; PADDING-TOP: 0.75em
+}
+UL.primary-links LI A:link {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: url(bg-navigation-item.png) no-repeat 50% 0px; COLOR: #fff; PADDING-TOP: 0.75em
+}
+UL.primary-links LI A:visited {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: url(bg-navigation-item.png) no-repeat 50% 0px; COLOR: #fff; PADDING-TOP: 0.75em
+}
+UL.primary-links LI A:hover {
+	BACKGROUND: url(bg-navigation-item-hover.png) no-repeat 50% 0px; COLOR: #fff
+}
+UL.primary-links LI A.active {
+	BACKGROUND: url(bg-navigation-item-hover.png) no-repeat 50% 0px; COLOR: #fff
+}
+UL.secondary-links {
+	Z-INDEX: 4; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: right; CLEAR: right; PADDING-TOP: 18px
+}
+UL.secondary-links LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+UL.secondary-links LI A {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #cde3f1; PADDING-TOP: 0.75em
+}
+UL.secondary-links LI A:link {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #cde3f1; PADDING-TOP: 0.75em
+}
+UL.secondary-links LI A:visited {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #cde3f1; PADDING-TOP: 0.75em
+}
+UL.secondary-links LI A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #cde3f1
+}
+UL.secondary-links LI A.active {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #cde3f1
+}
+UL.primary {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.primary LI {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.secondary {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.secondary LI {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+#tabs-wrapper {
+	BORDER-BOTTOM: #e9eff3 1px solid; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px -26px 1em; PADDING-LEFT: 26px; PADDING-RIGHT: 26px; PADDING-TOP: 0px
+}
+UL.primary {
+	PADDING-BOTTOM: 10px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0.5em
+}
+UL.secondary {
+	BORDER-BOTTOM: #e9eff3 1px solid; TEXT-ALIGN: left; PADDING-BOTTOM: 0.6em; MARGIN: -0.2em -26px 1em; PADDING-LEFT: 26px; PADDING-RIGHT: 26px; CLEAR: both; PADDING-TOP: 0px
+}
+H2.with-tabs {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 2em 0px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+UL.primary LI A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI.active A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI A:hover {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI A:visited {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI.active A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI A:hover {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI A:visited {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI.active A {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.primary LI.active A:link {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.primary LI.active A:visited {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.primary LI A:hover {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.secondary LI.active A {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.secondary LI.active A:link {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.secondary LI.active A:visited {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.secondary LI A:hover {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #fff
+}
+UL.primary LI.active A {
+	FONT-WEIGHT: bold
+}
+UL.secondary LI.active A {
+	FONT-WEIGHT: bold
+}
+.node {
+	BORDER-BOTTOM: #e9eff3 1px solid; PADDING-BOTTOM: 1.5em; MARGIN: -1.5em -26px 1.5em; PADDING-LEFT: 26px; PADDING-RIGHT: 26px; PADDING-TOP: 1.5em
+}
+UL.links LI {
+	BACKGROUND-IMAGE: none; PADDING-LEFT: 0px; PADDING-RIGHT: 1em; MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+UL.inline LI {
+	BACKGROUND-IMAGE: none; PADDING-LEFT: 0px; PADDING-RIGHT: 1em; MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+.node .links {
+	TEXT-ALIGN: left
+
+}
+.comment .links {
+	TEXT-ALIGN: left
+}
+.node .links UL.links LI {
+
+}
+.comment .links UL.links LI {
+
+}
+.terms UL.links LI {
+	PADDING-LEFT: 1em; PADDING-RIGHT: 0px; MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+.picture {
+	PADDING-LEFT: 1em; FLOAT: right; CLEAR: right
+}
+.comment .submitted {
+	PADDING-LEFT: 1em; FLOAT: right; CLEAR: right
+}
+.new {
+	FLOAT: right; COLOR: #ffae00; FONT-SIZE: 0.92em; FONT-WEIGHT: bold
+}
+.terms {
+	FLOAT: right
+}
+.preview .node {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0.5em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: 0px 50%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0.5em
+}
+.preview .comment {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0.5em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: 0px 50%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0.5em
+}
+.sticky {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0.5em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: 0px 50%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0.5em
+}
+.sticky {
+	BORDER-BOTTOM: #e0e5fb 1px solid; BORDER-LEFT: #e0e5fb 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #fff; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; MARGIN-BOTTOM: 2em; BORDER-TOP: #e0e5fb 1px solid; BORDER-RIGHT: #e0e5fb 1px solid; PADDING-TOP: 1em
+}
+#comments {
+	BORDER-BOTTOM: #e9eff3 1px solid; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: -1.5em -25px 0px; PADDING-LEFT: 25px; PADDING-RIGHT: 25px; TOP: -1px; PADDING-TOP: 0px
+}
+#comments H2.comments {
+	PADDING-BOTTOM: 0.5em; MARGIN: 0px -25px; PADDING-LEFT: 25px; PADDING-RIGHT: 25px; BACKGROUND: url(gradient-inner.png) #fff repeat-x 0px 0px; PADDING-TOP: 0.5em
+}
+.comment {
+	PADDING-BOTTOM: 1.5em; MARGIN: 0px -25px; PADDING-LEFT: 25px; PADDING-RIGHT: 25px; BORDER-TOP: #e9eff3 1px solid; PADDING-TOP: 1.5em
+}
+.indented {
+	MARGIN-LEFT: 25px
+}
+.comment H3 A.active {
+	COLOR: #494949
+}
+.node .content {
+	MARGIN: 0.6em 0px
+}
+.comment .content {
+	MARGIN: 0.6em 0px
+}
+#aggregator {
+	MARGIN-TOP: 1em
+}
+#aggregator .feed-item-title {
+	LINE-HEIGHT: 130%; FONT-SIZE: 160%
+}
+#aggregator .feed-item {
+	BORDER-BOTTOM: #e9eff3 1px solid; PADDING-BOTTOM: 1.5em; MARGIN: -1.5em -31px 1.75em; PADDING-LEFT: 31px; PADDING-RIGHT: 31px; PADDING-TOP: 1.5em
+}
+#aggregator .feed-item-categories {
+	FONT-SIZE: 0.92em
+}
+#aggregator .feed-item-meta {
+	COLOR: #898989; FONT-SIZE: 0.92em
+}
+#palette .form-item {
+	BORDER-BOTTOM: #fff 1px solid; BORDER-LEFT: #fff 1px solid; BORDER-TOP: #fff 1px solid; BORDER-RIGHT: #fff 1px solid
+}
+#palette .item-selected {
+	BORDER-BOTTOM: #d9eaf5 1px solid; BORDER-LEFT: #d9eaf5 1px solid; BACKGROUND: url(gradient-inner.png) #fff repeat-x 0px 0px; BORDER-TOP: #d9eaf5 1px solid; BORDER-RIGHT: #d9eaf5 1px solid
+}
+TR.odd TD.menu-disabled {
+	BACKGROUND-COLOR: #edf5fa
+}
+TR.even TD.menu-disabled {
+	BACKGROUND-COLOR: #fff
+}
+TD.menu-disabled {
+	opacity: 0.5
+}
+.poll .bar {
+	BORDER-BOTTOM: #f0f0f0 1px solid; BORDER-LEFT: #f0f0f0 1px solid; BACKGROUND: url(bg-bar-white.png) #fff repeat-x 0px 0px; BORDER-TOP: #f0f0f0 0px solid; BORDER-RIGHT: #f0f0f0 1px solid
+}
+.poll .bar .foreground {
+	BACKGROUND: url(bg-bar.png) #71a7cc repeat-x 0px 100%
+}
+.poll .percent {
+	FONT-SIZE: 0.9em
+}
+#autocomplete LI {
+	PADDING-BOTTOM: 2px; MARGIN: 0px; PADDING-LEFT: 2px; PADDING-RIGHT: 2px; CURSOR: default; PADDING-TOP: 2px
+}
+FIELDSET {
+	BORDER-BOTTOM: #d9eaf5 1px solid; BORDER-LEFT: #d9eaf5 1px solid; PADDING-BOTTOM: 1em; MARGIN: 1em 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: url(gradient-inner.png) #fff repeat-x 0px 0px; BORDER-TOP: #d9eaf5 1px solid; BORDER-RIGHT: #d9eaf5 1px solid; PADDING-TOP: 1em
+}
+FIELDSET LEGEND {
+	DISPLAY: block
+}
+HTML.js FIELDSET.collapsed {
+	PADDING-BOTTOM: 0.6em; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+HTML.js FIELDSET.collapsible LEGEND A {
+	PADDING-LEFT: 2em; BACKGROUND: url(menu-expanded.gif) no-repeat 0% 50%
+}
+HTML.js FIELDSET.collapsed LEGEND A {
+	BACKGROUND: url(menu-collapsed.gif) no-repeat 0% 50%
+}
+#block-node-0 H2 {
+	PADDING-RIGHT: 20px; FLOAT: left
+}
+#block-node-0 IMG {
+	FLOAT: right; PADDING-TOP: 4px
+}
+.feed-icon {
+	FLOAT: right; PADDING-TOP: 4px
+}
+#block-node-0 .content {
+	CLEAR: right
+}
+#user-login-form {
+	TEXT-ALIGN: center
+}
+#user-login-form UL {
+	TEXT-ALIGN: left
+}
+DIV.admin-panel {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin-panel .description {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin-panel .body {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .left {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .right {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .expert-link {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.item-list {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.menu {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .left {
+	WIDTH: 48%; FLOAT: left
+}
+DIV.admin .right {
+	WIDTH: 48%; FLOAT: right
+}
+DIV.admin-panel {
+	PADDING-BOTTOM: 1.5em; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: url(gradient-inner.png) #fff repeat-x 0px 0px; PADDING-TOP: 1em
+}
+DIV.admin-panel .description {
+	MARGIN-BOTTOM: 1.5em
+}
+DIV.admin-panel DL {
+	MARGIN: 0px
+}
+DIV.admin-panel DD {
+	LINE-HEIGHT: 1.3em; MARGIN-TOP: -0.2em; MARGIN-BOTTOM: 0.65em; COLOR: #898989; FONT-SIZE: 0.92em
+}
+TABLE.system-status-report TH {
+	BORDER-BOTTOM-COLOR: #d3e7f4; BORDER-TOP-COLOR: #d3e7f4; BORDER-RIGHT-COLOR: #d3e7f4; BORDER-LEFT-COLOR: #d3e7f4
+}
+#autocomplete LI.selected {
+	BACKGROUND: #027ac6; COLOR: #fff
+}
+TR.selected TD {
+	BACKGROUND: #027ac6; COLOR: #fff
+}
+TR.selected TD.active {
+	BACKGROUND: #027ac6; COLOR: #fff
+}
+TR.selected TD A:link {
+	COLOR: #d3e7f4
+}
+TR.selected TD A:visited {
+	COLOR: #d3e7f4
+}
+TR.selected TD A:active {
+	COLOR: #d3e7f4
+}
+SPAN.clear {
+	LINE-HEIGHT: 0px; DISPLAY: block; MARGIN-BOTTOM: -1px; HEIGHT: 1px; CLEAR: both; FONT-SIZE: 0px
+}
+.messages {
+	BORDER-BOTTOM: #b8d3e5 1px solid; BORDER-LEFT: #b8d3e5 1px solid; BACKGROUND-COLOR: #fff; BORDER-TOP: #b8d3e5 1px solid; BORDER-RIGHT: #b8d3e5 1px solid
+}
+.preview {
+	BORDER-BOTTOM: #e5e58f 1px solid; BORDER-LEFT: #e5e58f 1px solid; BACKGROUND-COLOR: #fcfce8; BORDER-TOP: #e5e58f 1px solid; BORDER-RIGHT: #e5e58f 1px solid
+}
+DIV.status {
+	BORDER-BOTTOM-COLOR: #c7f2c8; BORDER-TOP-COLOR: #c7f2c8; COLOR: #3a3; BORDER-RIGHT-COLOR: #c7f2c8; BORDER-LEFT-COLOR: #c7f2c8
+}
+DIV.error {
+	COLOR: #c52020
+}
+.form-item INPUT.error {
+	BORDER-BOTTOM: #c52020 1px solid; BORDER-LEFT: #c52020 1px solid; COLOR: #494949; BORDER-TOP: #c52020 1px solid; BORDER-RIGHT: #c52020 1px solid
+}
+.form-item TEXTAREA.error {
+	BORDER-BOTTOM: #c52020 1px solid; BORDER-LEFT: #c52020 1px solid; COLOR: #494949; BORDER-TOP: #c52020 1px solid; BORDER-RIGHT: #c52020 1px solid
+}
+TR.watchdog-user {
+	BACKGROUND-COLOR: #fcf9e5
+}
+TR.watchdog-user TD.active {
+	BACKGROUND-COLOR: #fbf5cf
+}
+TR.watchdog-content {
+	BACKGROUND-COLOR: #fefefe
+}
+TR.watchdog-content TD.active {
+	BACKGROUND-COLOR: #f5f5f5
+}
+TR.watchdog-warning {
+	BACKGROUND-COLOR: #fdf5e6
+}
+TR.watchdog-warning TD.active {
+	BACKGROUND-COLOR: #fdf2de
+}
+TR.watchdog-error {
+	BACKGROUND-COLOR: #fbe4e4
+}
+TR.watchdog-error TD.active {
+	BACKGROUND-COLOR: #fbdbdb
+}
+TR.watchdog-page-not-found {
+	BACKGROUND: #d7ffd7
+}
+TR.watchdog-access-denied {
+	BACKGROUND: #d7ffd7
+}
+TR.watchdog-page-not-found TD.active {
+	BACKGROUND: #c7eec7
+}
+TR.watchdog-access-denied TD.active {
+	BACKGROUND: #c7eec7
+}
+TABLE.system-status-report TR.error {
+	BORDER-BOTTOM-COLOR: #ebb; BACKGROUND-COLOR: #fcc; BORDER-TOP-COLOR: #ebb; COLOR: #200; BORDER-RIGHT-COLOR: #ebb; BORDER-LEFT-COLOR: #ebb
+}
+TABLE.system-status-report TR.error TH {
+	BORDER-BOTTOM-COLOR: #ebb; BACKGROUND-COLOR: #fcc; BORDER-TOP-COLOR: #ebb; COLOR: #200; BORDER-RIGHT-COLOR: #ebb; BORDER-LEFT-COLOR: #ebb
+}
+TABLE.system-status-report TR.warning {
+	BORDER-BOTTOM-COLOR: #eeb; BACKGROUND-COLOR: #ffd; BORDER-TOP-COLOR: #eeb; BORDER-RIGHT-COLOR: #eeb; BORDER-LEFT-COLOR: #eeb
+}
+TABLE.system-status-report TR.warning TH {
+	BORDER-BOTTOM-COLOR: #eeb; BACKGROUND-COLOR: #ffd; BORDER-TOP-COLOR: #eeb; BORDER-RIGHT-COLOR: #eeb; BORDER-LEFT-COLOR: #eeb
+}
+TABLE.system-status-report TR.ok {
+	BORDER-BOTTOM-COLOR: #beb; BACKGROUND-COLOR: #dfd; BORDER-TOP-COLOR: #beb; BORDER-RIGHT-COLOR: #beb; BORDER-LEFT-COLOR: #beb
+}
+TABLE.system-status-report TR.ok TH {
+	BORDER-BOTTOM-COLOR: #beb; BACKGROUND-COLOR: #dfd; BORDER-TOP-COLOR: #beb; BORDER-RIGHT-COLOR: #beb; BORDER-LEFT-COLOR: #beb
+}
+BODY {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px/170% Verdana; BACKGROUND: #fbf9f2; COLOR: #494949; PADDING-TOP: 0px
+}
+INPUT {
+	FONT: 12px/100% "Verdana"; COLOR: #494949
+}
+TEXTAREA {
+	FONT: 12px/160% "Verdana"; COLOR: #494949
+}
+SELECT {
+	FONT: 12px/160% "Verdana"; COLOR: #494949
+}
+H1 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H2 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H3 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H4 {
+
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H5 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H6 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px
+}
+H1 {
+	FONT-SIZE: 170%
+}
+H2 {
+	LINE-HEIGHT: 130%; FONT-SIZE: 160%
+}
+H3 {
+	FONT-SIZE: 140%
+}
+H4 {
+	FONT-SIZE: 130%
+}
+H5 {
+	FONT-SIZE: 120%
+}
+H6 {
+	FONT-SIZE: 110%
+}
+UL {
+	MARGIN: 0.5em 0px
+}
+quote {
+	MARGIN: 0.5em 0px
+}
+CODE {
+	MARGIN: 0.5em 0px
+}
+FIELDSET {
+	MARGIN: 0.5em 0px
+}
+P {
+	PADDING-BOTTOM: 0px; MARGIN: 0.6em 0px 1.2em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+A:link {
+	COLOR: #0e0e6c; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #0e0e6c; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #0a0a53; TEXT-DECORATION: underline
+}
+A:active {
+	COLOR: #676778
+}
+A.active {
+	COLOR: #676778
+}
+HR {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: #d8c380; HEIGHT: 1px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px
+}
+UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0.5em 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL LI {
+	MARGIN: 0.4em 0px 0.4em 0.5em
+}
+UL.menu {
+	PADDING-BOTTOM: 0px; MARGIN: 0.35em 0px 0px -0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.item-list UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0.35em 0px 0px -0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.menu UL {
+	MARGIN-LEFT: 0em
+}
+.item-list UL UL {
+	MARGIN-LEFT: 0em
+}
+UL LI {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+UL.menu LI {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+.item-list UL LI {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+LI.leaf {
+	MARGIN: 0.15em 0px 0.15em 0.5em
+}
+UL LI {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+UL.menu LI {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+.item-list UL LI {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+LI.leaf {
+	PADDING-BOTTOM: 0.2em; LIST-STYLE-TYPE: none; PADDING-LEFT: 1.5em; PADDING-RIGHT: 0px; BACKGROUND: url(menu-leaf.gif) no-repeat 1px 0.35em; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px
+}
+UL LI.expanded {
+	BACKGROUND: url(menu-expanded.gif) no-repeat 1px 0.35em
+}
+UL LI.collapsed {
+	BACKGROUND: url(menu-collapsed.gif) no-repeat 0px 0.35em
+}
+UL LI.leaf A {
+	DISPLAY: block
+}
+UL LI.expanded A {
+	DISPLAY: block
+}
+UL LI.collapsed A {
+	DISPLAY: block
+}
+UL.inline LI {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+FIELDSET UL.clear-block LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DL {
+	MARGIN: 0.5em 0px 1em 1.5em
+}
+DL DT {
+
+}
+DL DD {
+	MARGIN: 0px 0px 0.5em 1.5em
+}
+IMG {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; BORDER-TOP: medium none; BORDER-RIGHT: medium none
+}
+A IMG {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; BORDER-TOP: medium none; BORDER-RIGHT: medium none
+}
+TABLE {
+	MARGIN: 1em 0px; WIDTH: 100%
+}
+THEAD TH {
+	BORDER-BOTTOM: #f8f2df 2px solid; COLOR: #494949; FONT-WEIGHT: bold
+}
+
+TH A:link {
+	COLOR: #7e7e7e
+}
+TH A:visited {
+	COLOR: #7e7e7e
+}
+TD {
+	PADDING-BOTTOM: 0.3em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.3em
+}
+TH {
+	PADDING-BOTTOM: 0.3em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; PADDING-TOP: 0.3em
+}
+TR.even {
+	BORDER-BOTTOM: #f8f2df 1px solid; BORDER-LEFT: #f8f2df 0px solid; BORDER-TOP: #f8f2df 1px solid; BORDER-RIGHT: #f8f2df 0px solid
+}
+TR.odd {
+	BORDER-BOTTOM: #f8f2df 1px solid; BORDER-LEFT: #f8f2df 0px solid; BORDER-TOP: #f8f2df 1px solid; BORDER-RIGHT: #f8f2df 0px solid
+}
+TBODY TH {
+	BORDER-BOTTOM: #f8f2df 1px solid; BORDER-LEFT: #f8f2df 0px solid; BORDER-TOP: #f8f2df 1px solid; BORDER-RIGHT: #f8f2df 0px solid
+}
+TR.odd {
+	BACKGROUND-COLOR: #fbf9f2
+}
+TR.info {
+	BACKGROUND-COLOR: #fbf9f2
+}
+TR.even {
+	BACKGROUND-COLOR: #ffffff
+}
+TR.odd TD.active {
+	BACKGROUND-COLOR: #f8f3e6
+}
+TR.even TD.active {
+	BACKGROUND-COLOR: #faf6ec
+}
+TD.region {
+	BORDER-BOTTOM: #f6ecca 1px solid; BACKGROUND-COLOR: #f7f1e0; COLOR: #454f67; BORDER-TOP: #ffffff 1.5em solid; FONT-WEIGHT: bold
+}
+TD.module {
+	BORDER-BOTTOM: #f6ecca 1px solid; BACKGROUND-COLOR: #f7f1e0; COLOR: #454f67; BORDER-TOP: #ffffff 1.5em solid; FONT-WEIGHT: bold
+}
+TD.container {
+	BORDER-BOTTOM: #f6ecca 1px solid; BACKGROUND-COLOR: #f7f1e0; COLOR: #454f67; BORDER-TOP: #ffffff 1.5em solid; FONT-WEIGHT: bold
+}
+TR:first-child TD.region {
+	BORDER-TOP-WIDTH: 0px
+}
+TR:first-child TD.module {
+	BORDER-TOP-WIDTH: 0px
+}
+TR:first-child TD.container {
+	BORDER-TOP-WIDTH: 0px
+}
+SPAN.form-required {
+	COLOR: #ffae00
+}
+SPAN.submitted {
+	COLOR: #898989; FONT-SIZE: 0.92em
+}
+.description {
+	COLOR: #898989; FONT-SIZE: 0.92em
+}
+.description {
+	LINE-HEIGHT: 150%; MARGIN-BOTTOM: 0.75em; COLOR: #898989
+}
+.messages {
+	PADDING-BOTTOM: 0.5em; MARGIN: 0.75em 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 0.5em
+}
+.preview {
+	PADDING-BOTTOM: 0.5em; MARGIN: 0.75em 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; PADDING-TOP: 0.5em
+}
+.messages UL {
+	MARGIN: 0px
+}
+.form-checkboxes {
+	MARGIN: 0.25em 0px
+}
+.form-radios {
+	MARGIN: 0.25em 0px
+}
+.form-checkboxes .form-item {
+	MARGIN: 0.25em 0px
+}
+.form-radios .form-item {
+	MARGIN: 0.25em 0px
+}
+#center FORM {
+	MARGIN-BOTTOM: 2em
+}
+.form-button {
+	MARGIN: 2em 0.5em 1em 0px
+}
+.form-submit {
+	MARGIN: 2em 0.5em 1em 0px
+}
+#watchdog-form-overview .form-submit {
+	MARGIN: 0px
+}
+.confirmation .form-submit {
+	MARGIN: 0px
+}
+.search-form .form-submit {
+	MARGIN: 0px
+}
+.poll .form-submit {
+	MARGIN: 0px
+}
+FIELDSET .form-button {
+	MARGIN: 0px
+}
+FIELDSET .form-submit {
+	MARGIN: 0px
+}
+.sidebar .form-button {
+	MARGIN: 0px
+}
+.sidebar .form-submit {
+	MARGIN: 0px
+}
+TABLE .form-button {
+	MARGIN: 0px
+}
+TABLE .form-submit {
+	MARGIN: 0px
+}
+.box {
+	MARGIN-BOTTOM: 2.5em
+}
+#header-region {
+	MIN-HEIGHT: 1em; BACKGROUND: url(bg-navigation.png) #f7f1de repeat-x 50% 100%
+}
+#header-region .block {
+	MARGIN: 0px 1em; DISPLAY: block
+}
+#header-region .block-region {
+	POSITION: relative; PADDING-BOTTOM: 0.5em; MARGIN: 0px 0.5em 1em; PADDING-LEFT: 0.5em; PADDING-RIGHT: 0.5em; DISPLAY: block; TOP: 0.5em; PADDING-TOP: 0.5em
+}
+#header-region * {
+	LINE-HEIGHT: 1.5em; MARGIN-TOP: 0px; DISPLAY: inline; MARGIN-BOTTOM: 0px
+}
+#header-region SCRIPT {
+	DISPLAY: none
+}
+#header-region P {
+	MARGIN-TOP: 0.5em
+}
+#header-region IMG {
+	MARGIN-TOP: 0.5em
+}
+#header-region H2 {
+	MARGIN: 0px 1em 0px 0px
+}
+#header-region H3 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+#header-region LABEL {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+#header-region LI {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+#wrapper {
+	BACKGROUND: url(body.png) #fbf9f2 repeat-x 50% 0px
+}
+#wrapper #container {
+	PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-LEFT: 20px; PADDING-RIGHT: 20px; MAX-WIDTH: 1270px; PADDING-TOP: 0px
+}
+#wrapper #container #header {
+	HEIGHT: 80px
+}
+#wrapper #container #header #logo-floater {
+	POSITION: absolute
+}
+#wrapper #container #header H1 {
+	Z-INDEX: 2; POSITION: relative; LINE-HEIGHT: 120px; WHITE-SPACE: nowrap
+}
+#wrapper #container #header H1 A:link {
+	Z-INDEX: 2; POSITION: relative; LINE-HEIGHT: 120px; WHITE-SPACE: nowrap
+}
+#wrapper #container #header H1 A:visited {
+	Z-INDEX: 2; POSITION: relative; LINE-HEIGHT: 120px; WHITE-SPACE: nowrap
+}
+#wrapper #container #header H1 SPAN {
+	FONT-WEIGHT: bold
+}
+#wrapper #container #header H1 IMG {
+	PADDING-RIGHT: 20px; FLOAT: left; PADDING-TOP: 16px
+}
+BODY.sidebars {
+	MIN-WIDTH: 980px
+}
+BODY.sidebar-left {
+	MIN-WIDTH: 780px
+}
+BODY.sidebar-right {
+	MIN-WIDTH: 780px
+}
+#wrapper #container #center {
+	WIDTH: 100%; FLOAT: left
+}
+BODY.sidebar-left #center {
+	MARGIN-LEFT: -210px
+}
+BODY.sidebar-right #center {
+	MARGIN-RIGHT: -210px
+}
+BODY.sidebars #center {
+	MARGIN: 0px -210px
+}
+BODY.sidebar-left #squeeze {
+	MARGIN-LEFT: 210px
+}
+BODY.sidebar-right #squeeze {
+	MARGIN-RIGHT: 210px
+}
+BODY.sidebars #squeeze {
+	MARGIN: 0px 210px
+}
+#wrapper #container .sidebar {
+	Z-INDEX: 2; POSITION: relative; MARGIN: 60px 0px 5em; WIDTH: 210px; FLOAT: left
+}
+#wrapper #container .sidebar .block {
+	MARGIN: 0px 0px 1.5em
+}
+#sidebar-left .block {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 15px; PADDING-TOP: 0px
+}
+#sidebar-right .block {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 15px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.block .content {
+	MARGIN: 0.5em 0px
+}
+#sidebar-left .block-region {
+	MARGIN: 0px 15px 0px 0px
+}
+#sidebar-right .block-region {
+	MARGIN: 0px 0px 0px 15px
+}
+.block-region {
+	BORDER-BOTTOM: #f6ecca 2px dashed; TEXT-ALIGN: center; BORDER-LEFT: #f6ecca 2px dashed; PADDING-BOTTOM: 1em; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; FONT-SIZE: 1.3em; BORDER-TOP: #f6ecca 2px dashed; BORDER-RIGHT: #f6ecca 2px dashed; PADDING-TOP: 1em
+}
+#wrapper #container #center #squeeze {
+	POSITION: relative; BACKGROUND: url(bg-content.png) #ffffff repeat-x 50% 0px
+}
+#wrapper #container #center .right-corner {
+	POSITION: relative; BACKGROUND: url(bg-content-right.png) no-repeat 100% 0px; LEFT: 10px
+}
+#wrapper #container #center .right-corner .left-corner {
+	POSITION: relative; PADDING-BOTTOM: 5em; MIN-HEIGHT: 400px; PADDING-LEFT: 35px; PADDING-RIGHT: 25px; BACKGROUND: url(bg-content-left.png) no-repeat 0px 0px; MARGIN-LEFT: -10px; PADDING-TOP: 60px; LEFT: -10px
+}
+#wrapper #container #footer {
+	TEXT-ALIGN: center; MARGIN: 4em 0px -3em; FLOAT: none; COLOR: #898989; CLEAR: both
+}
+#wrapper #container .breadcrumb {
+	Z-INDEX: 3; POSITION: absolute; TOP: 15px; LEFT: 35px
+}
+BODY.sidebar-left #footer {
+	MARGIN-LEFT: -210px
+}
+BODY.sidebar-right #footer {
+	MARGIN-RIGHT: -210px
+}
+BODY.sidebars #footer {
+	MARGIN: 0px -210px
+}
+#wrapper #container #header H1 {
+	COLOR: #ffffff; FONT-SIZE: 1.5em; FONT-WEIGHT: normal; text-shadow: #d9cb40 0px 1px 3px
+}
+#wrapper #container #header H1 A:link {
+	COLOR: #ffffff; FONT-SIZE: 1.5em; FONT-WEIGHT: normal; text-shadow: #d9cb40 0px 1px 3px
+}
+#wrapper #container #header H1 A:visited {
+	COLOR: #ffffff; FONT-SIZE: 1.5em; FONT-WEIGHT: normal; text-shadow: #d9cb40 0px 1px 3px
+}
+#wrapper #container #header H1 A:hover {
+	TEXT-DECORATION: none
+}
+#wrapper #container .breadcrumb {
+	FONT-SIZE: 0.92em
+}
+#wrapper #container .breadcrumb {
+	COLOR: #5d5998
+}
+#wrapper #container .breadcrumb A {
+	COLOR: #5d5998
+}
+#mission {
+	BORDER-BOTTOM: #fafdeb 1px solid; BORDER-LEFT: #fafdeb 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #ffffff; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; MARGIN-BOTTOM: 2em; BORDER-TOP: #fafdeb 1px solid; BORDER-RIGHT: #fafdeb 1px solid; PADDING-TOP: 1em
+}
+UL.primary-links {
+	Z-INDEX: 4; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: right; PADDING-TOP: 0px
+}
+UL.primary-links LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+UL.primary-links LI A {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: url(bg-navigation-item.png) no-repeat 50% 0px; COLOR: #ffffff; PADDING-TOP: 0.75em
+}
+UL.primary-links LI A:link {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: url(bg-navigation-item.png) no-repeat 50% 0px; COLOR: #ffffff; PADDING-TOP: 0.75em
+}
+UL.primary-links LI A:visited {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: url(bg-navigation-item.png) no-repeat 50% 0px; COLOR: #ffffff; PADDING-TOP: 0.75em
+}
+UL.primary-links LI A:hover {
+	BACKGROUND: url(bg-navigation-item-hover.png) no-repeat 50% 0px; COLOR: #ffffff
+}
+UL.primary-links LI A.active {
+	BACKGROUND: url(bg-navigation-item-hover.png) no-repeat 50% 0px; COLOR: #ffffff
+}
+UL.secondary-links {
+	Z-INDEX: 4; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: right; CLEAR: right; PADDING-TOP: 18px
+}
+UL.secondary-links LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+UL.secondary-links LI A {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #d0d0dd; PADDING-TOP: 0.75em
+}
+UL.secondary-links LI A:link {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #d0d0dd; PADDING-TOP: 0.75em
+}
+UL.secondary-links LI A:visited {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 1em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #d0d0dd; PADDING-TOP: 0.75em
+}
+UL.secondary-links LI A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #d0d0dd
+}
+UL.secondary-links LI A.active {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #d0d0dd
+}
+UL.primary {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.primary LI {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.secondary {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+UL.secondary LI {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: none transparent scroll repeat 0% 0%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+#tabs-wrapper {
+	BORDER-BOTTOM: #f7f5ee 1px solid; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px -26px 1em; PADDING-LEFT: 26px; PADDING-RIGHT: 26px; PADDING-TOP: 0px
+}
+UL.primary {
+	PADDING-BOTTOM: 10px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0.5em
+}
+UL.secondary {
+	BORDER-BOTTOM: #f7f5ee 1px solid; TEXT-ALIGN: left; PADDING-BOTTOM: 0.6em; MARGIN: -0.2em -26px 1em; PADDING-LEFT: 26px; PADDING-RIGHT: 26px; CLEAR: both; PADDING-TOP: 0px
+}
+H2.with-tabs {
+	PADDING-BOTTOM: 0px; MARGIN: 0px 2em 0px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 0px
+}
+UL.primary LI A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI.active A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI A:hover {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI A:visited {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI.active A {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI A:hover {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.secondary LI A:visited {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 0px 1px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: auto; BORDER-TOP: 0px; TOP: -1px; BORDER-RIGHT: 0px; TEXT-DECORATION: none; PADDING-TOP: 4px
+}
+UL.primary LI.active A {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.primary LI.active A:link {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.primary LI.active A:visited {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.primary LI A:hover {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.secondary LI.active A {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.secondary LI.active A:link {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.secondary LI.active A:visited {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.secondary LI A:hover {
+	BACKGROUND: url(bg-tab.png) repeat-x 0px 50%; COLOR: #ffffff
+}
+UL.primary LI.active A {
+	FONT-WEIGHT: bold
+}
+UL.secondary LI.active A {
+	FONT-WEIGHT: bold
+}
+.node {
+	BORDER-BOTTOM: #f7f5ee 1px solid; PADDING-BOTTOM: 1.5em; MARGIN: -1.5em -26px 1.5em; PADDING-LEFT: 26px; PADDING-RIGHT: 26px; PADDING-TOP: 1.5em
+}
+UL.links LI {
+	BACKGROUND-IMAGE: none; PADDING-LEFT: 0px; PADDING-RIGHT: 1em; MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+UL.inline LI {
+	BACKGROUND-IMAGE: none; PADDING-LEFT: 0px; PADDING-RIGHT: 1em; MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+.node .links {
+	TEXT-ALIGN: left
+}
+.comment .links {
+	TEXT-ALIGN: left
+}
+.node .links UL.links LI {
+
+}
+.comment .links UL.links LI {
+
+}
+.terms UL.links LI {
+	PADDING-LEFT: 1em; PADDING-RIGHT: 0px; MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+.picture {
+	PADDING-LEFT: 1em; FLOAT: right; CLEAR: right
+}
+.comment .submitted {
+	PADDING-LEFT: 1em; FLOAT: right; CLEAR: right
+}
+.new {
+	FLOAT: right; COLOR: #ffae00; FONT-SIZE: 0.92em; FONT-WEIGHT: bold
+}
+.terms {
+	FLOAT: right
+}
+.preview .node {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0.5em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: 0px 50%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0.5em
+}
+.preview .comment {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0.5em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: 0px 50%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0.5em
+}
+.sticky {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0.5em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: 0px 50%; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0.5em
+}
+.sticky {
+	BORDER-BOTTOM: #fafdeb 1px solid; BORDER-LEFT: #fafdeb 1px solid; PADDING-BOTTOM: 1em; BACKGROUND-COLOR: #ffffff; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; MARGIN-BOTTOM: 2em; BORDER-TOP: #fafdeb 1px solid; BORDER-RIGHT: #fafdeb 1px solid; PADDING-TOP: 1em
+}
+#comments {
+	BORDER-BOTTOM: #f7f5ee 1px solid; POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: -1.5em -25px 0px; PADDING-LEFT: 25px; PADDING-RIGHT: 25px; TOP: -1px; PADDING-TOP: 0px
+}
+#comments H2.comments {
+	PADDING-BOTTOM: 0.5em; MARGIN: 0px -25px; PADDING-LEFT: 25px; PADDING-RIGHT: 25px; BACKGROUND: url(gradient-inner.png) #ffffff repeat-x 0px 0px; PADDING-TOP: 0.5em
+}
+.comment {
+	PADDING-BOTTOM: 1.5em; MARGIN: 0px -25px; PADDING-LEFT: 25px; PADDING-RIGHT: 25px; BORDER-TOP: #f7f5ee 1px solid; PADDING-TOP: 1.5em
+}
+.indented {
+	MARGIN-LEFT: 25px
+}
+.comment H3 A.active {
+	COLOR: #494949
+}
+.node .content {
+	MARGIN: 0.6em 0px
+}
+.comment .content {
+	MARGIN: 0.6em 0px
+}
+#aggregator {
+	MARGIN-TOP: 1em
+}
+#aggregator .feed-item-title {
+	LINE-HEIGHT: 130%; FONT-SIZE: 160%
+}
+#aggregator .feed-item {
+	BORDER-BOTTOM: #f7f5ee 1px solid; PADDING-BOTTOM: 1.5em; MARGIN: -1.5em -31px 1.75em; PADDING-LEFT: 31px; PADDING-RIGHT: 31px; PADDING-TOP: 1.5em
+}
+#aggregator .feed-item-categories {
+	FONT-SIZE: 0.92em
+}
+#aggregator .feed-item-meta {
+	COLOR: #898989; FONT-SIZE: 0.92em
+}
+#palette .form-item {
+	BORDER-BOTTOM: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid; BORDER-TOP: #ffffff 1px solid; BORDER-RIGHT: #ffffff 1px solid
+}
+#palette .item-selected {
+	BORDER-BOTTOM: #f9f3e3 1px solid; BORDER-LEFT: #f9f3e3 1px solid; BACKGROUND: url(gradient-inner.png) #ffffff repeat-x 0px 0px; BORDER-TOP: #f9f3e3 1px solid; BORDER-RIGHT: #f9f3e3 1px solid
+}
+TR.odd TD.menu-disabled {
+	BACKGROUND-COLOR: #fbf9f2
+}
+TR.even TD.menu-disabled {
+	BACKGROUND-COLOR: #ffffff
+}
+TD.menu-disabled {
+	opacity: 0.5
+}
+.poll .bar {
+	BORDER-BOTTOM: #f4f3f3 1px solid; BORDER-LEFT: #f4f3f3 1px solid; BACKGROUND: url(bg-bar-white.png) #ffffff repeat-x 0px 0px; BORDER-TOP: #f4f3f3 0px solid; BORDER-RIGHT: #f4f3f3 1px solid
+}
+.poll .bar .foreground {
+	BACKGROUND: url(bg-bar.png) #dfce97 repeat-x 0px 100%
+}
+.poll .percent {
+	FONT-SIZE: 0.9em
+}
+#autocomplete LI {
+	PADDING-BOTTOM: 2px; MARGIN: 0px; PADDING-LEFT: 2px; PADDING-RIGHT: 2px; CURSOR: default; PADDING-TOP: 2px
+}
+FIELDSET {
+	BORDER-BOTTOM: #f9f3e3 1px solid; BORDER-LEFT: #f9f3e3 1px solid; PADDING-BOTTOM: 1em; MARGIN: 1em 0px; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: url(gradient-inner.png) #ffffff repeat-x 0px 0px; BORDER-TOP: #f9f3e3 1px solid; BORDER-RIGHT: #f9f3e3 1px solid; PADDING-TOP: 1em
+}
+FIELDSET LEGEND {
+	DISPLAY: block
+}
+HTML.js FIELDSET.collapsed {
+	PADDING-BOTTOM: 0.6em; BACKGROUND: none transparent scroll repeat 0% 0%; PADDING-TOP: 0px
+}
+HTML.js FIELDSET.collapsible LEGEND A {
+	PADDING-LEFT: 2em; BACKGROUND: url(menu-expanded.gif) no-repeat 0% 50%
+}
+HTML.js FIELDSET.collapsed LEGEND A {
+	BACKGROUND: url(menu-collapsed.gif) no-repeat 0% 50%
+}
+#block-node-0 H2 {
+	PADDING-RIGHT: 20px; FLOAT: left
+}
+#block-node-0 IMG {
+	FLOAT: right; PADDING-TOP: 4px
+}
+.feed-icon {
+	FLOAT: right; PADDING-TOP: 4px
+}
+#block-node-0 .content {
+	CLEAR: right
+}
+#user-login-form {
+	TEXT-ALIGN: center
+}
+#user-login-form UL {
+	TEXT-ALIGN: left
+}
+DIV.admin-panel {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin-panel .description {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin-panel .body {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .left {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .right {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .expert-link {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.item-list {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.menu {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+DIV.admin .left {
+	WIDTH: 48%; FLOAT: left
+}
+DIV.admin .right {
+	WIDTH: 48%; FLOAT: right
+}
+DIV.admin-panel {
+	PADDING-BOTTOM: 1.5em; PADDING-LEFT: 1em; PADDING-RIGHT: 1em; BACKGROUND: url(gradient-inner.png) #ffffff repeat-x 0px 0px; PADDING-TOP: 1em
+}
+DIV.admin-panel .description {
+	MARGIN-BOTTOM: 1.5em
+}
+DIV.admin-panel DL {
+	MARGIN: 0px
+}
+DIV.admin-panel DD {
+	LINE-HEIGHT: 1.3em; MARGIN-TOP: -0.2em; MARGIN-BOTTOM: 0.65em; COLOR: #898989; FONT-SIZE: 0.92em
+}
+TABLE.system-status-report TH {
+	BORDER-BOTTOM-COLOR: #f8f2df; BORDER-TOP-COLOR: #f8f2df; BORDER-RIGHT-COLOR: #f8f2df; BORDER-LEFT-COLOR: #f8f2df
+}
+#autocomplete LI.selected {
+	BACKGROUND: #0e0e6c; COLOR: #ffffff
+}
+TR.selected TD {
+	BACKGROUND: #0e0e6c; COLOR: #ffffff
+}
+TR.selected TD.active {
+	BACKGROUND: #0e0e6c; COLOR: #ffffff
+}
+TR.selected TD A:link {
+	COLOR: #d5d5e3
+}
+TR.selected TD A:visited {
+	COLOR: #d5d5e3
+}
+TR.selected TD A:active {
+	COLOR: #d5d5e3
+}
+SPAN.clear {
+	LINE-HEIGHT: 0px; DISPLAY: block; MARGIN-BOTTOM: -1px; HEIGHT: 1px; CLEAR: both; FONT-SIZE: 0px
+}
+.messages {
+	BORDER-BOTTOM: #b8d3e5 1px solid; BORDER-LEFT: #b8d3e5 1px solid; BACKGROUND-COLOR: #fff; BORDER-TOP: #b8d3e5 1px solid; BORDER-RIGHT: #b8d3e5 1px solid
+}
+.preview {
+	BORDER-BOTTOM: #e5e58f 1px solid; BORDER-LEFT: #e5e58f 1px solid; BACKGROUND-COLOR: #fcfce8; BORDER-TOP: #e5e58f 1px solid; BORDER-RIGHT: #e5e58f 1px solid
+}
+DIV.status {
+	BORDER-BOTTOM-COLOR: #c7f2c8; BORDER-TOP-COLOR: #c7f2c8; COLOR: #3a3; BORDER-RIGHT-COLOR: #c7f2c8; BORDER-LEFT-COLOR: #c7f2c8
+}
+DIV.error {
+	COLOR: #c52020
+}
+.form-item INPUT.error {
+	BORDER-BOTTOM: #c52020 1px solid; BORDER-LEFT: #c52020 1px solid; COLOR: #494949; BORDER-TOP: #c52020 1px solid; BORDER-RIGHT: #c52020 1px solid
+}
+.form-item TEXTAREA.error {
+	BORDER-BOTTOM: #c52020 1px solid; BORDER-LEFT: #c52020 1px solid; COLOR: #494949; BORDER-TOP: #c52020 1px solid; BORDER-RIGHT: #c52020 1px solid
+}
+TR.watchdog-user {
+	BACKGROUND-COLOR: #fcf9e5
+}
+TR.watchdog-user TD.active {
+	BACKGROUND-COLOR: #fbf5cf
+}
+TR.watchdog-content {
+	BACKGROUND-COLOR: #fefefe
+}
+TR.watchdog-content TD.active {
+	BACKGROUND-COLOR: #f5f5f5
+}
+TR.watchdog-warning {
+	BACKGROUND-COLOR: #fdf5e6
+}
+TR.watchdog-warning TD.active {
+	BACKGROUND-COLOR: #fdf2de
+}
+TR.watchdog-error {
+	BACKGROUND-COLOR: #fbe4e4
+}
+TR.watchdog-error TD.active {
+	BACKGROUND-COLOR: #fbdbdb
+}
+TR.watchdog-page-not-found {
+	BACKGROUND: #d7ffd7
+}
+TR.watchdog-access-denied {
+	BACKGROUND: #d7ffd7
+}
+TR.watchdog-page-not-found TD.active {
+	BACKGROUND: #c7eec7
+}
+TR.watchdog-access-denied TD.active {
+	BACKGROUND: #c7eec7
+}
+TABLE.system-status-report TR.error {
+	BORDER-BOTTOM-COLOR: #ebb; BACKGROUND-COLOR: #fcc; BORDER-TOP-COLOR: #ebb; COLOR: #200; BORDER-RIGHT-COLOR: #ebb; BORDER-LEFT-COLOR: #ebb
+}
+TABLE.system-status-report TR.error TH {
+	BORDER-BOTTOM-COLOR: #ebb; BACKGROUND-COLOR: #fcc; BORDER-TOP-COLOR: #ebb; COLOR: #200; BORDER-RIGHT-COLOR: #ebb; BORDER-LEFT-COLOR: #ebb
+}
+TABLE.system-status-report TR.warning {
+	BORDER-BOTTOM-COLOR: #eeb; BACKGROUND-COLOR: #ffd; BORDER-TOP-COLOR: #eeb; BORDER-RIGHT-COLOR: #eeb; BORDER-LEFT-COLOR: #eeb
+}
+TABLE.system-status-report TR.warning TH {
+	BORDER-BOTTOM-COLOR: #eeb; BACKGROUND-COLOR: #ffd; BORDER-TOP-COLOR: #eeb; BORDER-RIGHT-COLOR: #eeb; BORDER-LEFT-COLOR: #eeb
+}
+TABLE.system-status-report TR.ok {
+	BORDER-BOTTOM-COLOR: #beb; BACKGROUND-COLOR: #dfd; BORDER-TOP-COLOR: #beb; BORDER-RIGHT-COLOR: #beb; BORDER-LEFT-COLOR: #beb
+}
+TABLE.system-status-report TR.ok TH {
+	BORDER-BOTTOM-COLOR: #beb; BACKGROUND-COLOR: #dfd; BORDER-TOP-COLOR: #beb; BORDER-RIGHT-COLOR: #beb; BORDER-LEFT-COLOR: #beb
+}
+.cart_table{
+/*	border:#e0e0e0 1px solid; */
+	padding-right:5px;
+	}
+
+.cart_title{
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Helvetica, Arial, sans-serif; FONT-WEIGHT: normal; PADDING-TOP: 0px;
+	LINE-HEIGHT: 130%; FONT-SIZE: 160%;
+	}
+.cart_content{
+	color:#666666;
+	}
+.cart_link{
+	color:#000000;
+	font-weight:bold;
+	font-size:12px;
+	}
+.cart_link:hover{color:#000000;font-weight:bold;}
+
+.tr_0{background-color:#fefefe; padding:5px;}
+.tr_1{background-color:#fefefe; padding:5px;}
+.TblLower{background-color:#fefbfb; padding:5px;}
+.TblHigher{background-color:#fefffe; padding:5px;}
+.table_dark{background-color:#fbf9f2;width:100%;}
+.table_midtone{background-color:#fbf9f2;color:#333333;width:100%;}

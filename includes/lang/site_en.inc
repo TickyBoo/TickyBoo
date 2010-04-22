@@ -78,6 +78,7 @@ define("icon_nosal_alt","UnPublished");
 //TOOLTIPS COULD BE MOVED TO ANOTHER FILE
 //By default they use the name of the item plus _tooltip eg. add_venue button would be add_venue_tooltip
 define("add_tooltip","Add");
+define("add_multi_tooltip","Add sub-event to this main event.");
 define("edit_tooltip","Edit Item");
 define("add_venue_tooltip","Add a new Venue");
 define("compile_all_tooltip","This will (re)compile all the templates to check they are valid.");
@@ -86,6 +87,7 @@ define('add_pm','Add Placemap');
 define('pm_split','Split Placemap');
 define('split_zones','Split Zones');
 define('Published','Published');
+define('place_map_tooltip','Edit Event Seating and Discounts');
 define('Archive','Archive');
 define('details','Details');
 define('print','Print');
@@ -151,6 +153,7 @@ define("user_status","Status");
 define("act_err", "User Not Found or Already Activated!");
 define("act_error","Account Could Not be Activated! Please re-check the link or contact the system administrator.");
 define("act_uselink", "Please use the link that has been sent to your email address.");
+define("act_email_sent", "Activation email sent.");
 define("already_exist","This Name Already Exists. Choose Another!");
 define("useralreadyexist","This E-mail is Already Registered in the Database!");
 define("AutoCancel_order","Auto Cancel: Failed to Order!");
@@ -186,6 +189,7 @@ define("in_use","This Object is in use and <b>cannot</b> be Deleted!");
 define("internal_error","Internal Error!");
 define("invalid_date","Invalid Date!");
 define("invalid_number","Invalid Credit Card Number!");
+define("log_err_isactive", "That account is allready active.");
 define("log_err_mailnotsend", "The Activation Email <b>could not</b> be sent, please check you have entered the correct email address.");
 define("log_err_not_act","You are Not Activated!");
 define("log_err_not_act_info","<br />Please activate your account!
@@ -524,7 +528,7 @@ define("add_multi","Add Sub-Event");
 				define("event_recur_end","Event Stops");
 				define("recure_days_selection","Days to Exclude");
 	define("event_time","Event Begins");
-	define("event_open","Doors Open");
+	define("event_open","Event Open");
 	define("event_end","Event Ends");
 	define("event_order_limit","Order Limit");
 	define("event_template","Template for Tickets");
@@ -943,6 +947,8 @@ define("row","Row"); //discount.tpl
 define("normal","Normal"); //discount.tpl
 define("expired","EXPIRED");
 define("minutes","min.");
+define("selected_total","Selected Ticket Total in ");
+
 
 //cart_view.tpl
 define("shopping_cart","Your shopping cart");
@@ -994,10 +1000,15 @@ define("discounts","Discounts");
 define("place_nr","Seat nr");
 
 //event.tpl
+define("each","per ticket.");
 define("shop","Order Tickets");
+define("shop_main","Select Event");
 define("shop_info","Select the desired number of tickets. Click on 'Next', to check and confirm your order.");
-define("shop_condition","<br>Conditions: Information collected will only be stored to handle shipping and payment.");
+define("shop_info_main","Select a event below for the day which you wish to purchase tickets for.");
+define("shop_condition","Conditions: Information collected will only be stored to handle shipping and payment.");
 define("shop_no_event","Sorry but the event you are looking for, does not exsist, has expired or been removed.");
+define("from","From the");
+define("choose_event","Please select the event for the day you wish to book from the list below:");
 
 //event_description.tpl
 define("doors_open","Doors Open");
@@ -1113,6 +1124,13 @@ define("nospam_info", "<------ Enter This Code ------>.");
 define("agrement","I have read and agree to the General Terms of Sale.");
 define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send me information about future events and other {\$organizer->organizer_name} related matters, and that they will not pass on my details to any 3rd party.");
 define("member_info","Please enter your email address and password");
+
+define("personaldetails","Personal Details");
+define("addressdetails","Address Details");
+define("contactdetails","Contact Details");
+define("memberpasswords","Passwords");
+define("securitytc","Security and Terms");
+
 
 //Progressbar.tpl
 define("prg_order","Order");

@@ -45,12 +45,12 @@ class XMLData {
   	if(empty($query)){user_error('cannot export "'.$table.'": empty query');return;}
   	if($res=ShopDB::query($query)){
 
-  	  $nf=shopDB::num_fields($res);
+  	  $nf=shopDB::fieldCount($res);
 
   		$pc=-1;
   		for($i=0;$i<$nf;$i++){
   			if(!$pk){
-  				if(strpos(shopDB::field_flags($res,$i),'primary_key')!==false){
+  				if(strpos(shopDB::fieldFlags($res,$i),'primary_key')!==false){
   					$pc=$i;
   				}
   			}

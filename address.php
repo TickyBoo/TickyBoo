@@ -34,7 +34,5 @@
 
 define('ft_check','shop');
 $fond='venue_address';
-require_once('includes/classes/class.router.php');
-router::draw($fond);
-
+require_once('includes/controller/template.php');
 ?>

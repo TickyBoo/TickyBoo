@@ -40,8 +40,8 @@ class Update_Smarty {
 	function Update_Smarty( $smarty ) {
 		global $_SHOP;
 
-		$smarty->register->templateObject( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
-		$smarty->assignByRef( "update", $this );
+		$smarty->register_object( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
+		$smarty->assign_by_ref( "update", $this );
 	}
 
   function is_demo() {
