@@ -43,6 +43,7 @@
 .pagination  tr:hover td.current{
   background:none #BdC9D5 !important;
 }
+
 .done{
   background-color: #42729a;
   color: #FFFFFF;
@@ -65,7 +66,6 @@
     or $name==!shopping_cart! or $name==!pers_info! or $name==!shopping_cart_check_out! 
     or $name==!order_reg! or $name==!pay_accept! or $name==!pay_refused!}
   <table class="full">
-
     <tr>
       {if $name==!shop! and $shop_event.event_pm_id}
         <td class='current'> {!prg_order!} </td>

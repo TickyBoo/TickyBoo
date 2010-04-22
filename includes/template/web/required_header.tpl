@@ -15,7 +15,7 @@
   <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.3.js'></script>
   <script type='text/javascript' src='scripts/jquery/jquery.countdown.pack.js'></script>
   <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
-
+  
   <script type='text/javascript' src='scripts/jquery/roundies.js'></script>
 
   <script type="text/javascript">
@@ -45,10 +45,10 @@
     var showDialog = function(element){
       jQuery.get(jQuery(element).attr('href'),
         function(data){
-        jQuery("#showdialog").html(data);
-        jQuery("#showdialog").modal({
-          autoResize:true
-        });
+          jQuery("#showdialog").html(data);
+          jQuery("#showdialog").modal({
+            autoResize:true
+          });
         }
       );
       return false;
