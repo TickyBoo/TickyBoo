@@ -75,6 +75,9 @@
 	            {$shop_event.event_time|date_format:!time_format!} {$shop_event.pm_name}
             </li>
           {/event}
+          {if !$shop_event.event_main_id}
+            <p>{!no_sub_events!}</p>
+          {/if}
         {else}
           {!various_dates!}
         {/if}

@@ -1017,6 +1017,7 @@ define("doors_open","Doors Open");
 define("dates_localities","Dates and Locations");
 define("various_dates","Multiple Dates");
 define("venue","Location");
+define("no_sub_events","There are no sub-events currently avalible.");
 
 //event_groups.tpl
 define("event_groups","Event Groups");

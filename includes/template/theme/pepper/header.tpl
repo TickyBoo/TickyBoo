@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-type" content="text/html" />
     
     <!--link rel='stylesheet' href='style.php' type='text/css' /-->
     <link rel="stylesheet" href="{$_SHOP_theme_css}style.css" />
@@ -39,7 +39,7 @@
     
       <div id="header"><!-- Header -->
         <div>
-          <img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" />
+          <img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" alt="Logo" />
   	      <br />
           <img src="{$_SHOP_themeimages}logo.gif"/>
           <br />
@@ -51,20 +51,7 @@
       </div>
       
       <div id="main">
-        
-        <!-- Message Divs -->
-        <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all center" style="padding: 1em; margin-top: .7em; display:none;" >
-          <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-            <span id='error-text'>ffff</span>
-          </p>
-        </div>
-        <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all center" style=" padding: 1em; margin-top: .7em; display:none;" >
-          <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-            <span id='notice-text'>fff</span>
-          </p>
-        </div>
-        <!-- End Message Divs -->
-      
+
         <div id="col1"><!-- LEFT -->
           <div id="col1_content" class="clearfix">
             
@@ -85,11 +72,9 @@
         
         <div id="col2"><!-- Right -->
           <div id="col2_content" class="clearfix">
-          
             {include file="user_login_block.tpl"} <br />
           
             {include file="cart_resume.tpl"} <br />
-    		
           </div>
         </div>
         
@@ -97,6 +82,20 @@
           <div id="col3_content" class="clearfix">
             
             <div id="col3_content_2" class="clearfix">
+              
+              <!-- Message Divs -->
+              <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all center" style="padding: 1em; margin-top: .7em; display:none;" >
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+                  <span id='error-text'>ffff</span>
+                </p>
+              </div>
+              <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all center" style=" padding: 1em; margin-top: .7em; display:none;" >
+                <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                  <span id='notice-text'>fff</span>
+                </p>
+              </div>
+              <!-- End Message Divs -->
+              
               {include file="Progressbar.tpl" name=$name}
               
     					{if $name}
