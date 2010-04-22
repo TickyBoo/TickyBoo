@@ -336,8 +336,8 @@ class AdminView extends AUIComponent {
 
     function _check ($name,$main,$data){
       if (is_object($main)) {
-        if($main->$name!=$data[$name]){$chk='checked';}
-        return "<input type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
+        //if($main->$name==$data[$name]){$chk='checked';}
+        return "<input title=".con('reset_to_main')." type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
       }
       return $main;
     }

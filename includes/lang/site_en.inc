@@ -380,6 +380,7 @@ define("control_user_title","Ticket Takers");
 
 //Event Section
 define("event_status","Event Status");
+define("reset_to_main","Tick_to_reset_to_main_event.");
 
 //Venues
 define("ort_admin_tab","Venues");
