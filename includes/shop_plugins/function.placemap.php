@@ -186,19 +186,19 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                             }
                             $res .= "'>";
                         } else {
-                            $res .= "<img class='pm_resp ft-pm-cell' style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
+                            $res .= "<img style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
                         }
                     } else {
-                        $res .= "<img class='pm_occupied ft-pm-cell' style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
+                        $res .= "<img style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
                     }
                     ////////////////////////////
                 } else {
-                    $res .= "<img class='pm_occupied ft-pm-cell' style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}c.gif'>";
+                    $res .= "<img style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}seatused.gif'>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $res .= "<img class='pm_nosale ft-pm-cell' style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}b.gif'>";
+                $res .= "<img style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}b.gif'>";
             } else {
-                $res .= "<img class='pm_none ft-pm-cell' style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
+                $res .= "<img style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
             }
             $res .= "\n";
         }
