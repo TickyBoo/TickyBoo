@@ -106,7 +106,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
         $bottom = $pmp->pmp_height - 1;
     }
 
-    $res = "<table class='pm_table' cellpadding=0 cellspacing=1>\n";
+    $res = "<table class='full pm_table' cellpadding=0 cellspacing=1>\n";
 
     if ($pmp->pmp_shift) {
         $cspan = 'colspan=2';
