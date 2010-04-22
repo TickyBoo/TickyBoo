@@ -590,9 +590,11 @@ class ShopDB {
           fclose($handle);
         }
         $result ='';
-        foreach ($errors as $data) {
-          $result .= $data['changes'];
-          if ($data['error']) $result .= $data['error'];
+        if (is_array($errors)) {
+          foreach ($errors as $data) {
+            $result .= $data['changes'];
+            if ($data['error']) $result .= $data['error'];
+          }
         }
         If ($result) {
           require_once('admin'.DS.'class.adminview.php');

@@ -135,7 +135,8 @@ class eph_mollie extends payment{
     if (isset($_GET['transaction_id']))  {
       $ideal = new iDEAL_Payment ($this->pm_mollie_partneri);
       $ideal->setTestmode($this->pm_mollie_test);
-    	$ideal->checkPayment($_GET['transaction_id']);/*
+    	$ideal->checkPayment($_GET['transaction_id']);
+/*
       $debug = print_r($request, true). "\n";
       $debug .= print_r($ideal, true). "\n";
     $handle=fopen($_SHOP->tmp_dir."mollie.log","a");
