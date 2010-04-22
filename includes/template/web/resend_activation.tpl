@@ -39,15 +39,24 @@
     
     <table class="full" width='80%' align='center'>
       <tr>
-      <tr><td class='title' colspan='2' align='center'>
+        <td class='title' colspan='2' align='center'>
         {!act_notarr!}
-      </td></tr>
-      <tr><td  colspan='2'>
+        </td>
+      </tr>
+      <tr>
+        <td colspan='2'>
         {!act_note!}<br />
-		<br />
-      </td></tr>
-      <tr><td>{!email!}</td>
-      <td><input type='text' name='email' size='36'> &nbsp; <input type='submit' name='submit' value="{!act_send!}"></td></tr>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {!email!}
+        </td>
+        <td>
+          <input type='text' name='email' size='36' /> &nbsp; <input type='hidden' name='submit' value="{!act_send!}" />
+          <button type='submit' class="ft-ui-button">{!act_send!}</button>
+        </td>
+      </tr>
     </table>
   </form>
 {/if}
