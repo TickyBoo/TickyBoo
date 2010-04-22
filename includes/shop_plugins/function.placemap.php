@@ -68,7 +68,7 @@ function placeMapMargins($shift)
 function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
 {
     global $_SHOP;
-
+    $imagesize = 14;
     $l_row = ' '.con('place_row').' ';
     $l_seat = ' '.con('place_seat').' ';
 
@@ -106,27 +106,28 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
         $bottom = $pmp->pmp_height - 1;
     }
 
-    $res = "<table class='full pm_table' cellpadding=0 cellspacing=1>\n";
+    $res = '';// "<table class='full pm_table' cellpadding=0 cellspacing=1>\n";
 
-    if ($pmp->pmp_shift) {
+/*    if ($pmp->pmp_shift) {
         $cspan = 'colspan=2';
-        $ml[1] = $mr[0] = '<td class="pm_none ft-pm-cell"><img src="{$_SHOP->images_url}dot.gif" style="width:50%;" height="1"></td>';
+        $ml[1] = $mr[0] = '<img src="{$_SHOP->images_url}dot.gif" style="width:5;height=10">';
         $res .= '<tr>';
         $width2 = ($right - $left) * 2 + 1;
         for ($k = 0; $k <= $width2; $k++) {
-            $res .= '<td class="pm_none ft-pm-cell"><img src="{$_SHOP->images_url}dot.gif" style="width:50%;" height="1"></td>';
+            $res .= '<img src="{$_SHOP->images_url}dot.gif" style="width:5;height:10">';
         }
-        $res .= '</tr>';
+        $res .= '<br/>';
     }
+*/
 //    print_r($pmp);
     for ($j = $top; $j <= $bottom; $j++) {
-        $res .= '<tr>';
+//        $res .= '<tr>';
         $res .= $ml[$j % 2];
         ///////////
         for ($k = $left; $k <= $right; $k++) {
             $seat = $pmp->data[$j][$k];
             if ($seat[PM_ZONE] === 'L') {
-                if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
+/*                if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
                     $res .= "<td $cspan class='label_RE ft-pm-cell'>$irow";
                 } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->data[$j][$k - 1][PM_ROW]) {
                     $res .= "<td $cspan class='label_RW ft-pm-cell'>$irow";
@@ -142,18 +143,19 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                         $label_size *= 2;
                     }
                     $res .= "<td class='label_T ft-pm-cell' colspan='$label_size'>{$seat[PM_LABEL_TEXT]}";
-                } elseif ($seat[PM_LABEL_TYPE] == 'E') {
-                    $res .= "<td $cspan class='label_E ft-pm-cell'>";
+                } else */
+                if ($seat[PM_LABEL_TYPE] == 'E') {
+                    $res .= "<img  style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}exit.gif' class='label_E ft-pm-cell'>";
                 } else {
-                    $res .= "<td $cspan class='pm_none ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                    $res .= "<img src='{$_SHOP->images_url}dot.gif' style='width:{$imagesize};height:{$imagesize}'>";
                 }
             } elseif ($seat[PM_ZONE] and $seat[PM_CATEGORY]) {
                 //Empty seats
                 if ($seat[PM_STATUS] == PM_STATUS_FREE) {
                     if ($seat[PM_CATEGORY] == $cat_ident) {
                         $zone = $zones[$seat[PM_ZONE]];
-                        //$res.= "<td $cspan class='pm_free'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' onmouseover='this.T_WIDTH=100;return escape(\"{$zone->pmz_name} {$seat[PM_ROW]}/{$seat[PM_SEAT]}\")'>";
-                        $res .= "<td $cspan class='pm_free ft-pm-cell'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' title='";
+                        $res.= "<input type='hidden' id='place{$seat[PM_ID]}' name='place[{$seat[PM_ID]}]' value='0'>";
+                        $res .= "<a  href='javascript:gridClick({$seat[PM_ID]});'><img id='seat{$seat[PM_ID]}' src='{$_SHOP->images_url}seatfree.gif' style='width:{$imagesize};height:{$imagesize}' title='";
                         if ($print_zone) {
                             $res .= $zone->pmz_name . ' ';
                         }
@@ -163,17 +165,16 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                         if (($cat_num & 1) and $seat[PM_SEAT] != '0') {
                             $res .= $l_seat . $seat[PM_SEAT];
                         }
-                        $res .= "'>";
+                        $res .= "'></a>";
                     } else {
-                        $res .= "<td $cspan class='pm_free ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                      $res .= "<img src='{$_SHOP->images_url}d.gif' style='width:{$imagesize};height:{$imagesize}'>";
                     }
                     ////////////Reserved seats, they will only be selectable if you have area='pos' set in cat...tpl
                 } elseif ($seat[PM_STATUS] == PM_STATUS_RESP) {
                     if ($area === 'pos') {
                         if ($seat[PM_CATEGORY] == $cat_ident) {
                             $zone = $zones[$seat[PM_ZONE]];
-                            //$res.= "<td $cspan class='pm_free'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' onmouseover='this.T_WIDTH=100;return escape(\"{$zone->pmz_name} {$seat[PM_ROW]}/{$seat[PM_SEAT]}\")'>";
-                            $res .= "<td $cspan class='pm_resp ft-pm-cell'><input class='pm_check' type='checkbox' name='place[]' value='{$seat[PM_ID]}' title='";
+                            $res .= "<img src='{$_SHOP->images_url}seatselect.gif' name='place[]' value='{$seat[PM_ID]}' style='width:{$imagesize};height:{$imagesize}' title='";
                             if ($print_zone) {
                                 $res .= $zone->pmz_name . ' ';
                             }
@@ -185,27 +186,26 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                             }
                             $res .= "'>";
                         } else {
-                            $res .= "<td $cspan class='pm_resp ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                            $res .= "<img class='pm_resp ft-pm-cell' style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
                         }
                     } else {
-                        $res .= "<td $cspan class='pm_occupied ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                        $res .= "<img class='pm_occupied ft-pm-cell' style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
                     }
                     ////////////////////////////
                 } else {
-                    $res .= "<td $cspan class='pm_occupied ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                    $res .= "<img class='pm_occupied ft-pm-cell' style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}c.gif'>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $res .= "<td $cspan class='pm_nosale ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                $res .= "<img class='pm_nosale ft-pm-cell' style='width:{$imagesize};height:{$imagesize}' src='{$_SHOP->images_url}b.gif'>";
             } else {
-                $res .= "<td $cspan class='pm_none ft-pm-cell'><img src='{$_SHOP->images_url}dot.gif'>";
+                $res .= "<img class='pm_none ft-pm-cell' style='width:{$imagesize};height:{$imagesize}'  src='{$_SHOP->images_url}dot.gif'>";
             }
-            $res .= "</td>\n";
+            $res .= "\n";
         }
         $res .= $mr[$j % 2];
-        $res .= "</tr>\n";
+        $res .= "<br/>\n";
     }
 
-    $res .= "</table>";
     /*            <script language=\"JavaScript\" type=\"text/javascript\" src=\"wz_tooltip.js\"></script>    ";*/
 
 
@@ -224,6 +224,20 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
             $res = "<table border=0 class=pm_table_ext><tr><td align='center' valign='middle'><img src='{$_SHOP->images_url}scene_v_$l.png'></td><td align='center' valign='middle' >$res</td></tr></table>";
             break;
     }
+    $res .='
+      <script>
+function gridClick(id) {
+  x = window.document.getElementById("place"+id).value;
+  if ( x == 0 ) {
+    window.document.getElementById("seat"+id).src = "'.$_SHOP->images_url.'seatselect.gif";
+    window.document.getElementById("place"+id).value = id;
+  } else {
+    window.document.getElementById("seat"+id).src = "'.$_SHOP->images_url.'seatfree.gif";
+    window.document.getElementById("place"+id).value = 0;
+  }
+}
+</script>
+';
 
     return $res;
 
