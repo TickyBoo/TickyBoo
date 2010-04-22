@@ -96,9 +96,9 @@
         <div id="col3"><!-- Middle -->
           <div id="col3_content" class="clearfix">
             
-            <div id="col3_content_2" class="subc clearfix">
-            
+            <div id="col3_content_2" class="clearfix">
               {include file="Progressbar.tpl" name=$name}
+              
     					{if $name}
       				  <h1>{$name}</h1>
    						{/if}

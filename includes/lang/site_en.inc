@@ -260,6 +260,8 @@ define('search_choice_event','Choose an Event to Search!');
 define('search_choice_seat_row_nr','Choose a Seat/Row to Search!');
 define('Options_saved','Options Saved!');
 define('update_error','Update Error!');
+define('user_details_saved_successfully','User details sucessfully saved');
+
 
 //------------------------------------------------------
 //ADMIN
@@ -979,7 +981,7 @@ define("tnx_order_mess","Thank you very much! Your order was registered. To pay 
 
 //checkout_preview.tpl
 define("shopping_cart_check_out","Select Payment Method");
-define("Handling_cont_mess"," ");
+define("Handling_cont_mess","Check your tickets, Check your details and then select your payment and click 'Order'.");
 define("handlings","Payments");
 define("payment","Payment"); //personal_order.tpl
 define("shipment","Shipment"); //personal_order.tpl
