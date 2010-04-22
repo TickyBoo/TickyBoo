@@ -2,8 +2,8 @@
 //============================================================+
 // File name   : 2dbarcodes.php
 // Begin       : 2009-04-07
-// Last Update : 2009-12-15
-// Version     : 1.0.001
+// Last Update : 2010-03-23
+// Version     : 1.0.002
 // License     : GNU LGPL (http://www.gnu.org/copyleft/lesser.html)
 // 	----------------------------------------------------------------------------
 //  Copyright (C) 2008-2009 Nicola Asuni - Tecnick.com S.r.l.
@@ -47,7 +47,7 @@
  * @copyright 2008-2009 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
  * @link http://www.tcpdf.org
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
- * @version 1.0.001
+ * @version 1.0.002
  */
 
 	/**
@@ -75,7 +75,7 @@ class TCPDF2DBarcode {
 	 * <li>$arrcode['num_cols'] required number of columns</li>
 	 * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
 	 * @param string $code code to print
- 	 * @param string $type type of barcode: <ul><li>TEST</li><li>...TO BE IMPLEMENTED</li></ul>
+ 	 * @param string $type type of barcode: <ul><li>TEST</li><li>QRCODE : QR-CODE Low error correction</li><li>QRCODE,L : QR-CODE Low error correction</li><li>QRCODE,M : QR-CODE Medium error correction</li><li>QRCODE,Q : QR-CODE Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li></ul>
 	 */
 	public function __construct($code, $type) {
 		$this->setBarcode($code, $type);
@@ -92,7 +92,7 @@ class TCPDF2DBarcode {
 	/** 
 	 * Set the barcode.
 	 * @param string $code code to print
- 	 * @param string $type type of barcode: <ul><li>TEST</li><li>...TO BE IMPLEMENTED</li></ul>
+ 	 * @param string $type type of barcode: <ul><li>TEST</li><li>QRCODE : QR-CODE Low error correction</li><li>QRCODE,L : QR-CODE Low error correction</li><li>QRCODE,M : QR-CODE Medium error correction</li><li>QRCODE,Q : QR-CODE Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li></ul>
  	 * @return array
 	 */
 	public function setBarcode($code, $type) {
@@ -108,6 +108,15 @@ class TCPDF2DBarcode {
 					array(0,1,0,0,1,0,0,0,0,0,1,0,0,1,0),
 					array(0,1,0,0,1,1,1,0,1,1,1,0,0,1,0)
 				);
+				break;
+			}
+			case 'QRCODE': { // QR-CODE
+				require_once(dirname(__FILE__).'/qrcode.php');
+				if (!isset($mode[1]) OR (!in_array($mode[1],array('L','M','Q','H')))) {
+					$mode[1] = 'L'; // Ddefault: Low error correction
+				}
+				$qrcode = new QRcode($code, strtoupper($mode[1]));
+				$this->barcode_array = $qrcode->getBarcodeArray();
 				break;
 			}
 			default: {

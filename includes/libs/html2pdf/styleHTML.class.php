@@ -2,11 +2,11 @@
 /**
  * Logiciel : HTML2PDF - classe styleHTML
  * 
- * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
+ * Convertisseur HTML => PDF
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.29
+ * @version		3.30
  */
  
 	class styleHTML
@@ -70,161 +70,10 @@
 		 */
 		function init()
 		{
-			$color = array();
-			$color['AliceBlue']			= '#F0F8FF';
-			$color['AntiqueWhite']		= '#FAEBD7';
-			$color['Aqua']				= '#00FFFF';
-			$color['Aquamarine']		= '#7FFFD4';
-			$color['Azure']				= '#F0FFFF';
-			$color['Beige']				= '#F5F5DC';
-			$color['Bisque']			= '#FFE4C4';
-			$color['Black']				= '#000000';
-			$color['BlanchedAlmond']	= '#FFEBCD';
-			$color['Blue']				= '#0000FF';
-			$color['BlueViolet']		= '#8A2BE2';
-			$color['Brown']				= '#A52A2A';
-			$color['BurlyWood']			= '#DEB887';
-			$color['CadetBlue']			= '#5F9EA0';
-			$color['Chartreuse']		= '#7FFF00';
-			$color['Chocolate']			= '#D2691E';
-			$color['Coral']				= '#FF7F50';
-			$color['CornflowerBlue']	= '#6495ED';
-			$color['Cornsilk']			= '#FFF8DC';
-			$color['Crimson']			= '#DC143C';
-			$color['Cyan']				= '#00FFFF';
-			$color['DarkBlue']			= '#00008B';
-			$color['DarkCyan']			= '#008B8B';
-			$color['DarkGoldenRod']		= '#B8860B';
-			$color['DarkGray']			= '#A9A9A9';
-			$color['DarkGrey']			= '#A9A9A9';
-			$color['DarkGreen']			= '#006400';
-			$color['DarkKhaki']			= '#BDB76B';
-			$color['DarkMagenta']		= '#8B008B';
-			$color['DarkOliveGreen']	= '#556B2F';
-			$color['Darkorange']		= '#FF8C00';
-			$color['DarkOrchid']		= '#9932CC';
-			$color['DarkRed']			= '#8B0000';
-			$color['DarkSalmon']		= '#E9967A';
-			$color['DarkSeaGreen']		= '#8FBC8F';
-			$color['DarkSlateBlue']		= '#483D8B';
-			$color['DarkSlateGray']		= '#2F4F4F';
-			$color['DarkSlateGrey']		= '#2F4F4F';
-			$color['DarkTurquoise']		= '#00CED1';
-			$color['DarkViolet']		= '#9400D3';
-			$color['DeepPink']			= '#FF1493';
-			$color['DeepSkyBlue']		= '#00BFFF';
-			$color['DimGray']			= '#696969';
-			$color['DimGrey']			= '#696969';
-			$color['DodgerBlue']		= '#1E90FF';
-			$color['FireBrick']			= '#B22222';
-			$color['FloralWhite']		= '#FFFAF0';
-			$color['ForestGreen']		= '#228B22';
-			$color['Fuchsia']			= '#FF00FF';
-			$color['Gainsboro']			= '#DCDCDC';
-			$color['GhostWhite']		= '#F8F8FF';
-			$color['Gold']				= '#FFD700';
-			$color['GoldenRod']			= '#DAA520';
-			$color['Gray']				= '#808080';
-			$color['Grey']				= '#808080';
-			$color['Green']				= '#008000';
-			$color['GreenYellow']		= '#ADFF2F';
-			$color['HoneyDew']			= '#F0FFF0';
-			$color['HotPink']			= '#FF69B4';
-			$color['IndianRed']			= '#CD5C5C';
-			$color['Indigo']			= '#4B0082';
-			$color['Ivory']				= '#FFFFF0';
-			$color['Khaki']				= '#F0E68C';
-			$color['Lavender']			= '#E6E6FA';
-			$color['LavenderBlush']		= '#FFF0F5';
-			$color['LawnGreen']			= '#7CFC00';
-			$color['LemonChiffon']		= '#FFFACD';
-			$color['LightBlue']			= '#ADD8E6';
-			$color['LightCoral']		= '#F08080';
-			$color['LightCyan']			= '#E0FFFF';
-			$color['LightGoldenRodYellow']	= '#FAFAD2';
-			$color['LightGray']			= '#D3D3D3';
-			$color['LightGrey']			= '#D3D3D3';
-			$color['LightGreen']		= '#90EE90';
-			$color['LightPink']			= '#FFB6C1';
-			$color['LightSalmon']		= '#FFA07A';
-			$color['LightSeaGreen']		= '#20B2AA';
-			$color['LightSkyBlue']		= '#87CEFA';
-			$color['LightSlateGray']	= '#778899';
-			$color['LightSlateGrey']	= '#778899';
-			$color['LightSteelBlue']	= '#B0C4DE';
-			$color['LightYellow']		= '#FFFFE0';
-			$color['Lime']				= '#00FF00';
-			$color['LimeGreen']			= '#32CD32';
-			$color['Linen']				= '#FAF0E6';
-			$color['Magenta']			= '#FF00FF';
-			$color['Maroon']			= '#800000';
-			$color['MediumAquaMarine']	= '#66CDAA';
-			$color['MediumBlue']		= '#0000CD';
-			$color['MediumOrchid']		= '#BA55D3';
-			$color['MediumPurple']		= '#9370D8';
-			$color['MediumSeaGreen']	= '#3CB371';
-			$color['MediumSlateBlue']	= '#7B68EE';
-			$color['MediumSpringGreen']	= '#00FA9A';
-			$color['MediumTurquoise']	= '#48D1CC';
-			$color['MediumVioletRed']	= '#C71585';
-			$color['MidnightBlue']		= '#191970';
-			$color['MintCream']			= '#F5FFFA';
-			$color['MistyRose']			= '#FFE4E1';
-			$color['Moccasin']			= '#FFE4B5';
-			$color['NavajoWhite']		= '#FFDEAD';
-			$color['Navy']				= '#000080';
-			$color['OldLace']			= '#FDF5E6';
-			$color['Olive']				= '#808000';
-			$color['OliveDrab']			= '#6B8E23';
-			$color['Orange']			= '#FFA500';
-			$color['OrangeRed']			= '#FF4500';
-			$color['Orchid']			= '#DA70D6';
-			$color['PaleGoldenRod']		= '#EEE8AA';
-			$color['PaleGreen']			= '#98FB98';
-			$color['PaleTurquoise']		= '#AFEEEE';
-			$color['PaleVioletRed']		= '#D87093';
-			$color['PapayaWhip']		= '#FFEFD5';
-			$color['PeachPuff']			= '#FFDAB9';
-			$color['Peru']				= '#CD853F';
-			$color['Pink']				= '#FFC0CB';
-			$color['Plum']				= '#DDA0DD';
-			$color['PowderBlue']		= '#B0E0E6';
-			$color['Purple']			= '#800080';
-			$color['Red']				= '#FF0000';
-			$color['RosyBrown']			= '#BC8F8F';
-			$color['RoyalBlue']			= '#4169E1';
-			$color['SaddleBrown']		= '#8B4513';
-			$color['Salmon']			= '#FA8072';
-			$color['SandyBrown']		= '#F4A460';
-			$color['SeaGreen']			= '#2E8B57';
-			$color['SeaShell']			= '#FFF5EE';
-			$color['Sienna']			= '#A0522D';
-			$color['Silver']			= '#C0C0C0';
-			$color['SkyBlue']			= '#87CEEB';
-			$color['SlateBlue']			= '#6A5ACD';
-			$color['SlateGray']			= '#708090';
-			$color['SlateGrey']			= '#708090';
-			$color['Snow']				= '#FFFAFA';
-			$color['SpringGreen']		= '#00FF7F';
-			$color['SteelBlue']			= '#4682B4';
-			$color['Tan']				= '#D2B48C';
-			$color['Teal']				= '#008080';
-			$color['Thistle']			= '#D8BFD8';
-			$color['Tomato']			= '#FF6347';
-			$color['Turquoise']			= '#40E0D0';
-			$color['Violet']			= '#EE82EE';
-			$color['Wheat']				= '#F5DEB3';
-			$color['White']				= '#FFFFFF';
-			$color['WhiteSmoke']		= '#F5F5F5';
-			$color['Yellow']			= '#FFFF00';
-			$color['YellowGreen']		= '#9ACD32';
-			
-			$this->htmlColor = array();
-			foreach($color as $key => $val) $this->htmlColor[strtolower($key)] = $val;			
-			unset($color);
+		global $webcolor;
+		$this->htmlColor = &$webcolor;
 			
 			$this->table = array();
-			
 			$this->value = array();
 			$this->initStyle();
 			
@@ -331,8 +180,27 @@
 			}
 			$this->value['margin-auto'] = false;
 			
-			if (in_array($balise, array('div')))
+		if (in_array($balise, array('div', 'fieldset')))
 				$this->value['vertical-align']	 = 'top';
+
+		if (in_array($balise, array('fieldset', 'legend')))
+		{
+			$radius = $this->ConvertToMM('5px');
+			$this->value['border']	= array(
+									't' => $this->readBorder('solid 1px #000000'),
+									'r' => $this->readBorder('solid 1px #000000'),
+									'b' => $this->readBorder('solid 1px #000000'),
+									'l' => $this->readBorder('solid 1px #000000'),
+									'radius' => array(),
+									'collapse' => false,
+			);
+			
+			$this->value['border']['radius'] = array(
+						'tl' => array($radius, $radius),
+						'tr' => array($radius, $radius),
+						'br' => array($radius, $radius),
+						'bl' => array($radius, $radius));
+    		}
 
 			if (in_array($balise, array('ul', 'li')))
 			{
@@ -393,7 +261,8 @@
 			$b = ($this->value['font-bold']			? 'B' : '');
 			$i = ($this->value['font-italic']		? 'I' : '');
 			$u = ($this->value['font-underline']	? 'U' : '');
-		$d = '';
+		$d = ($this->value['font-linethrough']	? 'D' : '');
+		$o = ($this->value['font-overline']		? 'O' : '');
 			
 			if ($this->defaultFont)
 			{
@@ -417,11 +286,11 @@
 			$size = $this->value['font-size'];
 			$size = 72 * $size / 25.4;
 			
-			$this->pdf->setOverline($this->value['font-overline']);
-			$this->pdf->setLinethrough($this->value['font-linethrough']);
+		$this->pdf->setOverline($o ? true : false);
+		$this->pdf->setLinethrough($d ? true : false);
 			
 			// application de la fonte 
-		$this->pdf->SetFont($family, $b.$i.$u.$d, $this->value['mini-size']*$size);
+		$this->pdf->SetFont($family, $b.$i.$u, $this->value['mini-size']*$size);
 			$this->pdf->setMyTextColor($this->value['color']);
 			if ($this->value['background']['color'])
 				$this->pdf->setMyFillColor($this->value['background']['color']);
@@ -758,21 +627,12 @@
 							else	unset($val[$k]);
 						}
 						$val = array_values($val);
-						if (count($val)!=4)
-						{
-							$val = $this->ConvertToMM($val[0], 0);
-							$this->value['padding']['t'] = $val;
-							$this->value['padding']['r'] = $val;
-							$this->value['padding']['b'] = $val;
-							$this->value['padding']['l'] = $val;
-						}
-						else
-						{
+					$this->duplicateBorder($val);
+
 							$this->value['padding']['t'] = $this->ConvertToMM($val[0], 0);
 							$this->value['padding']['r'] = $this->ConvertToMM($val[1], 0);
 							$this->value['padding']['b'] = $this->ConvertToMM($val[2], 0);
 							$this->value['padding']['l'] = $this->ConvertToMM($val[3], 0);							
-						}
 						break;
 						
 					case 'padding-top':
@@ -805,21 +665,12 @@
 							else	unset($val[$k]);
 						}
 						$val = array_values($val);
-						if (count($val)!=4)
-						{
-							$val = $this->ConvertToMM($val[0], 0);
-							$this->value['margin']['t'] = $val;
-							$this->value['margin']['r'] = $val;
-							$this->value['margin']['b'] = $val;
-							$this->value['margin']['l'] = $val;
-						}
-						else
-						{
+					$this->duplicateBorder($val);
+
 							$this->value['margin']['t'] = $this->ConvertToMM($val[0], 0);
 							$this->value['margin']['r'] = $this->ConvertToMM($val[1], 0);
 							$this->value['margin']['b'] = $this->ConvertToMM($val[2], 0);
 							$this->value['margin']['l'] = $this->ConvertToMM($val[3], 0);							
-						}
 						break;
 						
 					case 'margin-top':
@@ -937,22 +788,22 @@
 						break;
 
 					case 'border-top-width':
-						$val = $this->ConvertToMM($val, 0);; 
+					$val = $this->ConvertToMM($val, 0);
 						if ($val) $this->value['border']['t']['width'] = $val;
 						break;
 
 					case 'border-right-width':
-						$val = $this->ConvertToMM($val, 0);; 
+					$val = $this->ConvertToMM($val, 0);
 						if ($val) $this->value['border']['r']['width'] = $val;
 						break;
 
 					case 'border-bottom-width':
-						$val = $this->ConvertToMM($val, 0);; 
+					$val = $this->ConvertToMM($val, 0);
 						if ($val) $this->value['border']['b']['width'] = $val;
 						break;
 
 					case 'border-left-width':
-						$val = $this->ConvertToMM($val, 0);; 
+					$val = $this->ConvertToMM($val, 0);
 						if ($val) $this->value['border']['l']['width'] = $val;
 						break;
 											
@@ -1087,13 +938,15 @@
 				}				
 			}
 
+		$return = true;
+
 			if ($this->value['margin']['t']===null) $this->value['margin']['t'] = $this->value['font-size'];
 			if ($this->value['margin']['b']===null) $this->value['margin']['b'] = $this->value['font-size'];
 			
 			if ($this->onlyLeft) $this->value['text-align'] = 'left';
 			
 			// correction de la largeur pour correspondre au modèle de boite quick
-			if ($no_width && in_array($balise, array('div')) && $this->value['position']!='absolute')
+		if ($no_width && in_array($balise, array('div', 'fieldset')) && $this->value['position']!='absolute')
 			{
 				$this->value['width'] = $this->getLastWidth();
 				$this->value['width']-= $this->value['margin']['l'] + $this->value['margin']['r'];
@@ -1102,7 +955,7 @@
 			{
 			if ($correct_width)
 			{
-				if (!in_array($balise, array('table', 'div', 'hr')))
+				if (!in_array($balise, array('table', 'div', 'fieldset', 'hr')))
 				{
 					$this->value['width']-= $this->value['padding']['l'] + $this->value['padding']['r'];
 					$this->value['width']-= $this->value['border']['l']['width'] + $this->value['border']['r']['width'];
@@ -1110,6 +963,7 @@
 				if (in_array($balise, array('th', 'td')))
 				{
 					$this->value['width']-= $this->ConvertToMM(isset($param['cellspacing']) ? $param['cellspacing'] : '2px');
+					$return = false;
 				}
 				if ($this->value['width']<0) $this->value['width']=0;
 			}
@@ -1139,6 +993,8 @@
 			
 			if ($this->value['top'] && $this->value['bottom'] && $this->value['height'])	$this->value['bottom']	= null;
 			if ($this->value['left'] && $this->value['right'] && $this->value['width'])		$this->value['right']	= null;
+		
+		return $return;
 		}
 		
  		/**
@@ -1160,15 +1016,15 @@
 		 */
 		function getLastWidth($mode = false)
 		{
-			for($k=count($this->table); $k>0; $k--)
+		for($k=count($this->table)-1; $k>=0; $k--)
 			{
-				if ($this->table[$k-1]['width'])
+			if ($this->table[$k]['width'])
 				{
-					$w = $this->table[$k-1]['width'];
+				$w = $this->table[$k]['width'];
 					if ($mode)
 					{
-						$w+= $this->table[$k-1]['border']['l']['width'] + $this->table[$k-1]['padding']['l']+0.02;
-						$w+= $this->table[$k-1]['border']['r']['width'] + $this->table[$k-1]['padding']['r']+0.02;
+					$w+= $this->table[$k]['border']['l']['width'] + $this->table[$k]['padding']['l'] + 0.02;
+					$w+= $this->table[$k]['border']['r']['width'] + $this->table[$k]['padding']['r'] + 0.02;
 					}
 					return $w;
 				}
@@ -1183,15 +1039,15 @@
 		 */
 		function getLastHeight($mode = false)
 		{
-			for($k=count($this->table); $k>0; $k--)
+		for($k=count($this->table)-1; $k>=0; $k--)
 			{
-				if ($this->table[$k-1]['height'])
+			if ($this->table[$k]['height'])
 				{
-					$h = $this->table[$k-1]['height'];
+				$h = $this->table[$k]['height'];
 					if ($mode)
 					{
-						$h+= $this->table[$k-1]['border']['t']['width'] + $this->table[$k-1]['padding']['t']+0.02;
-						$h+= $this->table[$k-1]['border']['b']['width'] + $this->table[$k-1]['padding']['b']+0.02;
+					$h+= $this->table[$k]['border']['t']['width'] + $this->table[$k]['padding']['t'] + 0.02;
+					$h+= $this->table[$k]['border']['b']['width'] + $this->table[$k]['padding']['b'] + 0.02;
 					}
 					return $h;
 				}
@@ -1216,18 +1072,18 @@
 		
 		function getLastAbsoluteX()
 		{
-			for($k=count($this->table); $k>0; $k--)
+		for($k=count($this->table)-1; $k>=0; $k--)
 			{
-				if ($this->table[$k-1]['x'] && $this->table[$k-1]['position']) return $this->table[$k-1]['x'];
+			if ($this->table[$k]['x'] && $this->table[$k]['position']) return $this->table[$k]['x'];
 			}
 		return $this->pdf->getlMargin();
 		}
 		
 		function getLastAbsoluteY()
 		{
-			for($k=count($this->table); $k>0; $k--)
+		for($k=count($this->table)-1; $k>=0; $k--)
 			{
-				if ($this->table[$k-1]['y'] && $this->table[$k-1]['position']) return $this->table[$k-1]['y'];
+			if ($this->table[$k]['y'] && $this->table[$k]['position']) return $this->table[$k]['y'];
 			}
 		return $this->pdf->gettMargin();
 		}
@@ -1530,21 +1386,27 @@
 			$res = true;
 				
 			if (strtolower($val)=='transparent') return array(null, null, null);
-			if (isset($this->htmlColor[strtolower($val)])) $val = $this->htmlColor[strtolower($val)];
-			
-			if (preg_match('/^#[0-9A-Fa-f]{6}$/isU', $val))
+		if (isset($this->htmlColor[strtolower($val)]))
 			{
-				$r = floatVal(hexdec(substr($val, 1, 2)))/255.;
-				$v = floatVal(hexdec(substr($val, 3, 2)))/255.;
-				$b = floatVal(hexdec(substr($val, 5, 2)))/255.;
-				$col = array($r, $v, $b);
+			$val = $this->htmlColor[strtolower($val)];
+			$r = floatVal(hexdec(substr($val, 0, 2)));
+			$v = floatVal(hexdec(substr($val, 2, 2)));
+			$b = floatVal(hexdec(substr($val, 4, 2)));
+			$col = array($r/255., $v/255., $b/255.);
+		}
+		elseif (preg_match('/^#[0-9A-Fa-f]{6}$/isU', $val))
+		{
+			$r = floatVal(hexdec(substr($val, 1, 2)));
+			$v = floatVal(hexdec(substr($val, 3, 2)));
+			$b = floatVal(hexdec(substr($val, 5, 2)));
+			$col = array($r/255., $v/255., $b/255.);
 			}
 			elseif (preg_match('/^#[0-9A-F]{3}$/isU', $val))
 			{
-				$r = floatVal(hexdec(substr($val, 1, 1).substr($val, 1, 1)))/255.;
-				$v = floatVal(hexdec(substr($val, 2, 1).substr($val, 2, 1)))/255.;
-				$b = floatVal(hexdec(substr($val, 3, 1).substr($val, 3, 1)))/255.;
-				$col = array($r, $v, $b);
+			$r = floatVal(hexdec(substr($val, 1, 1).substr($val, 1, 1)));
+			$v = floatVal(hexdec(substr($val, 2, 1).substr($val, 2, 1)));
+			$b = floatVal(hexdec(substr($val, 3, 1).substr($val, 3, 1)));
+			$col = array($r/255., $v/255., $b/255.);
 			}
 			elseif (preg_match('/rgb\([\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*,[\s]*([0-9%\.]+)[\s]*\)/isU', $val, $match))
 			{

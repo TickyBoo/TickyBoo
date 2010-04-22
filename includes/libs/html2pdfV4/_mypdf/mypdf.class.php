@@ -6,7 +6,7 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		4.00
+ * @version		4.01
  */
 
 if (!defined('__CLASS_MYPDF__'))
@@ -19,7 +19,6 @@ if (!defined('__CLASS_MYPDF__'))
 	class MyPDF extends TCPDF
 	{
 		protected $footer_param = array();
-		protected $overline		= false;
 		protected $transf		= array();
 		
 		public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false)
@@ -27,7 +26,7 @@ if (!defined('__CLASS_MYPDF__'))
 			parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache);
 			$this->SetCreator(PDF_CREATOR);
 			$this->SetAutoPageBreak(false, 0);
-			$this->SetLineStyle(array('cap' => 'square'));
+			$this->linestyleCap = '2 J';
 			$this->setPrintHeader(false);
 			$this->jpeg_quality=90;
 			$this->SetMyFooter();
@@ -64,304 +63,10 @@ if (!defined('__CLASS_MYPDF__'))
 				$txt = str_replace('[[nb]]',		'{nb}',				$txt);
 				
 				parent::SetY(-11);
-			 	$this->setOverline(false);
         		$this->SetFont('helvetica', 'I', 8);
 				$this->Cell(0, 10, $txt, 0, 0, 'R');
 			}
 		}
-
-		public function setOverline($v = true)		{ $this->overline = $v; }
-
-		/*
-		 * Fonction redéfinie pour ajouter la gestion des images générées en PHP ou en CGI ou autres
-		 */
-		public function getImageFileType($file) {
-			$type = ''; // default type
-			
-			$imgfile = explode('?', $file);
-			$fileinfo = pathinfo($imgfile[0]);
-			if (!isset($fileinfo['extension']) || !$fileinfo['extension'])
-				$fileinfo['extension'] = 'php';
-						
-			$type = strtolower($fileinfo['extension']);
-			if ($type == 'cgi') $type = 'php';
-			if ($type == 'jpg') $type = 'jpeg';
-
-			if ($type=='php')
-			{
-				// identification des infos
-				$infos=@GetImageSize($file);
-				if (!$infos) $this->Error('Unsupported image : '.$file);
-				
-				// identification du type
-				$type = explode('/', $infos['mime']);
-				if ($type[0]!='image') $this->Error('Unsupported image : '.$file);
-				$type = $type[1];	
-			}
-			
-			return $type;
-		}
-		
-		/*
-		 * fonction ajotuée pour le support du format GIF nativement
-		 */
-		protected function _parsegif($file)
-		{
-			//Extract info from a GIF file (via PNG conversion)
-			if(!function_exists('imagepng'))
-				$this->Error('GD extension is required for GIF support');
-			if(!function_exists('imagecreatefromgif'))
-				$this->Error('GD has no GIF read support');
-			$im=imagecreatefromgif($file);
-			if(!$im)
-				$this->Error('Missing or incorrect image file: '.$file);
-			imageinterlace($im,0);
-			$tmp=tempnam('.','gif');
-			if(!$tmp)
-				$this->Error('Unable to create a temporary file');
-			if(!imagepng($im,$tmp))
-				$this->Error('Error while saving to temporary file');
-			imagedestroy($im);
-			$info=$this->_parsepng($tmp);
-			unlink($tmp);
-			return $info;
-		}
-
-		/*
-		 * Fonction redéfinie pour ajouter la gestion de overline et une correcion sur le positionnement pour le calcul de position
-		 */
-		protected function getCellCode($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false)
-		{
-			$txt = $this->removeSHY($txt);
-			$rs = ''; //string to be returned
-			if (!$ignore_min_height) {
-				$min_cell_height = $this->FontSize * $this->cell_height_ratio;
-				if ($h < $min_cell_height) {
-					$h = $min_cell_height;
-				}
-			}
-			$k = $this->k;
-			if ($this->empty_string($w) OR ($w <= 0)) {
-				if ($this->rtl) {
-					$w = $this->x - $this->lMargin;
-				} else {
-					$w = $this->w - $this->rMargin - $this->x;
-				}
-			}
-			$s = '';
-			// fill and borders
-			if (($fill == 1) OR ($border == 1)) {
-				if ($fill == 1) {
-					$op = ($border == 1) ? 'B' : 'f';
-				} else {
-					$op = 'S';
-				}
-				if ($this->rtl) {
-					$xk = (($this->x  - $w) * $k);
-				} else {
-					$xk = ($this->x * $k);
-				}
-				$s .= sprintf('%.2F %.2F %.2F %.2F re %s ', $xk, (($this->h - $this->y) * $k), ($w * $k), (-$h * $k), $op);
-			}
-			if (is_string($border)) {
-				$lm = ($this->LineWidth / 2);
-				$x = $this->x;
-				$y = $this->y;
-				if (strpos($border,'L') !== false) {
-					if ($this->rtl) {
-						$xk = ($x - $w) * $k;
-					} else {
-						$xk = $x * $k;
-					}
-					$s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $xk, (($this->h - $y + $lm) * $k), $xk, (($this->h - ($y + $h + $lm)) * $k));
-				}
-				if (strpos($border,'T') !== false) {
-					if ($this->rtl) {
-						$xk = ($x - $w + $lm) * $k;
-						$xwk = ($x - $lm) * $k;
-					} else {
-						$xk = ($x - $lm) * $k;
-						$xwk = ($x + $w + $lm) * $k;
-					}
-					$s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $xk, (($this->h - $y) * $k), $xwk, (($this->h - $y) * $k));
-				}
-				if (strpos($border,'R') !== false) {
-					if ($this->rtl) {
-						$xk = $x * $k;
-					} else {
-						$xk = ($x + $w) * $k;
-					}
-					$s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $xk, (($this->h - $y + $lm) * $k), $xk, (($this->h - ($y + $h + $lm))* $k));
-				}
-				if (strpos($border,'B') !== false) {
-					if ($this->rtl) {
-						$xk = ($x - $w + $lm) * $k;
-						$xwk = ($x - $lm) * $k;
-					} else {
-						$xk = ($x - $lm) * $k;
-						$xwk = ($x + $w + $lm) * $k;
-					}
-					$s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $xk, (($this->h - ($y + $h)) * $k), $xwk, (($this->h - ($y + $h)) * $k));
-				}
-			}
-			if ($txt != '') {
-				$txt2 = $this->_escapetext($txt);
-				// text length
-				$txwidth = $this->GetStringWidth($txt);
-				$width = $txwidth;
-				// ratio between cell length and text length
-				if ($width <= 0) {
-					$ratio = 1;
-				} else {
-					$ratio = ($w - (2 * $this->cMargin)) / $width;
-				}
-				// stretch text if required
-				if (($stretch > 0) AND (($ratio < 1) OR (($ratio > 1) AND (($stretch % 2) == 0)))) {
-					if ($stretch > 2) {
-						// spacing
-						//Calculate character spacing in points
-						$char_space = (($w - $width - (2 * $this->cMargin)) * $this->k) / max($this->GetNumChars($txt)-1,1);
-						//Set character spacing
-						$rs .= sprintf('BT %.2F Tc ET ', $char_space);
-					} else {
-						// scaling
-						//Calculate horizontal scaling
-						$horiz_scale = $ratio * 100.0;
-						//Set horizontal scaling
-						$rs .= sprintf('BT %.2F Tz ET ', $horiz_scale);
-					}
-					$align = '';
-					$width = $w - (2 * $this->cMargin);
-				} else {
-					$stretch == 0;
-				}
-				if ($this->ColorFlag) {
-					$s .= 'q '.$this->TextColor.' ';
-				}
-				// count number of spaces
-				$ns = substr_count($txt, ' ');
-				// Justification
-				if (($align == 'J') AND ($ns > 0)) {
-					if (($this->CurrentFont['type'] == 'TrueTypeUnicode') OR ($this->CurrentFont['type'] == 'cidfont0')) {
-						// get string width without spaces
-						$width = $this->GetStringWidth(str_replace(' ', '', $txt));
-						// calculate average space width
-						$spacewidth = -1000 * ($w - $width - (2 * $this->cMargin)) / ($ns?$ns:1) / $this->FontSize;
-						// set word position to be used with TJ operator
-						$txt2 = str_replace(chr(0).' ', ') '.($spacewidth).' (', $txt2);
-					} else {
-						// get string width
-						$width = $txwidth;
-						$spacewidth = (($w - $width - (2 * $this->cMargin)) / ($ns?$ns:1)) * $this->k;
-						// set word spacing
-						$rs .= sprintf('BT %.3F Tw ET ', $spacewidth);
-					}
-					$width = $w - (2 * $this->cMargin);
-				}
-				switch ($align) {
-					case 'C': {
-						$dx = ($w - $width) / 2;
-						break;
-					}
-					case 'R': {
-						if ($this->rtl) {
-							$dx = $this->cMargin;
-						} else {
-							$dx = $w - $width - $this->cMargin;
-						}
-						break;
-					}
-					case 'L': {
-						if ($this->rtl) {
-							$dx = $w - $width - $this->cMargin;
-						} else {
-							$dx = $this->cMargin;
-						}
-						break;
-					}
-					case 'J':
-					default: {
-						$dx = $this->cMargin;
-						break;
-					}
-				}
-				if ($this->rtl) {
-					$xdx = $this->x - $dx - $width;
-				} else {
-					$xdx = $this->x + $dx;
-				}
-				$xdk = $xdx * $k;
-				// calculate approximate position of the font base line
-				//$basefonty = $this->y + (($h + $this->FontAscent - $this->FontDescent)/2);
-				/***** BEGIN MODIFICATION HTML2PDF *****/
-				$basefonty = $this->y + ($h/2.) + ($this->FontSize*0.3);
-				/***** END MODIFICATION HTML2PDF *****/
-				// print text
-				$s .= sprintf('BT %.2F %.2F Td [(%s)] TJ ET', $xdk, (($this->h - $basefonty) * $k), $txt2);
-				/***** BEGIN MODIFICATION HTML2PDF *****/
-				if ($this->underline)	$s .= ' '.$this->_dounderlinew($xdx, $basefonty, $width);
-				if ($this->linethrough)	$s .= ' '.$this->_dolinethroughw($xdx, $basefonty, $width);
-				if ($this->overline)	$s .= ' '.$this->_dooverlinew($xdx, $basefonty, $width);
-				/***** END MODIFICATION HTML2PDF *****/
-				if ($this->ColorFlag) {
-					$s .= ' Q';
-				}
-				if ($link) {
-					$this->Link($xdx, $this->y + (($h - $this->FontSize)/2), $width, $this->FontSize, $link, $ns);
-				}
-			}
-			// output cell
-			if ($s) {
-				// output cell
-				$rs .= $s;
-				// reset text stretching
-				if ($stretch > 2) {
-					//Reset character horizontal spacing
-					$rs .= ' BT 0 Tc ET';
-				} elseif ($stretch > 0) {
-					//Reset character horizontal scaling
-					$rs .= ' BT 100 Tz ET';
-				}
-			}
-			// reset word spacing
-			if (!(($this->CurrentFont['type'] == 'TrueTypeUnicode') OR ($this->CurrentFont['type'] == 'cidfont0')) AND ($align == 'J')) {
-				$rs .= ' BT 0 Tw ET';
-			}
-			$this->lasth = $h;
-			if ($ln > 0) {
-				//Go to the beginning of the next line
-				$this->y += $h;
-				if ($ln == 1) {
-					if ($this->rtl) {
-						$this->x = $this->w - $this->rMargin;
-					} else {
-						$this->x = $this->lMargin;
-					}
-				}
-			} else {
-				// go left or right by case
-				if ($this->rtl) {
-					$this->x -= $w;
-				} else {
-					$this->x += $w;
-				}
-			}
-			$gstyles = ''.$this->linestyleWidth.' '.$this->linestyleCap.' '.$this->linestyleJoin.' '.$this->linestyleDash.' '.$this->DrawColor.' '.$this->FillColor."\n";
-			$rs = $gstyles.$rs;
-			return $rs;
-		}
-		
-		protected function _dooverline($x, $y, $txt) {
-			$w = $this->GetStringWidth($txt);
-			return $this->_dooverlinew($x, $y, $w);
-		}
-
-		protected function _dooverlinew($x, $y, $w) {
-			$up = $this->CurrentFont['up'];
-			$ut = $this->CurrentFont['ut'];
-			return sprintf('%.2F %.2F %.2F %.2F re f', $x * $this->k, ($this->h - ($y - ($this->FontSize) - $up / 1000 * $this->FontSize)) * $this->k, $w * $this->k, -$ut / 1000 * $this->FontSizePt);
-		}
-		
 
 		public function cloneFontFrom(&$pdf)
 		{

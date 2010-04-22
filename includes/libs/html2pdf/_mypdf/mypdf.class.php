@@ -6,23 +6,24 @@
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.29
+ * @version		3.30
  */
 
 if (!defined('__CLASS_MYPDF__'))
 {
 	define('__CLASS_MYPDF__', true);
 	
+	require_once(dirname(__FILE__).'/htmlcolors.php');		// couleurs HTML, contient les memes que le fichier de TCPDF
 	require_once(dirname(__FILE__).'/99_fpdf_protection.class.php');		// classe fpdf_protection
 
 	class MyPDF extends FPDF_Protection
 	{
 		var $footer_param = array();
-		var $overline		= false;
 		var $transf			= array();
 		
 		var $underline		= false;
 		var $linethrough	= false;
+		var $overline		= false;
 			
 		function MyPDF($sens = 'P', $unit = 'mm', $format = 'A4')
 		{
@@ -48,11 +49,11 @@ if (!defined('__CLASS_MYPDF__'))
 		function Footer()
 		{ 
 			$txt = '';
-			if ($this->footer_param['form'])	$txt = (@HTML2PDF::textGET('pdf05'));
-			if ($this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(@HTML2PDF::textGET('pdf03'));
-			if ($this->footer_param['date'] && !$this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(@HTML2PDF::textGET('pdf01'));
-			if (!$this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(@HTML2PDF::textGET('pdf02'));
-			if ($this->footer_param['page'])	$txt.= ($txt ? ' - ' : '').(@HTML2PDF::textGET('pdf04'));
+			if ($this->footer_param['form'])	$txt = (HTML2PDF::textGET('pdf05'));
+			if ($this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf03'));
+			if ($this->footer_param['date'] && !$this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf01'));
+			if (!$this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf02'));
+			if ($this->footer_param['page'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf04'));
 			
 			if (strlen($txt)>0)
 			{

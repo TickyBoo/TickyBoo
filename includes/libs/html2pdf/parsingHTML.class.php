@@ -2,11 +2,11 @@
 /**
  * Logiciel : HTML2PDF - classe ParsingHTML
  * 
- * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
+ * Convertisseur HTML => PDF
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
- * @version		3.29
+ * @version		3.30
  */
  
 	class parsingHTML
@@ -94,9 +94,9 @@
 							if ($res['close'])
 							{
 								if (count($parents)<1)
-									@HTML2PDF::makeError(3, __FILE__, __LINE__, $res['name'], $this->getHtmlErrorCode($res['html_pos']));
+								HTML2PDF::makeError(3, __FILE__, __LINE__, $res['name'], $this->getHtmlErrorCode($res['html_pos']));
 								else if ($parents[count($parents)-1]!=$res['name'])
-									@HTML2PDF::makeError(4, __FILE__, __LINE__, $parents, $this->getHtmlErrorCode($res['html_pos']));
+								HTML2PDF::makeError(4, __FILE__, __LINE__, $parents, $this->getHtmlErrorCode($res['html_pos']));
 								else
 									unset($parents[count($parents)-1]);
 							}
@@ -164,7 +164,7 @@
 									'table', 'thead', 'tfoot', 'tr', 'td', 'th', 'br',
 									'div', 'hr', 'p', 'ul', 'ol', 'li',
 									'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-									'bookmark',
+								'bookmark', 'fieldset', 'legend',
 									'draw', 'circle', 'ellipse', 'path', 'rect', 'line', 'g', 'polygon', 'polyline');
 			$nb = count($todos);
 			for($k=0; $k<$nb; $k++)
@@ -177,14 +177,14 @@
 						$todos[$k]['param']['txt'] = ltrim($todos[$k]['param']['txt']);
 
 					// et qu'une balise spécifique le suit => on nettoye les espaces de la fin du texte
-					if ($k<count($todos)-1 && in_array($todos[$k+1]['name'], $balises_clean))
+				if ($k<$nb-1 && in_array($todos[$k+1]['name'], $balises_clean))
 						$todos[$k]['param']['txt'] = rtrim($todos[$k]['param']['txt']);
 						
 					if (!strlen($todos[$k]['param']['txt']))
 						unset($todos[$k]);
 				}
 			}
-			if (count($parents)) @HTML2PDF::makeError(5, __FILE__, __LINE__, $parents);
+		if (count($parents)) HTML2PDF::makeError(5, __FILE__, __LINE__, $parents);
 			
 			// liste des actions sauvée
 		$this->code = array_values($todos);
@@ -298,35 +298,35 @@
 				{
 					case 'width':
 						unset($param[$key]);
-						$param['style'] = 'width: '.$val.'px; '.$param['style'];
+					$param['style'] .= 'width: '.$val.'px; ';
 						break;	
 
 					case 'align':
 						if ($name==='img') 
 						{
 							unset($param[$key]);
-							$param['style'] = 'float: '.$val.'; '.$param['style']; 
+						$param['style'] .= 'float: '.$val.'; ';
 						} 
 						elseif ($name!=='table')
 						{
 							unset($param[$key]);
-							$param['style'] = 'text-align: '.$val.'; '.$param['style'];
+						$param['style'] .= 'text-align: '.$val.'; ';
 						}
 						break;
 						
 					case 'valign':
 						unset($param[$key]);
-						$param['style'] = 'vertical-align: '.$val.'; '.$param['style'];
+					$param['style'] .= 'vertical-align: '.$val.'; ';
 						break;
 						
 					case 'height':
 						unset($param[$key]);
-						$param['style'] = 'height: '.$val.'px; '.$param['style'];	
+					$param['style'] .= 'height: '.$val.'px; ';
 						break;	
 
 					case 'bgcolor':
 						unset($param[$key]);
-						$param['style'] = 'background: '.$val.'; '.$param['style'];					
+					$param['style'] .= 'background: '.$val.'; ';
 						break;	
 
 					case 'bordercolor':
@@ -336,7 +336,7 @@
 
 					case 'border':
 						unset($param[$key]);
-						if (preg_match('/^[0-9]$/isU', $val)) $val = $val.'px';
+					if (preg_match('/^[0-9]+$/isU', $val)) $val = $val.'px';
 						$border = $val;
 						break;
 					
@@ -358,7 +358,7 @@
 				if ($border)	$border = 'border: solid '.$border.' '.$color;
 				else			$border = 'border: none';
 				
-				$param['style'] = $border.'; '.$param['style'];
+			$param['style'] .= $border.'; ';
 				$param['border'] = $border; 
 			}
 			
