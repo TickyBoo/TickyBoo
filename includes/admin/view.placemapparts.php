@@ -368,10 +368,10 @@ class PlaceMapPartView extends AdminView {
 
                   $zone = $zones[$z];
 
-                  $col = "bgcolor='{$zone->pmz_color}'";
 
                   $cat_id = $pmp->data[$j][$k][PM_CATEGORY];
                   $category = $pmp->categories[$cat_id];
+                  $col = "bgcolor='{$zone->pmz_color}'";
 
                 //  if ($cat_id) {
                       $sty = "border-top:2px solid";
