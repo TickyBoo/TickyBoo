@@ -1360,4 +1360,8 @@ define ('version_updater','Update');
 define ('order_already_crated',"This order is already saved!!!");
 define ('Select_handling_option','Select a payment option.');
 define ('FreeTicketCode_notfound','FreeTicketCode not found. Try again');
+define ('placemap_image_explanation',"<img class='seatmapimage' src='{$_SHOP->images_url}seatfree.gif'>: Available choice, ".
+                                     "<img class='seatmapimage' src='{$_SHOP->images_url}seatselect.gif'>: Selected, ".
+                                     "<img class='seatmapimage' src='{$_SHOP->images_url}seatused.gif'>:  Unavailable, ".
+                                     "<img class='seatmapimage' src='{$_SHOP->images_url}seatdisable.gif'>: Other category");
 ?>

@@ -89,18 +89,27 @@
               </tr>
             {/if}
           </table>
-          <div style='overflow: auto; height: 350px; width:595px;' align='center' valign='middle'>
+<style type="text/css">
+{literal}
+.seatmapimage {
+   width: 16px;
+   height:16px;
+}
+</style>
+{/literal}
+          <div style='overflow: auto; height: 350px; width:595px; border: 1px solid #DDDDDD;' align='center' valign='middle'>
             {placemap  category=$shop_category}
           </div>
+          <center>{!placemap_image_explanation!}</center>
           {literal}
           <script type="text/javascript">
             jQuery(document).ready(function(){
               jQuery(".pm_free").mouseleave(function(e){
                 if(e.shiftKey){
-                  jQuery('input.pm_check',this).attr('checked', true);
+                  jQuery('img.pm_check',this).attr('checked', true);
                 }
                 if(e.ctrlKey){
-                  jQuery('input.pm_check',this).attr('checked', false);
+                  jQuery('img.pm_check',this).attr('checked', false);
                 }
 
               });
