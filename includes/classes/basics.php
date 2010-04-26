@@ -151,7 +151,7 @@ function FindClass(&$class_name) {
   }
 }
 
-
+/*
 function __autoload ($class_name ) {
 //  echo $class_name ,'~';
   $class_name = strtolower($class_name);
@@ -159,7 +159,7 @@ function __autoload ($class_name ) {
      require ($path . $class_name . '.php');
   }
 }
-
+*/
 function autoLoader ($class_name ) {
 //  echo $class_name ,'|';
   $class_name = strtolower($class_name);

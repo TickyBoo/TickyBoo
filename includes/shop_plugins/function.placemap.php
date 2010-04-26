@@ -100,7 +100,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
         ///////////
         for ($k = $left; $k <= $right; $k++) {
             $seat = $pmp->data[$j][$k];
-            $sty  = 'border: 0px; margin: 0px; padding 0px;';// "POSITION:absolute; LEFT:" . (($k - $left)*($imagesize+1)) . "px; TOP: " . (($j-$top )*($imagesize+1)) . "px; ";
+            $sty  = 'border:1px solid white;';// "POSITION:absolute; LEFT:" . (($k - $left)*($imagesize+1)) . "px; TOP: " . (($j-$top )*($imagesize+1)) . "px; ";
             $sty .= "width:".($imagesize)."px; height:".($imagesize)."px; ";
             if ($seat[PM_ZONE] === 'L') {
 /*                if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
@@ -127,35 +127,30 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                 $zone = $zones[$seat[PM_ZONE]];
                 $cat  = $cats[$seat[PM_CATEGORY]];
                 $cat_id = $seat[PM_CATEGORY];
-                $sty .= "background-color:{$cat->category_color};";
-/*
-                $sty .= "border-top:2px solid ";
+           //     $sty .= "background-color:{$zone->pmz_color};";
+
                 if ($pmp->data[$j - 1][$k][PM_CATEGORY] != $cat_id) {
-                    $sty .= " {$cat->category_color}";
-                } //else $sty .= " {$zone->pmz_color}";
+                    $sty .= "border-top-color: {$cat->category_color};";
+                }
 
-                $sty .= ";border-bottom:2px solid";
                 if ($pmp->data[$j + 1][$k][PM_CATEGORY] != $cat_id) {
-                    $sty .= " {$cat->category_color}";
-                } //else $sty .= " {$zone->pmz_color}";
+                    $sty .= "border-bottom-color: {$cat->category_color};";
+                }
 
-                $sty .= ";border-left:2px solid";
                 if ($pmp->data[$j][$k - 1][PM_CATEGORY] != $cat_id) {
-                    $sty .= " {$cat->category_color}";
-                } //else $sty .= " {$zone->pmz_color}";
+                    $sty .= "border-left-color: {$cat->category_color};";
+                }
 
-                $sty .= ";border-right:2px solid";
                 if ($pmp->data[$j][$k + 1][PM_CATEGORY] != $cat_id) {
-                    $sty .= " {$cat->category_color}";
-                } //else $sty .= " {$zone->pmz_color}";
+                    $sty .= "border-right-color: {$cat->category_color};";
+                }
                 $sty .= "; ";
-*/
+
                 //Empty seats
                 if ($seat[PM_STATUS] == PM_STATUS_FREE) {
                     if ($seat[PM_CATEGORY] == $cat_ident) {
-                        $zone = $zones[$seat[PM_ZONE]];
-                        $res.= "<input type='hidden' id='place{$seat[PM_ID]}' name='place[{$seat[PM_ID]}]' value='0'>";
-                        $res .= "<img style='{$sty}' border=0 id='seat{$seat[PM_ID]}' onclick='javascript:gridClick({$seat[PM_ID]});' src='{$_SHOP->images_url}seatfree.gif' title='";
+                        $res .= "<input type='hidden' id='place{$seat[PM_ID]}' name='place[{$seat[PM_ID]}]' value='0'>";
+                        $res .= "<img style='{$sty}' id='seat{$seat[PM_ID]}' onclick='javascript:gridClick({$seat[PM_ID]});' src='{$_SHOP->images_url}seatfree.gif' title='";
                         if ($print_zone) {
                             $res .= $zone->pmz_name . ' ';
                         }
@@ -182,7 +177,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
                     if (($cat_num & 1) and $seat[PM_SEAT] != '0') {
                         $res .= $l_seat . $seat[PM_SEAT];
                     }
-                    $res .= "'>\n";
+                    $res .= "'>";
                 } else {
                     $res .= "<img style='{$sty}' src='{$_SHOP->images_url}seatused.gif'>";
                 }
@@ -191,7 +186,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www')
             } else  {
                 $res .= "<img style='{$sty}' border=0 src='{$_SHOP->images_url}dot.gif'>";
             }
-            $res .= "\n";
+  //          $res .= "\n";
         }
         $res .= $mr[$j % 2];
         $res .= "<br/>\n";
