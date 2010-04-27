@@ -38,15 +38,17 @@
     <div class="page">
     
       <div id="header"><!-- Header -->
-        <div>
-          <img class="spacer" src='{$_SHOP_themeimages}dot.gif' height="1px" alt="Logo" />
-  	      <br />
-          <img src="{$_SHOP_themeimages}logo.gif"/>
-          <br />
+        <div class="floatbox">
+          <img class="float_left" src="{$_SHOP_themeimages}logo.gif"/>
+          <h1 class="center" style="color:#fff; font-size: 200%;">
+            <i>Pepper's Online Ticket Sales<br />
+              <font style="color:#e00085;">2010</font>
+            </i>
+          </h1>
         </div>
-        <div id="topnav">
+        <!--div id="topnav">
       			<a href="?setlang=en">[en]</a> Login 
-        </div>
+        </div-->
         
       </div>
       
@@ -55,6 +57,7 @@
         <div id="col1"><!-- LEFT -->
           <div id="col1_content" class="clearfix">
             
+            <h3 class="center">Pepper Tickets</h3>
             <ul class="pep-right-nav">
               <li>
                 <a href='index.php'>{!home!}</a>
@@ -65,7 +68,22 @@
               <li>
                 <a href='programm.php'>{!program!}</a>
               </li>
-            </ul>     
+            </ul>
+            
+            <h3 class="center">Pepper Show</h3>  
+            <ul class="pepper-show-links">
+              <li>
+                <a href="http://www.peppershow.com?page=index" class="menuStyle">&gt; Home</a>
+              </li>
+              <li><a href="http://www.peppershow.com?page=whatsnew" class="menuStyle">&gt; What's New</a></li>
+              <li><a href="http://www.peppershow.com?page=show" class="menuStyle">&gt; The Show</a></li>
+              <li><a href="http://www.peppershow.com?page=ticket" class="menuStyle">&gt; Tickets</a></li>
+              <li><a href="http://www.peppershow.com?page=volunteer" class="menuStyle">&gt; Volunteer</a></li>
+              <li><a href="http://www.peppershow.com?page=raffle" class="menuStyle">&gt; Raffle</a></li>
+              <li><a href="http://www.peppershow.com?page=silent" class="menuStyle">&gt; Silent Auction</a></li>
+              <li><a href="http://www.peppershow.com?page=roadshows" class="menuStyle">&gt; RoadShows</a></li>
+              <li><a href="http://www.peppershow.com?page=contacts" class="menuStyle">&gt; Contacts</a></li> 
+            </ul>
             
           </div>
         </div>
@@ -96,7 +114,7 @@
               </div>
               <!-- End Message Divs -->
               
-              {include file="Progressbar.tpl" name=$name}
+              {*include file="Progressbar.tpl" name=$name*}
               
     					{if $name}
       				  <h1>{$name}</h1>
