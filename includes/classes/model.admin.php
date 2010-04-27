@@ -97,14 +97,24 @@ class Admins extends Model {
     if($this->isDeleteSelf() || $this->isLastAdmin()){
       return false;
     }
+    if(stripos($this->admin_status,"pos") !== FALSE){
+      $query = "SELECT count(*)
+                FROM `Order`
+                Where order_user_id="._esc($this->admin_id);
+      //var_dump($res = ShopDB::query_one_row($query, false));
+      if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
+        return addWarning('in_use');
+      }
+
+    }
     if (parent::delete() and $this->user) {
       return $this->user->delete();
     }
   }
-  
+
   private function isLastAdmin(){
-    if(strcasecmp($this->admin_status,"admin") == 0){
-      $query="SELECT COUNT(*) AS admincount 
+    if(stripos($this->admin_status,"admin") !== FALSE){
+      $query="SELECT COUNT(*) AS admincount
         FROM Admin
         WHERE admin_status='admin'
           AND admin_id <> "._esc((int)$this->admin_id);
@@ -118,11 +128,11 @@ class Admins extends Model {
     }
     return false;
   }
-  
+
   private function isDeleteSelf(){
     if($_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'] == $this->admin_id){
       addWarning('cant_delete_self');
-      return true; 
+      return true;
     }
     return false;
   }

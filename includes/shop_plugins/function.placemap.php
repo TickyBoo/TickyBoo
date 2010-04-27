@@ -105,7 +105,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $
 }
 
 .pm_check:hover {
-  background-color:#D7E8D7;
+  background-color:#c7d8c7;
   cursor:pointer;
 
 
@@ -176,7 +176,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $
                         }
                         $res .= "'>";
                     } else {
-                      $res .= "<img class='seatmap' style='{$sty}' border=0 src='{$_SHOP->images_url}seatdisable.gif'>";
+                      $res .= "<img class='seatmap' style='{$sty};background-color:Gainsboro' border=0 src='{$_SHOP->images_url}seatdisable.gif'>";
                     }
                     ////////////Reserved seats, they will only be selectable if you have area='pos' set in cat...tpl
                 } elseif ($seat[PM_STATUS] == PM_STATUS_RESP && $area === 'pos' && $seat[PM_CATEGORY] == $cat_ident) {

@@ -227,11 +227,17 @@ select SQL_CALC_FOUND_ROWS *
 	}
 
   function showbuttons($img_pub, $row, $history) {
-    echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
-                            $img_pub[$row['event_status']]['title'],2,
-                             array('image'=>$img_pub[$row['event_status']]['src'],
-                                   'alt'  =>con($img_pub[$row['event_status']]['alt']),
-                                   'disable'=> $history));
+    if ($history) {
+      echo $this->show_button("javascript:if(confirm(\"".con('republish_old_event')."\")){location.href=\"{$img_pub[$row['event_status']]['link']}{$row['event_id']}\";}",
+                              $img_pub[$row['event_status']]['title'],2,
+                               array('image'=>$img_pub[$row['event_status']]['src'],
+                                     'alt'  =>con($img_pub[$row['event_status']]['alt'])));
+    } else {
+      echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
+                              $img_pub[$row['event_status']]['title'],2,
+                               array('image'=>$img_pub[$row['event_status']]['src'],
+                                     'alt'  =>con($img_pub[$row['event_status']]['alt'])));
+    }
     echo  $this->show_button("view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
     echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,
                              array('image'=>'pm.png',
@@ -266,10 +272,10 @@ select SQL_CALC_FOUND_ROWS *
 		$this->print_input('event_name', $data, $err, 30, 100, $main );
 		if ( !$data['event_id'] ) {
 			$this->print_select_group( 'event_group_id', $data, $err, $main );
-      If ($data['event_ort_id']) {
-        $data['event_pm_ort_id'] = $data['event_pm_id'].','.$data['event_ort_id'];
+      If ($data['event_ort_id'] && empty($data['event_pm_ort_id'] )) {
+        $data['event_pm_ort_id'] = ((int)$data['event_pm_id']).','.$data['event_ort_id'];
       }
-			$this->print_select_pm( 'event_pm_ort_id', $data, $err );
+			$this->print_select_pm( 'event_pm_ort_id', $data, $err,(($data['event_main_id'])?($data['event_pm_ort_id']):'main'));
 		} else {
 			$this->print_field_o( 'event_group_name', $data );
 			$this->print_field( 'event_ort_name', $data );
@@ -286,8 +292,8 @@ select SQL_CALC_FOUND_ROWS *
 		}
 
 
-		$this->print_area( 'event_short_text', $data, $err, 3,55,$main );
-		$this->print_large_area( 'event_text', $data, $err,6,95,$main  );
+		$this->print_area( 'event_short_text', $data, $err, 3,46,$main );
+		$this->print_large_area( 'event_text', $data, $err,6,80,$main  );
 		$this->print_input( 'event_url', $data, $err, 30, 100, $main  );
 
 		$this->print_date( 'event_date', $data, $err, $main );
@@ -627,16 +633,18 @@ select SQL_CALC_FOUND_ROWS *
 
     if ($main == 'main') {
         echo "<option value='no_pm' {$sel['no_pm']}></option>";
-    } elseif ($main == 'has_def') {
-        echo "<option value='copy_main_pm' {$sel['no_pm']}>(" . con('copy_main_pm') . ")</option>";
+    } else {
+        echo "<option value='{$main}' {$sel[$main]}>(" . con('copy_main_pm') . ")</option>";
     }
     while ($row = shopDB::fetch_assoc($res)) {
         if ($row['ort_id'] != $ort_id) {
             $ort_id = $row['ort_id'];
-            echo "<option value='0,{$row['ort_id']}' {$sel[$row['pm_id']]}>{$row['ort_name']} - " . con('agenda_only') . "</option>\n";
+            $key = "0,{$row['ort_id']}";
+            echo "<option value='{$key}' {$sel[$key]}>{$row['ort_name']} - (" . con('agenda_only') . ")</option>\n";
         }
         if ($row['pm_id']) {
-            echo "<option value='{$row['pm_id']},{$row['pm_ort_id']}' {$sel[$row['pm_id']]}>{$row['ort_name']} - {$row['pm_name']}</option>\n";
+            $key = "{$row['pm_id']},{$row['ort_id']}";
+            echo "<option value='{$key}' {$sel[$key]}>{$row['ort_name']} - {$row['pm_name']}</option>\n";
         }
     }
 

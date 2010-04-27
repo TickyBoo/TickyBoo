@@ -252,9 +252,10 @@ class OrderView extends AdminView{
   }
 
   function view($order_id){
-    $query="select *
-            from `Order` left join User on order_user_id=user_id
-            where order_id="._esc($order_id);
+    $query="select o.*, u.*, p.user_lastname as kasse_name
+            from `Order` o left join User u on order_user_id= u.user_id
+                         left join User p on order_owner_id= p.user_id
+            where o.order_id="._esc($order_id);
     if(!$order=ShopDB::query_one_row($query)){
       return addWarning('order_not_found');
     }
@@ -265,8 +266,8 @@ class OrderView extends AdminView{
     $order['order_responce_date'] = ($order['order_responce_date']== '0000-00-00 00:00:00')?'':$order['order_responce_date'];
     $order['order_partial_price'] = ($order['order_discount_price'] + $order['order_total_price']) - $order['order_fee'];
     $order['order_partial_price'] = number_format($order['order_partial_price'] , 2, '.', '');
-     echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
-    echo "<tr><td class='admin_list_title'>".con('order_nr')."  ".$order_id."</td>
+    echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
+    echo "  <tr><td class='admin_list_title'>".con('order_nr')."  ".$order_id."</td>
               <td align='right'>{$com}</td></tr>";
 
     $this->print_field('order_tickets_nr',$order);
@@ -285,6 +286,10 @@ class OrderView extends AdminView{
     $order['order_shipment_status']=con($order['order_shipment_status']);
     $order['order_payment_status'] =con($order['order_payment_status']);
 
+    $this->print_field('order_place',$order);
+    $this->print_field_o('order_owner_id',$order);
+
+    $this->print_field_o('kasse_name',$order);
     $this->print_field('order_status',$order);
     $this->print_field('order_shipment_status',$order);
     $this->print_field('order_payment_status',$order);

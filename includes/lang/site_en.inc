@@ -595,6 +595,7 @@ define("order_event_list_title","Orders by Event");
 	define("order_total_price","Total Price");
 	define("order_date","Order Date");
 	define("order_shipment_status","Shipment Status");
+	define("order_place","Order created by");
 
 		define("send","Sent");
 	define("order_payment_status","Payment Status");
@@ -1355,7 +1356,6 @@ define ('file_saved','Update.zip Saved');
 define ('file_deleted','Finished with Update.zip, removed.');
 define ('update_save','Update and/or Save Details');
 
-
 define ('version_updater','Update');
 define ('order_already_crated',"This order is already saved!!!");
 define ('Select_handling_option','Select a payment option.');
@@ -1364,4 +1364,6 @@ define ('placemap_image_explanation',"<img class='seatmapimage' src='{$_SHOP->im
                                      "<img class='seatmapimage' src='{$_SHOP->images_url}seatselect.gif'>: Selected, ".
                                      "<img class='seatmapimage' src='{$_SHOP->images_url}seatused.gif'>:  Unavailable, ".
                                      "<img class='seatmapimage' src='{$_SHOP->images_url}seatdisable.gif'>: Other category");
+define ('copy_main_pm','copy from main event');
+define ('republish_old_event',"Are you sure you want to publish this archived event?\r\n It will only show in the [Program] area of the Web Shop.");
 ?>
