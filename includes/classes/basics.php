@@ -495,7 +495,7 @@ function subtractDaysFromDate($date,$no_days) {
         }
       }
       if ($addDate){
-        $content = date('c',time()).' : '. $content;
+        $_SHOP->trace_subject = 'ErrorLog: '.$_shop->root.$content;
         $_SHOP->tracelog = '';
         $_SHOP->TraceOrphan = md5(getOphanData());
       }
@@ -528,17 +528,27 @@ function orphanCheck(){
   if(is($_SHOP->trace_on,false)){
     $text =getOphanData();
     trace("\n\nOrphan Check Dump: ".$text);
-    if ($_SHOP->TraceOrphan <> md5($text) || $_SHOP->trace_on =='ALL') {
-      file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name, $_SHOP->tracelog."\n",FILE_APPEND);
+    if ($_SHOP->TraceOrphan <> md5($text) || stripos($_SHOP->trace_on,'ALL') !== false) {
+      $content = date('c',time()).' : '.$_SHOP->trace_subject."\n". $_SHOP->tracelog."\n";
+      file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content ,FILE_APPEND);
 
-      if ($_SHOP->TraceOrphan <> md5($text) && $_SHOP->trace_on =='SEND') {
-        error_log(file_get_contents($_SHOP->trace_dir.$_SHOP->trace_name),1,'errorlog@fusionticket.com');
+      if ($_SHOP->TraceOrphan <> md5($text) && stripos($_SHOP->trace_on, 'SEND') !== false) {
+        SendMail(file_get_contents($_SHOP->trace_dir.$_SHOP->trace_name), $_SHOP->trace_subject ,'errorlog@fusionticket.com');
         unlink($_SHOP->trace_dir.$_SHOP->trace_name);
-//         call_our_server ( "cpanel.fusionticketr.com\addtracelog.php?traceid=".base64_decode(md5($_SHOP->secure_id).'|'. $_SHOP->root.'|'.now()));
-        // only the first part need to be send back in the url call to admin/errortrace.php
       }
     }
   }
+}
+
+function SendMail($message, $subject, $toaddress) {
+  global $_SHOP;
+  require_once (ROOT."includes/classes/email.swift.sender.php");
+  $message = Swift_Message::newInstance($subject )
+    ->setFrom(array($_SHOP->organizer_data->organizer_email=>$_SHOP->organizer_data->organizer_name))
+    ->setTo(array($toaddress))
+    ->setBody($message)
+    ;
+  EmailSwiftSender::send($message, "", $logger, $failedAddr, array('action' => 'Errorlog'));
 }
 
 function addDaysToDate($date,$no_days) {

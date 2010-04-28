@@ -38,7 +38,9 @@ require_once("admin/class.adminview.php");
 class EventTabsView extends AdminView {
 
   function draw() {
+    global $_SHOP;
     $_SESSION['_EVENT_tab'] = (isset($_REQUEST['tab']))? (int)$_REQUEST['tab']:((isset($_SESSION['_EVENT_tab']))?$_SESSION['_EVENT_tab']:0);
+    $_SHOP->trace_subject .= "[tab:{$_SESSION['_EVENT_tab']}]";
 
     $menu = array(con('ort_admin_tab')=>"?tab=0",
                   con("event_group_tab")=>'?tab=1',

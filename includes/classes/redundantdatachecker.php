@@ -389,7 +389,7 @@ class orphans {
       case'Category_stat~Total':
         ShopDB::Query("update Category_stat set
                           cs_total = (select count(*) from `Seat` where seat_category_id = cs_category_id),
-                          cs_free = (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free') 
+                          cs_free = (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free'))
                        where cs_category_id ='{$fix[2]}'") ;
         break;
       case 'Category~stat_id':

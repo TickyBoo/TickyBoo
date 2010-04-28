@@ -38,10 +38,12 @@ require_once("admin/class.adminview.php");
 class UserTabsView extends AdminView {
 
   function draw() {
+      global $_SHOP;
+
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_ADMIN_tab'] = (int)$_REQUEST['tab'];
     }
-
+    $_SHOP->trace_subject .= "[tab:{$_SESSION['_ADMIN_tab']}]";
     $menu = array(	con("admin_user_tab")=>"?tab=0",
     				con("organizer_tab")=>'?tab=1',
     				con("spoint_tab")=>"?tab=2",

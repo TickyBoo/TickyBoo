@@ -46,6 +46,7 @@ class IndexView extends AdminView {
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_INDEX_tab'] = (int)$_REQUEST['tab'];
     }
+    $_SHOP->trace_subject .= "[tab:{$_SESSION['_INDEX_tab']}]";
 
     $menu[con("index_admin_tab")]= "?tab=0";
     $menu[con("owner_tab")]      = '?tab=1';

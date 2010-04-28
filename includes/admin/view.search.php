@@ -316,10 +316,14 @@ class SearchView extends AdminView{
       echo "</table>";
     }
   }
+
   function draw () {
+        global $_SHOP;
+
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_SEARCH_tab'] = (int)$_REQUEST['tab'];
     }
+    $_SHOP->trace_subject .= "[tab:{$_SESSION['_SEARCH_tab']}]";
 
     $menu = array( con("patron_tab")=>"?tab=0", con("seat_tab")=>'?tab=1',
                    con("order_tab")=>"?tab=2",  con("barcode_tab")=>"?tab=3");
@@ -385,9 +389,7 @@ class SearchView extends AdminView{
       return "<font color='green'>".con('payed')."</font>";
     }else if($order_status=='cancel'){
       return "<font color='#787878'>".con('canceled')."</font>";
-   }
+    }
   }
-
-
 }
 ?>
