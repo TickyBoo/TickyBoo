@@ -202,7 +202,8 @@ $tbls['Discount']['fields'] = array(
   'discount_type' => " varchar(7) NOT NULL DEFAULT ''",
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'discount_promo' => " varchar(15) DEFAULT ''",
-  'discount_used' => " int(11) DEFAULT '0'"
+  'discount_used' => " int(11) DEFAULT '0'",
+  'discount_cond' => " text"  
   );
 $tbls['Discount']['key'] = array(
   "PRIMARY KEY (`discount_id`)");

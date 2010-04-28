@@ -1,5 +1,6 @@
   <!-- Required Header .tpl Start -->
   <link rel="stylesheet" type="text/css" href="css/flick/jquery-ui-1.8.custom.css" media="screen" />
+  <link rel='stylesheet' href='css/jquery.tooltip.css' media="screen" />
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
@@ -14,6 +15,7 @@
   <script type="text/javascript" src="scripts/jquery/jquery.validate.add-methods.js"></script>
   <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.3.js'></script>
   <script type='text/javascript' src='scripts/jquery/jquery.countdown.pack.js'></script>
+  <script type="text/javascript" src="scripts/jquery/jquery.tooltip.min.js"></script>
   <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
   
   <script type='text/javascript' src='scripts/jquery/roundies.js'></script>
@@ -41,6 +43,19 @@
   </style>
 
   <script type="text/javascript">
+    jQuery(document).ready(function(){
+      jQuery("*[class*='has-tooltip']").tooltip({
+        delay:40,
+        showURL:false,
+        bodyHandler: function() {
+          if(jQuery(this).children('div').html() != ''){
+            return jQuery(this).children('div').html();
+          }else{
+            return false;
+          }
+        }
+      });
+    });
 
     var showDialog = function(element){
       jQuery.get(jQuery(element).attr('href'),

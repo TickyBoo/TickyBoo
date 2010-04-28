@@ -37,7 +37,7 @@ class Discount  Extends Model {
   protected $_idName    = 'discount_id';
   protected $_tableName = 'Discount';
   protected $_columns   = array( '#discount_id', '*discount_type', '*discount_value', '*discount_name',
-                                 '#discount_event_id', 'discount_promo');
+                                 '#discount_event_id', 'discount_promo', 'discount_cond');
   function __construct($filldefs= false, $event_id=null){
     parent::__construct($filldefs);
     if ($filldefs) {

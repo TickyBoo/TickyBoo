@@ -128,6 +128,8 @@ class DiscountView extends AdminView {
     $this->print_select ("discount_type", $data, $err, array("fixe", "percent"));
 
     $this->print_input('discount_value', $data, $err, 6, 5);
+    
+    $this->print_area('discount_cond', $data, $err, 6);
 
     $this->print_field_o('discount_used', $data);
 
