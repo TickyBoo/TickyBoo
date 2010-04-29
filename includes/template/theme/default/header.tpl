@@ -84,7 +84,7 @@
 		<div class="maincontent">
 			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
   				<tr>
-					<td valign='top' align='left'>
+					<td valign='top' align='left'><br>
             {include file="Progressbar.tpl" name=$name}
 						<br />
   						{if $name}

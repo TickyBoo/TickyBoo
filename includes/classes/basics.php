@@ -725,15 +725,15 @@ function printMsg($key, $err = null, $addspan=true) {
     foreach($err[$key] as $value){
       if(is_array($value)){
         foreach($value as $val){
-          $output .= $val. "</br>";
+          $output .= $val. "<br>";
         }
       }else{
-        $output .= $value. "</br>";
+        $output .= $value. "<br>";
       }
     }
 
   }elseif (isset($err[$key]) && is_string($err[$key])) {
-    $output .= $err[$key]. "</br>";
+    $output .= $err[$key]. "<br>";
   }
   If ($output && $addspan) {
     switch ($key) {
@@ -744,7 +744,8 @@ function printMsg($key, $err = null, $addspan=true) {
         $output = "<h4 class='success'>".$output. "</h4>";
         break;
       default:
-        $output = "<span class='err error'>".$output. "</span>";
+        $output = str_ireplace('<br>',' ' , $output);
+        $output = "<img class='err error' src='{$_SHOP->images_url}unchecked.gif' alt='{$output}' title='{$output}'>";//<span class='err error'>".. "</span>
     }
   }
 

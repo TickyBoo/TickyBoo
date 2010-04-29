@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
-class UserView extends AdminView{
+class patronView extends AdminView{
   function __construct ($width, $id){
     $this->width   = $width;
     $this->user_id = $id;

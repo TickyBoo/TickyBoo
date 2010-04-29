@@ -34,6 +34,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once("admin/class.adminview.php");
+require_once ('view.admins.php');
 
 class UserTabsView extends AdminView {
 
@@ -52,25 +53,21 @@ class UserTabsView extends AdminView {
 
     switch ((int)$_SESSION['_ADMIN_tab']) {
      case 0:
-         require_once ('view.users.admin.php');
          $viewer = new AdminUserView($this->width);
          $viewer->draw('admin');
          break;
 
      case 1:
-         require_once ('view.users.admin.php');
          $viewer = new AdminUserView($this->width);
          $viewer->draw('organizer');
          break;
 
      case 2:
-         require_once ('view.users.admin.php');
          $viewer = new AdminUserView($this->width);
          $viewer->draw('pos');
          break;
 
      case 3:
-         require_once ('view.users.admin.php');
          $viewer = new AdminUserView($this->width);
          $viewer->draw('control');
          break;

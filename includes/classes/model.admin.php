@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *
@@ -7,6 +6,7 @@
  * @copyright 2010
  */
 include_once 'Auth/Container.php';
+
 class Admins extends Model {
   protected $_idName    = 'admin_id';
   protected $_tableName = 'Admin';
@@ -64,12 +64,8 @@ class Admins extends Model {
         addError('admin_login','already_exist');
       }
     }
-    if(!$this->admin_id){
-      if(empty($data['password1']) ){
+    if(!$this->admin_id && empty($data['password1']) ){
         addError('password1','mandatory');
-      } elseif(empty($data['password2'])){
-        addError('password2','mandatory');
-      }
     } elseif(!empty($data['password1']) and strlen($data['password1'])<5){
       addError('password1','pass_too_short');
     } elseif($data['password1']!=$data['password2']){
@@ -77,6 +73,9 @@ class Admins extends Model {
     }
     if (!hasErrors() and !empty($data['password1']) ){
       $data['admin_password'] = md5 ($data['password1']);
+    } else {
+      $data['password1'] = '';
+      $data['password2'] = '';
     }
     if(is_array($data['control_event_ids'])){
       $data['control_event_ids'] = implode(',', $data['control_event_ids']);

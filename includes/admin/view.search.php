@@ -335,8 +335,8 @@ class SearchView extends AdminView{
       if ($view->draw(true)) return;
       //$view->order_details($_REQUEST['order_id']);
     }elseif ($_REQUEST['action']=='user_detail'){
-      require_once("admin/view.users.php");
-      $view = new UserView($this->width, $_REQUEST['user_id']);
+      require_once("admin/view.patrons.php");
+      $view = new PatronView($this->width, $_REQUEST['user_id']);
       $view->draw();
       return;
 

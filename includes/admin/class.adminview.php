@@ -364,9 +364,9 @@ class AdminView extends AUIComponent {
         $prefix = "{$name}";
       }
       echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
-            <td class='admin_value'><input id='{$name}-input' type='password' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
+            <td class='admin_value'><input id='{$name}-input' type='password' name='$prefix'  size='$size' maxlength='$max'>
             ".printMsg($name, $err)."
-            </td></tr>\n";
+            </td></tr>\n";// Removed the value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' here for savety resonse.
     }
 
     function print_checkbox ($name, &$data, &$err, $size = '', $max = '')

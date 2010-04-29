@@ -34,7 +34,7 @@
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
-require_once ("admin/view.tabs.users.php");
+require_once ("admin/view.tabs.admins.php");
 
 
 //print cart update

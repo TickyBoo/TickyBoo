@@ -254,11 +254,21 @@ tr.admin_list_row_1:hover {background-color:#Faede4}
 
       text-align: center;}
 
+.error{color:red;
+  font-family:Georgia;
+  cursor: help;
+  }
 
 
-.error{color:red;padding-left:25px;padding-bottom:3px; padding-top:3px;font-weight:bold;font-family:Georgia;
 
-      font-size:14px; }
+.errorzzz{color:red;
+  padding-left:05px;
+ // padding-bottom:0px;
+  padding-top:3px;
+  font-weight:bold;
+  font-family:Georgia;
+  cursor: help;
+  font-size:14px; }
 
 .success{color:green; padding-left:25px;padding-bottom:3px; padding-top:3px;font-weight:bold; font-family:Georgia;
 

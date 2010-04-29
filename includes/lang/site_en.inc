@@ -199,7 +199,7 @@ define("log_err_wrong_usr","Wrong Username or Password!");
 define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />
 		If you have forgoten your username or password please click <a href='forgot_password.php' onclick='showDialog(this);return false;' >here</a></p>");
 define("mand_all", "All Input Fields are Required!");
-define("mandatory"," Field Required!");
+define("mandatory","Field Required!");
 define("MP3_loading_problem","Problem Loading MP3 File!");
 define('missing_pm_ord_id','Error: this placemap cant be saved, venue is missing');
 define("nosale_confirm_msg","Remove from Sale?");

@@ -38,12 +38,7 @@
 .pagination td{
   padding:0;
 }
-.pagination tr:hover td{
-  background:none !important;
-}
-.pagination  tr:hover td.current{
-  background:none #BdC9D5 !important;
-}
+
 
 .done{
   background-color: #42729a;
@@ -63,10 +58,18 @@
 }
 
 </style> {/literal}
-{if $name==!shop! or $name==!select_seat! or $name==!discounts! 
-    or $name==!shopping_cart! or $name==!pers_info! or $name==!shopping_cart_check_out! 
+{*
+.pagination tr:hover td{
+  background:none !important;
+}
+.pagination  tr:hover td.current{
+  background:none #BdC9D5 !important;
+}
+*}
+{if $name==!shop! or $name==!select_seat! or $name==!discounts!
+    or $name==!shopping_cart! or $name==!pers_info! or $name==!shopping_cart_check_out!
     or $name==!order_reg! or $name==!pay_accept! or $name==!pay_refused!}
-  <table class="full pagination">
+  <table cellspacing=0 cellpadding=0 class="full pagination">
     <tr>
       {if $name==!shop! and $shop_event.event_pm_id}
         <td class='current'> {!prg_order!} </td>
