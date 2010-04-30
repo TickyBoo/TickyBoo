@@ -15,7 +15,7 @@
  */
 function smarty_core_write_file($params, &$smarty)
 {
-    $_dirname = dirname($params['filename']);
+    writeLog( $_dirname = dirname($params['filename']));
 
     if ($params['create_dirs']) {
         $_params = array('dir' => $_dirname);
@@ -24,7 +24,7 @@ function smarty_core_write_file($params, &$smarty)
     }
 
     // write to tmp file, then rename it to avoid file locking race condition
-    $_tmp_file = tempnam($_dirname, 'wrt');
+   writeLog( $_tmp_file = tempnam($_dirname, 'wrt'));
 
     if (!($fd = @fopen($_tmp_file, 'wb'))) {
         $_tmp_file = $_dirname . DIRECTORY_SEPARATOR . uniqid('wrt');
@@ -38,7 +38,7 @@ function smarty_core_write_file($params, &$smarty)
     fclose($fd);
 
     if (DIRECTORY_SEPARATOR == '\\' || !@rename($_tmp_file, $params['filename'])) {
-        // On platforms and filesystems that cannot overwrite with rename() 
+        // On platforms and filesystems that cannot overwrite with rename()
         // delete the file before renaming it -- because windows always suffers
         // this, it is short-circuited to avoid the initial rename() attempt
         @unlink($params['filename']);

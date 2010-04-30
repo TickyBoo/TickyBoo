@@ -85,9 +85,10 @@ $smarty->assign( 'organizer', $_SHOP->organizer_data );
 
 
 $smarty->template_dir = array($_SHOP->tpl_dir.'pos'.DS.'custom'.DS, $_SHOP->tpl_dir.'pos'.DS);
-$smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
 $smarty->compile_id   = 'pos_'.$_SHOP->lang;
-$smarty->cache_dir    = $_SHOP->tmp_dir; // . '/web/cache/';
+
+$smarty->compile_dir  = substr($_SHOP->tmp_dir,0,-1); // . '/web/templates_c/';
+$smarty->cache_dir    = substr($_SHOP->tmp_dir,0,-1); // . '/web/cache/';
 $smarty->config_dir   = $_SHOP->includes_dir . 'lang' . DS;
 
 $smarty->plugins_dir  = array( "plugins", $_SHOP->includes_dir . "shop_plugins" );

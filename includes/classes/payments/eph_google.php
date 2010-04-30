@@ -47,8 +47,10 @@ require_once('classes/class.payment.php');
 
 class EPH_google extends Payment{
 
-	public $extras = array('pm_google_merchant_id', 'pm_google_merchant_key','pm_google_sandbox','pm_google_callback_link',
-		'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order');
+	public $extras = array('pm_google_merchant_id', 'pm_google_merchant_key',
+                         'pm_google_sandbox', 'pm_google_callback_link',
+		                     'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order',
+                         'pm_on_user_cancel_cancel_order');
   	public $mandatory = array('pm_google_merchant_id', 'pm_google_merchant_key'); // is only used in project vazant.
 
 	 public function admin_init(){
@@ -81,12 +83,9 @@ class EPH_google extends Payment{
 	}
 
 	public function admin_check(&$data){
-		parent::admin_check($data);
 		global $_SHOP;
-
 		$data['pm_google_callback_link'] = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();
-
-		return true;
+		return parent::admin_check($data);
 	}
 
 	public function on_confirm(&$order){

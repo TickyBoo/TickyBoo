@@ -110,5 +110,5 @@
             <span id='notice-text'>fff</span>
          </p>
       </div>
-
+      <div style="display:none" id='showdialog'>this is a nice dialog is it not?</div>
 			<div id="right">

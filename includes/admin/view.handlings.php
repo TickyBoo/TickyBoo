@@ -148,9 +148,9 @@ class HandlingView extends AdminView{
 //		$this->print_paper_format('pdf_paper',$data,$err);
 
 		if($data['handling_id']){
-			$this->print_large_area('handling_text_payment',$data,$err,3,92,'');
-			$this->print_large_area('handling_text_shipment',$data,$err,3,92,'');
-			$this->print_large_area('handling_html_template',$data,$err,10,92,'');
+			$this->print_large_area('handling_text_payment',$data,$err,3,80,'');
+			$this->print_large_area('handling_text_shipment',$data,$err,3,80,'');
+			$this->print_large_area('handling_html_template',$data,$err,10,80,'');
 		  $this->extra_form($h, $data, $err);
 		}
 
@@ -206,8 +206,8 @@ class HandlingView extends AdminView{
       $smarty->plugins_dir  = array("plugins".DS, $_SHOP->includes_dir . "shop_plugins".DS);
 
       $smarty->compile_id   = 'AdminHandling_'.$_SHOP->lang;
-      $smarty->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
-      $smarty->cache_dir    = $_SHOP->tmp_dir; // . '/web/cache/';
+      $smarty->compile_dir  = substr($_SHOP->tmp_dir,0,-1); // . '/web/templates_c/';
+      $smarty->cache_dir    = substr($_SHOP->tmp_dir,0,-1); // . '/web/cache/';
       $smarty->config_dir   = INC . 'lang'.DS;
 
       $gui   = new Gui_smarty($smarty);
