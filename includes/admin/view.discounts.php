@@ -92,7 +92,7 @@ class DiscountView extends AdminView {
             $type = valuta($row['discount_value']);
         }
         echo "<td class='admin_list_item' align='right'>$type</td>\n";
-        echo "<td class='admin_list_item' width='30'>{$row['discount_used']}&nbsp;</td>\n";
+        echo "<td class='admin_list_item' align='right' width='30'>{$row['discount_used']}&nbsp;</td>\n";
         echo "<td class='admin_list_item' width='65' align='right'>";
         echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id={$discount_event_id}","edit",2);
         echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id={$discount_event_id}\";}","remove",2,
@@ -128,7 +128,7 @@ class DiscountView extends AdminView {
     $this->print_select ("discount_type", $data, $err, array("fixe", "percent"));
 
     $this->print_input('discount_value', $data, $err, 6, 5);
-    
+
     $this->print_area('discount_cond', $data, $err, 6);
 
     $this->print_field_o('discount_used', $data);
@@ -163,8 +163,9 @@ class DiscountView extends AdminView {
     } elseif ($_GET['action'] == 'remove_disc' and $_GET['discount_id'] > 0) {
       $row = Discount::load($_GET['discount_id']);
       $row->delete();
+      return true;
     } elseif ($showlist) {
-       $this->table(null, false);
+      $this->table(null, false);
     }
   }
 }
