@@ -246,7 +246,8 @@ class SearchView extends AdminView{
     if(empty($_POST['codebar'])){
        return addError('codebar','mandatory' );
     } else {
-      list($seat_id,$ticket_code)=sscanf($_POST['codebar'],"%08d%s");
+      $bar = plugin::call('*OrderDecodeBarcode', ($_POST['codebar']));
+      list($seat_id,$ticket_code)= is($bar, sscanf($_POST['codebar'],"%08d%s"));
 
       $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id
                                       LEFT JOIN Category on seat_category_id=category_id

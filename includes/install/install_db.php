@@ -203,7 +203,7 @@ $tbls['Discount']['fields'] = array(
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'discount_promo' => " varchar(15) DEFAULT ''",
   'discount_used' => " int(11) DEFAULT '0'",
-  'discount_cond' => " text"  
+  'discount_cond' => " text"
   );
 $tbls['Discount']['key'] = array(
   "PRIMARY KEY (`discount_id`)");
@@ -541,17 +541,29 @@ $tbls['Payment_log']['key'] = array(
   "PRIMARY KEY (`payment_log_id`)",
   "KEY `payment_log_order_id` (`payment_log_order_id`)");
 $tbls['Payment_log']['engine'] = 'InnoDB';
-
 $tbls['Payment_log']['remove'] = array ()   ;
 
 $tbls['sessions']['fields'] = array(
-  'session_id' => " varchar(32) NOT NULL DEFAULT ''",
+  'session_id'     => " varchar(32) NOT NULL DEFAULT ''",
   'session_access' => " int(10) unsigned DEFAULT NULL",
-  'session_data' => " longtext");
+  'session_data'   => " longtext");
 $tbls['sessions']['key'] = array(
   "PRIMARY KEY (`session_id`)",
   "KEY `session_access` (`session_access`)");
 $tbls['sessions']['remove'] = array ('Sessions_id', 'Sessions_access','Sessions_data' );
 $tbls['sessions']['engine'] = 'InnoDB';
 
+$tbls['plugins']['fields'] = array(
+  'plugin_id'        => " int(11) NOT NULL AUTO_INCREMENT",
+  'plugin_name'      => " varchar(40) NOT NULL",
+  'plugin_version' => " varchar(40) NOT NULL",
+  'plugin_enabled'   => " tinyint(4) NOT NULL DEFAULT '0'",
+  'plugin_protected' => " tinyint(4) NOT NULL DEFAULT '0'",
+  'plugin_settings'  => " text",
+  'plugin_priority'  => " int(10) unsigned NOT NULL DEFAULT '3'");
+$tbls['plugins']['key'] = array(
+  "PRIMARY KEY (`plugin_id`)",
+  "UNIQUE KEY `key_plugin_name` (`plugin_name`)");
+$tbls['plugins']['remove'] = array ();
+$tbls['plugins']['engine'] = 'InnoDB';
 ?>

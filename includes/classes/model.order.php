@@ -71,25 +71,25 @@ class Order Extends Model {
               from `Order`
               WHERE order_id = "._esc($order_id);
  //   );
-    if($data=ShopDB::query_one_row($query)){
-      $order=new Order;
+      if($data=ShopDB::query_one_row($query)){
+        $order=new Order;
 
 
 
-      $order->_fill($data);
+        $order->_fill($data);
 
-      if($order && $complete){
-        if ($order->order_handling_id) {
-          $order->handling= Handling::load($order->order_handling_id);
-          $order->handling = &$order->handling;
+        if($order && $complete){
+          if ($order->order_handling_id) {
+            $order->handling= Handling::load($order->order_handling_id);
+            $order->handling = &$order->handling;
+          }
         }
+        if($order && $tickets){
+          $order->tickets = $this->loadTickets();
+        }
+        if($order){
+        return $order;
       }
-      if($order && $tickets){
-        $order->tickets = $this->loadTickets();
-      }
-      if($order){
-      return $order;
-    }
     }
     // the next log is included to find when or why sometimes it is not possible set the send state.
     ShopDB::dblogging("Cant load Order '{$order_id}', check of it exist.");
@@ -240,11 +240,9 @@ class Order Extends Model {
     //$this->order_date = date('Y-m-d H:i:s');
     $this->order_date = "CURRENT_TIMESTAMP() ";
 
-    //var_dump($this);
-    //var_dump($this->order_date_expire);
-    //return self::_abort('testing');
+    if (!plugin::call('!OrderCreate',$this)) {return false;}
 
-    if(!ShopDB::begin('Save Order')){
+    if(!ShopDB::begin('Create Order')){
       return FALSE;
     } elseif(parent::save()){
 
@@ -331,7 +329,11 @@ class Order Extends Model {
 
 
   function order_description() {
-    return con('orderDescription');
+    if (! $ret = plugin::call('*OrderDescription', $this, con('orderDescription'))) {
+      return con('orderDescription');
+    }
+
+    return $ret;
   }
 
   function Check_payment($order_id){
@@ -753,6 +755,10 @@ class Order Extends Model {
       return false;
     }
 
+    if (!plugin::call('!OrderStatusChanged',$this, $new_status, $dont_do_update)) {
+      return false;
+    }
+
     if(ShopDB::begin("change_{$field}_to_{$new_status}")){
       if(!$this->user_id){
         $query="SELECT * FROM `User` WHERE user_id='{$this->order_user_id}'";
@@ -1008,7 +1014,8 @@ class Order Extends Model {
         $data['seat_row_nr']='0';
       }
       //compute  barcode
-      $data['barcode_text']= sprintf("%08d%s", $data['seat_id'], $data['seat_code']);
+      $bar = plugin::call('*OrderEncodeBarcode', $order, $data, sprintf("%08d%s", $data['seat_id'], $data['seat_code']));
+      $data['barcode_text']= is($bar, sprintf("%08d%s", $data['seat_id'], $data['seat_code']));
       //save the data for the bill
       $key = "{$data['category_id']}";
       if ($data['discount_id']) {

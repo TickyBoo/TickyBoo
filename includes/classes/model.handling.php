@@ -374,6 +374,7 @@ class Handling Extends Model {
 
 		if (file_exists($file)){
       		if (!isset($this->_pment)){
+            require_once ($file);
         		$name = "EPH_".$this->handling_payment;
         		$this->_pment = new $name($this);
         		$this->extras = $this->_pment->extras;

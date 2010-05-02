@@ -90,22 +90,17 @@ function draw (){
 
 
   if(isset($_POST['codebar'])){
-    $code=sscanf($_POST['codebar'],"%08d%s");
-//    $event_id=$code[0];
-//    $rang=$code[1];
-//    $place=$code[2];
-//    $order_id=$code[3];
-//    $ticket_code=$code[4];
 
-    $seat_id=$code[0];
-    $ticket_code=$code[1];
+    $bar = plugin::call('*OrderDecodeBarcode', ($_POST['codebar']));
+    list($seat_id,$ticket_code)= is($bar, sscanf($_POST['codebar'],"%08d%s"));
+
 
     $query="select * from Seat LEFT JOIN PlaceMapZone ON seat_zone_id=pmz_id,
 	 					Category LEFT JOIN Color ON category_color=color_id
             where seat_category_id=category_id
             AND seat_id="._esc($seat_id)."
 	          AND seat_code="._esc($ticket_code);
-	          
+
     if(!$ticket=ShopDB::query_one_row($query)){
         echo "<div class='err'><table width='100%'><tr><td width='150' align='center'><img src='../images/attention.png'></td><td class='error' >".ticket_not_found."</td></tr></table></div>";
         return 0;

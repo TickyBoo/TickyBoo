@@ -307,14 +307,14 @@ class Event Extends Model {
           $es_total += $cs_total;
         }
       }
-      if(!$dry_run and !Event::create_stat($this->event_id,$es_total)) {
+      if(!$dry_run and !Event::create_stat($this->event_id, $es_total)) {
         return self::_abort('publish6');
       }
     }
 
     if(!$dry_run) {
       $this->event_status='pub';
-      if (!$this->save()) {
+      if (!plugin::call('!EventPublish', $this) || !$this->save()) {
         return self::_abort('publish7');
       }
       if( ShopDB::commit('Event publised')){
@@ -326,11 +326,13 @@ class Event Extends Model {
   }
 
   function stop_sales (){
+    plugin::call('EventUnPublish', $this);
     return $this->_change_state('pub','nosal');
   }
 
   function restart_sales (){
-    return $this->_change_state('nosal','pub');
+    return plugin::call('!EventPublish', $this) &&
+           $this->_change_state('nosal','pub');
   }
 
   function _change_state ($old_s, $new_s){
