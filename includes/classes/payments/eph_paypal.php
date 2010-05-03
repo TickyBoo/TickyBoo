@@ -151,7 +151,7 @@ class EPH_paypal extends payment{
   	    Order::set_payment_id($order->order_id,'paypal:'.$_POST['txn_id']) ;
         $order->set_payment_status('payed');
     }
-  //  ShopDB::dblogging($debug);
+    ShopDB::dblogging($debug);
     $handle=fopen($_SHOP->tmp_dir."paypal.log","a");
     fwrite($handle,$debug);
     fclose($handle);
