@@ -178,7 +178,7 @@ myExit();
   }
 
   function  printAction($smarty) {
-    Global $order;
+    Global $order, $pos;
     $myorder = is($_SESSION['_SHOP_order'],null);
     $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
     if($test < 1) {
@@ -189,8 +189,13 @@ myExit();
       return;
     }
     $mode = (int)$_REQUEST['mode'];
-    If (!$mode) $mode =2;
-    Order::printOrder($myorder->order_id, '', 'stream', false, $mode );
+    If (!$mode) $mode = 2;
+    //$pos->
+    //var_dump($_SESSION);//['_SHOP_USER_AUTH']
+    //echo $_SESSION['_SHOP_USER_AUTH']['user_prefs'];
+    $directprint = (isset($_SESSION['_SHOP_USER_AUTH']['user_prefs'])) ? ($_SESSION['_SHOP_USER_AUTH']['user_prefs']== 'pdt') : false;
+    
+    Order::printOrder($myorder->order_id, '', 'stream', $directprint, $mode );
     return;
   }
 

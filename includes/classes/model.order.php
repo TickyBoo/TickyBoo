@@ -914,11 +914,11 @@ class Order Extends Model {
 
     $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
            $order->order_handling_id .'~'. $order->order_total_price;
-    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36));
-    $md5 = base_convert(md5($md5),16,36);
-    $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($order->order_id,10,36).'_'. $md5);
-
-    return $item. urlencode ($code); //  }
+    $md5x = base_convert(md5($md5),16,36);
+    $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($order->order_id,10,36).'_'. $md5x);
+    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36).' -> '.urlencode ($code));
+  
+    return $item. strtr($code, '+/=', '-_~'); //  }
   }
 
   function DecodeSecureCode(&$order, $codestr ='', $loging=false) {
@@ -927,7 +927,7 @@ class Order Extends Model {
     If (!empty($codestr)) {
       //$code = urldecode( $code) ;
 //      print_r( $codestr );
-      $text = base64_decode($codestr);
+      $text = base64_decode(strtr($codestr, '-_~', '+/='));
       $code = explode('_',$text);
     //  print_r( $text );
       $code[0] = base_convert($code[0],36,10);
@@ -935,9 +935,8 @@ class Order Extends Model {
 //      print_r( $code );
 //      print_r( $order );
       if ($loging) {
-        ShopDB::dblogging('Decode:'.$text);
+        ShopDB::dblogging('Decode:'.$codestr.' -> '.$text);
         ShopDB::dblogging('Code:'.print_r( $code, true));
-
         ShopDB::dblogging('MD5.a:'.$code[2]);
       }
 
@@ -1052,7 +1051,7 @@ class Order Extends Model {
      $paper_size=$_SHOP->pdf_paper_size;
      $paper_orientation=$_SHOP->pdf_paper_orientation;
 
-    $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+     $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 
      if(!$bill_template){
       $bill_template=$hand->handling_pdf_template;

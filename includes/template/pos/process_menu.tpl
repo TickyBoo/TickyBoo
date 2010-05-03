@@ -45,7 +45,7 @@
   <table width='100%'  cellspacing='2' class='admin_info' style='border-top:#45436d 1px solid;border-bottom:#45436d 1px solid;'>
   <tr><td ><img src='{$_SHOP_themeimages}view.png' border='0'>
   {!order_details!}
-</td><td><img src='{$_SHOP_themeimages}printer.gif' border='0'>   
+</td><td><img src='{$_SHOP_images}printer.gif' border='0'>   
   {!print_order!}
 </td><td ><img src='{$_SHOP_themeimages}trash.png' border='0'>
   {!cancel_and_delete!}
