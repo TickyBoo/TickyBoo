@@ -483,7 +483,7 @@ function subtractDaysFromDate($date,$no_days) {
   * @param mixed $content
   * @return void
   */
-  function trace($content, $addDate=false, $addtrace=false){
+  function trace($content, $addDate=false, $addtrace=false,$appendNow=false){
     global $_SHOP;
 
     if(is($_SHOP->trace_on,false)){
@@ -499,7 +499,11 @@ function subtractDaysFromDate($date,$no_days) {
         $_SHOP->tracelog = '';
         $_SHOP->TraceOrphan = md5(getOphanData());
       }
-      $_SHOP->tracelog .= $content."\n";
+      if($appendNow){
+        file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content."\n" ,FILE_APPEND);
+      }else{
+        $_SHOP->tracelog .= $content."\n";
+      }
     }
   }
 function getophandata(){
@@ -725,15 +729,15 @@ function printMsg($key, $err = null, $addspan=true) {
     foreach($err[$key] as $value){
       if(is_array($value)){
         foreach($value as $val){
-          $output .= $val. "<br>";
+          $output .= $val. "</br>";
         }
       }else{
-        $output .= $value. "<br>";
+        $output .= $value. "</br>";
       }
     }
 
   }elseif (isset($err[$key]) && is_string($err[$key])) {
-    $output .= $err[$key]. "<br>";
+    $output .= $err[$key]. "</br>";
   }
   If ($output && $addspan) {
     switch ($key) {
@@ -744,8 +748,7 @@ function printMsg($key, $err = null, $addspan=true) {
         $output = "<h4 class='success'>".$output. "</h4>";
         break;
       default:
-        $output = str_ireplace('<br>',' ' , $output);
-        $output = "<img class='err error' src='{$_SHOP->images_url}unchecked.gif' alt='{$output}' title='{$output}'>";//<span class='err error'>".. "</span>
+        $output = "<span class='err error'>".$output. "</span>";
     }
   }
 

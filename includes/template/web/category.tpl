@@ -97,7 +97,7 @@
 }
 </style>
 {/literal}
-        <div style='overflow: scroll; height: 350px; width:595px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
+          <div style='overflow: auto; height: 350px; width:595px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
             {placemap  category=$shop_category}
           </div>
           <center>{!placemap_image_explanation!}</center>

@@ -33,30 +33,30 @@
 {include file="header.tpl" name=!order_reg! header=!tnx_order_mess!}
 {/if}
 
-  <table class='table_dark' cellspacing='1' cellpadding='4' border=0 bgcolor='white' width='100%'>
-    {eval var=$shop_handling.handling_text_payment assign=test}
-    {gui->view name=payment value=$test}
-    {eval var=$shop_handling.handling_text_shipment  assign=test}
-    {gui->view name=shipment value=$test}
+  <table class='table_dark full' cellspacing='1' cellpadding='4' border=0 bgcolor='white' width='100%'>
+    {eval var=$shop_handling.handling_text_payment assign=paymentVal}
+    {gui->view name=payment value=$paymentVal}
+    {eval var=$shop_handling.handling_text_shipment assign=shipmentVal}
+    {gui->view name=shipment value=$shipmentVal}
     {gui->view name=order_id value=$order_id}
 
-    {if $order_discount_price  neq 0.0|| $order_fee neq 0.0}
-    {gui->valuta value=$order_partial_price assign=test}
-    {gui->view name=order_partial_price value=$test}
+    {if $order_discount_price  neq 0.0 || $order_fee neq 0.0}
+      {gui->valuta value=$order_partial_price assign=orderPreDis}
+      {gui->view name=order_partial_price value=$orderPreDis}
     {/if}
 
     {if $order_fee neq 0.0}
-      {gui->valuta value=$order_fee assign=test}
-      {gui->view name=order_fee value=$test}
+      {gui->valuta value=$order_fee assign=orderFee}
+      {gui->view name=order_fee value=$orderFee}
     {/if}
 
-    {if $order_discount_price  neq 0.0}
-      {gui->valuta value=$order_discount_price assign=test}
-      {gui->view name=order_discount_price value=$test}
+    {if $order_discount_price neq 0.0}
+      {gui->valuta value=$order_discount_price assign=orderDis}
+      {gui->view name=order_discount_price value=$orderDis}
     {/if}
 
-    {gui->valuta value=$order_total_price assign=test}
-    {gui->view name=total_price value=$test}
+    {gui->valuta value=$order_total_price assign=orderTot}
+    {gui->view name=total_price value=$orderTot}
   </table>
   {eval var=$confirmtext}
 

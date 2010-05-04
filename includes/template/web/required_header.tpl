@@ -48,8 +48,8 @@
         delay:40,
         showURL:false,
         bodyHandler: function() {
-          if(jQuery(this).children('div').html() != ''){
-            return jQuery(this).children('div').html();
+          if(jQuery(this).children('*[class*="is-tooltip"]').first().html() != ''){
+            return jQuery(this).children('*[class*="is-tooltip"]').first().html();           
           }else{
             return false;
           }

@@ -374,7 +374,6 @@ class Handling Extends Model {
 
 		if (file_exists($file)){
       		if (!isset($this->_pment)){
-            require_once ($file);
         		$name = "EPH_".$this->handling_payment;
         		$this->_pment = new $name($this);
         		$this->extras = $this->_pment->extras;
@@ -496,7 +495,7 @@ class Handling Extends Model {
  	  	if(empty($data['handling_text_payment'])){addError('handling_text_payment','mandatory');}
  		  if(empty($data['handling_text_shipment'])){addError('handling_text_shipment','mandatory');}
       if($pm = $this->pment()){
-  			$pm->admin_check($data);
+  			$pm->admin_check(&$data);
   		}
     }
 		return parent::CheckValues($data);

@@ -965,7 +965,7 @@ define("tickets_available","Available:");
 define("category_sold","Category Sold");
 define("Discount_for","With Discount:");
 define("prices_in","Prices in");
-define("Please_login","<center><b>Please Login or Register to Reserve Seats.</b></center>");
+define("Please_login","Please Login or Register to Reserve Seats.");
 define("select_category","Select a Category");
 define("order_limit","Order Limit"); //category.tpl
 define("old_event","<center><B>This event is expired and can not be ordered anymore.</b></center>");
@@ -978,8 +978,7 @@ define("only_rows_numbered","Only rows numbered");
 
 //checkout_confirm.tpl
 define("order_reg","Order Registered");
-define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your order follow the proccess below.
-	<br><br>To view your order click ");
+define("tnx_order_mess","Thank you very much! Your order was registered. To pay for your order follow the proccess below. ");
 
 //checkout_preview.tpl
 define("shopping_cart_check_out","Select Payment Method");
@@ -1356,6 +1355,7 @@ define ('file_saved','Update.zip Saved');
 define ('file_deleted','Finished with Update.zip, removed.');
 define ('update_save','Update and/or Save Details');
 
+
 define ('version_updater','Update');
 define ('order_already_crated',"This order is already saved!!!");
 define ('Select_handling_option','Select a payment option.');
@@ -1366,36 +1366,4 @@ define ('placemap_image_explanation',"<img class='seatmapimage' src='{$_SHOP->im
                                      "<img class='seatmapimage' src='{$_SHOP->images_url}seatdisable.gif'>: Other category");
 define ('copy_main_pm','copy from main event');
 define ('republish_old_event',"Are you sure you want to publish this archived event?\r\n It will only show in the [Program] area of the Web Shop.");
-?><?php
-define('Click to UnPublish','Click to UnPublish');
-?>
-<?php
-define('UnPublished','UnPublished');
-?>
-<?php
-define('Click to RePublish','Click to RePublish');
-?>
-<?php
-define('restart__failure','restart__failure');
-?>
-<?php
-define('plugins_tab','plugins_tab');
-?>
-<?php
-define('New Event','New Event');
-?>
-<?php
-define('Click to Publish','Click to Publish');
-?>
-<?php
-define('category_pm_id','category_pm_id');
-?>
-<?php
-define('category_pmp_id','category_pmp_id');
-?>
-<?php
-define('publish7','publish7');
-?>
-<?php
-define('pub__failure','pub__failure');
 ?>

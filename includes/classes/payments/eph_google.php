@@ -47,10 +47,8 @@ require_once('classes/class.payment.php');
 
 class EPH_google extends Payment{
 
-	public $extras = array('pm_google_merchant_id', 'pm_google_merchant_key',
-                         'pm_google_sandbox', 'pm_google_callback_link',
-		                     'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order',
-                         'pm_on_user_cancel_cancel_order');
+	public $extras = array('pm_google_merchant_id', 'pm_google_merchant_key','pm_google_sandbox','pm_google_callback_link',
+		'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order');
   	public $mandatory = array('pm_google_merchant_id', 'pm_google_merchant_key'); // is only used in project vazant.
 
 	 public function admin_init(){
@@ -83,30 +81,31 @@ class EPH_google extends Payment{
 	}
 
 	public function admin_check(&$data){
+		parent::admin_check($data);
 		global $_SHOP;
+
 		$data['pm_google_callback_link'] = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();
-		return parent::admin_check($data);
+
+		return true;
 	}
 
 	public function on_confirm(&$order){
 		global $_SHOP;
 
-		$merchant_id = $this->pm_google_merchant_id;  // Your Merchant ID
-      	$merchant_key = $this->pm_google_merchant_key;  // Your Merchant Key
-      	$server_type = "sandbox";
-      	$currency = $_SHOP->organizer_data->organizer_currency;
+    $merchant_id = $this->pm_google_merchant_id;  // Your Merchant ID
+    $merchant_key = $this->pm_google_merchant_key;  // Your Merchant Key
+    $server_type = "sandbox";
+    $currency = $_SHOP->organizer_data->organizer_currency;
 
-      	if($this->pm_google_sandbox){
+    if($this->pm_google_sandbox){
 			$server_type = "sandbox";
 		}else{
 			$server_type = "live";
 		}
 
-      	$googleCart = new GoogleCart($merchant_id, $merchant_key, $server_type,$currency);
-
-      	$total_count = 1;
-
-      	$googleItem = new GoogleItem($_SHOP->organizer_data->organizer_name,      // Item name
+    $googleCart = new GoogleCart($merchant_id, $merchant_key, $server_type,$currency);
+   	$total_count = 1;
+   	$googleItem = new GoogleItem($_SHOP->organizer_data->organizer_name,      // Item name
                                $order->order_description(), // Item      description
                                $total_count, // Quantity
                                $order->order_total_price); // Unit price
@@ -169,6 +168,7 @@ class EPH_google extends Payment{
 
 		//Setup the log file
 		$Gresponse->SetLogFiles(RESPONSE_HANDLER_ERROR_LOG_FILE, RESPONSE_HANDLER_LOG_FILE, L_ALL);
+    $Grequest->SetLogFiles(RESPONSE_HANDLER_ERROR_LOG_FILE, RESPONSE_HANDLER_LOG_FILE, L_ALL);
 
 		// Retrieve the XML sent in the HTTP POST request to the ResponseHandler
 		$xml_response = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents("php://input");
@@ -184,6 +184,7 @@ class EPH_google extends Payment{
 
 		$google_order_id = $data[$root]['google-order-number']['VALUE'];
 
+    /* */
 		switch ($root) {
 			case "request-received": {
 			  break;
@@ -205,22 +206,22 @@ class EPH_google extends Payment{
 						$order = Order::load($order_id);
 						$order->set_payment_status('pending');
 
-						$Gresponse->SendAck();
+						$Gresponse->SendAck(false);
 						$Grequest->SendMerchantOrderNumber($google_order_id,$order_id);
 					}
 				}
-				$Gresponse->SendServerErrorStatus("500 The server can't update the order id please try later.", true);
+        $Gresponse->SendServerErrorStatus("500 The server can't update the order id please try later.", true);
 				break;
 			}
 			case "order-state-change-notification": {
-				$Gresponse->SendAck();
+				$Gresponse->SendAck(false);
 				$new_financial_state = $data[$root]['new-financial-order-state']['VALUE'];
 				$new_fulfillment_order = $data[$root]['new-fulfillment-order-state']['VALUE'];
 				$order = Order::loadFromPaymentId("google:".$google_order_id,$this->handling_id);
 
 				switch($new_financial_state) {
 					case 'REVIEWING': {
-				  		break;
+		  		  break;
 					}
 					case 'CHARGEABLE': {
 				  		//$Grequest->SendProcessOrder($data[$root]['google-order-number']['VALUE']);
@@ -235,7 +236,7 @@ class EPH_google extends Payment{
 					}
 					case 'PAYMENT_DECLINED': {
 						$order->set_payment_status('pending');
-				  		$Grequest->SendBuyerMessage($google_order_id,
+		  		  $Grequest->SendBuyerMessage($google_order_id,
 						   "Sorry, your payment for ".$_SHOP->organizer_data->organizer_name." has been declined.
 						   Your order is pending, Please login for more info.", true);
 				  		break;
@@ -243,16 +244,17 @@ class EPH_google extends Payment{
 					case 'CANCELLED': {
 						if($this->pm_on_user_cancel_cancel_order){
 							Order::delete($order->order_id,'user_cancelled_by_google_checkout'); //"Canceled By Google Checkout (User Canceled)."
+              
 							$Grequest->SendBuyerMessage($google_order_id,
 						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled.
 						   		Your order has been canceled, please login into Google Checkout for more info.", true);
-				   		}else{
+            }else{
 				   			$order->set_payment_status('none');
 				  			$Grequest->SendBuyerMessage($google_order_id,
 						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled.
 						   		Your order is not paid!, please login into Google Checkout for more info.", true);
-				   		}
-				  		break;
+			   		}
+			  		break;
 					}
 					case 'CANCELLED_BY_GOOGLE': {
 						if($this->pm_on_google_cancel_cancel_order){
@@ -314,7 +316,7 @@ class EPH_google extends Payment{
 			  break;
 			}
 			case "refund-amount-notification": {
-				$Gresponse->SendAck();
+				$Gresponse->SendAck(false);
 				$order = Order::loadFromPaymentId("google:".$google_order_id,$this->handling_id);
 
 				if($this->pm_on_refund_cancel_order){
@@ -332,6 +334,7 @@ class EPH_google extends Payment{
 			  $Gresponse->SendBadRequestStatus("Invalid or not supported Message");
 			  break;
 		}
+    /* */
 	}
 
 	function on_return(&$order, $result){
@@ -340,9 +343,9 @@ class EPH_google extends Payment{
                    'transaction_id'=>$order->order_payment_id ,
                    'response'=> 'Google Payment Registered. You will be emailed when your order status changes.<br>'
 				   				.'Or you may refresh this page to check order status.<br />'
-				   				.'Order Status: '.$order->order_status.'<br />'
-				   				.'Payment Status: '.$order->order_payment_status.'<br />'
-				   				.'Shipping Status: '.$order->order_shipment_status
+				   				.'Order Status: '.con($order->order_status).'<br />'
+				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
+				   				.'Shipping Status: '.con($order->order_shipment_status)
  								);
 	}
 

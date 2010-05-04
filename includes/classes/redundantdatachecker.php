@@ -114,9 +114,9 @@ SELECT 'Category_stat', cs_category_id,
 
 $orphancheck[]="
 SELECT 'Category_stat', cs_category_id,
-   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') )) seat_free, null
+   'Free' ,  CONCAT_WS('/', `cs_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL )) seat_free, null
  FROM `Category_stat`
-where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') ) <>0
+where `cs_free`  - (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL )) <>0
 ";
 
 /**/
@@ -167,9 +167,9 @@ where `es_total` - (select count(*) from `Seat` where seat_event_id = es_event_i
 ";
 $orphancheck[]="
 SELECT 'Event_stat',es_event_id,
-   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free','trash') )) seat_free, null
+   'Free',  CONCAT_WS('/', `es_free`, (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL )) seat_free, null
  FROM `Event_stat`
-where `es_free`  - (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free','trash') ) <>0
+where `es_free`  - (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL ) <>0
 ";
 
 
@@ -387,7 +387,7 @@ class orphans {
         break;
       case'Category_stat~Free':
         ShopDB::Query("update Category_stat set
-                  cs_free = (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash'))
+                  cs_free = (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL)
                where cs_category_id ='{$fix[2]}'") ;
         break;
       case'Category_stat~Total':
@@ -425,7 +425,7 @@ class orphans {
         break;
       case'Event_stat~Free':
         ShopDB::Query("update Event_stat set
-                          es_free = (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status IN ('res','free','trash') )
+                          es_free = (select count(*) from `Seat` where seat_event_id = es_event_id and seat_status IN ('res','free','trash') and seat_user_id IS NULL and seat_order_id IS NULL )
                        where es_event_id ='{$fix[2]}'") ;
         break;
       case'Event_stat~Total':

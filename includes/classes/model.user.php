@@ -41,7 +41,7 @@ class User extends Model{
                                 '*user_zip', '*user_city', 'user_state', '*user_country', 'user_phone', 'user_fax' ,
                                 '*user_email', '*user_status', 'user_prefs', 'user_created', 'user_custom1', 'user_custom2',
                                 'user_custom3', 'user_custom4', 'user_owner_id', 'user_lastlogin', 'user_order_total',
-                                'user_current_tickets', 'user_total_tickets');
+                                'user_current_tickets', 'user_total_tickets','user_maillist');
 
   var $is_member = false;
 

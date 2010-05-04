@@ -114,7 +114,7 @@
               </div>
               <!-- End Message Divs -->
               
-              {include file="Progressbar.tpl" name=$name} 
+              {include file="Progressbar.tpl" name=$name}
               
     					{if $name}
       				  <h1>{$name}</h1>
