@@ -128,11 +128,47 @@ class Handling Extends Model {
     return round($this->handling_fee_fix+($total/100.00)*$this->handling_fee_percent,2);
   }
 
+  /**
+   * Handling::handle()
+   * 
+   * Function will send try and send the handling method emails and any post proccessing that needs doing.
+   *
+   * 
+   * @param mixed $order
+   * @param mixed $new_state
+   * @param string $old_state
+   * @param string $field
+   * @return
+   */
   function handle ($order,$new_state,$old_state='',$field=''){
     global $_SHOP;//print_r($this);
     include_once(INC.'classes'.DS.'model.template.php');
 
-    $ok=TRUE;
+    $sentEmail=TRUE;
+    
+    ShopDB::begin('proc_on_handle_for_eph_esh');
+    
+    if($pm = $this->pment()){
+			if(method_exists($pm, 'on_handle')){
+				if(!$pm->on_handle($order,$new_state,$old_state,$field)){
+				  ShopDB::rollback('eph_on_handle_failed');
+          addWarning('eph_on_handle_failed');
+          return false;
+				}
+			}
+		}
+
+		if($sm = $this->sment()){
+			if(method_exists($sm,'on_handle')){
+				if(!$sm->on_handle($order,$new_state,$old_state,$field)){
+				  ShopDB::rollback('esh_on_handle_failed');
+          addWarning('esh_on_handle_failed');
+          return false;
+				}
+			}
+		}
+    
+    ShopDB::commit('proc_on_handle');
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
 
@@ -164,36 +200,28 @@ class Handling Extends Model {
       $order_d['action']= is($order_d['action'],'Handle: '.$new_state.'->'.$template_name);
 
       if(!Template::sendMail($tpl, $order_d, "", $_SHOP->lang)){
-        $ok=FALSE;
+        $sentEmail=FALSE;
       }
-      //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
-      $status = strtolower($new_state);
-      $manSend = strtolower($order->handling->handling_only_manual_send);
-      if($ok && $status=='payed' && $order->handling->handling_shipment=='email' && $manSend=='no'){
-  //      $order2=Order::load($order->order_id,true);
-  //      if ($order2) {
-          $order->set_shipment_status('send');
-          addNotice('order_is_set_to_send');
-  //      }
-      }
+          
     }
-
-
-		if($ok and $pm = $this->pment()){
-			if(method_exists($pm, 'on_handle')){
-				$ok=$pm->on_handle($order,$new_state,$old_state,$field);
-			}
-		}
-
-		if($ok and $sm = $this->sment()){
-			if(method_exists($sm,'on_handle')){
-				$ok= $sm->on_handle($order,$new_state,$old_state,$field);
-			}
-		}
-    if (!$ok) {
+    
+    if (!$sentEmail) {
       addWarning('status_change_handling_error');
+    }else{
+      addNotice("order_is_set_to_{$new_state}");
     }
-		return ($ok);
+    
+    //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
+    $status = strtolower($new_state);
+    $manSend = strtolower($order->handling->handling_only_manual_send);
+    if($status=='payed' && $order->handling->handling_shipment=='email' && $manSend=='no'){
+//      $order2=Order::load($order->order_id,true);
+//      if ($order2) {
+        $order->set_shipment_status('send');
+//      }
+    }
+    
+		return ($sentEmail);
   }
 
 	function on_order_delete($order_id){
