@@ -770,9 +770,11 @@ class Order Extends Model {
       if($field=='order_payment_status' and  $new_status=='payed' ){ //and
         $suppl = ", order_date_expire=NULL";
       }
+      //This breaks setting anything to pending!
+      /*
       if($field=='order_payment_status' and  $new_status=='pending' and  $old_status !=='none'){ //and
         return true; // just show the m
-      }
+      }*/
 
       $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE order_id='{$this->order_id}'";
       if($dont_do_update || (ShopDB::query($query))){// and shopDB::affected_rows()==1)){
