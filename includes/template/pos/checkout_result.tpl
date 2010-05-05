@@ -91,10 +91,10 @@
   <script type="text/javascript">
   var timerid = 0;
   var orderid = {$shop_order.order_id};
-  {if !$smarty.request.ajax}
+  {if !$smarty.request.ajax and !$no_header and !$no_footer}
     {literal}
-      $(document).ready(function(){
-        $("#checkout_result").dialog({
+      jQuery(document).ready(function(){
+        jQuery("#checkout_result").dialog({
           bgiframe: false,
           autoOpen: true,
           height: 'auto',
@@ -122,8 +122,8 @@
           data:      {"pos":true,"action":"Canprint",orderid:orderid},
           success:function(data, status){
             if(data.status){
-              $('#printticket').show();
-              $('#waiting').hide();
+              jQuery('#printticket').show();
+              jQuery('#waiting').hide();
             } else {
               timerid = setTimeout('checkpaint()', 1000);
             }
