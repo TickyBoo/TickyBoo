@@ -388,7 +388,7 @@ class OrderView extends AdminView{
         echo "<tr class='admin_list_row_$alt'>
         	   <td class='admin_list_item'>".$os["os_id"]."</td>
          	   <td class='admin_list_item'>".formatTime($os["os_changed"])."</td>
-         	   <td class='admin_list_item'>".$os["os_description"]."</td>
+         	   <td class='admin_list_item' ><pre style='overflow: auto;'>".$os["os_description"]."</pre></td>
        	   <tr>\n";
          $alt=($alt+1)%2;//
 

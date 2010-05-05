@@ -1094,10 +1094,10 @@ class Order Extends Model {
       if($mode=='file'){
         $pdf->output($_SHOP->ticket_dir.DS.$order_file_name, 'F');
       }else if($mode=='stream'){
-        $pdf->output($order_file_name, 'I');
         if($print){
-          $html2pdf->pdf->IncludeJS("print(true);");
+          $pdf->pdf->IncludeJS("print({bUI: false, bSilent: true}); doc.closeDoc(true);");
         }
+        $pdf->output($order_file_name, 'I');
       }else if($mode=='data'){
         $pdf_data=$pdf->output($order_file_name, 'S');
       }

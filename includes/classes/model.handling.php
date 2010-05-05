@@ -151,7 +151,7 @@ class Handling Extends Model {
     if($pm = $this->pment()){
 			if(method_exists($pm, 'on_handle')){
 				if(!$pm->on_handle($order,$new_state,$old_state,$field)){
-          return self::_abort('eph_on_handle_failed''eph_on_handle_failed');
+          return self::_abort('eph_on_handle_failed');
 				}
 			}
 		}
@@ -159,7 +159,7 @@ class Handling Extends Model {
 		if($sm = $this->sment()){
 			if(method_exists($sm,'on_handle')){
 				if(!$sm->on_handle($order,$new_state,$old_state,$field)){
-          return self::_abort('esh_on_handle_failed''eph_on_handle_failed');
+          return self::_abort('esh_on_handle_failed');
 				}
 			}
 		}
@@ -209,8 +209,8 @@ class Handling Extends Model {
     //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
     $status = strtolower($new_state);
     $manSend = strtolower($order->handling->handling_only_manual_send);
-    if($status=='payed' && 
-       $order->handling->handling_shipment=='email' && 
+    if($status=='payed' &&
+       $order->handling->handling_shipment=='email' &&
        $manSend=='no'){
       $order->set_shipment_status('send');
     }
