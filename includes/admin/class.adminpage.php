@@ -190,6 +190,13 @@ class AdminPage extends AUIComponent {
   //        }
   //        echo "</select>";
       echo"</td></tr></table></div><br>";
+      echo'
+        <DIV style="MARGIN-TOP: 0.35em;MARGIN-Bottom: 0.35em; DISPLAY: none" id=error-message class="ui-state-error ui-corner-all" title="Order Error Message">
+  <P><SPAN style="FLOAT: left; MARGIN-RIGHT: 0.3em" class="ui-icon ui-icon-alert"></SPAN><div id=error-text>ffff<br>tttttcv ttt </div> </P></DIV>
+  <DIV style="MARGIN-TOP: 0.35em; MARGIN-Bottom: 0.35em; DISPLAY: none" id=notice-message class="ui-state-highlight ui-corner-all" title="Order Notice Message">
+  <P><SPAN style="FLOAT: left; MARGIN-RIGHT: 0.3em" class="ui-icon ui-icon-info"></SPAN><div id=notice-text>fff</div> </P></DIV>
+    ';
+/*
       echo"
           <div id=\"error-message\" title='{!order_error_message!}' class=\"ui-state-error ui-corner-all\" style=\"padding: 1em; margin-top: .7em; display:none;\" >
              <p><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span>
@@ -201,6 +208,7 @@ class AdminPage extends AUIComponent {
                 <div id='notice-text'>fff</div>
              </p>
           </div>";
+          */
   }
 
   function drawFoot() {

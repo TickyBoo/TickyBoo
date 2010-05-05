@@ -376,19 +376,18 @@ class OrderView extends AdminView{
     } elseif ($_REQUEST['subtab']==2) {
       $query="select *
               from `order_status` where os_order_id="._esc($order_id)."
-              order by os_id" ;
+              order by os_id desc " ;
       if(!$res=ShopDB::query($query)){
         return addWarning('order_not_found');
       }
       echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
-      echo "<tr><td class='admin_list_title' colspan='8'>".con('order_statuslog')."</td></tr>";
+      echo "<tr><td class='admin_list_title' colspan='2'>".con('order_statuslog')."</td></tr>";
       $alt=0;
 
       while($os=shopDB::fetch_assoc($res)){
         echo "<tr class='admin_list_row_$alt'>
-        	   <td class='admin_list_item'>".$os["os_id"]."</td>
-         	   <td class='admin_list_item'>".formatTime($os["os_changed"])."</td>
-         	   <td class='admin_list_item' ><pre style='overflow: auto;'>".$os["os_description"]."</pre></td>
+         	   <td class='admin_list_item' width=120 nowrap><nowrap>".formatTime($os["os_changed"])."</nowrap></td>
+         	   <td class='admin_list_item' ><div style='overflow:hidden;'>".nl2br($os["os_description"])."</div></td>
        	   <tr>\n";
          $alt=($alt+1)%2;//
 

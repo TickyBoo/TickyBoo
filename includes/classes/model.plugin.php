@@ -146,8 +146,8 @@ class plugin extends model {
         }
       }
   //  echo "</pre>";
-      return $return;
     }
+      return $return;
   }
 
   function install() {
