@@ -518,7 +518,7 @@ class Handling Extends Model {
  	  	if(empty($data['handling_text_payment'])){addError('handling_text_payment','mandatory');}
  		  if(empty($data['handling_text_shipment'])){addError('handling_text_shipment','mandatory');}
       if($pm = $this->pment()){
-  			$pm->admin_check($data);
+  			$pm->admin_check(&$data);
   		}
     }
 		return parent::CheckValues($data);

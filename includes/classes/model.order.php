@@ -738,6 +738,7 @@ class Order Extends Model {
 
   function _set_status ($field, $new_status, $dont_do_update=FALSE){
     $old_status=$this->order_status;
+    $old_payment_status = $this->order_payment_status;
     //checks to see if its an remitted or canceled order!
     if($this->order_status=='cancel' or
        $this->order_status=='reissue'){
@@ -759,7 +760,9 @@ class Order Extends Model {
       if($field=='order_payment_status' and  $new_status=='payed' ){ //and
         $suppl = ", order_date_expire=NULL";
       }
-      if($field=='order_payment_status' and  $new_status=='pending' and  $old_status !=='none'){ //and
+      if($field=='order_payment_status' 
+          and  $new_status=='pending' 
+          and  $old_payment_status =='paid'){ //and
         return true; // just show the m
       }
 
