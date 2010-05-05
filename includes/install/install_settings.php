@@ -115,7 +115,7 @@ class install_settings {
                     We would like to receive these logs if or when the system detects a problem.
                   </div>
                </td>
-              <td><select name=\"trace_on\"><option value='SEND'>eMail orphan errors</option><option value='ALL'>Alway log traces</option><option value='0'>Disable (faster response)</option> </select></td>
+              <td><select name=\"trace_on\"><option value='ALLSEND'>Email orphan errors with history</option><option value='SEND'>eMail orphan errors</option><option value='ALL'>Alway log traces</option><option value='0'>Disable (faster response)</option> </select></td>
             </tr>
           </table>";
     Install_Form_Buttons ();
