@@ -40,7 +40,7 @@ require_once(INC."classes".DS."model.organizer.php");
 
 class install_execute {
 
-  static function precheck($Install) {
+  static function precheck($Install, $configpath = false) {
     global $_SHOP;
     RemoveDir(ROOT."includes/temp",false);
     $install_mode=$_SESSION['radio'];
@@ -111,7 +111,7 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
 
 
-    install_execute::CreateConfig();
+    install_execute::CreateConfig($configpath);
 
     if (getophandata()!=='none') {
       array_push($Install->Warnings,'After the update the installer found some problems with your database.<br>'.
@@ -174,7 +174,7 @@ class install_execute {
     return $config;
   }
 
-  static function CreateConfig() {
+  static function CreateConfig($configpath) {
 
     $config = "<?php\n";
     $config .= "/**\n";
@@ -202,7 +202,8 @@ class install_execute {
     ksort($_SESSION['SHOP']);
     $config .= self::fillConfig($_SESSION['SHOP'],'$_SHOP->');
     $config .= "\n?>";
-    return file_put_contents (ROOT."includes".DS."config".DS."init_config.php", $config);
+    $configpath = is($configpath,ROOT."includes".DS."config".DS."init_config.php");
+    return file_put_contents ($configpath, $config);
   }
 
   static function display($Install) {

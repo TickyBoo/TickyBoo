@@ -117,7 +117,7 @@ function writeLog($what, $where = FT_DEBUG){
      $what = date('d.m.Y H:i ') ."--------------------------------\n". $what;
      $_SHOP->hasloged[$where] =1;
    }
-   $h = fopen(INC . 'temp' . DS . $logname . '.log', 'a');
+   $h = fopen($_SHOP->tmp_dir . $logname . '.log', 'a');
    if ($h) {
       fwrite($h,utf8_encode($what . "\n"));
       fclose($h);
@@ -472,40 +472,37 @@ function subtractDaysFromDate($date,$no_days) {
   return date('Y-m-d', $res);
 }
 
- /**
-  * trace()
-  *
-  * Will print full traces to file when enabled in config_common.php
-  *
-  * Tempted to remove dblogging and do both in trace function.
-  * Like trace($content,$dblog=false){}
-  *
-  * @param mixed $content
-  * @return void
-  */
-  function trace($content, $addDate=false, $addtrace=false,$appendNow=false){
-    global $_SHOP;
+/**
+* trace()
+*
+* Will print full traces to file when enabled in config_common.php
+*
+* Tempted to remove dblogging and do both in trace function.
+* Like trace($content,$dblog=false){}
+*
+* @param mixed $content
+* @return void
+*/
+function trace($content, $addDate=false, $addtrace=false){
+  global $_SHOP;
 
-    if(is($_SHOP->trace_on,false)){
-      if ($addtrace){
-        $traceArr = debug_backtrace();
-        if(isset($traceArr) && count($traceArr) > 3) {
-          $errString = '=> '.basename($traceArr[2]['file']).' '.$traceArr[2]['line'].':';
-          $content = $errString ."\n". $content;
-        }
-      }
-      if ($addDate){
-        $_SHOP->trace_subject = 'ErrorLog: '.$_shop->root.$content;
-        $_SHOP->tracelog = '';
-        $_SHOP->TraceOrphan = md5(getOphanData());
-      }
-      if($appendNow){
-        file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content."\n" ,FILE_APPEND);
-      }else{
-        $_SHOP->tracelog .= $content."\n";
+  if(is($_SHOP->trace_on,false)){
+    if ($addtrace){
+      $traceArr = debug_backtrace();
+      if(isset($traceArr) && count($traceArr) > 3) {
+        $errString = '=> '.basename($traceArr[2]['file']).' '.$traceArr[2]['line'].':';
+        $content = $errString ."\n". $content;
       }
     }
+    if ($addDate){
+      $_SHOP->trace_subject = 'ErrorLog: '.$_shop->root.$content;
+      $_SHOP->tracelog = '';
+      $_SHOP->TraceOrphan = md5(getOphanData());
+    }
+    $_SHOP->tracelog .= $content."\n";
   }
+}
+
 function getophandata(){
   global $_SHOP, $orphancheck;
   require_once("classes/redundantdatachecker.php");
@@ -729,15 +726,15 @@ function printMsg($key, $err = null, $addspan=true) {
     foreach($err[$key] as $value){
       if(is_array($value)){
         foreach($value as $val){
-          $output .= $val. "</br>";
+          $output .= $val. "<br>";
         }
       }else{
-        $output .= $value. "</br>";
+        $output .= $value. "<br>";
       }
     }
 
   }elseif (isset($err[$key]) && is_string($err[$key])) {
-    $output .= $err[$key]. "</br>";
+    $output .= $err[$key]. "<br>";
   }
   If ($output && $addspan) {
     switch ($key) {
@@ -748,7 +745,8 @@ function printMsg($key, $err = null, $addspan=true) {
         $output = "<h4 class='success'>".$output. "</h4>";
         break;
       default:
-        $output = "<span class='err error'>".$output. "</span>";
+        $output = str_ireplace('<br>',' ' , $output);
+        $output = "<img class='err error' src='{$_SHOP->images_url}unchecked.gif' alt='{$output}' title='{$output}'>";//<span class='err error'>".. "</span>
     }
   }
 

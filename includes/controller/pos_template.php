@@ -33,7 +33,7 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once ( "../includes/config/init_pos.php" );
+require_once ( dirname(dirname(__FILE__))."/config/init_pos.php" );
 
 /*/Check page is secure
 if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {

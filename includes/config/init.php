@@ -57,6 +57,11 @@ if (!defined('ft_check')) {die('System intrusion ');}
   require_once("classes/class.shopdb.php");
   require_once("classes/basics.php");
   require_once("classes/class.model.php");
+  if(isset($_SHOP->auth_required)){
+    require_once "Auth/Auth.php";
+    require_once "classes/model.admin.php";
+  }
+
   //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
 
@@ -104,7 +109,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_GET['action']     = $action;
   $_POST['action']    = $action;
 
-  trace( '====================================================================');
   trace( $_SERVER["PHP_SELF"]. " [{$action}]", true);
   trace( '====================================================================');
  // print_r($_SERVER);
@@ -228,17 +232,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   if(isset($_SHOP->auth_required)){
 
-    //authentication stuff
-    require_once "Auth/Auth.php";
-    require_once "classes/model.admin.php";
-
     //authentication starts here
-    $params = array("advancedsecurity"=>false );
+    $params = array("advancedsecurity"=>false,
+                    'sessionName'=> $_SHOP->session_name,
+                    );
 
 
     $auth_container = new CustomAuthContainer($_SHOP->auth_status);
     $_auth = new Auth($auth_container,$params);//,'loginFunction'
-    $_auth ->setSessionName($_SHOP->session_name);
     $_auth ->setLoginCallback('loginCallback');
     is($action,"");
     if ($action == 'logout') {
@@ -255,7 +256,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     if (!$_auth->checkAuth()) {
       exit;
     }
-    $_SHOP->auth = $_auth;
+  //  print_r($_auth);
   }
 
   //ini_set("session.gc_maxlifetime", [timeinsec]);
@@ -270,14 +271,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 
   function logincallback ($username, $auth){
-    global $_shop;
-    $query="select * from `Admin` where `admin_login`="._esc($username);
-    if($res=shopdb::query($query) and $data=shopdb::fetch_assoc($res)){
-      unset($data[ $_shop->auth_password ]);
-      $_SESSION['_SHOP_AUTH_USER_DATA']=$data;
+    if($res=Admins::load($auth->admin_id) ){
+      $res = $res->user;
+      unset($res->admin_password);
+    //  unset($res->_columns);
+      $_SESSION['_SHOP_AUTH_USER_DATA']= (array)$res;
     }	else {
       session_destroy();
-     exit;
+      exit;
     }
 
     $_SESSION['_SHOP_AUTH_USER_NAME']=$username;

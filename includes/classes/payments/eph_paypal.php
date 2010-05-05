@@ -137,21 +137,22 @@ class EPH_paypal extends payment{
 
     $return = false;
   	if(stristr("VERIFIED",$result)===false) {
-        $debug.="NOT OK\n";
+        $debugx="NOT OK\n";
     } elseif(($_POST["receiver_email"] != $receiver_email) and ($_POST["receiver_id"]!=$receiver_email)) {
-        $debug.="wrong receiver_email\n";
+        $debugx="wrong receiver_email\n";
     } elseif($_POST["mc_gross"]+is($_POST["mc_gross"],0)<$order_total) {
-        $debug.="Invalid payment\n";
+        $debugx="Invalid payment\n";
     } elseif($_POST["payment_status"]!="Completed") {
-        $debug.=$_POST["payment_status"]."\n";
+        $debugx=$_POST["payment_status"]."\n";
     } else {
-        $debug.="OK\n";
+        $debugx="OK \n";
         $return =true;
     	  $order->order_payment_id='paypal:'.$_POST['txn_id'];
   	    Order::set_payment_id($order->order_id,'paypal:'.$_POST['txn_id']) ;
         $order->set_payment_status('payed');
     }
-    ShopDB::dblogging($debug);
+    $debug .= $debugx;
+    OrderStatus::statusChange($order_id,$_SHOP->tmp_dir,$debugx,'checkout::notify',$debug.print_r($_POST,true));
     $handle=fopen($_SHOP->tmp_dir."paypal.log","a");
     fwrite($handle,$debug);
     fclose($handle);

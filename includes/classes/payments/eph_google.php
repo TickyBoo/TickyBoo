@@ -81,12 +81,9 @@ class EPH_google extends Payment{
 	}
 
 	public function admin_check(&$data){
-		parent::admin_check($data);
 		global $_SHOP;
-
 		$data['pm_google_callback_link'] = $_SHOP->root_secured. 'checkout_notify.php?'.$this->encodeCallback();
-
-		return true;
+		return parent::admin_check($data);
 	}
 
 	public function on_confirm(&$order){
@@ -244,7 +241,7 @@ class EPH_google extends Payment{
 					case 'CANCELLED': {
 						if($this->pm_on_user_cancel_cancel_order){
 							Order::delete($order->order_id,'user_cancelled_by_google_checkout'); //"Canceled By Google Checkout (User Canceled)."
-              
+
 							$Grequest->SendBuyerMessage($google_order_id,
 						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled.
 						   		Your order has been canceled, please login into Google Checkout for more info.", true);

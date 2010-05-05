@@ -130,10 +130,10 @@ class Handling Extends Model {
 
   /**
    * Handling::handle()
-   * 
+   *
    * Function will send try and send the handling method emails and any post proccessing that needs doing.
    *
-   * 
+   *
    * @param mixed $order
    * @param mixed $new_state
    * @param string $old_state
@@ -145,15 +145,13 @@ class Handling Extends Model {
     include_once(INC.'classes'.DS.'model.template.php');
 
     $sentEmail=TRUE;
-    
+
     ShopDB::begin('proc_on_handle_for_eph_esh');
-    
+
     if($pm = $this->pment()){
 			if(method_exists($pm, 'on_handle')){
 				if(!$pm->on_handle($order,$new_state,$old_state,$field)){
-				  ShopDB::rollback('eph_on_handle_failed');
-          addWarning('eph_on_handle_failed');
-          return false;
+          return self::_abort('eph_on_handle_failed''eph_on_handle_failed');
 				}
 			}
 		}
@@ -161,14 +159,10 @@ class Handling Extends Model {
 		if($sm = $this->sment()){
 			if(method_exists($sm,'on_handle')){
 				if(!$sm->on_handle($order,$new_state,$old_state,$field)){
-				  ShopDB::rollback('esh_on_handle_failed');
-          addWarning('esh_on_handle_failed');
-          return false;
+          return self::_abort('esh_on_handle_failed''eph_on_handle_failed');
 				}
 			}
 		}
-    
-    ShopDB::commit('proc_on_handle');
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
 
@@ -202,25 +196,25 @@ class Handling Extends Model {
       if(!Template::sendMail($tpl, $order_d, "", $_SHOP->lang)){
         $sentEmail=FALSE;
       }
-          
+
     }
-    
+
     if (!$sentEmail) {
       addWarning('status_change_handling_error');
     }else{
+      ShopDB::commit('proc_on_handle');
       addNotice("order_is_set_to_{$new_state}");
     }
-    
+
     //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
     $status = strtolower($new_state);
     $manSend = strtolower($order->handling->handling_only_manual_send);
-    if($status=='payed' && $order->handling->handling_shipment=='email' && $manSend=='no'){
-//      $order2=Order::load($order->order_id,true);
-//      if ($order2) {
-        $order->set_shipment_status('send');
-//      }
+    if($status=='payed' && 
+       $order->handling->handling_shipment=='email' && 
+       $manSend=='no'){
+      $order->set_shipment_status('send');
     }
-    
+
 		return ($sentEmail);
   }
 
@@ -402,6 +396,7 @@ class Handling Extends Model {
 
 		if (file_exists($file)){
       		if (!isset($this->_pment)){
+            require_once ($file);
         		$name = "EPH_".$this->handling_payment;
         		$this->_pment = new $name($this);
         		$this->extras = $this->_pment->extras;
@@ -523,7 +518,7 @@ class Handling Extends Model {
  	  	if(empty($data['handling_text_payment'])){addError('handling_text_payment','mandatory');}
  		  if(empty($data['handling_text_shipment'])){addError('handling_text_shipment','mandatory');}
       if($pm = $this->pment()){
-  			$pm->admin_check(&$data);
+  			$pm->admin_check($data);
   		}
     }
 		return parent::CheckValues($data);

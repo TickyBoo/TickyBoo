@@ -43,8 +43,8 @@ class Order_Smarty {
     $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
     $smarty->assign_by_ref("order",$this);
 
-    if(isset($_SESSION['_SHOP_USER_AUTH']['user_id'])) {
-      $this->user_auth_id=$_SESSION['_SHOP_USER_AUTH']['user_id'];
+    if(isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
+      $this->user_auth_id=$_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
     }
   }
 

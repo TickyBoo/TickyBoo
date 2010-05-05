@@ -15,7 +15,7 @@
  */
 function smarty_core_write_file($params, &$smarty)
 {
-    writeLog( $_dirname = dirname($params['filename']));
+    $_dirname = dirname($params['filename']);
 
     if ($params['create_dirs']) {
         $_params = array('dir' => $_dirname);
@@ -24,7 +24,7 @@ function smarty_core_write_file($params, &$smarty)
     }
 
     // write to tmp file, then rename it to avoid file locking race condition
-   writeLog( $_tmp_file = tempnam($_dirname, 'wrt'));
+    $_tmp_file = tempnam($_dirname, 'wrt');
 
     if (!($fd = @fopen($_tmp_file, 'wb'))) {
         $_tmp_file = $_dirname . DIRECTORY_SEPARATOR . uniqid('wrt');

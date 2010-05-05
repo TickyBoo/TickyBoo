@@ -52,7 +52,7 @@ class PluginsView extends AdminView{
       echo "<tr class='admin_list_row_$alt'>";
       echo "<td class='admin_list_item' width='150' >";
       if ($row->plugin_id && in_array('config',$row->plugin_actions)) {
-        echo "<a href='{$_SERVER['PHP_SELF']}?action=config&id={$row->plugin_name}'>{$row->plugin_info} {$row->plugin_myversion}</a>";
+        echo "<a href='{$_SERVER['PHP_SELF']}?action=config&plugin_name={$row->plugin_name}'>{$row->plugin_info} {$row->plugin_myversion}</a>";
       } else {
         echo "{$row->plugin_info} {$row->plugin_myversion}";
       }
@@ -74,15 +74,15 @@ class PluginsView extends AdminView{
       echo "&nbsp;</td>";
       echo "<td class='admin_list_item' width='65' align='center'>";
       if (!$row->plugin_id && in_array('install',$row->plugin_actions)) {
-        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=install&id={$row->plugin_name}","Install",1);
+        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=install&plugin_name={$row->plugin_name}","Install",1);
       } else {
         //echo version_compare($row->plugin_version, $row->plugin_myversion);
         if ($row->plugin_id && version_compare($row->plugin_version, $row->plugin_myversion)<0  && in_array('upgrade',$row->plugin_actions)) {
-          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=upgrade&id={$row->plugin_name}","Upgrade",1);
+          echo $this->show_button("{$_SERVER['PHP_SELF']}?action=upgrade&plugin_name={$row->plugin_name}","Upgrade",1);
         }
 
         if ($row->plugin_id && in_array('uninstall',$row->plugin_actions)) {
-          echo $this->show_button("javascript:if(confirm(\"".con('plugin_allow_uninstall')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=uninstall&id={$row->plugin_name}\";}","Uninstall",1,array('tooltiptext'=>"Unistall {$row->plugin_name}?"));
+          echo $this->show_button("javascript:if(confirm(\"".con('plugin_allow_uninstall')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=uninstall&plugin_name={$row->plugin_name}\";}","Uninstall",1,array('tooltiptext'=>"Unistall {$row->plugin_name}?"));
         }
       }
 
@@ -98,7 +98,7 @@ class PluginsView extends AdminView{
     if (is_null($data)) $data = (array)$plugin;
 
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n";
-    echo "<input type='hidden' name='id' value='{$data['plugin_name']}'/>\n";
+    echo "<input type='hidden' name='plugin_name' value='{$data['plugin_name']}'/>\n";
     echo "<input type='hidden' name='action' value='save'/>\n";
     echo "<input type='hidden' name='plugin_title' value='$title'/>\n";
     $this->form_head($title);
@@ -118,7 +118,7 @@ class PluginsView extends AdminView{
     $this->form_foot(2,$_SERVER['PHP_SELF']);
   }
 
-  function draw ($admintype) {
+  function draw () {
     global $_SHOP;
 
     if ($_POST['action'] == 'update') {
@@ -133,8 +133,8 @@ class PluginsView extends AdminView{
          }
        }
        $this->table();
-    } elseif ($_GET['action'] == 'install' && $_GET['id']){
-      $adm = Plugin::load($_REQUEST['id']);
+    } elseif ($_GET['action'] == 'install' && $_GET['plugin_name']){
+      $adm = Plugin::load($_REQUEST['plugin_name']);
       if ($adm &&
           in_array('install',$adm->plugin_actions) &&
           $adm->install()  &&
@@ -142,30 +142,30 @@ class PluginsView extends AdminView{
          $this->form($adm, null, con('plugin_install_title'));
       } else $this->table();
 
-    } elseif ($_GET['action'] == 'upgrade' && $_GET['id']){
-      $adm = Plugin::load($_REQUEST['id']);
+    } elseif ($_GET['action'] == 'upgrade' && $_GET['plugin_name']){
+      $adm = Plugin::load($_REQUEST['plugin_name']);
       if ($adm &&
           in_array('upgrade',$adm->plugin_actions) &&
           $adm->install()  &&
           in_array('config',$adm->plugin_actions) ) {
          $this->form($adm, null, con('plugin_upgrade_title'));
       } else $this->table();
-    } elseif ($_GET['action'] == 'config' && $_GET['id']){
-      $adm = Plugin::load($_REQUEST['id']);
+    } elseif ($_GET['action'] == 'config' && $_GET['plugin_name']){
+      $adm = Plugin::load($_REQUEST['plugin_name']);
       if ($adm &&
           in_array('config',$adm->plugin_actions) ) {
          $this->form($adm, null, con('plugin_config_title'));
       } else $this->table();
-    } elseif ($_POST['action'] == 'save' && $_POST['id']) {
-      $adm = Plugin::load($_REQUEST['id']);
+    } elseif ($_POST['action'] == 'save' && $_POST['plugin_name']) {
+      $adm = Plugin::load($_REQUEST['plugin_name']);
       if ($adm &&
           in_array('config',$adm->plugin_actions) &&
           (!$adm->fillPost() || !$adm->saveEx())) {
         $this->form($adm, $_POST, $_POST['plugin_title']);
       } else
           $this->table();
-    } elseif($_GET['action']=='uninstall' and $_GET['id']){
-      $adm = Plugin::load($_REQUEST['id']);
+    } elseif($_GET['action']=='uninstall' and $_GET['plugin_name']){
+      $adm = Plugin::load($_REQUEST['plugin_name']);
       if ($adm &&
           in_array('uninstall',$adm->plugin_actions)) {
         $adm->uninstall();

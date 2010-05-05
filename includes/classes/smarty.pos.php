@@ -39,17 +39,11 @@ class POS_Smarty {
   var $logged;
 
   function POS_Smarty ($smarty){
-    if(isset($_SESSION['_SHOP_POS_USER'])){
-      $user=$_SESSION['_SHOP_POS_USER'];
-    }else{
-       $user=POS_Smarty::_load();
-       $_SESSION['_SHOP_POS_USER']=$user;
-    }
-
     $smarty->register_object("pos",$this);
     $smarty->assign_by_ref("pos",$this);
     $this->logged=false;
 
+    $user=POS_Smarty::_load();
     if($user){
       $this->_fill($user);
       $this->logged=true;
@@ -58,28 +52,20 @@ class POS_Smarty {
 
 
   function _load (){
-    $auth=$_SESSION['_SHOP_AUTH_USER_DATA'];
-    $query="select *
-            from User
-	    where user_id="._esc($auth['user_id']) ." limit 1";
-
-    if($result=ShopDB::query($query) and $user=shopDB::fetch_assoc($result)){
-      return $user;
-    }
-    return FALSE;
+    return $_SESSION['_SHOP_AUTH_USER_DATA'];;
   }
 
   function _fill ($user){
     $this->_clean();
     foreach($user as $k=>$v){
-      $this->$k=$v;
+      if (strpos($k,'*' )===false) $this->$k=$v;
     }
   }
 
   function _clean (){
     $user=(array)$this;
     foreach($user as $k=>$v){
-      unset($this->$k);
+         unset($this->$k);
     }
   }
 
@@ -117,7 +103,7 @@ class POS_Smarty {
 
     if(ShopDB::query($query) and shopDB::affected_rows()==1){
        //print_r($_SESSION['_SHOP_USER_AUTH']);
-       $_SESSION['_SHOP_USER_AUTH']['user_prefs']=$this->user_prefs;
+       $_SESSION['_SHOP_AUTH_USER_DATA']['user_prefs']=$this->user_prefs;
        return TRUE;
     }
     return FALSE;

@@ -190,11 +190,8 @@ myExit();
     }
     $mode = (int)$_REQUEST['mode'];
     If (!$mode) $mode = 2;
-    //$pos->
-    //var_dump($_SESSION);//['_SHOP_USER_AUTH']
-    //echo $_SESSION['_SHOP_USER_AUTH']['user_prefs'];
-    $directprint = (isset($_SESSION['_SHOP_USER_AUTH']['user_prefs'])) ? ($_SESSION['_SHOP_USER_AUTH']['user_prefs']== 'pdt') : false;
-    
+    $directprint = (isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_prefs'])) ? ($_SESSION['_SHOP_AUTH_USER_DATA']['user_prefs']== 'pdt') : false;
+
     Order::printOrder($myorder->order_id, '', 'stream', $directprint, $mode );
     return;
   }

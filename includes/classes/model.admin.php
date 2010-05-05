@@ -154,7 +154,7 @@ class CustomAuthContainer extends Auth_Container {
 
     function fetchData($username, $password) {
         // Check If valid etc
-        $query = "select admin_password
+        $query = "select admin_id, admin_password
                   from Admin
                   where admin_login = "._esc($username)."
                   and   (admin_status like '{$this->admin_status}'";
@@ -167,7 +167,7 @@ class CustomAuthContainer extends Auth_Container {
             $this->activeUser = '';
             return false;
         }
-
+        $this->_auth_obj->admin_id = $res['admin_id'];
         // Perform trimming here before the hashihg
         $password = trim($password, "\r\n");
         $res['admin_password'] = trim($res['admin_password'], "\r\n");

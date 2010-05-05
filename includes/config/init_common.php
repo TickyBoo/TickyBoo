@@ -105,7 +105,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->tpl_dir=INC."template".DS;
 
   //Trace File settings
-  $_SHOP->trace_dir  = INC."temp".DS;
+
   $_SHOP->trace_name = 'trace.log';
   $_SHOP->trace_on   = 'ALL';
 
@@ -137,27 +137,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->input_time_type = 24; //12; //
   $_SHOP->input_date_type = 'dmy'; // 'mdy'
 
-  ini_set("magic_quotes_runtime", 0);
-  ini_set('allow_call_time_pass_reference', 0);
-
-	//emulates magic_quotes_gpc off
-  function stripslashes_deep($value) {
-    if(is_array($value)) {
-        foreach($value as $k => $v) {
-            $return[$k] = $this->stripslashes_deep($v);
-        }
-    } elseif(isset($value)) {
-        $return = stripslashes($value);
-    }
-    return $return;
-  }
-
-  if (get_magic_quotes_gpc()) {
-	    $_POST    = array_map('stripslashes_deep', $_POST);
-	    $_GET     = array_map('stripslashes_deep', $_GET);
-	    $_COOKIE  = array_map('stripslashes_deep', $_COOKIE);
-	    $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-	}
 
 	//accepted languages
 	$_SHOP->langs=array('en');
@@ -195,12 +174,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
   if (!defined('CURRENT_VERSION')) {
     define('CURRENT_VERSION','Unknown');
   }
-
+  include_once('classes/basics.php');
+  if (!isset($_SHOP->root))         $_SHOP->root = constructBase(false);//
+ // echo INC,'- ', CURRENT_VERSION,';', INSTALL_VERSION;
   if (CURRENT_VERSION <> INSTALL_VERSION){
     echo "<a href='{$_SHOP->root}inst/index.php'>Upgrade me now!</a>";
     exit;
   }
-  include_once('classes/basics.php');
+
 
   $_SHOP->Messages = array();
 //  var_dump($_SHOP);
@@ -213,4 +194,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->files_url=constructBase()."files/";
   $_SHOP->images_url=constructBase()."images/";
   $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
+  $_SHOP->trace_dir = $_SHOP->tmp_dir ;
+  //echo $_SHOP->tmp_dir;
 ?>

@@ -247,9 +247,8 @@ class Order Extends Model {
     } elseif(parent::save()){
 
       /*Create intial Order status */
-      if(!OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order")){
-        return false;
-      }
+      OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order");
+
       if (isset($this->discount)) {
         $this->discount->isUsed();
         $this->order_discount_promo = $this->discount->discount_promo;
@@ -404,9 +403,7 @@ class Order Extends Model {
         return self::_abort('cant_set_order_to_cancel');
       }
 
-      if(!OrderStatus::statusChange($order_id,'cancel',null,'Order::delete',$reason)){
-        return self::_abort("Failed to update order_status");
-      }
+      OrderStatus::statusChange($order_id,'cancel',null,'Order::delete',$reason);
 
       if($order_handling=Handling::load($order['order_handling_id']) and
         !$order_handling->on_order_delete($order_id)){
@@ -471,9 +468,7 @@ class Order Extends Model {
           return false;
         }
 
-        if(!OrderStatus::statusChange($order_id,false,null,'Order::delete_ticket',var_export($place,true))){
-          return self::_abort('cannot_delete_ticket_1.5');
-        }
+        OrderStatus::statusChange($order_id,false,null,'Order::delete_ticket',print_r($place,true));
         //returns cost of seats Adds up the seats with the same order id.
         $query="SELECT SUM(seat_price) AS total
                 FROM `Seat`
@@ -551,9 +546,7 @@ class Order Extends Model {
       }
 
       //Update Status to let the admin know the order has been remitted.
-      if(!OrderStatus::statusChange($order_old['order_id'],'ord',null,'Order::reserve_to_order','Order Completed Reissue')){
-        return self::_abort('order_cannot_reissue_update_status');
-      }
+      OrderStatus::statusChange($order_old['order_id'],'ord',null,'Order::reserve_to_order','Order Completed Reissue');
 
       //returns cost of seats Adds up the seats with the same order id.
       $query="SELECT SUM(seat_price) AS total FROM `Seat` WHERE seat_order_id='$order_id'";
@@ -635,9 +628,7 @@ class Order Extends Model {
       }
 
       //Update Status to let the admin know the order has been remitted.
-      if(!OrderStatus::statusChange($order['order_id'],'reissue',null,'Order::reissue','Order Reissue')){
-        return self::_abort('order_cannot_reissue_update_status_1');
-      }
+      OrderStatus::statusChange($order['order_id'],'reissue',null,'Order::reissue','Order Reissue');
 
       //Selects Seats from old order using passed order_id from 'params'
       $query="SELECT seat_id FROM `Seat` WHERE seat_order_id='$order_id' FOR UPDATE";
@@ -653,9 +644,7 @@ class Order Extends Model {
         }
       }
       //Update Status to let the admin know the order has been remitted.
-      if(!OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue')){
-        return self::_abort('order_cannot_reissue_update_status');
-      }
+      OrderStatus::statusChange($order['order_id'],$order['order_status'],null,'Order::reissue','Order Completed Reissue');
 
       $handling = Handling::load($order['order_handling_id']);
       if($handling->handling_shipment == 'email'){
@@ -770,18 +759,14 @@ class Order Extends Model {
       if($field=='order_payment_status' and  $new_status=='payed' ){ //and
         $suppl = ", order_date_expire=NULL";
       }
-      //This breaks setting anything to pending!
-      /*
       if($field=='order_payment_status' and  $new_status=='pending' and  $old_status !=='none'){ //and
         return true; // just show the m
-      }*/
+      }
 
       $query="UPDATE `Order` SET $field='$new_status' $suppl WHERE order_id='{$this->order_id}'";
       if($dont_do_update || (ShopDB::query($query))){// and shopDB::affected_rows()==1)){
 
-        if(!OrderStatus::statusChange($this->order_id,$new_status,NULL,'Order::_set_status',"Set $field to $new_status")){
-          return self::_abort('Cant update orderstatus');;
-        }
+        OrderStatus::statusChange($this->order_id,$new_status,NULL,'Order::_set_status',"Set $field to $new_status");
 
         if(!$this->handling){
           $this->handling=Handling::load($this->order_handling_id);
@@ -884,9 +869,7 @@ class Order Extends Model {
       $nRows = ShopDB::num_rows($res);
 
       $fields[' AND order_status'] = 'cancel';
-      if(!OrderStatus::massStatusChange($fields,'trash',null,'Order::purgeDeleted',"Purged order to the bin")){
-        return self::_abort("Failed to update order statuses");
-      }
+      OrderStatus::massStatusChange($fields,'trash',null,'Order::purgeDeleted',"Purged order to the bin");
 
       $query = "UPDATE `Order` SET
                   order_status='trash'
@@ -919,7 +902,7 @@ class Order Extends Model {
     $md5x = base_convert(md5($md5),16,36);
     $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($order->order_id,10,36).'_'. $md5x);
     ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36).' -> '.urlencode ($code));
-  
+
     return $item. strtr($code, '+/=', '-_~'); //  }
   }
 

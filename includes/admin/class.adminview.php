@@ -750,8 +750,8 @@ class AdminView extends AUIComponent {
             <td class='admin_value'>";
 
             if ($type == 'img') {
-           		if(file_exists(ROOT.'files'.DS.$data[$name])){
-           			list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$data[$name]);
+           		if(file_exists($_SHOP->files_dir.$data[$name])){
+           			list($width, $height, $type, $attr) = getimagesize($_SHOP->files_dir.$data[$name]);
       					if (($width>$height) and ($width > 300)) {
       						$attr = "width='300'";
       					} elseif ($height > 250) {
@@ -759,7 +759,7 @@ class AdminView extends AUIComponent {
       					}
       					echo "<img $attr src='$src'>";
            		}else{
-           			echo "<strong>".con("file_not_exsist")."</strong>";
+           			echo "<strong title='$src'>".con("file_not_exsist")."</strong>";
            		}
             } else {
                 echo "<a href='$src'>{$data[$name]}</a>";
@@ -815,47 +815,6 @@ class AdminView extends AUIComponent {
     }
 
     return $_COUNTRY_LIST[$val];
-  }
-
-  function file_post ($data, $id, $table, $name, $suffix = '_image') {
-      global $_SHOP;
-
-      $img_field = $name . $suffix;
-      if ($id) {
-        $id_field = "WHERE {$name}_id="._esc($id);
-      } else {
-        $id_field = 'Limit 1';
-      }
-
-      if ($data['remove_' . $name . $suffix]==1) {
-          $query = "UPDATE $table SET $img_field='' $id_field ";
-//            unlink( $_SHOP->files_dir . "/" .$data['remove_' . $name . $suffix]);
-
-      } else
-      if (!empty($_FILES[$img_field]) and !empty($_FILES[$img_field]['name']) and !empty($_FILES[$img_field]['tmp_name'])) {
-          if (!preg_match('/\.(\w+)$/', $_FILES[$img_field]['name'], $ext)) {
-              return false;
-          }
-
-          $ext = strtolower($ext[1]);
-          if (!in_array($ext, $_SHOP->allowed_uploads)) {
-              return false;
-          }
-
-          $doc_name = $img_field . '_' . $id . '.' . $ext;
-
-          if (!move_uploaded_file ($_FILES[$img_field]['tmp_name'], $_SHOP->files_dir . "/" . $doc_name)) {
-              return false;
-          }
-
-          chmod($_SHOP->files_dir . "/" . $doc_name, $_SHOP->file_mode);
-          $query = "UPDATE $table SET $img_field='$doc_name' $id_field";
-      }
-
-      if (!$query or ShopDB::query($query)) {
-         return true;
-      }
-      return false;
   }
 
   function user_url($data) {

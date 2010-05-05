@@ -7,7 +7,7 @@
  * @copyright 2010
  */
 class plugin extends model {
-  protected $_idName    = 'plugin_name';
+  protected $_idName    = 'plugin_id';
   protected $_tableName = 'plugins';
   protected $_columns   = array( '#plugin_id', '*plugin_name', '*plugin_version','*plugin_enabled',
                                  '*plugin_protected', 'plugin_settings', '*plugin_priority');
@@ -39,11 +39,13 @@ class plugin extends model {
       while($event_d=shopDB::fetch_assoc($res)){
         if (file_exists(INC.'plugins'.DS.'plugin.'.$event_d['plugin_name'].'.php')){
           $event = new plugin;
+          $event->plug($event_d['plugin_name']);
           $event->_fill($event_d, false);
           $event->_unser_extra();
           $events[$event_d['plugin_name']] = $event;
         }
       }
+    }
       if ($allrecord) {
         $dir = INC .'plugins';
     	  if ($handle = opendir($dir)) {
@@ -62,7 +64,6 @@ class plugin extends model {
       	}
       }
       return $events;
-    }
   }
 
 	private function plug($plugname='') {
@@ -114,6 +115,7 @@ class plugin extends model {
       }
 
     }
+    if (!is_array($_SHOP->plugins )) return $return;
     $args = func_get_args();
   	array_shift($args);
     // echo "<pre>",$eventname;
