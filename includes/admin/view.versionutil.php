@@ -36,18 +36,25 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class VersionUtilView extends AdminView{
-  
+
   private $upPath = UPDATES;
 
   private function view($data) {
     global $_SHOP;
-    $data['curr_ver'] = CURRENT_VERSION;
-
+    $data['curr_ver'] = explode(" ",INSTALL_REVISION);
+    $data['curr_ver'] = $data['curr_ver'][1];
+    $version = INSTALL_VERSION.' ('.$data['curr_ver'].')';
+    $result = $this->getLatestVersion();
  	  $this->form_head( con('version_checker'), $this->width, 2);
-    echo "<tr><td class='admin_name'>".con('avaliable_version')."</td><td class='admin_value'>".$this->getLatestVersion()."</td></tr>";
-    echo "<tr><td class='admin_name'>".con('donator_avaliable_version')."</td><td class='admin_value'>".$this->getLatestVersion(true)."</td></tr>";
-    $this->print_field('curr_ver', $data);
-    $this->print_field('curr_build',str_replace('$','',INSTALL_REVISION));
+    $this->print_field('curr_ver', $version);
+    if ($data['curr_ver'] < $result['main'][0]) {
+      $mainversion = $result['main'][1].' ('.$result['main'][0].')';
+      $this->print_field('avaliable_version', $mainversion);
+    }
+    if ($result['main'][0] <> $result['donor'][0] and $data['curr_ver'] < $result['donor'][0]) {
+      $donorversion = $result['donor'][1].' ('.$result['donor'][0].')';
+      $this->print_field('donator_avaliable_version', $donorversion);
+    }
     $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
     $this->print_field('InfoPhpVersion',  phpversion ());
     $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
@@ -110,35 +117,35 @@ class VersionUtilView extends AdminView{
     $this->view($row);
 
   }
-  
+
   private function doUpdate(){
     //Save Details
-    if($_POST['shopconfig_keepdetails']==='1' && 
-        !empty($_POST['shopconfig_ftusername']) && 
+    if($_POST['shopconfig_keepdetails']==='1' &&
+        !empty($_POST['shopconfig_ftusername']) &&
         !empty($_POST['shopconfig_ftpassword'])){
- 			
+
       $query="UPDATE `ShopConfig` SET
-              shopconfig_keepdetails='1', 
-              shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).", 
-              shopconfig_proxyport="._esc($_POST['shopconfig_proxyport']).", 
+              shopconfig_keepdetails='1',
+              shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).",
+              shopconfig_proxyport="._esc($_POST['shopconfig_proxyport']).",
               shopconfig_ftusername="._esc($_POST['shopconfig_ftusername']) ;
-        if(isset($_POST['shopconfig_ftpassword'])){ 
-          $query .= " , shopconfig_ftpassword="._esc(base64_encode($_POST['shopconfig_ftpassword'])); 
-        } 
+        if(isset($_POST['shopconfig_ftpassword'])){
+          $query .= " , shopconfig_ftpassword="._esc(base64_encode($_POST['shopconfig_ftpassword']));
+        }
         $query .= " limit 1 ";
-  
+
       if(!ShopDB::query($query)){
         addWarning('update_error');
 		  }else{
         addNotice('Options_saved');
       }
 		}elseif($_POST['shopconfig_keepdetails']==='0'){
-      $query="UPDATE `ShopConfig` SET 
-              shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).", 
-              shopconfig_proxyport="._esc($_POST['shopconfig_proxyport']).", 
-              shopconfig_ftusername='', 
-              shopconfig_ftpassword='', 
-              shopconfig_keepdetails='0' 
+      $query="UPDATE `ShopConfig` SET
+              shopconfig_proxyaddress="._esc($_POST['shopconfig_proxyaddress']).",
+              shopconfig_proxyport="._esc($_POST['shopconfig_proxyport']).",
+              shopconfig_ftusername='',
+              shopconfig_ftpassword='',
+              shopconfig_keepdetails='0'
         		  limit 1 ";
       if(!ShopDB::query($query)){
         addWarning('update_error');
@@ -148,7 +155,7 @@ class VersionUtilView extends AdminView{
 		}
     // Sure you want to download?
     if(isset($_POST['are_you_sure']) && isset($_POST['action']) ){
-      
+
       if($_POST['are_you_sure']==='1' && $_POST['action']=='reinstall'){
         $query="SELECT * FROM `ShopConfig` limit 1";
         $row=ShopDB::query_one_row($query);
@@ -161,7 +168,7 @@ class VersionUtilView extends AdminView{
           $ftu = $_POST['shopconfig_ftusername'];
           $ftp = base64_encode($_POST['shopconfig_ftpassword']);
         }
-        
+
         $this->install_update(true,$ftu,$ftp);
       }
     }
@@ -169,19 +176,7 @@ class VersionUtilView extends AdminView{
 
   private function install_update($force = false, $ftu=null, $ftp=null){
     //Get Download link
-    $dlLink = $this->getLatestVersion(false,true,$ftu,$ftp);
-    if(!$dlLink){return false;} //If download link is bad dont try to download (waste of time)
-    
-    //Download File
-    $rsc = new RestServiceClient($dlLink);
-    //Check for username/password
-    if(!empty($ftu) && !empty($ftp)){
-      $rsc->josUsername = $ftu;
-      $rsc->josPassword = $ftp;
-    }    
-    $rsc->excuteRequest();
-    $data = $rsc->getResponse();
-    
+    $data = $this->getLatestVersion(true,$ftu,$ftp);
     //Check Data.
     if(!$data){
       addWarning('file_download_failed');
@@ -197,28 +192,28 @@ class VersionUtilView extends AdminView{
     //Save File
     file_put_contents($path, $data);
     addNotice('file_saved');
-    
-    
+
+
     // If user wants to blankly overwrite there site with update.
     if(isset($_POST['are_you_sure_apply_update']) && $_POST['are_you_sure_apply_update'] === '1'){
-      
+
       //Get unzipper class
       require_once(LIBS."zip".DS."unzip.lib.php");
       $zip = new SimpleUnzip();
       $entries = $zip->ReadFile($path);
-  
+
       //Create Install directory (normaly root as your updating this install!)
       $installDir = ROOT;
       mkdir($installDir);
       addNotice('install_dir'," : ".$installDir);
-  
+
       /* */
       foreach ($entries as $entry){
         mkdir($installDir.$entry->Path);
         $entryPath = $installDir.$entry->Path .DS.$entry->Name;
-  
+
         echo $entryPath;
-  
+
         if(!empty($entry->Data)){
           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
           $fh = fopen($entryPath, 'w', false);
@@ -231,12 +226,12 @@ class VersionUtilView extends AdminView{
         }
       }
       /* */
-  
+
       unlink($path);
       addNotice("file_deleted");
     }
   }
-  
+
   private function removeFile($name){
     $name = str_replace('..','',$name); //Stops users trying to go up the tree.
     if(file_exists($this->upPath.$name)){
@@ -245,8 +240,8 @@ class VersionUtilView extends AdminView{
     }else{
       addWarning('file_not_exist');
     }
-    
+
   }
-  
+
 }
 ?>

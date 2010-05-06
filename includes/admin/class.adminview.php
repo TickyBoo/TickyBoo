@@ -842,89 +842,62 @@ class AdminView extends AUIComponent {
     return $this->jScript;
   }
 
-
   protected function hasNewVersion(){
-    require_once("classes/class.restservice.client.php");
-
-    //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
-    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
-    try{
-      $rsc->excuteRequest();
-      $array = $rsc->getArray();
-    //  print_r($array);
-      if(isset($array['versions']['version_attr']['version'])){
-        $currentVersion = $array['versions']['version_attr']['version'];
-        $currentOrder = $array['versions']['version_attr']['order'];
-      }else{
-        throw new Exception('Couldnt get version');
-      }
-    }catch(Exception $e){
+    $result = $this->getLatestVersion();
+    if(is_array($result)) {
+      if ($result['current'][0]) addNotice('new_version_available');
+      return $result['current'][1];
+    }else{
       return " - Could not check for new version.";
     }
-    $matches = explode(' ', INSTALL_REVISION);
-    $matches[1] = (int)$matches[1];
- //   var_dump($matches); echo $currentOrder;
-    if( $matches[1] > $currentOrder){
-      $string = " <span style='color:blue; '> SVN Build </span>";
-    }elseif( $matches[1] < $currentOrder){
-      $string = "<br> - <span style='color:red;'> There is a new verion Available: ".$currentVersion."! </span>";
-      addNotice('new_version_available');
-    }else{
-      //$string = " - You have the latest Version";
-    }
-
-    return $string;
   }
 
-  protected function getLatestVersion($donatorVersion=false,$dlLink=false,$ftu=null,$ftp=null){
+  protected function getLatestVersion($dlLink=false,$ftu=false,$ftp=false){
     require_once("classes/class.restservice.client.php");
-
-    //$rsc = new RestServiceClient('http://localhost/cpanel/versions/latest.xml');
-    if($dlLink){
-      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/download.xml');
-    }elseif($donatorVersion){
-      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latestdonator.xml');
-    }else{
-      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
-    }
+    $rsc = new RestServiceClient('http://cpanel.fusionticket.org/versions/latest.xml');
+    $rev = explode(" ",INSTALL_REVISION);
     try{
       if(!empty($ftu) && !empty($ftp)){
         $rsc->josUsername = $ftu;
         $rsc->josPassword = $ftp;
         //print_r(base64_decode($_SHOP->shopconfig_ftpassword));
       }
+      $rsc->ftrevision = (int)$rev[1];
+      $rsc->ftDownloadNow = ($dlLink)?'true':'false';
+
       $rsc->excuteRequest();
-      $array = $rsc->getArray();
-
-      if($dlLink){
-        $rev = explode(" ",INSTALL_REVISION);
-        if($array['versions']['version_attr']['order'] < (int)$rev[1]){
-          addWarning('download_older_than_curr');
-          return false;
-        }elseif($array['versions']['version_attr']['order'] == (int)$rev[1]){
-          addWarning('download_same_as_curr');
-          return false;
-        }elseif(isset($array['versions']['version_attr']['version']) && isset($array['versions']['version_attr']['download_link'])){
-          return $array['versions']['version_attr']['download_link'];
-        }elseif(!empty($array['versions']['version_attr']['reason'])){
-          addWarning('error',$array['versions']['version_attr']['reason']);
-          return false;
-        }else{
-          addWarning('download_link_failed');
-          return false;
+      if (!$dlLink) {
+        $array = $rsc->getArray();
+        if(!isset($array['versions']['version']['0_attr'])){
+          throw new Exception('Couldnt get version');
         }
-      }
 
-      if(isset($array['versions']['version_attr']['version'])){
-        $currentVersion = $array['versions']['version_attr']['version'];
-        $currentOrder = $array['versions']['version_attr']['order'];
-        return $currentVersion.'  <b>Build:</b> '.$currentOrder;
-      }else{
-        throw new Exception('Couldnt get version');
+        $donor_rev = $array['versions']['version']['1_attr']['order'];
+        $donor_ver = $array['versions']['version']['1_attr']['version'];
+        $result['donor'] = array($donor_rev,$donor_ver);
+
+        $main_rev  = $array['versions']['version']['0_attr']['order'];
+        $main_ver  = $array['versions']['version']['0_attr']['version'];
+        $result['main'] = array($main_rev, $main_ver);
+
+        if ( $main_rev > (int)$rev[1]){
+          $result['current'] = array(true, "<br> - <span style='color:red;'> There is a new verion Available: ".$main_ver."! </span>");
+        } elseif ( $donor_rev > (int)$rev[1]){
+          $result['current'] = array(false, "<br> - <span style='color:blue;'> There is a new <b>donor</b> verion Available: ".$main_ver."! </span>");
+        } elseif ( $main_rev == (int)$rev[1]){
+          $result['current'] = array(false, "");
+        } elseif ( $donor_rev == (int)$rev[1]){
+          $result['current'] = array(false, " <span style='color:blue;'><b>donor</b> verion. </span>");
+        } else {
+          $result['current'] = array(false, " <span style='color:blue; '> SVN Build </span>");
+        }
+        return $result;
+      } else {
+        return $rsc->getResponse();
       }
     }catch(Exception $e){
       print_r($e->getMessage());
-      return " - Could not check for new version.";
+      return false;// " - Could not check for new version.";
     }
   }
 

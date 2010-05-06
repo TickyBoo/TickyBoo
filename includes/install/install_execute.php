@@ -202,7 +202,7 @@ class install_execute {
     ksort($_SESSION['SHOP']);
     $config .= self::fillConfig($_SESSION['SHOP'],'$_SHOP->');
     $config .= "\n?>";
-    $configpath = is($configpath,ROOT."includes".DS."config".DS."init_config.php");
+    $configpath = ($configpath)?$configpath:(ROOT."includes".DS."config".DS."init_config.php");
     return file_put_contents ($configpath, $config);
   }
 
