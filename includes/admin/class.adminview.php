@@ -881,13 +881,13 @@ class AdminView extends AUIComponent {
         $result['main'] = array($main_rev, $main_ver);
 
         if ( $main_rev > (int)$rev[1]){
-          $result['current'] = array(true, "<br> - <span style='color:red;'> There is a new verion Available: ".$main_ver."! </span>");
+          $result['current'] = array(true, "<br> - <span style='color:red;'> There is a new version Available: ".$main_ver."! </span>");
         } elseif ( $donor_rev > (int)$rev[1]){
           $result['current'] = array(false, "<br> - <span style='color:blue;'> There is a new <b>donor</b> verion Available: ".$main_ver."! </span>");
         } elseif ( $main_rev == (int)$rev[1]){
           $result['current'] = array(false, "");
         } elseif ( $donor_rev == (int)$rev[1]){
-          $result['current'] = array(false, " <span style='color:blue;'><b>donor</b> verion. </span>");
+          $result['current'] = array(false, " <span style='color:blue;'><b>donor</b> version. </span>");
         } else {
           $result['current'] = array(false, " <span style='color:blue; '> SVN Build </span>");
         }
