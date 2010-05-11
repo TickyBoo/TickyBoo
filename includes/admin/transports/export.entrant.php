@@ -64,8 +64,10 @@ class export_entrant extends AdminView {
 		</table></form>";
   }
 
-  function generate_xl($res, $event){
+  function generate_xl($res, $event, $event_id){
     global $_SHOP;
+//print_r($this->query);
+
 
     $workbook = new Spreadsheet_Excel_Writer();
     // sending HTTP headers
@@ -191,7 +193,8 @@ class export_entrant extends AdminView {
       if (is($_GET['export_entrant_withseats'], false)) {
         $query="SELECT DISTINCT `seat_row_nr`, `seat_nr`, `category_numbering`
                       FROM `seat` left join `category` on `seat_category_id` = `category_id`
-                      WHERE seat_order_id = {$row['order_id']}";
+                      WHERE seat_order_id = {$row['order_id']}
+                      and   seat_event_id = ".($event_id);
         if ($res_seat=ShopDB::query($query)){
           while($seat=shopDB::fetch_assoc($res_seat)){
       //      $seats .= "|{$seat['category_numbering']}";
@@ -237,14 +240,14 @@ class export_entrant extends AdminView {
                               User.user_firstname, User.user_lastname, User.user_city, count(Seat.seat_order_id) AS seat_count, sum(seat_price) as seat_totall_price
               FROM  Seat left JOIN `Order` ON (`Order`.order_id = Seat.seat_order_id)
                          left JOIN User ON (`Order`.order_user_id = User.user_id)
-              WHERE `Order`.order_status = 'ord' and seat_event_id=$event_id
+              WHERE `Order`.order_status = 'ord' and seat_event_id={$event_id}
               GROUP BY `Order`.order_id, `Order`.order_tickets_nr, `Order`.order_total_price, `Order`.order_shipment_status, `Order`.order_payment_status, `Order`.order_status,
                        `Order`.order_fee, User.user_firstname, User.user_lastname, User.user_city
               ORDER BY User.user_firstname, User.user_lastname";
       if(!$res=ShopDB::query($this->query)){
         return 0;
       }
-    $this->generate_xl($res, (int)$_GET['export_entrant_event']);
+    $this->generate_xl($res, (int)$_GET['export_entrant_event'],$event_id);
     return TRUE;
     }
   }

@@ -241,7 +241,7 @@ define("split_pm","Split Seat Chart");
 define("Status_is_pub","This Event is Published!");
 define("stop_success","Successfully Stopped!");
 define("system_halted","<b>SYSTEM IS HALTED!<b>");
-define('This_page_is_not_secure','This page is not Secure!');
+define('This_page_is_not_secure','Atention: Your Registration and Order Details are not encrypted however payments using Paypal will use secure pages (SSL).');
 define("ticket_deleted","Ticket Deleted!");
 define("ticket_not_found","Ticket Not Found in Database!");
 define("tickets_printing","Tickets are Printing. Please Wait!");
@@ -1398,4 +1398,5 @@ define('publish7','publish7');
 ?>
 <?php
 define('pub__failure','pub__failure');
+define('export_entrant_withseats','Export with seatsnumbers');
 ?>
