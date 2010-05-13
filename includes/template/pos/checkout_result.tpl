@@ -74,13 +74,18 @@
     {if $pm_return.approved}
       <tr>
         <td>
-          <a href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=2' target='_blank'>{!printinvoice!}</a>
+          <div>
+            <a href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=2' target='_blank'>{!printinvoice!}</a>
+          </div>
         </td>
         <td align='right'>&nbsp;
-          {if $shop_order.handling->handling_shipment eq "sp"}
-            <a id='printticket' href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=1' style='display:none;' target='_blank'>{!printtickets!}</a>
+          {if $shop_order.handling->handling_shipment eq "sp" or $pos}
             <div id="waiting">
-              <img src="{$_SHOP_themeimages}LoadingImageSmall.gif" width="16" height="16" alt="Waiting for payment, please wait" />
+              <p style="float:left; display:inline; margin:0;">Waiting for payment..</p>
+              <img style="float:right; display:inline;" src="{$_SHOP_themeimages}LoadingImageSmall.gif" width="16" height="16" alt="Waiting for payment, please wait" />
+            </div>
+            <div id='printticket' style='display:none;'>
+              <a href='checkout.php?action=print&{$order->EncodeSecureCode($order_id)}&mode=1' target='_blank'>{!printtickets!}</a>
             </div>
           {/if}
         </td>
@@ -110,7 +115,7 @@
       });
     {/literal}
   {/if}
-  {if $shop_order.handling->handling_shipment eq "sp"}
+  {if $shop_order.handling->handling_shipment eq "sp" or $pos}
     {literal}
 
       //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.

@@ -43,7 +43,7 @@
         <td width='50%' valign='top'>
           <table width='99%' border='0'>
             <tr>
-              <td class='title' colspan=1 >
+              <td class='title' colspan='1' >
                 {!order_id!} {$shop_order.order_id}
               </td>
               <td class='title'  align='right'>&nbsp;
@@ -189,6 +189,16 @@
                 {/literal}
                 {include file='checkout_payment.tpl' order_id=$shop_order.order_id}
                 </span>
+              </td>
+            </tr>
+            <tr>
+              <th>{!manual_payment!}</th>
+              <td>
+                <form name='manualpayment' action='view.php' method='post'>
+                  <input type="hidden" name="action" value="setpaid" />
+      						<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
+                  <input type="submit" value="{!change_order_to_payed!}" />
+                </form>
               </td>
             </tr>
             {/if}
