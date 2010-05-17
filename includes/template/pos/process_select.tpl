@@ -32,8 +32,8 @@
  * clear to you.
  *}
 {include file="header.tpl"}
-<br>
-{capture assign="tabview"}{!pos_reservedlist!}|{!pos_unpaidlist!}|{!pos_unsentlist!}|{!pos_currenttickets!}{/capture}
+<br />
+{capture assign="tabview"}{!pos_reservedlist!}|{!pos_unpaidlist!}|{!pos_unsentlist!}|{!pos_yourtickets!}|{!pos_alltickets!}{/capture}
 {gui->Tabbar menu=$tabview}
 
 {if $TabBarid == 0} {* eq "reserved" *}
@@ -89,6 +89,7 @@
   {else}
     {include file="process_list.tpl" not_status="send" status="payed" hand_shipment='post,sp'}
   {/if}
+  
 {elseif $TabBarid == 3} {*  eq "pos owned orders" *}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq "update_note"}
@@ -101,5 +102,19 @@
   {else}
     {include file="process_list.tpl" place='pos'}
   {/if}
+  
+{elseif $TabBarid == 4} {*  eq "all paid orders" *}
+  {if $smarty.request.order_id}
+    {if $smarty.post.action eq "update_note"}
+      {order->save_order_note order_id=$smarty.post.order_id note=$smarty.post.note}
+      <div class='success' style="text-align:center;">
+        {$order_note}
+      </div>
+    {/if}
+    {include file="process_view.tpl" status="payed,send"}
+  {else}
+    {include file="process_list.tpl" status="payed,send"}
+  {/if}
+
 {/if}
 {include file="footer.tpl"}

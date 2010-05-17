@@ -197,7 +197,7 @@
                 <form name='manualpayment' action='view.php' method='post'>
                   <input type="hidden" name="action" value="setpaid" />
       						<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
-                  <input type="submit" value="{!change_order_to_payed!}" />
+                  <input type="submit" value="{!change_order_to_payed!}" onclick="if(alert()){return true}else{return false}" />
                 </form>
               </td>
             </tr>

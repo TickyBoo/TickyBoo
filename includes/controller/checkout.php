@@ -48,7 +48,8 @@ GLOBAL $_SHOP;
 //print_r($_SERVER);
 //echo strtoupper(substr($_SHOP->root_secured, 0, 8)), '<br>';
 if ($_SHOP->secure_site) {
-  $url = $_SHOP->root_secured.basename($_SERVER['REQUEST_URI']);
+  $request_uri = str_replace('&amp;', '&',basename($_SERVER['REQUEST_URI']));
+  $url = $_SHOP->root_secured.$request_uri;
   if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
     header("Location: $url");
 //   echo "<script>window.location.href='$url';</script>";

@@ -182,32 +182,43 @@ class Order_Smarty {
   function order_list ($params, $content, $smarty,&$repeat){
 
     if ($repeat) {
-      $from='FROM `Order`';
+      $from= " FROM `Order` ";
+      $where = " WHERE 1=1 ";
 
       if($params['user_id']){
         $user_id=$this->secure_url_param($params['user_id']);
-        $where="where order_user_id='{$user_id}' AND Order.order_status!='trash'";
+        $where .= " AND order_user_id='{$user_id}' AND Order.order_status!='trash' ";
   /*    }else if($this->user_auth_id){
            $where="where order_user_id='{$this->user_auth_id}' AND Order.order_status!='trash'";
   */
       }else{
-        if($params['status']) {
-          $status=$this->secure_url_param(false,$params['status']);
-          if($params['status']=="payed"){
-            $where .="WHERE order_status NOT IN ('trash','cancel') AND Order.order_payment_status='{$params['status']}'";
-          }elseif($params['status']=="send"){
-            $where .="WHERE order_status NOT IN ('trash','cancel') AND Order.order_shipment_status='{$params['status']}'";
-          }else{
-            $where .="WHERE Order.order_status='{$params['status']}'";
+        
+        if($params['status']){
+          $status=$params['status'];
+      		$types=explode(",",$status);
+          
+      		foreach($types as $type){
+            if($type=="payed"){
+              $where .=" AND Order.order_payment_status='{$type}'";
+            }elseif($type=="send"){
+              $where .=" AND Order.order_shipment_status='{$type}'";
+            }elseif($in){$in .= ",'".$type."'";
+      			}else{$in = "'".$type."'";}
+      		}
+          if($in){
+      		  $where .= " AND Order.order_status IN ({$in})";
           }
+          unset($in);
+
         }else{
-          $where="WHERE 1 AND Order.order_status!='trash'";
+          $where .= " AND Order.order_status!='trash' ";
         }
       }
 
       if($params['handling'] || $params['not_hand_payment'] || $params['not_hand_shipment'] || $params['hand_shipment'] || $params['hand_payment']){
       	$from.=',Handling ';
       	$where.=' AND handling_id = order_handling_id';
+        
       	if($params['not_hand_payment']){
       		$types=explode(",",$params['not_hand_payment']);
       		foreach($types as $type){
@@ -217,6 +228,7 @@ class Order_Smarty {
       		$where.=" AND handling_payment NOT IN ({$in})";
       	}
       	unset($in);
+        
       	if($params['not_hand_shipment']){
       		$types=explode(",",$params['not_hand_shipment']);
       		foreach($types as $type){
@@ -226,6 +238,7 @@ class Order_Smarty {
   			$where.=" AND handling_shipment NOT IN ({$in})";
       	}
       	unset($in);
+        
       	if($params['hand_shipment']){
       		$types=explode(",",$params['hand_shipment']);
       		foreach($types as $type){
@@ -235,6 +248,7 @@ class Order_Smarty {
       		$where.=" AND handling_shipment IN ({$in})";
       	}
       	unset($in);
+        
       	if($params['hand_payment']){
       		$types=explode(",",$params['hand_payment']);
       		foreach($types as $type){
