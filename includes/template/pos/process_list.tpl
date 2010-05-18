@@ -91,7 +91,7 @@
           <td>{!actions!}</td>
         </tr>
 
-        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to}
+        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to order=$orderby}
           {counter print=false assign=count}
           {if $count lt ($length+1)}
 

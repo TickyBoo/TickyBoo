@@ -111,9 +111,9 @@
         {$order_note}
       </div>
     {/if}
-    {include file="process_view.tpl" status="payed,send"}
+    {include file="process_view.tpl" status="payed,send" orderby="order_date DESC" cur_order_dir="DESC"}
   {else}
-    {include file="process_list.tpl" status="payed,send"}
+    {include file="process_list.tpl" status="payed,send" orderby="order_date DESC"}
   {/if}
 
 {/if}

@@ -171,19 +171,20 @@ class Order_Smarty {
    * @param mixed $smarty
    * @param mixed $repeat
    * #Passable Params:
-   * 	status =
+   * 	status = "ord,send"
    * 	user = id
-   * 	place =
+   * 	place = 
    * 	not_sent = bool
-   * 	not_status = status
-   * 	order = comma delimied order by
+   * 	not_status = "payed,send"
+   * 	order = "order_date DESC,order_time DESC"
    * 	order_id = id
+   *  curr_order_id = "curr_id [DESC|ASC]" Subject to change..
    */
   function order_list ($params, $content, $smarty,&$repeat){
 
     if ($repeat) {
       $from= " FROM `Order` ";
-      $where = " WHERE 1=1 ";
+      $where = " WHERE 1=1 AND Order.order_status!='trash'";
 
       if($params['user_id']){
         $user_id=$this->secure_url_param($params['user_id']);
@@ -192,7 +193,7 @@ class Order_Smarty {
            $where="where order_user_id='{$this->user_auth_id}' AND Order.order_status!='trash'";
   */
       }else{
-        
+        /* Filter Status */
         if($params['status']){
           $status=$params['status'];
       		$types=explode(",",$status);
@@ -209,16 +210,34 @@ class Order_Smarty {
       		  $where .= " AND Order.order_status IN ({$in})";
           }
           unset($in);
-
-        }else{
-          $where .= " AND Order.order_status!='trash' ";
         }
       }
-
+      
+      /* Not these status's */
+      if($params['not_status']){
+        $notStatus=$params['not_status'];
+    		$types=explode(",",$notStatus);
+        
+    		foreach($types as $type){
+          if($type=="payed" && $params['status']!="payed" ){
+            $where .=" AND Order.order_payment_status <> "._esc($type);
+          }elseif($type=="send" && $params['status']!="send"){
+            $where .=" AND Order.order_shipment_status <> "._esc($type);
+          }elseif($in){$in .= ","._esc($type);
+    			}else{$in = _esc($type);}
+    		}
+        if($in){
+    		  $where .= " AND Order.order_status NOT IN ({$in})";
+        }
+        unset($in);
+      }
+      
+      /* Filter Handling */
       if($params['handling'] || $params['not_hand_payment'] || $params['not_hand_shipment'] || $params['hand_shipment'] || $params['hand_payment']){
       	$from.=',Handling ';
       	$where.=' AND handling_id = order_handling_id';
         
+        //Not these payment types
       	if($params['not_hand_payment']){
       		$types=explode(",",$params['not_hand_payment']);
       		foreach($types as $type){
@@ -229,6 +248,7 @@ class Order_Smarty {
       	}
       	unset($in);
         
+        //Not these shipping types
       	if($params['not_hand_shipment']){
       		$types=explode(",",$params['not_hand_shipment']);
       		foreach($types as $type){
@@ -239,6 +259,7 @@ class Order_Smarty {
       	}
       	unset($in);
         
+        //These shipping types
       	if($params['hand_shipment']){
       		$types=explode(",",$params['hand_shipment']);
       		foreach($types as $type){
@@ -249,6 +270,7 @@ class Order_Smarty {
       	}
       	unset($in);
         
+        //These payment types
       	if($params['hand_payment']){
       		$types=explode(",",$params['hand_payment']);
       		foreach($types as $type){
@@ -258,43 +280,19 @@ class Order_Smarty {
       		$where.=" AND handling_payment IN ({$in})";
       	}
       }
+      
+      //Grab user details too
       if($params['user']){
         $from.=',User';
         $where.=' and order_user_id=user_id';
       }
+      //Order Location
       if($params['place']) {
         $where .=" and order_place='{$params['place']}'";
       }
-
+      /*DEPRICATED USE NOT_STATUS NOW */
       if($params['not_sent']){
         $where .=" AND order_shipment_status != 'send' ";
-      }
-
-      if($params['not_status']){
-        $types=explode(",",$params['not_status']);
-        if(count($types) <= 1){
-          if($params['not_status']=="payed" and $params['status']!="payed"){
-            $where .=" AND order_payment_status!='{$params['not_status']}' ";
-          }elseif($params['not_status']=="send" and $params['status']!="send"){
-            $where .=" AND order_shipment_status!='{$params['not_status']}' ";
-          }else{
-            $where .="AND order_status!='{$params['not_status']}' ";
-          }
-        }else{
-          $first=true;
-          foreach($types as $type){
-            $type=_esc($type);
-            if($first){
-              $notIn .= $type;
-              $first = false;
-            }else{
-              $notIn .= ",".$type;
-            }
-          }
-          $where .= " AND order_status NOT IN ( {$notIn} )";
-        }
-
-
       }
 
       if($params['order']){
@@ -306,8 +304,14 @@ class Order_Smarty {
           $where .= " and order_id='{$order_id}'";
       }
       if($params['curr_order_id']){
-          $curr_order_id=$this->secure_url_param($params['curr_order_id']);
-          $where .= " and order_id>'{$curr_order_id}'";
+          $direction = explode(" ",$params['curr_order_id']);
+          $curr_order_id=$this->secure_url_param($direction[0]);
+          if(strcasecmp(is($direction[1],''),'DESC')===0){
+            $where .= " AND order_id < '{$curr_order_id}' ";
+          }else{
+            $where .= " AND order_id > '{$curr_order_id}' ";
+          }
+          
       }
       if($params['order_by_date']){
         $order_by .= " ORDER BY order_date {$params['order_by_date']}";
