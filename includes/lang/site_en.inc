@@ -61,6 +61,8 @@ define("remove","Remove");
 define("res","Reset");
 define("reserve","Reserve");
 define("save","Save");
+define("save_payment","Save &amp; Email payment note");
+define("save_payment","Save &amp; Email Shipping Note");
 define("search","Search");
 define("show_seats","Seating Chart");
 define("submit","Submit");
@@ -613,6 +615,19 @@ define("order_event_list_title","Orders by Event");
   define("order_statuslog",'Order status log');
   define("order_note",'Dont forget to save the note.');
   define("order_note_title","Note");
+  define("order_add_note","Add Note");
+    define("on_type","Note Type");
+      define("on_type_note","Generic Note");
+      define("on_type_admin","Admin Note");
+      define("on_type_action","Action/ToDo");
+      define("on_type_payment","Payment Details Note");
+      define("on_type_ship","Shipping Details Note");
+        define("note","Note");
+        define("admin","Admin");
+        define("ship","Shipping");
+    define("on_private","Personal Note (You can see only)");
+    define("on_subject","Note Subject");
+    define("on_note","Note Details");
 
 
 	//Action icons

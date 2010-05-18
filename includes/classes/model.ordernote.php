@@ -33,16 +33,24 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-class EmailLog Extends Model {
+class OrderNote Extends Model {
+  
+  const TYPE_NOTE = "note";
+  const TYPE_CUST = "cust";
+  const TYPE_ADMIN = "admin";
+  const TYPE_RESERVE = "reserved";
+  const TYPE_PAYMENT = "payment";
+  const TYPE_SHIP = "ship";
+  const PRIVATE_ADMINS = 1;
+  const PRIVATE_PUBLIC = 0;
 
-  protected $_idName    = 'el_id';
-  protected $_tableName = 'email_log';
-  protected $_columns   = array('#el_id', '#el_order_id', '#el_user_id', 'el_failed',
-                                'el_received', 'el_timestamp', '*el_action',
-                                'el_email_uid', 'el_email_to', 'el_email_cc',
-                                'el_email_message', 'el_log');
+  protected $_idName    = 'on_id';
+  protected $_tableName = 'order_note';
+  protected $_columns   = array('#on_id', '*on_order_id', '#on_user_id', '#on_admin_id',
+                                'on_timestamp', 'on_private', 'on_type',
+                                'on_subject','*on_note');
 
-
+  /*
   public function __construct($data, $message) {
     parent::__construct();
     $this->el_order_id = is($data['order_id']);
@@ -54,6 +62,21 @@ class EmailLog Extends Model {
     $this->el_email_message = is($message->toString());
     $this->el_bad_emails = '';
     $this->el_failed = 'unknown';
+  }
+  */
+  
+  
+  public function addNote($data){
+    parent::CheckValues($data);
+  }
+  
+  public function save(){
+    parent::save();
+  }
+  
+  public function fillRequest($noCheck = false){
+    $this->on_admin_id = is($_SESSION['_SHOP_AUTH_USER_DATA']['admin_id']);
+    return parent::fillRequest($noCheck);
   }
 }
 ?>

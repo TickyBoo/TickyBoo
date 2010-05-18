@@ -272,7 +272,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   function logincallback ($username, $auth){
     if($res=Admins::load($auth->admin_id) ){
-      $res = $res->user;
+      $res = empt($res->user,$res); 
       unset($res->admin_password);
     //  unset($res->_columns);
       $_SESSION['_SHOP_AUTH_USER_DATA']= (array)$res;

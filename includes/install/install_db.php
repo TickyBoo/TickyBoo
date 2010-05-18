@@ -375,10 +375,12 @@ $tbls['order_status']['remove'] = array ('id','order_id','changed','status_from'
 $tbls['order_note']['fields'] =array(
   'on_id' => " int(11) NOT NULL AUTO_INCREMENT",
   'on_order_id' => " int(11) NOT NULL DEFAULT '0'",
-  'on_user_id' => " int(11) NOT NULL DEFAULT '0'",
-  'on_admin_id' => " int(11) NOT NULL DEFAULT '0'",
+  'on_user_id' => " int(11) DEFAULT NULL",
+  'on_admin_id' => " int(11) DEFAULT NULL",
+  'on_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'on_private' => " tinyint(1) NOT NULL DEFAULT '0'",
   'on_type' => " varchar(20) NOT NULL DEFAULT 'note'",
+  'on_subject' => " varchar(200) NOT NULL DEFAULT ''",
   'on_note' => " text"
 );
 $tbls['order_note']['key'] = array(
