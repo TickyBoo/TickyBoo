@@ -62,7 +62,7 @@ define("res","Reset");
 define("reserve","Reserve");
 define("save","Save");
 define("save_payment","Save &amp; Email payment note");
-define("save_payment","Save &amp; Email Shipping Note");
+define("save_ship","Save &amp; Email shipping note");
 define("search","Search");
 define("show_seats","Seating Chart");
 define("submit","Submit");
