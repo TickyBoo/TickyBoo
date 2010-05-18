@@ -372,6 +372,22 @@ $tbls['order_status']['key'] = array(
 $tbls['order_status']['engine'] = 'InnoDB';
 $tbls['order_status']['remove'] = array ('id','order_id','changed','status_from','status_to','changed_by','action','description');
 
+$tbls['order_note']['fields'] =array(
+  'on_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'on_order_id' => " int(11) NOT NULL DEFAULT '0'",
+  'on_user_id' => " int(11) NOT NULL DEFAULT '0'",
+  'on_admin_id' => " int(11) NOT NULL DEFAULT '0'",
+  'on_private' => " tinyint(1) NOT NULL DEFAULT '0'",
+  'on_type' => " varchar(20) NOT NULL DEFAULT 'note'",
+  'on_note' => " text"
+);
+$tbls['order_note']['key'] = array(
+  "PRIMARY KEY (`on_id`)",
+  "KEY `on_order_id` (`on_order_id`)"
+);
+$tbls['order_note']['engine'] = 'InnoDB';
+$tbls['order_note']['remove'] = array();
+
 $tbls['Organizer']['fields'] = array(
   'organizer_name' => " varchar(100) NOT NULL DEFAULT ''" ,
   'organizer_address' => " varchar(100) NOT NULL DEFAULT ''" ,
