@@ -37,6 +37,7 @@ class OrderNote Extends Model {
   
   const TYPE_NOTE = "note";
   const TYPE_CUST = "cust";
+  const TYPE_TODO = "todo";
   const TYPE_ADMIN = "admin";
   const TYPE_RESERVE = "reserved";
   const TYPE_PAYMENT = "payment";
@@ -44,11 +45,11 @@ class OrderNote Extends Model {
   const PRIVATE_ADMINS = 1;
   const PRIVATE_PUBLIC = 0;
 
-  protected $_idName    = 'on_id';
+  protected $_idName    = 'onote_id';
   protected $_tableName = 'order_note';
-  protected $_columns   = array('#on_id', '*on_order_id', '#on_user_id', '#on_admin_id',
-                                'on_timestamp', 'on_private', 'on_type',
-                                'on_subject','*on_note');
+  protected $_columns   = array('#onote_id', '*onote_order_id', '#onote_user_id', '#onote_admin_id',
+                                'onote_timestamp', 'onote_private', 'onote_type',
+                                'onote_subject','*onote_note');
 
   /*
   public function __construct($data, $message) {
@@ -75,7 +76,7 @@ class OrderNote Extends Model {
   }
   
   public function fillRequest($noCheck = false){
-    $this->on_admin_id = is($_SESSION['_SHOP_AUTH_USER_DATA']['admin_id']);
+    $this->onote_admin_id = is($_SESSION['_SHOP_AUTH_USER_DATA']['admin_id']);
     return parent::fillRequest($noCheck);
   }
 }

@@ -404,12 +404,13 @@ class OrderView extends AdminView{
          $alt=($alt+1)%2;//
       }
       echo "</table>\n";
+      
     } else { //Note Tab
     
       $query="SELECT *
               FROM `order_note` 
-              WHERE on_order_id="._esc($order_id)."
-              ORDER BY on_timestamp DESC " ;
+              WHERE onote_order_id="._esc($order_id)."
+              ORDER BY onote_timestamp DESC ";
       if(!$res=ShopDB::query($query)){
         return addWarning('order_not_found');
       }
@@ -417,42 +418,43 @@ class OrderView extends AdminView{
       echo "<tr><td class='admin_list_title' colspan='2'>".con('order_note_title')."</td></tr>";
       
       $alt=0;
-      while($on=ShopDB::fetch_assoc($res)){
+      while($onote=ShopDB::fetch_assoc($res)){
         echo "<tr class='admin_list_row_$alt'>
-         	      <td class='admin_list_item' width='120'>".formatTime($on["on_timestamp"])."</td>
-         	      <td class='admin_list_title' >".$on["on_subject"]."</td>
+         	      <td class='admin_list_item' width='120'>".formatTime($onote["onote_timestamp"])."</td>
+         	      <td class='admin_list_title' >".$onote["onote_subject"]."</td>
        	      <tr>\n";
         echo "<tr class='admin_list_row_$alt'>
-                <td class='admin_list_item' width='120'>".con('on_type').": ".con($on["on_type"])."</td>
-                <td class='admin_value' ><div style='overflow:hidden;'>".nl2br($on["on_note"])."</div></td>
+                <td class='admin_list_item' width='120'>".con('on_type').": ".con($onote["onote_type"])."</td>
+                <td class='admin_value' ><div style='overflow:hidden;'>".nl2br($onote["onote_note"])."</div></td>
               <tr>\n";
         echo "<tr class='admin_list_row_$alt'>
-                <td class='admin_value' colspan='2'>".con('on_private').": ".con($on["on_private"])."</td>
+                <td class='admin_value' colspan='2'>".con('on_private').": ".con($onote["onote_private"])."</td>
               <tr>\n";
          $alt=($alt+1)%2;//
       }
       echo "</table>\n";
       
       echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=addnote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
-      $this->print_hidden('on_order_id',array('on_order_id'=>$order_id));
+      $this->print_hidden('onote_order_id',array('onote_order_id'=>$order_id));
       $this->form_head(con('order_add_note'));     
-      $this->print_select_assoc('on_type',$new,$err,array(
+      $this->print_select_assoc('onote_type',$new,$err,array(
           OrderNote::TYPE_NOTE=>"on_type_note",
           OrderNote::TYPE_ADMIN=>"on_type_admin",
           OrderNote::TYPE_PAYMENT=>"on_type_payment",
-          OrderNote::TYPE_SHIP=>"on_type_ship"
+          OrderNote::TYPE_SHIP=>"on_type_ship",
+          OrderNote::TYPE_TODO=>"on_type_todo"
           ));
-      $this->print_checkbox('on_private',$new,$err);
-      $this->print_input('on_subject',$new,$err,40);
-      $this->print_large_area('on_note',$new,$err,8);
+      $this->print_checkbox('onote_private',$new,$err);
+      $this->print_input('onote_subject',$new,$err,40);
+      $this->print_large_area('onote_note',$new,$err,8);
       echo "<tr id=\"on_save_email_ship\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
-        .$this->Show_button('submit','save_ship',3)."<input type='hidden' id='on_ship_note' name='on_ship_note' value='0' /></td></tr>";
+        .$this->Show_button('submit','save_ship',3)."<input type='hidden' id='on_ship_note' name='onote_ship_note' value='0' /></td></tr>";
       echo "<tr id=\"on_save_email_payment\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
-        .$this->Show_button('submit','save_payment',3)."<input type='hidden' id='on_payment_note' name='on_payment_note' value='0' /></td></tr>";
+        .$this->Show_button('submit','save_payment',3)."<input type='hidden' id='on_payment_note' name='onote_payment_note' value='0' /></td></tr>";
       $this->form_foot();
       
       $script = "
-      $('#on_type-select').change(function(){
+      $('#onote_type-select').change(function(){
         if($(this).val() == '".OrderNote::TYPE_SHIP."'){
           $('#on_save_email_ship').show(); 
           $('#on_ship_note').val('1'); 

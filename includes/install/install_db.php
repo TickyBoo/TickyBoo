@@ -373,19 +373,21 @@ $tbls['order_status']['engine'] = 'InnoDB';
 $tbls['order_status']['remove'] = array ('id','order_id','changed','status_from','status_to','changed_by','action','description');
 
 $tbls['order_note']['fields'] =array(
-  'on_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'on_order_id' => " int(11) NOT NULL DEFAULT '0'",
-  'on_user_id' => " int(11) DEFAULT NULL",
-  'on_admin_id' => " int(11) DEFAULT NULL",
-  'on_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
-  'on_private' => " tinyint(1) NOT NULL DEFAULT '0'",
-  'on_type' => " varchar(20) NOT NULL DEFAULT 'note'",
-  'on_subject' => " varchar(200) NOT NULL DEFAULT ''",
-  'on_note' => " text"
+  'onote_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'onote_order_id' => " int(11) NOT NULL DEFAULT '0'",
+  'onote_user_id' => " int(11) DEFAULT NULL",
+  'onote_admin_id' => " int(11) DEFAULT NULL",
+  'onote_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
+  'onote_private' => " tinyint(1) NOT NULL DEFAULT '0'",
+  'onote_type' => " varchar(20) NOT NULL DEFAULT 'note'",
+  'onote_subject' => " varchar(200) NOT NULL DEFAULT ''",
+  'onote_note' => " text",
+  'onote_todo' => " tinyint(1) NOT NULL DEFAULT '0'",
+  'onote_todo_timestamp' => " timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"
 );
 $tbls['order_note']['key'] = array(
-  "PRIMARY KEY (`on_id`)",
-  "KEY `on_order_id` (`on_order_id`)"
+  "PRIMARY KEY (`onote_id`)",
+  "KEY `on_order_id` (`onote_order_id`)"
 );
 $tbls['order_note']['engine'] = 'InnoDB';
 $tbls['order_note']['remove'] = array();
