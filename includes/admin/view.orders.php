@@ -447,29 +447,29 @@ class OrderView extends AdminView{
       $this->print_checkbox('onote_private',$new,$err);
       $this->print_input('onote_subject',$new,$err,40);
       $this->print_large_area('onote_note',$new,$err,8);
-      echo "<tr id=\"on_save_email_ship\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
-        .$this->Show_button('submit','save_ship',3)."<input type='hidden' id='on_ship_note' name='onote_ship_note' value='0' /></td></tr>";
-      echo "<tr id=\"on_save_email_payment\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
-        .$this->Show_button('submit','save_payment',3)."<input type='hidden' id='on_payment_note' name='onote_payment_note' value='0' /></td></tr>";
+      echo "<tr id=\"on_save_email_ship\" style=\"display:none;\"><td class='' style='text-align:center;'>"
+        .$this->Show_button('submit','save_ship',3)."</td><td><label for='onote_set_sent'>".con("onote_set_sent")."</label><input type='checkbox' id='onote_set_sent' name='onote_set_sent' value='1' /></td></tr>";
+      echo "<tr id=\"on_save_email_payment\" style=\"display:none;\"><td class='' style='text-align:center;'>"
+        .$this->Show_button('submit','save_payment',3)."</td><td><label for='onote_set_payed'>".con("onote_set_payed")."</label><input type='checkbox' id='onote_set_payed' name='onote_set_payed' value='1' /></td></tr>";
+      echo "<tr id=\"on_save_email_note\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
+        .$this->Show_button('submit','save_note',3)."</td></tr>";
       $this->form_foot();
       
       $script = "
       $('#onote_type-select').change(function(){
         if($(this).val() == '".OrderNote::TYPE_SHIP."'){
-          $('#on_save_email_ship').show(); 
-          $('#on_ship_note').val('1'); 
-          $('#on_save_email_payment').hide(); 
-          $('#on_payment_note').val('0');
+          $('#on_save_email_ship').show(); $('#on_save_email_note').hide();
+          $('#on_save_email_payment').hide(); $('#onote_set_payed').attr('checked',false);
         }else if($(this).val() == '".OrderNote::TYPE_PAYMENT."'){
-          $('#on_save_email_ship').hide(); 
-          $('#on_ship_note').val('0'); 
-          $('#on_save_email_payment').show(); 
-          $('#on_payment_note').val('1');
+          $('#on_save_email_ship').hide(); $('#on_save_email_note').hide();
+          $('#onote_set_sent').attr('checked',false); $('#on_save_email_payment').show();
+        }else if($(this).val() == '".OrderNote::TYPE_NOTE."'){
+          $('#on_ship_note').attr('checked',false); $('#on_payment_note').attr('checked',false); 
+          $('#on_save_email_ship').hide(); $('#on_save_email_payment').hide(); 
+          $('#on_save_email_note').show(); 
         }else{
-          $('#on_save_email_ship').hide();
-          $('#on_save_email_payment').hide();  
-          $('#on_ship_note').val('0'); 
-          $('#on_payment_note').val('0');
+          $('#on_save_email_ship').hide(); $('#on_save_email_payment').hide(); $('#on_save_email_note').hide();  
+          $('#on_ship_note').attr('checked',false); $('#on_payment_note').attr('checked',false);
         }
       }).change();";
       $this->addJQuery($script);
@@ -528,13 +528,14 @@ class OrderView extends AdminView{
       return $this->view($_REQUEST["order_id"]);
       
     }elseif($_GET['action']=='addnote') {
+      print_r($_REQUEST);
+      if(is($_REQUEST['save_payment'])){
+        //send email
+      }
       $orderNote = new OrderNote();
       if (!$orderNote->fillRequest() || !$orderNote->saveEx()) {
-				$this->view($_REQUEST["order_id"]);
-        return;
+        return $this->view($_REQUEST["order_id"]);
 			}
-      order::save_order_note($_REQUEST["order_id"],$_REQUEST["order_note"]);
-      return $this->view($_REQUEST["order_id"]);
 
     } elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
       return $this->view($_REQUEST["order_id"]);

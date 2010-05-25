@@ -63,6 +63,7 @@ define("reserve","Reserve");
 define("save","Save");
 define("save_payment","Save &amp; Email payment note");
 define("save_ship","Save &amp; Email shipping note");
+define("save_note","Save &amp; Email a note");
 define("search","Search");
 define("show_seats","Seating Chart");
 define("submit","Submit");
@@ -98,6 +99,9 @@ define('set_status_shipment_send','Set to Sent');
 define('set_status_shipment_none','Set to Not Sent');
 define('set_status_payment_payed','Set to Paid');
 define('set_status_payment_none','Set to Not Paid');
+define("save_payment_tooltip","Save &amp; Email the above note to the customer.");
+define("save_ship_tooltip","Save &amp; Email shipping note");
+define("save_note_tooltip","Save &amp; Email a note");
 define('delete_ticket','Delete Ticket');
 
 
@@ -616,18 +620,21 @@ define("order_event_list_title","Orders by Event");
   define("order_note",'Dont forget to save the note.');
   define("order_note_title","Note");
   define("order_add_note","Add Note");
-    define("on_type","Note Type");
+    define("onote_type","Note Type");
       define("on_type_note","Generic Note");
       define("on_type_admin","Admin Note");
       define("on_type_action","Action/ToDo");
       define("on_type_payment","Payment Details Note");
       define("on_type_ship","Shipping Details Note");
+      define("on_type_todo","ToDo");
         define("note","Note");
         define("admin","Admin");
         define("ship","Shipping");
-    define("on_private","Personal Note (You can see only)");
-    define("on_subject","Note Subject");
-    define("on_note","Note Details");
+    define("onote_private","Personal Note (You can see only)");
+    define("onote_subject","Note Subject");
+    define("onote_note","Note Details");
+    define("onote_set_sent","On \"Save &amp; Email\" Set Order To Sent.");
+    define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
 
 
 	//Action icons
