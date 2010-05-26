@@ -72,12 +72,44 @@ class OrderNote Extends Model {
   }
   
   public function save(){
-    parent::save();
+    return parent::save();
+  }
+  
+  public function saveEx(){
+    return parent::saveEx();
   }
   
   public function fillRequest($noCheck = false){
     $this->onote_admin_id = is($_SESSION['_SHOP_AUTH_USER_DATA']['admin_id']);
     return parent::fillRequest($noCheck);
+  }
+  
+  public function sendNote($orderObj,$statusType='note'){
+    global $_SHOP;
+    
+    if(!is_object($orderObj)){
+      return false;
+    }
+    OrderStatus::statusChange($orderObj->order_id,false,NULL,'OrderNote::sendNote',"Send Type: $statusType to order");
+    
+    $tpl= &Template::getTemplate('OrderNote');
+    
+    if(!$tpl){
+      addWarning('no_template_for_note');
+      return;
+    }
+
+    $order_d=(array)$orderObj;   //print_r( $order_d);
+    $link= $_SHOP->root."index.php?personal_page=orders&id=";
+    $order_d['order_link']=$link;
+    $order_d['order_old_status'] = $old_state;
+    $order_d['note_subject'] = empt($this->onote_subject,"");
+    $order_d['note_body']=empt($this->onote_note,"");
+    
+    if(!Template::sendMail($tpl, $order_d, "", $_SHOP->lang)){
+      addWarning('failed_to_send_note'); 
+    }
+    return;
   }
 }
 ?>

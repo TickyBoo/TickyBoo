@@ -418,35 +418,44 @@ class OrderView extends AdminView{
       echo "<tr><td class='admin_list_title' colspan='2'>".con('order_note_title')."</td></tr>";
       
       $alt=0;
-      while($onote=ShopDB::fetch_assoc($res)){
-        echo "<tr class='admin_list_row_$alt'>
-         	      <td class='admin_list_item' width='120'>".formatTime($onote["onote_timestamp"])."</td>
-         	      <td class='admin_list_title' >".$onote["onote_subject"]."</td>
-       	      <tr>\n";
-        echo "<tr class='admin_list_row_$alt'>
-                <td class='admin_list_item' width='120'>".con('on_type').": ".con($onote["onote_type"])."</td>
-                <td class='admin_value' ><div style='overflow:hidden;'>".nl2br($onote["onote_note"])."</div></td>
-              <tr>\n";
-        echo "<tr class='admin_list_row_$alt'>
-                <td class='admin_value' colspan='2'>".con('on_private').": ".con($onote["onote_private"])."</td>
-              <tr>\n";
-         $alt=($alt+1)%2;//
-      }
-      echo "</table>\n";
-      
-      echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=addnote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
-      $this->print_hidden('onote_order_id',array('onote_order_id'=>$order_id));
-      $this->form_head(con('order_add_note'));     
-      $this->print_select_assoc('onote_type',$new,$err,array(
+      $noteTypes = array(
           OrderNote::TYPE_NOTE=>"on_type_note",
           OrderNote::TYPE_ADMIN=>"on_type_admin",
           OrderNote::TYPE_PAYMENT=>"on_type_payment",
           OrderNote::TYPE_SHIP=>"on_type_ship",
           OrderNote::TYPE_TODO=>"on_type_todo"
-          ));
-      $this->print_checkbox('onote_private',$new,$err);
-      $this->print_input('onote_subject',$new,$err,40);
-      $this->print_large_area('onote_note',$new,$err,8);
+          );
+      while($onote=ShopDB::fetch_assoc($res)){
+        $private = ($onote["onote_private"])?con('yes'):con('no');
+        $noteCounts[$onote["onote_type"]] += 1;
+        if($onote["onote_type"] == OrderNote::TYPE_PAYMENT){
+          unset($noteTypes[OrderNote::TYPE_PAYMENT]);
+        }elseif($onote["onote_type"] == OrderNote::TYPE_SHIP){
+          unset($noteTypes[OrderNote::TYPE_SHIP]);
+        }
+        echo "<tr class='admin_list_row_$alt'>
+         	      <td class='admin_list_item' width='120'>".formatTime($onote["onote_timestamp"])."</td>
+         	      <td class='admin_list_title' >".$onote["onote_subject"]."</td>
+       	      <tr>\n";
+        echo "<tr class='admin_list_row_$alt'>
+                <td class='admin_list_item' width='120'>".con('onote_type').": ".con($onote["onote_type"])."</td>
+                <td class='admin_value' ><div style='overflow:hidden;'>".nl2br($onote["onote_note"])."</div></td>
+              <tr>\n";
+        echo "<tr class='admin_list_row_$alt'>
+                <td class='admin_value' colspan='2'>".con('onote_private').": ".$private."</td>
+              <tr>\n";
+         $alt=($alt+1)%2;//
+      }
+      echo "</table>\n";
+      print_r($noteCounts);
+      
+      echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=addnote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
+      $this->print_hidden('onote_order_id',array('onote_order_id'=>$order_id));
+      $this->form_head(con('order_add_note'));
+      $this->print_select_assoc('onote_type',$_REQUEST,$err,$noteTypes);
+      $this->print_checkbox('onote_private',$_REQUEST,$err);
+      $this->print_input('onote_subject',$_REQUEST,$err,40);
+      $this->print_large_area('onote_note',$_REQUEST,$err,8);
       echo "<tr id=\"on_save_email_ship\" style=\"display:none;\"><td class='' style='text-align:center;'>"
         .$this->Show_button('submit','save_ship',3)."</td><td><label for='onote_set_sent'>".con("onote_set_sent")."</label><input type='checkbox' id='onote_set_sent' name='onote_set_sent' value='1' /></td></tr>";
       echo "<tr id=\"on_save_email_payment\" style=\"display:none;\"><td class='' style='text-align:center;'>"
@@ -528,15 +537,25 @@ class OrderView extends AdminView{
       return $this->view($_REQUEST["order_id"]);
       
     }elseif($_GET['action']=='addnote') {
-      print_r($_REQUEST);
-      if(is($_REQUEST['save_payment'])){
-        //send email
-      }
       $orderNote = new OrderNote();
       if (!$orderNote->fillRequest() || !$orderNote->saveEx()) {
         return $this->view($_REQUEST["order_id"]);
 			}
-
+      if(!$order=Order::load($_REQUEST['order_id'])){return;}
+      $order->orderNote = $orderNote->onote_note;
+      if(is($_REQUEST['onote_set_sent'])==="1"){
+        $order->set_shipment_status('send');
+      }elseif(is($_REQUEST['onote_set_payed'])==="1"){
+        $order->set_payment_status('payed');
+      }elseif(isset($_REQUEST['save_payment'])){
+        $orderNote->sendNote($order);
+      }elseif(isset($_REQUEST['save_ship'])){
+        $orderNote->sendNote($order);
+      }elseif(isset($_REQUEST['save_note'])){
+        $orderNote->sendNote($order);
+      }
+      return $this->view($_REQUEST["order_id"]);
+      
     } elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
       return $this->view($_REQUEST["order_id"]);
 

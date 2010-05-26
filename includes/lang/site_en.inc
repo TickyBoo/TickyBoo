@@ -737,7 +737,7 @@ define("handling_update_title","Modify the Payment Type");
 	define("handling_expires_min","Minutes until OH Cancels for<br> Non-Payment (0 = Never)");
 	define("handling_fee_fix","Fee Fixed");
 	define("handling_fee_percent","Fee Percent");
-	define("handling_email_template_ord","Email Template for Order");
+	define("handling_email_template_ord","Email Template On Order");
 	define("handling_email_template_send","Email Template for Sent");
 	define("handling_email_template_payed","Email Template for Payment");
 	define("handling_pdf_template","PDF Template for Invoice/Receipt");

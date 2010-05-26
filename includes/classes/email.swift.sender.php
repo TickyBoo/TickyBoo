@@ -86,7 +86,7 @@ class EmailSwiftSender {
     $log = new EmailLog($data, $swiftMessage);
 
     try{
-      $ret = $mailer->send($swiftMessage,$failed);
+      $ret = $mailer->send($swiftMessage,$failedAddr);
     }catch(Exception $e){
       $ret = false;
     }
