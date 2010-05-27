@@ -35,7 +35,7 @@
 	{user->logout}
 {/if}
 {if !$user->logged}
-  {include file="header.tpl" name=!login! header=!memberinfo!}
+  {include file="header.tpl" name=!login! header=!memberinfo!}<br>
 
   <form method='post' action='index.php' style='margin-top:0px;'>
     <input type="hidden" name="action" value="login">
@@ -53,23 +53,26 @@
       	</tr>
       	<tr>
       		<td  class="TblLower">{!password!}</td>
-      		<td class="TblHigher" ><input type='password' name='password' size='20' /> {printMsg key='loginpassword'}</td>
-      	</tr>
-      	<tr>
-      		<td colspan='2' class="TblLower">
-      			<li><a  href='index.php?register_user=on'>{!register!}</a></li>
+      		<td class="TblHigher" ><input type='password' name='password' size='20' /> {printMsg key='loginpassword'}
+      		<input type='submit' value='{!login_button!}' style='font-size:10px;'/>
       		</td>
       	</tr>
       	<tr>
       		<td colspan='2' class="TblLower">
-      			<li><a target='forgotpass'  onclick='showDialog(this);return false;' href='forgot_password.php'>{!forgot_pwd!}</a></li>
+      			<li><a  href='index.php?action=register'>{!register!}</a></li>
       		</td>
       	</tr>
-      </table>
-      <table border="0" width='80%'>
       	<tr>
-      		<td align='right'> <input type='submit' value='{!login!}'/>	</td>
+      		<td colspan='2' class="TblLower">
+      			<li><a onclick='showDialog(this);return false;' href='forgot_password.php'>{!forgot_pwd!}</a></li>
+      		</td>
       	</tr>
+      	      	<tr>
+      		<td colspan='2' class="TblLower">
+      			<li><a onclick='showDialog(this);return false;' href='index.php?action=resend_activation'>{!act_notarr!}</a></li>
+      		</td>
+      	</tr>
+
       </table>
     </center>
   </form>

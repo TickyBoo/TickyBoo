@@ -8,8 +8,7 @@
 
 // SetLocate settings:
 
-;
-  define('setlocale_ALL','en.utf8; en.utf-8;en_EN.utf8;en_EN.utf-8;en-EN.utf8;en-EN.utf-8;en;en_EN;en-EN');
+define('setlocale_ALL','en.utf8; en.utf-8;en_EN.utf8;en_EN.utf-8;en-EN.utf8;en-EN.utf-8;en;en_EN;en-EN');
 //  define('setlocale_TIME','en.utf8; en.utf-8;en_EN.utf8;en_EN.utf-8;en-EN.utf8;en-EN.utf-8;en;en_EN;en-EN');
 
 
@@ -737,9 +736,9 @@ define("handling_update_title","Modify the Payment Type");
 	define("handling_expires_min","Minutes until OH Cancels for<br> Non-Payment (0 = Never)");
 	define("handling_fee_fix","Fee Fixed");
 	define("handling_fee_percent","Fee Percent");
-	define("handling_email_template_ord","Email Template On Order");
-	define("handling_email_template_send","Email Template for Sent");
-	define("handling_email_template_payed","Email Template for Payment");
+	define("handling_email_template_ord","Email to send when Ordered");
+	define("handling_email_template_send","Email to send when Shipped");
+	define("handling_email_template_payed","Email to send when Paid");
 	define("handling_pdf_template","PDF Template for Invoice/Receipt");
 	define("handling_pdf_ticket_template","PDF Ticket Template");
 	define("handling_text_payment","Payment Label");
@@ -1023,6 +1022,7 @@ define("printtickets","Print Tickets");
 //discount.tpl
 define("discounts","Discounts");
 define("place_nr","Seat nr");
+define("unassigned_seat","Unassigned");
 
 //event.tpl
 define("each","per ticket.");
