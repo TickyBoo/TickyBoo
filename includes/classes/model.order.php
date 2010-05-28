@@ -762,7 +762,7 @@ class Order Extends Model {
       }
       if($field=='order_payment_status' 
           and  $new_status=='pending' 
-          and  $old_payment_status =='paid'){ //and
+          and  $old_payment_status =='payed'){ //and
         return true; // just show the m
       }
 
