@@ -33,6 +33,8 @@
  */
 
 define('ft_check','shop');
-$action='notify';
-require_once('includes/controller/checkout.php');
+$action='/'.'notify';
+require_once('includes/classes/class.router.php');
+router::draw($action, 'web/checkout');
+
 ?>

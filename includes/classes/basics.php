@@ -207,6 +207,7 @@ function env($key){
    return null;
 }
 
+
 function constructBase($secure=null) {
   if ($secure == null) $secure = env('HTTPS');
   $dir = dirname(env('PHP_SELF'));
@@ -214,15 +215,17 @@ function constructBase($secure=null) {
   if (($file=='admin') ||  ($file=='pos')) {
     $dir = dirname($dir);
   }
-  $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME'). $dir;
+  $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME');
+  // thanks to Nasi it will now also works with different port numbers
+  if (env('SERVER_PORT') != '80') {
+		$base .= ':' . env('SERVER_PORT');
+	}
+	$base .= $dir;
   if (substr($base, -1, 1) != '/') {
     $base .= '/';
   }
-  // . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '')
   return $base;
 }
-
-
 
 /**
  * Merge a group of arrays

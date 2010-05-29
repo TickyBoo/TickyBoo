@@ -33,6 +33,9 @@
  */
 
 define('ft_check','shop');
-$action='cancel';
-require_once('includes/controller/checkout.php');
+$action='/'.'cancel';
+require_once('includes/classes/class.router.php');
+router::draw($action, 'web/checkout');
+
+
 ?>

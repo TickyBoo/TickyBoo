@@ -100,14 +100,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
     define('PHP_SELF',$_SERVER['PHP_SELF']);
 
 
-  if (isset($_REQUEST['action'])) {
-    $action=$_REQUEST['action'];
-  } elseif(!isset($action)){
-    $action=false;
-  }
-  $_REQUEST['action'] = $action;
-  $_GET['action']     = $action;
-  $_POST['action']    = $action;
 
   trace( $_SERVER["PHP_SELF"]. " [{$action}]", true);
   trace( '====================================================================');
@@ -272,7 +264,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   function logincallback ($username, $auth){
     if($res=Admins::load($auth->admin_id) ){
-      $res = empt($res->user,$res); 
+      $res = empt($res->user,$res);
       unset($res->admin_password);
     //  unset($res->_columns);
       $_SESSION['_SHOP_AUTH_USER_DATA']= (array)$res;

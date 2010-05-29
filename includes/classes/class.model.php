@@ -29,6 +29,15 @@
 
 
 if (!defined('ft_check')) {die('System intrusion ');}
+/**
+ * Model
+ *
+ * @package
+ * @author niels
+ * @copyright Copyright (c) 2010
+ * @version $Id$
+ * @access public
+ */
 class Model {
   /**
   * The name of this model
@@ -42,6 +51,7 @@ class Model {
   protected $_idName = false;
   protected $_tableName;
   protected $_columns = array();
+  protected $isLocked = false;
 
   function __construct($filldefs= false){
     if ((!$this->_columns || $filldefs) && $this->_tableName) {
@@ -72,6 +82,28 @@ class Model {
       } else
         $this->$key = null;
     }
+  }
+
+  /**
+   * Model::lock()
+   *
+   * @param string $message transaction message
+   * @param boolean $shared type of record locking ($shared)?'LOCK IN SHARE MODE':'FOR UPDATE';
+   * @param mixed $where When you want to lock more records at the sametime.
+   * @return true when the lock is done.
+   *   You need to commit/rollback every function that you start with a lock.
+   */
+  function lock($message, $shared=true, $where=false) {
+    if (!$this->isLocked) {
+      $shared = ($shared)?'LOCK IN SHARE MODE':'FOR UPDATE';
+      $where  = ($where)?$where:"{$this->_idName} = {$this->id}";
+      $query  = " select {$this->_idName} from {$this->_tableName} where {$where} {$shared}";
+      if (shopDB::query($query)) {
+        $this->isLocked = true;
+      }
+    }
+    shopDB::Begin($message);
+    return $this->isLocked;
   }
 
   function save($id = null, $exclude=null){
@@ -306,18 +338,6 @@ class Model {
     }*/
   }
 
-  function _myErrorHandler($errno, $errstr, $errfile, $errline) {
-    if($errno!=2){
-      addWarning('',"$errno $errstr $errfil $errline");
-    }
-  }
-
-  function _dyn_load($name){
-    set_error_handler(array(&$this,'_myErrorHandler'));
-    $res=include_once($name);
-    restore_error_handler();
-    return $res;
-  }
 
   function _test() {
     return array($this->_tableName, $this->_idName, $this->_columns);
