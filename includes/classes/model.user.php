@@ -45,7 +45,7 @@ class User extends Model{
 
   var $is_member = false;
 
-  function load ($user_id){
+  static function load ($user_id){
     $query="select User.*, auth.active
             from User left join auth on auth.user_id=User.user_id
             where User.user_id='$user_id'";
@@ -58,7 +58,7 @@ class User extends Model{
     return $user;
   }
 
-  function login ($username, $password){
+  static function login ($username, $password){
     if(!isset($username)|| !isset($password)){
       addWarning('mand_all');
       return false;
@@ -90,13 +90,14 @@ class User extends Model{
   }
 
 
-  function register ($status, $data, $mandatory=array(), $secure=0, $short=0){
+  static function register ($status, $data, $mandatory=array(), $secure=0, $short=0){
     $user = new User();
     $data['user_status']=$status;
 
     if ($user->CheckValues($data, $status, $mandatory, $secure, $short)){
+
       //Why should guests be allowed to use an exsisting email address?
-      if ($status == 2) {
+//      if ($status == 2) {
         $query="SELECT count(*) as count
                 from auth
                 where username="._esc($data['user_email']);
@@ -104,7 +105,7 @@ class User extends Model{
           addError('user_email','useralreadyexist');
           return FALSE;
         }
-      }
+      //}
       if (ShopDB::begin('register user')) {
         $user->_fill($data);
         $user->user_status = $status;
@@ -136,6 +137,7 @@ class User extends Model{
             return self::_abort('cant send activation code');
           }
         }
+
 
         //Try to commit changes or fail;
         if(!ShopDB::Commit('Registered user')){
