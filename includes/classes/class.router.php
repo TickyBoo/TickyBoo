@@ -53,7 +53,7 @@ class router {
   		throw new Exception('Controller [' . $params['controller'] . '] does not allow execution of action [' . $params['action'] . ']');
   	}
     if (strpos($module,'/') === false) {
-      $controller = $module;
+      $controller = 'shop';
     } else {
       $controller = substr($module,   strpos($module,'/')+1);
       $module     = substr($module,0, strpos($module,'/'));
@@ -72,11 +72,11 @@ class router {
     $_GET['action']     = $action;
     $_POST['action']    = $action;
 
-		$classname = 'ctrl'.ucfirst($controller);
+		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
 
     require_once ( dirname(dirname(__FILE__)).'\config\defines.php' );
     require_once ( dirname(dirname(__FILE__)).'\config\init_'.$module.'.php' );
-    require_once ( INC.'controller'.DS.'controller.'.$controller.'.php' );
+    require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
 
   	$c = new $classname($module);
     $c->draw($page, $action, $isAjax);

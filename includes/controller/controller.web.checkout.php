@@ -36,7 +36,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 $fond = null;
 
 
-require_once ("controller.web.php");
+require_once ("controller.web.shop.php");
 
 GLOBAL $_SHOP;
 
@@ -60,17 +60,16 @@ if ($_SHOP->secure_site) {
   addWarning('This_page_is_not_secure');
 }
 
-class ctrlCheckout extends ctrlWeb {
+class ctrlWebCheckout extends ctrlWebShop {
 
   public function __construct($context='web') {
     if ($_REQUEST['pos']) $context = 'pos';
     parent::__construct($context);
-    require_once ("classes/class.checkout.php");
   }
 
   public function draw($page, $action, $isAjax= false) {
     GLOBAL $_SHOP;
-    if (!$action) {$action = 'index';}
+    if (!$action) {$action = 'index';} echo $action,'||';
     if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
     	if (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
     		$this->smarty->display($fond . '.tpl');
@@ -82,8 +81,12 @@ class ctrlCheckout extends ctrlWeb {
         	 $action !== 'login' ) {
         $this->smarty->display('user_register.tpl');
      	} elseif (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
+        echo $fond,'||';
      	  $this->smarty->display($fond . '.tpl');
+      } else {
+        echo "did is not good";
       }
+
     } else {
       if ($action == 'useredit') {
         $array = array('status'=>false,'msg'=>con('checkout_expired'));
@@ -91,7 +94,7 @@ class ctrlCheckout extends ctrlWeb {
       } elseif(!$_REQUEST['pos']) {
       	redirect($_SHOP->root."index.php?action=cart_view",403);
       } else {
-        addWarning('noting_checkout');
+        addWarning('noting_checkout'); echo 'bummer';
       }
     }
     orphanCheck();
@@ -161,13 +164,42 @@ class ctrlCheckout extends ctrlWeb {
   }
 
   function actionSubmit () {
-    return checkout::submitAction($this, $myorder );
+    return $this->_submit();
   }
 
-  function actionPrint () {
-    Global $order;
+  protected function  _submit() {
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode(), true);
+    if($test < 1) {
+  //    header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
+      ShopDB::dblogging("submit error ($test): $myorder->order_id\n". print_r($myorder, true));
+
+      unset( $_SESSION['_SHOP_order']);
+      return;
+    }
+    $this->setordervalues($myorder);
+    $hand= $myorder->handling;
+    $pm_return = $hand->on_submit($myorder);
+    if (empty($pm_return)) {
+      return false;
+    } elseif (is_string($pm_return)) {
+      $order->obj = $myorder;
+      $smarty->assign('confirmtext', $pm_return);
+      return "checkout_confirm";
+    } else  {
+      $smarty->assign('pm_return',$pm_return);
+      if(!$pm_return['approved']){
+       	Order::delete($myorder->order_id,'payment_not_approved' );
+      }
+      unset( $_SESSION['_SHOP_order']);
+      return "checkout_result";
+    }
+  }
+
+
+  function actionPrint () {
+    $myorder = is($_SESSION['_SHOP_order'],null);
+    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
@@ -183,7 +215,7 @@ class ctrlCheckout extends ctrlWeb {
 
   function actionAccept () {
     $myorder = is($_SESSION['_SHOP_order'],nil);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
     if($test < 1) {
       echo "accept error ($test): $myorder->order_id\n". print_r($myorder, true);
       //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -193,7 +225,7 @@ class ctrlCheckout extends ctrlWeb {
     }
  //   echo "accept ok ($test): $myorder->order_id\n". print_r($myorder, true);
     $hand=$myorder->handling;
-    Checkout::setordervalues($myorder, $this);
+    $this->setordervalues($myorder);
 
     $pm_return = $hand->on_return($myorder, true);
     If (!$pm_return['approved']) {
@@ -207,7 +239,6 @@ class ctrlCheckout extends ctrlWeb {
   }
 
   function actionPosCancel () {
-
  		$this->__MyCart->destroy_f(); // destroy cart
     $myorder = is($_SESSION['_SHOP_order'],null);
     if ($myorder) {
@@ -217,14 +248,14 @@ class ctrlCheckout extends ctrlWeb {
 
   function actionCancel () {
     $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("cancel error ($test): $myorder->order_id\n". print_r($myorder, true));
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    Checkout::setordervalues($myorder, $this);
+    $this->setordervalues($myorder);
     $hand=$myorder->handling;
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
@@ -237,7 +268,7 @@ class ctrlCheckout extends ctrlWeb {
 	function actionNotify ($type="sor") {
 		if($type == "sor"){
 			$myorder = is($_SESSION['_SHOP_order'], null);
-			$test = Order::DecodeSecureCode($myorder, checkout::getsecurecode($type), true);
+			$test = Order::DecodeSecureCode($myorder, $this->getsecurecode($type), true);
 			if($test < 1) {
 		   		header('HTTP/1.1 502 Action not allowed', true, 502);
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
@@ -247,7 +278,7 @@ class ctrlCheckout extends ctrlWeb {
 			$hand= $myorder->handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
-			$hand = Handling::decodeEPHCallback(checkout::getsecurecode($type), true);
+			$hand = Handling::decodeEPHCallback($this->getsecurecode($type), true);
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);
 				ShopDB::dblogging("notify error : ($hand)\n". print_r($hand, true));
@@ -260,22 +291,165 @@ class ctrlCheckout extends ctrlWeb {
 
   function actionPayment (){
     $myorder = is($_SESSION['_SHOP_order'], null);
-    $test = Order::DecodeSecureCode($myorder, checkout::getsecurecode());
+    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
       ShopDB::dblogging("payment error ($test): $myorder->order_id\n". print_r($myorder, true));
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    return checkout::paymentAction($myorder, $this);
+    return $this->_payment($myorder);
   }
+  /**
+   * Checkout::paymentAction()
+   *
+   * For the recheckout methods with show just the payment method that you would see from
+   * just checking out.
+   *
+   * @param object $order
+   * @return boolean
+   */
+  protected function _payment($orderInput){
+    if(!$orderInput){
+      addWarning('invalid_order');
+      return false;
+    }
+    if(is_numeric($orderInput)){
+      $orderInput = Order::load($orderInput, true);
+      if(!is_object($orderInput)){ addWarning('invalid_order'); return false;}
+    }
+    $this->setordervalues($orderInput); //assign order vars
+    $hand = $orderInput->handling; // get the payment handling object
+    $confirmtext = $hand->on_confirm($orderInput); // get the payment button/method...
+
+    if (is_array($confirmtext)) {
+      $this->assign('pm_return',$confirmtext);
+      if(!$confirmtext['approved']) {
+        $orderInput->delete($orderInput->order_id,'payment_not_approved' );
+      }
+  		unset( $_SESSION['_SHOP_order']);
+      return "checkout_result";
+    } else {
+      if ($hand->is_eph()) {
+        $_SESSION['_SHOP_order'] = $orderInput;
+ 			}
+      $this->assign('confirmtext', $confirmtext);
+   		return "checkout_confirm";
+    }
+  }
+
 
   function actionReserve ($origin='www',$user_id=null) {
-    return checkout::reserveAction($this, $origin, $user_id);
+    return $this->_reserve($origin, $user_id);
   }
 
+  protected function _reserve($origin='www',$user_id=null) {
+    $myorder = $this->__Order->make_f(1, $origin, NULL, $user_id);
+
+    if (!$myorder) {
+      return "checkout_preview";
+    } else {
+      $this->setordervalues($myorder);
+      $this->__MyCart->destroy_f();
+      $this->assign('pm_return',array('approved'=>TRUE));
+      return "checkout_result";
+    }
+  }
+
+
   function actionConfirm ( $origin="www", $user_id=0, $no_fee=0) {
-    return checkout::confirmAction($this, $origin, $user_id, $no_fee);
+    return $this->_confirm($origin, $user_id, $no_fee);
+  }
+
+  protected function _confirm($origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
+    if (!isset($_SESSION['_SHOP_order'])) {
+      $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
+ 	  } else {
+		  $myorder = $_SESSION['_SHOP_order'];
+    }
+    print_r($myorder);
+
+    if (!$myorder) {
+      addwarning('order_not_found_or_created');
+      return "checkout_preview";
+    } else {
+      $this->setordervalues($myorder); //assign order vars
+            echo 'do!';
+      $this->__MyCart->destroy_f(); // destroy cart
+      if(!$myorder->handling){
+        $myorder->handling = Handling::load($myorder->order_handling_id);
+      }
+    	$hand = $myorder->handling; // get the payment handling object
+      $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
+
+      if (is_array($confirmtext)) {
+    	 $this->assign('pm_return',$confirmtext);
+        if(!$confirmtext['approved']) {
+          $myorder->delete($myorder->order_id,'payment_not_approved' );
+        }
+     		unset( $_SESSION['_SHOP_order']);
+      	return "checkout_result";
+      } else {
+ 			  if ($hand->is_eph()) {
+    		  $_SESSION['_SHOP_order'] = $myorder;
+   			}
+    		$order->obj = $myorder;
+      	$this->assign('confirmtext', $confirmtext);
+   			return "checkout_confirm";
+      }
+    }
+  }
+
+	function getsecurecode($type='sor') {
+		if (isset($_POST[$type])) {
+     		$return = urldecode( $_POST[$type]);
+	 	} elseif (isset($_GET[$type])) {
+     	$return = $_GET[$type];
+    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
+     	$return = substr($action, 1);
+    } else {
+     	print_r($_REQUEST); Print_r($_SERVER);
+     	$return ='';
+    }
+    //  echo $return;
+    	return $return;
+  }
+
+  /**
+	 * @name SetOrderValues
+	 *
+	 * Used to set the order values using the smarty assign methods, which can then be used
+	 * by the plugable payments.
+	 *
+	 * @author Niels
+	 * @since 1.0
+	 * @uses Smarty, Smarty_Order
+	 * @param aorder : Order Object [required]
+	 * @return null loads the values to smarty vars
+	 */
+  function setordervalues($aOrder){
+    $this->__Order->obj = $aOrder;
+
+    if (!is_a  ( $aOrder, 'Order')) return;
+    if (isset($aOrder) and isset($aOrder->places)) {
+      foreach($aorder->places as $ticket){
+    		$seats[$ticket->id]=TRUE;
+      }
+    }
+    $this->smarty->assign('order_success',true);
+    $this->smarty->assign('order_id',$aOrder->order_id);
+    $this->smarty->assign('order_fee',$aOrder->order_fee);
+    $this->smarty->assign('order_total_price',$aOrder->order_total_price);
+    $this->smarty->assign('order_partial_price',$aOrder->order_partial_price);
+    $this->smarty->assign('order_discount_price',$aOrder->order_discount_price);
+    $this->smarty->assign('order_tickets_nr',$aOrder->size());
+    $this->smarty->assign('order_shipment_mode',$aOrder->order_shipment_mode);
+    $this->smarty->assign('order_payment_mode',$aOrder->order_payment_mode);
+
+    $this->smarty->assign('shop_handling', (array)$aOrder->handling);
+    $this->smarty->assign('shop_order', (array)$aOrder);
+
+    $this->smarty->assign('order_seats_id',$seats);
   }
 }
 //session_write_close();

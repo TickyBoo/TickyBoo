@@ -173,7 +173,7 @@ class Order_Smarty {
    * #Passable Params:
    * 	status = "ord,send"
    * 	user = id
-   * 	place = 
+   * 	place =
    * 	not_sent = bool
    * 	not_status = "payed,send"
    * 	order = "order_date DESC,order_time DESC"
@@ -197,7 +197,7 @@ class Order_Smarty {
         if($params['status']){
           $status=$params['status'];
       		$types=explode(",",$status);
-          
+
       		foreach($types as $type){
             if($type=="payed"){
               $where .=" AND Order.order_payment_status='{$type}'";
@@ -212,12 +212,12 @@ class Order_Smarty {
           unset($in);
         }
       }
-      
+
       /* Not these status's */
       if($params['not_status']){
         $notStatus=$params['not_status'];
     		$types=explode(",",$notStatus);
-        
+
     		foreach($types as $type){
           if($type=="payed" && $params['status']!="payed" ){
             $where .=" AND Order.order_payment_status <> "._esc($type);
@@ -231,12 +231,12 @@ class Order_Smarty {
         }
         unset($in);
       }
-      
+
       /* Filter Handling */
       if($params['handling'] || $params['not_hand_payment'] || $params['not_hand_shipment'] || $params['hand_shipment'] || $params['hand_payment']){
       	$from.=',Handling ';
       	$where.=' AND handling_id = order_handling_id';
-        
+
         //Not these payment types
       	if($params['not_hand_payment']){
       		$types=explode(",",$params['not_hand_payment']);
@@ -247,7 +247,7 @@ class Order_Smarty {
       		$where.=" AND handling_payment NOT IN ({$in})";
       	}
       	unset($in);
-        
+
         //Not these shipping types
       	if($params['not_hand_shipment']){
       		$types=explode(",",$params['not_hand_shipment']);
@@ -258,7 +258,7 @@ class Order_Smarty {
   			$where.=" AND handling_shipment NOT IN ({$in})";
       	}
       	unset($in);
-        
+
         //These shipping types
       	if($params['hand_shipment']){
       		$types=explode(",",$params['hand_shipment']);
@@ -269,7 +269,7 @@ class Order_Smarty {
       		$where.=" AND handling_shipment IN ({$in})";
       	}
       	unset($in);
-        
+
         //These payment types
       	if($params['hand_payment']){
       		$types=explode(",",$params['hand_payment']);
@@ -280,7 +280,7 @@ class Order_Smarty {
       		$where.=" AND handling_payment IN ({$in})";
       	}
       }
-      
+
       //Grab user details too
       if($params['user']){
         $from.=',User';
@@ -311,7 +311,7 @@ class Order_Smarty {
           }else{
             $where .= " AND order_id > '{$curr_order_id}' ";
           }
-          
+
       }
       if($params['order_by_date']){
         $order_by .= " ORDER BY order_date {$params['order_by_date']}";
@@ -530,9 +530,16 @@ class Order_Smarty {
   }
 
   function paymentForOrder($params, $smarty){
-    require_once "classes/class.checkout.php";
     $orderId = is($params['order_id'],0);
-    $return = Checkout::paymentAction($orderId,$smarty);
+    $orderInput = Order::load($orderId, true);
+    $return = '';
+    if(!is_object($orderInput)){
+       addWarning('invalid_order');
+    } else {
+      $hand = $orderInput->handling; // get the payment handling object
+      $confirmtext = $hand->on_confirm($orderInput); // get the payment button/method...
+      $return = (is_string($confirmtext))?$confirmtext:'';
+    }
     $smarty->assign('payment_tpl',$return);
   }
 

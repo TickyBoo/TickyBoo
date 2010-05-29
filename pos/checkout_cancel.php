@@ -1,6 +1,5 @@
-<?php 
+<?php
 define('ft_check','pos');
-$action='cancel';
-$_REQUEST['pos'] = true;
-require_once('../includes/controller/checkout.php');
+require_once('../includes/classes/class.router.php');
+router::draw('/cancel', 'pos/checkout');
 ?>

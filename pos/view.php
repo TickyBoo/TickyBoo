@@ -1,6 +1,8 @@
 <?php
 define('ft_check','pos');
-$fond = 'view';
-require_once("../includes/controller/pos_template.php");
+require_once('../includes/classes/class.router.php');
+router::draw('view', 'pos/shop');
+
+
 
 ?>

@@ -32,30 +32,91 @@
  * clear to you.
  */
 
-//Load File
+/**
+ * AJAJ will return JSON only!
+ *
+ * The class will follow strict rules and load the settings to see if a session is present
+ * if not then will return false with a bad request status
+ *
+ * JSON Requests should allways use json_encode(mixed, JSON_FORCE_OBJECT)
+ * Its allways good practice to turn the var into an object as
+ * JSON is 'Object Notifaction'
+ *
+ */
+
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("shop_plugins".DS."function.placemap.php");
-require_once ("classes/class.checkout.php");
+$fond = 0;
 
-class PosAjax {
+require_once("classes/jsonwrapper.php"); // Call the real php encoder built into 5.2+
 
+require_once ("controller.web.checkout.php");
+
+class ctrlPosShop extends ctrlWebCheckout {
 	private $request = array();
-	private $action = "";
+	private $json    = array();
+	private $action  = "";
 	private $actionName = "";
-	private $json;
 
-	function __construct($request, $action){
-		$this->request = $request;
-		$this->actionName = $action;
-    $other = substr($action,0,1);
-    if(strtolower($other) == '_'){
-      $this->action = 'do'.ucfirst(substr($action,1));
+  public function draw($page, $action) {
+    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
+  		$this->request    = $_REQUEST;
+  		$this->actionName = $action;
+      $other = substr($action,0,1);
+      if(strtolower($other) == '_'){
+        $this->action = 'do'.ucfirst(substr($action,1));
+      }else{
+        $this->action = "get".ucfirst(strtolower($action));
+      }
+      $result = $this->callAction();
+  		if(!$result){
+  		    $object = array("status" => false, "reason" => 'Missing action request');
+  		    echo json_encode($object);
+  		}
     }else{
-      $this->action = "get".ucfirst(strtolower($action));
+    	header("Status: 400");
+    	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
     }
-		$this->json = array();
+
+    orphanCheck();
+    trace("End of ajax req \n");
 	}
 
+  public function callAction(){
+    if(is_callable(array($this,$this->action))){
+		  $this->json = am($this->json,array("status" =>true, "reason" => 'success'));
+      //Instead of falling over in a heap at least return an error.
+      try{
+        $return = call_user_func(array($this,$this->action));
+      }catch(Exception $e){
+        addWarning('Error!');
+        addWarning($e->getMessage());
+        $return = false;
+      }
+      if(!$return){
+				$this->json = array("status" => false, "reason" => 'reason unknown !!!');
+			}
+      $this->loadMessages();
+  		echo json_encode($this->json);
+			return true;
+		}
+		return false;
+	}
+
+  private function loadMessages() {
+    $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
+    $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
+    $this->json['messages']['Error']   = array();
+    if (isset($_SHOP->Messages['__Errors__'])) {
+      $err = $_SHOP->Messages['__Errors__'];
+      foreach ($err as $key => $value) {
+        $output = '';
+        foreach($value as $val){
+          $output .= $val. "</br>";
+        }
+        $this->json['messages']['Error'][$key] = $output;
+      }
+    }
+  }
 
 	/**
 	 * PosAjax::getEvents()
@@ -242,8 +303,6 @@ class PosAjax {
 	 * @return boolean as to whether the JSON should be compiled or not.
 	 */
 	private function getCartInfo(){
-	global $cart, $order;
-
     $this->json['page'] = 1;
     $this->json['total'] = 1;
     $this->json['records'] = 0;
@@ -329,7 +388,7 @@ class PosAjax {
             FROM `Handling`
             WHERE handling_sale_mode LIKE "%sp%"';
 
- 		if(check_event($cart->min_date_f())){
+ 		if(check_event($this->__MyCart->min_date_f())){
 			$sql .= " and handling_alt <= 3";
 		} else {
    		$sql .= " and handling_alt_only='No'";
@@ -481,8 +540,7 @@ class PosAjax {
       addWarning('wrong_event_id');
       return false;
     }
-    require_once "smarty.mycart.php";
-    $res = MyCart_Smarty::CartCheck($event_id,$category_id,$this->request['place'],'mode_pos',false,$this->request['discount_id'],false);
+    $res = $this->__MyCart->CartCheck($event_id,$category_id,$this->request['place'],'mode_pos',false,$this->request['discount_id'],false);
     if($res){
       $this->json['reason']=$res;
       $this->json['status']=true;
@@ -515,19 +573,17 @@ class PosAjax {
 
 
   private function doPosConfirm(){
-    global $smarty;
     $fond=null;
 //    require ("controller/pos_template.php");
-    if (!$smarty) addWarning('Smarty_not_set.');
     try{
-      $checkoutRes = $this->_posConfirm($smarty);
+      $checkoutRes = $this->_posConfirm();
     }catch(Exception $e){
       addWarning('unknown_error',$e->getMessage());
       return false;
     }
 
     if(is_string($checkoutRes)){
-      $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
+      $this->json['html'] = $this->smarty->fetch($checkoutRes . '.tpl');
       return true;
     }elseif(is_bool($checkoutRes) and !$checkoutRes){
       return false;
@@ -535,10 +591,9 @@ class PosAjax {
   }
 
   private function doPosSubmit(){
-    global $smarty;
-    $checkoutRes = Checkout::submitAction($smarty );
+    $checkoutRes = $this->_submit();
     if(is_string($checkoutRes)){
-      $this->json['html'] = $smarty->fetch($checkoutRes . '.tpl');
+      $this->json['html'] = $this->smarty->fetch($checkoutRes . '.tpl');
       return true;
     }else {
       return false;
@@ -546,9 +601,7 @@ class PosAjax {
   }
 
 
-  private function _posConfirm ($smarty) {
-  	global $order, $cart, $user;
-
+  private function _posConfirm () {
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected
         addWarning('no_handling_selected');//.print_r($_POST,true);
         return false;
@@ -564,16 +617,16 @@ class PosAjax {
         addWarning('admin_user_id_blank');
         return false;
       }
-      $user->load_f($user_id);
+      $this->__User->load_f($user_id);
 
     } elseif ($_POST['user_id']==0) {
       //if new user selected put the pos user as the owner of the order
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'];
-      $user_id = $user->register_f(false, $_POST, $errors, 0, '', true);
+      $user_id = $this->__User->register_f(false, $_POST, $errors, 0, '', true);
       if (!$user_id || hasErrors() ) {
         return false;
       } else {
-        $smarty->assign('newuser_id', $user_id);
+        $this->assign('newuser_id', $user_id);
       }
     } else {
       $user_id = $_POST['user_id'];
@@ -582,9 +635,9 @@ class PosAjax {
     $no_cost = is($_POST['no_cost'], 0);
         unset($_SESSION['_SHOP_order']) ;
     if((int)$_POST['handling_id'] === 1){
-      $return = Checkout::reserveAction($smarty,'pos',$user_id);
+      $return = $this->_reserve('pos',$user_id);
     }else{
-      $return = Checkout::confirmAction($smarty, 'pos', $user_id, $no_fee, $no_cost);
+      $return = $this->_confirm('pos', $user_id, $no_fee, $no_cost);
     }
     if ($return == 'checkout_preview' ) {
       return false;
@@ -592,43 +645,9 @@ class PosAjax {
       return $return;
     }
   }
-
-
-  public function callAction(){
-    if(is_callable(array($this,$this->action))){
-		  $this->json = am($this->json,array("status" =>true, "reason" => 'success'));
-      //Instead of falling over in a heap at least return an error.
-      try{
-        $return = call_user_func(array($this,$this->action));
-      }catch(Exception $e){
-        addWarning('Error!');
-        addWarning($e->getMessage());
-        $return = false;
-      }
-      if(!$return){
-				$this->json = array("status" => false, "reason" => 'reason unknown !!!');
-			}
-      $this->loadMessages();
-  		echo json_encode($this->json);
-			return true;
-		}
-		return false;
-	}
-
-  private function loadMessages() {
-    $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
-    $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
-    $this->json['messages']['Error']   = array();
-    if (isset($_SHOP->Messages['__Errors__'])) {
-      $err = $_SHOP->Messages['__Errors__'];
-      foreach ($err as $key => $value) {
-        $output = '';
-        foreach($value as $val){
-          $output .= $val. "</br>";
-        }
-        $this->json['messages']['Error'][$key] = $output;
-      }
-    }
-  }
 }
+
+
+
+
 ?>

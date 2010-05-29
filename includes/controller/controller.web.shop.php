@@ -34,6 +34,8 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 
+
+
 /*/Check page is secure
 if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
 $url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
@@ -46,9 +48,56 @@ $url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
 echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 
-require_once ("controller.web.php");
+require_once (dirname(dirname(__FILE__)).DS. 'classes/class.smarty.php');
 
-class ctrlPos extends ctrlWeb {
+
+// remove the # below under linux to get a list of locale tags.
+
+#  print_r(list_system_locales());
+
+global $_SHOP;
+
+class ctrlWebShop  {
+  protected $smarty ;
+  protected $HelperList = array();
+
+  public function __construct($context='web') {
+    $this->smarty = new MySmarty($this);
+    $this->Loadplugins(array('MyCart','User','Order','Update'));
+    if (strtolower($context) == 'pos') {
+      $this->Loadplugins(array('POS'));
+    }
+    require_once ( dirname(dirname(__FILE__)).'\config\init.php' );
+    $this->initPlugins();
+    $this->smarty->init($context);
+  }
+
+  public function draw($fond, $isAjax= false) {
+    $this->smarty->display(is($fond, 'shop') . '.tpl');
+    orphanCheck();
+    trace("End of shop \n\n\r");
+  }
+
+  public function assign($tpl_var, $value = null) {
+    return $this->smarty->assign($tpl_var, $value);
+  }
+
+  public function Loadplugins($pluginList) {
+    foreach ($pluginList as $plugin) {
+      $filename = 'smarty.'.strtolower($plugin).'.php';
+      require_once (INC. 'classes'.DS.$filename);
+      $this->HelperList[]=$plugin;
+    }
+  }
+
+  protected function initPlugins() {
+    foreach ($this->HelperList as $plugin) {
+      $classname = $plugin.'_smarty';
+      $plugin = "__{$plugin}";
+      $this->$plugin  = new $classname($this->smarty);
+    }
+  }
+
 }
 
 ?>
