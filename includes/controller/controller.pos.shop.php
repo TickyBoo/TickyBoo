@@ -49,6 +49,10 @@ echo "<script>window.location.href='$url';</script>"; exit;
 require_once ("controller.web.shop.php");
 
 class ctrlPosShop extends ctrlWebShop {
+  public function __construct($context='web') {
+    parent::__construct($context);
+    $this->checkSSL();
+  }
 }
 
 ?>

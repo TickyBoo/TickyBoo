@@ -31,6 +31,12 @@
  * Contains the dispatcher-class. Here is where it all starts.
  *
  */
+
+require_once ( dirname(dirname(__FILE__)).'\config\defines.php' );
+require_once ( LIBS.'FirePHPCore'.DS.'fb.php' );
+require_once ( INC.'classes'.DS.'basics.php' );
+FB::setEnabled(true);
+
 class router {
 	/**
 	 * placeholer-array for all relevant variables a class may need later on (e.g. controller)
@@ -48,7 +54,7 @@ class router {
 	 */
 
   static function draw($page, $module = 'web', $isAjax= false) {
-    GLOBAL $action;
+    GLOBAL $action, $_SHOP;
   	if ($action { 0 } == '_') {
   		throw new Exception('Controller [' . $params['controller'] . '] does not allow execution of action [' . $params['action'] . ']');
   	}
@@ -74,8 +80,7 @@ class router {
 
 		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
 
-    require_once ( dirname(dirname(__FILE__)).'\config\defines.php' );
-    require_once ( dirname(dirname(__FILE__)).'\config\init_'.$module.'.php' );
+    require_once ( INC.'config'.DS.'init_'.$module.'.php' );
     require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
 
   	$c = new $classname($module);
@@ -120,7 +125,6 @@ class router {
 
 			if ($params['action'] { 0 } == '_') {
 				throw new Exception('Controller [' . $params['controller'] . '] does not allow execution of action [' . $params['action'] . ']');
-
 			}
 
 			$c->_constructClasses();

@@ -51,7 +51,7 @@ require_once("classes/jsonwrapper.php"); // Call the real php encoder built into
 
 require_once ("controller.web.checkout.php");
 
-class ctrlPosShop extends ctrlWebCheckout {
+class ctrlPosAjax extends ctrlWebCheckout {
 	private $request = array();
 	private $json    = array();
 	private $action  = "";
@@ -308,9 +308,9 @@ class ctrlPosShop extends ctrlWebCheckout {
     $this->json['records'] = 0;
     $this->json['userdata'] = array();
     $mycart=$_SESSION['_SMART_cart'];
-    $this->json['userdata']['can_cancel'] = !$cart->is_empty_f() or isset($_SESSION['_SHOP_order']);
+    $this->json['userdata']['can_cancel'] = !$this->__MyCart->is_empty_f() or isset($_SESSION['_SHOP_order']);
     $cart_list  =array();
-    if($mycart and !$cart->is_empty_f()){
+    if($mycart and !$this->__MyCart->is_empty_f()){
       $mycart->load_info();
       $mycart->iterate(array(&$this,'_pre_items'),$cart_list);
     }
@@ -516,7 +516,7 @@ class ctrlPosShop extends ctrlWebCheckout {
 		$smarty = "";
 
 		$params['category'] = $category; //add category details
-
+    require_once("shop_plugins".DS."function.placemap.php");
 		return smarty_function_placemap($params, $smarty); //return the placemap
 	}
 
@@ -646,8 +646,4 @@ class ctrlPosShop extends ctrlWebCheckout {
     }
   }
 }
-
-
-
-
 ?>

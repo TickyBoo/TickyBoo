@@ -55,14 +55,16 @@ require_once (dirname(dirname(__FILE__)).DS. 'classes/class.smarty.php');
 
 #  print_r(list_system_locales());
 
-global $_SHOP;
+
 
 class ctrlWebShop  {
   protected $smarty ;
   protected $HelperList = array();
+  protected $context = '';
 
   public function __construct($context='web') {
     $this->smarty = new MySmarty($this);
+    $this->context = $context;
     $this->Loadplugins(array('MyCart','User','Order','Update'));
     if (strtolower($context) == 'pos') {
       $this->Loadplugins(array('POS'));
@@ -76,6 +78,21 @@ class ctrlWebShop  {
     $this->smarty->display(is($fond, 'shop') . '.tpl');
     orphanCheck();
     trace("End of shop \n\n\r");
+  }
+
+  protected function checkSSL(){
+    global $_SHOP;
+//    print_r($_SERVER);
+    if ($_SHOP->secure_site) {
+      $url = $_SHOP->root_secured.basename($_SERVER['SCRIPT_NAME']);
+      if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+        header("Location: $url");
+        exit;
+      }
+    } elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+      addWarning('This_page_is_not_secure');
+    }
+    /* */
   }
 
   public function assign($tpl_var, $value = null) {
@@ -97,7 +114,6 @@ class ctrlWebShop  {
       $this->$plugin  = new $classname($this->smarty);
     }
   }
-
 }
 
 ?>

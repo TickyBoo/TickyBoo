@@ -33,43 +33,21 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-$fond = null;
-
 
 require_once ("controller.web.shop.php");
 
-GLOBAL $_SHOP;
 
-//var_dump($_SHOP);
-//print_r($_SERVER);
-//echo strtoupper(substr($_SHOP->root_secured, 0, 8)), '<br>';
-if ($_SHOP->secure_site) {
-  $url = $_SHOP->root_secured.basename($_SERVER['REQUEST_URI']);
-  if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-    header("Location: $url");
-//   echo "<script>window.location.href='$url';</script>";
-    exit;
-  }
-/*    //remove the www. to stop certificate errors.
-  if(("https://".$_SERVER['SERVER_NAME']."/") != ($_SHOP->root_secured)) {
-   // header("Location: $url");
-   // echo "<script>window.location.href='$url';</script>";
-    exit;
-  }  */
-} elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-  addWarning('This_page_is_not_secure');
-}
 
 class ctrlWebCheckout extends ctrlWebShop {
 
   public function __construct($context='web') {
-    if ($_REQUEST['pos']) $context = 'pos';
     parent::__construct($context);
+    $this->checkSSL();
   }
 
   public function draw($page, $action, $isAjax= false) {
     GLOBAL $_SHOP;
-    if (!$action) {$action = 'index';} echo $action,'||';
+    if (!$action) {$action = 'index';}
     if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
     	if (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
     		$this->smarty->display($fond . '.tpl');
@@ -81,10 +59,10 @@ class ctrlWebCheckout extends ctrlWebShop {
         	 $action !== 'login' ) {
         $this->smarty->display('user_register.tpl');
      	} elseif (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
-        echo $fond,'||';
+
      	  $this->smarty->display($fond . '.tpl');
       } else {
-        echo "did is not good";
+        echo "!!did is not good!!";
       }
 
     } else {
@@ -367,14 +345,11 @@ class ctrlWebCheckout extends ctrlWebShop {
  	  } else {
 		  $myorder = $_SESSION['_SHOP_order'];
     }
-    print_r($myorder);
-
     if (!$myorder) {
       addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
       $this->setordervalues($myorder); //assign order vars
-            echo 'do!';
       $this->__MyCart->destroy_f(); // destroy cart
       if(!$myorder->handling){
         $myorder->handling = Handling::load($myorder->order_handling_id);
