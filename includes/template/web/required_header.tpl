@@ -1,11 +1,11 @@
   <!-- Required Header .tpl Start -->
-  <link rel="stylesheet" type="text/css" href="css/flick/jquery-ui-1.8.custom.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="css/flick/jquery-ui-1.8.1.custom.css" media="screen" />
   <link rel='stylesheet' href='css/jquery.tooltip.css' media="screen" />
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
   <script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.custom.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
 
   <script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery.json-2.2.min.js"></script>
@@ -13,11 +13,11 @@
   <script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery.validate.add-methods.js"></script>
-  <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.3.js'></script>
+  <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.5.js'></script>
   <script type='text/javascript' src='scripts/jquery/jquery.countdown.pack.js'></script>
   <script type="text/javascript" src="scripts/jquery/jquery.tooltip.min.js"></script>
   <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
-  
+
   <script type='text/javascript' src='scripts/jquery/roundies.js'></script>
 
   <script type="text/javascript">
@@ -49,7 +49,7 @@
         showURL:false,
         bodyHandler: function() {
           if(jQuery(this).children('*[class*="is-tooltip"]').first().html() != ''){
-            return jQuery(this).children('*[class*="is-tooltip"]').first().html();           
+            return jQuery(this).children('*[class*="is-tooltip"]').first().html();
           }else{
             return false;
           }
@@ -62,7 +62,9 @@
         function(data){
           jQuery("#showdialog").html(data);
           jQuery("#showdialog").modal({
-            autoResize:true
+            autoResize:true,
+            maxHeight:500,
+            maxWidth:800
           });
         }
       );

@@ -114,11 +114,11 @@ class AdminPage extends AUIComponent {
     <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
     <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
     <title>" . $this->getTitle() . "</title>
-    <link rel='stylesheet' href='../css/ui-lightness/jquery-ui-1.7.2.custom.css' />
+    <link rel='stylesheet' href='../css/flick/jquery-ui-1.8.1.custom.css' />
     <link rel='stylesheet' href='../css/jquery.tooltip.css' />
     <link rel='stylesheet' href='admin.css' />
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.4.1.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.7.2.custom.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-1.4.2.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.8.1.custom.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.caret.js\"></script>

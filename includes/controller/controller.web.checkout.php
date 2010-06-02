@@ -161,11 +161,11 @@ class ctrlWebCheckout extends ctrlWebShop {
     if (empty($pm_return)) {
       return false;
     } elseif (is_string($pm_return)) {
-      $order->obj = $myorder;
-      $smarty->assign('confirmtext', $pm_return);
+      $this->__Order->obj = $myorder;
+      $this->smarty->assign('confirmtext', $pm_return);
       return "checkout_confirm";
     } else  {
-      $smarty->assign('pm_return',$pm_return);
+      $this->smarty->assign('pm_return', $pm_return);
       if(!$pm_return['approved']){
        	Order::delete($myorder->order_id,'payment_not_approved' );
       }

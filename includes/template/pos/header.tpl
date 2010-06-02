@@ -38,7 +38,7 @@
 
 		<link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
 
-		<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../css/flick/jquery-ui-1.8.1.custom.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
 
 		<script type="text/javascript">
@@ -49,8 +49,8 @@
 			lang.not_number = '{!not_number!}';
 		</script>
 
-		<script type="text/javascript" src="../scripts/jquery/jquery-1.4.1.min.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
 
 		<script type="text/javascript" src="../scripts/jquery/jquery.ajaxmanager.js"></script>
 		<script type="text/javascript" src="../scripts/jquery/jquery.form.js"></script>
