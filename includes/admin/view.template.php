@@ -130,7 +130,7 @@ class TemplateView extends AdminView{
 		      return addwarning("no_template");
 		    }
 		    $order_file_name = "pdf_{$data['template_name']}.pdf";
-        $pdf->output($order_file_name, 'I'); 
+        $pdf->output($order_file_name, 'I');
 		    break;
       default:
         echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -216,10 +216,7 @@ class TemplateView extends AdminView{
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
 
     //cols = 96 is too big in ff and ie 92 is the max size before you misshape the table, this is because opera adds the scrollbar.
-    echo "<tr><td class='admin_value' colspan='2'><span class='err'>{$err['template_text']}</span>\n
-    <textarea rows='20' cols='92' name='template_text'>" .$data['template_text'] ."</textarea>
-
-    </td></tr>";
+    $this->print_large_area('template_text', $data, $err, 20,80 );
     $this->form_foot(2, $_SERVER['PHP_SELF']);
   }
 

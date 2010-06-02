@@ -132,6 +132,11 @@ class DiscountView extends AdminView {
     $this->print_area('discount_cond', $data, $err, 6);
 
     $this->print_field_o('discount_used', $data);
+    if ($data['discount_used'] != 0) {
+      echo "<tr><td class='admin_name' align='left'>&nbsp;</td><td class='admin_value' >" .
+        $this->show_button("{$_SERVER['PHP_SELF']}?action=clear_disc&discount_id={$data['discount_id']}&count={$data['discount_used']}", 'Clear')
+      . "</td></tr>";
+    }
 
     if ($data['event_pm_id']) {
 		  $this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['event_pm_id']}");
@@ -141,7 +146,13 @@ class DiscountView extends AdminView {
   }
 
   function draw ($showlist=false) {
-    if ($_GET['action'] == 'add_disc') {
+    if ($_GET['action'] == 'clear_disc') {
+        $disc = Discount::load($_GET['discount_id']);
+        $disc->isUsed(- $this->discount_used);
+        $disc = Discount::load($_GET['discount_id']);
+        $row = (array)$disc;
+        $this->form($row, null, con('discount_update_title'));
+    } elseif ($_GET['action'] == 'add_disc') {
         $disc = new Discount(true, is($_GET['discount_event_id'],false));
         $row = (array)$disc;
         $this->form($row, null, con('discount_add_title'));

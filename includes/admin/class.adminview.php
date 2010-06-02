@@ -321,53 +321,51 @@ class AdminView extends AUIComponent {
 
   }
 
-    function print_field ($name, &$data, $prefix='') {
+  function print_field ($name, $data, $prefix='') {
+      echo "<tr id='{$name}-tr'><td class='admin_name' width='".self::$labelwidth."'>$prefix" , con($name) , "</td>
+            <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
+  }
 
-        echo "<tr id='{$name}-tr'><td class='admin_name' width='".self::$labelwidth."'>$prefix" , con($name) , "</td>
-              <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
+  function print_field_o ($name, $data, $prefix='') {
+    if (!empty($data[$name])) {
+        $this->print_field($name, $data, $prefix);
     }
+  }
 
-    function print_field_o ($name, &$data)
-    {
-        if (!empty($data[$name])) {
-            $this->print_field($name, $data);
-        }
+  function _check ($name,$main,$data){
+    if (is_object($main)) {
+      //if($main->$name==$data[$name]){$chk='checked';}
+      return "<input title=".con('reset_to_main')." type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
     }
+    return $main;
+  }
 
-    function _check ($name,$main,$data){
-      if (is_object($main)) {
-        //if($main->$name==$data[$name]){$chk='checked';}
-        return "<input title=".con('reset_to_main')." type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
-      }
-      return $main;
+
+  function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
+    $suffix = self::_check($name, $suffix,$data);
+    if($arrPrefix <> ''){
+      $prefix = $arrPrefix."[$name]";
+    }else{
+      $prefix = "{$name}";
     }
+    echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
+          <td class='admin_value'><input id='{$name}-input' type='text' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
+          ".printMsg($name, $err)."
+          </td></tr>\n";
+  }
 
-
-    function print_input ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
-      $suffix = self::_check($name, $suffix,$data);
-      if($arrPrefix <> ''){
-        $prefix = $arrPrefix."[$name]";
-      }else{
-        $prefix = "{$name}";
-      }
-      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
-            <td class='admin_value'><input id='{$name}-input' type='text' name='$prefix' value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' size='$size' maxlength='$max'>
-            ".printMsg($name, $err)."
-            </td></tr>\n";
+  function print_password ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
+    $suffix = self::_check($name, $suffix,$data);
+    if($arrPrefix <> ''){
+      $prefix = $arrPrefix."[$name]";
+    }else{
+      $prefix = "{$name}";
     }
-
-    function print_password ($name, &$data, &$err, $size = 30, $max = 100, $suffix = '', $arrPrefix='') {
-      $suffix = self::_check($name, $suffix,$data);
-      if($arrPrefix <> ''){
-        $prefix = $arrPrefix."[$name]";
-      }else{
-        $prefix = "{$name}";
-      }
-      echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
-            <td class='admin_value'><input id='{$name}-input' type='password' name='$prefix'  size='$size' maxlength='$max'>
-            ".printMsg($name, $err)."
-            </td></tr>\n";// Removed the value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' here for savety resonse.
-    }
+    echo "<tr id='{$name}-tr' ><td class='admin_name'  width='".self::$labelwidth."'>$suffix" . con($name) . "</td>
+          <td class='admin_value'><input id='{$name}-input' type='password' name='$prefix'  size='$size' maxlength='$max'>
+          ".printMsg($name, $err)."
+          </td></tr>\n";// Removed the value='" . htmlspecialchars(is($data[$name],''), ENT_QUOTES) . "' here for savety resonse.
+  }
 
     function print_checkbox ($name, &$data, &$err, $size = '', $max = '')
     {

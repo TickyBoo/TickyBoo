@@ -84,6 +84,9 @@ class Order Extends Model {
             $order->handling = &$order->handling;
           }
         }
+        $order->no_cost = (strpos($order->order_order_set, 'nocost') === false);
+        $order->no_fee  = (strpos($order->order_order_set, 'nofee') === false);
+
         if($order && $tickets){
           $order->tickets = $this->loadTickets();
         }
@@ -211,6 +214,7 @@ class Order Extends Model {
     }else {
       $total=$amount+$fee;
     }
+
     $this->order_order_set = implode(',',$order_set);
     $this->order_discount_price = number_format($this->order_discount_price, 2, '.', '');
     $this->order_partial_price=number_format($amount, 2, '.', '');;
@@ -250,7 +254,7 @@ class Order Extends Model {
       OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order");
 
       if (isset($this->discount)) {
-        $this->discount->isUsed();
+        $this->discount->isUsed(count($this->places));
         $this->order_discount_promo = $this->discount->discount_promo;
         OrderStatus::statusChange($this->order_id,$this->discount->discount_name, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
@@ -760,8 +764,8 @@ class Order Extends Model {
       if($field=='order_payment_status' and  $new_status=='payed' ){ //and
         $suppl = ", order_date_expire=NULL";
       }
-      if($field=='order_payment_status' 
-          and  $new_status=='pending' 
+      if($field=='order_payment_status'
+          and  $new_status=='pending'
           and  $old_payment_status =='payed'){ //and
         return true; // just show the m
       }

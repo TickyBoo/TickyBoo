@@ -63,13 +63,11 @@ class Order_Smarty {
     $cart=$_SESSION['_SMART_cart'];
 //
     if(!$cart || !$cart->can_checkout()){
-      addWarning('cart_empty_or_invalid');
-      return false;
+      return addWarning('cart_empty_or_invalid');
     }
 
     if(!$handling or !$user_id or !$cart or !$cart->can_checkout()){
-      addWarning('reservate_failed');
-      return;
+      return addWarning('reservate_failed');
     }
 
     $no_cost = false;
@@ -85,10 +83,10 @@ class Order_Smarty {
     $order = Order::create($user_id, session_id(), $handling, 0, $no_fee, $no_cost, $place);
 
     //begin the transaction
-    if(ShopDB::begin('Make order')){
+    if (ShopDB::begin('Make order')){
 
       // apply Global discount over the total price.
-      if (!empty($_POST['FreeTicketCode']) and !$no_cost) {
+      if (!empty($_POST['FreeTicketCode']) and !$order->no_cost) {
         if (!($order->discount =Discount::LoadGlobal($_POST['FreeTicketCode']))) {
           addWarning('FreeTicketCode_notfound');
           ShopDB::rollback('FreeTicketCode_notfound');
@@ -110,8 +108,7 @@ class Order_Smarty {
       //commit the transaction
       return (ShopDB::commit('Order created'))? $order: false;
     } else {
-      addWarning('cant_start_transaction');
-      return;
+      return  addWarning('cant_start_transaction');
     }
 
   }

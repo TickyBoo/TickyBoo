@@ -338,12 +338,15 @@ class Handling Extends Model {
   	 */
 	public function on_confirm($order) {
     	$return ='';
-  		if($pm=$this->pment()){
-      		$return = $pm->on_confirm($order);
+  		if(($pm=$this->pment()) && ((real)$order->order_total_price != 0.00)){
+      	$return = $pm->on_confirm($order);
   		} else {
-      return array('approved'=>true,
-                   'transaction_id'=>false,
-                   'response'=> $this->handling_html_template);
+        if((real)$order->order_total_price === 0.00){
+          $order->set_payment_status ('payed');
+        }
+        return array('approved'=>true,
+                     'transaction_id'=>false,
+                     'response'=> $this->handling_html_template);
     	}
     	return (is_array($return))?$return:$return.'<br>'.$this->handling_html_template;
   	}
