@@ -100,7 +100,7 @@ class AdminUserView extends AdminView{
                 where event_pm_id is not null
       		  		and event_rep LIKE '%sub%'
       		  		AND event_status <> 'unpub'
-      		  		AND event_date >= now()
+      		  		AND event_date >= curdate()
                 order by event_date,event_time";
         if(!$res=ShopDB::query($query)){
           user_error(shopDB::error());
