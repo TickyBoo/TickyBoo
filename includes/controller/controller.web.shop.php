@@ -48,7 +48,7 @@ $url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
 echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 
-require_once (dirname(dirname(__FILE__)).DS. 'classes/class.smarty.php');
+require_once (CLASSES.'class.smarty.php');
 
 
 // remove the # below under linux to get a list of locale tags.
@@ -69,7 +69,7 @@ class ctrlWebShop  {
     if (strtolower($context) == 'pos') {
       $this->Loadplugins(array('POS'));
     }
-    require_once ( dirname(dirname(__FILE__)).'\config\init.php' );
+    require_once (INC. 'config'.DS.'init.php' );
     $this->initPlugins();
     $this->smarty->init($context);
   }
@@ -102,7 +102,7 @@ class ctrlWebShop  {
   public function Loadplugins($pluginList) {
     foreach ($pluginList as $plugin) {
       $filename = 'smarty.'.strtolower($plugin).'.php';
-      require_once (INC. 'classes'.DS.$filename);
+      require_once (CLASSES.$filename);
       $this->HelperList[]=$plugin;
     }
   }

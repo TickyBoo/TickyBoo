@@ -48,6 +48,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   public function draw($page, $action, $isAjax= false) {
     GLOBAL $_SHOP;
     if (!$action) {$action = 'index';}
+    ShopDB::begin('Running the Checkout pages');
     if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
     	if (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
     		$this->smarty->display($fond . '.tpl');
@@ -74,6 +75,9 @@ class ctrlWebCheckout extends ctrlWebShop {
       } else {
         addWarning('noting_checkout'); echo 'bummer';
       }
+    }
+    if (ShopDB::isTxn()) {
+      ShopDB::commit('Checkout page rendered.');
     }
     orphanCheck();
     trace("End of shop \n\n\r");
@@ -155,6 +159,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       unset( $_SESSION['_SHOP_order']);
       return;
     }
+    $myorder->lock();
     $this->setordervalues($myorder);
     $hand= $myorder->handling;
     $pm_return = $hand->on_submit($myorder);
@@ -201,7 +206,8 @@ class ctrlWebCheckout extends ctrlWebShop {
       unset( $_SESSION['_SHOP_order']);
       return;
     }
- //   echo "accept ok ($test): $myorder->order_id\n". print_r($myorder, true);
+    $myorder->lock();
+
     $hand=$myorder->handling;
     $this->setordervalues($myorder);
 
@@ -233,6 +239,8 @@ class ctrlWebCheckout extends ctrlWebShop {
       unset( $_SESSION['_SHOP_order']);
       return;
     }
+    $myorder->lock();
+
     $this->setordervalues($myorder);
     $hand=$myorder->handling;
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
@@ -253,6 +261,8 @@ class ctrlWebCheckout extends ctrlWebShop {
 		   		return;
 			}
 			ShopDB::dblogging("notify  ($test): $myorder->order_id.\n");
+      $myorder->lock();
+
 			$hand= $myorder->handling;
 			$hand->on_notify($myorder);
 		}elseif($type == "cbr"){
@@ -288,6 +298,7 @@ class ctrlWebCheckout extends ctrlWebShop {
    * @return boolean
    */
   protected function _payment($orderInput){
+
     if(!$orderInput){
       addWarning('invalid_order');
       return false;
@@ -296,6 +307,8 @@ class ctrlWebCheckout extends ctrlWebShop {
       $orderInput = Order::load($orderInput, true);
       if(!is_object($orderInput)){ addWarning('invalid_order'); return false;}
     }
+    $orderInput->lock();
+
     $this->setordervalues($orderInput); //assign order vars
     $hand = $orderInput->handling; // get the payment handling object
     $confirmtext = $hand->on_confirm($orderInput); // get the payment button/method...
@@ -323,7 +336,7 @@ class ctrlWebCheckout extends ctrlWebShop {
 
   protected function _reserve($origin='www',$user_id=null) {
     $myorder = $this->__Order->make_f(1, $origin, NULL, $user_id);
-
+    $myorder->lock();
     if (!$myorder) {
       return "checkout_preview";
     } else {
@@ -349,6 +362,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
+      $myorder->lock();
       $this->setordervalues($myorder); //assign order vars
       $this->__MyCart->destroy_f(); // destroy cart
       if(!$myorder->handling){
