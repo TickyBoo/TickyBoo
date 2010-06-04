@@ -1,24 +1,15 @@
   <!-- Required Header .tpl Start -->
+  <!--
   <link rel="stylesheet" type="text/css" href="css/flick/jquery-ui-1.8.1.custom.css" media="screen" />
   <link rel='stylesheet' href='css/jquery.tooltip.css' media="screen" />
+   -->
+  {minify type='css' files='css/flick/jquery-ui-1.8.1.custom.css,css/jquery.tooltip.css'}
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-
-  <script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
-
-  <script type="text/javascript" src="scripts/jquery/jquery.ajaxmanager.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.json-2.2.min.js"></script>
-
-  <script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.validate.add-methods.js"></script>
-  <script type='text/javascript' src='scripts/jquery/jquery.simplemodal-1.3.5.js'></script>
-  <script type='text/javascript' src='scripts/jquery/jquery.countdown.pack.js'></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.tooltip.min.js"></script>
-  <script type="text/javascript" src="scripts/shop.jquery.forms.js"></script>
-
-  <script type='text/javascript' src='scripts/jquery/roundies.js'></script>
+   
+  {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery.ui.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal-1.3.5.js,jquery.countdown.pack.js,jquery.tooltip.min.js'}
+   
+  {minify type='js' files='scripts/shop.jquery.forms.js'}
 
   <script type="text/javascript">
   	var lang = new Object();

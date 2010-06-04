@@ -99,9 +99,10 @@ class MySmarty extends Smarty {
     $this->assign('_SHOP_root_secured', $_SHOP->root_secured);
     $this->assign('_SHOP_lang', $_SHOP->lang);
     $this->assign('_SHOP_theme', $_SHOP->tpl_dir . "theme".DS. $_SHOP->theme_name.DS );
-    $this->assign('_SHOP_themeimages', $_SHOP->images_url . "theme/". $_SHOP->theme_name.'/' );
+    $this->assign('_SHOP_themeimages', $_SHOP->images_url . "theme/".$_SHOP->theme_name.'/' );
     $this->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
     $this->assign("_SHOP_images", $_SHOP->images_url);
+    $this->assign("_SHOP_theme_css", "css/theme/".$_SHOP->theme_name);
 
     $this->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
     $this->assign('organizer', $_SHOP->organizer_data);
