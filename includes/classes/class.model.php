@@ -93,7 +93,7 @@ class Model {
    * @return true when the lock is done.
    *   You need to commit/rollback every function that you start with a lock.
    */
-  function lock($message, $shared=true, $where=false) {
+  function lock($message, $shared=false, $where=false) {
     if (!$this->isLocked) {
       $shared = ($shared)?'LOCK IN SHARE MODE':'FOR UPDATE';
       $where  = ($where)?$where:"{$this->_idName} = {$this->id}";

@@ -30,7 +30,7 @@
  * clear to you.
  *}
 {if $shop_event.event_rep eq 'main'}
-  <table class="table_dark" cellpadding="5">
+  <table class="table_dark" cellpadding="5" border=1>
     <tr>
     	{if $shop_event.event_image}
         <td width="30%" valign="top" colspan="2">
@@ -39,7 +39,7 @@
           <!-- /a -->
     	  </td>
     	{/if}
-      <td colspan='4' valign='top'>
+      <td colspan='4' valign='top' align=left'>
         <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
           {if $shop_event.event_pm_id}
             <img border='0' src='{$_SHOP_themeimages}ticket.gif'>
@@ -88,13 +88,13 @@
   <table class="table_dark">
     <tr>
       {if $shop_event.event_image}
-        <td>
+        <td width="30%" valign="top" >
           <!-- a href='index.php?event_id={$shop_event.event_id}'-->
             <img src="files/{$shop_event.event_image}" align='left' class="magnify" border="0" width="200"  style="margin:15px;" border="0">
           <!-- /a -->
         </td>
       {/if}
-      <td>
+      <td valign='top' align=left'>
         <a  class="title_link" href='index.php?event_id={$shop_event.event_id}'>
           {if $shop_event.event_pm_id}
             <img border='0' src='{$_SHOP_themeimages}ticket.gif' align="middle">
