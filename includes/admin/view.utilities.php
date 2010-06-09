@@ -515,10 +515,10 @@ HTML;
 		    return bzopen($_SHOP->files_dir.DS . $this->filename, "{$mode}b{$this->comp_level}");
 		} elseif ($this->comp_method == 1) {
 			$this->filename = "{$name}.sql.gz";
-		    return gzopen($_SHOP->files_dir.DS. $this->filename, "{$mode}b{$this->comp_level}");
+		    return gzopen($_SHOP->files_dir . DS . $this->filename, "{$mode}b{$this->comp_level}");
 		} else{
 			$this->filename = "{$name}.sql";
-			return fopen($_SHOP->files_dir .DS. $this->filename, "{$mode}b");
+			return fopen($_SHOP->files_dir . DS . $this->filename, "{$mode}b");
 		}
 	}
 

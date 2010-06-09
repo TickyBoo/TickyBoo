@@ -748,8 +748,8 @@ class AdminView extends AUIComponent {
             <td class='admin_value'>";
 
             if ($type == 'img') {
-           		if(file_exists($_SHOP->files_dir.$data[$name])){
-           			list($width, $height, $type, $attr) = getimagesize($_SHOP->files_dir.$data[$name]);
+           		if(file_exists($_SHOP->files_dir.DS.$data[$name])){
+           			list($width, $height, $type, $attr) = getimagesize($_SHOP->files_dir.DS.$data[$name]);
       					if (($width>$height) and ($width > 300)) {
       						$attr = "width='300'";
       					} elseif ($height > 250) {
@@ -822,7 +822,7 @@ class AdminView extends AUIComponent {
 
   function user_file ($path){
       global $_SHOP;
-      return $_SHOP->files_dir . $path;
+      return $_SHOP->files_dir . DS . $path;
   }
 
   function delayedLocation($url){
