@@ -101,21 +101,6 @@
             {placemap  category=$shop_category}
           </div>
           <center>{!placemap_image_explanation!}</center>
-          {literal}
-          <script type="text/javascript">
-            jQuery(document).ready(function(){
-              jQuery(".pm_free").mouseleave(function(e){
-                if(e.shiftKey){
-                  jQuery('img.pm_check',this).attr('checked', true);
-                }
-                if(e.ctrlKey){
-                  jQuery('img.pm_check',this).attr('checked', false);
-                }
-
-              });
-            });
-          </script>
-          {/literal}
         {/if}
       <br />
       <center>

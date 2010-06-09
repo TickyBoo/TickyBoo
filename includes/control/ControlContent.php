@@ -176,56 +176,59 @@ function draw (){
 
 function event_list (){
 global $_SHOP;
-if($_SHOP->event_ids !=''){
-   $query="select * from Event,Ort where event_status!='unpub' AND
-    event_rep LIKE '%sub%' AND event_ort_id=ort_id
-  	  and FIELD(event_id,{$_SHOP->event_ids})>0 order by event_date, event_time ";
-  if(!$events=ShopDB::query($query)){
-      user_error(shopDB::error());
-      return 0;
-  }
-
-  echo "<table width='100%' class='event_list'  cellpadding='2'>";
-  echo "<tr><td colspan='6' class='event_list_title' align='center'>".control_events_list."</td></tr>";
-  echo "<tr class='event_list_subtitle'>
-  	 <td width='200' class='event_list_td'>".event."</td>
-  	 <td width='200' class='event_list_td'>".date."</td>
-  	 <td width='200' class='event_list_td'>".ort."</td>
-	 <td width='50' class='event_list_td' align='right'>".checked."</td>
-	 <td width='50' class='event_list_td' align='right'>".com."</td>
-	 <td width='50' class='event_list_td' align='right'>".free."</td>";
-
-  while($event=shopDB::fetch_assoc($events)){
-    $query_ev="SELECT seat_status, COUNT(*) as count FROM Seat where
-               seat_event_id='{$event["event_id"]}' GROUP BY seat_status";
-     if(!$status=ShopDB::query($query_ev)){
-       return 0;
-     }
-
-    $ev_stat=array();
-
-    while($stat=shopDB::fetch_assoc($status)){
-      $ev_stat[$stat["seat_status"]]=$stat["count"];
+  if($_SHOP->event_ids !=''){
+     $query="select * from Event,Ort
+             where event_status!='unpub'
+             AND   event_rep LIKE '%sub%'
+             AND   event_ort_id=ort_id
+    	       and FIELD(event_id,{$_SHOP->event_ids})>0 
+             order by event_date, event_time ";
+    if(!$events=ShopDB::query($query)){
+        user_error(shopDB::error());
+        return 0;
     }
-    $edate=formatDate($event["event_date"]);
-    $etime=formatTime($event["event_time"]);
 
-    echo "<tr class='event_list_tr0'>
-  	   <td width='200' class='event_list_td' valign='top'>
-           <a href='{$_SERVER['PHP_SELF']}?event_id={$event['event_id']}&event_name={$event['event_name']}'>
-           {$event["event_name"]}</a></td>
-  	 <td width='200' class='event_list_td' valign='top'>$edate - $etime</td>
-  	 <td width='200' class='event_list_td' valign='top'>{$event["ort_name"]}-{$event["ort_city"]}</td>
-	 <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["check"]."</td>
-	 <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["com"]."</td>
-	 <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["free"]."</td>
-	 </tr>";
+    echo "<table width='100%' class='event_list'  cellpadding='2'>";
+    echo "<tr><td colspan='6' class='event_list_title' align='center'>".control_events_list."</td></tr>";
+    echo "<tr class='event_list_subtitle'>
+    	 <td width='200' class='event_list_td'>".event."</td>
+    	 <td width='200' class='event_list_td'>".date."</td>
+    	 <td width='200' class='event_list_td'>".ort."</td>
+    <td width='50' class='event_list_td' align='right'>".checked."</td>
+    <td width='50' class='event_list_td' align='right'>".com."</td>
+    <td width='50' class='event_list_td' align='right'>".free."</td>";
 
-  }
-  echo "</table>";
- }else{
-   echo con("no_event_sets");
- }
+    while($event=shopDB::fetch_assoc($events)){
+      $query_ev="SELECT seat_status, COUNT(*) as count FROM Seat where
+                 seat_event_id='{$event["event_id"]}' GROUP BY seat_status";
+       if(!$status=ShopDB::query($query_ev)){
+         return 0;
+       }
+
+      $ev_stat=array();
+
+      while($stat=shopDB::fetch_assoc($status)){
+        $ev_stat[$stat["seat_status"]]=$stat["count"];
+      }
+      $edate=formatDate($event["event_date"]);
+      $etime=formatTime($event["event_time"]);
+
+      echo "<tr class='event_list_tr0'>
+    	   <td width='200' class='event_list_td' valign='top'>
+             <a href='{$_SERVER['PHP_SELF']}?event_id={$event['event_id']}&event_name={$event['event_name']}'>
+             {$event["event_name"]}</a></td>
+    	 <td width='200' class='event_list_td' valign='top'>$edate - $etime</td>
+    	 <td width='200' class='event_list_td' valign='top'>{$event["ort_name"]}-{$event["ort_city"]}</td>
+    <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["check"]."</td>
+    <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["com"]."</td>
+    <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["free"]."</td>
+    </tr>";
+
+    }
+    echo "</table>";
+    }else{
+     echo con("no_event_sets");
+    }
  }
  function search_form (&$data){
   global $_SHOP;
@@ -496,7 +499,7 @@ function print_order_status ($order_status){
     return "<font color='green'>".payed."</font>";
   }else if($order_status=='cancel'){
     return "<font color='#787878'>".canceled."</font>";
- }
+  }
 }
 
 

@@ -60,6 +60,8 @@ class ControlPage extends AUIComponent {
         $this->drawHead();
         $this->drawChild($this->items["body"]);
         $this->drawFoot();
+        orphanCheck();
+        trace("End of page. \n\n\r");
     }
 
     function drawHead() {

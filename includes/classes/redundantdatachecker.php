@@ -84,7 +84,7 @@ $orphancheck[]="
 select 'Category', category_id, 'stat_id'  i4 , category_id, cs_category_id
 from Category left join Category_stat on category_id       = cs_category_id
               left join Event    on category_event_id = event_id
-where  (cs_category_id is null and event_status is not null and event_status != 'unpub')
+where  (cs_category_id is null and event_status is not null and event_status != 'unpub' and event_rep !='main')
 ";
 $orphancheck[]="
 select 'Category', category_id, 'shadow'  , category_event_id, null

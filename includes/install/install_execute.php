@@ -111,7 +111,10 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
 
 
-    install_execute::CreateConfig($configpath);
+    if ((!install_execute::CreateConfig($configpath)===false) or !file_exists($configpath)){
+        array_push($Install->Errors,"Configuration file is not saved correctly check the folder permissions!");
+        return true;
+    }
 
     if (getophandata()!=='none') {
       array_push($Install->Warnings,'After the update the installer found some problems with your database.<br>'.
@@ -174,7 +177,7 @@ class install_execute {
     return $config;
   }
 
-  static function CreateConfig($configpath) {
+  static function CreateConfig(& $configpath) {
 
     $config = "<?php\n";
     $config .= "/**\n";
