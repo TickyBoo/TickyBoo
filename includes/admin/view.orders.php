@@ -542,7 +542,8 @@ class OrderView extends AdminView{
         return $this->view($_REQUEST["order_id"]);
 			}
       if(!$order=Order::load($_REQUEST['order_id'])){return;}
-      $order->orderNote = $orderNote->onote_note;
+      $order->emailSubject = $orderNote->onote_subject;
+      $order->emailNote = $orderNote->onote_note;
       if(is($_REQUEST['onote_set_sent'])==="1"){
         $order->set_shipment_status('send');
       }elseif(is($_REQUEST['onote_set_payed'])==="1"){

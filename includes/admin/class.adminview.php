@@ -390,7 +390,7 @@ class AdminView extends AUIComponent {
     function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='') {
       $suffix = self::_check($name, $suffix,$data);
       echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
-              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
+              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" .$data[$name] /*htmlspecialchars($data[$name], ENT_QUOTES)*/ . "</textarea>
               </td></tr>\n";
     }
 

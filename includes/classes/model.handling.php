@@ -172,6 +172,7 @@ class Handling Extends Model {
       $link= $_SHOP->root."index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
       $order_d['order_old_status'] = $old_state;
+      $order_d['note_subject']=empt($order->emailSubect,"");
       $order_d['note_body']=empt($order->emailNote,"");
 
       $handTemps=explode(",",$order->handling->handling_email_template);

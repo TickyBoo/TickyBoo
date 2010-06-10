@@ -144,4 +144,6 @@ $order['pmp_scene'] = 'north';
 $order['pmp_shift'] = '';
 $order['pmp_expires'] = '1236567765';
 $order['barcode_text'] = '0001745306416117';
+$order['note_subject'] = 'Order Note Subject';
+$order['note_body'] = 'Order Note text.. say something important!';
 ?>
