@@ -334,8 +334,8 @@ class AdminView extends AUIComponent {
 
   function _check ($name,$main,$data){
     if (is_object($main)) {
-      //if($main->$name==$data[$name]){$chk='checked';}
-      return "<input title=".con('reset_to_main')." type='checkbox' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
+      if($main->$name==$data[$name]){$chk='checked';}
+      return "<input title=".con('reset_to_main')." type='checkbox' id='$name"."_reset_chk' name='$name"."_chk' value=1 $chk align='middle' style='border:0px;'> ";
     }
     return $main;
   }
@@ -387,10 +387,28 @@ class AdminView extends AUIComponent {
           </td></tr>\n";
     }
 
-    function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $class='') {
+    /**
+     * AdminView::print_large_area()
+     * 
+     * @param mixed $name
+     * @param mixed $data
+     * @param mixed $err
+     * @param integer $rows
+     * @param integer $cols
+     * @param string $suffix
+     * @param string|array $options ($class depricated) array of options additional options
+     * 'escape'=>false, wont escape the html
+     * 'class'=>'class-name' CSS Class name
+     * @return void
+     */
+    function print_large_area ($name, &$data, &$err, $rows = 20, $cols = 80, $suffix = '', $options='') {
+      if(is_array($options)){
+        $class = is($options['class'],'');
+      }else{$class = $options;}
+      $escape = is($options['escape'],true);
       $suffix = self::_check($name, $suffix,$data);
       echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
-              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" .$data[$name] /*htmlspecialchars($data[$name], ENT_QUOTES)*/ . "</textarea>
+              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . ($escape ? htmlspecialchars($data[$name], ENT_QUOTES):$data[$name]) . "</textarea>
               </td></tr>\n";
     }
 

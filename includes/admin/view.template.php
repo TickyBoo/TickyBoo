@@ -216,7 +216,7 @@ class TemplateView extends AdminView{
 //    $this->print_select ("template_type", $data, $err, array("email", "pdf2"));   //"pdf",
 
     //cols = 96 is too big in ff and ie 92 is the max size before you misshape the table, this is because opera adds the scrollbar.
-    $this->print_large_area('template_text', $data, $err, 20,80 );
+    $this->print_large_area('template_text', $data, $err, 20,92,'',array('escape'=>false) );
     $this->form_foot(2, $_SERVER['PHP_SELF']);
   }
 

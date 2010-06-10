@@ -313,6 +313,17 @@ select SQL_CALC_FOUND_ROWS *
 
 		$this->print_file( 'event_image', $data, $err, 'img', $main);
 		$this->print_file( 'event_mp3', $data, $err, 'mp3', $main );
+    
+    $script = "
+    jQuery('input,textarea,select').change(function(){
+      var name = jQuery(this).attr('name');
+      name = name.substring(0,name.indexOf('-',0));
+      console.log(name);
+      jQuery('#'+name+'_reset_chk').attr('checked',false);
+    });
+    ";
+    $this->addJQuery($script);
+    
         //recurrence
 		$this->form_foot(2,$_SERVER['PHP_SELF']);
 	}
