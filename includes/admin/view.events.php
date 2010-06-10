@@ -317,8 +317,9 @@ select SQL_CALC_FOUND_ROWS *
     $script = "
     jQuery('input,textarea,select').change(function(){
       var name = jQuery(this).attr('name');
-      name = name.substring(0,name.indexOf('-',0));
-      console.log(name);
+      if(name.indexOf('-',0) > 0 ) {
+        name = name.substring(0,name.indexOf('-',0));
+      }
       jQuery('#'+name+'_reset_chk').attr('checked',false);
     });
     ";
