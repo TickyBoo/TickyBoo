@@ -109,9 +109,8 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='forgot_passwd'");
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='Signup_email'");
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
-
-
-    if ((!install_execute::CreateConfig($configpath)===false) or !file_exists($configpath)){
+    
+    if ((install_execute::CreateConfig($configpath)===false) or !file_exists($configpath)){
         array_push($Install->Errors,"Configuration file is not saved correctly check the folder permissions!");
         return true;
     }
@@ -177,7 +176,7 @@ class install_execute {
     return $config;
   }
 
-  static function CreateConfig(& $configpath) {
+  static function CreateConfig(&$configpath) {
 
     $config = "<?php\n";
     $config .= "/**\n";
@@ -206,7 +205,7 @@ class install_execute {
     $config .= self::fillConfig($_SESSION['SHOP'],'$_SHOP->');
     $config .= "\n?>";
     $configpath = ($configpath)?$configpath:(ROOT."includes".DS."config".DS."init_config.php");
-    return file_put_contents ($configpath, $config);
+    return file_put_contents($configpath, $config);
   }
 
   static function display($Install) {
