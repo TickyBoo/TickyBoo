@@ -36,6 +36,21 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once('classes/model.orderstatus.php');
 
 class Order Extends Model {
+  
+  const STS_PMT_PAID = 'payed';
+  const STS_PMT_PEND = 'pending';
+  const STS_PMT_NONE = 'none';
+  
+  const STS_SMT_SENT = 'send';
+  const STS_SMT_NONE = 'none';
+  
+  const STATUS_NONE = 'none';
+  const STATUS_ORDERED = 'ord';
+  const STATUS_RESERVED = 'res';
+  const STATUS_REISSUED = 'reissue';
+  const STATUS_CANCELED = 'cancel';
+  const STATUS_TRASH = 'trash';
+  
   protected $_idName    = 'order_id';
   protected $_tableName = 'Order';
   protected $_columns   = array('#order_id', '*order_user_id', 'order_session_id', '*order_tickets_nr',
