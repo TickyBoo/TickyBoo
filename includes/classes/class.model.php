@@ -96,8 +96,8 @@ class Model {
   function lock($message, $shared=false, $where=false) {
     if (!$this->isLocked) {
       $shared = ($shared)?'LOCK IN SHARE MODE':'FOR UPDATE';
-      $where  = ($where)?$where:"{$this->_idName} = {$this->id}";
-      $query  = " select {$this->_idName} from {$this->_tableName} where {$where} {$shared}";
+      $where  = ($where)?$where:"`{$this->_idName}` = {$this->id}";
+      $query  = "select `{$this->_idName}` from `{$this->_tableName}` where {$where} {$shared}";
       if (shopDB::query($query)) {
         $this->isLocked = true;
       }
