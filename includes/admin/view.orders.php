@@ -207,9 +207,8 @@ class OrderView extends AdminView{
 
     if ($type) {
       $query="SELECT SQL_CALC_FOUND_ROWS distinct seat_order_id, `Order`.*
-              FROM  Seat left JOIN `Order` on seat_order_id=order_id
+              FROM  Seat RIGHT JOIN `Order` on seat_order_id=order_id
               WHERE $where
-              and seat_order_id is not null
               ORDER BY order_date DESC
               LIMIT {$limit['start']},{$limit['end']}";
       $event = Event::load($id);

@@ -13,7 +13,7 @@ class OrderStatus{
   public $updated_by;
 
 
-  public function statusChange($orderId, $newStatus=false, $updatedBy=NULL, $action=false, $description=false){
+  public function statusChange($orderId, $newStatus=false, $updatedBy=NULL, $action=false, $description=false,$data=''){
 
     if(is_numeric($orderId)){
       $sql = "SELECT *
@@ -44,6 +44,11 @@ class OrderStatus{
       if(empty($newStatus)){
         $newStatus=$query['os_status_to'];
       }
+      if(is_array($data)){ $data = (object)$data;}
+      if(is_object($data)){ $data = "'".serialize($data)."'"; 
+      }else{
+        $data = _esc($data);
+      }
 
 
       $sql = "INSERT INTO order_status (
@@ -54,7 +59,8 @@ class OrderStatus{
                 `os_status_to`,
                 `os_changed_by`,
                 `os_action`,
-                `os_description`
+                `os_description`,
+                `os_data`
               ) VALUES (
                 null,
                 "._esc($orderId).",
@@ -63,7 +69,8 @@ class OrderStatus{
                 "._esc($newStatus).",
                 null,
                 ".$action.",
-                ".$description."
+                ".$description.",
+                ".$data."
               )";
       if(!$res=ShopDB::query($sql) || ShopDB::num_rows($res)<>1){
         ShopDB::rollback("Failed to insert status row.");

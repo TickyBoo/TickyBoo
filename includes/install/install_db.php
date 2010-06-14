@@ -363,7 +363,8 @@ $tbls['order_status']['fields'] = array(
   'os_status_to' => "varchar(50) DEFAULT NULL",
   'os_changed_by' => "int(11) DEFAULT NULL",
   'os_action' => "varchar(50) DEFAULT NULL",
-  'os_description' => "text"
+  'os_description' => "text",
+  'os_data' => "text"
 );
 $tbls['order_status']['key'] = array(
   "PRIMARY KEY (`os_id`)",

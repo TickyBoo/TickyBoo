@@ -106,7 +106,7 @@ class Order_Smarty {
       }
 
       //commit the transaction
-      return (ShopDB::commit('Order created'))? $order: false;
+      return (ShopDB::commit('Make order'))? $order: false;
     } else {
       return  addWarning('cant_start_transaction');
     }

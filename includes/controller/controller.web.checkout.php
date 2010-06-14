@@ -48,7 +48,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   public function draw($page, $action, $isAjax= false) {
     GLOBAL $_SHOP;
     if (!$action) {$action = 'index';}
-    ShopDB::begin('Running the Checkout pages');
+    //ShopDB::begin('Running the Checkout pages'); Buggy
     if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
     	if (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
     		$this->smarty->display($fond . '.tpl');
@@ -76,9 +76,9 @@ class ctrlWebCheckout extends ctrlWebShop {
         addWarning('noting_checkout'); echo 'bummer';
       }
     }
-    if (ShopDB::isTxn()) {
-      ShopDB::commit('Checkout page rendered.');
-    }
+    //if (ShopDB::isTxn()) { //Commit allready does this check!
+      //ShopDB::commit('Checkout page rendered.'); //Never Committs!
+    //}
     orphanCheck();
     trace("End of shop \n\n\r");
   }

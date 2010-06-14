@@ -196,13 +196,13 @@ class Order Extends Model {
    * Save order function, will take parmaters from the class varibles constructor.
    *
    * @since 1.0
-   * @updated 1.0 beta6
+   * @updated 1.0 beta6.2
    */
   function save () {
     global $_SHOP;
 
     if($this->order_id){
-      return addWarning('order_already_crated'); //already saved
+      return addWarning('order_already_created'); //already saved
     }
 
     $amount=$this->amount();
@@ -266,12 +266,14 @@ class Order Extends Model {
     } elseif(parent::save()){
 
       /*Create intial Order status */
-      OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order");
+      $temp = $this;
+      unset($temp->handling,$temp->discount,$temp->places);
+      OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order",$temp);
 
       if (isset($this->discount)) {
         $this->discount->isUsed(count($this->places));
         $this->order_discount_promo = $this->discount->discount_promo;
-        OrderStatus::statusChange($this->order_id,$this->discount->discount_name, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
+        OrderStatus::statusChange($this->order_id, false, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
 
       foreach(array_keys($this->places) as $i){
