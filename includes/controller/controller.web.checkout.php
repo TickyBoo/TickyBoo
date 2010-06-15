@@ -48,7 +48,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   public function draw($page, $action, $isAjax= false) {
     GLOBAL $_SHOP;
     if (!$action) {$action = 'index';}
-    //ShopDB::begin('Running the Checkout pages'); Buggy
+    ShopDB::begin('Running the Checkout pages'); //Buggy
     if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
     	if (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
     		$this->smarty->display($fond . '.tpl');
@@ -76,9 +76,9 @@ class ctrlWebCheckout extends ctrlWebShop {
         addWarning('noting_checkout'); echo 'bummer';
       }
     }
-    //if (ShopDB::isTxn()) { //Commit allready does this check!
-      //ShopDB::commit('Checkout page rendered.'); //Never Committs!
-    //}
+    if (ShopDB::isTxn()) { //Commit allready does this check!
+      ShopDB::commit('Checkout page rendered.'); //Never Committs!
+    }
     orphanCheck();
     trace("End of shop \n\n\r");
   }
@@ -362,7 +362,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
-      $myorder->lock();
+      $myorder->lock('Lock Created Order'); //Lock created order
       $this->setordervalues($myorder); //assign order vars
       $this->__MyCart->destroy_f(); // destroy cart
       if(!$myorder->handling){
@@ -370,7 +370,8 @@ class ctrlWebCheckout extends ctrlWebShop {
       }
     	$hand = $myorder->handling; // get the payment handling object
       $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
-
+      
+      ShopDB::commit('UnLock Created Order');
       if (is_array($confirmtext)) {
     	 $this->assign('pm_return',$confirmtext);
         if(!$confirmtext['approved']) {

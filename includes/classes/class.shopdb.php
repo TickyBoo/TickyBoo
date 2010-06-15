@@ -221,6 +221,7 @@ class ShopDB {
      * @return bool, Is true if a transaction has started.
      */
     static function isTransaction(){
+      print_r(self::$db_trx_started);
       return self::$db_trx_started >0;
     }
 

@@ -163,6 +163,8 @@ class Handling Extends Model {
 				}
 			}
 		}
+    
+    ShopDB::commit('proc_on_handle_for_eph_esh'); // No DB objects are handled below.
 
     if($template_name=$this->templates[$new_state] and $order->user_email){
 
@@ -198,13 +200,11 @@ class Handling Extends Model {
       if(!Template::sendMail($tpl, $order_d, "", $_SHOP->lang)){
         $sentEmail=FALSE;
       }
-
     }
 
     if (!$sentEmail) {
       addWarning('status_change_handling_error');
     }else{
-      ShopDB::commit('proc_on_handle');
       addNotice("order_is_set_to_{$new_state}");
     }
 
