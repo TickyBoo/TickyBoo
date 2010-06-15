@@ -44,12 +44,20 @@ class HandlingView extends AdminView{
 		echo "<tr><td class='admin_list_title' colspan='4' align='left'>".con('handling_title')."</td>\n";
     echo "<td class='admin_list_title' colspan='2' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
     echo "</tr>\n";
+    echo "<tr>";
+      echo "<td class='admin_list_item'>".con('payment')."</td>";
+      echo "<td class='admin_list_item'>".con('shipment')."</td>";
+      echo "<td class='admin_list_item'>".con('fees')."</td>";
+      echo "<td class='admin_list_item'>".con('www','?')."</td>";
+      echo "<td class='admin_list_item'>".con('sp','?')."</td>";
+      echo "<td class='admin_list_item'></td>";
+    echo "</tr>\n";
 		if($hands=Handling::loadAll()){
 			foreach($hands as $hand){
 				$handling_mode_pos=(strpos($hand->handling_sale_mode,'sp')!==false)?'pos':'&nbsp;';
 				$handling_mode_web=(strpos($hand->handling_sale_mode,'www')!==false)?'web':'&nbsp;';
-
-				echo "<tr class='admin_list_row_$alt'>";
+        
+        echo "<tr class='admin_list_row_$alt'>";
 				if($hand->handling_id==1){
 //				 	echo  "<td  class='admin_list_item'>".reserved."</td>";
 //				 	echo "<td class='admin_list_item'>".reserved."</td>\n";

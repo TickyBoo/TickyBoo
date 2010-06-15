@@ -88,9 +88,7 @@ class Order Extends Model {
  //   );
       if($data=ShopDB::query_one_row($query)){
         $order=new Order;
-
-
-
+        
         $order->_fill($data);
 
         if($order && $complete){
@@ -232,9 +230,9 @@ class Order Extends Model {
 
     $this->order_order_set = implode(',',$order_set);
     $this->order_discount_price = number_format($this->order_discount_price, 2, '.', '');
-    $this->order_partial_price=number_format($amount, 2, '.', '');;
-    $this->order_total_price=number_format($total, 2, '.', '');;
-    $this->order_fee=number_format($fee, 2, '.', '');;
+    $this->order_partial_price=number_format($amount, 2, '.', '');
+    $this->order_total_price=number_format($total, 2, '.', '');
+    $this->order_fee=number_format($fee, 2, '.', '');
 
     //$this->order_date_expire = null;
 
@@ -264,12 +262,11 @@ class Order Extends Model {
     if(!ShopDB::begin('Create Order')){
       return FALSE;
     } elseif(parent::save()){
+      
+      /* Create intial Order status log */
+      OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order",$this);
 
-      /*Create intial Order status */
-      $temp = $this;
-      unset($temp->handling,$temp->discount,$temp->places);
-      OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order",$temp);
-
+      
       if (isset($this->discount)) {
         $this->discount->isUsed(count($this->places));
         $this->order_discount_promo = $this->discount->discount_promo;
@@ -318,7 +315,6 @@ class Order Extends Model {
 
       $tmpOrdForDate = Order::load($this->order_id);
       $this->order_date = $tmpOrdForDate->order_date;
-
 
       if($this->handling->handling_id=='1'){
          $ok = $this->set_status('res',TRUE);

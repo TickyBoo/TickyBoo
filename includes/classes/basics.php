@@ -289,7 +289,9 @@ function empt(&$arg , $default=null){
 function con($name, $value='') {
   global $_SHOP;
   if (defined($name)) {
-    return constant($name);
+    $ret = constant($name);
+    $ret .= ($value)?$value:'';
+    return $ret;
   } elseif ($value) {
     return $value;
   } elseif ($name) {

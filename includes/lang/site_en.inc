@@ -707,6 +707,7 @@ define('email_body','Email Body');
 
 
 //Order Handling
+define("fees","Fee's");
 define("handling_title","Order Handlings");
 define("handling_add_title","Add an Order Handling");
 define("payment_update_title","Modify the Payment Type");
