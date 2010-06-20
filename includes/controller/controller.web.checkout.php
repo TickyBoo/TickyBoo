@@ -370,8 +370,8 @@ class ctrlWebCheckout extends ctrlWebShop {
       }
     	$hand = $myorder->handling; // get the payment handling object
       $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
-      
-      ShopDB::commit('UnLock Created Order');
+
+   //    ShopDB::commit('UnLock Created Order'); // Dont commit within the processes  will be done at the end.
       if (is_array($confirmtext)) {
     	 $this->assign('pm_return',$confirmtext);
         if(!$confirmtext['approved']) {

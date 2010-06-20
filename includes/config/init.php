@@ -215,11 +215,11 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   $loc = con('setlocale_ALL',' ');
   if(!empty($loc)){
-    setlocale(LC_ALL,explode(';',$loc));
+    setlocale(LC_ALL, explode(';',$loc));
   }
   $loc = con('setlocale_TIME',' ');
   if(!empty($loc)){
-    setlocale(LC_TIME,explode(';',$loc));
+    setlocale(LC_TIME, explode(';',$loc));
   }
 
   if(isset($_SHOP->auth_required)){
@@ -233,7 +233,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $auth_container = new CustomAuthContainer($_SHOP->auth_status);
     $_auth = new Auth($auth_container,$params);//,'loginFunction'
     $_auth ->setLoginCallback('loginCallback');
-    is($action,"");
+    $action = is($action, $_REQUEST['action']);
     if ($action == 'logout') {
       $_auth->logout();
       session_unset();

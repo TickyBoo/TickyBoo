@@ -286,14 +286,21 @@ function empt(&$arg , $default=null){
   return $default;
 }
 
-function con($name, $value='') {
+/**
+ * con() show translation text
+ *
+ * @param string $name the name of the definded language constant
+ * @param string $default default value when $name is not defined.
+ * @return
+ */
+function con($name, $default='') {
   global $_SHOP;
   if (defined($name)) {
     $ret = constant($name);
-    $ret .= ($value)?$value:'';
+//    $ret .= ($default)?$default:'';
     return $ret;
-  } elseif ($value) {
-    return $value;
+  } elseif ($default) {
+    return $default;
   } elseif ($name) {
     if (isset($_SHOP->AutoDefineLangs)  and $_SHOP->AutoDefineLangs) {
       if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){

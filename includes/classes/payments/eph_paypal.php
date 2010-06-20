@@ -71,7 +71,7 @@ class EPH_paypal extends payment{
         <input type='hidden' name='cmd' value='_xclick'>
         <input type='hidden' name='business' value='{$this->pm_paypal_business}'>
         <input type='hidden' name='item_name' value='".$order->order_description()."'>
-        <input type='hidden' name='item_number' value='{$order->order_id}'>
+
         <input type='hidden' name='amount' value='".sprintf("%01.2F", ($order->order_total_price-$order->order_fee))."'>
         <input type='hidden' name='handling' value='".($order->order_fee)."'>
         <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."'>
@@ -87,6 +87,7 @@ class EPH_paypal extends payment{
         <input type='submit' value='{!pay!}' name='submit2' alt='{!paypal_pay!}' >
         </div>
       </form>";
+      // <input type='hidden' name='item_number' value='{$order->order_id}'>
   }
 
   function on_return(&$order, $result){
@@ -114,18 +115,18 @@ class EPH_paypal extends payment{
     }
 //     $url=$this->pm_paypal_url;
     $receiver_email=$this->pm_paypal_business;
-    if (!isset($_POST['item_number']) or !is_numeric($_POST['item_number']) or ($_POST['item_number']<>$order->order_id)) {
+    if (!isset($_POST['invoice']) or !is_numeric($_POST['invoice']) or ($_POST['invoice']<>$order->order_id)) {
       ShopDB::dblogging("Notification error, order_id mismatch: \n". print_r($_POST, true));
       return;
     }
-    $debug ="date: ".date('r')."\n";
-    $debug .="url: $url\n";
+    $debug  = "date: ".date('r')."\n";
+    $debug .= "url: $url\n";
 
-    $order_id    = $_POST['item_number'];
+    $order_id    = $_POST['invoice'];
     $order_total = $order->order_total_price;
 
-    $debug.="Order_id : $order_id\n";
-    $debug.="Amount   : $order_total\n";
+    $debug .= "Order_id : $order_id\n";
+    $debug .= "Amount   : $order_total\n";
 
     $_POST["cmd"]="_notify-validate";
 
@@ -133,7 +134,7 @@ class EPH_paypal extends payment{
 
 //    $debug.=print_r($_POST,true);
 
-    $debug.="res : $result\n";
+    $debug .= "res : $result\n";
 
     $return = false;
   	if(stristr("VERIFIED",$result)===false) {

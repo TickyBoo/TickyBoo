@@ -206,8 +206,9 @@ class OrderView extends AdminView{
     $limit=$this->get_limit($page);
 
     if ($type) {
+      // NVDS: changed so it is more uniform, but works the same ;)
       $query="SELECT SQL_CALC_FOUND_ROWS distinct seat_order_id, `Order`.*
-              FROM  Seat RIGHT JOIN `Order` on seat_order_id=order_id
+              FROM `Order` left JOIN `Seat` on seat_order_id=order_id
               WHERE $where
               ORDER BY order_date DESC
               LIMIT {$limit['start']},{$limit['end']}";
@@ -252,11 +253,11 @@ class OrderView extends AdminView{
 
   /**
    * OrderView::view()
-   * 
+   *
    * Produces Order View + Tabs and Extra info.
-   * 
+   *
    * @param mixed $order_id
-   * @return prints out order 
+   * @return prints out order
    */
   function view($order_id){
     $query="select o.*, u.*, p.user_lastname as kasse_name
@@ -323,7 +324,7 @@ class OrderView extends AdminView{
                    con("order_details_notetab")=>'?subtab=3'.$data);
     echo $this->PrintTabMenu($menu, (int)$_REQUEST['subtab'], "left");
     $_REQUEST['subtab'] = (int)$_REQUEST['subtab'];
-    
+
     //Each Order Sub Tab
     if ($_REQUEST['subtab']==0) { //Tickets
       echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
@@ -360,7 +361,7 @@ class OrderView extends AdminView{
 
        }
        echo "</table><br>\n";
-       
+
     } elseif ($_REQUEST['subtab']==1) { //Orders Owner (User)
 
        $order["user_country_name"]=$this->getCountry($order["user_country"]);
@@ -383,7 +384,7 @@ class OrderView extends AdminView{
        $this->print_field('user_status',$order);
 
        echo "</table>\n";
-       
+
     } elseif ($_REQUEST['subtab']==2) { // Orders Status Log
       $query="select *
               from `order_status` where os_order_id="._esc($order_id)."
@@ -403,11 +404,11 @@ class OrderView extends AdminView{
          $alt=($alt+1)%2;//
       }
       echo "</table>\n";
-      
+
     } else { //Note Tab
-    
+
       $query="SELECT *
-              FROM `order_note` 
+              FROM `order_note`
               WHERE onote_order_id="._esc($order_id)."
               ORDER BY onote_timestamp DESC ";
       if(!$res=ShopDB::query($query)){
@@ -415,7 +416,7 @@ class OrderView extends AdminView{
       }
       echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='2'>\n";
       echo "<tr><td class='admin_list_title' colspan='2'>".con('order_note_title')."</td></tr>";
-      
+
       $alt=0;
       $noteTypes = array(
           OrderNote::TYPE_NOTE=>"on_type_note",
@@ -447,7 +448,7 @@ class OrderView extends AdminView{
       }
       echo "</table>\n";
       print_r($noteCounts);
-      
+
       echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=addnote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
       $this->print_hidden('onote_order_id',array('onote_order_id'=>$order_id));
       $this->form_head(con('order_add_note'));
@@ -462,7 +463,7 @@ class OrderView extends AdminView{
       echo "<tr id=\"on_save_email_note\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
         .$this->Show_button('submit','save_note',3)."</td></tr>";
       $this->form_foot();
-      
+
       $script = "
       $('#onote_type-select').change(function(){
         if($(this).val() == '".OrderNote::TYPE_SHIP."'){
@@ -472,21 +473,21 @@ class OrderView extends AdminView{
           $('#on_save_email_ship').hide(); $('#on_save_email_note').hide();
           $('#onote_set_sent').attr('checked',false); $('#on_save_email_payment').show();
         }else if($(this).val() == '".OrderNote::TYPE_NOTE."'){
-          $('#on_ship_note').attr('checked',false); $('#on_payment_note').attr('checked',false); 
-          $('#on_save_email_ship').hide(); $('#on_save_email_payment').hide(); 
-          $('#on_save_email_note').show(); 
+          $('#on_ship_note').attr('checked',false); $('#on_payment_note').attr('checked',false);
+          $('#on_save_email_ship').hide(); $('#on_save_email_payment').hide();
+          $('#on_save_email_note').show();
         }else{
-          $('#on_save_email_ship').hide(); $('#on_save_email_payment').hide(); $('#on_save_email_note').hide();  
+          $('#on_save_email_ship').hide(); $('#on_save_email_payment').hide(); $('#on_save_email_note').hide();
           $('#on_ship_note').attr('checked',false); $('#on_payment_note').attr('checked',false);
         }
       }).change();";
       $this->addJQuery($script);
-      
+
       if(empt($order['order_note'])){
         echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=savenote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
         $this->form_head(con('order_note_title'));
         $this->print_large_area('order_note',$order, $err,10);
-        $this->form_foot(); 
+        $this->form_foot();
       }
     }
     return true;
@@ -534,7 +535,7 @@ class OrderView extends AdminView{
     if($_GET['action']=='savenote') {
       order::save_order_note($_REQUEST["order_id"],$_REQUEST["order_note"]);
       return $this->view($_REQUEST["order_id"]);
-      
+
     }elseif($_GET['action']=='addnote') {
       $orderNote = new OrderNote();
       if (!$orderNote->fillRequest() || !$orderNote->saveEx()) {
@@ -555,7 +556,7 @@ class OrderView extends AdminView{
         $orderNote->sendNote($order);
       }
       return $this->view($_REQUEST["order_id"]);
-      
+
     } elseif($_GET['action']=='details' || $_REQUEST['action']=='order_detail'){
       return $this->view($_REQUEST["order_id"]);
 

@@ -36,21 +36,21 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once('classes/model.orderstatus.php');
 
 class Order Extends Model {
-  
+
   const STS_PMT_PAID = 'payed';
   const STS_PMT_PEND = 'pending';
   const STS_PMT_NONE = 'none';
-  
+
   const STS_SMT_SENT = 'send';
   const STS_SMT_NONE = 'none';
-  
+
   const STATUS_NONE = 'none';
   const STATUS_ORDERED = 'ord';
   const STATUS_RESERVED = 'res';
   const STATUS_REISSUED = 'reissue';
   const STATUS_CANCELED = 'cancel';
   const STATUS_TRASH = 'trash';
-  
+
   protected $_idName    = 'order_id';
   protected $_tableName = 'Order';
   protected $_columns   = array('#order_id', '*order_user_id', 'order_session_id', '*order_tickets_nr',
@@ -88,7 +88,7 @@ class Order Extends Model {
  //   );
       if($data=ShopDB::query_one_row($query)){
         $order=new Order;
-        
+
         $order->_fill($data);
 
         if($order && $complete){
@@ -262,26 +262,30 @@ class Order Extends Model {
     if(!ShopDB::begin('Create Order')){
       return FALSE;
     } elseif(parent::save()){
-      
+
       /* Create intial Order status log */
       OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order",$this);
 
-      
+
       if (isset($this->discount)) {
         $this->discount->isUsed(count($this->places));
         $this->order_discount_promo = $this->discount->discount_promo;
         OrderStatus::statusChange($this->order_id, false, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
-
+      $tickets = array();
       foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
         $ticket->order_id($this->order_id);
+        $tickets[] = $ticket->id;
         // Tickets are saved here if handled==1 tickets are reserved instead of ordered.
         if(!$ticket->save($this->handling->handling_id=='1')){
           return self::_abort('Errors_commiting_ticket_save');
         }
         $event_stat[$ticket->seat_event_id]++;
         $category_stat[$ticket->seat_category_id]++;
+      }
+      if (count($tickets)>0) {
+        OrderStatus::statusChange($this->order_id, false, NULL, 'Order::save', "Seats: ".implode(', ',$tickets ));
       }
 
       foreach($event_stat as $event_id=>$count){
