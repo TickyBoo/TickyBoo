@@ -29,7 +29,7 @@
  * Please goto fusionticket.org for more info and help.
  */
  *}
-
+{if $smarty.request.ajax neq "yes"}
 
 			</div>
 
@@ -39,3 +39,4 @@
 		</div>
 	</body>
 </html>
+{/if}

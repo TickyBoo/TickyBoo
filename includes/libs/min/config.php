@@ -32,7 +32,7 @@ $min_errorLogger = false;
  * Allow use of the Minify URI Builder app. If you no longer need 
  * this, set to false.
  **/
-$min_enableBuilder = true;
+$min_enableBuilder = false;
 
 
 /**
@@ -54,10 +54,17 @@ $min_cachePath = TEMP;
  * If /min/ is directly inside your document root, just uncomment the 
  * second line. The third line might work on some Apache servers.
  */
-$min_documentRoot = WWW_ROOT;
+$min_documentRoot = rtrim(WWW_ROOT,'\/');
 //$min_documentRoot = substr(__FILE__, 0, strlen(__FILE__) - 15);
 //$min_documentRoot = $_SERVER['SUBDOMAIN_DOCUMENT_ROOT'];
 
+// Set $__siteUri to the path of the site from the webserver's real docroot
+// Likely "" on production, "/mySite" on our testing server 
+list($__siteUri) = explode('/minify.php', $_SERVER['SCRIPT_NAME'], 2);
+
+
+// Prepend $siteUri to the rewritten URIs in CSS files
+$min_symlinks['//' . ltrim($__siteUri, '/')] = $min_documentRoot;
 
 /**
  * Cache file locking. Set to false if filesystem is NFS. On at least one 
@@ -123,8 +130,8 @@ $min_serveOptions['minApp']['maxFiles'] = 10;
  * array('//static' => 'D:\\staticStorage')  // Windows
  * </code>
  */
-$min_symlinks = array();
-
+//$min_symlinks = array();
+//print_r($min_symlinks);
 
 /**
  * If you upload files from Windows to a non-Windows server, Windows may report

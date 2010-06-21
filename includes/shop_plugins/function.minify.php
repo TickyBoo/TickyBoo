@@ -31,6 +31,7 @@
 
 function smarty_function_minify($params, &$smarty)
 {
+  global $_SHOP;
 
 // Retrieve the files to process
 $files = $params['files'];
@@ -41,8 +42,9 @@ $base = is($params['base'],false);
 // Retrieve type of file
 $type = $params['type'];
 
+$url = $_SHOP->root_base."minify.php?";
 if($base){
-  $url = "b=".$base."&";
+  $url .= "b=".$base."&";
 }
 $url .= "f=".$files;
 
@@ -50,11 +52,11 @@ $url .= "f=".$files;
 switch ( $type )
 {
 case 'css':
-$min = '<link type="text/css" rel="stylesheet" href="minify.php?'.$url.'" />';
+$min = '<link type="text/css" rel="stylesheet" href="'.$url.'" />';
 break;
 
 default:
-$min = '<script type="text/javascript" src="minify.php?'.$url.'"></script>';
+$min = '<script type="text/javascript" src="'.$url.'"></script>';
 break;
 }
 

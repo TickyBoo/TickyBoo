@@ -11,7 +11,8 @@ var loadOrder = function(){
       'Close': function() {
         $(this).dialog('close');
       }
-    }
+    },
+    open: function(){jQuery("#seat-chart").parent().appendTo($("#order-form"));} 
   });
 
   $("#order_action").dialog({

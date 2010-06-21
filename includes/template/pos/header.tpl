@@ -29,37 +29,30 @@
  * Please goto fusionticket.org for more info and help.
  */
  *}
+{if $smarty.request.ajax neq "yes"}
 <html>
 
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>FusionTicket: Box Office / Sale Point </title>
-
-		<link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
-
-		<link rel="stylesheet" type="text/css" href="../css/flick/jquery-ui-1.8.1.custom.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css" media="screen" />
+    
+    {minify type='css' files='css/formatting.css,css/flick/jquery-ui-1.8.1.custom.css,css/ui.jqgrid.css'}
+    
+    {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery.ui.js,jquery.ajaxmanager.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.checkboxselect.js,i18n/grid.locale-en.js,jquery.jqGrid.min.js'}
 
 		<script type="text/javascript">
+      var address = '{$_SHOP_root}';
 			var lang = new Object();
 			lang.required = '{!mandatory!}';        lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';
 			lang.fax_long = '{!fax_long!}';         lang.fax_short = '{!fax_short!}';
 			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
 			lang.not_number = '{!not_number!}';
 		</script>
+    
+    {minify type='js' base='pos/scripts' files='pos.jquery.style.js,pos.jquery.ajax.js,pos.jquery.order.functions.js,pos.jquery.order.js,pos.jquery.order.user.js,pos.jq.forms.js,pos.jq.current.js,pos.jq.current.functions.js'}
 
-		<script type="text/javascript" src="../scripts/jquery/jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
-
-		<script type="text/javascript" src="../scripts/jquery/jquery.ajaxmanager.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery.form.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery.validate.min.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery.checkboxselect.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/i18n/grid.locale-en.js"></script>
-		<script type="text/javascript" src="../scripts/jquery/jquery.jqGrid.min.js"></script>
-
+    <!-- 
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
     <script type="text/javascript" src="scripts/pos.jquery.order.functions.js"></script>
@@ -68,26 +61,13 @@
     <script type="text/javascript" src="scripts/pos.jq.forms.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.current.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.current.functions.js"></script>
-    {literal}
-			<script type="text/javascript">
-				$(document).ready(function(){
-					/*
-					$.ajax({
-						type:	"POST",
-						url:	"ajax.php",
-						dataType:"json",
-						data:{"test":true},
-						success:function(data, status){
-							console.log("Status: "+status);
-							console.log(data.status);
-						}
-					});*/
-	 			});
-			</script>
-		{/literal}
+    -->
+    <script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
+    
 	</head>
 
 	<body>
+
 		<div id="wrap">
 			<div id="header">
 				<div class="loading">
@@ -110,5 +90,6 @@
             <span id='notice-text'>fff</span>
          </p>
       </div>
-      <div style="display:none" id='showdialog'>this is a nice dialog is it not?</div>
+      <div style="display:none" id='showdialog'>&nbsp;</div>
 			<div id="right">
+{/if}

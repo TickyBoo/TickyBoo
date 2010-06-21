@@ -1,12 +1,16 @@
 $(document).ready(function(){
 	$(document).checkboxAreaSelect();
+  
+  //bindLinks();
+  
+  console.log(address);
 
-	$().ajaxSend(function(evt, request, settings){
-		$(".loading").show();
+	$(".loading").ajaxSend(function(evt, request, settings){
+		$(this).show();
 	});
 
-	$().ajaxStop(function(evt, request, settings){
-		$(".loading").fadeOut("fast");
+	$(".loading").ajaxStop(function(evt, request, settings){
+		$(this).fadeOut("fast");
 	});
 
 });
@@ -20,7 +24,7 @@ var ajaxQManager = $.manageAjax.create('ajaxQMan',{
 
 var bindForms = function(){
 	$("form").submit(function(){
-	   console.log("fire!!");
+    console.log("fire!!");
 		var form = $(this);
 		if($(form).attr("id") == "order-form"){
     		return false;
@@ -39,14 +43,17 @@ var bindForms = function(){
 
 var bindLinks = function(){
 	//$("a:not([href^='http'])").click(function () { //does not work after rebind in ie8.
-	$("a").click(function () {
+	$("a").live('click select', function () {
+	   console.log("AjaxLink");
     	var url = $(this).attr('href');
     	if($(this).hasClass("ui-dialog-titlebar-close") || $(this).hasClass('.ui-state-hover')){
     		return false;
-    	}               alert('test me');
+    	}
     	$("#seat-chart").each(function(){
     		$(this).remove();
     	});
+      //window.location.replace(url);#
+      location.hash = url;
    		ajaxQManager.clear();
    		ajaxQManager.add({
 		//$.ajax({
