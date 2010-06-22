@@ -44,18 +44,18 @@
           {valuta value=$shop_category.category_price|string_format:"%.2f"}
         </td>
         <td align='left' width='25%'>
-          {if $shop_category.cs_free>0}
-            {if $shop_category.cs_free/$shop_category.cs_total ge 0.2}
-              <font>{!tickets_available!} {$shop_category.cs_free}</font>
+          {if $shop_category.category_free>0}
+            {if $shop_category.category_free/$shop_category.category_size ge 0.2}
+              <font>{!tickets_available!} {$shop_category.category_free}</font>
             {else}
-              <font color='Yellow'>{!tickets_available!} {$shop_category.cs_free}</font>
+              <font color='Yellow'>{!tickets_available!} {$shop_category.category_free}</font>
             {/if}
           {else}
             <span class='error'>{!category_sold!}</span>
           {/if}
         </td>
       </tr>
-      {if $shop_category.cs_free>0}
+      {if $shop_category.category_free>0}
         {assign var=js_array value="$js_array unnum_cats[unnum_cats.length]='`$shop_category.category_numbering`';"}
         {capture assign=opt}
           <option value='{$shop_category.category_id}' {if $shop_category.category_id eq $smarty.request.category_id}selected{/if} />
@@ -133,7 +133,7 @@
               <img src="files/{$shop_event.pm_image}"  border='0'  usemap="#ort_map">
               <map name="ort_map">
                 {category event_id=$shop_event.event_id stats="on"}
-                  {if $shop_category.cs_free gt 0}
+                  {if $shop_category.category_free gt 0}
                     <area href="index.php?category_id={$shop_category.category_id}&event_id={$smarty.get.event_id}" {$shop_category.category_data} />
                   {/if}
                 {/category}

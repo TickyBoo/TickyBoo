@@ -35,15 +35,15 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 class Seat  Extends Model {
-  
+
   const STATUS_FREE = 'free';
   const STATUS_ORDERED = 'ord';
   const STATUS_RESERVED = 'resp';
   const STATUS_HOLD = 'res';
   const STATUS_CANCELED = 'cancel';
   const STATUS_TRASH = 'trash';
-  
-  
+
+
   protected $_idName    = 'seat_id';
   protected $_tableName = 'Seat';
   protected $_columns   = array('#seat_id', '*seat_event_id', '*seat_category_id', '#seat_user_id', '#seat_order_id',
@@ -305,7 +305,7 @@ class Seat  Extends Model {
   //the order is cancelled -> moves places to 'free' status and
   //updates stats
   //$seats = array(array('seat_id'=>,'event_id'=>,category_id=>,pmp_id=>))
-  function cancel ($seats, $user_id, $nocommit=FALSE){
+  function cancel($seats, $user_id, $nocommit=FALSE){
     global $_SHOP;
     if(!ShopDB::begin('cancel seats')){
       return FALSE;
@@ -340,19 +340,14 @@ class Seat  Extends Model {
     }
 
     foreach($category_stat as $cat=>$count){
-      $query="UPDATE `Category_stat` SET cs_free=cs_free+$count
-              WHERE cs_category_id='$cat'";
-      if(!ShopDB::query($query)){
-        ShopDB::rollback('cant_cancel_seat_3');//echo c;
-        return FALSE;
+      if (!PlaceMapCategory::dec_stat($cat, $count)) {
+        return ShopDB::rollback('cant_cancel_seat_3');//echo c;
       }
     }
 
     foreach($event_stat as $event=>$count){
-      $query="UPDATE `Event_stat` SET es_free=es_free+$count
-              WHERE es_event_id='$event'";
-      if(!ShopDB::query($query)){
-        return self::_abort('cant_cancel_seat_4');//echo d;;
+      if (!Event::dec_stat($event, $count)) {
+        return ShopDB::rollback('cant_cancel_seat_4');//echo c;
       }
     }
 

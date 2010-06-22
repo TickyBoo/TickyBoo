@@ -112,22 +112,6 @@ class export_xml_event extends AdminView {
 			'pk'=>'user_id',
 			'query'=>"SELECT  DISTINCT User.* FROM Seat left join User on seat_user_id=user_id WHERE seat_event_id=$event_id");
 
-
-			$what[]=array(
-			'table'=>'Color',
-			'pk'=>'color_id',
-			'query'=>"SELECT DISTINCT Color.* FROM Color left join `Category` on `category_color`=color_id WHERE `category_event_id`=$event_id");
-
-			$what[]=array(
-			'table'=>'Category_stat',
-			'pk'=>'cs_category_id',
-			'query'=>"SELECT DISTINCT Category_stat.* FROM Category_stat, `Category`
-                WHERE `cs_category_id`=category_id and `category_event_id`=$event_id");
-
-			$what[]=array(
-			'table'=>'Event_stat',
-			'query'=>"SELECT * FROM Event_stat  WHERE `es_event_id`=$event_id");
-
 			$filename=$_GET['export_xml_event_file'];
 			if(empty($filename)){
 			  $filename='event'.(int)$_GET['export_xml_event_event'].'.xml';

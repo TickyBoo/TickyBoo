@@ -289,13 +289,13 @@ class Order Extends Model {
       }
 
       foreach($event_stat as $event_id=>$count){
-        if(!Event::dec_stat($event_id,$count)){
+        if(!Event::dec_stat($event_id, $count)){
           return self::_abort('Errors_commiting_order_stat');
         }
       }
 
       foreach($category_stat as $cat_id=>$count){
-        if(!PlaceMapCategory::dec_stat($cat_id,$count)){
+        if(!PlaceMapCategory::dec_stat($cat_id, $count)){
           return self::_abort('Errors_commiting_cat_stat');
         }
       }

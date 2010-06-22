@@ -152,18 +152,16 @@ class ctrlPosAjax extends ctrlWebCheckout {
 			$toDate = 'event_date';
 		}
 
-		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, es_free
+		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, event_free es_free
 				FROM Event,
-				Ort,
-				Event_stat
+				Ort
 				WHERE 1=1
 				AND ort_id = event_ort_id
-				AND event_id = es_event_id
 				AND event_date >= "._esc($fromDate)."
 				AND event_date <= ".$toDate."
 				and event_rep LIKE '%sub%'
 				AND event_status = 'pub'
-				AND es_free > 0
+				AND event_free > 0
 				ORDER BY event_date,event_time
 				LIMIT 0,50";
 		if(!$query = ShopDB::query($sql)){
@@ -218,10 +216,8 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		}
 
 		$sql = "SELECT *
-			FROM Category c,
-			Category_stat cs
+			FROM Category c
 			WHERE 1=1
-			AND c.category_id = cs.cs_category_id
 			AND c.category_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);
 
@@ -241,7 +237,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 			$placemap .= $this->loadPlaceMap($cat);
       $placemap .= "</div>";
 			}
-			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['cs_free']);
+			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['category_free']);
 		}
 		//Finish loading categories and there details lets grab the discounts to...
 		//If we only need the categories updating then just stop here.
@@ -425,10 +421,8 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		}
 
 		$sql = "SELECT *
-			FROM Category c,
-			Category_stat cs
+			FROM Category c
 			WHERE 1=1
-			AND c.category_id = cs.cs_category_id
 			AND c.category_id = "._esc($catId);
 		$result = ShopDB::query_one_row($sql);
 

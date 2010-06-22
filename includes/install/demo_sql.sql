@@ -1,33 +1,25 @@
-INSERT INTO `Category` (`category_id`, `category_event_id`, `category_price`, `category_name`, `category_pm_id`, `category_pmp_id`, `category_ident`, `category_numbering`, `category_size`, `category_max`, `category_min`, `category_template`, `category_color`, `category_data`) VALUES
-(1, NULL, 65.00, 'Cat I', 1, NULL, 1, 'both', 60, NULL, NULL, '', '3', 'shape="rect" coords="80,525,210,675"'),
-(2, NULL, 75.00, 'Cat II', 1, NULL, 2, 'both', 140, NULL, NULL, '', '4', 'shape="rect" coords="80,200,210,525"'),
-(3, NULL, 55.00, 'Cat III', 1, NULL, 3, 'both', 210, NULL, NULL, '', '5', 'shape="rect" coords="235,200,370,675" '),
-(4, 1, 65.00, 'Cat I', 2, NULL, 1, 'both', 60, NULL, NULL, '', '3', 'shape="rect" coords="80,525,210,675"'),
-(5, 1, 75.00, 'Cat II', 2, NULL, 2, 'both', 140, NULL, NULL, '', '4', 'shape="rect" coords="80,200,210,525"'),
-(6, 1, 55.00, 'Cat III', 2, NULL, 3, 'both', 210, NULL, NULL, '', '5', 'shape="rect" coords="235,200,370,675" '),
-(7, NULL, 7.50, 'General Admission', 3, NULL, 1, 'none', 50, NULL, NULL, 'Ticket_pdf2', '3', ''),
-(8, 2, 7.50, 'General Admission', 4, NULL, 1, 'none', 50, NULL, NULL, 'Ticket_pdf2', '3', '');
-
-
-INSERT INTO `Category_stat` (`cs_category_id`, `cs_total`, `cs_free`) VALUES
-(8, 50, 46);
+INSERT INTO `Category` (`category_id`, `category_event_id`, `category_price`, `category_name`, `category_pm_id`, `category_pmp_id`, `category_ident`, `category_numbering`, `category_size`, `category_max`, `category_min`, `category_template`, `category_color`, `category_data`, `category_free`) VALUES
+(1, NULL, 65.00, 'Cat I', 1, NULL, 1, 'both', 60, NULL, NULL, '', '3', 'shape="rect" coords="80,525,210,675"',0),
+(2, NULL, 75.00, 'Cat II', 1, NULL, 2, 'both', 140, NULL, NULL, '', '4', 'shape="rect" coords="80,200,210,525"',0),
+(3, NULL, 55.00, 'Cat III', 1, NULL, 3, 'both', 210, NULL, NULL, '', '5', 'shape="rect" coords="235,200,370,675" ',0),
+(4, 1, 65.00, 'Cat I', 2, NULL, 1, 'both', 60, NULL, NULL, '', '3', 'shape="rect" coords="80,525,210,675"',0),
+(5, 1, 75.00, 'Cat II', 2, NULL, 2, 'both', 140, NULL, NULL, '', '4', 'shape="rect" coords="80,200,210,525"',0),
+(6, 1, 55.00, 'Cat III', 2, NULL, 3, 'both', 210, NULL, NULL, '', '5', 'shape="rect" coords="235,200,370,675" ',0),
+(7, NULL, 7.50, 'General Admission', 3, NULL, 1, 'none', 50, NULL, NULL, 'Ticket_pdf2', '3', '',0),
+(8, 2, 7.50, 'General Admission', 4, NULL, 1, 'none', 50, NULL, NULL, 'Ticket_pdf2', '3', '', 46);
 
 INSERT INTO `Discount` (`discount_id`, `discount_event_id`, `discount_name`, `discount_type`, `discount_value`) VALUES
 (1, 2, 'Demo Discount', 'fixe', 7.49);
 
 
-INSERT INTO `Event` (`event_id`, `event_name`, `event_text`, `event_short_text`, `event_url`, `event_image`, `event_ort_id`, `event_pm_id`, `event_date`, `event_time`, `event_open`, `event_end`, `event_status`, `event_order_limit`, `event_template`, `event_group_id`, `event_mp3`, `event_rep`, `event_main_id`, `event_type`) VALUES
+INSERT INTO `Event` (`event_id`, `event_name`, `event_text`, `event_short_text`, `event_url`, `event_image`, `event_ort_id`, `event_pm_id`, `event_date`, `event_time`, `event_open`, `event_end`, `event_status`, `event_order_limit`, `event_template`, `event_group_id`, `event_mp3`, `event_rep`, `event_main_id`, `event_type`, `event_total`, `event_free`) VALUES
 (1, 'Demo Banquet', 'Enter details and order information here.', 'Enter short summary of event here.', 'http://demohomepage@demo.com', 'event_image_1.jpg', 1, 2, '2010-11-01', '12:00:00', '11:30:00', '16:00:00', 'unpub', 0, 'Ticket_pdf2', 1, NULL, 'main,sub', 1, 'party'),
-(2, 'Demo Theater Event', 'Add the details here', 'Put short description of the event here', NULL, 'event_image_2.jpg', 1, 4, '2010-11-01', '14:00:00', '13:30:00', '16:00:00', 'pub', 0, 'Ticket_pdf2', 2, NULL, 'main,sub', 2, '');
+(2, 'Demo Theater Event', 'Add the details here', 'Put short description of the event here', NULL, 'event_image_2.jpg', 1, 4, '2010-11-01', '14:00:00', '13:30:00', '16:00:00', 'pub', 0, 'Ticket_pdf2', 2, NULL, 'main,sub', 2, '', 50, 46);
 
 
 INSERT INTO `Event_group` (`event_group_id`, `event_group_name`, `event_group_description`, `event_group_image`, `event_group_status`, `event_group_start_date`, `event_group_end_date`, `event_group_type`) VALUES
-(1, 'Group I', 'Use this group to seperate events.', '', 'unpub', NULL, NULL, 'theatre'),
+(1, 'Group I', 'Use this group to seperate events.', '', 'unpub', NULL, NULL, 'theatre',0,0),
 (2, 'Group II', 'Add another Group for different groupings of events.', '', 'unpub', NULL, NULL, 'festival');
-
-
-INSERT INTO `Event_stat` (`es_event_id`, `es_total`, `es_free`) VALUES
-(2, 50, 46);
 
 INSERT INTO `Order` (`order_id`, `order_user_id`, `order_session_id`, `order_tickets_nr`, `order_total_price`, `order_date`, `order_shipment_status`, `order_payment_status`, `order_payment_id`, `order_handling_id`, `order_status`, `order_reemited_id`, `order_fee`, `order_place`, `order_owner_id`, `order_date_expire`, `order_responce`, `order_responce_date`, `order_note`, `order_lock`, `order_lock_time`, `order_lock_admin_id`) VALUES
 (1, 1, '81ab9c70d475786f6ede5c480a129725', 1, 0.01, '2010-09-28 03:24:10', 'send', 'payed', NULL, 2, 'ord', NULL, 0.00, 'pos', 1, NULL, '', '0000-00-00 00:00:00', NULL, '0', '0000-00-00 00:00:00', NULL),

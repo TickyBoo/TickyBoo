@@ -40,7 +40,8 @@ class Event Extends Model {
   protected $_columns   = array('#event_id', 'event_created', '*event_name', 'event_text', 'event_short_text', 'event_url',
                                 'event_image', '#event_ort_id', '#event_pm_id', 'event_timestamp', 'event_date', 'event_time',
                                 'event_open', 'event_end', '*event_status', 'event_order_limit', 'event_template',
-                                '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
+                                '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type',
+                                'event_total', 'event_free');
 
   function load ($id, $only_published=TRUE){
     $pub=($only_published)?"and event_status='pub'":'';
@@ -272,9 +273,8 @@ class Event Extends Model {
         return self::_abort('discount_delete_failed');
       }
 
-      $query="DELETE e.*, es.*
-              FROM Event e LEFT JOIN Event_stat es
-              ON e.event_id = es.es_event_id
+      $query="DELETE e.*
+              FROM Event
               WHERE e.event_id="._esc($this->id);
       if(!ShopDB::query($query)){
         return self::_abort('event_delete_failed');
@@ -307,9 +307,8 @@ class Event Extends Model {
           $es_total += $cs_total;
         }
       }
-      if(!$dry_run and !Event::create_stat($this->event_id, $es_total)) {
-        return self::_abort('publish6');
-      }
+      $this->event_free  = $es_total;
+      $this->event_total = $es_total;
     }
 
     if(!$dry_run) {
@@ -511,21 +510,10 @@ class Event Extends Model {
     return $counter;
   }
 
-  function create_stat($es_event_id=0,$es_total=0,$es_free=-1) {
-    if ($es_free==-1) $es_free= $es_total;
-    $query="insert into Event_stat set
-              es_event_id={$es_event_id},
-              es_free={$es_free},
-              es_total={$es_total}";
-    if(ShopDB::query($query)){
-      return TRUE;
-    }
-  }
-
-  function dec_stat ($es_event_id,$count){
+  static function dec_stat ($event_id,$count){
   	global $_SHOP;
-    $query="UPDATE Event_stat SET es_free=es_free-$count
-            WHERE es_event_id='$es_event_id' LIMIT 1";
+    $query="UPDATE `Event` SET event_free=event_free-{$count}
+            WHERE event_id="._esc($event_id)." LIMIT 1";
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
       return FALSE;
     }else{
@@ -533,9 +521,9 @@ class Event Extends Model {
     }
   }
 
-  function inc_stat ($es_event_id,$count){
-    $query="UPDATE Event_stat SET es_free=es_free+$count
-            WHERE es_event_id='$es_event_id' LIMIT 1";
+  static function inc_stat ($event_id,$count){
+    $query="UPDATE `Event` SET event_free=event_free+{$count}
+            WHERE event_id="._esc($event_id)." LIMIT 1";
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
       return FALSE;
     }else{

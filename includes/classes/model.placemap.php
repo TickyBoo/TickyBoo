@@ -113,20 +113,20 @@ class PlaceMap Extends Model {
         $stats[$cat->category_ident]+= $cat->category_size;
       }
       if(!$dry_run){
+        $cat->category_free = $stats[$cat->category_ident];
         if($cat->category_numbering !== 'none'){
-          $cat->category_size = $stats[$cat->category_ident];
+          $cat->category_size   = $stats[$cat->category_ident];
           $cat->category_pmp_id = $pmps[$cat->category_ident];
-          if (!$cat->save())
-            return self::_abort('pm.publish4.b');
         }
         if ($cat->category_size ==0) {
            return self::_abort('cant_publish_event_cat_no_size');
         } elseif($cat->category_numbering !=='none' and !$cat->category_pmp_id){
            return self::_abort('cant_publish_event_cat_not_connect');
         }
+        if (!$cat->save())
+          return self::_abort('pm.publish4.b');
       }
-      if (!$dry_run && !PlaceMapCategory::create_stat($cat->category_id, $stats[$cat->category_ident]))
-        return self::_abort('pm.publish5');
+
     }
 
     if($dry_run or ShopDB::commit('placemap publised')){
@@ -151,9 +151,8 @@ class PlaceMap Extends Model {
         return  placemap::_abort('placemapzone_stat_delete_failed');
       }
 
-      $query="DELETE c.*, cs.*
-              FROM Category c LEFT JOIN Category_stat cs
-              ON c.category_id = cs.cs_category_id
+      $query="DELETE c.*
+              FROM Category c
               WHERE c.category_pm_id={$this->pm_id}";
       if(!ShopDB::query($query)){
         return self::_abort('Category_delete_failed');

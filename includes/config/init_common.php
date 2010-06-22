@@ -185,8 +185,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
     $_SHOP->secure_site = '0';
   }
   $_SHOP->root_base = $_SHOP->root;
-  $_SHOP->files_url=constructBase()."files/";
-  $_SHOP->images_url=constructBase()."images/";
+  $_SHOP->files_url = constructBase()."files/";
+  $_SHOP->images_url= constructBase()."images/";
   $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
   $_SHOP->trace_dir = $_SHOP->tmp_dir ;
   

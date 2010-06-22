@@ -210,7 +210,7 @@ function env($key){
 
 function constructBase($secure=null) {
   if ($secure == null) $secure = env('HTTPS');
-  $dir = dirname(env('PHP_SELF'));
+  $dir  = dirname(env('PHP_SELF'));
   $file = basename($dir);
   if (($file=='admin') ||  ($file=='pos')) {
     $dir = dirname($dir);

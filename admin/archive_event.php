@@ -44,10 +44,9 @@ global $_SHOP;
 
   if(isset($_GET["event_id"])) $event_id=$_GET["event_id"];
   $query="SELECT *
-             FROM (Event,Ort,Event_stat)
+             FROM (Event,Ort)
              WHERE Event.event_id='$event_id'
-             AND Event.event_ort_id=Ort.ort_id
-             AND Event_stat.es_event_id=Event.event_id";
+             AND Event.event_ort_id=Ort.ort_id";
 
    if(!$res=ShopDB::query($query) or !$event=ShopDB::fetch_assoc($res)){
      //user_error(mysql_error());

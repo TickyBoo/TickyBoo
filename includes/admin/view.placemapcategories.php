@@ -107,7 +107,7 @@ class PlaceMapCategoryView extends AdminView {
     } else {
       $this->print_field('category_numbering', $data);
       $this->print_field('category_size', $data);
-      $taken = $data['cs_total'] - $data['cs_free'];
+      $taken = $data['category_size'] - $data['category_free'];
       $this->print_field('number_taken', $taken);
     }
 

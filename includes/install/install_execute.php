@@ -98,6 +98,8 @@ class install_execute {
         return true;
       }
     }
+    self::recalcStats($Install);
+
     Orphans::clearZeros('Category',     array('category_pm_id','category_event_id','category_pmp_id'));
     Orphans::clearZeros('Event',        array('event_group_id','event_main_id'));
     Orphans::clearZeros('Order',        array('order_owner_id'));
@@ -109,7 +111,7 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='forgot_passwd'");
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='Signup_email'");
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
-    
+
     if ((install_execute::CreateConfig($configpath)===false) or !file_exists($configpath)){
         array_push($Install->Errors,"Configuration file is not saved correctly check the folder permissions!");
         return true;
@@ -133,11 +135,11 @@ class install_execute {
 
   static function postcheck($Install) {
     if ($_POST['fixdatabase1']==2) {
-      renameTables(array('Category','Category_stat','Discount','Event','Event_group','Event_stat',
-                         'PlaceMap2','PlaceMapPart','PlaceMapZone','Seat','Order'));
+      self::renameTables(array('Category','Discount','Event','Event_group',
+                               'PlaceMap2','PlaceMapPart','PlaceMapZone','Seat','Order'));
       array_push($Install->Warnings,"The next tables are renamed:
-                                     Category, Category_stat, Discount, Event, Event_group, Event_stat,
-                                     PlaceMap2, PlaceMapPart, PlaceMapZone, Seat, Order. You can copy the data back yourself.");
+                                     Category, Discount, Event, Event_group, PlaceMap2, PlaceMapPart, PlaceMapZone,Seat, Order.
+                                     You can copy the data back yourself.");
     }
     return false;
   }
@@ -269,7 +271,7 @@ class install_execute {
     Install_Form_Close ();
   }
 
-  function checkadmin($name) {
+  static function checkadmin($name) {
     $query="select Count(*) as count
             from Admin
             where admin_login= "._esc($name);
@@ -279,7 +281,7 @@ class install_execute {
       return ($res["count"]>0);
   }
 
-  function MigrateSpoint() {
+  static function MigrateSpoint() {
     $query = "select * from SPoint";
     $res = ShopDB::Query($query);
     while ($row = ShopDB::fetch_assoc($res)){
@@ -295,7 +297,7 @@ class install_execute {
     ShopDB::query($sql);
   }
 
-  function MigrateControl(){
+  static function MigrateControl(){
     $query = "select * from `Control`";
     $res = ShopDB::Query($query);
     while ($row = ShopDB::fetch_assoc($res)){
@@ -311,7 +313,7 @@ class install_execute {
     ShopDB::query($sql);
   }
 
-  function renameTables($array) {
+  static function renameTables($array) {
     if (is_array($array)) {
 
       foreach($array as $table) {
@@ -320,6 +322,29 @@ class install_execute {
         $sql = "RENAME TABLE `{$table}` TO `old{$no}_{$table}`"; // The MySQL way.
         ShopDB::query($sql);
       }
+    }
+  }
+
+  static function recalcStats($Install) {
+    if (ShopDB::TableExists ('Event_stat')) {
+      ShopDB::Query("update Event set
+                        event_free  = (select count(*) from `Seat`
+                                       where seat_event_id = event_id
+                                       and seat_status IN ('res','free','trash')
+                                       and seat_user_id IS NULL
+                                       and seat_order_id IS NULL ),
+                        event_total = (select count(*) from `Seat`
+                                       where seat_event_id = event_id)");
+      ShopDB::Query("update Category set
+                       category_free = (select count(*) from `Seat`
+                                        where seat_category_id = category_id
+                                        and seat_status in ('res', 'free','trash')
+                                        and seat_user_id IS NULL
+                                        and seat_order_id IS NULL)");
+
+      array_push($Install->Warnings,"We moved the statistics information back to there main table this gives us a more stable system.");
+
+      self::renameTables(array('Category_stat','Event_stat'));
     }
   }
 }

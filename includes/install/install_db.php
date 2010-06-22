@@ -154,7 +154,8 @@ $tbls['Category']['fields'] = array(
   'category_pmp_id' => " int(11) DEFAULT NULL",
   'category_ident' => " tinyint(4) DEFAULT NULL",
   'category_numbering' => " varchar(5) NOT NULL DEFAULT 'both'",
-  'category_size' => " int(11) DEFAULT NULL",
+  'category_size' => " int(11) NOT NULL DEFAULT '0'",
+  'category_free' => " int(11) NOT NULL DEFAULT '0'",
   'category_max' => " int(11) DEFAULT NULL",
   'category_min' => " int(11) DEFAULT NULL",
   'category_template' => " varchar(30) DEFAULT NULL",
@@ -166,15 +167,6 @@ $tbls['Category']['key'] = array(
 $tbls['Category']['engine'] = 'InnoDB';
 $tbls['Category']['remove'] = array ('category_organizer_id');
 //$tbls['Category']['AUTO_INCREMENT'] = 87;
-
-$tbls['Category_stat']['fields'] = array(
-  'cs_category_id' => " int(11) NOT NULL DEFAULT '0'",
-  'cs_total' => " int(11) NOT NULL DEFAULT '0'",
-  'cs_free' => " int(11) NOT NULL DEFAULT '0'");
-$tbls['Category_stat']['key'] = array(
-  "PRIMARY KEY (`cs_category_id`)");
-$tbls['Category_stat']['engine'] = 'InnoDB';
-$tbls['Category_stat']['remove'] = array ('cs_organizer_id');
 
 $tbls['CC_Info']['fields'] = array(
   'cc_info_order_id' => "  int(11) NOT NULL AUTO_INCREMENT",
@@ -233,7 +225,9 @@ $tbls['Event']['fields'] = array(
   'event_mp3' => " varchar(200) DEFAULT NULL",
   'event_rep' => " set('main','sub') NOT NULL DEFAULT 'main,sub'",
   'event_main_id' => " int(11) DEFAULT NULL",
-  'event_type' => " varchar(25) DEFAULT NULL");
+  'event_type' => " varchar(25) DEFAULT NULL",
+  'event_total' => " int(11) NOT NULL DEFAULT '0'",
+  'event_free' => " int(11) NOT NULL DEFAULT '0'");
 $tbls['Event']['key'] = array(
   "PRIMARY KEY (`event_id`)",
   "KEY `event_date` (`event_date`)",
@@ -256,15 +250,6 @@ $tbls['Event_group']['key'] = array(
 $tbls['Event_group']['engine'] = 'InnoDB';
 $tbls['Event_group']['remove'] = array ('event_group_organizer_id');
 //$tbls['Event_group']['AUTO_INCREMENT'] = 3;
-
-$tbls['Event_stat']['fields'] = array(
-  'es_event_id' => " int(11) NOT NULL DEFAULT '0'",
-  'es_total' => " int(11) NOT NULL DEFAULT '0'",
-  'es_free' => " int(11) NOT NULL DEFAULT '0'");
-$tbls['Event_stat']['key'] = array(
-  "PRIMARY KEY (`es_event_id`)");
-$tbls['Event_stat']['remove'] = array ('es_organizer_id');
-$tbls['Event_stat']['engine'] = 'InnoDB';
 
 $tbls['email_log']['fields'] = array(
   'el_id' => " int(11) NOT NULL AUTO_INCREMENT",

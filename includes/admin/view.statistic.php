@@ -48,7 +48,7 @@ class StatisticView extends AdminView{
 
   function plotEventStats ($start_date, $end_date, $month, $year) {
     global $_SHOP;
-    $query = "select MAX(es_total) as count from Event_stat";
+    $query = "select MAX(event_total) as count from Event";
     if (!$res = ShopDB::query_one_row($query)){
       user_error(shopDB::error());
       return;
@@ -58,8 +58,8 @@ class StatisticView extends AdminView{
       return;
     }
 
-    $query = "select Event_stat.*, event_id, event_name, event_date, event_time, event_status
-              from Event left join Event_stat on es_event_id=event_id
+    $query = "select  event_id, event_name, event_date, event_time, event_status, event_total, event_free
+              from Event
               where event_status != 'unpub'
   	           and event_date >="._esc($start_date)."
         	     and event_date <="._esc($end_date)."
@@ -80,8 +80,8 @@ class StatisticView extends AdminView{
  	  echo "</table><br>\n";
 
     while ($event = shopDB::fetch_assoc($evres)){
-      $evtot   = $event["es_total"];
-      $evfree  = $event["es_free"];
+      $evtot   = $event["event_total"];
+      $evfree  = $event["event_free"];
       $evsaled = ($evtot - $evfree);
       If ($event["event_status"] == 'pub' or $evsaled) {
         echo "<table class='admin_list' width='$this->width' cellspacing='0' cellpadding='5'>\n";
@@ -91,7 +91,7 @@ class StatisticView extends AdminView{
                 </td>
               </TR><tr>";
         $query = "select *
-                  from Category left join Category_stat on cs_category_id=category_id
+                  from Category
                   where category_event_id=" . _esc($event["event_id"]);
 
         if (!$res = ShopDB::query($query)){
@@ -106,8 +106,8 @@ class StatisticView extends AdminView{
                      " . $cat["category_name"] . "
                   </td>
                   <td class='admin_list_item' align='left' width='250'>";
-          $tot = $cat["cs_total"];
-          $free = $cat["cs_free"];
+          $tot = $cat["category_size"];
+          $free = $cat["category_free"];
           $this->plotBar($tot, $free);
           echo "</tr>";
           $alt = ($alt + 1) % 2;
@@ -148,8 +148,8 @@ class StatisticView extends AdminView{
       $sum[$sums["seat_category_id"]] = $sums["total_sum"];
     }
 
-    $query = "select Event_stat.*,event_id,event_name,event_date,event_time, event_status
-             from Event left join Event_stat on es_event_id=event_id
+    $query = "select event_free, event_total, event_id,event_name,event_date,event_time, event_status
+             from Event
              where event_status != 'unpub'
       	     and event_date >= '$start_date'
       	     and event_date <= '$end_date'
@@ -173,8 +173,8 @@ class StatisticView extends AdminView{
 	  <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . (($month < 12)?($month + 1):1) . "&year=" . ($month < 12?$year:$year + 1) . "'>>>>>></a></td></tr>\n";
 	  echo "</table><br>\n";
     for($i = 0;$i < sizeof($events);$i++){
-      $evtot = $events[$i]["es_total"];
-      $evfree = $events[$i]["es_free"];
+      $evtot = $events[$i]["event_total"];
+      $evfree = $events[$i]["event_free"];
       $evsaled = ($evtot - $evfree);
       If ($events[$i]["event_status"] == 'pub' or $evsaled) {
         $evpercent = ($evtot)?(100 * $evsaled / $evtot):0;
@@ -185,7 +185,7 @@ class StatisticView extends AdminView{
         formatAdminDate($events[$i]["event_date"]) . " " . formatTime($events[$i]["event_time"]) . "</td></tr>";
 
         $query = "select *
-                  from Category left join Category_stat on cs_category_id=category_id
+                  from Category
                   where category_event_id=" . _esc($events[$i]["event_id"]);
         if (!$res = ShopDB::query($query)){
           user_error(shopDB::error());
@@ -193,8 +193,8 @@ class StatisticView extends AdminView{
         }
         $alt = 0;
         while ($cat = shopDB::fetch_assoc($res)){
-          $tot = $cat["cs_total"];
-          $free = $cat["cs_free"];
+          $tot = $cat["category_total"];
+          $free = $cat["category_free"];
           $saled = ($tot - $free);
           $percent = ($tot)?(100 * $saled / $tot):0;
           $percent = round($percent, 2);

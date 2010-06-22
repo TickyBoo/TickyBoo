@@ -41,10 +41,6 @@ function smarty_block_category ($params, $content, $smarty, &$repeat) {
       $from .= " LEFT JOIN PlaceMap2 ON category_pm_id=pm_id \n";
     }
 
-    if($params['stats']){
-      $from .= ' left join Category_stat on category_id=cs_category_id'."\n";
-    }
-
     if($params['event']){
       $from .= ' left join Event on event_id=category_event_id'."\n".
                ' left join Ort   on event_ort_id=ort_id'."\n";

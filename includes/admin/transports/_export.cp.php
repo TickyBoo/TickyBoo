@@ -111,21 +111,6 @@ class export_cp extends AdminView {
 			'pk'=>'user_id',
 			'query'=>"SELECT  DISTINCT User.* FROM Seat,User WHERE seat_event_id='$event_id' and seat_user_id=user_id");
 
-
-			$what[]=array(
-			'table'=>'Color',
-			'pk'=>'color_id',
-			'query'=>"SELECT DISTINCT Color.* FROM Color,`Category`  WHERE `category_color`=color_id and `category_event_id`='$event_id'");
-
-			$what[]=array(
-			'table'=>'Category_stat',
-			'pk'=>'cs_category_id',
-			'query'=>"SELECT DISTINCT Category_stat.* FROM Category_stat,`Category`  WHERE `cs_category_id`=category_id and `category_event_id`='$event_id'");
-
-			$what[]=array(
-			'table'=>'Event_stat',
-			'query'=>"SELECT * FROM Event_stat  WHERE `es_event_id`='$event_id'");
-
 			$filename=$_GET['export_cp_file'];
 			if(empty($filename)){
 			  $filename='event'.$event_id.'.xml';

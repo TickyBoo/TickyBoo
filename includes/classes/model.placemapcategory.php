@@ -39,7 +39,7 @@ class PlaceMapCategory Extends Model {
   protected $_columns   = array( '#category_id', '#category_event_id', 'category_price', 'category_name',
                                  '*category_pm_id', '#category_pmp_id', 'category_ident', '*category_numbering',
                                  'category_size', 'category_max', 'category_min', 'category_template',
-                                 '*category_color', 'category_data');
+                                 '*category_color', 'category_data', 'category_free');
 
   function create($category_pm_id=0,
                   $category_name=0,
@@ -64,9 +64,8 @@ class PlaceMapCategory Extends Model {
   }
 
   function load ($category_id){
-    $query="select c.*, cs.*, e.event_status
+    $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
-                            left join Category_stat cs on cs_category_id=category_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
@@ -78,9 +77,8 @@ class PlaceMapCategory Extends Model {
   }
 
   function loadFull ($category_id){
-    $query="select c.*, cs.*, e.event_status
+    $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
-                            left join Category_stat cs on cs_category_id=category_id
             where category_id="._esc($category_id);
 
     if($res=ShopDB::query_one_row($query)){
@@ -92,9 +90,8 @@ class PlaceMapCategory Extends Model {
   }
 
   function loadAll ($pm_id){
-    $query="select c.*, cs.*, e.event_status
+    $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
-                            left join Category_stat cs on cs_category_id=category_id
             where category_pm_id=$pm_id";
     $cats = array();
     if($res=ShopDB::query($query)){
@@ -113,6 +110,7 @@ class PlaceMapCategory Extends Model {
     if(!$this->category_ident){
       $this->category_ident = $this->_find_ident($this->category_pm_id);
     }
+
     return parent::save($id, $exclude);
   }
 
@@ -124,9 +122,8 @@ class PlaceMapCategory Extends Model {
     }
 
     if(ShopDB::begin('delete category: '.$this->id)){
-      $query="DELETE c.*, cs.*
-              FROM Category c LEFT JOIN Category_stat cs
-              ON c.category_id = cs.cs_category_id
+      $query="DELETE c.*
+              FROM Category c
               WHERE c.category_id="._esc($this->id);
       if(!ShopDB::query($query)){
         return self::_abort('Category_delete_failed');
@@ -161,42 +158,34 @@ class PlaceMapCategory Extends Model {
       echo "#ERR-CNTCHGNUMSTS(3)";
       return FALSE;
     }
-    $new_category_size=$this->category_size+$delta;
+    $new_category_size = $this->category_size+$delta;
 
     if($new_category_size<=0){
       echo "#ERR-CATSIZE<0(4)";
       return FALSE;
     }
+    if(($delta+$this->category_free)<0){
+      return self::_about('Size is to small category');
+    }
 
     if(ShopDB::begin('resize category')){
-      $query="SELECT * FROM Category_stat
-              WHERE cs_category_id='{$this->category_id}'
-              FOR UPDATE";
-
-      if(!$cs=ShopDB::query_one_row($query)){
-        return self::_about('cant lock Category_stat');
-      }
-
-      if(($delta+$cs['cs_free'])<0){
-        return self::_about('Size is to small category');
-      }
 
       $new_cs_total=$new_category_size;
-      $new_cs_free=$delta+$cs['cs_free'];
+      $new_cs_free=$delta+$this->category_free;
 
-      $query="SELECT * FROM Event_stat
-              WHERE es_event_id='{$this->category_event_id}'
+      $query="SELECT event_free, event_total FROM Event
+              WHERE event_id='{$this->category_event_id}'
               FOR UPDATE";
       if(!$es=ShopDB::query_one_row($query)){
         return self::_about('cant lock event_stat');
       }
 
-      if(($delta+$es['es_free'])<0){
+      if(($delta+$es['event_free'])<0){
         return self::_about('Size to small for event');
       }
 
-      $new_es_total=$delta+$es['es_total'];
-      $new_es_free=$delta+$es['es_free'];
+      $new_es_total= $delta+$es['event_total'];
+      $new_es_free = $delta+$es['event_free'];
 
 
       if($delta>0){
@@ -222,23 +211,10 @@ class PlaceMapCategory Extends Model {
         }
       }
 
-      $query="UPDATE Category_stat SET
-                cs_free='$new_cs_free',
-                cs_total='$new_cs_total'
-              WHERE cs_category_id='{$this->category_id}'
-              LIMIT 1";
-
-      if(!ShopDB::query($query)){
-        return self::_about('cant update category_stat');
-      }
-      if(shopDB::affected_rows()!=1){
-        return self::_about('category_stat not changes');
-      }
-
-      $query="UPDATE Event_stat SET
-                es_free='$new_es_free',
-                es_total='$new_es_total'
-              WHERE es_event_id='{$this->category_event_id}'
+      $query="UPDATE Event SET
+                event_free='$new_es_free',
+                event_total='$new_es_total'
+              WHERE event_id='{$this->category_event_id}'
               LIMIT 1";
 
       if(!ShopDB::query($query)){
@@ -248,7 +224,8 @@ class PlaceMapCategory Extends Model {
         return self::_about('event_stat not changes');
       }
 
-      $this->category_size=$new_category_size;
+      $this->category_free =$new_cs_free;
+      $this->category_size =$new_category_size;
 
       if(!$this->save()){
         return self::_about('cant save category');
@@ -312,21 +289,9 @@ class PlaceMapCategory Extends Model {
     return $color;
   }
 
-  static function create_stat($cs_category_id, $cs_total, $cs_free=-1) {
-    if ($cs_free==-1) $cs_free = $cs_total;
-     $query="insert into Category_stat set
-              cs_category_id="._esc($cs_category_id).",
-              cs_free="       ._esc($cs_free).",
-              cs_total="      ._esc($cs_total);
-
-    if(ShopDB::query($query)){
-      return TRUE;
-    }
-  }
-
-  function dec_stat ($cs_category_id,$count){
-    $query="UPDATE Category_stat SET cs_free=cs_free-$count
-            WHERE cs_category_id="._esc($cs_category_id)." LIMIT 1";
+  static function dec_stat ($category_id, $count){
+    $query="UPDATE Category SET category_free=category_free-{$count}
+            WHERE category_id="._esc($category_id)." LIMIT 1";
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
       return FALSE;
     }else{
@@ -334,9 +299,9 @@ class PlaceMapCategory Extends Model {
     }
   }
 
-  function inc_stat ($cs_category_id,$count){
-    $query="UPDATE Category_stat SET cs_free=cs_free+$count
-            WHERE cs_category_id="._esc($cs_category_id)." LIMIT 1";
+  static function inc_stat ($category_id, $count){
+    $query="UPDATE Category SET category_free=category_free+{$count}
+            WHERE category_id="._esc($category_id)." LIMIT 1";
     if(!ShopDB::query($query) or shopDB::affected_rows()!=1){
       return FALSE;
     }else{

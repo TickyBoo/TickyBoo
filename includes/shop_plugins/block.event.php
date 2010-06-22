@@ -56,17 +56,12 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
       $from.=' LEFT JOIN PlaceMap2 ON pm_event_id=event_id';
     }
 
-    if($params['stats']){
-      $from.=' left join Event_stat on event_id=es_event_id';
-    }
-
     if($params['cats']){
-      $from.=' left join Category on event_id=category_event_id ';
-      $from.=' left join Category_stat on cs_category_id=category_id';
+      $from.=' LEFT JOIN Category ON event_id=category_event_id ';
     }
 
     if($params['event_group']){
-      $from.=' left join Event_group on Event.event_group_id=Event_group.event_group_id';
+      $from  .= ' LEFT JOIN Event_group ON Event.event_group_id=Event_group.event_group_id';
       $where .= " and Event_group.event_group_id="._esc($params['event_group']);
     }
 
