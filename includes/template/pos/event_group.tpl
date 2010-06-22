@@ -47,7 +47,7 @@
           <td class='festival' >{$shop_event.ort_city}</td>
           <td class='festival' >
             {if $shop_event.event_free gt 0}
-              {if $shop_event.es_free/$shop_event.event_total ge 0.2}
+              {if $shop_event.event_free/$shop_event.event_total ge 0.2}
                 <img src='{$_SHOP_themeimages}green.png'> {$shop_event.event_free}/{$shop_event.event_total}
               {else}
                 <img src='{$_SHOP_themeimages}orange.png'> {$shop_event.event_free}/{$shop_event.event_total}

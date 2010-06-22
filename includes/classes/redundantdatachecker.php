@@ -87,7 +87,7 @@ SELECT 'Category', category_id,
 
 $orphancheck[]="
 SELECT 'Category', category_id,
-   'Free' ,  CONCAT_WS('/', `category_free` , (select count(*) from `Seat` where seat_category_id = cs_category_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL )) seat_free, null
+   'Free' ,  CONCAT_WS('/', `category_free` , (select count(*) from `Seat` where seat_category_id = category_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL )) seat_free, null
  FROM `Category`
 where `category_free`  - (select count(*) from `Seat` where seat_category_id = category_id and seat_status in ('res', 'free','trash') and seat_user_id IS NULL and seat_order_id IS NULL ) <> 0
 ";
@@ -471,17 +471,6 @@ class orphans {
             $cat->save();
           }
         }
-/*
-        if($stats){
-          foreach($stats as $category_ident=>$cs_total){
-            $cat=$cats[$category_ident];
-            $cs=new Category_stat($cat->category_id,$cs_total);
-            if(!$dry_run){$cs->save() or self::_abort('publish5');}
-          }
-        }
-*/
-
-//        echo "</pre>";
         break;
 
 

@@ -18,7 +18,7 @@ INSERT INTO `Event` (`event_id`, `event_name`, `event_text`, `event_short_text`,
 
 
 INSERT INTO `Event_group` (`event_group_id`, `event_group_name`, `event_group_description`, `event_group_image`, `event_group_status`, `event_group_start_date`, `event_group_end_date`, `event_group_type`) VALUES
-(1, 'Group I', 'Use this group to seperate events.', '', 'unpub', NULL, NULL, 'theatre',0,0),
+(1, 'Group I', 'Use this group to seperate events.', '', 'unpub', NULL, NULL, 'theatre'),
 (2, 'Group II', 'Add another Group for different groupings of events.', '', 'unpub', NULL, NULL, 'festival');
 
 INSERT INTO `Order` (`order_id`, `order_user_id`, `order_session_id`, `order_tickets_nr`, `order_total_price`, `order_date`, `order_shipment_status`, `order_payment_status`, `order_payment_id`, `order_handling_id`, `order_status`, `order_reemited_id`, `order_fee`, `order_place`, `order_owner_id`, `order_date_expire`, `order_responce`, `order_responce_date`, `order_note`, `order_lock`, `order_lock_time`, `order_lock_admin_id`) VALUES

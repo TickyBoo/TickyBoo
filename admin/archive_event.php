@@ -68,9 +68,8 @@ global $_SHOP;
 
     $worksheet1 =& $workbook->addWorksheet('Category Data');
 
-    $query="SELECT * FROM Category,Category_stat
-            WHERE category_event_id='{$_GET["event_id"]}' and cs_category_id=category_id
-	    and category_organizer_id='{$_SHOP->organizer_id}' and cs_organizer_id='{$_SHOP->organizer_id}'";
+    $query="SELECT * FROM Category
+            WHERE    category_event_id='{$_GET["event_id"]}'";
     if(!$res=ShopDB::query($query)){
       user_error(ShopDB::error());
       return FALSE;
