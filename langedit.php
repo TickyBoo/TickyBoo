@@ -138,7 +138,7 @@
 
 		<title>FusionTicket: Language editor </title>
 		<link rel="stylesheet" type="text/css" href="css/ingrid.css" media="screen" />
-		<script type="text/javascript" src="scripts/jquery/jquery-1.4.1.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
 
 		<script type="text/javascript" src="scripts/jquery/jquery.jqGrid.min.js"></script>

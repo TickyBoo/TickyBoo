@@ -53,7 +53,7 @@ include_once 'install_version.php';
   <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
   <link rel='stylesheet' href='../css/jquery.tooltip.css' />
-  <script type="text/javascript" src="../scripts/jquery/jquery-1.4.1.min.js"></script>
+  <script type="text/javascript" src="../scripts/jquery/jquery.min.js"></script>
   <script type="text/javascript" src="../scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
   <script type="text/javascript" src="../scripts/jquery/jquery.dimensions.min.js"></script>
   <script type="text/javascript" src="../scripts/jquery/jquery.tooltip.min.js"></script>

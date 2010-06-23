@@ -193,7 +193,7 @@ class StatisticView extends AdminView{
         }
         $alt = 0;
         while ($cat = shopDB::fetch_assoc($res)){
-          $tot = $cat["category_total"];
+          $tot = $cat["category_size"];
           $free = $cat["category_free"];
           $saled = ($tot - $free);
           $percent = ($tot)?(100 * $saled / $tot):0;
