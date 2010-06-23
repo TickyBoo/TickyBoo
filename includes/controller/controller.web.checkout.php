@@ -197,14 +197,18 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   function actionAccept () {
-    $myorder = is($_SESSION['_SHOP_order'],nil);
-    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
+    $sesOrder = is($_SESSION['_SHOP_order'],NULL);
+    $test = Order::DecodeSecureCode($sesOrder, $this->getsecurecode());
     if($test < 1) {
-      echo "accept error ($test): $myorder->order_id\n". print_r($myorder, true);
+      echo "accept error ($test): $sesOrder->order_id\n". print_r($sesOrder, true);
       //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("accept error ($test): $myorder->order_id\n". print_r($myorder, true));
+      ShopDB::dblogging("accept error ($test): $sesOrder->order_id\n". print_r($sesOrder, true));
       unset( $_SESSION['_SHOP_order']);
       return;
+    }
+    if(is($sesOrder->order_id,false)){
+      $myorder = Order::load($sesOrder->order_id,true);
+      $myorder = is($myorder,$sesOrder);
     }
     $myorder->lock();
 
