@@ -134,7 +134,7 @@
               <map name="ort_map">
                 {category event_id=$shop_event.event_id stats="on"}
                   {if $shop_category.category_free gt 0}
-                    <area href="index.php?category_id={$shop_category.category_id}&event_id={$smarty.get.event_id}" {$shop_category.category_data} />
+                    <area href="index.php?category_id={$shop_category.category_id}&event_id={$shop_event.event_id}" {$shop_category.category_data} />
                   {/if}
                 {/category}
               </map>
@@ -165,7 +165,7 @@
             </td>
             <td  align='left'>
               <input type='submit' name='submit_cat' value='{!continue!}'>
-              <input type='hidden' name='event_id' value='{$smarty.request.event_id}'>
+              <input type='hidden' name='event_id' value='{$shop_event.event_id}'>
             </td>
           {/if}
         </tr>

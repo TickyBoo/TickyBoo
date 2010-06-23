@@ -81,7 +81,7 @@ class eph_mollie extends payment{
     //print_r($order);
 
     return "
-      {gui->StartForm id='payment-confirm-form' name='mollie' action='checkout.php' method='post' onsubmit='this.submit.disabled=true;return true;'}
+      {gui->StartForm  width='100%' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
         {gui->hidden name='action' value='submit'}
         {gui->hidden name='sor' value='".Order::EncodeSecureCode($order,'')."'}
         {gui->selection name='bank_id' options=\$ideal_issuers}
@@ -96,13 +96,13 @@ class eph_mollie extends payment{
     $return_url = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode(null);
     $report_url = $_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode(null);
     if (isset($_POST['bank_id']) and !empty($_POST['bank_id'])) {
-    	if ($ideal->createPayment($_POST['bank_id'], $order->order_total_price *100, $order->order_description(), $return_url, $report_url)) 	{
+     	if ($ideal->createPayment((int) $_POST['bank_id'], (int)($order->order_total_price *100), $order->order_description(), $return_url, $report_url)) 	{
     		/* Hier kunt u de aangemaakte betaling opslaan in uw database, bijv. met het unieke transactie_id
     		   Het transactie_id kunt u aanvragen door $iDEAL->getTransactionId() te gebruiken. Hierna wordt
     		   de consument automatisch doorgestuurd naar de gekozen bank. */
      		$transactionID = $ideal->getTransactionId();
         $order->order_payment_id=$transactionID;
-        Order::set_payment_id($order->order_id,'ideal:'.$transactionID) ;
+        Order::set_payment_id($order->order_id,'mollie:'.$transactionID) ;
         $order->set_payment_status('pending');
 
      		header("Location: " . $ideal->getBankURL());
@@ -111,7 +111,7 @@ class eph_mollie extends payment{
     	} else {
         return array('approved'=>false,
                      'transaction_id'=>$ideal->getErrorCode().' - '.$ideal->getErrorMessage(),
-                     'response'=> $ideal->getConsumerInfo());
+                     'response'=> implode('<br>',$ideal->getConsumerInfo()));
 
     	}
     }

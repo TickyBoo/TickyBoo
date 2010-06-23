@@ -41,23 +41,26 @@
 }
 
 
-.done{
-  background: url('images/theme/Adsense/bar_center.png') 0 100% repeat-x;
+.done{ {/literal}
+  background: url('{$_SHOP_themeimages}bar_center.png') 0 100% repeat-x;
   color: #FFFFFF;
   TEXT-ALIGN: center;
-
+{literal}
 }
 .current{
-	background: url('images/theme/Adsense/bar_center.png') 0 100% repeat-x;
+{/literal}
+	background: url('{$_SHOP_themeimages}bar_center.png') 0 100% repeat-x;
    	font-weight: bold;
    	color: #000000;
    	border-right: 0px solid #5FE3E0;
-
+{literal}
 }
 .next{
+{/literal}
   TEXT-ALIGN: center;
-    background: url('images/theme/Adsense/bar_center_wht.png') 0 100% repeat-x;
+    background: url('{$_SHOP_themeimages}bar_center_wht.png') 0 100% repeat-x;
    	background-color: white;
+{literal}
 }
 
 </style> {/literal}

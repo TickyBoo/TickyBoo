@@ -67,7 +67,7 @@
       <td colspan='6'>
         {if $info_plus eq "on"}
           {!dates_localities!}:
-          {event event_main_id=$smarty.get.event_id ort='on' stats='on' sub='on' event_status='pub' place_map='on'}
+          {event event_main_id=$shop_event.event_id ort='on' stats='on' sub='on' event_status='pub' place_map='on'}
             <li>
               <a href="index.php?event_id={$shop_event.event_id}">
                 {$shop_event.event_date|date_format:!date_format!}

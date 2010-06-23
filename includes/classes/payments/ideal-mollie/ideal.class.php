@@ -92,7 +92,7 @@ class iDEAL_Payment
 			!$this->setReturnUrl($return_url) or
 			!$this->setReportUrl($report_url))
 		{
-			$this->error_message = "De opgegeven betalings gegevens zijn onjuist of incompleet.";
+			$this->error_message .= "De opgegeven betalings gegevens zijn onjuist of incompleet.";
 			return false;
 		}
 
@@ -284,6 +284,7 @@ class iDEAL_Payment
 	public function setPartnerId ($partner_id)
 	{
 		if (!is_numeric($partner_id)) {
+      $this->error_message = 'Partner_ID incorrect.';
 			return false;
 		}
 
@@ -302,9 +303,10 @@ class iDEAL_Payment
 
 	public function setBankId ($bank_id)
 	{
-		if (!is_numeric($bank_id))
+		if (!is_numeric($bank_id)) {
+      $this->error_message = 'bank_id incorrect.';
 			return false;
-
+    }
 		return ($this->bank_id = $bank_id);
 	}
 
@@ -316,10 +318,12 @@ class iDEAL_Payment
 	public function setAmount ($amount)
 	{
 		if (!preg_match('~^[0-9]+$~', $amount)) {
+      $this->error_message = 'Amount incorrect ('.$amount.').';
 			return false;
 		}
 
 		if (self::MIN_TRANS_AMOUNT > $amount) {
+      $this->error_message = 'Amount ('.$amount.') kleiner dan '.self::MIN_TRANS_AMOUNT.'.';
 			return false;
 		}
 
@@ -345,9 +349,10 @@ class iDEAL_Payment
 
 	public function setReturnURL ($return_url)
 	{
-		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?(.*)|', $return_url))
+		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?(.*)|', $return_url)) {
+      $this->error_message = 'Return_url ('.$return_url.') incorrect.';
 			return false;
-
+    }
 		return ($this->return_url = $return_url);
 	}
 
@@ -359,6 +364,7 @@ class iDEAL_Payment
 	public function setReportURL ($report_url)
 	{
 		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?(.*)|', $report_url)) {
+      $this->error_message = 'report_url ('.$report_url.') incorrect.';
 			return false;
 		}
 

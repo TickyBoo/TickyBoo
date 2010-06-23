@@ -63,4 +63,8 @@
     </td>
   </tr>
 </table>
+      <form action=".\index.php">
+        <input name="go_home" value="{!order_more_tickets!}" type="submit">
+      </form>
+
 {include file="footer.tpl" noFooter=$no_footer}

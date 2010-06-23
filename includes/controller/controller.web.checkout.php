@@ -421,10 +421,12 @@ class ctrlWebCheckout extends ctrlWebShop {
     $this->__Order->obj = $aOrder;
 
     if (!is_a  ( $aOrder, 'Order')) return;
-    if (isset($aOrder) and isset($aOrder->places)) {
+    if (is_array($aOrder->places)) {
       foreach($aorder->places as $ticket){
     		$seats[$ticket->id]=TRUE;
       }
+    } else {
+      print_r($aOrder);
     }
     $this->smarty->assign('order_success',true);
     $this->smarty->assign('order_id',$aOrder->order_id);

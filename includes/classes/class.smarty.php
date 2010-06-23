@@ -73,7 +73,7 @@ class MySmarty extends Smarty {
 //      $this->smarty->register_prefilter(array(&$this,'Con_prefilter'));
 
     }
-
+    $_SHOP->smarty = $this;
     $this->_SHOP_db_res = array();
   }
 

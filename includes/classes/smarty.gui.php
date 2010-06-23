@@ -192,7 +192,9 @@ class Gui_smarty {
     }
     $return ='';
     If ($method <> 'node') {
-      $return .= "<form action='$url' id='$id' name='$name' method='$method' enctype='$enctype'";
+       $target       = is($params['target']);
+       if ($target) $target = 'target="'.$target.'"';
+      $return .= "<form action='$url' id='$id' name='$name' method='$method' enctype='$enctype' $target";
       $return .= ($onsubmit)?" onsubmit ='$onsubmit'>":">";
       $return .= self::showFormToken( $params, $smarty);
       $this->FormDepth ++;

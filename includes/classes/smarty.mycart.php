@@ -288,7 +288,7 @@ class MyCart_Smarty {
   function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved,$discount_id = 0, $force=false){
   	// Loads event details
     if(!$event=Event::load($event_id)){
-      addWarning('event_order_limit_exceeded');
+      addWarning('error_cantloadevent');
       return FALSE;
     }
     // Loads cat details
@@ -343,11 +343,11 @@ class MyCart_Smarty {
 
         $has = $cart->total_places($this->event_id);
         if(($has+$newp)>$max){
-          addWarning('event_order_limit_exceeded');
+          addWarning('event_order_limit_exceeded','A:'.$has.' '.$newp.' '.$max );
       	  return FALSE;
       	}
       }else if($newp>$max){
-        addWarning('event_order_limit_exceeded');
+        addWarning('event_order_limit_exceeded','B:'.$has.' '.$newp.' '.$max);
         return FALSE;
       }
     }

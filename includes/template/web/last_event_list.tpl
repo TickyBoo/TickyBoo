@@ -34,6 +34,16 @@
 {assign var='start_date' value=$smarty.now|date_format:"%Y-%m-%d"}
 <p>
   {event order="event_date,event_time"  ort='on' sub='on' event_status='pub' start_date=$start_date  limit='0,3'}
+
+    {if $shop_event.tot_count eq 1}
+      {include file="event_description.tpl" info_plus ='on'}
+      {if $shop_event.event_rep neq 'main'}
+        {include file="cat_description.tpl"}
+      {/if}
+      {!shop_condition!}
+
+    {else}
     {include file="event_description.tpl"} <br>
+    {/if}
   {/event}
 </p>

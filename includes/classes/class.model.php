@@ -102,7 +102,6 @@ class Model {
         $this->isLocked = true;
       }
     }
-    shopDB::Begin($message);
     return $this->isLocked;
   }
 
