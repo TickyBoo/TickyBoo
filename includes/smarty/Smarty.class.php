@@ -1057,7 +1057,7 @@ class Smarty
         } else {
             // var non-existant, return valid reference
             $_tmp = null;
-            return $_tmp;   
+            return $_tmp;
         }
     }
 
@@ -1116,7 +1116,7 @@ class Smarty
     function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false)
     {
         static $_cache_info = array();
-        
+
         $_smarty_old_error_level = $this->debugging ? error_reporting() : error_reporting(isset($this->error_reporting)
                ? $this->error_reporting : error_reporting() & ~E_NOTICE);
 
@@ -1291,7 +1291,7 @@ class Smarty
         $this->_cache_including = $_cache_including;
 
         if ($display) {
-            if (isset($_smarty_results)) { echo $_smarty_results; }
+            if (isset($_smarty_results)) { echo trim( $_smarty_results, " \n\r"); }
             if ($this->debugging) {
                 // capture time for debugging info
                 $_params = array();
@@ -1304,7 +1304,7 @@ class Smarty
             return;
         } else {
             error_reporting($_smarty_old_error_level);
-            if (isset($_smarty_results)) { return $_smarty_results; }
+            if (isset($_smarty_results)) { return trim( $_smarty_results, " \r\n"); }
         }
     }
 
@@ -1932,10 +1932,10 @@ class Smarty
     {
         return eval($code);
     }
-    
+
     /**
      * Extracts the filter name from the given callback
-     * 
+     *
      * @param callback $function
      * @return string
      */
@@ -1950,7 +1950,7 @@ class Smarty
 			return $function;
 		}
 	}
-    
+
     /**#@-*/
 
 }
