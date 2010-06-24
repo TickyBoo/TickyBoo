@@ -301,7 +301,7 @@ class Event Extends Model {
         return false;
       }
       $es_total = 0;
-
+      
       if($stats){
         foreach($stats as $category_ident =>$cs_total){
           $es_total += $cs_total;

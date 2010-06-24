@@ -469,8 +469,7 @@ class Order_Smarty {
   function setStatusPaid($order_id){
     return Order::set_payed($order_id);
   }
-
-
+  
   /**
    * Order_Smarty::set_send_f()
    *
@@ -478,8 +477,6 @@ class Order_Smarty {
    * @return
    */
   function set_send_f($order_id){
-
-
     global $_SHOP;
     return Order::set_send($order_id, 0, $this->user_auth_id);
   }
@@ -503,6 +500,44 @@ class Order_Smarty {
   function save_order_note($params,$smarty){
     $ret=Order::save_order_note($params['order_id'],$params['note']);
     $smarty->assign('order_note',$ret);
+  }
+  
+  /**
+   * Order_Smarty::add_order_note()
+   * 
+   * Need to POST at least onote_title,onote_body
+   * <code>
+   * {if $smarty.request.action eq 'addnote'}
+   *   {order->add_order_note}
+   *   {if $order_note}
+   *     ...
+   *   {/if}
+   * {/if}
+   * </code> 
+   * @return bool + assign warning/notice
+   */
+  function add_order_note($params,$smarty){
+    $orderNote = new OrderNote();
+    if (!$orderNote->fillRequest() || !$orderNote->saveEx()) {
+      $smarty->assign('success',false);
+      addWarning('failed_to_add_note');
+		}
+    if(!$order=Order::load($_REQUEST['order_id'])){return;}
+    $order->emailSubject = $orderNote->onote_subject;
+    $order->emailNote = $orderNote->onote_note;
+    if(is($_REQUEST['onote_set_sent'])==="1"){
+      $order->set_shipment_status('send');
+    }elseif(is($_REQUEST['onote_set_payed'])==="1"){
+      $order->set_payment_status('payed');
+    }elseif(isset($_REQUEST['save_payment'])){
+      $orderNote->sendNote($order);
+    }elseif(isset($_REQUEST['save_ship'])){
+      $orderNote->sendNote($order);
+    }elseif(isset($_REQUEST['save_note'])){
+      $orderNote->sendNote($order);
+    }
+    $smarty->assign('success',true);
+    addNotice('successfully_add_note');
   }
 
   function set_payed ($params,$smarty){

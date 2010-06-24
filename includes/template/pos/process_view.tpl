@@ -439,9 +439,10 @@
          $alt=($alt+1)%2;//
       }
       echo "</table>\n";
-      print_r($noteCounts);
-
-      echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=addnote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
+      
+      
+      <form method='POST' action='view.php' enctype='multipart/form-data'>
+      {gui->}
       $this->print_hidden('onote_order_id',array('onote_order_id'=>$order_id));
       $this->form_head(con('order_add_note'));
       $this->print_select_assoc('onote_type',$_REQUEST,$err,$noteTypes);
@@ -454,7 +455,8 @@
         .$this->Show_button('submit','save_payment',3)."</td><td><label for='onote_set_payed'>".con("onote_set_payed")."</label><input type='checkbox' id='onote_set_payed' name='onote_set_payed' value='1' /></td></tr>";
       "<tr id=\"on_save_email_note\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>".$this->Show_button('submit','save_note',3)."</td></tr>";
         
-        
+      <script language="javascript" type="text/javascript">
+      {literal}
       $('#onote_type-select').change(function(){
         if($(this).val() == '".OrderNote::TYPE_SHIP."'){
           $('#on_save_email_ship').show(); $('#on_save_email_note').hide();
@@ -471,7 +473,9 @@
           $('#on_ship_note').attr('checked',false); $('#on_payment_note').attr('checked',false);
         }
       }).change();
-      *}
+      {/literal}
+      </script>   
+      *}   
       <form name='f' action='view.php' method='post'>
         <input type="hidden" name="action" value="update_note" />
         <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
