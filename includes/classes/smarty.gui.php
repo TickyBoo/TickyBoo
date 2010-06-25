@@ -333,7 +333,7 @@ class Gui_smarty {
     // $val=array('both','rows','none');
     $sel[$value] = " selected ";
 
-    $return = "<select id='$name' name='$name' $mult>\n";
+    $return = "<select id='{$name}-select' name='$name' $mult>\n";
 
     foreach($opt as $v => $n) {
         if (is_array($n)) {

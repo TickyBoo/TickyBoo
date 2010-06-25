@@ -84,12 +84,20 @@
 
 				</ul>
 			</div>
-
-      <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-top: .7em; display:none;" >
-         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-            <span id='notice-text'>fff</span>
-         </p>
+          
+      <!-- Message Divs -->
+      <div id="error-message-main" title='{!order_error_message!}' class="ui-state-error ui-corner-all center" style="padding: 1em; margin-top: .7em; display:none;" >
+        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+          <span id='error-text-main'>ffff</span>
+        </p>
       </div>
+      <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all center" style=" padding: 1em; margin-top: .7em; display:none;" >
+        <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+          <span id='notice-text'>fff</span>
+        </p>
+      </div>
+      <!-- End Message Divs -->
+      
       <div style="display:none" id='showdialog'>&nbsp;</div>
 			<div id="right">
 {/if}

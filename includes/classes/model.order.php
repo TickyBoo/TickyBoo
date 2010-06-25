@@ -930,8 +930,27 @@ class Order Extends Model {
     return $item. strtr($code, '+/=', '-_~'); //  }
   }
 
+  /**
+   * Order::DecodeSecureCode()
+   * 
+   * This is used by most EPH where we sent a url to the EPH and when the system GET/POST the SOR back we can
+   * handle the request and load the order and proccess the payment. 
+   * 
+   * ***THIS WORKS DIFFERNTLY TO CallBackRequest***
+   * 
+   * @param mixed &$order Order Object/ Null
+   * @param string $codestr : SecureOrderRequest code (SOR).
+   * @param bool $loging : set to true to enable extra logging to dblogging
+   * @return int/bool : true if code correct and order loaded
+   * Call Back errors:
+   * -5 : No SOR
+   * -4 : MD5 doesnt match the one sent
+   * -3 : Order Loaded doesnt match SOR
+   * -1 : Can't load/get Order Object
+   * True : All is good!
+   */
   function DecodeSecureCode(&$order, $codestr ='', $loging=false) {
-    If (empty($codestr) and isset($_REQUEST['sor'])) $codestr =$_REQUEST['sor'];
+    If (empty($codestr) and isset($_REQUEST['sor'])) $codestr = $_REQUEST['sor'];
    //
     If (!empty($codestr)) {
       //$code = urldecode( $code) ;

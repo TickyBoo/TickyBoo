@@ -290,7 +290,7 @@ class Handling Extends Model {
 	 * to check that the handling id matches the settings within the eph.
 	 * The handling object filled will then be returned on successfull decode and validation.
 	 *
-	 * @return handling Object or null.
+	 * @return Handling : Object or null.
 	 * @uses Handling
 	 * @since 1.0b5
 	 */

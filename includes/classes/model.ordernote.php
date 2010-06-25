@@ -49,7 +49,7 @@ class OrderNote Extends Model {
   protected $_tableName = 'order_note';
   protected $_columns   = array('#onote_id', '*onote_order_id', '#onote_user_id', '#onote_admin_id',
                                 'onote_timestamp', 'onote_private', 'onote_type',
-                                'onote_subject','*onote_note');
+                                '*onote_subject','*onote_note');
 
   /*
   public function __construct($data, $message) {

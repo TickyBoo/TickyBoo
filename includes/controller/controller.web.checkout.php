@@ -197,8 +197,13 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   function actionAccept () {
-    $sesOrder = is($_SESSION['_SHOP_order'],NULL);
-    $test = Order::DecodeSecureCode($sesOrder, $this->getsecurecode());
+    $myorder = is($_SESSION['_SHOP_order'],NULL);
+    //if order is still in the session use the id to reload the order!
+    if($myorder->order_id > 0){
+      $myorder = Order::load($myorder->order_id,true);
+    }
+    //If the above is null Decode Will Load latest order from CallBack
+    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
     if($test < 1) {
       echo "accept error ($test): $sesOrder->order_id\n". print_r($sesOrder, true);
       //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -206,10 +211,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       unset( $_SESSION['_SHOP_order']);
       return;
     }
-    if(is($sesOrder->order_id,false)){
-      $myorder = Order::load($sesOrder->order_id,true);
-      $myorder = is($myorder,$sesOrder);
-    }
+    //Now we have the order Lock it!
     $myorder->lock();
 
     $hand=$myorder->handling;
@@ -236,6 +238,10 @@ class ctrlWebCheckout extends ctrlWebShop {
 
   function actionCancel () {
     $myorder = is($_SESSION['_SHOP_order'],null);
+    //if order is still in the session use the id to reload the order!
+    if($myorder->order_id > 0){
+      $myorder = Order::load($myorder->order_id,true);
+    }
     $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
     if($test < 1) {
       header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
@@ -255,17 +261,32 @@ class ctrlWebCheckout extends ctrlWebShop {
     return "checkout_result";
   }
 
+	/**
+	 * ctrlWebCheckout::actionNotify()
+   * 
+   * Handles call backs from EPH.
+	 * 
+	 * @param string $type : type of call back SOR or CBR;
+	 * @return null
+   * Generaly the EPH will need to terminate or send response back to the EPH Server
+   * Therefore 99% of the time nothing ever makes it back to this function.
+	 */
 	function actionNotify ($type="sor") {
 		if($type == "sor"){
 			$myorder = is($_SESSION['_SHOP_order'], null);
+      
+      //if order is still in the session use the id to reload the order!
+      if($myorder->order_id > 0){
+        $myorder = Order::load($myorder->order_id,true);
+      }
 			$test = Order::DecodeSecureCode($myorder, $this->getsecurecode($type), true);
 			if($test < 1) {
 		   		header('HTTP/1.1 502 Action not allowed', true, 502);
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
 		   		return;
 			}
-			ShopDB::dblogging("notify  ($test): $myorder->order_id.\n");
       $myorder->lock();
+			ShopDB::dblogging("notify  ($test): $myorder->order_id.\n");      
 
 			$hand= $myorder->handling;
 			$hand->on_notify($myorder);

@@ -521,6 +521,7 @@ class Order_Smarty {
     if (!$orderNote->fillRequest() || !$orderNote->saveEx()) {
       $smarty->assign('success',false);
       addWarning('failed_to_add_note');
+      return;
 		}
     if(!$order=Order::load($_REQUEST['order_id'])){return;}
     $order->emailSubject = $orderNote->onote_subject;

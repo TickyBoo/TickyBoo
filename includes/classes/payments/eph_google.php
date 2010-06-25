@@ -152,11 +152,11 @@ class EPH_google extends Payment{
 		define('RESPONSE_HANDLER_LOG_FILE', 'googlemessage.log');
 
 		$merchant_id = $this->pm_google_merchant_id;  // Your Merchant ID
-      	$merchant_key = $this->pm_google_merchant_key;  // Your Merchant Key
-      	$server_type = "sandbox";
-      	$currency = $_SHOP->organizer_data->organizer_currency;
+ 	  $merchant_key = $this->pm_google_merchant_key;  // Your Merchant Key
+    $server_type = "sandbox";
+    $currency = $_SHOP->organizer_data->organizer_currency;
 
-      	if($this->pm_google_sandbox){
+    if($this->pm_google_sandbox){
 			$server_type = "sandbox";
 		}else{
 			$server_type = "live";
