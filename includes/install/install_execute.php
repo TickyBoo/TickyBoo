@@ -99,6 +99,7 @@ class install_execute {
       }
     }
     self::recalcStats($Install);
+    self::moveOrderNotes($Install);
 
     Orphans::clearZeros('Category',     array('category_pm_id','category_event_id','category_pmp_id'));
     Orphans::clearZeros('Event',        array('event_group_id','event_main_id'));
@@ -345,6 +346,30 @@ class install_execute {
       array_push($Install->Warnings,"We moved the statistics information back to there main table this gives us a more stable system.");
 
       self::renameTables(array('Category_stat','Event_stat'));
+    }
+  }
+  
+  /**
+   * install_execute::moveOrderNotes()
+   * 
+   * Move order notes to new order_notes table
+   * 
+   * @return void
+   */
+  static function moveOrderNotes(){
+    if(ShopDB::query("SELECT COUNT(*) FROM `Order` WHERE order_note IS NOT NULL")){  
+      $query = "INSERT INTO `order_note` 
+                (`onote_order_id`,`onote_subject`,`onote_note`)
+                SELECT order_id,'Old Note',order_note
+                FROM `Order`
+                WHERE order_note IS NOT NULL";
+      if(ShopDB::query($query)){
+        $query = "UPDATE `Order` 
+                  SET order_note = NULL 
+                  WHERE order_note IS NULL";
+        ShopDB::query($query);
+      }
+      array_push($Install->Warnings,"Moved the Order Note to there new location!");
     }
   }
 }

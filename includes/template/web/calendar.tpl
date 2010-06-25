@@ -35,7 +35,7 @@
 
 <table class='table_dark'>
   {country event=true distinct='ort_country' order='ort_country DESC'}
-  {print_r var=$shop_country}
+  
   {/country}
   
   {event start_date=$start_date sub='on' ort='on' place_map='on' order="event_date,event_time" first=$smarty.get.offset length=$length}

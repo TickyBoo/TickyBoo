@@ -88,6 +88,7 @@ class OrderNote Extends Model {
     global $_SHOP;
     
     if(!is_object($orderObj)){
+      addWarning('no_order_for_note');
       return false;
     }
     OrderStatus::statusChange($orderObj->order_id,false,NULL,'OrderNote::sendNote',"Send Type: $statusType to order");
