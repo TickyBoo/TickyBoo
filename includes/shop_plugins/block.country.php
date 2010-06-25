@@ -32,7 +32,7 @@
  * clear to you.
  */
 
-function smarty_block_countries ($params, $content, $smarty, &$repeat) {
+function smarty_block_country ($params, $content, $smarty, &$repeat) {
 	global $_SHOP;
 
   if ($repeat) {
@@ -94,9 +94,11 @@ function smarty_block_countries ($params, $content, $smarty, &$repeat) {
     
     if($params['distinct']){
       $select .= " DISTINCT "._esc($params['distinct'],false);
+    }else{
+      $select .= " * ";
     }
 
-    $query="$SELECT FROM $from $where $order_by $limit";
+    $query="$select FROM $from $where $order_by $limit";
     $res=ShopDB::query($query);
 
 	  $part_count=ShopDB::num_rows($res);
@@ -129,7 +131,7 @@ function smarty_block_countries ($params, $content, $smarty, &$repeat) {
 		$ort['tot_count']=$tot_count;
     $ort['part_count']=$part_count;
 
-    $smarty->assign("shop_countries",$ort);
+    $smarty->assign("shop_country",$ort);
 
     $smarty->_SHOP_db_res[]=array($res,$tot_count,$part_count);
   }
