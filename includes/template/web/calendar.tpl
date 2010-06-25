@@ -32,7 +32,12 @@
 {include file="header.tpl" name=!calendar!}
 {assign var='length' value='15'}
 {assign var=start_date value=$smarty.now|date_format:"%Y-%m-%d"}
+
 <table class='table_dark'>
+  {countries event=true distinct='ort_country' order='ort_country DESC'}
+  {print_r var=$shop_countries}
+  {/countries}
+  
   {event start_date=$start_date sub='on' ort='on' place_map='on' order="event_date,event_time" first=$smarty.get.offset length=$length}
     {assign var='month' value=$shop_event.event_date|date_format:"%B"}
     {if $month neq  $month1}
