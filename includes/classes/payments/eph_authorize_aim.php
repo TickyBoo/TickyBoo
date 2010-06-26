@@ -80,7 +80,7 @@ class EPH_authorize_aim Extends Payment{
 		$order_id=$order->order_id;
     return "{gui->StartForm  width='100%' name='authorize_aim-form' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
             <input type='hidden' name='action' value='submit'>
-            <input type='hidden' name='sor' value='{$order->EncodeSecureCode(null,'')}'>
+            <input type='hidden' name='sor' value='{$order->EncodeSecureCode('')}'>
 
             {gui->input name='cc_name'}
             {gui->input name='cc_number'}

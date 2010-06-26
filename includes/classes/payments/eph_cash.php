@@ -59,7 +59,7 @@ class EPH_cash extends payment{
     $alreadypayed=(float) $alreadypayed;//title=\"".con('eph_cash_confirm')."\"
     return "{gui->StartForm  width='100%' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
               <input type='hidden' name='action' value='submit'>
-              <input type='hidden' name='sor' value='{$order->EncodeSecureCode(null,'')}'>
+              <input type='hidden' name='sor' value='{$order->EncodeSecureCode('')}'>
               <input type='hidden' name='order_id' value='{$order_id}'>
               <input type='hidden' name='alreadypayed' value='{$alreadypayed}'>
               ".(($alreadypayed)?"{gui->view name='order_payed_already' value='".valuta(number_format($alreadypayed, 2, '.', ''))."'":"")."

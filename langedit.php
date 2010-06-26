@@ -31,8 +31,10 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-  define('ft_check','langcheck');
-  include_once('includes/config/init_common.php');
+  session_name('langedit');
+
+  session_start();
+
 
   function load() {
     $content = array();
@@ -60,21 +62,32 @@
       return array_combine( $m[1],$m[2]);
   }
 
-  if (isset($_GET['load'])) {
+  if ($_POST['load']) {
+    If (!isset($_SESSION['diff1']) or $_SESSION['lang']<>$_POST['lang'] ) {
     $string1 = file_get_contents('includes/lang/site_en.inc');
-    $en = findinside($string1);
-    if (file_exists( dirname(__FILE__)."/includes/lang/site_{$_GET['lang']}.inc")) {
-      $string2 = file_get_contents("includes/lang/site_{$_GET['lang']}.inc");
-      $du = findinside($string2);
+      $diff1 = findinside($string1);
+      if (file_exists( dirname(__FILE__)."/includes/lang/site_{$_POST['lang']}.inc")) {
+        $string2 = file_get_contents("includes/lang/site_{$_POST['lang']}.inc");
+        $diff2 = findinside($string2);
     } else {
-      $du = array();
+        $diff2 = array();
     }
 
-    $diff1= array_diff_key($en, $du);
-    $diff2= array_diff_key($du, $en);
+      $_SESSION['diff1'] = $diff1;
+      $_SESSION['diff2'] = $diff2;
+      $_SESSION['lang']  = $_POST['lang'];
+
+    } else {
+      $diff1= $_SESSION['diff1'];
+      $diff2= $_SESSION['diff2'];
   }
 
-  if ($_GET['load']=='update_1') {
+  }
+  if ($_POST['oper']=='edit') {
+      $_SESSION['diff2'][$_POST['id']] = $_POST['lang2'];
+     die("done");
+
+  }elseif ($_POST['load']=='update_1') {
      if (count($diff2)===0) {
        die('noting to update');
      } elseif (!is_writable('includes/lang/site_en.inc')) {
@@ -90,7 +103,7 @@
      }
      die("done");
 
-  }elseif ($_GET['load']=='update_2') {
+  }elseif ($_POST['load']=='update_2') {
      if (count($diff1)===0) {
        die('noting to update');
      } elseif (!is_writable("includes/lang/site_{$_GET['lang']}.inc")) {
@@ -105,7 +118,7 @@
        file_put_contents("includes/lang/site_{$_GET['lang']}.inc",$string2, FILE_TEXT );
      }
      die("done");
-  } elseif ($_GET['load']=='grid')  {
+  } elseif ($_POST['load']=='grid')  {
     $responce = array();
     $responce['page'] = 1;
     $responce['total'] = 1;
@@ -115,13 +128,15 @@
 
     foreach ($diff1 as $key =>$value) {
       $responce['rows'][$i]['id']=$key;
-      $responce['rows'][$i]['cell']=array($key, htmlentities($value), "&nbsp;");
+      $responce['rows'][$i]['cell']=array($key, htmlentities($value), htmlentities($diff2[$key]));
       $i++;
     }
     foreach ($diff2 as $key =>$value) {
+      if(!array_key_exists($key, $diff1 )){
       $responce['rows'][$i]['id']=$key;
       $responce['rows'][$i]['cell']=array($key, "&nbsp;", htmlentities($value));
       $i++;
+    }
     }
     echo json_encode($responce);
     exit;
@@ -139,7 +154,7 @@
 		<title>FusionTicket: Language editor </title>
 		<link rel="stylesheet" type="text/css" href="css/ingrid.css" media="screen" />
 		<script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
 
 		<script type="text/javascript" src="scripts/jquery/jquery.jqGrid.min.js"></script>
 
@@ -148,61 +163,41 @@
        $(document).ready(function() {
           var mycombo = $("#combo");
           var lang = mycombo.val();
-
+          var lastsel;
           var mygrid1 = $("#table1").jqGrid({
             url:'langedit.php',
             datatype: 'JSON',
-            mtype: 'GET',
+            mtype: 'POST',
             postData: {"load":"grid","lang":lang},
             colNames: ['Expire_in','Lang_en','Other langCount'],
             colModel :[
                 {name:'key',   index:'key',   width:200, sortable:false, resizable: false  },
-                {name:'lang1', index:'lang1', width:475, sortable:false, resizable: false },
-                {name:'lang2', index:'lang2', width:475, sortable:false, resizable: false }],
+                {name:'lang1', index:'lang1', width:470, sortable:false, resizable: false },
+                {name:'lang2', index:'lang2', width:470, sortable:false, resizable: false,
+                 editable:true, edittype: "textarea", editoptions: {rows:"2",cols:"51"} }],
             altRows: true,
-            height: 300,
+            height: 400,
         		hiddengrid : true,
             forceFit   : true,
-            rownumbers : true,
+            rownumbers : false,
             rowNum:   -1,
         		footerrow : false,
-        		viewrecords: false,
+        		viewrecords: true,
+            editurl: "langedit.php?load=save",
             loadError: function(xhr,status,error) {
               alert(status+'-'+error);
             },
             onSelectRow: function(rowid,status) {
+              if(rowid && rowid!==lastsel){
           		var ret = mygrid1.jqGrid('getRowData',rowid);
-          	//	alert("id="+ret.key+" lang1="+ret.lang1+"...");
-              $('#key').val(ret.key);
               $('#orgintext').val(ret.lang1);
-              $('#changedtext').val(ret.lang2);
+
+                mygrid1.jqGrid('restoreRow',lastsel);
+                mygrid1.jqGrid('editRow',rowid, true);
+                lastsel=rowid;
             }
-          });
-
-          $('#secLang').text(mycombo.val());
-      		$('#update_1').click(function(){
-             $.get("langedit.php", { load: "update_1", lang: lang }, function(data){
-                if (data== 'done') {
-                  mygrid1.g.load({lang: lang });
-                } else alert(data);}, "text");
-      		});
-
-      		$('#update_2').click(function(){
-             $.get("langedit.php", { load: "update_2", lang: lang }, function(data){
-                if (data== 'done') {
-                  mygrid1.g.load({lang: lang });
-                } else alert(data);}, "text");
-      		});
-          $("#lang-form").submit(function(){
-            $(this).ajaxSubmit({
-              data:{load:"save"},
-              dataType: "json",
-              success: function(data, status){
-                alert('saved');
               }
             });
-            return false;
-          });
 
       		$('#combo').change(function(){
       			lang = mycombo.val();
@@ -226,15 +221,7 @@
 ?>
 </select>
   <table id="table1" class="scroll" cellpadding="0" cellspacing="0"></table>
-  <form id='lang-form'>
-  <input type='hidden' id='key' name='key' value=''>
-  <input type='hidden' name='load' value='NewValue'>
   Orgin text:<br>
-
-  <textarea id='orgintext' name=orgintext rows='4' cols='142'  ></textarea>  <br>
-  Changed text:<br>
-  <textarea id='changedtext' name=changedtext rows='4' cols='142'  ></textarea>  <br>
-  <input type=submit
-  </form>
+  <textarea id='orgintext' name=orgintext rows='4' cols='160'  ></textarea>
   </body>
 </html>

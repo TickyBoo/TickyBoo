@@ -1238,8 +1238,7 @@ define("pos_nextorder","Next Order");
 define("pos_nextunpaid","Next UnPaid Order");
 define("pos_nextunsent","Next UnSent Order");
 define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
-define("pos_reorder_info","To Order Tickets Click below:<br>".
-		"WARNING old order is CANCELED on Re-Order!");
+define("pos_reorder_info","To Order Tickets Click below:<br>WARNING old order is CANCELED on Re-Order!");
 define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
 define("shipmentstatus","Shipment Status");
 define("next_order_id","Next Order ID");
@@ -1385,10 +1384,10 @@ define ('version_updater','Update');
 define ('order_already_crated',"This order is already saved!!!");
 define ('Select_handling_option','Select a payment option.');
 define ('FreeTicketCode_notfound','FreeTicketCode not found. Try again');
-define ('placemap_image_explanation',"<img class='seatmapimage' src='{$_SHOP->images_url}seatfree.gif'>: Available choice, ".
-                                     "<img class='seatmapimage' src='{$_SHOP->images_url}seatselect.gif'>: Selected, ".
-                                     "<img class='seatmapimage' src='{$_SHOP->images_url}seatused.gif'>:  Unavailable, ".
-                                     "<img class='seatmapimage' src='{$_SHOP->images_url}seatdisable.gif'>: Other category");
+define ('placemap_image_explanation',"<img class='seatmapimage' src='{$_SHOP->images_url}seatfree.gif'>: Available choice,
+                                     <img class='seatmapimage' src='{$_SHOP->images_url}seatselect.gif'>: Selected,
+                                     <img class='seatmapimage' src='{$_SHOP->images_url}seatused.gif'>:  Unavailable,
+                                     <img class='seatmapimage' src='{$_SHOP->images_url}seatdisable.gif'>: Other category");
 define ('copy_main_pm','copy from main event');
 define ('republish_old_event',"Are you sure you want to publish this archived event?\r\n It will only show in the [Program] area of the Web Shop.");
 ?><?php

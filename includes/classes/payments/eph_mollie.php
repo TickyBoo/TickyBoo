@@ -65,7 +65,7 @@ class eph_mollie extends payment{
 		$this->pm_mollie_test  = true;
 	}
 
-	function on_confirm(&$order) {
+	function on_confirm($order) {
     global $_SHOP;
     $ideal = new iDEAL_Payment ($this->pm_mollie_partnerid);
     $ideal->setTestmode($this->pm_mollie_test);
@@ -83,7 +83,7 @@ class eph_mollie extends payment{
     return "
       {gui->StartForm  width='100%' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
         {gui->hidden name='action' value='submit'}
-        {gui->hidden name='sor' value='".Order::EncodeSecureCode($order,'')."'}
+        {gui->hidden name='sor' value='".$order->EncodeSecureCode('')."'}
         {gui->selection name='bank_id' options=\$ideal_issuers}
       {gui->EndForm title=!pay! align='right' noreset=true}";
 	}
@@ -93,8 +93,8 @@ class eph_mollie extends payment{
     $ideal = new iDEAL_Payment ($this->pm_mollie_partnerid);
     $ideal->setTestmode($this->pm_mollie_test);
 
-    $return_url = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode(null);
-    $report_url = $_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode(null);
+    $return_url = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode();
+    $report_url = $_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode();
     if (isset($_POST['bank_id']) and !empty($_POST['bank_id'])) {
      	if ($ideal->createPayment((int) $_POST['bank_id'], (int)($order->order_total_price *100), $order->order_description(), $return_url, $report_url)) 	{
     		/* Hier kunt u de aangemaakte betaling opslaan in uw database, bijv. met het unieke transactie_id
@@ -117,12 +117,21 @@ class eph_mollie extends payment{
     }
   }
 
-  function on_return(&$order, $result){
+  function on_return($order, $result){
     global $_SHOP;
     if (isset($_GET['transaction_id'])) {
+      if (true == true){
       return array('approved'=>true,
                    'transaction_id'=>($_GET['transaction_id']) ,
-                   'response'=> con('eph_ideal_waitingaception'));
+                     'response'=> 'iDeal Payment ontangen. De tickets zijn (of worden) naar je verzonden.<br>'
+				   				.'Order Status: '.con($order->order_status).'<br />'
+				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
+				   				.'Shipping Status: '.con($order->order_shipment_status));
+      } else {
+        return array('approved'      => false,
+                     'transaction_id'=> ($_GET['transaction_id']) ,
+                     'response'      => 'Reason: <pre>'.print_r($ideal,true).'</pre>');
+      }
     } else {
       return array('approved'=>false,
                    'transaction_id'=>null ,
@@ -130,30 +139,30 @@ class eph_mollie extends payment{
     }
   }
 
-  function on_check(&$order){
+  function on_notify($order){
     global $_SHOP;
     if (isset($_GET['transaction_id']))  {
-      $ideal = new iDEAL_Payment ($this->pm_mollie_partneri);
+      $ideal = new iDEAL_Payment ($this->pm_mollie_partnerid);
       $ideal->setTestmode($this->pm_mollie_test);
     	$ideal->checkPayment($_GET['transaction_id']);
-/*
-      $debug = print_r($request, true). "\n";
-      $debug .= print_r($ideal, true). "\n";
-    $handle=fopen($_SHOP->tmp_dir."mollie.log","a");
-    fwrite($handle,$debug);
-    fclose($handle);
-*/
+
+      OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::notpaide',print_r(	$ideal,true));
 	    if ($ideal->getPaidStatus() == true){
   	    $order->order_payment_id=$_GET['transaction_id'];
-  	    Order::set_payment_id($order->order_id,'ideal:'.$_GET['transaction_id']);
+  	    Order::set_payment_id($order->order_id,'mollie:'.$_GET['transaction_id']);
         $order->set_payment_status('payed');
-        return true;
       } else {
-        OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::notpaide',print_r(	$ideal->consumer_info,true));
-        $order->delete($order->order_id, con('mollie_notpaid_notify'));
-        return true;
+//        print_r($ideal);
+//        OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::notpaide','');
+        $order->set_payment_status('none');
+     //   $order->delete($order->order_id, con('mollie_notpaid_notify'));
       }
+    } else {
+      OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify:result_error',print_r($_REQUEST,true));
     }
+    header('HTTP/1.1 200 Data received', true, 200);
+    return true;
+
   }
 }
 ?>

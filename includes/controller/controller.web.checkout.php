@@ -150,13 +150,9 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   protected function  _submit() {
-    $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode(), true);
-    if($test < 1) {
-  //    header('HTTP/1.1 404 '.con('OrderNotFound'), true, 404);
-      ShopDB::dblogging("submit error ($test): $myorder->order_id\n". print_r($myorder, true));
-
-      unset( $_SESSION['_SHOP_order']);
+    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    if(is_numeric($myorder)) {
+      ShopDB::dblogging("submit error ($myorder).");
       return;
     }
     $myorder->lock();
@@ -181,13 +177,9 @@ class ctrlWebCheckout extends ctrlWebShop {
 
 
   function actionPrint () {
-    $myorder = is($_SESSION['_SHOP_order'],null);
-    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
-    if($test < 1) {
-      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("print error ($test): $myorder->order_id\n". print_r($myorder, true));
-      echo "print error $test" ; print_r($myorder);
-      unset( $_SESSION['_SHOP_order']);
+    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    if(is_numeric($myorder)) {
+      ShopDB::dblogging("Print error ($myorder).");
       return;
     }
     $mode = (int)$_REQUEST['mode'];
@@ -197,21 +189,11 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   function actionAccept () {
-    $myorder = is($_SESSION['_SHOP_order'],NULL);
-    //if order is still in the session use the id to reload the order!
-    if($myorder->order_id > 0){
-      $myorder = Order::load($myorder->order_id,true);
-    }
-    //If the above is null Decode Will Load latest order from CallBack
-    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
-    if($test < 1) {
-      echo "accept error ($test): $sesOrder->order_id\n". print_r($sesOrder, true);
-      //header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("accept error ($test): $sesOrder->order_id\n". print_r($sesOrder, true));
-      unset( $_SESSION['_SHOP_order']);
+    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    if(is_numeric($myorder)) {
+      echo "accept error ($myorder).\n";
       return;
     }
-    //Now we have the order Lock it!
     $myorder->lock();
 
     $hand=$myorder->handling;
@@ -237,16 +219,9 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   function actionCancel () {
-    $myorder = is($_SESSION['_SHOP_order'],null);
-    //if order is still in the session use the id to reload the order!
-    if($myorder->order_id > 0){
-      $myorder = Order::load($myorder->order_id,true);
-    }
-    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
-    if($test < 1) {
-      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("cancel error ($test): $myorder->order_id\n". print_r($myorder, true));
-      unset( $_SESSION['_SHOP_order']);
+    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    if(is_numeric($myorder)) {
+      echo "Cancel error ($myorder).\n";
       return;
     }
     $myorder->lock();
@@ -261,26 +236,10 @@ class ctrlWebCheckout extends ctrlWebShop {
     return "checkout_result";
   }
 
-	/**
-	 * ctrlWebCheckout::actionNotify()
-   * 
-   * Handles call backs from EPH.
-	 * 
-	 * @param string $type : type of call back SOR or CBR;
-	 * @return null
-   * Generaly the EPH will need to terminate or send response back to the EPH Server
-   * Therefore 99% of the time nothing ever makes it back to this function.
-	 */
 	function actionNotify ($type="sor") {
 		if($type == "sor"){
-			$myorder = is($_SESSION['_SHOP_order'], null);
-      
-      //if order is still in the session use the id to reload the order!
-      if($myorder->order_id > 0){
-        $myorder = Order::load($myorder->order_id,true);
-      }
-			$test = Order::DecodeSecureCode($myorder, $this->getsecurecode($type), true);
-			if($test < 1) {
+      $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+      if(is_numeric($myorder)) {
 		   		header('HTTP/1.1 502 Action not allowed', true, 502);
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
 		   		return;
@@ -303,12 +262,9 @@ class ctrlWebCheckout extends ctrlWebShop {
  	}
 
   function actionPayment (){
-    $myorder = is($_SESSION['_SHOP_order'], null);
-    $test = Order::DecodeSecureCode($myorder, $this->getsecurecode());
-    if($test < 1) {
-      header('HTTP/1.1 502 '.con('OrderNotFound'), true, 502);
-      ShopDB::dblogging("payment error ($test): $myorder->order_id\n". print_r($myorder, true));
-      unset( $_SESSION['_SHOP_order']);
+    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    if(is_numeric($myorder)) {
+      echo "Cancel error ($myorder).\n";
       return;
     }
     return $this->_payment($myorder);
@@ -381,13 +337,18 @@ class ctrlWebCheckout extends ctrlWebShop {
     if (!isset($_SESSION['_SHOP_order'])) {
       $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
  	  } else {
+      $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+      if(is_numeric($myorder)) {
+        echo "Cancel error ($myorder).\n";
+        return;
+      }
 		  $myorder = $_SESSION['_SHOP_order'];
     }
     if (!$myorder) {
       addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
-      $myorder->lock('Lock Created Order'); //Lock created order
+      $myorder->lock(); //Lock created order
       $this->setordervalues($myorder); //assign order vars
       $this->__MyCart->destroy_f(); // destroy cart
       if(!$myorder->handling){
@@ -408,7 +369,7 @@ class ctrlWebCheckout extends ctrlWebShop {
  			  if ($hand->is_eph()) {
     		  $_SESSION['_SHOP_order'] = $myorder;
    			}
-    		$order->obj = $myorder;
+    		$this->__Order->obj = $myorder;
       	$this->assign('confirmtext', $confirmtext);
    			return "checkout_confirm";
       }

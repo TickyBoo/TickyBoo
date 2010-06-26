@@ -577,7 +577,9 @@ class Order_Smarty {
   }
 
   function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
-    return Order::EncodeSecureCode($order, $item, $loging);
+    if (is_numeric($order)) $order = Order::load($order);
+    if(!is_object($order)) return '';
+    return $order->EncodeSecureCode($item, $loging);
   }
 
   function secure_url_param($num=FALSE, $nonum=FALSE)
@@ -604,9 +606,6 @@ class Order_Smarty {
     }
     }
   }
-//  function EncodeSecureCode($order){
-//    return $order->EncodeSecureCode();
-//  }
 }
 
 function _collect(&$event_item,&$cat_item,&$place_item,&$order){

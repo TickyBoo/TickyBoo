@@ -913,19 +913,24 @@ class Order Extends Model {
     Order::purgeDeleted($order_handling_id);
   }
 
-  function EncodeSecureCode($order= null, $item='sor=', $loging=false) {
+  /**
+   * Order::EncodeSecureCode()
+   *
+   * @param string $item : property value
+   * @param bool $loging : set to true to enable extra logging to dblogging
+   * @return string;
+   */
+  function EncodeSecureCode($item='sor=', $loging=false) {
 
-    if ($order == null && ($this->obj instanceof Order)) { $order = $this->obj;
-    } elseif ($order == null) { $order = $this; }
-    if (is_numeric($order)) $order = self::load($order);
-    if ($order == null) return '';
-    if (!$order->order_tickets_nr ) $order->order_tickets_nr = $order->size();
+    if (!$this->order_tickets_nr ) $this->order_tickets_nr = $this->size();
 
-    $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.
-           $order->order_handling_id .'~'. $order->order_total_price;
+    $md5 = $this->order_session_id.'~'.$this->order_user_id .'~'. $this->order_tickets_nr .'~'.
+           $this->order_handling_id .'~'. $this->order_total_price;
     $md5x = base_convert(md5($md5),16,36);
-    $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($order->order_id,10,36).'_'. $md5x);
+    $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($this->order_id,10,36).'_'. $md5x);
+    if ($loging) {
     ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36).' -> '.urlencode ($code));
+    }
 
     return $item. strtr($code, '+/=', '-_~'); //  }
   }
@@ -933,42 +938,35 @@ class Order Extends Model {
   /**
    * Order::DecodeSecureCode()
    * 
-   * This is used by most EPH where we sent a url to the EPH and when the system GET/POST the SOR back we can
+   * This is used by most checkout actions and eph's where we sent a url to the EPH and when the system GET/POST the SOR back we can
    * handle the request and load the order and proccess the payment. 
    * 
    * ***THIS WORKS DIFFERNTLY TO CallBackRequest***
    * 
-   * @param mixed &$order Order Object/ Null
    * @param string $codestr : SecureOrderRequest code (SOR).
    * @param bool $loging : set to true to enable extra logging to dblogging
-   * @return int/bool : true if code correct and order loaded
+   * @return int/object : true if code correct and order loaded
    * Call Back errors:
    * -5 : No SOR
    * -4 : MD5 doesnt match the one sent
    * -3 : Order Loaded doesnt match SOR
    * -1 : Can't load/get Order Object
-   * True : All is good!
+   * $order (Tobject) : All is good!
    */
-  function DecodeSecureCode(&$order, $codestr ='', $loging=false) {
+  static function DecodeSecureCode( $codestr ='', $loging=false) {
     If (empty($codestr) and isset($_REQUEST['sor'])) $codestr = $_REQUEST['sor'];
    //
     If (!empty($codestr)) {
-      //$code = urldecode( $code) ;
-//      print_r( $codestr );
       $text = base64_decode(strtr($codestr, '-_~', '+/='));
       $code = explode('_',$text);
-    //  print_r( $text );
       $code[0] = base_convert($code[0],36,10);
       $code[1] = base_convert($code[1],36,10);
-//      print_r( $code );
-//      print_r( $order );
       if ($loging) {
         ShopDB::dblogging('Decode:'.$codestr.' -> '.$text);
         ShopDB::dblogging('Code:'.print_r( $code, true));
         ShopDB::dblogging('MD5.a:'.$code[2]);
       }
 
-      if (!is_object($order) and isset($this) and ($this instanceof Order)) $order = $this;
       if (!is_object($order)) $order = self::load($code[1], true);
       if (!is_object($order)) return -1;
 
@@ -984,7 +982,7 @@ class Order Extends Model {
 //      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;
       if ($code[2] <> $md5) return -4;
-      return true;
+      return $order;
     } else
       return -5;
   }
