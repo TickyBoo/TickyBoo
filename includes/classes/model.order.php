@@ -39,6 +39,7 @@ class Order Extends Model {
 
   const STS_PMT_PAID = 'payed';
   const STS_PMT_PEND = 'pending';
+  const STS_PMT_CANCELED = 'canceled';
   const STS_PMT_NONE = 'none';
 
   const STS_SMT_SENT = 'send';

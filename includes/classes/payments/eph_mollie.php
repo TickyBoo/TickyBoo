@@ -118,24 +118,17 @@ class eph_mollie extends payment{
   }
 
   function on_return($order, $result){
-    global $_SHOP;
-    if (isset($_GET['transaction_id'])) {
-      if (true == true){
+    if ($order->order_payment_status == 'canceled'){
+        return array('approved'      => false,
+                     'transaction_id'=> null ,
+                     'response'      => con('mollie_status_canceled'));
+    } else {
       return array('approved'=>true,
                    'transaction_id'=>($_GET['transaction_id']) ,
-                     'response'=> 'iDeal Payment ontangen. De tickets zijn (of worden) naar je verzonden.<br>'
+                     'response'=> 'Betaling '.con($order->order_payment_status).'. De tickets zijn (of worden) naar je verzonden zo gouw de betaling binnen is.<br>'
 				   				.'Order Status: '.con($order->order_status).'<br />'
 				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
 				   				.'Shipping Status: '.con($order->order_shipment_status));
-      } else {
-        return array('approved'      => false,
-                     'transaction_id'=> ($_GET['transaction_id']) ,
-                     'response'      => 'Reason: <pre>'.print_r($ideal,true).'</pre>');
-      }
-    } else {
-      return array('approved'=>false,
-                   'transaction_id'=>null ,
-                   'response'=> 'Reason: '.print_r($_REQUEST,true));
     }
   }
 
@@ -148,14 +141,10 @@ class eph_mollie extends payment{
 
       OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::notpaide',print_r(	$ideal,true));
 	    if ($ideal->getPaidStatus() == true){
-  	    $order->order_payment_id=$_GET['transaction_id'];
   	    Order::set_payment_id($order->order_id,'mollie:'.$_GET['transaction_id']);
         $order->set_payment_status('payed');
       } else {
-//        print_r($ideal);
-//        OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::notpaide','');
-        $order->set_payment_status('none');
-     //   $order->delete($order->order_id, con('mollie_notpaid_notify'));
+        $order->set_payment_status('canceled');
       }
     } else {
       OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify:result_error',print_r($_REQUEST,true));

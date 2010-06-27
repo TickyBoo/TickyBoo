@@ -627,7 +627,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
     }
     $no_fee  = is($_POST['no_fee'], 0);
     $no_cost = is($_POST['no_cost'], 0);
-        unset($_SESSION['_SHOP_order']) ;
+    unset($_SESSION['_SHOP_order']) ;
     if((int)$_POST['handling_id'] === 1){
       $return = $this->_reserve('pos',$user_id);
     }else{

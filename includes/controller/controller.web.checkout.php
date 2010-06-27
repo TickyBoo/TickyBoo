@@ -212,7 +212,7 @@ class ctrlWebCheckout extends ctrlWebShop {
 
   function actionPosCancel () {
  		$this->__MyCart->destroy_f(); // destroy cart
-    $myorder = is($_SESSION['_SHOP_order'],null);
+    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
     if ($myorder) {
        Order::delete($myorder->order_id,'pos_manual_canceled' );
     }
@@ -303,7 +303,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       return "checkout_result";
     } else {
       if ($hand->is_eph()) {
-        $_SESSION['_SHOP_order'] = $orderInput;
+        $_SESSION['_SHOP_order'] = true;
  			}
       $this->assign('confirmtext', $confirmtext);
    		return "checkout_confirm";
@@ -342,7 +342,6 @@ class ctrlWebCheckout extends ctrlWebShop {
         echo "Cancel error ($myorder).\n";
         return;
       }
-		  $myorder = $_SESSION['_SHOP_order'];
     }
     if (!$myorder) {
       addwarning('order_not_found_or_created');
@@ -367,7 +366,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       	return "checkout_result";
       } else {
  			  if ($hand->is_eph()) {
-    		  $_SESSION['_SHOP_order'] = $myorder;
+    		  $_SESSION['_SHOP_order'] = true;
    			}
     		$this->__Order->obj = $myorder;
       	$this->assign('confirmtext', $confirmtext);
