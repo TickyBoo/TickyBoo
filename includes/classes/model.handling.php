@@ -202,9 +202,9 @@ class Handling Extends Model {
     }
 
     if (!$sentEmail) {
-      addWarning('status_change_handling_error');
+      addWarning('status_change_handling_error', $new_state);
     }else{
-      addNotice("order_is_set_to_{$new_state}");
+      trace("order_is_set_to_{$new_state}");
     }
 
     //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;

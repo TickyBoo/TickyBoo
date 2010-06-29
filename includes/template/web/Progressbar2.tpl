@@ -45,6 +45,7 @@
   background: url('{$_SHOP_themeimages}bar_center.png') 0 100% repeat-x;
   color: #FFFFFF;
   TEXT-ALIGN: center;
+  border-style: none; border-width: medium;
 {literal}
 }
 .current{
@@ -53,6 +54,7 @@
    	font-weight: bold;
    	color: #000000;
    	border-right: 0px solid #5FE3E0;
+    border-style: none; border-width: medium;
 {literal}
 }
 .next{
@@ -60,6 +62,7 @@
   TEXT-ALIGN: center;
     background: url('{$_SHOP_themeimages}bar_center_wht.png') 0 100% repeat-x;
    	background-color: white;
+    border-style: none; border-width: medium
 {literal}
 }
 
@@ -81,7 +84,7 @@
     <tr>
       {if $name==!shop! and $shop_event.event_pm_id}
         <td width='5'><img src='{$_SHOP_themeimages}bar_left.png' height='20'></td>
-        <td class='current' style="border-style: none; border-width: medium"> {!prg_order!} </td>
+        <td class='current'> {!prg_order!} </td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right.png' height='20'></td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_left_wht.png' height='20'></td>
         <td class='next'>{!prg_review!}</td>
@@ -90,8 +93,8 @@
             {!prg_signin!}
           </td>
         {/if}
-        <td class='next' style="border-style: none; border-width: medium">{!prg_payment!}</td>
-        <td class="next" style="border-style: none; border-width: medium">{!prg_complete!}</td>
+        <td class='next' style="border-right: 1px solid #5FE3E0">{!prg_payment!}</td>
+        <td class="next" >{!prg_complete!}</td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right_wht.png' height='20'></td>
       {elseif $name==!select_seat!}
         <td width='5'><img src='{$_SHOP_themeimages}bar_left.png' height='20'></td>
@@ -124,33 +127,33 @@
         <td width='5'><img src='{$_SHOP_themeimages}bar_right_wht.png' height='20'></td>
       {elseif $name==!shopping_cart!}
       <td width='5'><img src='{$_SHOP_themeimages}bar_left.png' height='20'></td>
-        <td class='done'>{!prg_order!} </td>
-        <td class='current' style="border-style: none; border-width: medium">{!prg_review!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_order!} </td>
+        <td class='current' >{!prg_review!} </td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right.png' height='20'></td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_left_wht.png' height='20'></td>
 
         {if !$user->logged}
-          <td class='next' style="border-style: none; border-width: medium">{!prg_signin!}</td>
+          <td class='next' style="border-right: 1px solid #5FE3E0">{!prg_signin!}</td>
         {/if}
-        <td class='next' style="border-style: none; border-width: medium">{!prg_payment!}</td>
-        <td class="next" style="border-style: none; border-width: medium">{!prg_complete!}</td>
+        <td class='next' style="border-right: 1px solid #5FE3E0">{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right_wht.png' height='20'></td>
       {elseif $name==!pers_info!}
       <td width='5'><img src='{$_SHOP_themeimages}bar_left.png' height='20'></td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_order!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_review!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_order!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_review!} </td>
         <td class='current'>{!prg_signin!} </td>
 		<td width='5'><img src='{$_SHOP_themeimages}bar_right.png' height='20'></td>
 		<td width='5'><img src='{$_SHOP_themeimages}bar_left_wht.png' height='20'></td>
 
-        <td class='next' style="border-style: none; border-width: medium">{!prg_payment!}</td>
-        <td class="next" style="border-style: none; border-width: medium">{!prg_complete!}</td>
+        <td class='next'  style="border-right: 1px solid #5FE3E0">{!prg_payment!}</td>
+        <td class="next">{!prg_complete!}</td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right_wht.png' height='20'></td>
       {elseif $name==!shopping_cart_check_out!}
       <td width='5'><img src='{$_SHOP_themeimages}bar_left.png' height='20'></td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_order!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_review!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_signin!}</td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_order!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_review!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_signin!}</td>
         <td class='current' style="border-style: none; border-width: medium">{!prg_payment!} </td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right.png' height='20'></td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_left_wht.png' height='20'></td>
@@ -159,18 +162,18 @@
         <td width='5'><img src='{$_SHOP_themeimages}bar_right_wht.png' height='20'></td>
       {elseif $name==!order_reg!}
       <td width='5'><img src='{$_SHOP_themeimages}bar_left.png' height='20'></td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_order!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_review!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_signin!}</td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_payment!} </td>
-        <td class="current" style="border-style: none; border-width: medium">{!prg_complete!}</td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_order!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_review!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_signin!}</td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_payment!} </td>
+        <td class="current">{!prg_complete!}</td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right.png' height='20'></td>
       {elseif $name==!pay_accept! or $name==!pay_refused!}
-        <td class='done' style="border-style: none; border-width: medium">{!prg_order!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_review!} </td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_signin!}</td>
-        <td class='done' style="border-style: none; border-width: medium">{!prg_payment!} </td>
-        <td class="current" style="border-style: none; border-width: medium">{!prg_complete!}</td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_order!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_review!} </td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_signin!}</td>
+        <td class='done' style="border-right: 1px solid #5FE3E0">{!prg_payment!} </td>
+        <td class="current">{!prg_complete!}</td>
         <td width='5'><img src='{$_SHOP_themeimages}bar_right.png' height='20'></td>
       {/if}
     </tr>
