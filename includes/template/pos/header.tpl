@@ -54,8 +54,7 @@
 			lang.fax_long = '{!fax_long!}';         lang.fax_short = '{!fax_short!}';
 			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
 			lang.not_number = '{!not_number!}';
-		</script>
-        
+		</script>    
     {minify type='js' base='pos/scripts' files='pos.jquery.style.js,pos.jquery.ajax.js,pos.jquery.order.functions.js,pos.jquery.order.js,pos.jquery.order.user.js,pos.jq.forms.js,pos.jq.current.js,pos.jq.current.functions.js'}
     
     <!-- 

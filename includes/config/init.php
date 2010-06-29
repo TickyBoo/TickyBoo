@@ -163,7 +163,10 @@ if (!defined('ft_check')) {die('System intrusion ');}
      orphancheck();
      session_unset();
      session_destroy();
-     die('Access Denied');
+     $string = "<h1>Access Denied</h1>";
+     $string .= "<p><strong>Why?</strong> :- Please check you submitted a form within the same domain (website address).</p>";
+     $string .= "<p><strong>Or</strong> :- Your session does not match your url.</p>";
+     die($string);
   }
 
 
