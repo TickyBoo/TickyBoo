@@ -3,7 +3,7 @@
 
 var clearOrder = function(){
   $("#cat-select").html("<option value='0'></option>");
-  $("#discount-select").html("<option value='0'></option>");//hide().
+  $("#discount-select").html("<option value='0'></option>");//.hide();
   $("#discount-name").hide();
   $("#seat-qty").hide();
   $("#seat-chart").html("");
@@ -59,8 +59,8 @@ var eventIdChange = function(){
 //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
 var refreshOrder = function(){
   var data = $('#cart_table').getGridParam('postData');
-  data['handling_id'] = $("input:radio[name='handling_id']:checked").val();
-  if($("input:checkbox[name='no_fee']").is(":checked")){
+  data['handling_id'] = $("input[type=radio][name=handling_id]:checked").val();
+  if($("input[type=checkbox][name='no_fee']").is(":checked")){
   	data['no_fee'] = 1;
   }else{
   	data['no_fee'] = 0;
@@ -120,7 +120,7 @@ var updateEvents = function(){
          if(data.status){
             eventData = data//set event data
             //Fill Categories
-            $("#event-id").hide().html("");
+            $("#event-id").hide().html(" ");
             $.each(eventData.events,function(){
                $("#event-id").append(this.html);
             });
@@ -135,11 +135,13 @@ var bindCheckoutSubmitForm = function(){
     url:      "ajax.php?x=_possubmit",
     dataType: "json",
     success:  function(data, status){
+      if(jQuery.isPlainObject(data)){
         printMessages(data.messages);
         $("#order_action").dialog('close');
         $("#order_action").html(data.html);
         bindCheckoutSubmitForm();
-        $("#order_action").dialog('open');
+        $("#order_action").dialog('open'); 
+      }
     }
   });
 }

@@ -1,29 +1,10 @@
 var catData = new Object();
-var refreshTimer;
+var refreshTimer = null;
 var eventData = new Object();
 
 var loadOrder = function(){
-  $("#seat-chart").dialog({
-    bgiframe: false,autoOpen: false,
-    height: 'auto',maxHeight: 400,
-    width: 'auto',modal: true,
-    buttons: {
-      'Close': function() {
-        $(this).dialog('close');
-      }
-    },
-    open: function(){jQuery("#seat-chart").parent().appendTo($("#order-form"));} 
-  });
-
-  $("#order_action").dialog({
-    bgiframe: false,autoOpen: false,
-    height: 'auto',width: 'auto',
-    modal: true,
-    close: function(event, ui) {
-      updateEvents();
-      refreshOrder();
-    }
-  });
+  
+  orderDialogs();
 
   $('#cart_table').jqGrid({
     url:'ajax.php?x=cart',
@@ -56,60 +37,56 @@ var loadOrder = function(){
       bindCartRemove(); // This listens for cart remove button;
     }
   });
-  //refreshOrder();
-  updateEvents();
 
-    $('#event-from').datepicker({
-      minDate:0, changeMonth: true,
-      changeYear: true, dateFormat:'yy-mm-dd',
-      showButtonPanel: true,
-      onSelect: function(dateText, inst) {
-         $('#event-from').change();
-      }
-    });
-    $('#event-to').datepicker({
-      minDate:0, changeMonth: true,
-      changeYear: true, dateFormat:'yy-mm-dd',
-      showButtonPanel: true,
-      onSelect: function(dateText, inst) {
-         $('#event-to').change();
-      }
-    });
-    $('#event-from').change(function(){
-      updateEvents();
-    });
-    $('#event-to').change(function(){
-      updateEvents();
-    });
-    $("#event-id").change(function(){
+  //Add datepickers
+  $('#event-from').datepicker({
+    minDate:0, changeMonth: true,
+    changeYear: true, dateFormat:'yy-mm-dd',
+    showButtonPanel: true,
+    onSelect: function(dateText, inst) {
+       $('#event-from').change();
+    }
+  });
+  $('#event-to').datepicker({
+    minDate:0, changeMonth: true,
+    changeYear: true, dateFormat:'yy-mm-dd',
+    showButtonPanel: true,
+    onSelect: function(dateText, inst) {
+       $('#event-to').change();
+    }
+  });
+  //Start the event listeners
+  $('#event-from').change(function(){ updateEvents(); });
+  $('#event-to').change(function(){ updateEvents(); });
+  $("#event-id").change(function(){ eventIdChange(); });
+  $("#event-id").keyup(function(event){
+    if(event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40){
       eventIdChange();
-    });
-    $("#event-id").keyup(function(event){
-      if(event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40){
-        eventIdChange();
-      }
-    });
-   $("#cat-select").change(function(){
-      if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
-         var catId = $("#cat-select").val();
-         $("#ft-cat-free-seats").html(catData.categories[catId].free_seats);
-         updateSeatChart();
-      }
-   });
-
-    //Creates a auto refreshing function.
-    refreshTimer = setInterval(function(){refreshOrder();}, 120000);
-    $("input:radio[name='handling_id']").click(function(){
-      refreshOrder();
-    });
-    $('#no_fee').click(function(){
-      refreshOrder();});
-
-    //Make sure all add ticket fields are added to this so when clearing selection
-    // All fields are reset.
-    $('#clear-button').click(function(){
-      clearOrder();
-    });
+    }
+  });
+  $("#cat-select").change(function(){
+    if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
+      var catId = $("#cat-select").val();
+      $("#ft-cat-free-seats").html(catData.categories[catId].free_seats);
+      updateSeatChart();
+    }
+  });
+  $('#no_fee').click(function(){ refreshOrder(); });
+  
+  //Make sure all add ticket fields are added to this so when clearing selection 
+  //All fields are reset.
+  $('#clear-button').click(function(){ clearOrder(); });
+  
+  //Change to live
+  // Refresh (Update Price) on transaction change.
+  jQuery("input").live("click change",function(){
+    if(jQuery(this).attr('name') == 'handling_id' && jQuery(this).is(':radio')){
+      refreshOrder();  
+    }
+  });
+  
+  //Creates a auto refreshing function.
+  refreshTimer = setInterval(function(){refreshOrder();}, 120000);
 
   $("#order-form").submit(function(){
     $("#error-message").hide();
@@ -127,20 +104,20 @@ var loadOrder = function(){
     return false;
   });
 
-   /**
-   	* Sends the order information the POS Confirm action in controller/checkout.php.
-   	*/
+  ////
+  // Sends the order information the POS Confirm action in controller/checkout.php
+  ////
   $("#checkout").click(function(){
     var userdata = {ajax:"yes",pos:"yes",action:"_PosConfirm"};
-
-    userdata['handling_id'] = $("input:radio[name='handling_id']:checked").val();
+    
+    userdata['handling_id'] = $("input[type=radio][name='handling_id']:checked").val();
     if(userdata['handling_id'] === undefined){
       message = new Object();
       message.warning = "Select a payment option.";
       printMessages(message);
       return;
     }
-
+    
     //If user is being passed check its valid
     if(!$('#user_info_none').is(':checked')){
       if(!$('#pos-user-form').valid()){
@@ -150,13 +127,12 @@ var loadOrder = function(){
         return;
       }
     }
-
-    if($("input:checkbox[name='no_fee']").is(":checked")){
+    if($("input[type=checkbox][name='no_fee']").is(":checked")){
       userdata['no_fee'] = 1;
     }else{
       userdata['no_fee'] = 0;
     }
-    $("#user_data :input").each(function() {
+    $("#user_data input").each(function() {
       userdata[$(this).attr("name")] = $(this).val();
     });
     $("#error-message").hide();
@@ -167,7 +143,6 @@ var loadOrder = function(){
       data:      userdata,
       success:function(data, status){
         printMessages(data.messages);
-
         if(data.status){
           $("#order_action").html(data.html);
           $("#order_action").dialog('open');
@@ -176,22 +151,54 @@ var loadOrder = function(){
       }
     });
     return false;
-   });
+  });
 
-   $("#cancel").click(function(){
-     $("#error-message").hide();
-     ajaxQManager.add({
-        type:      "POST",
-        url:      "checkout.php?x=poscancel",
-        dataType:   "HTML",
-        data:      {pos:"yes",action:"PosCancel"},
-        success:function(html, status){
+  $("#cancel").click(function(){
+   $("#error-message").hide();
+   ajaxQManager.add({
+      type:      "POST",
+      url:      "checkout.php?x=poscancel",
+      dataType:   "HTML",
+      data:      {pos:"yes",action:"PosCancel"},
+      success:function(html, status){
         refreshOrder();
-        }
-      });
-      return false;
-   });
+      }
+    });
+    return false;
+  });
+   
+  //Load the events 
+  updateEvents();
+}
 
+//Load Dialog Functions
+
+var orderDialogs = function(){
+  
+  //Seat Chart Popup Box, Gets pushed back into Form on open.  
+  $("#seat-chart").dialog({
+    bgiframe: false,autoOpen: false,
+    height: 'auto',maxHeight: 400,
+    width: 'auto',modal: true,
+    buttons: {
+      'Close': function() {
+        $(this).dialog('close');
+      }
+    },
+    open: function(){jQuery("#seat-chart").parent().appendTo($("#order-form"));} 
+  });
+  
+  // Opens a dialog to confirm payment
+  $("#order_action").dialog({
+    bgiframe: false,autoOpen: false,
+    height: 'auto',width: 'auto',
+    modal: true,
+    close: function(event, ui) {
+      updateEvents();
+      refreshOrder();
+    }
+  });
+  
 }
 
 //End of order startup

@@ -4,7 +4,7 @@ $(document).ready(function(){
   //bindLinks();
   
   console.log(address);
-
+  
 	$(".loading").ajaxSend(function(evt, request, settings){
 		$(this).show();
 	});
@@ -12,7 +12,6 @@ $(document).ready(function(){
 	$(".loading").ajaxStop(function(evt, request, settings){
 		$(this).fadeOut("fast");
 	});
-
 });
 
 var ajaxQManager = $.manageAjax.create('ajaxQMan',{

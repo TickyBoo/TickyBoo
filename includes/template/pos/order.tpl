@@ -120,7 +120,7 @@
 <script type="text/javascript">
 {literal}
   $(document).ready(function(){
-    loadOrder();  
+    loadOrder();
   });
 {/literal}
 </script>

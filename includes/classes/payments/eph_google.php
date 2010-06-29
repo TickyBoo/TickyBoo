@@ -51,9 +51,9 @@ class EPH_google extends Payment{
                          'pm_google_sandbox','pm_google_callback_link',
 		                     'pm_on_google_cancel_cancel_order','pm_on_refund_cancel_order',
                          'pm_on_user_cancel_cancel_order');
-  	public $mandatory = array('pm_google_merchant_id', 'pm_google_merchant_key'); // is only used in project vazant.
+	public $mandatory = array('pm_google_merchant_id', 'pm_google_merchant_key'); // is only used in project vazant.
 
-	 public function admin_init(){
+  public function admin_init(){
  		$this->handling_text_payment    = "Google Checkout";
 		$this->handling_text_payment_alt= "Google Checkout";
 		//$this->handling_html_template  .= "";
