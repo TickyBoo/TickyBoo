@@ -16,7 +16,21 @@
           <td class='admin_info' ><div style='overflow:hidden;'>{$order_onote.onote_note}</div></td>
         </tr>
         <tr class='admin_list_row_{$row%2}'>
-          <td class='admin_info' colspan='2'>{!onote_private!} : {$order_onote.onote_private}</td>
+          <td class='admin_info' colspan='2'>
+            <p style="float:left;"  >{!onote_private!} : {$order_onote.onote_private}</p>
+            
+            {gui->StartForm name=order_note_resend action=$smarty.server.REQUEST_URI data=$smarty.post table=false}
+            {gui->hidden name='onote_id' value=$order_onote.id }
+            {gui->hidden name='onote_order_id' value=$order.order_id }
+            {gui->hidden name='order_id' value=$order.order_id }
+            {gui->hidden name='action' value='resendnote'}
+            {if $order_onote.onote_type eq 'payment'}
+              <button type='submit' name='save_payment' value='' style='float:right;'>{!onote_resend_payed!}</button>
+            {elseif $order_onote.onote_type eq 'ship' }
+              <button type='submit' name='save_ship' value='' style='float:right;'>{!onote_resend_sent!}</button>
+            {/if}
+            </form>
+          </td>
         </tr>
         {/order_note}
       </table>
@@ -27,7 +41,8 @@
       
       {gui->StartForm title=!order_add_note! name=order_add_note width='100%' action=$smarty.server.REQUEST_URI data=$smarty.post}
       {gui->hidden name='action' value='addnote'}
-      {gui->hidden name='onote_order_id' value=$order_id.order_id }
+      {gui->hidden name='onote_order_id' value=$order.order_id }
+      {gui->hidden name='order_id' value=$order.order_id }
       {gui->selection name='onote_type' options=$order_onote_types con=true}
       {gui->checkbox name='onote_private'}
       {gui->input name='onote_subject' size=40}

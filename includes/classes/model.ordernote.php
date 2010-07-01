@@ -112,5 +112,25 @@ class OrderNote Extends Model {
     }
     return;
   }
+  
+  public function load($onote_id){
+    
+    if(! is_numeric($onote_id) || $onote_id <= 0){
+      addWarning('bad_id');
+      return false;
+    }
+    
+    $query = "SELECT * 
+              FROM `order_note`
+              WHERE 1=1
+              AND onote_id ="._esc($onote_id);
+              
+    if($row = ShopDB::query_one_row($query)){
+      $orderNote = new OrderNote();      
+      $orderNote->_fill($row);
+      return $orderNote;
+    }
+    return false;
+  }
 }
 ?>

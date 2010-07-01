@@ -44,19 +44,23 @@ class EmailSwiftSender {
     $smtpHost = is($manSet['smtp_host'],$_SHOP->mail_smtp_host);
     $smtpPort = is($manSet['smtp_port'],$_SHOP->mail_smtp_port);
     $smtpSecurity = is($manSet['smtp_security'],$_SHOP->mail_smtp_security);
-    $smtpUsername = is($manSet['smtp_username'],$_SHOP->mail_smtp_username);
-    $smtpPassword = is($manSet['smtp_password'],$_SHOP->mail_smtp_password);
+    $smtpUsername = is($manSet['smtp_username'],$_SHOP->mail_smtp_user);
+    $smtpPassword = is($manSet['smtp_password'],$_SHOP->mail_smtp_pass);
     $sendmail = is($manSet['sendmail'],$_SHOP->mail_sendmail);
 
     //Add SMTP Mailer if defined.
     if(empt($smtpHost,false)){
-      $smtp = Swift_SmtpTransport::newInstance($smtpHost,
+      //if need to auth use the following method.
+      if(empt($smtpUsername,false)){
+        $smtp = Swift_SmtpTransport::newInstance($smtpHost,
+        empt($smtpPort,'25'),
+        empt($smtpSecurity,null))
+          ->setUsername($smtpUsername)
+          ->setPassword(empt($smtpPassword,''));
+      }else{
+        $smtp = Swift_SmtpTransport::newInstance($smtpHost,
         empt($smtpPort,'25'),
         empt($smtpSecurity,null));
-
-      if(empt($smtpUsername,false)){
-        $smtp->setUsername($smtpUsername);
-        $smtp->setPassword(empt($smtpPassword,''));
       }
       $tranports[] = $smtp;
     }
@@ -84,6 +88,10 @@ class EmailSwiftSender {
     $logger = new Swift_Plugins_Loggers_ArrayLogger();
     $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
     $log = new EmailLog($data, $swiftMessage);
+    
+    //Log username and password.
+    //$logger->add($smtp->);
+    //$logger->add($swiftMessage->getPassword());
 
     try{
       $ret = $mailer->send($swiftMessage,$failedAddr);

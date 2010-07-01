@@ -44,6 +44,8 @@
   </div>
 {elseif $smarty.post.action eq "addnote"}
   {order->add_order_note}
+{elseif $smarty.post.action eq "resendnote"}
+  {order->resend_note}
 {/if}
     
 {if $TabBarid == 0} {* eq "reserved" *}

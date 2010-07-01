@@ -634,6 +634,8 @@ define("order_event_list_title","Orders by Event");
     define("onote_note","Note Details");
     define("onote_set_sent","On \"Save &amp; Email\" Set Order To Sent.");
     define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
+    define("onote_resend_sent","Resend \"Sent\" Email.");
+    define("onote_resend_payed","Resend \"Paid\" Email.");
 
 
 	//Action icons
@@ -1085,10 +1087,11 @@ define("cancelled","Cancelled");
 define("buytimeleft","You have ~DAYS~ Days, ~HOURS~ Hours, ~MINS~ Mins, ~SECS~ Seconds left to confirm your order!");
 define("autocancel","After this time your order is automaticaly canceled!");
 define("ordertickets","To Order Tickets Click below:");
-define("reserv_cancel","WARNING Reservation is CANCELLED on Ordering!");
+define("reserv_cancel","WARNING this is a one way proccess!");
 define("notpaid","Not Paid");
 
 define("paid","Paid");
+define("manual_payment","Set to Paid: ");
 define("payhere","<br><br>To Pay Now, Check Here:");
 define("notsent","Not Sent");
 define("sent","Sent");

@@ -181,6 +181,7 @@ class Gui_smarty {
     $name     = is($params['name']);
     $id       = is($params['id']);
     $title    = is($params['title']);
+    $table    = is($params['table'],true);
     $width    = is($params['width'],$this->width);
     $class    = is($params['class'],'gui_form');
     $enctype  = is($params['enctype'],'application/x-www-form-urlencoded');
@@ -200,9 +201,11 @@ class Gui_smarty {
       $this->FormDepth ++;
       $this->_ShowLabel = True;
     }
-    $return .= "<table class='$class' width='$width' border=0 cellspacing='1' cellpadding='4'>\n";
-    if ($title) {
-      $return .= "<tr><th class='$class_title' colspan='2'>$title</th></tr>\n";
+    if($table){
+      $return .= "<table class='$class' width='$width' border=0 cellspacing='1' cellpadding='4'>\n";
+      if ($title) {
+        $return .= "<tr><th class='$class_title' colspan='2'>$title</th></tr>\n";
+      }
     }
     return $return;
   }

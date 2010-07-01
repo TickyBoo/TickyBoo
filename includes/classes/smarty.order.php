@@ -523,22 +523,56 @@ class Order_Smarty {
       addWarning('failed_to_add_note');
       return;
 		}
+    
     if(!$order=Order::load($_REQUEST['order_id'])){return;}
     $order->emailSubject = $orderNote->onote_subject;
     $order->emailNote = $orderNote->onote_note;
-    if(is($_REQUEST['onote_set_sent'])==="1"){
-      $order->set_shipment_status('send');
-    }elseif(is($_REQUEST['onote_set_payed'])==="1"){
-      $order->set_payment_status('payed');
-    }elseif(isset($_REQUEST['save_payment'])){
-      $orderNote->sendNote($order);
-    }elseif(isset($_REQUEST['save_ship'])){
-      $orderNote->sendNote($order);
-    }elseif(isset($_REQUEST['save_note'])){
-      $orderNote->sendNote($order);
-    }
+    $this->_sendNote($orderNote,$order,$_REQUEST);
     $smarty->assign('success',true);
     addNotice('successfully_add_note');
+  }
+  
+  function resend_note($params,$smarty){
+    if(!is($_REQUEST['onote_id'],false)){
+      addWarning('bad_id');
+    }
+    
+    if($orderNote = OrderNote::load($_REQUEST['onote_id'])){return;}
+    if(!$order=Order::load($_REQUEST['order_id'])){return;}
+    $order->emailSubject = $orderNote->onote_subject;
+    $order->emailNote = $orderNote->onote_note;
+    
+    if($this->_sendNote($orderNote,$order,$_REQUEST)){
+      addNotice('successfully_sent_note');
+    }
+    
+  }
+  
+  /**
+   * Order_Smarty::_sendNote()
+   * 
+   * Shared Function for note sending.
+   * 
+   * @return bool
+   */
+  private function _sendNote($onote, $order, $request){
+    if(!is_object($onote) || !is_object($order)){
+      return false;
+    }
+    if(is($request['onote_set_sent'])==="1"){
+      $order->set_shipment_status('send');
+    }elseif(is($request['onote_set_payed'])==="1"){
+      $order->set_payment_status('payed');
+    }elseif(isset($request['save_payment'])){
+      $orderNote->sendNote($order);
+    }elseif(isset($request['save_ship'])){
+      $orderNote->sendNote($order);
+    }elseif(isset($request['save_note'])){
+      $orderNote->sendNote($order);
+    }
+    if(!hasErrors("__Warning__")){
+      return true;
+    }
   }
 
   function set_payed ($params,$smarty){
