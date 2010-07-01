@@ -36,7 +36,7 @@
 {order->order_list curr_order_id="$order_id $cur_order_dir" first=0 length=1 not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent order=$orderby}
   {assign var='next_order_id' value=$shop_order.order_id}
 {/order->order_list}
-<br>
+<br />
   <table width='100%' border='0'>
     {order->order_list order_id=$order_id handling=true}
       <tr>
@@ -47,14 +47,7 @@
                 {!order_id!} {$shop_order.order_id}
               </td>
               <td class='title'  align='right'>&nbsp;
-                {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"}
-                  <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
-                    <img border='0' src='{$_SHOP_images}printer.gif'>
-                  </a>
-                  <a href='javascript:if(confirm("{!pos_deleteorder!}")){literal}{location.href="view.php?action=cancel_order&order_id={/literal}{$shop_order.order_id}{literal}";}{/literal}'>
-                    <img border='0' src='{$_SHOP_themeimages}trash.png'>
-                  </a>
-                {/if}
+                {include file='process_actions.tpl' $shop_order=$shop_order}
               </td>
             </tr>
             <tr>

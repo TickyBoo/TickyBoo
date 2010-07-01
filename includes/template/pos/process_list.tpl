@@ -118,16 +118,7 @@
                 <a href='view.php?order_id={$shop_order.order_id}'>
                   <img src='{$_SHOP_themeimages}view.png' border='0'>
                 </a>
-                {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"} {* Legacy support for older orders. *}
-                  <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
-                    <img border='0' src='{$_SHOP_images}printer.gif'>
-                  </a>
-                  {if $shop_order.payment_status eq 'none'}
-                  <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$pos}{literal}";}{/literal}'>
-                    <img border='0' src='{$_SHOP_themeimages}trash.png'>
-                  </a>
-                  {/if}
-                {/if}
+                {include file='process_actions.tpl' $shop_order=$shop_order}
               </td>
             </tr>
           {/if}
