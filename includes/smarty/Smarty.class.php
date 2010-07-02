@@ -1254,9 +1254,10 @@ class Smarty
             {
                 ob_start();
                 include($_smarty_compile_path);
-                $_smarty_results = ob_get_contents();
+                $_tmp = ob_get_contents();
                 ob_end_clean();
-                echo trim($_smarty_results, " \r\n");
+                echo trim($_tmp, " \r\n");
+                unset($_tmp);
 
             }
         } else {
