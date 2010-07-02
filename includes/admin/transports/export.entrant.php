@@ -194,7 +194,7 @@ class export_entrant extends AdminView {
       $seats = '';
       if ($export_entrant_withseats) {
         $query="SELECT DISTINCT `seat_row_nr`, `seat_nr`, `category_numbering`
-                      FROM `seat` left join `category` on `seat_category_id` = `category_id`
+                      FROM `Seat` left join `Category` on `seat_category_id` = `category_id`
                       WHERE seat_order_id = {$row['order_id']}
                       and   seat_event_id = ".($event_id);
         if ($res_seat=ShopDB::query($query)){
