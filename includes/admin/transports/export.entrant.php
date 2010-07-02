@@ -162,7 +162,9 @@ class export_entrant extends AdminView {
     $worksheet->write(3, 2, con('export_entrant_city'), $format_title);
     $worksheet->write(3, 3, con('export_entrant_tickets'),$format_title);
     $worksheet->write(3, 4, con('export_entrant_price'),$format_title);
-    if (is($_GET['export_entrant_withseats'], false)) {
+
+    $export_entrant_withseats = is($_GET['export_entrant_withseats'], false);
+    if ($export_entrant_withseats) {
       $worksheet->write(3, 5, con('export_entrant_seats'),$format_title);
     }
 
@@ -190,7 +192,7 @@ class export_entrant extends AdminView {
       $worksheet->write($i, 4,$price, $format_price);
 
       $seats = '';
-      if (is($_GET['export_entrant_withseats'], false)) {
+      if ($export_entrant_withseats) {
         $query="SELECT DISTINCT `seat_row_nr`, `seat_nr`, `category_numbering`
                       FROM `seat` left join `category` on `seat_category_id` = `category_id`
                       WHERE seat_order_id = {$row['order_id']}

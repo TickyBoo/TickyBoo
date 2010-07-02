@@ -88,10 +88,6 @@ class EmailSwiftSender {
     $logger = new Swift_Plugins_Loggers_ArrayLogger();
     $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
     $log = new EmailLog($data, $swiftMessage);
-    
-    //Log username and password.
-    //$logger->add($smtp->);
-    //$logger->add($swiftMessage->getPassword());
 
     try{
       $ret = $mailer->send($swiftMessage,$failedAddr);

@@ -1,4 +1,13 @@
 <?php
+/*
+
+  Please add new defines only at the bottom of the file. This makes it easier for translators to 
+  find new defines.
+
+  Thanks 
+
+*/
+
 //These defines are located at the beginning of this file and are used throughout Fusion Ticket.
 //Use caution when changing and try not to be page specific with the definition.
 	//Date & Time Formats, Buttons & Links, Navigation, Passwords, Globals, and Warnings.
@@ -1393,37 +1402,14 @@ define ('placemap_image_explanation',"<img class='seatmapimage' src='{$_SHOP->im
                                      <img class='seatmapimage' src='{$_SHOP->images_url}seatdisable.gif'>: Other category");
 define ('copy_main_pm','copy from main event');
 define ('republish_old_event',"Are you sure you want to publish this archived event?\r\n It will only show in the [Program] area of the Web Shop.");
-?><?php
-define('Click to UnPublish','Click to UnPublish');
-?>
-<?php
 define('UnPublished','UnPublished');
-?>
-<?php
-define('Click to RePublish','Click to RePublish');
-?>
-<?php
 define('restart__failure','restart__failure');
-?>
-<?php
 define('plugins_tab','plugins_tab');
-?>
-<?php
-define('New Event','New Event');
-?>
-<?php
-define('Click to Publish','Click to Publish');
-?>
-<?php
 define('category_pm_id','category_pm_id');
-?>
-<?php
 define('category_pmp_id','category_pmp_id');
-?>
-<?php
 define('publish7','publish7');
-?>
-<?php
 define('pub__failure','pub__failure');
 define('export_entrant_withseats','Export with seatsnumbers');
+
+define('mollie_status_canceled','You have canceled the order while in iDeal');
 ?>

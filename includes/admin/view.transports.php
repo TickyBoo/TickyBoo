@@ -115,6 +115,8 @@ class ImpExpView extends AdminView {
 			  return $this->runobject->export();
       }
 		}
+    orphanCheck();
+    trace("End of export \n\n\r");
 		return FALSE;
   }
 

@@ -146,8 +146,8 @@ class PlaceMapPartView extends AdminView {
                   echo "<td class='admin_list_item' align='right'>{$stats->zones[$zone_ident]}</td>\n";
 
                   if (!$view_only) {
-                      echo "<td class='admin_list_item' valign=middle width=35 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id&pmz_ident=$zone_ident'><img height=15 src='../images/checkbox-checked.gif' border='0' alt='" . view . "' title='" . view . "'></a>\n";
-                      echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=pmz_edit_num_pmp&pmp_id=$pmp_id&pmz_ident=$zone_ident'><img height=15 src='../images/numbers.png' border='0' alt='" . edit . "' title='" . edit . "'></a></td>\n";
+                      echo "<td class='admin_list_item' valign=middle width=35 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id&pmz_ident=$zone_ident'><img height=15 src='../images/checkbox-checked.gif' border='0' alt='" . con('view') . "' title='" . con('view') . "'></a>\n";
+                      echo "<a class='link' href='{$_SERVER['PHP_SELF']}?action=pmz_edit_num_pmp&pmp_id=$pmp_id&pmz_ident=$zone_ident'><img height=15 src='../images/numbers.png' border='0' alt='" . con('edit') . "' title='" . con('edit') . "'></a></td>\n";
 //                  } else {
 //                      echo "<td>&nbsp;</td>";
                   }
@@ -174,7 +174,7 @@ class PlaceMapPartView extends AdminView {
                   echo "<td class='admin_list_item' align='right'>{$stats->categories[$ident]}</td>\n";
                   echo "<td class='admin_list_item'>{$category->category_numbering}</td>\n";
                   if (!$view_only) {
-                      echo "<td class='admin_list_item' width=18 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id&category_id={$category->category_ident}'><img height=15 src='../images/checkbox-checked.gif' border='0' alt='" . view . "' title='" . view . "'></a></td>\n";
+                      echo "<td class='admin_list_item' width=18 align=right><a class='link' href='{$_SERVER['PHP_SELF']}?action=view_pmp&pmp_id=$pmp_id&category_id={$category->category_ident}'><img height=15 src='../images/checkbox-checked.gif' border='0' alt='" . con('view') . "' title='" . con('view') . "'></a></td>\n";
 //                  } else {
 //                      echo "<td></td>\n";
                   }
@@ -725,7 +725,9 @@ class PlaceMapPartView extends AdminView {
     } elseif ( $_POST['action'] == 'split_pmp' and $_POST['pm_id'] > 0 ) {
       if ($pm = PlaceMap::load($_POST['pm_id']) ) {
         $pm->split( $_POST['pm_parts'], $_POST['split_zones'] );
-        $this->view( $_POST['pm_id'] );
+        if (count($_POST['pm_parts'])>0) {
+          $this->view( $_POST['pm_parts'][0] );
+        }
       }
     }
   }

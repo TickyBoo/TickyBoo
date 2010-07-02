@@ -340,13 +340,13 @@ class Seat  Extends Model {
     }
 
     foreach($category_stat as $cat=>$count){
-      if (!PlaceMapCategory::dec_stat($cat, $count)) {
+      if (!PlaceMapCategory::inc_stat($cat, $count)) {
         return ShopDB::rollback('cant_cancel_seat_3');//echo c;
       }
     }
 
     foreach($event_stat as $event=>$count){
-      if (!Event::dec_stat($event, $count)) {
+      if (!Event::inc_stat($event, $count)) {
         return ShopDB::rollback('cant_cancel_seat_4');//echo c;
       }
     }

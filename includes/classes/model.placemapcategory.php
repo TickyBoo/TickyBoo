@@ -41,7 +41,7 @@ class PlaceMapCategory Extends Model {
                                  'category_size', 'category_max', 'category_min', 'category_template',
                                  '*category_color', 'category_data', 'category_free');
 
-  function create($category_pm_id=0,
+  static function create($category_pm_id=0,
                   $category_name=0,
                   $category_price=0,
                   $category_template=0,
@@ -63,7 +63,7 @@ class PlaceMapCategory Extends Model {
     return $new;
   }
 
-  function load ($category_id){
+  static function load ($category_id){
     $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
             where category_id="._esc($category_id);
@@ -76,7 +76,7 @@ class PlaceMapCategory Extends Model {
     }
   }
 
-  function loadFull ($category_id){
+  static function loadFull ($category_id){
     $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
             where category_id="._esc($category_id);
@@ -89,7 +89,7 @@ class PlaceMapCategory Extends Model {
     }
   }
 
-  function loadAll ($pm_id){
+  static function loadAll ($pm_id){
     $query="select c.*, e.event_status
             from Category c LEFT JOIN Event e ON event_id=category_event_id
             where category_pm_id=$pm_id";
