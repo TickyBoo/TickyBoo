@@ -63,7 +63,7 @@
   }
 
   if ($_POST['load']) {
-    If (!isset($_SESSION['diff1']) or $_SESSION['lang']<>$_POST['lang'] ) {
+ //   If (!isset($_SESSION['diff1']) or $_SESSION['lang']<>$_POST['lang'] ) {
     $string1 = file_get_contents('includes/lang/site_en.inc');
       $diff1 = findinside($string1);
       if (file_exists( dirname(__FILE__)."/includes/lang/site_{$_POST['lang']}.inc")) {
@@ -77,10 +77,10 @@
       $_SESSION['diff2'] = $diff2;
       $_SESSION['lang']  = $_POST['lang'];
 
-    } else {
-      $diff1= $_SESSION['diff1'];
-      $diff2= $_SESSION['diff2'];
-  }
+//    } else {
+//      $diff1= $_SESSION['diff1'];
+      //$diff2= $_SESSION['diff2'];
+//    }
 
   }
   if ($_POST['oper']=='edit') {
@@ -106,16 +106,21 @@
   }elseif ($_POST['load']=='update_2') {
      if (count($diff1)===0) {
        die('noting to update');
-     } elseif (!is_writable("includes/lang/site_{$_GET['lang']}.inc")) {
+     } elseif (!is_writable("includes/lang/site_{$_POST['lang']}.inc")) {
        die('This file is not writable.');
      } else {
        $string2 .= "<"."?php\n";
        $string2 .= "// defines added at: ".date('c')."\n";
-       foreach ($diff1 as $key =>$value) {
+       foreach ($diff2 as $key =>$value) {
+         $string2 .= "define('$key', $value);\n";
+       }
+       $diff= array_diff_key($diff1, $diff2);
+       foreach ($diff as $key =>$value) {
          $string2 .= "define('$key', $value);\n";
        }
        $string2 .= "?>";
-       file_put_contents("includes/lang/site_{$_GET['lang']}.inc",$string2, FILE_TEXT );
+       file_put_contents("includes/lang/site_{$_POST['lang']}.inc",$string2, FILE_TEXT );
+
      }
      die("done");
   } elseif ($_POST['load']=='grid')  {
@@ -169,7 +174,7 @@
             datatype: 'JSON',
             mtype: 'POST',
             postData: {"load":"grid","lang":lang},
-            colNames: ['Expire_in','Lang_en','Other langCount'],
+            colNames: ['LangKey','Default language','Editedable language'],
             colModel :[
                 {name:'key',   index:'key',   width:200, sortable:false, resizable: false  },
                 {name:'lang1', index:'lang1', width:470, sortable:false, resizable: false },
@@ -199,6 +204,14 @@
               }
             });
 
+      		$('#update_2').click(function(){
+             $.post("langedit.php", { load: "update_2", lang: lang }, function(data){
+                alert(data);
+                if (data== 'done') {
+                  mygrid1.g.load({lang: lang });
+                } else alert(data);}, "text");
+      		});
+
       		$('#combo').change(function(){
       			lang = mycombo.val();
             mygrid1.g.load({lang: lang }, function(){
@@ -222,6 +235,7 @@
 </select>
   <table id="table1" class="scroll" cellpadding="0" cellspacing="0"></table>
   Orgin text:<br>
-  <textarea id='orgintext' name=orgintext rows='4' cols='160'  ></textarea>
+  <textarea id='orgintext' name=orgintext rows='4' cols='160'  ></textarea><br>
+  <button id='update_2'>Update missing</button>
   </body>
 </html>
