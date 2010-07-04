@@ -274,7 +274,7 @@ class Event Extends Model {
       }
 
       $query="DELETE e.*
-              FROM Event
+              FROM Event e
               WHERE e.event_id="._esc($this->id);
       if(!ShopDB::query($query)){
         return self::_abort('event_delete_failed');
@@ -301,7 +301,7 @@ class Event Extends Model {
         return false;
       }
       $es_total = 0;
-      
+
       if($stats){
         foreach($stats as $category_ident =>$cs_total){
           $es_total += $cs_total;

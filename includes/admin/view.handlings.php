@@ -56,7 +56,7 @@ class HandlingView extends AdminView{
 			foreach($hands as $hand){
 				$handling_mode_pos=(strpos($hand->handling_sale_mode,'sp')!==false)?'pos':'&nbsp;';
 				$handling_mode_web=(strpos($hand->handling_sale_mode,'www')!==false)?'web':'&nbsp;';
-        
+
         echo "<tr class='admin_list_row_$alt'>";
 				if($hand->handling_id==1){
 //				 	echo  "<td  class='admin_list_item'>".reserved."</td>";
@@ -165,6 +165,32 @@ class HandlingView extends AdminView{
     $this->form_foot(2,$_SERVER['PHP_SELF']);
   }
 
+  function extra_form($hand, &$data, &$err){
+    Global $_SHOP;
+
+    $extras = $hand->admin_form();
+    if ( $extras) {
+      require_once('smarty/Smarty.class.php');
+      require_once('classes/smarty.gui.php');
+
+      $smarty = new Smarty;
+  //    $smarty->plugins_dir = array("plugins", INC . "shop_plugins".DS);
+      $smarty->plugins_dir  = array("plugins".DS, $_SHOP->includes_dir . "shop_plugins".DS);
+
+      $smarty->compile_id   = 'AdminHandling_'.$_SHOP->lang;
+      $smarty->compile_dir  = substr($_SHOP->tmp_dir,0,-1); // . '/web/templates_c/';
+      $smarty->cache_dir    = substr($_SHOP->tmp_dir,0,-1); // . '/web/cache/';
+      $smarty->config_dir   = INC . 'lang'.DS;
+
+      $gui   = new Gui_smarty($smarty);
+      $gui->guidata   = $data;
+      $gui->gui_name  = 'admin_name';
+  	  $gui->gui_value = 'admin_value';
+
+      $smarty->my_template_source = $extras;
+      $smarty->display('text:'. $hand->handling_payment );
+    }
+  }
 
   function draw (){
     global $_SHOP;
@@ -200,33 +226,6 @@ class HandlingView extends AdminView{
   	$this->table();
 	}
 
-
-  function extra_form($hand, &$data, &$err){
-    Global $_SHOP;
-
-    $extras = $hand->admin_form();
-    if ( $extras) {
-      require_once('smarty/Smarty.class.php');
-      require_once('classes/smarty.gui.php');
-
-      $smarty = new Smarty;
-  //    $smarty->plugins_dir = array("plugins", INC . "shop_plugins".DS);
-      $smarty->plugins_dir  = array("plugins".DS, $_SHOP->includes_dir . "shop_plugins".DS);
-
-      $smarty->compile_id   = 'AdminHandling_'.$_SHOP->lang;
-      $smarty->compile_dir  = substr($_SHOP->tmp_dir,0,-1); // . '/web/templates_c/';
-      $smarty->cache_dir    = substr($_SHOP->tmp_dir,0,-1); // . '/web/cache/';
-      $smarty->config_dir   = INC . 'lang'.DS;
-
-      $gui   = new Gui_smarty($smarty);
-      $gui->guidata   = $data;
-      $gui->gui_name  = 'admin_name';
-  	  $gui->gui_value = 'admin_value';
-
-      $smarty->my_template_source = $extras;
-      $smarty->display('text:'. $hand->handling_payment );
-    }
-  }
 
   function print_select_tpl ($name, $type, &$data, &$err, $inclPdf=false){
     global $_SHOP;
