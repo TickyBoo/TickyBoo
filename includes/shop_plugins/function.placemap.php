@@ -123,11 +123,11 @@ clear:both;
 
 
  </style> ';
-
+   $ml[1] = $ml[0] = '';
     if ($pmp->pmp_shift) {
-      $cspan = "colspan='2'";
-      $ml[1] = $mr[0] = "<td class='seatmap Shiftright'>&nbsp;</td>";
-      //$ml[1] = $mr[0] = "<td class='seatmap Shiftright'><img style='width:".(($imagesize/2)-2)."px;' border=0 src='{$_SHOP->images_url}dot.gif' height='1px'></td>";
+      $cspan = "colspan='2' align='right'";
+     // $ml[1] = "<td class='ShiftRight seatmap'>z</td>";
+       $ml[0] = "<td class='ShiftRight seatmap '><img style='width:".(($imagesize/2)-2)."px;' border=0 src='{$_SHOP->images_url}dot.gif' height='100%'></td>";
      } else {
       $ml[1] = $mr[0] = '';
       $cspan = "";
@@ -144,9 +144,9 @@ clear:both;
             $res .= "<td {$cspan} clase='seatmap'>";
             if ($seat[PM_ZONE] === 'L') {
                 if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
-                    $res .= "<div class='seatmap'>$iseat</div>";
+                    $res .= "<div class='seatmap'>$irow</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->data[$j][$k - 1][PM_ROW]) {
-                    $res .= "<div class='seatmap'>$iseat</div>";
+                    $res .= "<div class='seatmap'>$irow</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SS' and $iseat = $pmp->data[$j + 1][$k][PM_SEAT]) {
                     $res .= "<div class='seatmap'>$iseat</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SN' and $iseat = $pmp->data[$j - 1][$k][PM_SEAT]) {
@@ -263,7 +263,7 @@ clear:both;
                          <img src='{$_SHOP->images_url}scene_v_$l.png'>
                        </td>
                        <td>
-                         <table border=0  class='pm_table' cellspacing=0 cellpadding=0>$res</table>
+                         <table border=0 class='pm_table' cellspacing=0 cellpadding=0>$res</table>
                        </td>
                      </tr>
                    </table>";
@@ -272,7 +272,7 @@ clear:both;
             $res = "<table border=0  cellspacing=0 cellpadding=0>
                       <tr>
                         <td>
-                          <table border=0  class='pm_table' cellspacing=0 cellpadding=0>$res</table>
+                          <table border=0 class='pm_table' cellspacing=0 cellpadding=0>$res</table>
                         </td>
                         <td align='center' valign='middle'>
                           <img src='{$_SHOP->images_url}scene_v_$l.png'>
@@ -289,7 +289,7 @@ clear:both;
                </tr>
                <tr>
                  <td>
-                   <table border=0  class='pm_table' cellspacing=0 cellpadding=0>$res</table>
+                   <table border=0 class='pm_table' cellspacing=0 cellpadding=0>$res</table>
                  </td>
                </tr>
              </table>";

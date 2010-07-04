@@ -146,7 +146,7 @@ class install_execute {
   }
 
   static function fillConfig($array, $suffix, $eq=' = ',$isarray=false){
-    $arr_type = array('langs_names','valutas','event_group_type_enum','event_type_enum');
+    $arr_type = array('langs_names','valutas','event_group_type_enum','event_type_enum', 'langs');
     $config  =($isarray!==2)?'':array();
     foreach ($array as $key =>$value) {
       if (is_int($key)) $key= '';
@@ -348,24 +348,24 @@ class install_execute {
       self::renameTables(array('Category_stat','Event_stat'));
     }
   }
-  
+
   /**
    * install_execute::moveOrderNotes()
-   * 
+   *
    * Move order notes to new order_notes table
-   * 
+   *
    * @return void
    */
   static function moveOrderNotes(){
-    if(ShopDB::query("SELECT COUNT(*) FROM `Order` WHERE order_note IS NOT NULL")){  
-      $query = "INSERT INTO `order_note` 
+    if(ShopDB::query("SELECT COUNT(*) FROM `Order` WHERE order_note IS NOT NULL")){
+      $query = "INSERT INTO `order_note`
                 (`onote_order_id`,`onote_subject`,`onote_note`)
                 SELECT order_id,'Old Note',order_note
                 FROM `Order`
                 WHERE order_note IS NOT NULL";
       if(ShopDB::query($query)){
-        $query = "UPDATE `Order` 
-                  SET order_note = NULL 
+        $query = "UPDATE `Order`
+                  SET order_note = NULL
                   WHERE order_note IS NULL";
         ShopDB::query($query);
       }

@@ -673,7 +673,8 @@ class PlaceMapPartView extends AdminView {
           $pmp->set_category($_POST['category_id'], $_POST['seat']);
           $pmp->save();
         }
-      }
+      } else
+         addwarning('select_seats_first');
       $this->view($_POST['pmp_id']);
     } else if ($_POST['action'] == 'def_pmz_pmp' and $_POST['pmp_id'] > 0 and $_POST['zone_id'] > 0) {
       if (is_array($_POST['seat'])) {
@@ -681,7 +682,8 @@ class PlaceMapPartView extends AdminView {
           $pmp->set_zone($_POST['zone_id'], $_POST['seat']);
           $pmp->save();
         }
-      }
+      } else
+         addwarning('select_seats_first');
       $this->view($_POST['pmp_id'], $err);
     } else if ($_POST['action'] == 'def_label_pmp' and $_POST['pmp_id'] > 0 and $_POST['label_type']) {
       if (is_array($_POST['seat'])) {
@@ -689,7 +691,8 @@ class PlaceMapPartView extends AdminView {
           $pmp->set_label($_POST['label_type'], $_POST['seat'], $_POST['label_text']);
           $pmp->save();
         }
-      }
+      } else
+         addwarning('select_seats_first');
       $this->view($_POST['pmp_id']);
     } else if ($_POST['action'] == 'def_clear_pmp' and $_POST['pmp_id'] > 0) {
       if (is_array($_POST['seat'])) {
@@ -697,7 +700,8 @@ class PlaceMapPartView extends AdminView {
           $pmp->clear($_POST['seat']);
           $pmp->save();
         }
-      }
+      } else
+         addwarning('select_seats_first');
       $this->view($_POST['pmp_id']);
 
     } else if ($_GET['action'] == 'pmz_edit_num_pmp' and $_GET['pmp_id'] and $_GET['pmz_ident']) {
