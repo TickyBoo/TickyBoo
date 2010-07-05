@@ -53,7 +53,7 @@ class User extends Model{
       return FALSE;
     }
   	$user['is_member'] = ($user['user_status']==2);
-    $user['active']    = (empty($user['active']));
+    $user['active']    = (empty($user['active'])) && $user['is_member'];
   	$_SESSION['_SHOP_USER']=$user_id;
     return $user;
   }

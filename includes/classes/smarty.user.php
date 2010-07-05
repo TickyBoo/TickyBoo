@@ -58,7 +58,7 @@ class User_Smarty {
   function load_f($user_id){
     $user = User::load($user_id);
     $this->_fill($user);
-    $this->logged=($user)?true:false;
+    $this->logged=($user)?($user['active']):false;
     if ($this->active) {
       $_SESSION['_NEW_MEMBER']= false;
     }
@@ -137,7 +137,7 @@ class User_Smarty {
 		if (User::UpdateEx($member, $mandatory_l=0, $short)) {
 		  $user = User::load($this->user_id);
       $this->_fill($user);
-      $this->logged=true;
+      $this->logged=$user['active'] ;
       addNotice('successfully_updated_user_details');
       return true;
    	} else {
