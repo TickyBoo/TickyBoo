@@ -37,7 +37,7 @@ class Discount  Extends Model {
   protected $_idName    = 'discount_id';
   protected $_tableName = 'Discount';
   protected $_columns   = array( '#discount_id', '*discount_type', '*discount_value', '*discount_name',
-                                 '#discount_event_id', 'discount_promo', 'discount_cond');
+                                 '#discount_event_id', 'discount_promo', 'discount_cond', '*discount_active');
   function __construct($filldefs= false, $event_id=null){
     parent::__construct($filldefs);
     if ($filldefs) {
@@ -75,6 +75,27 @@ class Discount  Extends Model {
       }
       return $discounts;
     }
+  }
+
+  static function loadGlobal($promocode) {
+    $query="SELECT Discount.*
+            FROM Discount
+            WHERE discount_event_id is null
+            and discount_promo ="._esc($promocode);
+    if($row=ShopDB::query_one_row($query)){
+      $new = new Discount;
+      $new->_fill($row);
+      return $new;
+    }
+  }
+
+  static function hasGlobals() {
+    $query = "SELECT count(*) count
+              from Discount
+              where discount_event_id is null
+              and discount_active = \"yes\"";
+    $count = ShopDB::query_one_row($query);
+    return (is($count['count'], 0) != 0);
   }
 
   function delete(){
@@ -144,26 +165,5 @@ class Discount  Extends Model {
               where discount_id="._esc($this->id);
     ShopDB::query($query);
   }
-
-  static function hasGlobals() {
-    $query = "SELECT count(*) count
-              from Discount
-              where discount_event_id is null";
-    $count = ShopDB::query_one_row($query);
-    return (is($count['count'], 0) != 0);
-  }
-
-  static function loadGlobal($promocode) {
-    $query="SELECT Discount.*
-            FROM Discount
-            WHERE discount_event_id is null
-            and discount_promo ="._esc($promocode);
-    if($row=ShopDB::query_one_row($query)){
-      $new = new Discount;
-      $new->_fill($row);
-      return $new;
-    }
-  }
-
 }
 ?>

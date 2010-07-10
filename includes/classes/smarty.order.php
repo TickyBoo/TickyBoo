@@ -87,10 +87,12 @@ class Order_Smarty {
 
       // apply Global discount over the total price.
       if (!empty($_POST['FreeTicketCode']) and !$order->no_cost) {
-        if (!($order->discount =Discount::LoadGlobal($_POST['FreeTicketCode']))) {
+        if (!($discount =Discount::LoadGlobal($_POST['FreeTicketCode'])) or ($discount->discount->active=='no')) {
           addWarning('FreeTicketCode_notfound');
           ShopDB::rollback('FreeTicketCode_notfound');
           return;
+        } else {
+          $order->discount = $discount;
         }
       }
 

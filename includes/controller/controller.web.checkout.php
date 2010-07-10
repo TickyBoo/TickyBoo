@@ -54,7 +54,6 @@ class ctrlWebCheckout extends ctrlWebShop {
     		$this->smarty->display($fond . '.tpl');
     	}
     } elseif ($this->__MyCart->can_checkout_f() or isset($_SESSION['_SHOP_order']) ) { //or isset($_SESSION['order'])
-    echo '[',$this->__User->user_status,']';
       if ( !$_REQUEST['pos'] and
            (!$this->__User->logged and ($this->__User->user_status!=3)) and
   		     $action !== 'register' and

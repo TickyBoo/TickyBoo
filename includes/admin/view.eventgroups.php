@@ -54,8 +54,8 @@ class EventGroupView extends AdminView{
 
        echo "<tr class='admin_list_row_$alt'>";
   //     echo "<td class='admin_list_item'>{$row['event_group_id']}</td>";
-       echo "<td  class='admin_list_item' width='100%'>{$row['event_group_name']}</td>";
-       echo "<td class='admin_list_item' align='right' nowrap>\n";
+       echo "<td  class='admin_list_item' >{$row['event_group_name']}</td>";
+       echo "<td class='admin_list_item' width='105' align='right' nowrap>\n";
 
        if($row['event_group_status']=='pub'){
           echo $this->show_button("javascript:if(confirm(\"".con('unpublish_event_group')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=unpublish&event_group_id={$row['event_group_id']}\"; }","unpublish",2,

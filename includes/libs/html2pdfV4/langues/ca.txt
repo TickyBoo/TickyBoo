@@ -6,6 +6,7 @@ err05	Codi HTML no vàlid, totes les etiquetes han de tenir el seu tancament.<br>
 err06	Impossible carregar la imatge <b>[[OTHER]]</b>
 err07	El contingut d'una etiqueta TD no quep en una sola pàgina
 err08	<b>&lt;[[OTHER]]&gt;</b> tag not in a &lt;DRAW&gt; tag
+err09	The using of the <b>&lt;[[OTHER_0]]&gt;</b>> tag has changed, you can not use [[OTHER_1]] anymore. Read the WIKI
 txt01	ERROR n°
 txt02	Fitxer :
 txt03	Línia :

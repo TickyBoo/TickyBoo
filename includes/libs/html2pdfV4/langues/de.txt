@@ -6,6 +6,7 @@ err05	Falsches HTML Code, alle Tags sollen geschloßen sein.<br>Status : <pre>[[O
 err06	Ladung des Bilds unmöglich <b>[[OTHER]]</b>
 err07	Er Inhalt eines TD-Tag passt nicht nur auf einer Seite
 err08	<b>&lt;[[OTHER]]&gt;</b> tag not in a &lt;DRAW&gt; tag
+err09	The using of the <b>&lt;[[OTHER_0]]&gt;</b>> tag has changed, you can not use [[OTHER_1]] anymore. Read the WIKI
 txt01	Fehler n°
 txt02	Datei :
 txt03	Linie :

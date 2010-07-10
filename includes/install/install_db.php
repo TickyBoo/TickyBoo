@@ -195,6 +195,7 @@ $tbls['Discount']['fields'] = array(
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'discount_promo' => " varchar(15) DEFAULT ''",
   'discount_used' => " int(11) DEFAULT '0'",
+  'discount_active' => " enum('no','yes') DEFAULT 'yes'",
   'discount_cond' => " text"
   );
 $tbls['Discount']['key'] = array(

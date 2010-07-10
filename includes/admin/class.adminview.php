@@ -479,6 +479,12 @@ class AdminView extends AUIComponent {
       $style   = is($options['style'],'');
       $idname  = is($options['id'], $name);
       $disabled= is($options['disable'],false);
+      $target= is($options['target'],'');
+
+      if ($target) {
+        $target = "target='{$target}'";
+      }
+
       if(!$icon){
         $classes .= " admin-button-text";
       }
@@ -515,7 +521,7 @@ class AdminView extends AUIComponent {
       if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
 
       if(!$button){
-        $rtn .= "<a id='{$idname}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";
+        $rtn .= "<a id='{$idname}' {$target} class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$alt}>";
       }else{
         $rtn .= "<button $disAtr type='{$url}' name='{$name}' id='{$idname}' class='{$hasTTClass} admin-button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' {$alt}>";
       }

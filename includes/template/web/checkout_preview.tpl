@@ -164,5 +164,5 @@
   });
   {/literal}
   </script>
-  {/if}
-  {include file="footer.tpl"}
+{/if}
+{include file="footer.tpl"}

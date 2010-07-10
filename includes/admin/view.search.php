@@ -213,7 +213,7 @@ class SearchView extends AdminView{
               <a class='link' href='{$_SERVER['PHP_SELF']}?action=user_detail&user_id=".$row["user_id"]."'>".
                  $row["user_lastname"]." ".$row["user_firstname"]."</a></td>
             <td class='admin_list_item'>
-              <a class='link' href='{$_SERVER['PHP_SELF']}?action=order_detail&order_id=".$row["order_id"]."'>".$row["order_id"]."</a></td>
+              <a class='link' href='{$_SERVER['PHP_SELF']}?action=details&order_id=".$row["order_id"]."'>".$row["order_id"]."</a></td>
             <td class='admin_list_item'>".$this->print_order_status($row["order_status"])."</td>
 
   	  </tr>" ;
@@ -225,7 +225,7 @@ class SearchView extends AdminView{
 
   function orderForm (&$data){
     global $_SHOP;
-    echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>
+    echo "<form method='GET' action='{$_SERVER['PHP_SELF']}'>
       <input type='hidden' name='action' value='details'/>\n";
     $this->form_head(con("search_title_order"));
     $this->print_input('order_id', $data, $err,11,11);
@@ -269,7 +269,7 @@ class SearchView extends AdminView{
       $this->print_field("seat_id",$ticket);
       echo "<tr><td class='admin_name' width='40%'>".con('order_id')."</td>
       <td class='admin_value'>
-      <a class='link' href='{$_SERVER['PHP_SELF']}?order_id={$ticket["order_id"]}&action=order_detail'>
+      <a class='link' href='{$_SERVER['PHP_SELF']}?order_id={$ticket["order_id"]}&action=details'>
       {$ticket["order_id"]}</a>
       </td></tr>\n";
       echo "<tr><td class='admin_name' width='40%'>".con('user')."</td>
@@ -316,6 +316,7 @@ class SearchView extends AdminView{
       }
       echo "</table>";
     }
+    return true;
   }
 
   function draw () {
@@ -330,7 +331,7 @@ class SearchView extends AdminView{
                    con("order_tab")=>"?tab=2",  con("barcode_tab")=>"?tab=3");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_SEARCH_tab'], "left");
 
-    if ($_REQUEST['action']=='details'){
+    if ((int) $_REQUEST['order_id']){
       require_once("admin/view.orders.php");
       $view = new OrderView($this->width);
       if ($view->draw(true)) return;

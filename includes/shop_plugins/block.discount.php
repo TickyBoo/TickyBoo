@@ -36,36 +36,36 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
 {
     if ($repeat) {
         $from = 'from Discount';
-        $where = "where 1=1";
+        if ($params['discount_id']) {
+          $where = " where  discount_id=" . _esc($params['discount_id']);
+        } else {
+          $where = "where discount_active=\"yes\"";
+        }
 
         if ($params['order']) {
             $order_by = "order by {$params['order']}";
         }
 
         if($params['category_id']){
-        	$from .=",Event,Category ";
-        	$where .= " AND discount_event_id=event_id ";
-        	$where .= " AND event_id=category_event_id ";
+        	$from .=" left join Event on discount_event_id=event_id
+                    left join Category ON event_id=category_event_id ";
         	$where .= " AND category_id="._esc($params['category_id']);
         }
 
         if ($params['event_id']) {
-            $where .= " and discount_event_id=" . ShopDB::quote($params['event_id']);
+            $where .= " and discount_event_id=" . _esc($params['event_id']);
         }
 
-        if ($params['discount_id']) {
-            $where .= " and discount_id=" . ShopDB::quote($params['discount_id']);
-        }
 
         if ($params['discount_name']) {
             $d_names = explode(",", $params['discount_name']);
             $first = 0;
             foreach($d_names as $name) {
                 if (!$first) {
-                    $where .= " and ( discount_name=" . ShopDB::quote($name);
+                    $where .= " and ( discount_name=" . _esc($name);
                     $first = 1;
                 } else {
-                    $where .= "  or  discount_name=" . ShopDB::quote($name);
+                    $where .= "  or  discount_name=" . _esc($name);
                 }
             }
             $where .= " ) ";

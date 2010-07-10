@@ -81,7 +81,7 @@ class eph_mollie extends payment{
     //print_r($order);
 
     return "
-      {gui->StartForm  width='100%' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
+      {gui->StartForm  width='100%' target='_self' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}
         {gui->hidden name='action' value='submit'}
         {gui->hidden name='sor' value='".$order->EncodeSecureCode('')."'}
         {gui->selection name='bank_id' options=\$ideal_issuers}

@@ -1175,8 +1175,8 @@ define("securitytc","Security and Terms");
 define("prg_order","Order");
 define("prg_seat","Select Seat");
 define("prg_discounts","Select Discounts");
-define("prg_review","Review Order");
-define("prg_signin","Log-in or Register");
+define("prg_review","Cart");
+define("prg_signin","Register");
 define("prg_payment","Select Payment");
 define("prg_complete","Complete Order");
 

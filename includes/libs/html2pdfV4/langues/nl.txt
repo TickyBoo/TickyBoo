@@ -6,6 +6,7 @@ err05	Ongeldige HTML code, alle tags dienen te zijn gesloten.<br>Status : <pre>[
 err06	Kan afbeelding niet laden: <b>[[OTHER]]</b>
 err07	De inhoud van de cel (<TD>) past niet op een pagina
 err08	<b>&lt;[[OTHER]]&gt;</b> tag not in a &lt;DRAW&gt; tag
+err09	The using of the <b>&lt;[[OTHER_0]]&gt;</b>> tag has changed, you can not use [[OTHER_1]] anymore. Read the WIKI
 txt01	Fout nr
 txt02	Bestand :
 txt03	Regel :

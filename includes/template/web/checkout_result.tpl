@@ -41,9 +41,12 @@
           {!pay_reg!}!
         {/if}
         <br />
-		    {!order_id!} <b>{$shop_order.order_id}</b><br/>
+		    {!order_id!}: <b>{$shop_order.order_id}</b><br/>
 		    {if $pm_return.transaction_id}
           {!trx_id!}: <b>{$pm_return.transaction_id}</b><br/>
+        {/if}
+        {if $pm_return.response}
+          <p>{eval var=$pm_return.response}</p>
         {/if}
         <br /> <br />
         {if !$pm_return.approved}
@@ -54,9 +57,6 @@
              <a href='?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
           <br />
           <div>
-        {/if}
-        {if $pm_return.response}
-          <p>{eval var=$pm_return.response}</p>
         {/if}
 			  </div>
 

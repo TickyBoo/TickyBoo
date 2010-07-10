@@ -2,7 +2,7 @@
 /**
  * Logiciel : HTML2PDF - classe MyPDF
  * 
- * Convertisseur HTML => PDF, utilise TCPDF 
+ * Convertisseur HTML => PDF
  * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
@@ -335,12 +335,12 @@ if (!defined('__CLASS_MYPDF__'))
 			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0],$tm[1],$tm[2],$tm[3],$tm[4],$tm[5]));
 		}
 		
-		public function SetX($x)
+		public function SetX($x, $rtloff=false)
 		{
 			$this->x=$x;
 		}
 		
-		public function SetY($y, $resetx=true)
+		public function SetY($y, $resetx=true, $rtloff=false)
 		{
 			if ($resetx)
 				$this->x=$this->lMargin;
@@ -348,7 +348,7 @@ if (!defined('__CLASS_MYPDF__'))
 			$this->y=$y;
 		}
 		
-		public function SetXY($x, $y)
+		public function SetXY($x, $y, $rtloff=false)
 		{
 			$this->x=$x;
 			$this->y=$y;

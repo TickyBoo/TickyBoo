@@ -32,6 +32,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		protected	$background			= array();	// informations sur le background
 		protected	$testTDin1page		= true;		// activer le test de TD ne devant pas depasser une page
 		protected	$testIsImage		= true;		// test si les images existes ou non
+		protected	$testIsDeprecated	= false;	// test si certaines fonctions sont deprecated
 		protected	$isSubPart			= false;	// indique que le convertisseur courant est un sous html
 
 		protected	$parse_pos			= 0;		// position du parsing
@@ -129,7 +130,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			// initialisations diverses
 			$this->setTestTdInOnePage(true);
-			$this->setTestIsImage(false);
+			$this->setTestIsImage(true);
+			$this->setTestIsDeprecated(true);
 			$this->setDefaultFont(null);
 
 			// initialisation du parsing
@@ -249,6 +251,19 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			$old = $this->testIsImage;
 			$this->testIsImage = $mode ? true : false;
+			return $old;
+		}
+
+		/**
+		* activer ou desactiver le test sur les fonctions deprecated
+		*
+		* @param	boolean	nouvel etat
+		* @return	boolean ancien etat
+		*/
+		public function setTestIsDeprecated($mode = true)
+		{
+			$old = $this->testIsDeprecated;
+			$this->testIsDeprecated = $mode ? true : false;
 			return $old;
 		}
 
@@ -702,6 +717,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			HTML2PDF::$SUBOBJ->setIsSubPart();
 			HTML2PDF::$SUBOBJ->setTestTdInOnePage($this->testTDin1page);
 			HTML2PDF::$SUBOBJ->setTestIsImage($this->testIsImage);
+			HTML2PDF::$SUBOBJ->setTestIsDeprecated($this->testIsDeprecated);
 			HTML2PDF::$SUBOBJ->setDefaultFont($this->defaultFont);
 			HTML2PDF::$SUBOBJ->style->css			= &$this->style->css;
 			HTML2PDF::$SUBOBJ->style->css_keys		= &$this->style->css_keys;
@@ -1901,8 +1917,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if (!isset($param['type']))		$param['type'] = 'C39';
 			if (!isset($param['value']))	$param['value']	= 0;
 			if (!isset($param['label']))	$param['label']	= 'label';
-
 			if (!isset($param['style']['color'])) $param['style']['color'] = '#000000';
+
+			if ($this->testIsDeprecated && (isset($param['bar_h']) || isset($param['bar_w'])))
+				throw new HTML2PDF_exception(9, array('BARCODE', 'bar_h, bar_w'));
 
 			$param['type'] = strtoupper($param['type']);
 			if (isset($lst_barcode[$param['type']])) $param['type'] = $lst_barcode[$param['type']];
@@ -1914,7 +1932,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			$x = $this->pdf->getX();
 			$y = $this->pdf->getY();
-			$w = $this->style->value['width'];	if (!$w) $w = $this->style->ConvertToMM('30mm');
+			$w = $this->style->value['width'];	if (!$w) $w = $this->style->ConvertToMM('50mm');
 			$h = $this->style->value['height'];	if (!$h) $h = $this->style->ConvertToMM('10mm');
 			$txt = ($param['label']!=='none' ? $this->style->value['font-size'] : false);
 			$c = $this->style->value['color'];
@@ -1958,16 +1976,25 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/
 		protected function o_QRCODE($param)
 		{
+			if ($this->testIsDeprecated && (isset($param['size']) || isset($param['noborder'])))
+				throw new HTML2PDF_exception(9, array('QRCODE', 'size, noborder'));
+			
 			if ($this->DEBUG_actif) $this->DEBUG_add('QRCODE', true);
+			
 			if (!isset($param['value']))						$param['value']	= '';
 			if (!isset($param['ec']))							$param['ec']	= 'H';
-			if (!isset($param['size']))							$param['size']	= '0.6mm';
 			if (!isset($param['style']['color']))				$param['style']['color'] = '#000000';
 			if (!isset($param['style']['background-color']))	$param['style']['background-color'] = '#FFFFFF';
+			if (isset($param['style']['border']))
+			{
+				$borders = $param['style']['border']!='none';
+				unset($param['style']['border']);
+			}
+			else
+				$borders = true;
 
 			if ($param['value']==='') return true;
-
-			$noborder = isset($param['noborder']);
+			if (!in_array($param['ec'], array('L', 'M', 'Q', 'H'))) $param['ec'] = 'H';
 
 			$this->style->save();
 			$this->style->analyse('qrcode', $param);
@@ -1975,18 +2002,31 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$this->style->FontSet();
 
 			$x = $this->pdf->getX();
-
 			$y = $this->pdf->getY();
-			$s = $this->style->ConvertToMM($param['size']);
-			$ec = $param['ec']; if (!in_array($ec, array('L', 'M', 'Q', 'H'))) $ec = 'H';
+			$w = $this->style->value['width'];
+			$h = $this->style->value['height'];
+			$size = max($w, $h); if (!$size) $size = $this->style->ConvertToMM('50mm');
 
-			require_once(dirname(__FILE__).'/qrcode/qrcode.class.php');
-			$qrcode = new QRcode($param['value'], $ec);
-			if ($noborder) $qrcode->disableBorder();
+			$style = array(
+				    'fgcolor' => $this->style->value['color'],
+				    'bgcolor' => $this->style->value['background']['color'],
+				);
+
+			if ($borders)
+			{
+				$style['border'] = true;
+				$style['padding'] = 'auto';
+			}
+			else
+			{
+				$style['border'] = false;
+				$style['padding'] = 0;
+			}
+
 			if (!$this->sub_part && !$this->isSubPart)
-				$qrcode->displayTCPDF($this->pdf, $x, $y, $s, $this->style->value['background']['color'], $this->style->value['color']);
-			$size = $s*$qrcode->getQrSize();
-			unset($qrcode);
+			{
+				$this->pdf->write2DBarcode($param['value'], 'QRCODE,'.$param['ec'], $x, $y, $size, $size, $style);
+			}
 
 			// position maximale globale
 			$this->maxX = max($this->maxX, $x+$size);
@@ -2000,6 +2040,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			return true;
 		}
+		
 		/**
 		* balise : QRCODE
 		* mode : FERMETURE
@@ -2145,7 +2186,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$str = $old;
 
 				// si rien de rentre, et que le premier mot ne rentre de toute facon pas dans une ligne, on le force...
-				if ($i==0 && (($left+$str[1])>=$right))
+				if ($i==0 && (($left+$words[0][1])>=$right))
 				{
 					$str = $words[0];
 					array_shift($words);
@@ -5993,6 +6034,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		protected $tag = null;
 		protected $html = null;
 		protected $image = null;
+		protected $message_html = '';
 
 		/**
 		* generer une erreur HTML2PDF
@@ -6003,6 +6045,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 		*/
 		final public function __construct($err = 0, $other = null, $html = '')
 		{
+			// creation du message d'erreur
 			$msg = '';
 			
 			switch($err)
@@ -6051,23 +6094,36 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$msg = str_replace('[[OTHER]]', $other, $msg);
 					$this->tag = $other; 
 					break;
+					
+				case 9:
+					$msg = (HTML2PDF::textGET('err09'));
+					$msg = str_replace('[[OTHER_0]]', $other[0], $msg); 
+					$msg = str_replace('[[OTHER_1]]', $other[1], $msg); 
+					$this->tag = $other[0]; 
+					break;
 			}
-			if ($html) $this->html = $html;
 			
+			// creation du message HTML
+			$this->message_html = '<span style="color: #AA0000; font-weight: bold;">'.(HTML2PDF::textGET('txt01')).$err.'</span><br>';
+			$this->message_html.= (HTML2PDF::textGET('txt02')).' '.$this->file.'<br>';
+			$this->message_html.= (HTML2PDF::textGET('txt03')).' '.$this->line.'<br>';
+			$this->message_html.= '<br>';
+			$this->message_html.= $msg;
+			
+			// creation du message classique
+			$msg = HTML2PDF::textGET('txt01').$err.' : '.strip_tags($msg);
+
+			if ($html)
+			{
+				$this->message_html.= "<br><br>HTML : ...".trim(htmlentities($html)).'...';
+				$this->html = $html;
+				$msg.= ' HTML : ...'.trim($html).'...';
+		}
+		
 			parent::__construct($msg, $err);
 		}
 		
-		public function __toString()
-		{
-			$str = '<span style="color: #AA0000; font-weight: bold;">'.(HTML2PDF::textGET('txt01')).$this->code.'</span><br>';
-			$str.= (HTML2PDF::textGET('txt02')).' '.$this->file.'<br>';
-			$str.= (HTML2PDF::textGET('txt03')).' '.$this->line.'<br>';
-			$str.= '<br>';
-			$str.= $this->message;
-			if ($this->html) $str.= "<br><br>HTML : ...".trim(htmlentities($this->html)).'...';
-			return $str;
-		}
-		
+		public function __toString()	{ return $this->message_html; }
 		public function getTAG()	{ return $this->tag; }
 		public function getHTML()	{ return $this->html; }
 		public function getIMAGE()	{ return $this->image; }

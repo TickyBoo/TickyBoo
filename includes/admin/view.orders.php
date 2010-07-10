@@ -588,11 +588,12 @@ class OrderView extends AdminView{
   	} else if($_GET['action']=='purge_reissued'){
   		Order::purgeReissued((int)$_GET['order_handling_id']);
     }
-
+    if (!$noTab) {
     if($_SESSION['_overview_tab']==1) {
        $this->tableByEvent();
     } else {
        $this->tableByHandling();
+      }
     }
   }
 

@@ -6,7 +6,7 @@
 **  Copyright 2000-2010 by Laurent Minguet             **
 *********************************************************
 *******************************
-* HTML2PDF v4.01 - 2010-04-22 *
+* HTML2PDF v4.01 - 2010-05-07 *
 *******************************
 
 How to use :
@@ -30,6 +30,7 @@ How to use :
  - Some tests can be enabled (true) or disabled (false) :
      * setTestIsImage method: test that images must exist
      * setTestTdInOnePage method: test that the contents of TDs fit on one page
+     * setTestIsDeprecated method: test that old properties of specific tags are not used anymore
 
   - A DEBUG mode to know the resources used is present
    It is activated by adding the following command just after the contructor (see Example 0):
@@ -83,8 +84,6 @@ Help & Support :
 
 Informations :
 -------------
- Programming in PHP5
-
  Programmer : Spipu
       email    : webmaster@html2pdf.fr
       web site : http://html2pdf.fr/
@@ -93,6 +92,7 @@ Informations :
 
 Thanks :
 -------
- * Olivier PLATHEY for his library Fpdf (http://www.fpdf.org/)
- * yAronet for hosting support forum
+ * Olivier Plathey: for have made FPDF
+ * Nicola Asuni: for the changes he has agreed to make to TCPDF
+ * yAronet: for hosting support forum
  * everyone who helped me to develop this library and to bring the texts

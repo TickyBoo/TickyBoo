@@ -6,6 +6,7 @@ err05	Código HTML não válido, todas as tags devem ser fechadas.<br>Estado : <pre
 err06	Impossível carregar imagem <b>[[OTHER]]</b>
 err07	O conteúdo de uma tag TD não se encaixa em apenas uma página
 err08	<b>&lt;[[OTHER]]&gt;</b> tag not in a &lt;DRAW&gt; tag
+err09	The using of the <b>&lt;[[OTHER_0]]&gt;</b>> tag has changed, you can not use [[OTHER_1]] anymore. Read the WIKI
 txt01	ERRO n°
 txt02	Arquivo :
 txt03	Linha :

@@ -6,6 +6,7 @@ err05	HTML-kode er ugyldig, alle tags skal lukkes. <br>Status : <pre>[[OTHER]]</
 err06	Umuligt at indlæse billedet <b>[[OTHER]]</b>
 err07	Indholdet af en TD tag ikke passer på én side
 err08	<b>&lt;[[OTHER]]&gt;</b> tag not in a &lt;DRAW&gt; tag
+err09	The using of the <b>&lt;[[OTHER_0]]&gt;</b>> tag has changed, you can not use [[OTHER_1]] anymore. Read the WIKI
 txt01	FEJL n°
 txt02	File :
 txt03	Linje :

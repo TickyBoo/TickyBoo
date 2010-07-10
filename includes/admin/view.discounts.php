@@ -93,9 +93,17 @@ class DiscountView extends AdminView {
         }
         echo "<td class='admin_list_item' align='right'>$type</td>\n";
         echo "<td class='admin_list_item' align='right' width='30'>{$row['discount_used']}&nbsp;</td>\n";
-        echo "<td class='admin_list_item' width='65' align='right'>";
-        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}&discount_event_id={$discount_event_id}","edit",2);
-        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}&discount_event_id={$discount_event_id}\";}","remove",2,
+        echo "<td class='admin_list_item' width='105' align='right'>";
+        if ($row['discount_active'] =='yes') {
+          echo $this->show_button("javascript:if(confirm(\"".con('discount_deactivate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=no\"; }","unpublish",2,
+               array('image'=>'checked.gif'));
+        } else {
+          echo $this->show_button("javascript:if(confirm(\"".con('discount_activate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=yes\"; }","publish",2,
+               array('image'=>'unchecked.gif'));
+        }
+
+        echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}","edit",2);
+        echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}\";}","remove",2,
                                 array('tooltiptext'=>"Delete {$row['discount_name']}?",
                                       'disable'=>$live ));
         echo "</td></tr>";
@@ -118,6 +126,7 @@ class DiscountView extends AdminView {
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . $title . "</td></tr>";
 
     $this->print_field_o('discount_id', $data);
+    $this->print_field_o('discount_activate', $data);
 
     $this->print_input('discount_name', $data, $err, 30, 50);
     if (is_null($data['discount_event_id'])) {
@@ -156,6 +165,13 @@ class DiscountView extends AdminView {
         $disc = new Discount(true, is($_GET['discount_event_id'],false));
         $row = (array)$disc;
         $this->form($row, null, con('discount_add_title'));
+    } elseif ($_GET['action'] == 'active_disc') {
+        $row = Discount::load($_GET['discount_id']);
+        if ($row) {
+          $row->discount_active = ($_GET['mode']=='yes')?'yes':'no';
+          $row->save();
+        }
+        $this->table(null, false);
     } elseif ($_GET['action'] == 'edit_disc') {
         $row = Discount::load($_GET['discount_id']);
         $this->form((array)$row, null, con('discount_update_title'));

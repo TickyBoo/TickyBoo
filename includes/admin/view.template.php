@@ -274,7 +274,7 @@ class TemplateView extends AdminView{
       echo "<td class='admin_list_item' >{$row['template_name']}</td>\n";
       $target = ($type=='pdf2')?'target="_blank"':'';
       echo "<td class='admin_list_item' width='65' align='right' nowarp=nowarp'><nowrap>".
-        $this->show_button("{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}","view",2);
+        $this->show_button("{$_SERVER['PHP_SELF']}?action=view&template_id={$row['template_id']}","view",2,array('target'=>'pdfdoc'));
       if ($row['template_type'] !=='pdf') {
         echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&template_id={$row['template_id']}","edit",2);
       }

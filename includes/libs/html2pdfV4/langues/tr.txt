@@ -6,6 +6,7 @@ err05	HTML kodu hatalý, bütün etiketler kapatýlmalý.<br>Durum : <pre>[[OTHER]]</
 err06	Resim dosyasý okunamýyor <b>[[OTHER]]</b>
 err07	TD içeriði bir sayfaya sýðmýyor
 err08	<b>&lt;[[OTHER]]&gt;</b> tag not in a &lt;DRAW&gt; tag
+err09	The using of the <b>&lt;[[OTHER_0]]&gt;</b>> tag has changed, you can not use [[OTHER_1]] anymore. Read the WIKI
 txt01	HATA n°
 txt02	Dosya :
 txt03	Satýr :
