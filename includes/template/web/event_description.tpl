@@ -35,7 +35,7 @@
     	{if $shop_event.event_image}
         <td width="30%" valign="top" colspan="2">
     	  	<!-- a href='index.php?event_id={$shop_event.event_id}' -->
-            <img src="files/{$shop_event.event_image}" align='left' class="magnify" border="0" style="margin:3px;" alt="{$shop_event.event_name} in {$shop_event.ort_city}" title="{$shop_event.event_name} in {$shop_event.ort_city}" border="0" height="100">
+            <img src="files/{$shop_event.event_image}" align='left' class="magnify" border="0" style="margin:3px;" alt="{$shop_event.event_name} in {$shop_event.ort_city}" title="{$shop_event.event_name} in {$shop_event.ort_city}" border="0" width="100">
           <!-- /a -->
     	  </td>
     	{/if}
@@ -90,7 +90,7 @@
       {if $shop_event.event_image}
         <td width="30%" valign="top" >
           <!-- a href='index.php?event_id={$shop_event.event_id}'-->
-            <img src="files/{$shop_event.event_image}" align='left' class="magnify" border="0" width="200"  style="margin:15px;" border="0">
+            <img src="files/{$shop_event.event_image}" align='left' class="magnify" border="0" width="100"  style="margin:15px;" border="0">
           <!-- /a -->
         </td>
       {/if}

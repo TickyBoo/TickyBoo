@@ -42,7 +42,7 @@
         {if $shop_event.event_image}
           <tr><td align='left'>
             <a href='index.php?event_id={$shop_event.event_id}'>
-              <img src="files/{$shop_event.event_image}" align='middle' style="margin:15px;">
+              <img src="files/{$shop_event.event_image}" align='middle' style="margin:15px;" width="100">
             </a>
           </td></tr>
         {/if}
