@@ -1,11 +1,11 @@
 <?php
 
-require_once('classes/class.payment.php');
+
 if (!defined('ft_check')) {die('System intrusion ');}
+require_once('classes/class.shipment.php');
 
+class esm_email extends Shipment{
 
-class Email extends Shipment{
-  
 }
 
 

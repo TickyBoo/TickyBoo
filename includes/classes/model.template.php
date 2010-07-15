@@ -212,6 +212,5 @@ class Template Extends Model {
     return EmailSwiftSender::send($message, "", $log, $failedAddr, $data);
 
   }
-
 }
 ?>

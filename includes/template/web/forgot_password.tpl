@@ -29,28 +29,6 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
- {* Not needed for new ajax call method *
-<html>
-<head>
-  <title>{!pwd_forgot!}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta http-equiv="Content-Language" content="nl" />
-
-  <link rel="shortcut icon" href="images\favicon.ico" />
-  <link rel="icon" href="images\animated_favicon1.gif" type="image/gif" />
-
-  <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
-  <link rel='stylesheet' href='style.php' type='text/css' />
-
-  <script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery-ui-1.7.2.custom.min.js"></script>
-
-
-</head>
-<body topmargin="0" leftmargin="0" style='align:left;'>
-  <br/>
-{* *}
-
   <h1>{!forgot_password!}</h1>
   <br />
   <div id="error-message-dialog" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="padding: 1em; margin-bottom: .7em; display:none; " >
@@ -80,9 +58,25 @@
   {/if}
 {literal}
 <script type="text/javascript">
-  jQuery(document).ready(function(){
     jQuery('#ft-forgot-password-form').unbind('submit');
     jQuery('#ft-forgot-password-form').validate({
+           	rules: {
+    			FullName	: 	{ required :true },
+    			Organisation	:	{ required : true },
+    			Role    	:	{ required : true },
+    			Performances 	:	{ required : true },
+    			Seats 	: 	{ required : true },
+    			EmailAddr 	: 	{ required : true, email :true },
+    		},
+    		errorClass: "form-error",
+    		success: "form-valid",
+    		errorPlacement: function(error, element) {
+    	 		if (element.attr("name") == "check_condition")
+    		   		error.insertAfter(element);
+    		 	else
+    		   		error.insertAfter(element);
+    		},
+
       submitHandler: function(form) {
         jQuery(form).ajaxSubmit({
           success: function(data){
@@ -103,10 +97,6 @@
       $("#notice-text-dialog").html(msg);
       $("#notice-message-dialog").show();
     }
-  });
+    });
 </script>
 {/literal}
-{* *
-</body>
-</html>
-{* *}

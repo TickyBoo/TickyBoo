@@ -91,6 +91,7 @@ class HandlingView extends AdminView{
 			 }
 		 }
 		echo "</table>\n";
+
   }
 
   function form ($data, $err, $title){
@@ -110,59 +111,59 @@ class HandlingView extends AdminView{
 
   	$this->form_head($title);
 
-		if($data['handling_id']){
-      $this->print_field('handling_payment', con($data['handling_payment']));
-      $this->print_field('handling_shipment', con($data['handling_shipment']));
-		}else{
+		if(!$data['handling_id']){
       $this->print_select_assoc('handling_payment', $data, $err, Handling::getPayment());
       $this->print_select_assoc('handling_shipment', $data, $err, Handling::getShipment());
-		}
+      $this->form_foot(2,$_SERVER['PHP_SELF'],'continue');
+		}else{
+      $this->print_field('handling_payment', con($data['handling_payment']));
+      $this->print_field('handling_shipment', con($data['handling_shipment']));
 
-		if( $data['sale_mode']['sp']){$chk_sp='checked';}
-		if($data['sale_mode']['www']){$chk_www='checked';}
-		echo "<tr><td class='admin_name'>".con('handling_sale_mode')."</td>
-			<td class='admin_value'>
-        <input type='checkbox' name='sale_mode[www]' value='www' $chk_www> ".con('www')."&nbsp;
-        <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp> ".con('sp')."&nbsp;
-			</td></tr>";
+  		if( $data['sale_mode']['sp']){$chk_sp='checked';}
+  		if($data['sale_mode']['www']){$chk_www='checked';}
+  		echo "<tr><td class='admin_name'>".con('handling_sale_mode')."</td>
+  			<td class='admin_value'>
+          <input type='checkbox' name='sale_mode[www]' value='www' $chk_www> ".con('www')."&nbsp;
+          <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp> ".con('sp')."&nbsp;
+  			</td></tr>";
 
 
-		//This is for the alt payments if nothing is slected alt wont be used when close to an event.
-    $this->print_select_assoc('handling_alt',$data,$err,
-           Handling::getHandlings(con('handling_no_alt')));
+  		//This is for the alt payments if nothing is slected alt wont be used when close to an event.
+      $this->print_select_assoc('handling_alt',$data,$err,
+             Handling::getHandlings(con('handling_no_alt')));
 
-		//This to ask if the handling is alturnative only this could be an auto proccess but then you would only be
-		//able to use the handling when close to the event.
-    $this->print_select_assoc('handling_alt_only',$data,$err,array('No'=>'no','Yes'=>'yes'));
-		$this->print_input('handling_expires_min',$data,$err,10);
-		$this->print_input('handling_fee_fix',$data,$err,5,10);
-		$this->print_input('handling_fee_percent',$data,$err,5,10);
+  		//This to ask if the handling is alturnative only this could be an auto proccess but then you would only be
+  		//able to use the handling when close to the event.
+      $this->print_select_assoc('handling_alt_only',$data,$err,array('No'=>'no','Yes'=>'yes'));
+  		$this->print_input('handling_expires_min',$data,$err,10);
+  		$this->print_input('handling_fee_fix',$data,$err,5,10);
+  		$this->print_input('handling_fee_percent',$data,$err,5,10);
 
-    //print_r($data['handling_email_template']);
+      //print_r($data['handling_email_template']);
 
-		$temps=explode(",",$data['handling_email_template']);
-		foreach($temps as $temp){
-			$t=explode("=",$temp);
-			$data["handling_email_template_{$t[0]}"]=$t[1];
-		}
+  		$temps=explode(",",$data['handling_email_template']);
+  		foreach($temps as $temp){
+  			$t=explode("=",$temp);
+  			$data["handling_email_template_{$t[0]}"]=$t[1];
+  		}
 
-		$this->print_select_tpl('handling_email_template_ord',"'email','swift'",$data,$err, true);
-		$this->print_select_tpl('handling_email_template_payed',"'email','swift'",$data,$err, true);
-    $this->print_select_tpl('handling_email_template_send',"'email','swift'",$data,$err, true);
+  		$this->print_select_tpl('handling_email_template_ord',"'email','swift'",$data,$err, true);
+  		$this->print_select_tpl('handling_email_template_payed',"'email','swift'",$data,$err, true);
+      $this->print_select_tpl('handling_email_template_send',"'email','swift'",$data,$err, true);
 
-		$this->print_select_tpl('handling_pdf_template',"'pdf2'",$data,$err);
-		$this->print_select_tpl('handling_pdf_ticket_template',"'pdf2'",$data,$err);
-    $this->print_select_assoc('handling_only_manual_send',$data,$err,array('No'=>'no','Yes'=>'yes'));
-//		$this->print_paper_format('pdf_paper',$data,$err);
+  		$this->print_select_tpl('handling_pdf_template',"'pdf2'",$data,$err);
+  		$this->print_select_tpl('handling_pdf_ticket_template',"'pdf2'",$data,$err);
+      $this->print_select_assoc('handling_only_manual_send',$data,$err,array('No'=>'no','Yes'=>'yes'));
+  //		$this->print_paper_format('pdf_paper',$data,$err);
 
-		if($data['handling_id']){
 			$this->print_large_area('handling_text_payment',$data,$err,3,80,'');
 			$this->print_large_area('handling_text_shipment',$data,$err,3,80,'');
 			$this->print_large_area('handling_html_template',$data,$err,10,80,'');
 		  $this->extra_form($h, $data, $err);
+      $this->form_foot(2,$_SERVER['PHP_SELF']);
+
 		}
 
-    $this->form_foot(2,$_SERVER['PHP_SELF']);
   }
 
   function extra_form($hand, &$data, &$err){

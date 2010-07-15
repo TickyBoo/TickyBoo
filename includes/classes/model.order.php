@@ -938,12 +938,12 @@ class Order Extends Model {
 
   /**
    * Order::DecodeSecureCode()
-   * 
+   *
    * This is used by most checkout actions and eph's where we sent a url to the EPH and when the system GET/POST the SOR back we can
-   * handle the request and load the order and proccess the payment. 
-   * 
+   * handle the request and load the order and proccess the payment.
+   *
    * ***THIS WORKS DIFFERNTLY TO CallBackRequest***
-   * 
+   *
    * @param string $codestr : SecureOrderRequest code (SOR).
    * @param bool $loging : set to true to enable extra logging to dblogging
    * @return int/object : true if code correct and order loaded
@@ -1072,15 +1072,15 @@ class Order Extends Model {
     $order['order_subtotal'] = $order['order_total_price'] - $order['order_fee'];
 
 
-    $hand=Handling::load($order['order_handling_id']);
+    $hand = Handling::load($order['order_handling_id']);
     $order['user_country_name']= gui_smarty::getCountry($order['user_country']);
 
-     $paper_size=$_SHOP->pdf_paper_size;
-     $paper_orientation=$_SHOP->pdf_paper_orientation;
+    $paper_size=$_SHOP->pdf_paper_size;
+    $paper_orientation=$_SHOP->pdf_paper_orientation;
 
-     $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+    $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
 
-     if(!$bill_template){
+    if(!$bill_template){
       $bill_template=$hand->handling_pdf_template;
     }
     $first_page = true;
@@ -1097,6 +1097,7 @@ class Order Extends Model {
 
     }
     foreach($seats as $seat) {
+    //  print_r($seat); print($hand);
       if($hand->handling_pdf_ticket_template){
         $tpl_id=$hand->handling_pdf_ticket_template;
       }else if($seat['category_template']){
@@ -1128,8 +1129,7 @@ class Order Extends Model {
     }
 
     if(true and !$first_page){
-  //        $pdf->output($order_file_name, 'P');
-
+   
       //composing filename without extension
       $order_file_name = "order_".$order_id.'.pdf';
         //producing the output

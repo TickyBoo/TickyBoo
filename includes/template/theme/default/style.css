@@ -28,13 +28,13 @@ body.main_side{
 	margin-right: 150px; */
 
   float: center;
-	
+
 }
-	
+
 .mainbody{
 	width:800;
 	position: relative;
-	
+
 }
 .maincontent{
 	width:100%;
@@ -42,7 +42,7 @@ body.main_side{
 }
 .content{
 	width: 100%;
-	padding-top: 10px;	
+	padding-top: 10px;
 }
 .footer{
 	width:100%;
@@ -94,7 +94,7 @@ body.main_side{
 .login_content{
 	color:#666666;
 	background-color:#FFFFFF;
-	padding:5px;	
+	padding:5px;
 }
 a{text-decoration:none;color:#FF0066;}
 a:hover{text-decoration:underline;color:#000000;}

@@ -128,7 +128,7 @@
               {* TODO: chris check this code, i have no clue how it need to work exactly *}
               {* for now i have an extra option maked that check shopconfig_restime      *}
           		{* if $updateview.can_reserve() *}
-          		{if $update->can_reserve()}
+          		{if $update->can_reserve() AND $user->active}
                 {if !$update->is_demo()}
                   <form action='' method='post' name='handling'>
               	    <input type='hidden' name='action' value='reserve' />

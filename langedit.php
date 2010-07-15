@@ -155,7 +155,7 @@
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" media="screen" />
+    <link rel='stylesheet' href='css/flick/jquery-ui-1.8.1.custom.css' />
 		<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" media="screen" />
 
 

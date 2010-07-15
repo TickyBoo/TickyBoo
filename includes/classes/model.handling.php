@@ -518,8 +518,8 @@ class Handling Extends Model {
   }
 
 	function CheckValues(&$data){
- 		if(empty($data['handling_pdf_template'])){addError('handling_pdf_template','mandatory');}
     if ($data['handling_id']) {
+  		if(empty($data['handling_pdf_template'])){addError('handling_pdf_template','mandatory');}
  	  	if(empty($data['handling_text_payment'])){addError('handling_text_payment','mandatory');}
  		  if(empty($data['handling_text_shipment'])){addError('handling_text_shipment','mandatory');}
       if($pm = $this->pment()){
