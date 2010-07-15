@@ -52,6 +52,7 @@ class export_entrant extends AdminView {
 		}
 
 		echo "<form action='{$_SERVER[PHP_SELF]}' method='get'>";
+    if (empty($data['export_entrant_NotSended'])) $data['export_entrant_NotSended'] = '1';
 		$this->form_head(con('export_entrant_title'));
 		$this->print_select_assoc('export_entrant_event',$data,$err,$event);
 		$this->print_checkbox('export_entrant_NotSended',$data,$err);
@@ -237,12 +238,13 @@ class export_entrant extends AdminView {
     if($_GET['submit']) {// and $_GET['export_xl2_event']>0){
 
 			$event_id=_esc((int)$_GET['export_entrant_event']);
-      if (!$_GET['expert_entrant_NotSended']) $org .= " and `Order`.order_shipment_status='none'";
+      if ($_GET['export_entrant_NotSended']== 1) $org = " and `Order`.order_shipment_status='none'";
       $this->query="SELECT DISTINCT `Order`.order_id,`Order`.order_tickets_nr,`Order`.order_total_price,`Order`.order_shipment_status,`Order`.order_payment_status,`Order`.order_fee,
                               User.user_firstname, User.user_lastname, User.user_city, count(Seat.seat_order_id) AS seat_count, sum(seat_price) as seat_totall_price
               FROM  Seat left JOIN `Order` ON (`Order`.order_id = Seat.seat_order_id)
                          left JOIN User ON (`Order`.order_user_id = User.user_id)
               WHERE `Order`.order_status = 'ord' and seat_event_id={$event_id}
+              {$org}
               GROUP BY `Order`.order_id, `Order`.order_tickets_nr, `Order`.order_total_price, `Order`.order_shipment_status, `Order`.order_payment_status, `Order`.order_status,
                        `Order`.order_fee, User.user_firstname, User.user_lastname, User.user_city
               ORDER BY User.user_firstname, User.user_lastname";
