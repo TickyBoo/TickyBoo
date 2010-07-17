@@ -130,10 +130,12 @@ if (!defined('ROOT')) {
 }
 require_once(ROOT."includes".DS."config".DS."defines.php");
 
- if(function_exists("date_default_timezone_set") and
-    function_exists("date_default_timezone_get")) {
-   @date_default_timezone_set(@date_default_timezone_get());
- }
+if(function_exists("date_default_timezone_set") and
+  function_exists("date_default_timezone_get")) {
+  @date_default_timezone_set(@date_default_timezone_get());
+}
+
+$_SHOP->tmp_dir= ROOT."includes".DS."temp".DS;
 
 $root = "http://" . $_SERVER['HTTP_HOST'];
 $root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);

@@ -80,8 +80,8 @@ class Discount  Extends Model {
   static function loadGlobal($promocode) {
     $query="SELECT Discount.*
             FROM Discount
-            WHERE discount_event_id is null
-            and discount_promo ="._esc($promocode);
+            WHERE discount_event_id is null";
+    $query.=((is_integer($promocode))?" and discount_promo =":" and discount_ID =")._esc($promocode);
     if($row=ShopDB::query_one_row($query)){
       $new = new Discount;
       $new->_fill($row);

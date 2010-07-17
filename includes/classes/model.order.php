@@ -59,7 +59,7 @@ class Order Extends Model {
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id','order_order_set',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '~order_date_expire', 'order_responce', 'order_responce_date',
-                                'order_note', 'order_discount_price', 'order_discount_promo'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
+                                'order_note', 'order_discount_price', 'order_discount_promo', 'order_discount_id'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
   public $places=array();
   public $tickets = array();
   public $no_fee = false;
@@ -212,6 +212,9 @@ class Order Extends Model {
         $this->order_discount_price = $amount;
       }
       $amount = $amount - $this->order_discount_price;
+      $this->order_discount_promo = $this->discount->discount_promo;
+      $this->order_discount_id = $this->discount->discount_id;
+
     }
     $order_set =array();
     if(!$this->no_fee){
@@ -270,7 +273,6 @@ class Order Extends Model {
 
       if (isset($this->discount)) {
         $this->discount->isUsed(count($this->places));
-        $this->order_discount_promo = $this->discount->discount_promo;
         OrderStatus::statusChange($this->order_id, false, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
       $tickets = array();
@@ -1009,6 +1011,7 @@ class Order Extends Model {
     $orderqry = '
         SELECT * FROM `Order` left join User     on (order_user_id= user_id)
                               left join Handling on (order_handling_id = handling_id)
+                              left join Discount on (order_discount_id = discount_id)
         where order_id = '._esc($order_id);
 
     $seatqry = '
@@ -1129,7 +1132,7 @@ class Order Extends Model {
     }
 
     if(true and !$first_page){
-   
+
       //composing filename without extension
       $order_file_name = "order_".$order_id.'.pdf';
         //producing the output

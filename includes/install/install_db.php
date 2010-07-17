@@ -308,6 +308,7 @@ $tbls['Order']['fields'] = array(
   'order_total_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'order_discount_promo' => " varchar(15) DEFAULT ''",
   'order_discount_price' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
+  'order_discount_id' => " int(11) DEFAULT NULL",
   'order_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
   'order_timestamp' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'order_order_set' => " set('nofee','nocost') DEFAULT ''",

@@ -174,6 +174,17 @@ select 'Order', o.order_id, 'reemited_id' l3 , o.order_reemited_id, o2.order_id
 from `Order` o left join `Order` o2 on o.order_reemited_id = o2.order_id
 where  (o.order_reemited_id is not null and o2.order_id is null)
 ";
+$orphancheck[]="
+select 'Order', o.order_id, 'discount_id', 'empty', null,'promo', CONCAT_WS('', '|',o.order_discount_promo,'|'),null
+from `Order` o
+where  (o.order_discount_promo is not null and o.order_discount_id <> '' and o.order_discount_id is null)
+";
+$orphancheck[]="
+select 'Order', o.order_id, 'discount_id', order_discount_id, null
+from `Order` o  left join `Discount` d on o.order_discount_id = d.discount_id and discount_event_id is null
+where  (o.order_discount_id is not null and o.order_discount_id <> '' and d.discount_id is null)
+";
+
 /*
 $orphancheck[]="
 select 'Order', o.order_id, 'owner_id' l4 ,    o.order_owner_id, POS.user_id
@@ -273,6 +284,7 @@ class orphans {
        'Event~pm_id'=>'Clear the link to the removed placemap',
        'Order~user_id'=>'Recreate missing user info for this order',
        'Order~owner_id'=>'Recreate missing POS login for this pos',
+       'Order~discount_id'=>'Recreate missing discount identifiers',
        'Order~handling_id'=>'Clear the handling fields, we dont know what orderhandler it was.',
        'Order~Seats'=>'This order has less tickets then ordered!!!',
        'Order~zeros'=>'Clear all zero identifiers in the order table',
@@ -502,6 +514,15 @@ class orphans {
       case 'Order~zeros':
         Orphans::clearZeros('Order', array('order_handling_id','order_owner_id'));
         break;
+      case 'Order~discount_id':
+        if ($fix[4] == 'empty') {
+          ShopDB::Query("update `Order` set
+                           order_discount_id = (select discount_id FROM `Discount` where  discount_promo = order_discount_promo and discount_event_id is null )
+                         where order_discount_promo is not null") ;
+//        } else {
+        }
+        break;
+
 
       case 'Order~Seats':
         ShopDB::Query("update `Order` set
