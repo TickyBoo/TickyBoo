@@ -38,5 +38,7 @@ define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
 require_once ("admin/view.statistic.php");
 $body=new StatisticView();
-$body->drawall();
+if(!$body->execute()){
+  $body->drawall();
+}
 ?>

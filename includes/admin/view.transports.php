@@ -43,18 +43,15 @@ class ImpExpView extends AdminView {
 
 	function __construct($width=0){
     parent::__construct($width);
-    If (isset($_REQUEST['import_type'])) {
-      $this->runtype = 'import';
-    } else
-    If (isset($_REQUEST['export_type'])) {
-         $this->runtype = 'export';
-    }//  else echo "c";
-    if ($this->runtype) {
-     $runlist = $this->load($this->runtype);
-      $run=$_REQUEST[$this->runtype.'_type'];//
-      if(in_array($run,$runlist)){
+
+    If (isset($_REQUEST['run'])) {
+      preg_match("/^(.*)-(.*?\w+)/", $_REQUEST['run'], $matches);
+      $this->runtype = $matches[1];
+      $run=$matches[2];//
+      $file = INC.'admin'.DS.'transports'.DS."{$this->runtype}.{$run}.php";
+      if(file_exists($file)){
+	  		require_once($file);
 			  $runclass = $this->runtype.'_'.$run;
-	  		require_once(INC.'admin'.DS.'transports'.DS."{$this->runtype}.{$run}.php");
 		  	$this->runobject = new $runclass;
 		  } else {
         addWarning($this->runtype.'_script_not_found');
@@ -81,27 +78,40 @@ class ImpExpView extends AdminView {
   }
 
 
-	function export_list(){
+	function exportList(){
 		$this->list_head(con('export_admin_title'),1,'98%');
 		$alt=0;
 		$types = $this->load('export');
 		foreach($types as $type){
      echo "<tr class='admin_list_row_$alt'>
            <td class='admin_list_item'>
-					 <a href='?export_type=$type' class='link'>".con('export_'.$type)."</a>
+					 <a href='?run=export-{$type}' class='link'>".con('export_'.$type)."</a>
 					 </td></tr>";
 		}
 		echo "</table>\n";
 	}
 
-	function import_list(){
+	function importList(){
 		$this->list_head(con('import_admin_title'),1,'98%');
 		$alt=0;
 		$types = $this->load('import');
 		foreach($types as $type){
       echo "<tr class='admin_list_row_$alt'>
             <td class='admin_list_item'>
-	  	      <a href='?import_type=$type' class='link'>".con('import_'.$type)."</a>
+	  	      <a href='?run=import-{$type}' class='link'>".con('import_'.$type)."</a>
+	 				  </td></tr>";
+		}
+		echo "</table>\n";
+	}
+
+	function reportList(){
+		$this->list_head(con('report_admin_title'),1,'100%');
+		$alt=0;
+		$types = $this->load('report');
+		foreach($types as $type){
+      echo "<tr class='admin_list_row_$alt'>
+            <td class='admin_list_item'>
+	  	      <a href='?run=report-{$type}' class='link'>".con('report_'.$type)."</a>
 	 				  </td></tr>";
 		}
 		echo "</table>\n";
@@ -109,28 +119,26 @@ class ImpExpView extends AdminView {
 
   function execute (){
 		if($this->runobject){
-      if ($this->runtype=='import'){
-   			return $this->runobject->import();
-      } else {
-			  return $this->runobject->export();
-      }
+		  return $this->runobject->execute();
 		}
     orphanCheck();
     trace("End of export \n\n\r");
 		return FALSE;
   }
 
-  function draw (){
+  function draw ($ShowReports=false){
 		if($this->runobject){
     	$this->runobject->setwidth($this->width);
 			$this->runobject->draw();
       echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
-		}else{
+		}elseif($ShowReports){
+		    $this->reportList();
+    } else {
       echo "<table border=0 cellspacing='0' cellpadding='0' width='{$this->width}'>
             <tr><td width=50%><tr><td valign='top'>\n";
-		    $this->export_list();
+		    $this->exportList();
 		  echo "</td><td align='right' valign='top'>\n";
-		    $this->import_list();
+		    $this->importList();
       echo "</td></tr></table>\n";
 		}
   }

@@ -56,13 +56,14 @@ class export_cp extends AdminView {
 		$this->print_field('export_cp_file',$data,$err);
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  		<input type='hidden' name='export_type' value='cp'>
+  		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+
 		<input type='submit' name='submit' value='".export_cp_submit."'></td></tr>
 		</table></form>";
   }
 
 
-  function export (){
+  function execute (){
     global $_SHOP;
 
     if($_GET['submit'] and $_GET['export_cp_event']>0){

@@ -47,7 +47,7 @@ class import_template extends AdminView {
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  	<input type='hidden' name='import_type' value='template'>
+  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
 		<input type='submit' name='submit' value='".con('import_xml_submit')."'></td></tr>
 		</table></form>
 		<center><span class='error'>{$err['main']}</span></center>";

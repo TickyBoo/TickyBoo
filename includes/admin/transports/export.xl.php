@@ -46,7 +46,8 @@ class export_xl extends AdminView {
     $this->print_date('xl_end',$data,$err);
     echo "<tr><td align='center' class='admin_value' colspan='2'>
 
-		<input type='hidden' name='export_type' value='xl'>
+		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+
 
 		<input type='submit' name='submit' value='".con('generate_xl')."'>
 		<input type='reset' name='reset' value='".con('res')."'></td></tr>";
@@ -161,7 +162,7 @@ class export_xl extends AdminView {
     $workbook->close();
   }
 
-  function export (){
+  function execute (){
    global $_SHOP;
 
    if($_GET['submit']){

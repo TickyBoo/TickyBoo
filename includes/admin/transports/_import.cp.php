@@ -48,13 +48,14 @@ class import_cp extends AdminView {
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  	<input type='hidden' name='import_type' value='cp'>
+  	  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+
 		<input type='submit' name='submit' value='".import_cp_submit."'></td></tr>
 		</table></form>";
   }
 
 
-  function import (){
+  function execute (){
     global $_SHOP;
 
 		if(!empty($_FILES['import_cp_file']) and !empty($_FILES['import_cp_file']['name']) and !empty($_FILES['import_cp_file']['tmp_name'])){

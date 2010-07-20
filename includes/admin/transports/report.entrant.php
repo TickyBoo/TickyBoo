@@ -36,7 +36,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 require_once 'Spreadsheet/Excel/Writer.php';
 
-class export_entrant extends AdminView {
+class report_entrant extends AdminView {
 
    var $query = '';
 
@@ -60,7 +60,8 @@ class export_entrant extends AdminView {
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  		<input type='hidden' name='export_type' value='entrant'>
+  		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+
 		<input type='submit' name='submit' value='".con('export_xml_event_submit')."'></td></tr>
 		</table></form>";
   }
@@ -232,7 +233,7 @@ class export_entrant extends AdminView {
     $workbook->close();
   }
 
-  function export (){
+  function execute (){
     global $_SHOP;
 
     if($_GET['submit']) {// and $_GET['export_xl2_event']>0){

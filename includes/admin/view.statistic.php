@@ -269,14 +269,33 @@ class StatisticView extends AdminView{
 
 
     $menu = array(con('show_text_stats')=>"?tab=0&month={$month }&year={$year}",
-                  con('show_grafik_stats')=>"?tab=1&month={$month }&year={$year}");
+                  con('show_grafik_stats')=>"?tab=1&month={$month }&year={$year}",
+                  con('show_stat_reports')=>"?tab=2&month={$month }&year={$year}");
     echo $this->PrintTabMenu($menu, (int)$_SESSION['_STATS_tab'], "left");
-
-    if ((int)$_SESSION['_STATS_tab'] == 1){
-      $this->plotEventStats($start_date, $end_date, $month, $year);
-    }else{
-      $this->eventStats($start_date, $end_date, $month, $year);
+    switch ((int)$_SESSION['_STATS_tab']){
+      case 0:
+        $this->eventStats($start_date, $end_date, $month, $year);
+        break;
+      case 1:
+        $this->plotEventStats($start_date, $end_date, $month, $year);
+        break;
+      case 2:
+        $this->expviewer->setwidth($this->width);
+        $this->expviewer->draw(true);
+      break;
     }
+  }
+  function execute (){
+    if(isset($_REQUEST['tab'])) {
+      $_SESSION['_STATS_tab'] = (int)$_REQUEST['tab'];
+    }
+    if ((int)$_SESSION['_STATS_tab']==2){
+        require('view.transports.php');
+        $this->expviewer = new ImpExpView($this->width);
+        return $this->expviewer->execute();
+
+    }
+
   }
 }
 

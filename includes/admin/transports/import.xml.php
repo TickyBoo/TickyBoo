@@ -54,7 +54,7 @@ class import_xml extends AdminView {
   }
 
 
-  function import (){
+  function execute (){
     global $_SHOP;
 
 		if(!empty($_FILES['import_xml_file']) and !empty($_FILES['import_xml_file']['name']) and !empty($_FILES['import_xml_file']['tmp_name'])){

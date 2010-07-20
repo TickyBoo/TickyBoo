@@ -54,7 +54,7 @@
   	    {else}
           <br />
 
-             <a href='?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
+             <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
           <br />
           <div>
         {/if}

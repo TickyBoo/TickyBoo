@@ -244,7 +244,7 @@ select SQL_CALC_FOUND_ROWS *
                                    'disable'=> !$row['event_pm_id']));
     $pub = ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or (!$row['event_pm_id'] and
       				$row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') );
-    echo  $this->show_button("archive_event.php?event_id={$row['event_id']}",'Archive',2,
+    echo  $this->show_button("view_impexp.php?run=report-archive_event&event_id={$row['event_id']}",'Archive',2,
                              array('image'=>'archive.png',
                                    'disable'=> !$pub));
     echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_id={$row['event_id']}\";}","remove",2,
@@ -313,7 +313,7 @@ select SQL_CALC_FOUND_ROWS *
 
 		$this->print_file( 'event_image', $data, $err, 'img', $main);
 		$this->print_file( 'event_mp3', $data, $err, 'mp3', $main );
-    
+
     $script = "
     jQuery('input,textarea,select').change(function(){
       var name = jQuery(this).attr('name');
@@ -324,7 +324,7 @@ select SQL_CALC_FOUND_ROWS *
     });
     ";
     $this->addJQuery($script);
-    
+
         //recurrence
 		$this->form_foot(2,$_SERVER['PHP_SELF']);
 	}

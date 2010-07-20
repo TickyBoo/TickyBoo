@@ -57,7 +57,7 @@ class export_cc extends AdminView {
   }
 
 
-  function export (){
+  function execute (){
     global $_SHOP;
 
     if($_GET['submit']){

@@ -57,13 +57,14 @@ class export_templates extends AdminView {
 		$this->print_input('export_template_file',$data,$err);
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  		<input type='hidden' name='export_type' value='templates'>
+  		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+
 		<input type='submit' name='submit' value='". con('export_submit') ."'></td></tr>
 		</table></form>";
   }
 
 
-  function export (){
+  function execute (){
     global $_SHOP;
 
     if($_GET['submit'] and $_GET['export_template_id']>0){

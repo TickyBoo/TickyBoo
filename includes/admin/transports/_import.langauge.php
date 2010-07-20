@@ -53,14 +53,15 @@ class import_langauge extends AdminView {
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  	<input type='hidden' name='import_type' value='langauge'>
+  	  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+
 		<input type='submit' name='submit' value='".import_xml_submit."'></td></tr>
 		</table></form>
 		<center><span class='error'>{$err['main']}</span></center>";
   }
 
 
-  function import (){
+  function execute (){
     global $_SHOP;
     //print_R($_POST);
     if($_POST['submit']){
