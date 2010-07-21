@@ -144,6 +144,66 @@ class ctrlWebCheckout extends ctrlWebShop {
     unset( $_SESSION['_SHOP_order']);
     return "checkout_preview";
   }
+  function actionReserve ($origin='www',$user_id=null) {
+    return $this->_reserve($origin, $user_id);
+  }
+
+  protected function _reserve($origin='www',$user_id=null) {
+    $myorder = $this->__Order->make_f(1, $origin, NULL, $user_id);
+    if (!$myorder) {
+      return "checkout_preview";
+    } else {
+      $this->setordervalues($myorder);
+      $this->__MyCart->destroy_f();
+      $this->assign('pm_return',array('approved'=>TRUE));
+      return "checkout_result";
+    }
+  }
+
+  function actionConfirm ( $origin="www", $user_id=0, $no_fee=0) {
+    return $this->_confirm($origin, $user_id, $no_fee);
+  }
+
+  protected function _confirm($origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
+    if (!isset($_SESSION['_SHOP_order'])) {
+      $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
+ 	  } else {
+      $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+      if(is_numeric($myorder)) {
+        echo "Cancel error ($myorder).\n";
+        return;
+      }
+    }
+    if (!$myorder) {
+      addwarning('order_not_found_or_created');
+      return "checkout_preview";
+    } else {
+      $this->setordervalues($myorder); //assign order vars
+      $this->__MyCart->destroy_f(); // destroy cart
+      if(!$myorder->handling){
+        $myorder->handling = Handling::load($myorder->order_handling_id);
+      }
+    	$hand = $myorder->handling; // get the payment handling object
+      $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
+
+   //    ShopDB::commit('UnLock Created Order'); // Dont commit within the processes  will be done at the end.
+      if (is_array($confirmtext)) {
+    	 $this->assign('pm_return',$confirmtext);
+        if(!$confirmtext['approved']) {
+          $myorder->delete($myorder->order_id,'payment_not_approved' );
+        }
+     		unset( $_SESSION['_SHOP_order']);
+      	return "checkout_result";
+      } else {
+ 			  if ($hand->is_eph()) {
+    		  $_SESSION['_SHOP_order'] = true;
+   			}
+    		$this->__Order->obj = $myorder;
+      	$this->assign('confirmtext', $confirmtext);
+   			return "checkout_confirm";
+      }
+    }
+  }
 
   function actionSubmit () {
     return $this->_submit();
@@ -306,71 +366,6 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
 
-  function actionReserve ($origin='www',$user_id=null) {
-    return $this->_reserve($origin, $user_id);
-  }
-
-  protected function _reserve($origin='www',$user_id=null) {
-    $myorder = $this->__Order->make_f(1, $origin, NULL, $user_id);
-    if (!$myorder) {
-      return "checkout_preview";
-    } else {
-      $this->setordervalues($myorder);
-      $this->__MyCart->destroy_f();
-      $this->assign('pm_return',array('approved'=>TRUE));
-      return "checkout_result";
-    }
-  }
-
-
-  function actionConfirm ( $origin="www", $user_id=0, $no_fee=0) {
-    return $this->_confirm($origin, $user_id, $no_fee);
-  }
-
-  protected function _confirm($origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
-    if (!isset($_SESSION['_SHOP_order'])) {
-      $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
-      echo "<pre>";
-      Print_r($myorder);
-      echo "</pre>";
- 	  } else {
-      $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
-      if(is_numeric($myorder)) {
-        echo "Cancel error ($myorder).\n";
-        return;
-      }
-    }
-    if (!$myorder) {
-      addwarning('order_not_found_or_created');
-      return "checkout_preview";
-    } else {
-      $this->setordervalues($myorder); //assign order vars
-      $this->__MyCart->destroy_f(); // destroy cart
-      if(!$myorder->handling){
-        $myorder->handling = Handling::load($myorder->order_handling_id);
-      }
-    	$hand = $myorder->handling; // get the payment handling object
-      $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
-
-   //    ShopDB::commit('UnLock Created Order'); // Dont commit within the processes  will be done at the end.
-      if (is_array($confirmtext)) {
-    	 $this->assign('pm_return',$confirmtext);
-        if(!$confirmtext['approved']) {
-          $myorder->delete($myorder->order_id,'payment_not_approved' );
-        }
-     		unset( $_SESSION['_SHOP_order']);
-      	return "checkout_result";
-      } else {
- 			  if ($hand->is_eph()) {
-    		  $_SESSION['_SHOP_order'] = true;
-   			}
-    		$this->__Order->obj = $myorder;
-      	$this->assign('confirmtext', $confirmtext);
-   			return "checkout_confirm";
-      }
-    }
-  }
-
 	function getsecurecode($type='sor') {
 		if (isset($_POST[$type])) {
      		$return = urldecode( $_POST[$type]);
@@ -379,7 +374,9 @@ class ctrlWebCheckout extends ctrlWebShop {
     } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
      	$return = substr($action, 1);
     } else {
+      echo "<pre>";
      	print_r($_REQUEST); Print_r($_SERVER);
+      echo "</pre>";
      	$return ='';
     }
     //  echo $return;
@@ -403,11 +400,14 @@ class ctrlWebCheckout extends ctrlWebShop {
 
     if (!is_a  ( $aOrder, 'Order')) return;
     if (is_array($aOrder->places)) {
-      foreach($aorder->places as $ticket){
+      foreach($aOrder->places as $ticket){
     		$seats[$ticket->id]=TRUE;
       }
     } else {
+      echo "<pre>";
+
       print_r($aOrder);
+      echo "</pre>";
     }
     $this->smarty->assign('order_success',true);
     $this->smarty->assign('order_id',$aOrder->order_id);

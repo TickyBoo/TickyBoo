@@ -81,7 +81,8 @@ class Discount  Extends Model {
     $query="SELECT Discount.*
             FROM Discount
             WHERE discount_event_id is null";
-    $query.=((is_integer($promocode))?" and discount_promo =":" and discount_ID =")._esc($promocode);
+    $query.=((!is_integer($promocode))?" and discount_promo =":" and discount_ID =")._esc($promocode);
+    echo $query;
     if($row=ShopDB::query_one_row($query)){
       $new = new Discount;
       $new->_fill($row);

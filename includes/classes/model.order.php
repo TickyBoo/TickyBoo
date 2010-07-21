@@ -102,6 +102,8 @@ class Order Extends Model {
 
         if($order && $tickets){
           $order->places = Seat::loadAllOrder($order_id);
+        } else {
+          $order->places = array();
         }
         if($order){
         return $order;
@@ -197,14 +199,13 @@ class Order Extends Model {
     $amount=$this->amount();
     $this->order_discount_price = 0.0;
     if (isset($this->discount) and !$this->no_cost) {
+      $this->order_discount_promo = $this->discount->discount_promo;
+      $this->order_discount_id    = $this->discount->discount_id;
       $this->order_discount_price = $this->discount->value ($amount);
       If ($this->order_discount_price > $amount) {
         $this->order_discount_price = $amount;
       }
       $amount = $amount - $this->order_discount_price;
-      $this->order_discount_promo = $this->discount->discount_promo;
-      $this->order_discount_id = $this->discount->discount_id;
-
     }
     $order_set =array();
     if(!$this->no_fee){

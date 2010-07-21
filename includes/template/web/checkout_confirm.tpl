@@ -41,7 +41,7 @@
     {gui->view name=order_id value=$order_id}
 
     {if $order_discount_price  neq 0.0 || $order_fee neq 0.0}
-      {gui->valuta value=$order_partial_price assign=orderPreDis}
+      {gui->valuta value=$order_partial_price+$order_discount_price assign=orderPreDis}
       {gui->view name=order_partial_price value=$orderPreDis}
     {/if}
 

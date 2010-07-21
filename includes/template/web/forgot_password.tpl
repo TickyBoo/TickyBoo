@@ -61,12 +61,7 @@
     jQuery('#ft-forgot-password-form').unbind('submit');
     jQuery('#ft-forgot-password-form').validate({
            	rules: {
-    			FullName	: 	{ required :true },
-    			Organisation	:	{ required : true },
-    			Role    	:	{ required : true },
-    			Performances 	:	{ required : true },
-    			Seats 	: 	{ required : true },
-    			EmailAddr 	: 	{ required : true, email :true },
+    			email 	: 	{ required : true, email :true },
     		},
     		errorClass: "form-error",
     		success: "form-valid",
@@ -84,9 +79,8 @@
           }
         });
       }
-    })
-    //var msg = ' errors';
-    var msg = '{/literal}{printMsg key='__Warning__' addspan=false}{literal}';
+    });
+  var msg = '{/literal}{printMsg key='__Warning__' addspan=false}{literal}';
     if(msg) {
       $("#error-text-dialog").html(msg);
       $("#error-message-dialog").show();
@@ -97,6 +91,7 @@
       $("#notice-text-dialog").html(msg);
       $("#notice-message-dialog").show();
     }
-    });
+
+
 </script>
 {/literal}
