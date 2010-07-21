@@ -79,30 +79,29 @@ class Order Extends Model {
     return $order;
   }
 
-  function load ($order_id, $complete=false, $tickets=false){
+  function load ($order_id, $handling=false, $tickets=false, $extend=false, $locked=false){
     global $_SHOP;
 
-//    ShopDB::dblogging(
       $query="select *
-              from `Order`
-              WHERE order_id = "._esc($order_id);
+              from `Order` ".
+              (($extend)?"left join `User` on order_user_id=user_id":"")."
+              WHERE order_id = "._esc($order_id). self::lock($locked);
  //   );
       if($data=ShopDB::query_one_row($query)){
         $order=new Order;
 
         $order->_fill($data);
 
-        if($order && $complete){
+        if($order && $handling){
           if ($order->order_handling_id) {
-            $order->handling= Handling::load($order->order_handling_id);
-            $order->handling = &$order->handling;
+            $order->handling = Handling::load($order->order_handling_id);
           }
         }
         $order->no_cost = (strpos($order->order_order_set, 'nocost') === false);
         $order->no_fee  = (strpos($order->order_order_set, 'nofee') === false);
 
         if($order && $tickets){
-          $order->tickets = $this->loadTickets();
+          $order->places = Seat::loadAllOrder($order_id);
         }
         if($order){
         return $order;
@@ -110,6 +109,10 @@ class Order Extends Model {
     }
     // the next log is included to find when or why sometimes it is not possible set the send state.
     ShopDB::dblogging("Cant load Order '{$order_id}', check of it exist.");
+  }
+
+  function loadExt ($order_id, $locked=self::LOCK_UPDATE){
+    return self::load($order_id, true, true, true, $locked);
   }
 
   public function loadFromPaymentId($payment_id, $handling_id, $complete=false){
@@ -160,19 +163,6 @@ class Order Extends Model {
       $seats[] = $seat;
     }
     return $seats;
-  }
-
-  function load_ext ($order_id){
-    global $_SHOP;
-    $query = "SELECT * FROM `Order` left join `User` on order_user_id=user_id
-              WHERE order_id = "._esc($order_id);
-
-    if($data=ShopDB::query_one_row($query)){
-      $order=new Order;
-      $order->_fill($data);
-      return $order;
-    }
-
   }
 
   function add_seat ($event_id,$category_id,$place_id,$price,$discount=null){
@@ -320,7 +310,7 @@ class Order Extends Model {
         return self::_abort('user_failed_not found');
       }
 
-      $tmpOrdForDate = Order::load($this->order_id);
+      $tmpOrdForDate = self::load($this->order_id);
       $this->order_date = $tmpOrdForDate->order_date;
 
       if($this->handling->handling_id=='1'){
@@ -360,7 +350,7 @@ class Order Extends Model {
   }
 
   function Check_payment($order_id){
-    $order = Order::load($order_id, true);
+    $order = self::load($order_id, true);
     //var_dump($order);
     if ($order && $order->handling) {
       return $order->handling->on_check($order);
@@ -736,7 +726,7 @@ class Order Extends Model {
 
   static function set_statusEx($order_id, $new_status){
     if(ShopDB::begin('set_statusEx to '.$new_status)){
-      $order=Order::load($order_id);
+      $order=self::load($order_id);
       if($order->order_status=='cancel' or
          $order->order_status=='reissue'){
         return false;
@@ -927,8 +917,8 @@ class Order Extends Model {
 
     if (!$this->order_tickets_nr ) $this->order_tickets_nr = $this->size();
 
-    $md5 = $this->order_session_id.'~'.$this->order_user_id .'~'. $this->order_tickets_nr .'~'.
-           $this->order_handling_id .'~'. $this->order_total_price;
+    $md5  = $this->order_session_id.'~'.$this->order_user_id .'~'. $this->order_tickets_nr .'~'.
+            $this->order_handling_id .'~'. $this->order_total_price;
     $md5x = base_convert(md5($md5),16,36);
     $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($this->order_id,10,36).'_'. $md5x);
     if ($loging) {
@@ -970,7 +960,7 @@ class Order Extends Model {
         ShopDB::dblogging('MD5.a:'.$code[2]);
       }
 
-      if (!is_object($order)) $order = self::load($code[1], true);
+      if (!is_object($order)) $order = self::loadExt($code[1], true);
       if (!is_object($order)) return -1;
 
       $md5 = $order->order_session_id.'~'.$order->order_user_id .'~'. $order->order_tickets_nr .'~'.

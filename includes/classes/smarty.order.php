@@ -457,8 +457,8 @@ class Order_Smarty {
       		if($ticket){
 	        	$smarty->assign("shop_ticket",$ticket);
 	        	//print_r($ticket);
-	    		$smarty->_SHOP_db_res[]=$res;
-			}
+	      		$smarty->_SHOP_db_res[]=$res;
+			    }
 	    }
     return $content;
 
@@ -471,7 +471,7 @@ class Order_Smarty {
   function setStatusPaid($order_id){
     return Order::set_payed($order_id);
   }
-  
+
   /**
    * Order_Smarty::set_send_f()
    *
@@ -503,10 +503,10 @@ class Order_Smarty {
     $ret=Order::save_order_note($params['order_id'],$params['note']);
     $smarty->assign('order_note',$ret);
   }
-  
+
   /**
    * Order_Smarty::add_order_note()
-   * 
+   *
    * Need to POST at least onote_title,onote_body
    * <code>
    * {if $smarty.request.action eq 'addnote'}
@@ -515,7 +515,7 @@ class Order_Smarty {
    *     ...
    *   {/if}
    * {/if}
-   * </code> 
+   * </code>
    * @return bool + assign warning/notice
    */
   function add_order_note($params,$smarty){
@@ -525,7 +525,7 @@ class Order_Smarty {
       addWarning('failed_to_add_note');
       return;
 		}
-    
+
     if(!$order=Order::load($_REQUEST['order_id'])){return;}
     $order->emailSubject = $orderNote->onote_subject;
     $order->emailNote = $orderNote->onote_note;
@@ -533,28 +533,28 @@ class Order_Smarty {
     $smarty->assign('success',true);
     addNotice('successfully_add_note');
   }
-  
+
   function resend_note($params,$smarty){
     if(!is($_REQUEST['onote_id'],false)){
       addWarning('bad_id');
     }
-    
+
     if($orderNote = OrderNote::load($_REQUEST['onote_id'])){return;}
     if(!$order=Order::load($_REQUEST['order_id'])){return;}
     $order->emailSubject = $orderNote->onote_subject;
     $order->emailNote = $orderNote->onote_note;
-    
+
     if($this->_sendNote($orderNote,$order,$_REQUEST)){
       addNotice('successfully_sent_note');
     }
-    
+
   }
-  
+
   /**
    * Order_Smarty::_sendNote()
-   * 
+   *
    * Shared Function for note sending.
-   * 
+   *
    * @return bool
    */
   private function _sendNote($onote, $order, $request){
@@ -660,11 +660,14 @@ function _collect(&$event_item,&$cat_item,&$place_item,&$order){
     }
     $place_item->ordered =  $order;
     // cant find any
+/*
     if(!isset($order->place_items)){
       $order->place_items=array();
     }
     array_push($order->place_items,array($event_item->event_id,$cat_item->id,$place_item->id));
+*/
   }
+
   return 1;
 }
 

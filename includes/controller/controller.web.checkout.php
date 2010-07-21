@@ -155,7 +155,6 @@ class ctrlWebCheckout extends ctrlWebShop {
       ShopDB::dblogging("submit error ($myorder).");
       return;
     }
-    $myorder->lock();
     $this->setordervalues($myorder);
     $hand= $myorder->handling;
     $pm_return = $hand->on_submit($myorder);
@@ -194,7 +193,6 @@ class ctrlWebCheckout extends ctrlWebShop {
       echo "accept error ($myorder).\n";
       return;
     }
-    $myorder->lock();
 
     $hand=$myorder->handling;
     $this->setordervalues($myorder);
@@ -224,7 +222,6 @@ class ctrlWebCheckout extends ctrlWebShop {
       echo "Cancel error ($myorder).\n";
       return;
     }
-    $myorder->lock();
 
     $this->setordervalues($myorder);
     $hand=$myorder->handling;
@@ -244,7 +241,6 @@ class ctrlWebCheckout extends ctrlWebShop {
 		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
 		   		return;
 			}
-      $myorder->lock();
 			ShopDB::dblogging("notify  ($test): $myorder->order_id.\n");
 
 			$hand= $myorder->handling;
@@ -285,10 +281,9 @@ class ctrlWebCheckout extends ctrlWebShop {
       return false;
     }
     if(is_numeric($orderInput)){
-      $orderInput = Order::load($orderInput, true);
+      $orderInput = Order::loadExt($orderInput, true);
       if(!is_object($orderInput)){ addWarning('invalid_order'); return false;}
     }
-    $orderInput->lock();
 
     $this->setordervalues($orderInput); //assign order vars
     $hand = $orderInput->handling; // get the payment handling object
@@ -317,7 +312,6 @@ class ctrlWebCheckout extends ctrlWebShop {
 
   protected function _reserve($origin='www',$user_id=null) {
     $myorder = $this->__Order->make_f(1, $origin, NULL, $user_id);
-    $myorder->lock();
     if (!$myorder) {
       return "checkout_preview";
     } else {
@@ -336,6 +330,9 @@ class ctrlWebCheckout extends ctrlWebShop {
   protected function _confirm($origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
     if (!isset($_SESSION['_SHOP_order'])) {
       $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
+      echo "<pre>";
+      Print_r($myorder);
+      echo "</pre>";
  	  } else {
       $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
       if(is_numeric($myorder)) {
@@ -347,7 +344,6 @@ class ctrlWebCheckout extends ctrlWebShop {
       addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
-      $myorder->lock(); //Lock created order
       $this->setordervalues($myorder); //assign order vars
       $this->__MyCart->destroy_f(); // destroy cart
       if(!$myorder->handling){

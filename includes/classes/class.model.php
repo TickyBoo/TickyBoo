@@ -47,6 +47,9 @@ class Model {
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
   const MDL_NOQOUTE   = 4;
+  const LOCK_SHARED   = -1;
+  const LOCK_NONE     = false;
+  const LOCK_UPDATE   = 1;
 
   protected $_idName = false;
   protected $_tableName;
@@ -93,16 +96,11 @@ class Model {
    * @return true when the lock is done.
    *   You need to commit/rollback every function that you start with a lock.
    */
-  function lock($shared=false, $where=false) {
-    if (!$this->isLocked) {
-      $shared = ($shared)?'LOCK IN SHARE MODE':'FOR UPDATE';
-      $where  = ($where)?$where:"`{$this->_idName}` = {$this->id}";
-      $query  = "select `{$this->_idName}` from `{$this->_tableName}` where {$where} {$shared}";
-      if (shopDB::query($query)) {
-        $this->isLocked = true;
-      }
+  function lock($shared=false) {
+    if ($shared) {
+      $shared = ($shared=== self::LOCK_SHARED)?' LOCK IN SHARE MODE': 'FOR UPDATE';
     }
-    return $this->isLocked;
+    return $shared;
   }
 
   function save($id = null, $exclude=null){
