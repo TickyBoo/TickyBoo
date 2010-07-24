@@ -31,25 +31,25 @@
  *}
   <h1>{!forgot_password!}</h1>
   <br />
-  <div id="error-message-dialog" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="padding: 1em; margin-bottom: .7em; display:none; " >
+  <div id="error-message-dialog" class="ui-state-error ui-corner-all" style="padding: 1em; margin-bottom: .7em; display:none; " >
      <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
         <span id='error-text-dialog'>ffff</span>
      </p>
   </div>
-  <div id="notice-message-dialog" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-bottom: .7em; display:none; " >
+  <div id="notice-message-dialog" class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-bottom: .7em; display:none; " >
      <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
         <span id='notice-text-dialog'>fff</span>
      </p>
   </div>
   {if $smarty.post.submit AND $user->forgot_password_f($smarty.post.email)}
-    <button onclick="jQuery.modal.close();">{!close!}</button>
+    <center><button onclick="jQuery.modal.close();">{!close!}</button></center>
   {else}
     {gui->StartForm width="100%" id='ft-forgot-password-form' class="login_table" action='forgot_password.php' method='post' name='resendpassword' onsubmit='this.submit.disabled=true;return true;'}
       <tr>
         <td colspan='2'>{!pwd_note!}<br/><br/></td>
       </tr>
       <tr>
-        <td>{!user_email!}</td>
+        <td width='100'>{!user_email!}</td>
         <td><input type='text' name='email' size='30'/>{printMsg key='email'}</td>
       </tr>
       {gui->EndForm title=!pwd_send! noreset=true align='center'}
@@ -61,7 +61,7 @@
     jQuery('#ft-forgot-password-form').unbind('submit');
     jQuery('#ft-forgot-password-form').validate({
            	rules: {
-    			email 	: 	{ required : true, email :true },
+    			email 	: 	{ required : true, email :true }
     		},
     		errorClass: "form-error",
     		success: "form-valid",
@@ -71,6 +71,9 @@
     		 	else
     		   		error.insertAfter(element);
     		},
+    invalidHandler: function(form, validator) {
+       $('#submit').attr("disabled",false);
+    },
 
       submitHandler: function(form) {
         jQuery(form).ajaxSubmit({

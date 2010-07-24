@@ -63,7 +63,7 @@
     </td>
   </tr>
 </table>
-      <form action=".\index.php">
+      <form method='post' action='index.php'>
         <input name="go_home" value="{!order_more_tickets!}" type="submit">
       </form>
 

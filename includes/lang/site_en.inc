@@ -1,10 +1,10 @@
 <?php
 /*
 
-  Please add new defines only at the bottom of the file. This makes it easier for translators to 
+  Please add new defines only at the bottom of the file. This makes it easier for translators to
   find new defines.
 
-  Thanks 
+  Thanks
 
 */
 
@@ -743,7 +743,7 @@ define("handling_update_title","Modify the Payment Type");
 		define("www", "Webshop");
 		define("sp","POS");
 	define("handling_alt","Alt Handling Method");
-		define("handling_no_alt","None");
+		define("handling_no_alt","Hide");
 	define("handling_alt_only","Only Alt Handling Method");
 	define("handling_expires_min","Minutes until OH Cancels for<br> Non-Payment (0 = Never)");
 	define("handling_fee_fix","Fee Fixed");
@@ -1412,4 +1412,5 @@ define('pub__failure','pub__failure');
 define('export_entrant_withseats','Export with seatsnumbers');
 
 define('mollie_status_canceled','You have canceled the order while in iDeal');
+define('always_show_handling','Show always');
 ?>

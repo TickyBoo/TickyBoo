@@ -37,28 +37,28 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
 	global $_SHOP;
 
   if ($repeat) {
-    $from='FROM Handling';
-    $where="WHERE 1=1 ";
 
-  	if($params['event_date']){
-  		$use_alt=check_event($params['event_date']);
-  	}
-  	if(!$params['handling_id']){
+    $use_alt=($params['event_date'])?check_event($params['event_date']):false;
+   	if(!$params['handling_id']){
 	   	if(!$use_alt){
-	   		$where .= " AND handling_alt_only='No'";
+	   		$where .= " AND h.handling_alt_only='No'";
+        if($_SHOP->shopconfig_restime > 0 && !$params['www']){
+          $where .= " OR h.handling_id = 1";
+        }
+
+  		}else{
+
+  			$where .= " AND ((select count(*) from Handling hh where hh.handling_alt = h.handling_id) > 0)";
   		}
-  		if($use_alt){
-  			$where .= " AND handling_alt <= 3";
-  		}
-  	}
+  	} else {
+     $where .= " and h.handling_id="._esc((int)$params['handling_id']);
+    }
+
 
     if($params['order']){
       $order_by="order by {$params['order']}";
     }
 
-    if($params['handling_id']){
-     $where .= " and handling_id="._esc((int)$params['handling_id']);
-    }
 
     if($params['sp']){
      $where .= " and handling_sale_mode LIKE '%sp%'";
@@ -69,13 +69,13 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
     }
 
     // We use the reserve button in the shop.
-    if($_SHOP->shopconfig_restime > 0 && !$params['www']){
-      $where .= " OR handling_id = 1";
-    }
 
     $limit= ($params['limit'])?'limit '.$params['limit']:'';
 
-    $query="select * $from $where $order_by $limit";
+    $query="select * FROM Handling h
+            WHERE 1=1
+            $where
+            $order_by $limit";
 
     $res=ShopDB::query($query);
 

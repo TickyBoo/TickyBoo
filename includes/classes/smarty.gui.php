@@ -219,7 +219,7 @@ class Gui_smarty {
     $noreset  = is($params['noreset'], false);
     $onclick  = is($params['onclick'],'');
     $return = "<tr class='$class' ><td colspan='2' style='text-align:{$align};'>\n".
-              "<input type='submit' name='$name' value='{$title}'  style='float:none;' >";
+              "<input type='submit' name='$name'  id='$name' value='{$title}'  style='float:none;' >";
     if (!$noreset) {
       $return .= "&nbsp; <input type='reset' name='reset' value='" . con('gui_reset','reset') . "' >\n";
     }

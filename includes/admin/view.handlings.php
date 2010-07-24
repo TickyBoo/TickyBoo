@@ -126,16 +126,20 @@ class HandlingView extends AdminView{
           <input type='checkbox' name='sale_mode[www]' value='www' $chk_www> ".con('www')."&nbsp;
           <input type='checkbox' name='sale_mode[sp]' value='sp' $chk_sp> ".con('sp')."&nbsp;
   			</td></tr>";
+  		$this->print_input('handling_expires_min',$data,$err,10);
 
+      echo "<tr ><td colspan='2' class='admin_name'>" . con('handling_alt_settings') ."</td></tr>";
 
   		//This is for the alt payments if nothing is slected alt wont be used when close to an event.
+      $data['handling_alt'] = is($data['handling_alt'],$data['handling_id']);
       $this->print_select_assoc('handling_alt',$data,$err,
-             Handling::getHandlings(con('handling_no_alt')));
+             Handling::getHandlings(con('handling_no_alt'),$data['handling_id']));
 
   		//This to ask if the handling is alturnative only this could be an auto proccess but then you would only be
   		//able to use the handling when close to the event.
       $this->print_select_assoc('handling_alt_only',$data,$err,array('No'=>'no','Yes'=>'yes'));
-  		$this->print_input('handling_expires_min',$data,$err,10);
+
+      echo "<tr ><td colspan='2' class='admin_name'>" . con('handling_fee_settings') ."</td></tr>";
   		$this->print_input('handling_fee_fix',$data,$err,5,10);
   		$this->print_input('handling_fee_percent',$data,$err,5,10);
 
@@ -143,17 +147,21 @@ class HandlingView extends AdminView{
 
   		$temps=explode(",",$data['handling_email_template']);
   		foreach($temps as $temp){
+
   			$t=explode("=",$temp);
   			$data["handling_email_template_{$t[0]}"]=$t[1];
   		}
 
+      echo "<tr ><td colspan='2' class='admin_name'>" . con('hanging_pdf_settings') ."</td></tr>";
+  		$this->print_select_tpl('handling_pdf_template',"'pdf2'",$data,$err);
+  		$this->print_select_tpl('handling_pdf_ticket_template',"'pdf2'",$data,$err);
+      $this->print_select_assoc('handling_only_manual_send',$data,$err,array('No'=>'no','Yes'=>'yes'));
+
+      echo "<tr ><td colspan='2' class='admin_name'>" . con('hanging_email_settings') ."</td></tr>";
   		$this->print_select_tpl('handling_email_template_ord',"'email','swift'",$data,$err, true);
   		$this->print_select_tpl('handling_email_template_payed',"'email','swift'",$data,$err, true);
       $this->print_select_tpl('handling_email_template_send',"'email','swift'",$data,$err, true);
 
-  		$this->print_select_tpl('handling_pdf_template',"'pdf2'",$data,$err);
-  		$this->print_select_tpl('handling_pdf_ticket_template',"'pdf2'",$data,$err);
-      $this->print_select_assoc('handling_only_manual_send',$data,$err,array('No'=>'no','Yes'=>'yes'));
   //		$this->print_paper_format('pdf_paper',$data,$err);
 
 			$this->print_large_area('handling_text_payment',$data,$err,3,80,'');

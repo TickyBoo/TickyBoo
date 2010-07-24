@@ -597,7 +597,11 @@ class OrderView extends AdminView{
     }
   }
 
- function link ($action, $order_id, $img, $confirm=FALSE, $con_msg='',$param=null, $hide=false){
+ function link ($action, $order_id, $img, $confirm=FALSE, $con_msg='',$param=null, $hide=false, $config=false){
+   if (!is_array($config)) $config = array();
+   $config['image']= $img;
+   $config['disable'] = $hide;
+
    if($confirm){
      $param['action1']=$action;
      $param['order_id']=$order_id;
@@ -606,13 +610,9 @@ class OrderView extends AdminView{
        $psep="&";
      }
 
-     return $this->show_button("javascript:if(confirm(\"".con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}",$action , 2,
-                              array('image'=> $img,
-                                    'disable'=> $hide));
+     return $this->show_button("javascript:if(confirm(\"".con($con_msg)."\")){location.href=\"".$_SERVER['PHP_SELF']."?$par\";}",$action , 2,$config);
    }
-   return $this->show_button($_SERVER['PHP_SELF']."?action=$action&order_id=$order_id",$action , 2,
-                            array('image'=> $img,
-                                  'disable'=> $hide));
+   return $this->show_button($_SERVER['PHP_SELF']."?action=$action&order_id=$order_id",$action , 2,$config);
  }
 
   function _order_status_color($row){
@@ -735,7 +735,7 @@ class OrderView extends AdminView{
       $com["details"]=$this->link("details",$order["order_id"],"view.png",false,'',null, !$list);
     }
 
-    $com["print"]=$this->link("print",$order["order_id"],"printer.gif",false,'',null, $hide );
+    $com["print"]=$this->link("print",$order["order_id"],"printer.gif",false,'',null, $hide ,array('target'=>'pdfdoc'));
 
     $com["ord"]=$this->link("set_status_ord",$order["order_id"],"ord.png",TRUE,con('change_status_to_ord'),$_GET, $list);
     if ($order['order_shipment_status']!=='send') {

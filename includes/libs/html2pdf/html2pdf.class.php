@@ -130,8 +130,8 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			// initialisations diverses
 			$this->setTestTdInOnePage(true);
-			$this->setTestIsImage(true);
-			$this->setTestIsDeprecated(true);
+			$this->setTestIsImage(false);
+			$this->setTestIsDeprecated(false);
 			$this->setDefaultFont(null);
 
 			// initialisation du parsing
@@ -1540,7 +1540,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				if (isset($param['moveLeft']))	$this->style->value['margin']['l']	+= $param['moveLeft'];
 				if (isset($param['moveDown']))	$this->style->value['margin']['b']	+= $param['moveDown'];
 			}
-			
+
 			$align_object = null;
 			if ($this->style->value['margin-auto']) $align_object = 'center';
 
@@ -1760,15 +1760,15 @@ if (!defined('__CLASS_HTML2PDF__'))
 		}
 		protected function o_BLOCKQUOTE($param) { return $this->o_DIV($param, 'blockquote'); }
 		protected function o_LEGEND($param) { return $this->o_DIV($param, 'legend'); }
-		
+
 		/**
 		* balise : FIELDSET
 		* mode : OUVERTURE
 		* ecrite par Pavel Kochman
-		* 
+		*
 		* @param	array	paramètres de l'élément de parsing
 		* @return	null
-		*/	
+		*/
 		protected function o_FIELDSET($param)
 		{
 
@@ -1794,7 +1794,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 					{
 						$todo = $sub->parsing->code[$sub->parse_pos];
 						$sub->loadAction($todo);
-						
+
 						if ($todo['name'] == 'legend' && $todo['close'])
 							break;
 					}
@@ -1803,9 +1803,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 					$this->destroySubHTML($sub);
 
 					$move = $this->style->value['padding']['t'] + $this->style->value['border']['t']['width'] + 0.03;
-					
+
 					$param['moveTop'] = $legendH / 2;
-					
+
 					$this->parsing->code[$legend_open_pos]['param']['moveTop'] = - ($legendH / 2 + $move);
 					$this->parsing->code[$legend_open_pos]['param']['moveLeft'] = 2 - $this->style->value['border']['l']['width'] - $this->style->value['padding']['l'];
 					$this->parsing->code[$legend_open_pos]['param']['moveDown'] = $move;
@@ -1813,7 +1813,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				}
 			}
 			$this->style->load();
-			
+
 			return $this->o_DIV($param, 'fieldset');
 		}
 
@@ -1851,7 +1851,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			$y = $this->style->value['y'];
 			$w = $this->style->value['width']+$marge['l']+$marge['r']+$this->style->value['margin']['r'];
 			$h = $this->style->value['height']+$marge['t']+$marge['b']+$this->style->value['margin']['b'];
-			
+
 			switch($this->style->value['rotate'])
 			{
 				case 90:
@@ -1978,9 +1978,9 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			if ($this->testIsDeprecated && (isset($param['size']) || isset($param['noborder'])))
 				throw new HTML2PDF_exception(9, array('QRCODE', 'size, noborder'));
-			
+
 			if ($this->DEBUG_actif) $this->DEBUG_add('QRCODE', true);
-			
+
 			if (!isset($param['value']))						$param['value']	= '';
 			if (!isset($param['ec']))							$param['ec']	= 'H';
 			if (!isset($param['style']['color']))				$param['style']['color'] = '#000000';
@@ -2040,7 +2040,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 
 			return true;
 		}
-		
+
 		/**
 		* balise : QRCODE
 		* mode : FERMETURE
@@ -2312,7 +2312,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			{
 				if ($this->testIsImage)
 					throw new HTML2PDF_exception(6, $src);
-				
+
 				$src = null;
 				$infos = array(16, 16);
 			}
@@ -3333,14 +3333,14 @@ if (!defined('__CLASS_HTML2PDF__'))
 			// hauteur du H1
 			$this->maxH+= $this->style->value['margin']['b'];
 			$h = max($this->maxH, $this->style->getLineHeight());
-			
+
 			$this->style->load();
 			$this->style->FontSet();
 
 			// saut de ligne et initialisation de la hauteur
 			$this->makeBR($h);
 			$this->maxH = 0;
-			
+
 			return true;
 		}
 		protected function c_H2($param)	{ return $this->c_H1($param); }
@@ -4661,7 +4661,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 					if (!$return) $this->style->value['width']+= $this->style->value['border']['l']['width'];
 					$this->style->value['border']['l'] = $this->style->readBorder('none');
 			}
-			}	
+			}
 
 			$marge = array();
 			$marge['t'] = $this->style->value['padding']['t']+0.5*HTML2PDF::$TABLES[$param['num']]['cellspacing']+$this->style->value['border']['t']['width'];
@@ -4788,7 +4788,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			if ($this->sub_part)
 			{
 				if ($this->testTDin1page && $this->sub_html->pdf->getPage()>1)
-					throw new HTML2PDF_exception(7); 
+					throw new HTML2PDF_exception(7);
 
 				// dimentions de cette case
 				$w0 = $this->sub_html->maxX + $marge['l'] + $marge['r'];
@@ -6028,7 +6028,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 			return HTML2PDF::$TEXTES[$key];
 		}
 	}
-	
+
 	class HTML2PDF_exception extends exception
 	{
 		protected $tag = null;
@@ -6047,13 +6047,13 @@ if (!defined('__CLASS_HTML2PDF__'))
 		{
 			// creation du message d'erreur
 			$msg = '';
-			
+
 			switch($err)
 			{
 				case 1:
 					$msg = (HTML2PDF::textGET('err01'));
 					$msg = str_replace('[[OTHER]]', $other, $msg);
-					$this->tag = $other; 
+					$this->tag = $other;
 					break;
 
 				case 2:
@@ -6066,7 +6066,7 @@ if (!defined('__CLASS_HTML2PDF__'))
 				case 3:
 					$msg = (HTML2PDF::textGET('err03'));
 					$msg = str_replace('[[OTHER]]', $other, $msg);
-					$this->tag = $other; 
+					$this->tag = $other;
 					break;
 
 				case 4:
@@ -6092,24 +6092,24 @@ if (!defined('__CLASS_HTML2PDF__'))
 				case 8:
 					$msg = (HTML2PDF::textGET('err08'));
 					$msg = str_replace('[[OTHER]]', $other, $msg);
-					$this->tag = $other; 
+					$this->tag = $other;
 					break;
-					
+
 				case 9:
 					$msg = (HTML2PDF::textGET('err09'));
-					$msg = str_replace('[[OTHER_0]]', $other[0], $msg); 
-					$msg = str_replace('[[OTHER_1]]', $other[1], $msg); 
-					$this->tag = $other[0]; 
+					$msg = str_replace('[[OTHER_0]]', $other[0], $msg);
+					$msg = str_replace('[[OTHER_1]]', $other[1], $msg);
+					$this->tag = $other[0];
 					break;
 			}
-			
+
 			// creation du message HTML
 			$this->message_html = '<span style="color: #AA0000; font-weight: bold;">'.(HTML2PDF::textGET('txt01')).$err.'</span><br>';
 			$this->message_html.= (HTML2PDF::textGET('txt02')).' '.$this->file.'<br>';
 			$this->message_html.= (HTML2PDF::textGET('txt03')).' '.$this->line.'<br>';
 			$this->message_html.= '<br>';
 			$this->message_html.= $msg;
-			
+
 			// creation du message classique
 			$msg = HTML2PDF::textGET('txt01').$err.' : '.strip_tags($msg);
 
@@ -6119,10 +6119,10 @@ if (!defined('__CLASS_HTML2PDF__'))
 				$this->html = $html;
 				$msg.= ' HTML : ...'.trim($html).'...';
 		}
-		
+
 			parent::__construct($msg, $err);
 		}
-		
+
 		public function __toString()	{ return $this->message_html; }
 		public function getTAG()	{ return $this->tag; }
 		public function getHTML()	{ return $this->html; }

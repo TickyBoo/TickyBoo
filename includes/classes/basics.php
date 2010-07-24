@@ -117,7 +117,7 @@ function writeLog($what, $where = FT_DEBUG){
      $what = date('d.m.Y H:i ') ."--------------------------------\n". $what;
      $_SHOP->hasloged[$where] =1;
    }
-   $h = fopen($_SHOP->tmp_dir . $logname . '.log', 'a');
+   $h = fopen($_SHOP->tmp_dir . $logname.'.'.date('Y-m-d') . '.log', 'a');
    if ($h) {
       fwrite($h,utf8_encode($what . "\n"));
       fclose($h);
@@ -346,13 +346,11 @@ function check_event($event_date){
   require_once("classes/class.time.php");
 
   global $_SHOP;
-  if($_SHOP->shopconfig_posttocollect>=10){
+  if($_SHOP->shopconfig_posttocollect>0){
     $time=Time::StringToTime($event_date);
     $remain=Time::countdown($time);
-    //if there is less than 10 mins till the event needs to go to alt payment return a 1
-    // so alt payment should be used.
-    //echo $remain["justmins"]."-".$this->shopconfig_posttocollect;
-    if($remain["justmins"]<=($_SHOP->shopconfig_posttocollect+10)){
+   // echo $remain["justmins"]."-".$_SHOP->shopconfig_posttocollect;
+    if($remain["justmins"]<=($_SHOP->shopconfig_posttocollect)){
       return 1;
     }else{
       return 0;
@@ -543,11 +541,12 @@ function orphanCheck(){
     trace("\n\nOrphan Check Dump: ".$text);
     if ($_SHOP->TraceOrphan <> md5($text) || stripos($_SHOP->trace_on,'ALL') !== false) {
       $content = date('c',time()).' : '.$_SHOP->trace_subject."\n". $_SHOP->tracelog."\n";
-      file_put_contents($_SHOP->trace_dir.$_SHOP->trace_name,$content ,FILE_APPEND);
+      $file = $_SHOP->trace_dir.'trace'.'.'.date('Y-m-d') . '.log';
+      file_put_contents($file, $content ,FILE_APPEND);
 
       if ($_SHOP->TraceOrphan <> md5($text) && stripos($_SHOP->trace_on, 'SEND') !== false) {
-        SendMail(file_get_contents($_SHOP->trace_dir.$_SHOP->trace_name), $_SHOP->trace_subject ,'errorlog@fusionticket.com');
-        unlink($_SHOP->trace_dir.$_SHOP->trace_name);
+        SendMail(file_get_contents($file), $_SHOP->trace_subject ,'errorlog@fusionticket.com');
+        unlink($file);
       }
     }
   }

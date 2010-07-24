@@ -447,10 +447,12 @@ class Handling Extends Model {
     return $namedTypes;
   }
 
-  function getHandlings ($include =''){
-		$sqli="SELECT handling_id, handling_payment, handling_shipment FROM `Handling` WHERE handling_id!='1'";
+  function getHandlings ($include ='', $handle_id=0){
+		$sqli="SELECT handling_id, handling_payment, handling_shipment FROM `Handling` WHERE handling_id not in ('1','{$handle_id}')";
 		if(!$result=ShopDB::query($sqli)){echo("Error"); return;}
 		$options= array();
+
+    $options["{$handle_id}"] = con('always_show_handling');
     if ($include)
 			$options["1"] = $include;
 

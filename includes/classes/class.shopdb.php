@@ -566,7 +566,7 @@ class ShopDB {
     static function dblogging($debug) {
         global $_SHOP;
         trace($debug);
-        $handle=@fopen($_SHOP->tmp_dir."shopdb.log","a");
+        $handle=@fopen($_SHOP->tmp_dir."shopdb.".date('Y-m-d') .".log","a");
         @fwrite($handle, date('c',time()).' '. $debug."\n");
         @fclose($handle);
     }

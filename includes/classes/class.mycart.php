@@ -103,7 +103,7 @@ class Cart {
   function min_date (){
     $min_date=true;
     foreach($this->event_items as $event){
-      $min_date=min($event->event_date,$min_date);
+      $min_date=min($event->event_date.' '.$event->event_time, $min_date);
     }
     return $min_date;
   }

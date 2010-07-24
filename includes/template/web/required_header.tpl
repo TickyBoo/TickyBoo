@@ -6,9 +6,9 @@
   {minify type='css' files='css/flick/jquery-ui-1.8.1.custom.css,css/jquery.tooltip.css'}
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-   
+
   {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery.ui.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal-1.3.5.js,jquery.countdown.pack.js,jquery.tooltip.min.js'}
-   
+
   {minify type='js' files='scripts/shop.jquery.forms.js'}
 
   <script type="text/javascript">
@@ -22,15 +22,18 @@
 
   {literal}
   <style type="text/css">
-    #simplemodal-overlay {background-color:#ffffff;}
-    #simplemodal-container {background-color:#ffffff; border:2px solid #004088; padding:12px;}
-    #simplemodal-container a.modalCloseImg {
-      background:url(images/unchecked.gif) no-repeat; /* adjust url as required */
-      width:25px; height:29px;
-      display:inline; z-index:3200;
-      position:absolute; top:-15px;
-      right:-18px; cursor:pointer;
-    }
+    #basic-modal-content {display:none;}
+
+    /* Overlay */
+    #simplemodal-overlay {background-color:#ffffff; cursor:wait;}
+
+    /* Container */
+    #simplemodal-container { background-color:#ffffff; border:4px solid #004088; padding:12px;}
+    #simplemodal-container code {background:#ffffff; border-left:3px solid #65B43D; color:#bbb; display:block; margin-bottom:12px; padding:4px 6px 6px;}
+    #simplemodal-container a {color:#ddd;}
+    #simplemodal-container a.modalCloseImg {background:url(images/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+
+    #simplemodal-container #basic-modal-content {padding:8px;}
   </style>
 
   <script type="text/javascript">

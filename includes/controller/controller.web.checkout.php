@@ -60,8 +60,7 @@ class ctrlWebCheckout extends ctrlWebShop {
         	 $action !== 'login' ) {
         $this->smarty->display('user_register.tpl');
      	} elseif (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
-
-     	  $this->smarty->display($fond . '.tpl');
+        if (is_string($fond))  $this->smarty->display($fond . '.tpl');
       } else {
         echo "!!did is not good!!";
       }
@@ -98,12 +97,11 @@ class ctrlWebCheckout extends ctrlWebShop {
     if (isset($_POST['submit_update'])) {
       if ($this->__User->update_f($_POST, $errors)) {
         $array = array('saved'=>true,'msg'=>con('user_details_saved_successfully'));
-        echo json_encode($array);
-        myExit();
+      } else {
+        $array = array('saved'=>false,'msg'=>printMsg('__Errors__', null, false).printMsg('__Warning__', null, false));
       }
-      $array = array('saved'=>false,'msg'=>printMsg('__Errors__', null, false).printMsg('__Warning__', null, false));
       echo json_encode($array);
-      myExit();
+      return true;
     } else {
       $this->assign('user_data',   $this->__User->asarray());
     }
