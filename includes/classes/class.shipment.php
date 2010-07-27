@@ -43,7 +43,7 @@ class Shipment {
      "ordered"=>array("opt","opt"),
      "reserved"=>array("opt","opt"),
      "paid"=>array("opt","opt"),
-     "unpaid"=>array("opt","opt"),     
+     "unpaid"=>array("opt","opt"),
      "sent"=>array("opt","opt"),
      "unsent"=>array("opt","opt"),
      "cancelled"=>array("opt","opt")
@@ -68,9 +68,9 @@ class Shipment {
 	  		return false;
 		}
 	}
-  
+
   public function getEmailOptions(){
-    
+
   }
 
 	public function admin_view ( ){}
@@ -94,11 +94,11 @@ class Shipment {
 	function on_handle($order, $new_status, $old_status, $field){
     return true;
   }
-  
+
 	function on_order_delete($order_id){
     return true;
   }
-  
+
   function on_confirm(&$order){return '';}
 
   function on_submit(&$order){}
@@ -108,7 +108,7 @@ class Shipment {
                   'transaction_id'=>false,
                   'response'=> '');
   }
-  
+
   function on_notify(&$order){}
 
   function on_check(&$order){ return false;}
@@ -118,10 +118,5 @@ class Shipment {
   public function encodeCallback(){return "";}
 
   public function decodeCallback(){return true;}
-
-  function dyn_load($name){
-    $res = include_once($name);
-    return $res;
-  }
 }
 ?>

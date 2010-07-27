@@ -59,7 +59,7 @@ class Order Extends Model {
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id','order_order_set',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '~order_date_expire', 'order_responce', 'order_responce_date',
-                                'order_note', 'order_discount_price', 'order_discount_promo', 'order_discount_id'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
+                                'order_note', 'order_discount_price', 'order_discount_promo', 'order_discount_id', 'order_lang'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
   public $places=array();
   public $tickets = array();
   public $no_fee = false;
@@ -195,7 +195,9 @@ class Order Extends Model {
     if($this->order_id){
       return addWarning('order_already_created'); //already saved
     }
-
+    if (!isset($this->order_lang)) {
+      $this->order_lang = $_SHOP->lang;
+    }
     $amount=$this->amount();
     $this->order_discount_price = 0.0;
     if (isset($this->discount) and !$this->no_cost) {
@@ -923,7 +925,7 @@ class Order Extends Model {
     $md5x = base_convert(md5($md5),16,36);
     $code = base64_encode(base_convert(time(),10,36).'_'. base_convert($this->order_id,10,36).'_'. $md5x);
     if ($loging) {
-    ShopDB::dblogging('encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36).' -> '.urlencode ($code));
+      $_SESSION['LAST_SOR'] = 'Encode:'.$code.'|'.$md5.'|'.base_convert(md5($md5),16,36).' -> '.urlencode ($code)."/n";
     }
 
     return $item. strtr($code, '+/=', '-_~'); //  }
@@ -948,6 +950,7 @@ class Order Extends Model {
    * $order (Tobject) : All is good!
    */
   static function DecodeSecureCode( $codestr ='', $loging=false) {
+    $error ='';
     If (empty($codestr) and isset($_REQUEST['sor'])) $codestr = $_REQUEST['sor'];
    //
     If (!empty($codestr)) {
@@ -956,9 +959,9 @@ class Order Extends Model {
       $code[0] = base_convert($code[0],36,10);
       $code[1] = base_convert($code[1],36,10);
       if ($loging) {
-        ShopDB::dblogging('Decode:'.$codestr.' -> '.$text);
-        ShopDB::dblogging('Code:'.print_r( $code, true));
-        ShopDB::dblogging('MD5.a:'.$code[2]);
+        $_SESSION['LAST_SOR'] .= ('Decode:'.$codestr.' -> '.$text)."/n";
+        $_SESSION['LAST_SOR'] .= ('Code:'.print_r( $code, true)."/n");
+        $_SESSION['LAST_SOR'] .= ('MD5.a:'.$code[2])."/n";
       }
 
       if (!is_object($order)) $order = self::loadExt($code[1], true);
@@ -968,10 +971,10 @@ class Order Extends Model {
              $order->order_handling_id .'~'. $order->order_total_price;
       $md5 = base_convert(md5($md5),16,36);
       if ($loging) {
-        ShopDB::dblogging('MD5.b:'.$md5);
+        $_SESSION['LAST_SOR'] .= ('MD5.b:'.$md5)."/n";
 
-        ShopDB::dblogging('code[2] <> $md5 = '.(($code[2] <> $md5)?'True':'false'));
-        ShopDB::dblogging('strcmp (code[2], $md5) = '.strcmp($code[2], $md5));
+        $_SESSION['LAST_SOR'] .= ('code[2] <> $md5 = '.(($code[2] <> $md5)?'True':'false'))."/n";
+        $_SESSION['LAST_SOR'] .= ('strcmp (code[2], $md5) = '.strcmp($code[2], $md5))."/n";
       }
 //      if ($code[0] > time()) return -2;
       if ($code[1] <> $order->order_id) return -3;

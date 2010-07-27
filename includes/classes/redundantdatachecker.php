@@ -276,7 +276,7 @@ class orphans {
        'Category~Total'=>'Reset the category statics from seat count',
        'Category~Free'=>'Reset the category statics from seat count',
        'Discount~event_id'=>'Remove this Discount, event is already removed',
-       'Event_~Total'=>'Reset the event statics from seat count',
+       'Event~Total'=>'Reset the event statics from seat count',
        'Event~Free'=>'Reset the event statics from seat count',
        'Event~group_id'=>'Clear the link to this removed eventgroup',
        'Event~zeros'=>'Clear all zero identifiers in the event table',

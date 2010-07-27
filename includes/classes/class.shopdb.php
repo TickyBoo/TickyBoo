@@ -91,10 +91,7 @@ class ShopDB {
             //Set Session Time Zone.
             //This does not work:
             ShopDB::query("SET time_zone = '".date('P')."'");
-            //2009-10-24T13:17:46+02:00 [Error: 1298] SET time_zone = '-8'
-            //2009-10-24T13:17:46+02:00 Unknown or incorrect time zone: '-8'
-
-            //Time Zone should be "SET time_zone = -8" or "SET time_zone = 'London/Europe' ";
+            ShopDB::query("SET NAMES utf8");
 
             return true;
           } elseif ($canDie) {

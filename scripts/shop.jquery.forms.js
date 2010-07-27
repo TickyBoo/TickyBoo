@@ -47,15 +47,27 @@ $(window).load(function(){
 			user_address	:	{ required : true },
 			user_zip 	:	{ required : true },
 			user_city 	: 	{ required : true },
-			user_phone 	: 	{ digits : true, minlength : 9, maxlength : 14 }, //We support addtional validation methods ie. phoneUS:true , check jquery.validation.add-methods.js
-			user_fax 	: 	{ digits : true, minlength : 9, maxlength : 14 },
+			user_phone 	: 	{ phoneEU : true }, //We support addtional validation methods ie. phoneUS:true , check jquery.validation.add-methods.js
+			user_fax 	: 	{ phoneEU : true },
 			user_email 	: 	{ required : true, email :true },
 			user_email2 	: 	{ required : true, email :true, equalTo : "#email" },
 			password1 	: 	{ required : true, minlength : 6 },
 			password2 	: 	{ required : true, minlength : 6, equalTo: "#password" },
-			user_nospam :	{ required : true },
-			check_condition	:	{ required : true}
-		},
+			check_condition	:	{ required : true},
+			user_nospam: {
+				required: true,
+				remote: {
+          url: "nospam.php",
+          type: "post",
+          data: {
+            name: "user_nospam",
+            check: function() {
+              return $("#user_nospam").val();
+            }
+          }
+  			}
+			}
+ 		},
 		messages : {
 			user_firstname : { required : lang.required },
 			user_lastname : { required : lang.required	},

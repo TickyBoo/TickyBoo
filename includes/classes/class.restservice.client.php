@@ -63,29 +63,29 @@ class RestServiceClient {
 
 	public function excuteRequest() {
     global $_SHOP;
-    
+
     $this->siteUrl = $_SHOP->root;
     $this->siteVersion = CURRENT_VERSION;
-   
+
 		//work ok the URI we are calling
-		$uri = $this->url; 
+		$uri = $this->url;
     $postData = $this->getPostData();
-    
+
     //set timeout so that you wont be waiting forever if our server is under heavy load.
     $ctxOpt = array(
       'http' => array(
         'method' => 'POST',
-        'header'  => "Content-type: application/x-www-form-urlencoded\r\n". 
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n".
           "Content-Length: " . strlen($postData) . "\r\n",
         'content' => $postData,
         'timeout' => 2
         )
       );
     if(!empty($_SHOP->shopconfig_proxyaddress) && !empty($_SHOP->shopconfig_proxyport)){
-      $ctxOpt['http']['proxy'] = "tcp://".$_SHOP->shopconfig_proxyaddress.":".$_SHOP->shopconfig_proxyport; 
+      $ctxOpt['http']['proxy'] = "tcp://".$_SHOP->shopconfig_proxyaddress.":".$_SHOP->shopconfig_proxyport;
     }
     $ctx = stream_context_create($ctxOpt);
-    
+
 		//get the URI trapping errors
 		$result = @file_get_contents($uri,false,$ctx);
 
@@ -94,7 +94,7 @@ class RestServiceClient {
 
 		//if we didn't get a '200 OK' then thow an Exception
 		if ($httpStatusCode != 200) {
-			throw new Exception('HTTP/REST error: ' . $httpMessage, $httpStatusCode);
+			throw new Exception('HTTP/REST error: ' . $httpMessage. $httpStatusCode);
 		} else {
 			$this->response = $result;
 		}
@@ -132,18 +132,18 @@ class RestServiceClient {
 
 		return '?' . $queryString;
 	}
-  
+
   /**
    * @author Christopher Jenkins
    * used for posting data
    */
   protected function getPostData(){
     $queryArray = array();
-    
+
     foreach ($this->data as $var => $val) {
       $queryArray["{$var}"] = $val;
 		}
-    
+
     return http_build_query($queryArray,null,"&");
   }
 }

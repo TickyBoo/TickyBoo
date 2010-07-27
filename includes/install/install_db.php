@@ -327,7 +327,8 @@ $tbls['Order']['fields'] = array(
   'order_note' => "text",
   'order_lock' => "enum('0','1') NOT NULL DEFAULT '0'",
   'order_lock_time' => "timestamp NULL DEFAULT '0000-00-00 00:00:00'",
-  'order_lock_admin_id' => "int(11) DEFAULT NULL");
+  'order_lock_admin_id' => "int(11) DEFAULT NULL",
+  'order_lang' => "varchar(2) DEFAULT NULL");
 
 $tbls['Order']['key'] = array(
   "PRIMARY KEY (`order_id`)",
@@ -468,7 +469,7 @@ $tbls['PlaceMapZone']['remove'] = array ('pmz_organizer_id')   ;
 //$tbls['PlaceMapZone']['AUTO_INCREMENT'] = 51;
 
 $tbls['Seat']['fields'] = array(
-  'seat_id' => " int(11) NOT NULL AUTO_INCREMENT",
+  'seat_id' => " int(11) unsigned NOT NULL AUTO_INCREMENT",
   'seat_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'seat_event_id' => " int(11) NOT NULL DEFAULT '0'",
   'seat_category_id' => " int(11) NOT NULL DEFAULT '0'",

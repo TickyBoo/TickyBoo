@@ -146,12 +146,16 @@ class install_execute {
   }
 
   static function fillConfig($array, $suffix, $eq=' = ',$isarray=false){
-    $arr_type = array('langs_names','valutas','event_group_type_enum','event_type_enum', 'langs');
+    $arr_type = array('langs_names','valutas','event_group_type_enum','event_type_enum');
     $config  =($isarray!==2)?'':array();
     foreach ($array as $key =>$value) {
-      if (is_int($key)) $key= '';
-      if ($isarray===1) { $key = "['$key']"; }
-      if ($isarray===2) { $key = "'$key'"; }
+      if (is_int($key)){
+        $key= '';
+        if ($isarray===1) { $key = "[]"; }
+      } else {
+        if ($isarray===1) { $key = "['$key']"; }
+        if ($isarray===2) { $key = "'$key'"; }
+      }
       if (is_array($value)) {
          $x = (!$isarray and !in_array($key,$arr_type ))?2:(($isarray)?$isarray:1);
          if ($x==1) {
@@ -159,7 +163,7 @@ class install_execute {
          } else {
            $config .= "{$suffix}{$key} {$eq} array(";
            $item    = self::fillConfig($value, '', '=>',  $x);
-           $config .= implode(",\n          " ,$item );
+           $config .= implode(", " ,$item );
            $config .= ");\n";
          }
          continue;
@@ -170,10 +174,15 @@ class install_execute {
       } elseif(is_string($value)) {
         $value = _esc($value);
       }
-      If ($isarray!==2) {
-        $config .= "{$suffix}{$key} {$eq} {$value};\n";
+      If ($isarray==2) {
+        if (strlen(trim("{$suffix}{$key}"))==0) {
+          $config[] = "{$value}";
+        } else
+          $config[] = "{$suffix}{$key} {$eq} {$value}";
+      } elseif (strlen(trim("{$suffix}{$key}"))==0) {
+        $config .= "{$value}";
       } else
-        $config[] = "{$suffix}{$key} {$eq} {$value}";
+        $config .= "{$suffix}{$key} {$eq} {$value};\n";
     }
 
     return $config;

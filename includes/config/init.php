@@ -171,8 +171,10 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 
 //loading language file
-
-  if(isset($_REQUEST['setlang']) ) {
+  if (isset($_SHOP->lang)) {
+    // do noting
+    $_SESSION['_SHOP_LANG']=$_SHOP->lang;
+  } elseif(isset($_REQUEST['setlang']) ) {
 	  if ($lang=$_REQUEST['setlang'] and in_array($lang,$_SHOP->langs)){
   		//  setcookie("lang",$lang,time()+60*60*24*30);
     	$_SHOP->lang=$lang;
@@ -182,9 +184,9 @@ if (!defined('ft_check')) {die('System intrusion ');}
         die;
       }
 	  }
-  }else if(isset($_SESSION['_SHOP_LANG'])){
+  }elseif(isset($_SESSION['_SHOP_LANG'])){
     $_SHOP->lang=$_SESSION['_SHOP_LANG'] ;
-  }else if(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && $_SERVER["HTTP_ACCEPT_LANGUAGE"]){
+  }elseif(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && $_SERVER["HTTP_ACCEPT_LANGUAGE"]){
 		$lpat=implode($_SHOP->langs,"|");
     if(preg_match_all("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res )){
       $newlang = '';

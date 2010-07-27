@@ -87,7 +87,7 @@ class AdminView extends AUIComponent {
       }
   }
 
-  function form_foot($colspan = 2, $backlink='', $submit='save' ) {
+  function form_foot($colspan = 2, $backlink='', $submit='save', $showreset=true ) {
       echo "<tr  class='admin_value' ><td>";
       if ($backlink) {
         echo  $this->show_button($backlink,'admin_list',3);
@@ -95,7 +95,9 @@ class AdminView extends AUIComponent {
       $colspan = $colspan-1;
       echo "&nbsp;</td><td align='right' class='admin_value' colspan='{$colspan}'>";
       echo $this->Show_button('submit',$submit,3);
-      echo $this->Show_button('reset','res',3);
+      if ($showreset) {
+        echo $this->Show_button('reset','res',3);
+      }
       echo "</table></form>\n";
   }
 
@@ -389,7 +391,7 @@ class AdminView extends AUIComponent {
 
     /**
      * AdminView::print_large_area()
-     * 
+     *
      * @param mixed $name
      * @param mixed $data
      * @param mixed $err

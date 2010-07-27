@@ -75,7 +75,7 @@ class EPH_paypal extends payment{
         <input type='hidden' name='amount' value='".sprintf("%01.2F", ($order->order_total_price-$order->order_fee))."'>
         <input type='hidden' name='handling' value='".($order->order_fee)."'>
         <input type='hidden' name='return' value='".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."'>
-        <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."'>
+        <input type='hidden' name='notify_url' value='".$_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."&setlang={$_SHOP->lang}'>
         <input type='hidden' name='cancel_return' value='".$_SHOP->root_secured. 'checkout_cancel.php?'.$order->EncodeSecureCode()."'>
         <input type='hidden' name='currency_code' value='{$_SHOP->organizer_data->organizer_currency}'>
         <input type='hidden' name='undefined_quantity' value='0'>

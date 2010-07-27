@@ -36,6 +36,15 @@
 define('ft_check','shop');
 require_once('includes/classes/basics.php');
 
+session_name('ShopSession');
+session_start();
+
+if (isset($_POST['check'])) {
+  $check = $_SESSION['_NoSpam'][clean($_POST['name'])] == md5(strtoupper ($_POST['check']));
+  echo json_encode($check);
+  exit;
+}
+
 $randomnr = '';
 
 // captcha plaatje met nummer maken - afmetingen kun je aanpassen gebruikte font
@@ -80,8 +89,6 @@ $text = '2346789ABCEFGHKNPRT';
    }
  }
 
-session_name('ShopSession');
-session_start();
 if (!isset($_GET['name'])) {$_GET['name'] ='RandomNr';}
 $_SESSION['_NoSpam'][clean($_GET['name'])] = md5($randomnr);
 

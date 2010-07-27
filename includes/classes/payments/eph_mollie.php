@@ -94,7 +94,7 @@ class eph_mollie extends payment{
     $ideal->setTestmode($this->pm_mollie_test);
 
     $return_url = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode();
-    $report_url = $_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode();
+    $report_url = $_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."&setlang={$_SHOP->lang}";
     if (isset($_POST['bank_id']) and !empty($_POST['bank_id'])) {
      	if ($ideal->createPayment((int) $_POST['bank_id'], (int)($order->order_total_price *100), $order->order_description(), $return_url, $report_url)) 	{
     		/* Hier kunt u de aangemaakte betaling opslaan in uw database, bijv. met het unieke transactie_id

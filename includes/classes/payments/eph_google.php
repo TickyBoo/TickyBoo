@@ -102,7 +102,7 @@ class EPH_google extends Payment{
 			$server_type = "live";
 		}
 
-    $googleCart = new GoogleCart($merchant_id, $merchant_key, $server_type,$currency);
+    $googleCart = new GoogleCart($merchant_id, $merchant_key, $server_type, $currency);
    	$total_count = 1;
    	$googleItem = new GoogleItem($_SHOP->organizer_data->organizer_name,      // Item name
                                $order->order_description(), // Item      description

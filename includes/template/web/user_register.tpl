@@ -87,7 +87,7 @@
           <table cellpadding="0" cellspacing="0" width='400'>
             <tr>
               <td >
-                <input type='text' name='user_nospam' size='10' maxlength="10" value='' >	<sup> &nbsp;{!nospam_info!} </sup>{printMsg key='user_nospam'}
+                <input type='text' name='user_nospam' id='user_nospam' size='10' maxlength="10" value='' >	<sup> &nbsp;{!nospam_info!} </sup>{printMsg key='user_nospam'}
               </td>
               <td align='center'>
                 <img src="nospam.php?name=user_nospam" alt='' border=1>
