@@ -260,9 +260,10 @@ class OrderView extends AdminView{
    * @return prints out order
    */
   function view($order_id){
-    $query="select o.*, u.*, p.user_lastname as kasse_name
+    $query="select o.*, u.*, p.user_lastname as kasse_name, h.*
             from `Order` o left join User u on order_user_id= u.user_id
-                         left join User p on order_owner_id= p.user_id
+                           left join User p on order_owner_id= p.user_id
+                           left join Handling h on order_handling_id= h.handling_id
             where o.order_id="._esc($order_id);
     if(!$order=ShopDB::query_one_row($query)){
       return addWarning('order_not_found');
@@ -299,8 +300,12 @@ class OrderView extends AdminView{
 
     $this->print_field_o('kasse_name',$order);
     $this->print_field('order_status',$order);
+
+    $this->print_field('handling_shipment', con($order['handling_shipment']));
     $this->print_field('order_shipment_status',$order);
+    $this->print_field('handling_payment', con($order['handling_payment']));
     $this->print_field('order_payment_status',$order);
+
     $this->print_field_o('order_payment_id',$order);
     $this->print_field_o('order_responce',con($order['order_responce']));
     $this->print_field_o('order_responce_date',$order);
@@ -403,7 +408,11 @@ class OrderView extends AdminView{
        	   <tr>\n";
          $alt=($alt+1)%2;//
       }
-      echo "</table>\n";
+     	echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+			echo "<input type='hidden' name='action' value='printlog' />\n";
+			echo "<input type='hidden' name='order_id' value='{$order_id}' />\n";
+
+      $this->form_foot(2,null,'export_statuslog', false);
 
     } else { //Note Tab
 
@@ -532,7 +541,11 @@ class OrderView extends AdminView{
 
     }
 
-    if($_GET['action']=='savenote') {
+    if($_POST['action']=='printlog') {
+      $this->printSatusLog($_REQUEST["order_id"]);
+      return $this->view($_REQUEST["order_id"]);
+
+    }elseif($_GET['action']=='savenote') {
       order::save_order_note($_REQUEST["order_id"],$_REQUEST["order_note"]);
       return $this->view($_REQUEST["order_id"]);
 
@@ -757,6 +770,21 @@ class OrderView extends AdminView{
 
     if(empty($com)){$com[]='';}
     return $com;
+  }
+
+  function printSatusLog($order_id) {
+      $query="select *
+              from `order_status` where os_order_id="._esc($order_id)."
+              order by os_id desc " ;
+      if(!$res=ShopDB::query($query)){
+        return addWarning('order_not_found');
+      }
+      $log = '';
+      while($os=shopDB::fetch_assoc($res)){
+        $log .= formatTime($os["os_changed"]).":".nl2br($os["os_description"])."\n";
+      }
+      $file = $_SHOP->trace_dir.'order_'.$order_id.'.'.date('Y-m-d') . '.log';
+      file_put_contents($file, $log);
   }
 
 

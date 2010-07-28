@@ -36,12 +36,11 @@ function smarty_function_placemap($params, $smarty){
 
     $pz = preg_match(strtolower('/no|0|false/'), $params['print_zone']);
     $imagesize = is ($params['imagesize'], 16);
-    return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area'], $imagesize);
+    return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area'], $imagesize, $smarty);
 
 }
 
-function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $imagesize = 16)
-{
+function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $imagesize = 16, $smarty = null) {
     global $_SHOP;
 
     $l_row = ' '.con('place_row').' ';
@@ -95,41 +94,66 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $
 //    print_r($pmp);
    $res .= '
 <style type="text/css">
-.seatmap {
-  margin:0;padding:0;
-  vertical-align:middle;
-  text-align: center;
-   border:2px dashed transparent;
-   width:'.($imagesize).'px;
-   height:'.($imagesize).'px;
-   font-size: '.((int)($imagesize)/1.75).'px;
-}
-.ShiftRight {
-   width:'.($imagesize/2).'px;
-}
+  .pm_seatmap {
+    margin:0;padding:0;
+    vertical-align:middle;
+    text-align: center;
+     border:0px dashed transparent;
 
-.container {display:inline-block;}
-.pm_check {
-  cursor:pointer;
-}
+     width:'.($imagesize).'px;
+     height:'.($imagesize).'px;
+     font-size: '.((int)($imagesize)/1.75).'px;
+  }
+  .pm_seatmap img {
+     border:1px dashed transparent;
+  }
+  .pm_shiftright {
+    margin:0;padding:0;
+    vertical-align:middle;
+    text-align: center;
+     border:0px dashed transparent;
+     width:'.((int)($imagesize/2)).'px;
+     height:'.($imagesize).'px;
+  }
+  .pm_table {margin:5px;}
+  .pm_info{width:100%;}
+  .pm_box{width:600px; background-color:#FFFFFF; padding:10px;}
+  .pm_nosale{background-color:#d2d2d2;width:14px; height:14px;}
 
-.pm_first {
-clear:both;
-}
+  .pm_ruler {}
 
-.pm_check:hover {
-  background-color:#4F07E2;
-  cursor:pointer;
+  .pm_free {background-color:#339900;width:14px; height:14px; border-right:#339900 1px solid;border-bottom:#339900 1px solid;padding:0px;}
 
+  .pm_occupied {background-color:#FF0066;width:14px; height:14px;border-top:#000000 1px solid;border-left:#000000 1px solid;padding:0px;}
 
- </style> ';
+  .pm_none {padding:0px;zoom:1;}
+  .pm_check {
+    cursor:pointer;
+  }
+
+  .pm_first {
+     clear:both;
+  }
+
+  .pm_check:hover {
+    background-color:#4F07E2;
+    cursor:pointer;
+  }
+</style>'."\n";
    $ml[1] = $ml[0] = '';
+   $mr[1] = $mr[0] = '';
     if ($pmp->pmp_shift) {
-      $cspan = "colspan='2' align='right'";
-     // $ml[1] = "<td class='ShiftRight seatmap'>z</td>";
-       $ml[0] = "<td class='ShiftRight seatmap '><img style='width:".(($imagesize/2)-2)."px;' border=0 src='{$_SHOP->images_url}dot.gif' height='100%'></td>";
+      $cspan = "colspan='2'";
+     // $ml[1] = "<td class='ShiftRight pm_seatmap'>z</td>";
+       $ml[1] = $mr[0] = "<td class='pm_shiftright' ><img style='width:".((int)($imagesize/2))."px;' border=0 src='{$_SHOP->images_url}dot.gif' height='100%'></td>";
+        $res .= '<tr>';
+        $width2 = ($right - $left) * 2 + 2;
+        for ($k = 0; $k <= $width2; $k++) {
+            $res .= '<td class="pm_none"><img src="{$_SHOP->images_url}dot.gif" style="width:'.((int)($imagesize/2)).'px;" height="1"></td>';
+        }
+        $res .= '</tr>';
+
      } else {
-      $ml[1] = $mr[0] = '';
       $cspan = "";
     }
 
@@ -141,28 +165,28 @@ clear:both;
         for ($k = $left; $k <= $right; $k++) {
             $seat = $pmp->data[$j][$k];
             $sty ='';
-            $res .= "<td {$cspan} clase='seatmap'>";
+            $res .= "<td {$cspan} class='pm_seatmap' >";
             if ($seat[PM_ZONE] === 'L') {
                 if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
-                    $res .= "<div class='seatmap'>$irow</div>";
+                    $res .= "<div class='pm_seatmap'>$irow</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->data[$j][$k - 1][PM_ROW]) {
-                    $res .= "<div class='seatmap'>$irow</div>";
+                    $res .= "<div class='pm_seatmap'>$irow</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SS' and $iseat = $pmp->data[$j + 1][$k][PM_SEAT]) {
-                    $res .= "<div class='seatmap'>$iseat</div>";
+                    $res .= "<div class='pm_seatmap'>$iseat</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SN' and $iseat = $pmp->data[$j - 1][$k][PM_SEAT]) {
-                    $res .= "<div class='seatmap'>$iseat</div>";
+                    $res .= "<div class='pm_seatmap'>$iseat</div>";
                 } else
                 if ($seat[PM_LABEL_TYPE] == 'T' and $seat[PM_LABEL_SIZE] > 0) {
-                  if (count($seat[PM_LABEL_TEXT])>3){
-                     $res .= "<img class='seatmap{$first}' src='{$_SHOP->images_url}info.gif' alt='{$seat[PM_LABEL_TEXT]}' title='{$seat[PM_LABEL_TEXT]}'>";
+                  if (strlen($seat[PM_LABEL_TEXT])>3){
+                     $res .= "<img class='pm_seatmap' src='{$_SHOP->images_url}info.gif' alt='{$seat[PM_LABEL_TEXT]}' title='{$seat[PM_LABEL_TEXT]}'>";
                   } else {
-                     $res .= "<div class='seatmap'>{$seat[PM_LABEL_TEXT]}</div>";
+                     $res .= "<div class='pm_seatmap'>{$seat[PM_LABEL_TEXT]}</div>";
                   }
                 } else
                 if ($seat[PM_LABEL_TYPE] == 'E') {
-                    $res .= "<img class='seatmap{$first}' src='{$_SHOP->images_url}exit.gif' alt='exit' title='exit'>";
+                  $res .= "<img class='pm_seatmap' src='{$_SHOP->images_url}exit.gif' alt='exit' title='exit'>";
                 } else {
-                  $res .= "<img class='seatmap{$first}' style='{$sty};border-color:red' border=0 src='{$_SHOP->images_url}dot.gif' title='{$seat[PM_LABEL_TYPE]}'>";
+                  $res .= "<img class='pm_seatmap' style='{$sty};border-color:red' border=0 src='{$_SHOP->images_url}dot.gif' title='{$seat[PM_LABEL_TYPE]}'>";
                 }
             } elseif ($seat[PM_ZONE] and $seat[PM_CATEGORY]) {
                 $zone = $zones[$seat[PM_ZONE]];
@@ -191,7 +215,7 @@ clear:both;
                 if ($seat[PM_STATUS] == PM_STATUS_FREE) {
                     if ($seat[PM_CATEGORY] == $cat_ident) {
                         $res .= "<input type='hidden' id='place{$seat[PM_ID]}' name='place[{$seat[PM_ID]}]' value='0'>";
-                        $res .= "<img class='seatmap pm_check{$first}' style='{$sty}' id='seat{$seat[PM_ID]}' onclick='javascript:gridClick({$seat[PM_ID]});' src='{$_SHOP->images_url}seatfree.png' title='";
+                        $res .= "<img class='pm_seatmap pm_check' style='{$sty}' id='seat{$seat[PM_ID]}' onclick='javascript:gridClick({$seat[PM_ID]});' src='{$_SHOP->images_url}seatfree.png' title='";
                         if ($print_zone) {
                             $res .= $zone->pmz_name . ' ';
                         }
@@ -203,14 +227,14 @@ clear:both;
                         }
                         $res .= "'>";
                     } else {
-                      $res .= "<img class='seatmap{$first}' style='{$sty};background-color:Gainsboro' border=0 src='{$_SHOP->images_url}seatdisable.png'>";
+                      $res .= "<img class='pm_seatmap' style='{$sty};background-color:Gainsboro' border=0 src='{$_SHOP->images_url}seatdisable.png'>";
                     }
                     ////////////Reserved seats, they will only be selectable if you have area='pos' set in cat...tpl
                 } elseif ($seat[PM_STATUS] == PM_STATUS_RESP && $area === 'pos' && $seat[PM_CATEGORY] == $cat_ident) {
                     $zone = $zones[$seat[PM_ZONE]];
-                    $res .= "<img class='seatmap{$first}' style='{$sty}' src='{$_SHOP->images_url}seatselect.png' title='";
+                    $res .= "<img class='pm_seatmap' style='{$sty}' src='{$_SHOP->images_url}seatselect.png' title='";
                     if ($print_zone) {
-                        $res .= $zone->pmz_name . ' ';
+                        $res .= $zone->pmz_name . ': ';
                     }
                     if (($cat_num & 2) and $seat[PM_ROW] != '0') {
                         $res .= $l_row . $seat[PM_ROW];
@@ -223,17 +247,17 @@ clear:both;
                   if ($seat[PM_CATEGORY] != $cat_ident) {
                     $sty .= ';background-color:Gainsboro';
                   }
-                  $res .= "<img class='seatmap{$first}' style='{$sty}' src='{$_SHOP->images_url}seatused.png'>";
+                  $res .= "<img class='pm_seatmap' style='{$sty}' src='{$_SHOP->images_url}seatused.png'>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $res .= "<img class='seatmap{$first}' style='{$sty}' border=0 src='{$_SHOP->images_url}b.gif'>";
+                $res .= "<img class='pm_seatmap' style='{$sty}' border=0 src='{$_SHOP->images_url}b.gif'>";
             } else  {
-               $res .= "<img class='seatmap{$first}' style='{$sty}' border=0 src='{$_SHOP->images_url}dot.gif' />";
+               $res .= "<img class='pm_seatmap' style='{$sty}' border=0 src='{$_SHOP->images_url}dot.gif' />";
             }
             $res .= "</td>";
             $first ='';
         }
-        $res .= "</tr>";
+        $res .= $mr[$j % 2]."</tr>";
     }
 
     /*            <script language=\"JavaScript\" type=\"text/javascript\" src=\"wz_tooltip.js\"></script>    ";*/
@@ -243,10 +267,10 @@ clear:both;
 
     switch ($pmp->pmp_scene) {
         case 'south':
-            $res = "<table border=0  cellspacing=0 cellpadding=0>
+            $res = "<table border=0 cellspacing=0 cellpadding=0>
                       <tr>
                         <td>
-                          <table class='pm_table' border=0  cellspacing=0 cellpadding=0>$res</table>
+                          <table class='pm_table' border=1  cellspacing=0 cellpadding=0>$res</table>
                         </td>
                       </tr>
                       <tr>
@@ -257,7 +281,7 @@ clear:both;
                     </table>";
             break;
         case 'east':
-           $res = "<table border=0>
+           $res = "<table border=0 cellspacing=0 cellpadding=0>
                      <tr>
                        <td align='center' valign='middle'>
                          <img src='{$_SHOP->images_url}scene_v_$l.png'>
@@ -281,7 +305,7 @@ clear:both;
                     </table>";
             break;
         default:
-            $res = "<table border=0>
+            $res = "<table border=0 cellspacing=0 cellpadding=0>
                <tr>
                  <td align='center' valign='middle'>
                    <img src='{$_SHOP->images_url}scene_h_$l.png'>
@@ -294,30 +318,42 @@ clear:both;
                </tr>
              </table>";
     }
-    $res .='
+    if ($category['event_order_limit']) {
+      $res .='
+           <input id="maxseats" value="'.$category['event_order_limit'].'" type="hidden" size="3" maxlength="5">
+           <script>
+            function gridClick(id) {
+              x = jQuery("#place"+id).val();
+              c = jQuery("#maxseats").val();
+              if ((x == 0) && (c >0)) {
+                jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatselect.png");
+                jQuery("#place"+id).val(id);
+                c--;
+              } else if (( x != 0) && (c < '.$category['event_order_limit'].' )) {
+                jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatfree.png");
+                jQuery("#place"+id).val(0);
+                c++;
+              } else if (c == 0) {
+                alert("'.con('max_seats_reached').'");
+              }
+              jQuery("#maxseats").val(c);
+            }';
+    } else {
+      $res .='
          <script>
             function gridClick(id) {
               x = jQuery("#place"+id).val();
-              if ( x == 0 ) {
+              if ( x == 0) {
                 jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatselect.png");
                 jQuery("#place"+id).val(id);
               } else {
                 jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatfree.png");
                 jQuery("#place"+id).val(0);
               }
-            }
-            jQuery(document).ready(function(){
-              jQuery(".pm_free").mouseleave(function(e){
-                if(e.shiftKey){
-                  jQuery("img.pm_check",this).attr("checked", true);
-                }
-                if(e.ctrlKey){
-                  jQuery("img.pm_check",this).attr("checked", false);
-                }
-
-              });
-            });
-       </script>
+            }';
+    }
+    $res .='
+     </script>
 ';
 
     return $res;

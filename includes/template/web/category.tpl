@@ -33,7 +33,6 @@
 
 {category category_id=$category_id event='on' placemap='on'}
 
-  {if $shop_category.category_numbering neq 'none'}
     {include file="header.tpl" name=!select_seat!}
     <form name='f' action='index.php' method='post'>
       {ShowFormToken name='categorys'}
@@ -100,14 +99,12 @@
           <div style='overflow: auto; height: 350px; width:595px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
             {placemap  category=$shop_category}
           </div>
-          <center>{!placemap_image_explanation!}</center>
+          <center><div valign='top'> {!placemap_image_explanation!}<div></center>
         {/if}
       <br />
       <center>
          <input type='submit' name='submit' value='{!reserve!}' />
   	  </center>
     </form>
-  {else}
-    {include file="event.tpl" event_id=$smarty.request.event_id}
-  {/if}
+
 {/category}
