@@ -50,7 +50,7 @@ class OptionsView extends AdminView{
   //	$this->print_field('shopconfig_lastrun',$data, $err,10,10);
 
   	$this->print_input('shopconfig_lastrun_int',$data, $err,5,10);
-  	$this->print_input('shopconfig_restime',$data, $err,5,10);
+
   //	$this->print_input('shopconfig_restime_remind',$data, $err,25,100);
   	//this will tell the auto scripts to check POS orders or not.
 
@@ -68,8 +68,12 @@ class OptionsView extends AdminView{
              '2'=>con('act_restrict_w_guest'),
              '3'=>con('act_restrict_quest_only')));
 
-   	$this->print_input('shopconfig_maxres',$data, $err,5,10);
   	$this->print_input('shopconfig_posttocollect',$data, $err,5,10);
+
+  	$this->print_input('shopconfig_restime',$data, $err,5,10);
+   	$this->print_input('shopconfig_maxres',$data, $err,5,10);
+   	$this->print_input('shopconfig_maxorder',$data, $err,5,10);
+
   	$this->print_input('res_delay' ,$data, $err, 5, 10);
     $this->print_input('cart_delay',$data, $err, 5, 10);
     $this->form_foot();
@@ -93,7 +97,8 @@ class OptionsView extends AdminView{
 	      		shopconfig_user_activate="._esc((int)$_POST['shopconfig_user_activate']).",
 	      		res_delay="._esc((int)$_POST['res_delay']).",
 	      		cart_delay="._esc((int)$_POST['cart_delay']).",
-	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres'])." 
+	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres'])."
+	      		shopconfig_maxorder="._esc($_POST['shopconfig_maxorder'])."
 	      		limit 1 ";
 
 				if(!ShopDB::query($query)){

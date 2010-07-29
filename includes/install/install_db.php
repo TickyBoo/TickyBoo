@@ -510,6 +510,7 @@ $tbls['ShopConfig']['fields'] = array(
   'shopconfig_posttocollect' => " varchar(20) NOT NULL DEFAULT '2'",
   'shopconfig_user_activate' => " tinyint(4) NOT NULL DEFAULT '0'",
   'shopconfig_maxres' => " int(11) NOT NULL DEFAULT '10'",
+  'shopconfig_maxorder' => " int(11) NOT NULL DEFAULT '14'",
   'status' => " char(3) NOT NULL DEFAULT 'ON'",
   'res_delay' => " int(11) NOT NULL DEFAULT '660'",
   'cart_delay' => " int(11) NOT NULL DEFAULT '600'",

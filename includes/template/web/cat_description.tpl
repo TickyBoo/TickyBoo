@@ -148,18 +148,14 @@
             </td>
             <td  align='left'>
               <div id='qqq'  align='left' style='font-size:9px; float:left;'>x
-                {assign var=limit value=14}
-                {if $shop_event.event_order_limit>0}
-                   {assign var=limit value=$shop_event.event_order_limit}
-                {/if}
-
+                {cart->maxSeatsAlowed event=$shop_event}
                 <select style="float:none;"  name='qty' >
-                  {section name="myLoop" start=0 loop=$limit+1}
+                  {section name="myLoop" start=0 loop=$seatlimit+1}
                     <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
                   {/section}
                 </select>
-                {if $shop_event.event_order_limit>0}
-                   ({!order_limit!} {$shop_event.event_order_limit})
+                {if $seatlimit>0}
+                   ({!order_limit!} {$seatlimit})
                 {/if}
               </div>
             </td>

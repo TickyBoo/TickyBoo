@@ -64,7 +64,7 @@ class Update_Smarty {
 		if ( !$event_date ) {
 			die( "No Event Date" );
 		}
-		if ( $_SHOP->shopconfig_restime >= 20 ) {
+		if ( $_SHOP->shopconfig_restime > 0 ) {
 			$enabled['can_reserve'] = true;
 
 			//check to see if can reserve, adds two days before the reservation would expire, stops
@@ -74,7 +74,7 @@ class Update_Smarty {
 
 			// edit number to change the offset for reserving, reserved tickets will allways expire 2 days before the event.
 			// I would recommend keeping this above 1440, a day before the event.
-			if ( $remain["justmins"] >= ($_SHOP->shopconfig_restime + 2880) ) {
+			if ( $remain["justmins"] >= ($_SHOP->shopconfig_restime ) ) {
 				$enabled['can_reserve'] = true;
 				$use_alt = check_event( $event_date );
 				if ( $use_alt == true ) {

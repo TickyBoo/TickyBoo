@@ -272,6 +272,25 @@ class MyCart_Smarty {
 
   }
 
+  function maxSeatsAlowed($params,$smarty){
+    $result = $this->maxSeatsAlowed_f($params['event']);
+    $smarty->assign('seatlimit',$result);
+  }
+
+  function maxSeatsAlowed_f ($event){
+    global $_SHOP;
+    $result = $_SHOP->shopconfig_maxorder;
+    $eventmax = 0;
+    $event = (array)$event;
+    $eventmax = $event['event_order_limit'];
+    if ($eventmax >0) $result = $eventmax;
+    $cart = $_SESSION['_SMART_cart'];
+    if (isset($cart)) {
+      $has = $cart->total_places($event['event_id']);
+      $result -= $has ;
+    }
+    return $result;
+  }
 
   /**
    * MyCart_Smarty::CartCheck()
@@ -343,11 +362,11 @@ class MyCart_Smarty {
 
         $has = $cart->total_places($this->event_id);
         if(($has+$newp)>$max){
-          addWarning('event_order_limit_exceeded','A:'.$has.' '.$newp.' '.$max );
+          addWarning('event_order_limit_exceeded',' A:'.$has.' '.$newp.' '.$max );
       	  return FALSE;
       	}
       }else if($newp>$max){
-        addWarning('event_order_limit_exceeded','B:'.$has.' '.$newp.' '.$max);
+        addWarning('event_order_limit_exceeded',' B:'.$has.' '.$newp.' '.$max);
         return FALSE;
       }
     }

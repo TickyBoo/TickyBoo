@@ -42,12 +42,7 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
    	if(!$params['handling_id']){
 	   	if(!$use_alt){
 	   		$where .= " AND h.handling_alt_only='No'";
-        if($_SHOP->shopconfig_restime > 0 && !$params['www']){
-          $where .= " OR h.handling_id = 1";
-        }
-
   		}else{
-
   			$where .= " AND ((select count(*) from Handling hh where hh.handling_alt = h.handling_id) > 0)";
   		}
   	} else {
@@ -69,6 +64,9 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
     }
 
     // We use the reserve button in the shop.
+   	if(!$params['handling_id'] && !$use_alt && $_SHOP->shopconfig_restime > 0 && !$params['www']){
+      $where .= " OR h.handling_id = 1";
+    }
 
     $limit= ($params['limit'])?'limit '.$params['limit']:'';
 

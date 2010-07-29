@@ -36,11 +36,11 @@ function smarty_function_placemap($params, $smarty){
 
     $pz = preg_match(strtolower('/no|0|false/'), $params['print_zone']);
     $imagesize = is ($params['imagesize'], 16);
-    return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area'], $imagesize, $smarty);
+    return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area'], $imagesize, $params['seatlimit']);
 
 }
 
-function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $imagesize = 16, $smarty = null) {
+function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $imagesize = 16, $seatlimit = 15) {
     global $_SHOP;
 
     $l_row = ' '.con('place_row').' ';
@@ -318,41 +318,25 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $
                </tr>
              </table>";
     }
-    if ($category['event_order_limit']) {
-      $res .='
-           <input id="maxseats" value="'.$category['event_order_limit'].'" type="hidden" size="3" maxlength="5">
-           <script>
-            function gridClick(id) {
-              x = jQuery("#place"+id).val();
-              c = jQuery("#maxseats").val();
-              if ((x == 0) && (c >0)) {
-                jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatselect.png");
-                jQuery("#place"+id).val(id);
-                c--;
-              } else if (( x != 0) && (c < '.$category['event_order_limit'].' )) {
-                jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatfree.png");
-                jQuery("#place"+id).val(0);
-                c++;
-              } else if (c == 0) {
-                alert("'.con('max_seats_reached').'");
-              }
-              jQuery("#maxseats").val(c);
-            }';
-    } else {
-      $res .='
-         <script>
-            function gridClick(id) {
-              x = jQuery("#place"+id).val();
-              if ( x == 0) {
-                jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatselect.png");
-                jQuery("#place"+id).val(id);
-              } else {
-                jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatfree.png");
-                jQuery("#place"+id).val(0);
-              }
-            }';
-    }
     $res .='
+         <input id="maxseats" value="'.$seatlimit.'" type="hidden" size="3" maxlength="5">
+         <script>
+          function gridClick(id) {
+            x = jQuery("#place"+id).val();
+            c = jQuery("#maxseats").val();
+            if ((x == 0) && (c >0)) {
+              jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatselect.png");
+              jQuery("#place"+id).val(id);
+              c--;
+            } else if (( x != 0) && (c < '.$seatlimit.' )) {
+              jQuery("#seat"+id).attr("src","'.$_SHOP->images_url.'seatfree.png");
+              jQuery("#place"+id).val(0);
+              c++;
+            } else if (c == 0) {
+              alert("'.con('max_seats_reached').'");
+            }
+            jQuery("#maxseats").val(c);
+          }
      </script>
 ';
 

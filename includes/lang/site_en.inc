@@ -348,7 +348,7 @@ define("shopconfig_user_activate","Users Checkout Level");
 	define("act_restrict_later","New members are allowed");
 	define("act_restrict_w_guest","New members and guests");
 	define("act_restrict_quest_only","Only guest users");
-define("shopconfig_maxres","Max Tickets Allowed");
+define("shopconfig_maxres","Max tickets to reservate");
 define("shopconfig_posttocollect","Switch to Alt Paymment");
 define("res_delay","Reserve Timeout");
 define("cart_delay","Cart Timeout");
@@ -1413,4 +1413,5 @@ define('export_entrant_withseats','Export with seatsnumbers');
 
 define('mollie_status_canceled','You have canceled the order while in iDeal');
 define('always_show_handling','Show always');
+define('shopconfig_maxorder','Max tickets to order');
 ?>

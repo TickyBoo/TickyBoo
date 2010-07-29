@@ -34,6 +34,8 @@
 {category category_id=$category_id event='on' placemap='on'}
 
     {include file="header.tpl" name=!select_seat!}
+    {cart->maxSeatsAlowed event=$shop_category}
+
     <form name='f' action='index.php' method='post'>
       {ShowFormToken name='categorys'}
       <input type='hidden' name='category_id' value='{$shop_category.category_id}'>
@@ -55,15 +57,12 @@
             </td>
           </tr>
         {/if}
-        {if $shop_category.event_order_limit}
           <tr>
             <td  align='center'>
               {!order_limit!}
-              {$shop_category.event_order_limit}
+              {$seatlimit}
             </td>
           </tr>
-        {/if}
-
         {if $shop_category.category_numbering eq 'none'}
           </table><br />
           <center>
@@ -73,7 +72,11 @@
                   {!number_seats!}
                 </td>
                 <td class='title'>
-                  <input type='text' name='place' size='4' maxlength='4' align='right' />
+                  <select style="float:none;"  name='place' >
+                    {section name="myLoop" start=1 loop=$seatlimit+1}
+                      <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
+                    {/section}
+                  </select>
                   <input type='hidden' name='numbering' value='none' />
                 </td>
               </tr>
@@ -97,7 +100,7 @@
 </style>
 {/literal}
           <div style='overflow: auto; height: 350px; width:595px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
-            {placemap  category=$shop_category}
+            {placemap  category=$shop_category seatlimit=$seatlimit}
           </div>
           <center><div valign='top'> {!placemap_image_explanation!}<div></center>
         {/if}
