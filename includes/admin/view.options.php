@@ -97,7 +97,7 @@ class OptionsView extends AdminView{
 	      		shopconfig_user_activate="._esc((int)$_POST['shopconfig_user_activate']).",
 	      		res_delay="._esc((int)$_POST['res_delay']).",
 	      		cart_delay="._esc((int)$_POST['cart_delay']).",
-	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres'])."
+	      		shopconfig_maxres="._esc($_POST['shopconfig_maxres']).",
 	      		shopconfig_maxorder="._esc($_POST['shopconfig_maxorder'])."
 	      		limit 1 ";
 

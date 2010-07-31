@@ -83,13 +83,13 @@ select SQL_CALC_FOUND_ROWS *
               order by event_date
               limit 0,15
 */
-    $wherex = (!$history)?"event_status='pub' or ":"event_status !='pub' AND ";
-    $where  = "and ((event_rep!='main' and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
+    $wherex = (!$history)?"event_status = 'pub' or ":"event_status != 'pub' AND ";
+    $where  = "and ((event_rep!='main' and  ({$wherex} TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
     $where .= "     or (event_rep='main' and ((select COALESCE(count(*),0)
                                                from Event main
                                                where main.event_main_id = Event.event_id
-                                               and event_status!='trash'
-                                               and  ($wherex TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)
+                                               and main.event_status!='trash'
+                                               and  (main.{$wherex} TO_DAYS(main.event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)
                                              OR
                                              ((select COALESCE(count(*),0)
                                                from Event main
@@ -100,7 +100,7 @@ select SQL_CALC_FOUND_ROWS *
 		//echo $history,' => ',
     $query = "select SQL_CALC_FOUND_ROWS `event_id`, `event_name`, `event_text`, `event_short_text`, `event_url`, `event_image`, `event_ort_id`, `event_pm_id`, `event_date`, event_time event_time, `event_open`, `event_end`, `event_status`, `event_order_limit`, `event_template`, `event_group_id`, `event_mp3`, `event_rep`, `event_main_id`, `event_type`, `ort_id`, `ort_name`, `ort_phone`, `ort_plan_nr`, `ort_url`, `ort_image`, `ort_address`, `ort_address1`, `ort_zip`, `ort_city`, `ort_state`, `ort_country`, `ort_pm`, `ort_fax`
               from Event LEFT JOIN Ort ON event_ort_id=ort_id
-              WHERE event_rep!='sub'
+              WHERE event_rep !='sub'
               and event_status!='trash'
               $where
               order by event_date, event_time
@@ -178,7 +178,7 @@ select SQL_CALC_FOUND_ROWS *
 
 	function tableSubs( $event_main_id, &$alt, $main_name, $history= false ) {
 		global $_SHOP;
-    $where = "and (TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())+1 ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
+    $where = "and (TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
 
 		$query = "select *
               from Event LEFT JOIN Ort ON event_ort_id=ort_id

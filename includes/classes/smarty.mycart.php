@@ -360,7 +360,7 @@ class MyCart_Smarty {
     if($mode=='mode_web' and $max){
       if(isset($cart)){
 
-        $has = $cart->total_places($this->event_id);
+        $has = $cart->total_places($event_id);
         if(($has+$newp)>$max){
           addWarning('event_order_limit_exceeded',' A:'.$has.' '.$newp.' '.$max );
       	  return FALSE;
