@@ -15,7 +15,7 @@
           <td class='user_value' >
             {!date_from!} {!yyyy_mm_dd!}: <input type="text" id="event-from" size="10" />
             {!date_to!} {!yyyy_mm_dd!}: <input type="text" id="event-to" size="10" /><br />
-            <select id="event-id" name="event_id" size="1"></select>  
+            <select id="event-id" name="event_id" size="1"></select>
             {!free_seat!}: <span id="ft-event-free-seats" >0</span> ({!approx!})
           </td>
         </tr>
@@ -24,7 +24,7 @@
           <td class='user_value'>
             <select name='category_id' id='cat-select' style="width:250px;">
               <option value='0'></option>
-            </select> 
+            </select>
             {!free_seat!}: <span id="ft-cat-free-seats" >0</span> ({!approx!})
           </td>
         </tr>
@@ -41,7 +41,7 @@
           <td class='user_value' class="seat-selection" >
             <div id="show-seats" style="display:none;">
               <button type="button" name='submit' value='show seating'>{!show_seats!} </button>
-              {!seat_count!} <input type="text" size="2" />
+              {* {!seat_count!} <input type="text" size="2" /> *}
             </div>
             <div id="seat-qty" style="display:none;"><input type='text' name='place' size='4' maxlength='2' /></div>
           </td>
@@ -60,7 +60,7 @@
   </form>
 
   <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
-  <div id="cart-pager"></div> 
+  <div id="cart-pager"></div>
   <div id="order_action" title='{!pos_order_page!}'></div>
   <br />
     <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
@@ -108,7 +108,7 @@
             <button type='button' id='reserved' name='action' value='PosReserved'>{!reserve!}</button>
            /if
                   *}
-            <button type='button' id='checkout' name='action' value='PosCheckout' style="float:none;">{!order_it!}</button>          
+            <button type='button' id='checkout' name='action' value='PosCheckout' style="float:none;">{!order_it!}</button>
             &nbsp;
             <button type='button' id='cancel' name='action' value='PosCancel' style="float:none;">{!cancel!}</button>
           </form>

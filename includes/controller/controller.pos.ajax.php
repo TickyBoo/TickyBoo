@@ -231,12 +231,12 @@ class ctrlPosAjax extends ctrlWebCheckout {
 			$placemap = ""; //leave placemap empty shouldnt be filled unless told to colect it.
 			if(strtolower($cat['category_numbering']) != 'none'){
 				$numbering = true; // If there should be a placemap set to true otherwise leave as false to show qty box.
-
 				//Load Place Map
       $placemap = "<div style='overflow: auto; height: 450px; width:800px;' align='center' valign='center'>";
 			$placemap .= $this->loadPlaceMap($cat);
       $placemap .= "</div>";
 			}
+
 			$this->json['categories'][strval($cat['category_id'])] = array('html'=>$option,'numbering'=>$numbering,'placemap'=>$placemap,'price'=>$cat['category_price'],'free_seats'=>$cat['category_free']);
 		}
 		//Finish loading categories and there details lets grab the discounts to...
@@ -505,13 +505,8 @@ class ctrlPosAjax extends ctrlWebCheckout {
 	 */
 	private function loadPlaceMap($category){
 
-		//define vars...
-		$params = array();
-		$smarty = "";
-
-		$params['category'] = $category; //add category details
     require_once("shop_plugins".DS."function.placemap.php");
-		return smarty_function_placemap($params, $smarty); //return the placemap
+		return placeMapDraw($category); //return the placemap
 	}
 
   /**
