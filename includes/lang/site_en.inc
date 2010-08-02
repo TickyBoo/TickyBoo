@@ -1404,14 +1404,56 @@ define ('copy_main_pm','copy from main event');
 define ('republish_old_event',"Are you sure you want to publish this archived event?\r\n It will only show in the [Program] area of the Web Shop.");
 define('UnPublished','UnPublished');
 define('restart__failure','restart__failure');
-define('plugins_tab','plugins_tab');
+define('plugins_tab','Plugins');
 define('category_pm_id','category_pm_id');
 define('category_pmp_id','category_pmp_id');
 define('publish7','publish7');
 define('pub__failure','pub__failure');
-define('export_entrant_withseats','Export with seatsnumbers');
+define('export_entrant_withseats','Export with seat numbers');
 
 define('mollie_status_canceled','You have canceled the order while in iDeal');
 define('always_show_handling','Show always');
 define('shopconfig_maxorder','Max tickets to order');
+
+
+//08-02-2010
+
+define('enabled','Enabled');
+
+define('InfoGetFileFunction','InfoGetFileFunction');
+
+define('InfoZipLibInstalled','InfoZipLibInstalled');
+
+define('show_stat_reports','Reports');
+
+define('report_admin_title','Spreadsheet Reports');
+
+define('report_xl','Sales Report');
+
+define('report_archive_event','Event Archives');
+
+define('report_entrant','Shipping Report');
+
+define('export_statuslog','Export Status Log');
+
+define('max_seats_reached','Maximum Seats Reached');
+
+define('handling_alt_settings','Alternate Settings');
+
+define('Show always','Show Always');
+
+define('Hide','Hide');
+
+define('handling_fee_settings','Fee Settings');
+
+define('hanging_pdf_settings','PDF Settings');
+
+define('hanging_email_settings','Email Settings');
+
+define('plugins_title','Plug Ins');
+
+define('plugin_email','Email: ');
+
+define('plugin_web','Website: ');
+
 ?>
