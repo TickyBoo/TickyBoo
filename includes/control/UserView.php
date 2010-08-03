@@ -55,7 +55,7 @@ class UserView extends AdminView{
     echo "<tr><td class='aadmin_value' colspan='3'> {$user["user_zip"]} ";
     echo " {$user["user_city"]}</td></tr>";
     echo " <tr><td class='admin_value' colspan='3'>{$user["user_country_name"]}</td></tr>";
-    echo "<tr><td class='admin_value'><b>".con('user_phone'}."</b> {$user["user_phone"]}</td>";
+    echo "<tr><td class='admin_value'><b>".con('user_phone')."</b> {$user["user_phone"]}</td>";
     echo "<td class='admin_value'><b>".con('user_fax')."</b> {$user["user_fax"]}</td>";
     echo "<td class='admin_value'><b>".con('user_email')."</b> {$user["user_email"]}</td></tr>";
     echo "<td class='admin_value' colspan='3'><b>".con('user_status')."</b> {$user["user_status"]}</td></tr>";
