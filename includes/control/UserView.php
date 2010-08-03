@@ -55,10 +55,10 @@ class UserView extends AdminView{
     echo "<tr><td class='aadmin_value' colspan='3'> {$user["user_zip"]} ";
     echo " {$user["user_city"]}</td></tr>";
     echo " <tr><td class='admin_value' colspan='3'>{$user["user_country_name"]}</td></tr>";
-    echo "<tr><td class='admin_value'><b>".user_phone."</b> {$user["user_phone"]}</td>";
-    echo "<td class='admin_value'><b>".user_fax."</b> {$user["user_fax"]}</td>";
-    echo "<td class='admin_value'><b>".user_email."</b> {$user["user_email"]}</td></tr>";
-    echo "<td class='admin_value' colspan='3'><b>".user_status."</b> {$user["user_status"]}</td></tr>";
+    echo "<tr><td class='admin_value'><b>".con('user_phone'}."</b> {$user["user_phone"]}</td>";
+    echo "<td class='admin_value'><b>".con('user_fax')."</b> {$user["user_fax"]}</td>";
+    echo "<td class='admin_value'><b>".con('user_email')."</b> {$user["user_email"]}</td></tr>";
+    echo "<td class='admin_value' colspan='3'><b>".con('user_status')."</b> {$user["user_status"]}</td></tr>";
 
     /*$this->print_field('user_lastname',$user );
     $this->print_field('user_firstname',$user );
@@ -85,11 +85,11 @@ class UserView extends AdminView{
      return;
    }
    echo  "<br><table class='admin_list' cellspacing='0' cellpadding='3' width='100%'>
-   <tr><td class='admin_list_title' colspan='7'>".orders."</td></tr>";
+   <tr><td class='admin_list_title' colspan='7'>".con('orders')."</td></tr>";
    while($order=shopDB::fetch_assoc($res)){
      echo "<tr><td class='order_item'>".$order["order_id"]."</td>
-               <td class='order_item' colspan='6'>".tickets_nr." ".$order["order_tickets_nr"].
-	       " - $currency ".$order["order_total_price"]." - ".date."  ".$order["order_date"].
+               <td class='order_item' colspan='6'>".con('tickets_nr')." ".$order["order_tickets_nr"].
+	       " - $currency ".$order["order_total_price"]." - ".con('date')."  ".$order["order_date"].
 	       " - ".$order["order_shipment_mode"]." - ".
 	       $this->print_order_status($order["order_status"])."
 	       <a href='view_order.php?action=details&order_id=".$order["order_id"]."'>
@@ -138,13 +138,13 @@ function print_status ($user_status){
 
 function print_order_status ($order_status){
   if($order_status=='ord'){
-    return "<font color='blue'>".ordered."</font>";
+    return "<font color='blue'>".con('ordered')."</font>";
   }else if ($order_status=='send'){
-    return "<font color='red'>".sended."</font>";
+    return "<font color='red'>".con('sended')."</font>";
   }else if($order_status=='payed'){
-    return "<font color='green'>".payed."</font>";
+    return "<font color='green'>".con('payed')."</font>";
   }else if($order_status=='cancel'){
-    return "<font color='#787878'>".canceled."</font>";
+    return "<font color='#787878'>".con('canceled')."</font>";
  }
 }
   function print_field ($name, &$data){
@@ -170,10 +170,10 @@ function print_order_status ($order_status){
   }
 function print_place_status ($place_status){
   switch($place_status){
-    case 'free':  return "<font color='green'>".free."</font>";
-    case 'res':  return "<font color='orange'>".reserved."</font>";
-    case 'com': return "<font color='red'>".com."</font>";
-    case 'check':return "<font color='blue'>".checked."</font>";
+    case 'free':  return "<font color='green'>".con('free')."</font>";
+    case 'res':  return "<font color='orange'>".con('reserved')."</font>";
+    case 'com': return "<font color='red'>".con('com')."</font>";
+    case 'check':return "<font color='blue'>".con('checked')."</font>";
    }
 }
 

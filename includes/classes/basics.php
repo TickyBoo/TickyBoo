@@ -212,8 +212,7 @@ function constructBase($secure=null) {
   if ($secure == null) $secure = env('HTTPS');
   $dir  = dirname(env('PHP_SELF'));
   $file = basename($dir);
-  if (($file=='admin') ||  ($file=='pos')) {
-    $dir = dirname($dir);
+  if (($file=='admin') || ($file=='pos') || ($file=='control')) {    $dir = dirname($dir);
   }
   $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME');
   // thanks to Nasi it will now also works with different port numbers
