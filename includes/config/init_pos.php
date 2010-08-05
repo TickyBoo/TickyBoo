@@ -41,6 +41,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->auth_required=TRUE;
   $_SHOP->auth_status="pos";
 
-  $_SHOP->root .= 'pos/';
-  $_SHOP->root_secured .= 'pos/';
+//  $_SHOP->root .= 'pos/';
+//  $_SHOP->root_secured .= 'pos/';
 ?>

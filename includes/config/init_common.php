@@ -175,27 +175,28 @@ if (!defined('ft_check')) {die('System intrusion ');}
     define('CURRENT_VERSION','Unknown');
   }
   include_once('classes/basics.php');
-  
+
   //Construct $_SHOP
   $_SHOP->Messages = array();
-  
+
   if (!isset($_SHOP->root)) $_SHOP->root = constructBase(false);//
   if (!isset($_SHOP->root_secured)) $_SHOP->root_secured = constructBase(isset($_SHOP->secure_site) && $_SHOP->secure_site);
   if ( strtoupper(substr($_SHOP->root_secured,0,5))=='HTTP:' ){
     $_SHOP->secure_site = '0';
   }
-  $_SHOP->root_base = $_SHOP->root;
-  $_SHOP->files_url = constructBase()."files/";
-  $_SHOP->images_url= constructBase()."images/";
+  //$_SHOP->root_base is allways the root and doenst add /pos/ /admin etc
+  $_SHOP->root_base = constructBase(null,true);
+  $_SHOP->files_url = $_SHOP->root_base."files/";
+  $_SHOP->images_url= $_SHOP->root_base."images/";
+
   $_SHOP->theme_dir = $_SHOP->tpl_dir . "theme".DS.$_SHOP->theme_name.DS;
-  $_SHOP->trace_dir = $_SHOP->tmp_dir ;
-  
-  
+  if (!isset($_SHOP->trace_dir)) $_SHOP->trace_dir = $_SHOP->tmp_dir ;
+
   //Check if version is uptodate
  // echo INC,'- ', CURRENT_VERSION,';', INSTALL_VERSION;
   if (CURRENT_VERSION <> INSTALL_VERSION){
     echo "<a href='{$_SHOP->root}inst/index.php'>Upgrade me now!</a>";
     exit;
   }
-  
+
 ?>
