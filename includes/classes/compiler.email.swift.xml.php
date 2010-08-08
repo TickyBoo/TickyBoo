@@ -155,6 +155,11 @@ class EmailSwiftXMLCompiler {
     }
     $res = $this->res[0];
     $langRes = $this->res[$lang];
+    echo "<pre>{$lang}";
+
+    print_r($res);
+    print_r($langRes);
+    echo "</pre>";
 
     if(isset($res['from'])){
    	  $message->setFrom((array)$res['from']);
@@ -198,10 +203,10 @@ class EmailSwiftXMLCompiler {
     }
 
     if(isset($langRes['html'])){
-      $message->setBody($langRes['html'],'text/html',is($langRes['html_charset'],"null"));
+      $message->setBody($langRes['html'],'text/html',is($langRes['html_charset'],is($res['html_charset'],null)));
     }
     if(isset($langRes['text'])){
-      $message->addPart($langRes['text'],'text/plain',is($langRes['text_charset'],"null"));
+      $message->addPart($langRes['text'],'text/plain',is($langRes['text_charset'],is($res['text_charset'],null)));
     }
 
     //TODO: Add check for new auto send methods.
