@@ -155,11 +155,6 @@ class EmailSwiftXMLCompiler {
     }
     $res = $this->res[0];
     $langRes = $this->res[$lang];
-    echo "<pre>{$lang}";
-
-    print_r($res);
-    print_r($langRes);
-    echo "</pre>";
 
     if(isset($res['from'])){
    	  $message->setFrom((array)$res['from']);

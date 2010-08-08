@@ -101,7 +101,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 
 
-  trace( $_SERVER["PHP_SELF"]. " [{$action}]", true);
+  trace( $_SERVER["PHP_SELF"]. " [{$_REQUEST['action']}]", true);
   trace( '====================================================================');
  // print_r($_SERVER);
   $query="SELECT *, UNIX_TIMESTAMP() as current_db_time FROM ShopConfig LIMIT 1";
