@@ -852,14 +852,14 @@ define("export_xml_event_file","Filename");
 		define("export_cc_title","Export Credit Card Numbers");
 		define("export_cc_count","Credit Card Count");
 	define("export_entrant","Export Attendees");
-		define("export_entrant_title","Tickets Shipped Report");
+		define("export_entrant_title","Ticket Status Report");
 		define("export_entrant_event","Choose an Event");
 		define("export_entrant_NotSended","'Not Sent' Orders only");
 			define("export_entrant_order_id","Order ID");
 			define("export_entrant_fullname","FullName");
 			define("export_entrant_city","City");
 			define("export_entrant_tickets","Tickets");
-			define("export_entrant_price","Total Sale");
+			define("export_entrant_price","Total Due");
 			define("export_entrant_totalprice","Totals");
       define("export_entrant_seats","Seats");
 			define("time","Time");
@@ -1432,7 +1432,7 @@ define('report_xl','Sales Report');
 
 define('report_archive_event','Event Archives');
 
-define('report_entrant','Shipping Report');
+define('report_entrant','Ticket Status Report');
 
 define('export_statuslog','Export Status Log');
 
