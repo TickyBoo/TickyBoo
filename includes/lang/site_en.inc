@@ -348,7 +348,7 @@ define("shopconfig_user_activate","Users Checkout Level");
 	define("act_restrict_later","New members are allowed");
 	define("act_restrict_w_guest","New members and guests");
 	define("act_restrict_quest_only","Only guest users");
-define("shopconfig_maxres","Max tickets to reservate");
+define("shopconfig_maxres","Max tickets to reserve");
 define("shopconfig_posttocollect","Switch to Alt Paymment");
 define("res_delay","Reserve Timeout");
 define("cart_delay","Cart Timeout");
@@ -852,7 +852,7 @@ define("export_xml_event_file","Filename");
 		define("export_cc_title","Export Credit Card Numbers");
 		define("export_cc_count","Credit Card Count");
 	define("export_entrant","Export Attendees");
-		define("export_entrant_title","Export Attendees");
+		define("export_entrant_title","Tickets Shipped Report");
 		define("export_entrant_event","Choose an Event");
 		define("export_entrant_NotSended","'Not Sent' Orders only");
 			define("export_entrant_order_id","Order ID");
@@ -1455,5 +1455,7 @@ define('plugins_title','Plug Ins');
 define('plugin_email','Email: ');
 
 define('plugin_web','Website: ');
+
+define('order_status_send','Sent');
 
 ?>
