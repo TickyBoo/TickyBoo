@@ -96,16 +96,14 @@ class User extends Model{
 
     if ($user->CheckValues($data, $status, $mandatory, $secure, $short)){
 
-      //Why should guests be allowed to use an exsisting email address?
-//      if ($status == 2) {
-        $query="SELECT count(*) as count
-                from auth
-                where username="._esc($data['user_email']);
-        if($row = ShopDB::query_one_row($query) and $row['count']>0){
-          addError('user_email','useralreadyexist');
-          return FALSE;
-        }
-      //}
+      $query="SELECT count(*) as count
+              from auth
+              where username="._esc($data['user_email']);
+      if($row = ShopDB::query_one_row($query) and $row['count']>0){
+        addError('user_email','useralreadyexist');
+        return FALSE;
+      }
+
       if (ShopDB::begin('register user')) {
         $user->_fill($data);
         $user->user_status = $status;
@@ -115,6 +113,8 @@ class User extends Model{
           return self::_abort('cant save user');
         }
         //Send activation code?
+       // echo 'new status:',$status;
+
         if (in_array($status, array(2))) {
           if ($short and empty($data['password1'])) {
             $data['password1'] = substr( base_convert($active,15,36),0,8);
