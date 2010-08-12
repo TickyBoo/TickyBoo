@@ -54,7 +54,7 @@ class import_template extends AdminView {
   }
 
 
-  function import (){
+  function execute (){
     global $_SHOP;
     if($_POST['submit']){
       if (empty($_POST['template_name'])){

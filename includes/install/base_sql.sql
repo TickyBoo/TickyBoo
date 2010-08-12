@@ -6,7 +6,7 @@ INSERT INTO `Organizer` (`organizer_name`, `organizer_address`, `organizer_plz`,
 
 
 INSERT INTO `ShopConfig` (`shopconfig_lastrun`, `shopconfig_lastrun_int`, `shopconfig_restime`, `shopconfig_restime_remind`, `shopconfig_check_pos`, `shopconfig_delunpaid`, `shopconfig_posttocollect`, `shopconfig_user_activate`, `shopconfig_maxres`, `status`, `res_delay`, `cart_delay`, `shopconfig_run_as_demo`) VALUES
-( 0,  10, 7200, 1440, 'No', 'Yes', '2880', 1, 10, 'ON', 660, 600, 0);
+( 0,  0, 0, 1440, 'No', 'No', 0, 1, 10, 'ON', 660, 600, 0);
 
 INSERT INTO `Color` (`color_id`, `color_code`) VALUES
 (1, '#FFFFFF'),

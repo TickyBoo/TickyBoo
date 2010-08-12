@@ -80,7 +80,7 @@ class ControlPage extends AUIComponent {
         }
 
         echo "<html><head>
-    <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=ISO-8859-1\">
+    <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
     <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
     <title>" . $this->getTitle() . "</title>
     <link rel='stylesheet' href='style.css'>

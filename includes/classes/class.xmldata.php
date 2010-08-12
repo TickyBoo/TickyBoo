@@ -82,7 +82,7 @@ class XMLData {
   }
 
   function sql2xml_all($what,$out=SQL2XML_OUT_RETURN){
-  	$ret.='<?xml version="1.0" encoding="ISO-8859-1" ?>'."\n";
+  	$ret.='<?xml version="1.0" encoding="UTF-8" ?>'."\n";
   	$ret.='<sql2xml>'."\n";
 
   	if($out==SQL2XML_OUT_ECHO){
@@ -216,7 +216,7 @@ class XMLData {
   }
 
   function sql2xml_all_new($what,$out=SQL2XML_OUT_RETURN){
-  	$ret.='<?xml version="1.0" encoding="ISO-8859-1" ?>'."\n";
+  	$ret.='<?xml version="1.0" encoding="UTF-8" ?>'."\n";
   	$ret.='<events>'."\n";
 
   	if($out==SQL2XML_OUT_ECHO){

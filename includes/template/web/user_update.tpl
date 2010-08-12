@@ -58,7 +58,7 @@
 <html>
 	<head>
 		<title></title>
-			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 			<meta http-equiv="Content-Language" content="nl" />
 
 			<link rel="shortcut icon" href="images\favicon.ico" />
@@ -82,13 +82,13 @@
 {/if}
     <input type='hidden' name='user_id' value='{user->user_id}' />
     <input type="hidden" name="submit_update" value="yes" />
-    
+
     <table cellpadding="3" class="main" bgcolor='white'>
 		  {include file='user_form.tpl'}
-      
+
       {if $user->is_member}
         {gui->input autocomplete='off'  type='password' name='old_password' size='10'  maxlength='10'}
-        
+
         {if !$usekasse}
           <tr id='passwords_tr1' >
             <td class='TblLower'>{!new_password!} (opt.)</td>
@@ -102,7 +102,7 @@
             <td class='TblHigher'><input autocomplete='off' type='password' name='password2' size='10'  maxlength='10' /></td>
           </tr>
         {/if}
-        
+
 		  {/if}
     </table>
     <br />

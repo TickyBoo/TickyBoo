@@ -2,7 +2,7 @@
 <html>
 <head>
 <title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
 <meta http-equiv="Content-Language" content="nl" >
 
 <link REL='stylesheet' HREF='style.php' TYPE='text/css' >

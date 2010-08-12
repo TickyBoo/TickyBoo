@@ -349,7 +349,7 @@ define("shopconfig_user_activate","Users Checkout Level");
 	define("act_restrict_w_guest","New members and guests");
 	define("act_restrict_quest_only","Only guest users");
 define("shopconfig_maxres","Max tickets to reserve");
-define("shopconfig_posttocollect","Switch to Alt Paymment");
+define("shopconfig_posttocollect","Switch to Alt Payment");
 define("res_delay","Reserve Timeout");
 define("cart_delay","Cart Timeout");
 define("res_delay_less_cart"," < Can not be less than Cart Timeout");
