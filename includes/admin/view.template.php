@@ -259,8 +259,15 @@ class TemplateView extends AdminView{
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('template_title') . "</td>";
-    echo "<td class='admin_list_title' width='68' colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
-    echo "</tr>\n";
+    echo "<td class='admin_list_title' width='68' colspan='1' align='right'>";
+
+    if (($type== 'systm')or ($type== 'pdf')) {
+      echo '&nbsp;';
+    } else {
+      echo $this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3);
+    }
+
+    echo "</td></tr>\n";
 
     $img_pub['new']   = '../images/new.png';
     $img_pub['error'] = '../images/error.png';
@@ -292,7 +299,7 @@ class TemplateView extends AdminView{
         <td colspan='5'>";
           echo $this->show_button("{$_SERVER['PHP_SELF']}?action=compile_all","compile_all",1);
           if($type=="swift" || $type=='email' || $type=='systm'){
-            echo $this->show_button("{$_SERVER['PHP_SELF']}?action=sendtest","send_test",1);
+           // echo $this->show_button("{$_SERVER['PHP_SELF']}?action=sendtest","send_test",1);
           }
     echo "</td></tr>\n";
 
