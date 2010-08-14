@@ -93,7 +93,7 @@ class UserView extends AdminView{
 	       " - ".$order["order_shipment_mode"]." - ".
 	       $this->print_order_status($order["order_status"])."
 	       <a href='view_order.php?action=details&order_id=".$order["order_id"]."'>
-	       <img src=\"".$_SHOP->root."images/view.png\" ></a></td><tr>";
+	       <img src=\"".$_SHOP->images_url."view.png\" border='0'/></a></td><tr>";
      $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,Event,Category where seat_order_id="._esc($order["order_id"])."
                AND seat_event_id=event_id AND seat_category_id= category_id";
      if(!$res1=ShopDB::query($query)){
