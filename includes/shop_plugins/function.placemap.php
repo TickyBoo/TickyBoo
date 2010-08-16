@@ -233,7 +233,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $
                       </tr>
                     </table>";
             break;
-        case 'east':
+        case 'west':
            $res = "<table border=0 cellspacing=0 cellpadding=0>
                      <tr>
                        <td align='center' valign='middle'>
@@ -245,7 +245,7 @@ function placeMapDraw($category, $restrict, $print_zone = true, $area = 'www', $
                      </tr>
                    </table>";
             break;
-        case 'west':
+        case 'east':
             $res = "<table border=0  cellspacing=0 cellpadding=0>
                       <tr>
                         <td>
