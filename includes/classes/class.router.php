@@ -58,9 +58,11 @@ class router {
 
   static function draw($page, $module = 'web', $isAjax= false) {
     GLOBAL $action, $_SHOP;
+/*
   	if ($action { 0 } == '_') {
   		throw new Exception('Controller [' . $params['controller'] . '] does not allow execution of action [' . $params['action'] . ']');
   	}
+*/
     if (strpos($module,'/') === false) {
       $controller = 'shop';
     } else {
@@ -71,7 +73,6 @@ class router {
       $action = substr($page ,    strpos($page,'/')+1 );
       $page   = substr($page , 0, strpos($page,'/') );
     }
-
     if (isset($_REQUEST['action'])) {
       $action=$_REQUEST['action'];
     } elseif(!isset($action)){
@@ -80,6 +81,7 @@ class router {
     $_REQUEST['action'] = $action;
     $_GET['action']     = $action;
     $_POST['action']    = $action;
+    //echo $controller,'-',$module, '-',$action;
 
 		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
 

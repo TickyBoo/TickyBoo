@@ -757,7 +757,7 @@ function printMsg($key, $err = null, $addspan=true) {
         break;
       default:
         $output = str_ireplace('<br>',' ' , $output);
-        $output = "<img class='err error' src='{$_SHOP->images_url}unchecked.gif' alt='{$output}' title='{$output}'>";//<span class='err error'>".. "</span>
+        $output = "<img class='err error' src='{$_SHOP->images_url}unchecked.gif' /><span class='err error'>{$output}</span>";
     }
   }
 

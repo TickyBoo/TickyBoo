@@ -116,6 +116,7 @@ $(window).load(function(){
   $('#forgot_password').click(function(){
     ajaxQManager.add({
       type:      "POST",
+
       url:      "forgot_password.php",
       dataType:   "HTML",
       data:      {},

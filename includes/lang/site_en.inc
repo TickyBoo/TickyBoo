@@ -1457,5 +1457,6 @@ define('plugin_email','Email: ');
 define('plugin_web','Website: ');
 
 define('order_status_send','Sent');
-
+define('promo_in_use', 'This promocode is already used.');
+define('discount_promo_for', 'Discount promocode for&nbsp;');
 ?>

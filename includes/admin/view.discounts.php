@@ -66,14 +66,18 @@ class DiscountView extends AdminView {
     }
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
-    echo "<tr><td class='admin_list_title' colspan='4' align='left'>". con('discount_title') . "</td>";
+    if (!is_null($discount_event_id)) {
+       echo "<tr><td class='admin_list_title' colspan='5' align='left'>". con('discount_title') . "</td>";
+    } else {
+       echo "<tr><td class='admin_list_title' colspan='4' align='left'>". con('discount_title') . "</td>";
+    }
     if (!$live) {
       if (!is_null($discount_event_id)) {
         echo "<td align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_disc&discount_event_id={$discount_event_id}","add",3)."</td>";
       } else {
         echo "<td align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add_disc","add",3)."</td>";
       }
-    }
+    } else
     echo "</tr>";
 
     while ($row = shopDB::fetch_assoc($res)) {
@@ -84,15 +88,15 @@ class DiscountView extends AdminView {
           echo "<td class='admin_list_item'>{$row['discount_name']}</td>\n";
         } else {
           echo "<td class='admin_list_item'>{$row['discount_name']}</td>\n";
-          echo "<td class='admin_list_item'>{$row['discount_promo']}</td>\n";
         }
+        echo "<td class='admin_list_item'>{$row['discount_promo']}</td>\n";
         if ($row['discount_type'] == 'percent') {
             $type = "{$row['discount_value']}%";
         } else if ($row['discount_type'] == 'fixe') {
             $type = valuta($row['discount_value']);
         }
         $pmp = ($row['discount_event_id'])?"&discount_event_id={$row['discount_event_id']}":'';
-        echo "<td class='admin_list_item' align='right'>$type</td>\n";
+        echo "<td class='admin_list_item' align='right' width='70'>$type</td>\n";
         echo "<td class='admin_list_item' align='right' width='30'>{$row['discount_used']}&nbsp;</td>\n";
         echo "<td class='admin_list_item' width='70' align='right'>";
         if ($row['discount_active'] =='yes') {
@@ -130,9 +134,9 @@ class DiscountView extends AdminView {
     $this->print_field_o('discount_activate', $data);
 
     $this->print_input('discount_name', $data, $err, 30, 50);
-    if (is_null($data['discount_event_id'])) {
+//    if (is_null($data['discount_event_id'])) {
       $this->print_input('discount_promo', $data, $err, 15, 15);
-    }
+//    }
 
 
     $this->print_select ("discount_type", $data, $err, array("fixe", "percent"));
@@ -151,6 +155,7 @@ class DiscountView extends AdminView {
     if ($data['event_pm_id']) {
 		  $this->form_foot(2,"{$_SERVER['PHP_SELF']}?action=edit_pm&pm_id={$data['event_pm_id']}");
     } else {
+
       $this->form_foot(2);
     }
   }
@@ -195,7 +200,11 @@ class DiscountView extends AdminView {
     } elseif ($_GET['action'] == 'remove_disc' and $_GET['discount_id'] > 0) {
       $row = Discount::load($_GET['discount_id']);
       $row->delete();
-      return true;
+      if ($showlist) {
+         $this->table(null, false);
+      } else {
+        return true;
+      }
     } elseif ($showlist) {
       $this->table(null, false);
     }

@@ -47,7 +47,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 $fond = 0;
 
-require_once("classes/jsonwrapper.php"); // Call the real php encoder built into 5.2+
+require_once(CLASSES."jsonwrapper.php"); // Call the real php encoder built into 5.2+
 
 require_once ("controller.web.checkout.php");
 

@@ -124,6 +124,19 @@ class Discount  Extends Model {
   }
 	function CheckValues($data){
  		if(empty($data['discount_event_id']) && empty($data['discount_promo']) ){addError('discount_promo','mandatory');}
+    if(empty($data['discount_event_id']) && !empty($data['discount_promo'])) {
+      $query = "select count(*) count from Discount where discount_promo ="._esc($data['discount_promo'])." and discount_id !="._esc($data['discount_id']);
+      $count = ShopDB::query_one_row($query);
+      if ((int)$count['count']) {
+        return addError('discount_promo','promo_in_use', ' global');
+      }
+    } elseif(!empty($data['discount_event_id']) && !empty($data['discount_promo'])) {
+      $query = "select count(*) count from Discount where (discount_event_id is null or discount_event_id ="._esc($data['discount_event_id']).") and discount_promo ="._esc($data['discount_promo'])." and discount_id !="._esc($data['discount_id']);
+      $count = ShopDB::query_one_row($query);
+      if ((int)$count['count']) {//
+        return addError('discount_promo','promo_in_use',' Event');
+      }
+    }
 		return parent::CheckValues($data);
 	}
 
