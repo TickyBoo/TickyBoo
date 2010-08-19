@@ -85,7 +85,7 @@ class ctrlWebJson  {
     $discount = Discount::load($this->request['id']);
     if (!empty($discount->discount_promo)) {
       $promo = $this->request[$this->request['name']];
-      $this->json = ($promo == $discount->discount_promo);
+      $this->json = (strtoupper($promo) == strtoupper($discount->discount_promo));
     } else {
       $this->json = false;
     }
