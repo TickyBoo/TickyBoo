@@ -1459,4 +1459,31 @@ define('plugin_web','Website: ');
 define('order_status_send','Sent');
 define('promo_in_use', 'This promocode is already used.');
 define('discount_promo_for', 'Discount promocode for&nbsp;');
+
+//Sales Data Report
+
+define('rep_ord_id','Order #');
+
+define('user_title','Customer Information');
+define('cust_id','ID');
+
+define('ven_id','ID');
+define('ven_name','Name');
+
+define('evnt_title','Event Information');
+define('evnt_id','ID');
+define('evnt_name','Name');
+define('evnt_date','Date');
+define('evnt_time','Time');
+
+define('cat_title','Ticket Information');
+define('cat_id','ID');
+define('cat_name','Name');
+define('cat_price','Value');
+define('cat_sold','Sold For');
+
+define('disc_name','Name');
+define('disc_type','Type');
+define('disc_value',"Value");
+
 ?>

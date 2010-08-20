@@ -74,48 +74,184 @@ class report_xl extends AdminView {
     GLOBAL $_SHOP;
     $start=substr($start,0,10);
     $end=substr($end,0,10);
+
     // Creating a workbook
     $workbook = new Spreadsheet_Excel_Writer();
+
     // sending HTTP headers
     $workbook->setTempDir($_SHOP->tmp_dir);
     $workbook->send("ticket".$start."_".$end.".xls");
+
     // Creating a worksheet
-    $worksheet =& $workbook->addWorksheet('Tickets Data');
+    $worksheet =& $workbook->addWorksheet (con('export_xl'));
+    
+    $format_bold =& $workbook->addFormat();
+    $format_bold->setBold();
+
+    $format_title =& $workbook->addFormat();
+    $format_title->setBold();
+    $format_title->setPattern(1);
+    $format_title->setFgColor(26);
+    $format_title->setbottom(1);
+
+    $format_titler =& $workbook->addFormat(array('Align'=>'right'));
+    $format_titler->setBold();
+    $format_titler->setPattern(1);
+    $format_titler->setFgColor(26);
+    $format_titler->setbottom(1);
+
+    $format_price =& $workbook->addFormat();
+    $format_price->setNumFormat('#,##0.00;-#,##0.00');
+    $format_price->setAlign('right');
+
+    $format_priceb =& $workbook->addFormat();
+    $format_priceb->setNumFormat('#,##0.00;-#,##0.00');
+    $format_priceb->setAlign('right');
+    $format_priceb->setBold();
+
+
+    $format_header =& $workbook->addFormat();
+    $format_header->setBold();
+    $format_header->setSize(15);
+    $format_header->setAlign('merge');
+    $format_header->setAlign('top');
+
+    $format_header2 =& $workbook->addFormat();
+    $format_header2->setBold();
+    $format_header2->setSize(12);
+    $format_header2->setAlign('merge');
+    $format_header2->setAlign('top');
+
+    $format_left =&$workbook->addFormat(array('Align'=>'left'));
+    $format_center =&$workbook->addFormat(array('Align'=>'center'));
+
+
+    $format_leftb =&$workbook->addFormat(array('Align'=>'left'));
+    $format_leftb->setBold();
+
+    $format_rightb =&$workbook->addFormat(array('Align'=>'right'));
+    $format_rightb->setBold();
+    $format_titler->setBgColor(26);
+
+    
     // The actual data
-    $worksheet->write(0, 0, con('seat_id'));
-    $worksheet->write(0, 1, con('order_id'));
-    $worksheet->write(0, 2, con('user_id'));
-    $worksheet->write(0, 3, con('user_status'));
-    $worksheet->write(0, 4, con('user_lastname'));
-    $worksheet->write(0, 5, con('user_firstname'));
-    $worksheet->write(0, 6, con('user_address'));
-    $worksheet->write(0, 7, con('user_address1'));
-    $worksheet->write(0, 8, con('user_zip'));
-    $worksheet->write(0, 9, con('user_city'));
-    $worksheet->write(0, 10, con('user_country'));
-    $worksheet->write(0, 11, con('user_phone'));
-    $worksheet->write(0, 12, con('user_fax'));
-    $worksheet->write(0, 13, con('user_email'));
+    $worksheet->hideGridLines();
 
-    $worksheet->write(0, 14, con('event_id'));
+    $worksheet->setrow(0,25);
+    $worksheet->setrow(1,20);
+    $worksheet->setrow(2,15);
+    
+    $worksheet->setcolumn(0, 0,7);
+    $worksheet->setcolumn(1, 1,7);
+    $worksheet->setcolumn(2, 2,7);
+    $worksheet->setcolumn(3, 3,7);
+    $worksheet->setcolumn(4, 4,20);
+    $worksheet->setcolumn(5, 5,20);
+    $worksheet->setcolumn(6, 6,20);
+    $worksheet->setcolumn(9, 9,20);
+    $worksheet->write(0, 0, con('export_xl'), $format_header);
+    $worksheet->write(0, 1, "", $format_header);
+    $worksheet->write(0, 2, "", $format_header);
+    $worksheet->write(0, 3, "", $format_header);
+    $worksheet->write(0, 4, "", $format_header);
+    $worksheet->write(0, 5, "", $format_header);
+    $worksheet->write(0, 6, "", $format_header);
+    $worksheet->write(0, 7, "", $format_header);
+    $worksheet->write(0, 8, "", $format_header);
+    $worksheet->write(0, 9, "", $format_header);
+    $worksheet->write(0, 10, "", $format_header);
+    $worksheet->write(0, 11, "", $format_header);
+    $worksheet->write(0, 12, "", $format_header);
+    $worksheet->write(0, 13, "", $format_header);
+    $worksheet->write(0, 14, "", $format_header);
+    $worksheet->write(0, 15, "", $format_header);
+    $worksheet->write(0, 16, "", $format_header);
+    $worksheet->write(0, 17, "", $format_header);
+    $worksheet->write(0, 18, "", $format_header);
+    $worksheet->write(0, 19, "", $format_header);
+    $worksheet->write(0, 20, "", $format_header);
+    $worksheet->write(0, 21, "", $format_header);
+    $worksheet->write(0, 22, "", $format_header);
+    $worksheet->write(0, 23, "", $format_header);
+    $worksheet->write(0, 24, "", $format_header);
+    $worksheet->write(0, 25, "", $format_header);
+    $worksheet->write(0, 26, "", $format_header);
 
-    $worksheet->write(0, 15, con('event_name'));
-    $worksheet->write(0, 16, con('event_date'));
-    $worksheet->write(0, 17, con('event_time'));
-    $worksheet->write(0, 18, con('ort_id'));
-    $worksheet->write(0, 19, con('ort_name'));
+    
+			$worksheet->write(1, 0, "--", $format_header2);
+    		$worksheet->write(1, 1, "", $format_header2);
+    
+    $worksheet->write(2, 0, con('seat_id'),$format_bold);
+    $worksheet->write(2, 1, con('rep_ord_id'),$format_bold);
+    	    
+    	    $worksheet->write(1, 2, con('user_title'), $format_header2);
+    		$worksheet->write(1, 3, "", $format_header2);
+    		$worksheet->write(1, 4, "", $format_header2);
+    		$worksheet->write(1, 5, "", $format_header2);
+    		$worksheet->write(1, 6, "", $format_header2);
+    		$worksheet->write(1, 7, "", $format_header2);
+    		$worksheet->write(1, 8, "", $format_header2);
+    		$worksheet->write(1, 9, "", $format_header2);
+    		$worksheet->write(1, 10, "", $format_header2);
+    		$worksheet->write(1, 11, "", $format_header2);
+    		$worksheet->write(1, 12, "", $format_header2);
+    		$worksheet->write(1, 13, "", $format_header2);
 
-    $worksheet->write(0, 20, con('category_id'));
+    $worksheet->write(2, 2, con('cust_id'),$format_bold, $format_center);
+    $worksheet->write(2, 3, con('user_status'),$format_bold);
+    $worksheet->write(2, 4, con('user_lastname'),$format_bold);
+    $worksheet->write(2, 5, con('user_firstname'),$format_bold);
+    $worksheet->write(2, 6, con('user_address'),$format_bold);
+    $worksheet->write(2, 7, con('user_address1'),$format_bold);
+    $worksheet->write(2, 8, con('user_zip'),$format_bold);
+    $worksheet->write(2, 9, con('user_city'),$format_bold);
+    $worksheet->write(2, 10, con('user_country'),$format_bold);
+    	$worksheet->setcolumn(11, 11,13);
+    $worksheet->write(2, 11, con('user_phone'),$format_bold);
+    	$worksheet->setcolumn(12, 12,13);
+    $worksheet->write(2, 12, con('user_fax'),$format_bold);
+    	$worksheet->setcolumn(13, 13,30);
+    $worksheet->write(2, 13, con('user_email'),$format_bold);
 
-    $worksheet->write(0, 21, con('category_name'));
-    $worksheet->write(0, 22, con('category_price'));
+    	    $worksheet->write(1, 14, con('ort'), $format_header2);
+    		$worksheet->write(1, 15, "", $format_header2);
 
-    $worksheet->write(0, 23, con('seat_price'));
-    $worksheet->write(0, 24, con('discount_name'));
-    $worksheet->write(0, 25, con('discount_type'));
-    $worksheet->write(0, 26, con('discount_value'));
+    $worksheet->write(2, 14, con('ven_id'),$format_bold);
+    	$worksheet->setcolumn(15, 15,30);
+    $worksheet->write(2, 15, con('ven_name'),$format_bold);
 
-    $i=1;
+		    $worksheet->write(1, 16, con('evnt_title'), $format_header2);
+    		$worksheet->write(1, 17, "", $format_header2);
+    		$worksheet->write(1, 18, "", $format_header2);
+    		$worksheet->write(1, 19, "", $format_header2);
+
+    $worksheet->write(2, 16, con('evnt_id'),$format_bold);
+		$worksheet->setcolumn(17, 17,30);
+    $worksheet->write(2, 17, con('evnt_name'),$format_bold);
+    	$worksheet->setcolumn(18, 18,10);
+    $worksheet->write(2, 18, con('evnt_date'),$format_bold);
+    $worksheet->write(2, 19, con('evnt_time'),$format_bold);
+
+    		$worksheet->write(1, 20, con('cat_title'), $format_header2);
+    		$worksheet->write(1, 21, "", $format_header2);
+    		$worksheet->write(1, 22, "", $format_header2);
+    		$worksheet->write(1, 23, "", $format_header2);
+
+    $worksheet->write(2, 20, con('cat_id'),$format_bold);
+    	$worksheet->setcolumn(21, 21,20);
+    $worksheet->write(2, 21, con('cat_name'),$format_bold);
+    $worksheet->write(2, 22, con('cat_price'),$format_bold);
+    $worksheet->write(2, 23, con('cat_sold'),$format_bold);
+    
+    		$worksheet->write(1, 24, "Discounts", $format_header2);
+    		$worksheet->write(1, 25, "", $format_header2);
+    		$worksheet->write(1, 26, "", $format_header2);
+
+    $worksheet->write(2, 24, con('disc_name'),$format_bold);
+    $worksheet->write(2, 25, con('disc_type'),$format_bold);
+    $worksheet->write(2, 26, con('disc_value'),$format_bold);
+
+    $i=3;
     while($row=shopDB::fetch_assoc($res)){
       $worksheet->write($i, 0, $row['seat_id']);
       $worksheet->write($i, 1, $row['seat_order_id']);
@@ -133,25 +269,24 @@ class report_xl extends AdminView {
       $worksheet->write($i, 12,$row['user_fax']);
       $worksheet->write($i, 13,$row['user_email']);
 
-      $worksheet->write($i, 14,$row['event_id']);
+      $worksheet->write($i, 14,$row['ort_id']);
+      $worksheet->write($i, 15,$row['ort_name']);
 
-      $worksheet->write($i, 15,$row['event_name']);
-      $worksheet->write($i, 16,$row['event_date']);
-      $worksheet->write($i, 17,$row['event_time']);
+      $worksheet->write($i, 16,$row['event_id']);
+      $worksheet->write($i, 17,$row['event_name']);
+      $worksheet->write($i, 18,$row['event_date']);
+      $worksheet->write($i, 19,$row['event_time']);
 
-      $worksheet->write($i, 18,$row['ort_id']);
-      $worksheet->write($i, 19,$row['ort_name']);
 
       $worksheet->write($i, 20,$row['category_id']);
-
       $worksheet->write($i, 21,$row['category_name']);
-      $worksheet->write($i, 22,$row['category_price']);
+      $worksheet->write($i, 22,$row['category_price'], $format_price);
 
-      $worksheet->write($i, 23,$row['seat_price']);
+      $worksheet->write($i, 23,$row['seat_price'], $format_price);
       if($row['discount_id']){
         $worksheet->write($i, 24,$row['discount_name']);
         $worksheet->write($i, 25,$row['discount_type']);
-        $worksheet->write($i, 26,$row['discount_value']);
+        $worksheet->write($i, 26,$row['discount_value'], $format_price);
 
       }
       $i++;
