@@ -146,6 +146,8 @@ class User extends Model{
         //AND FINALY return the id
         return $user->user_id; //eer silly <<<
       }
+    } else {
+      Addwarning('Error_while_registering_user');
     }
     unset($user);
     return false;
@@ -296,7 +298,7 @@ class User extends Model{
   }
 
   function CheckValues (&$data, $status=1, $mandatory=array(), $secure='', $short=true) {
-    if (!isset($data['user_id'])) {
+    if (!isset($data['user_id']) and ($status <>4)) {
       $mandatory[]='check_condition';
     }
     parent::CheckValues ($data, $mandatory);

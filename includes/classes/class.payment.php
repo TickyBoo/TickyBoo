@@ -119,7 +119,7 @@ class Payment {
 
   protected function url_post ($url,&$data){
     global $_SHOP;
-
+    $this->debug = 'ExucuteCall = '.$_SHOP->url_post_method . "\n";
   	switch($_SHOP->url_post_method) {
 
   		case "libCurl": //php compiled with libCurl support
@@ -159,7 +159,9 @@ class Payment {
 
   	//execute curl on the command line
 
-  	exec("{$_SHOP->url_post_curl_location} -d \"$postdata\" $url", $info);
+  	 $this->debug .=  "retExec   = ". print_r(exec("{$_SHOP->url_post_curl_location} -d \"$postdata\" $url", $info, $returnval))."\n";
+     $this->debug .=  "returnval = ".print_r($returnval);
+
 
   	$info=implode("\n",$info);
 
@@ -188,6 +190,13 @@ class Payment {
 
   	//Start ob to prevent curl_exec from displaying stuff.
   	$info =curl_exec($ch);
+    if ($info === false)
+    {
+        $this->debug .=  'curl_error = ' . curl_error($ch);
+    }
+
+    $this->debug .= 'curl_info = '.print_r(curl_getinfo($ch), true)."\n";
+
   	curl_close($ch);
 
   	return $info;
@@ -211,12 +220,11 @@ class Payment {
   	//Create connection
   	$fp=@fsockopen($ssl . $web[host],$web[port],$errnum,$errstr,30);
 
-  	//Error checking
-  	if(!$fp) { echo "$errnum: $errstr"; }
-
-  	//Post Data
-  	else {
-
+  	if(!$fp) {
+    	//Error checking
+      $this->debug .=   "$errnum: $errstr";
+    }	else {
+      //Post Data
   		fputs($fp, "POST $web[path] HTTP/1.1\r\n");
   		fputs($fp, "Host: $web[host]\r\n");
   		fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
@@ -225,7 +233,9 @@ class Payment {
   		fputs($fp, $postdata . "\r\n\r\n");
 
   		//loop through the response from the server
-  		while(!feof($fp)) { $info.=@fgets($fp, 1024); }
+  		while(!feof($fp)) {
+        $info .= @fgets($fp, 1024);
+      }
 
   		//close fp - we are done with it
   		fclose($fp);

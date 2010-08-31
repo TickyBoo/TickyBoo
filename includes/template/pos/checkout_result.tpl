@@ -105,9 +105,10 @@
           height: 'auto',
           width: 'auto',
           modal: true,
-          close: function(event, ui) {
+          close: function(event, ui) { confirm('test');
             if (timerid) {
               clearTimeout(timerid);
+              timerid = -1;
             }
             {/literal}window.location = '{$_SHOP_root}index.php';{literal}
           }
@@ -120,20 +121,24 @@
 
       //The refresh orderpage, the ajax manager SHOULD ALLWAYS be used where possible.
       var checkpaint = function(){
-        ajaxQManager.add({
-          type:      "POST",
-          url:      "ajax.php?x=canprint",
-          dataType:   "json",
-          data:      {"pos":true,"action":"Canprint",orderid:orderid},
-          success:function(data, status){
-            if(data.status){
-              jQuery('#printticket').show();
-              jQuery('#waiting').hide();
-            } else {
-              timerid = setTimeout('checkpaint()', 1000);
+        if (timerid > -1) {
+          ajaxQManager.add({
+            type:      "POST",
+            url:      "ajax.php?x=canprint",
+            dataType:   "json",
+            data:      {"pos":true,"action":"Canprint",orderid:orderid},
+            success:function(data, status){
+              if(data.status){
+                if (data.show){
+                  jQuery('#printticket').show();
+                }
+                jQuery('#waiting').hide();
+              } else {
+                timerid = setTimeout('checkpaint()', 1000);
+              }
             }
-          }
-        });
+          });
+        }
       }
       checkpaint();
     {/literal}

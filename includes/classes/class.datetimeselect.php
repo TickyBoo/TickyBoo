@@ -84,10 +84,20 @@ class DateTimeSelect
 		$selected = strtotime($selected);
 		switch($format)
 		{
+			case 'My':
+			case 'my':
+        If ($selected) {
+   			  $this->selected['month'] = date('n',$selected);
+    			$this->selected['year']  = date('y',$selected);
+  			}
+				$this->selectbox .= ($format=='my')?$this->buildMonth('F'):$this->buildMonth('n');
+				$this->selectbox .= $this->buildYear('y');
+				$this->selectbox .= $this->buildDateScript();
+				break;
 			case 'MY':
 			case 'mY':
         If ($selected) {
-   			$this->selected['month'] = date('n',$selected);
+   			  $this->selected['month'] = date('n',$selected);
     			$this->selected['year']  = date('Y',$selected);
   			}
 				$this->selectbox .= ($format=='mY')?$this->buildMonth('F'):$this->buildMonth('n');

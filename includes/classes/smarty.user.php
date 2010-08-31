@@ -101,10 +101,13 @@ class User_Smarty {
 
 /*The next bit of code creates users */
   function register_f ($ismember, &$member, $mandatory_l=0, $secure='', $short=0 ){
-    if (!isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
+    if (is_bool($ismember)){ // (!isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
       $type =($ismember)?2:3;
+    } elseif (is_integer($ismember)) {
+      $type = $ismember;
     } else {
-      $type = 4;
+      addwarning('Invalid_Member_type');
+      return false;
     }
 
     if($res = User::register($type, $member, convMandatory($mandatory_l) , $secure, $short)){ /* $res == the returned $user_id from create_member in user_func.php */

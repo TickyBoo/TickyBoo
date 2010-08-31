@@ -191,11 +191,11 @@ class Template Extends Model {
     if(!is_object($template)){
       return false;
     }
-    $type = is($template->template_type,'swift');
+    $type = is($template->template_type, 'swift');
 
     //Create the email
     require_once('classes/email.swift.sender.php');
-    $template->write($message,$data,$lang);
+    $template->write($message, $data, $lang);
 
     // Include Pdfs if told to.
     $includeInvoice = is($data['handling_incl_inv_pdf'],0) ;

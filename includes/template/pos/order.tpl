@@ -63,11 +63,11 @@
   <div id="cart-pager"></div>
   <div id="order_action" title='{!pos_order_page!}'></div>
   <br />
-    <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
+ {*   <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
           <strong>{!alert!} </strong><span id='error-text'></span>
        </p>
-    </div>
+    </div> *}
     <table width='100%'>
       <tr>
         <td valign='top'  width='50%'>
@@ -103,11 +103,6 @@
         <td style="text-align:center;">
           <form id="ft-pos-order-form">
             {* update->view event_date=$min_date user=user->user_id *}
-          {* if $update_view.can_reserve
-                   &nbsp;
-            <button type='button' id='reserved' name='action' value='PosReserved'>{!reserve!}</button>
-           /if
-                  *}
             <button type='button' id='checkout' name='action' value='PosCheckout' style="float:none;">{!order_it!}</button>
             &nbsp;
             <button type='button' id='cancel' name='action' value='PosCancel' style="float:none;">{!cancel!}</button>

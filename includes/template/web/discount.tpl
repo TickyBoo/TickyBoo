@@ -65,7 +65,7 @@
                       {elseif $shop_category.category_numbering eq 'seat'}
                         {!seat!} {$places_nr[i].1}
                       {elseif $shop_category.category_numbering eq 'none'}
-                        {$index}
+                        {!ticket!} {$smarty.section.i.index+1}
                       {/if}
                     </td>
                     <td style='font-size:11px;font-family:Verdana;'>

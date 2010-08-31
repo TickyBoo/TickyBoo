@@ -3,7 +3,7 @@ var refreshTimer = null;
 var eventData = new Object();
 
 var loadOrder = function(){
-  
+
   orderDialogs();
 
   $('#cart_table').jqGrid({
@@ -72,19 +72,19 @@ var loadOrder = function(){
     }
   });
   $('#no_fee').click(function(){ refreshOrder(); });
-  
-  //Make sure all add ticket fields are added to this so when clearing selection 
+
+  //Make sure all add ticket fields are added to this so when clearing selection
   //All fields are reset.
   $('#clear-button').click(function(){ clearOrder(); });
-  
+
   //Change to live
   // Refresh (Update Price) on transaction change.
   jQuery("input").live("click change",function(){
     if(jQuery(this).attr('name') == 'handling_id' && jQuery(this).is(':radio')){
-      refreshOrder();  
+      refreshOrder();
     }
   });
-  
+
   //Creates a auto refreshing function.
   refreshTimer = setInterval(function(){refreshOrder();}, 120000);
 
@@ -109,7 +109,7 @@ var loadOrder = function(){
   ////
   $("#checkout").click(function(){
     var userdata = {ajax:"yes",pos:"yes",action:"_PosConfirm"};
-    
+
     userdata['handling_id'] = $("input[type=radio][name='handling_id']:checked").val();
     if(userdata['handling_id'] === undefined){
       message = new Object();
@@ -117,7 +117,7 @@ var loadOrder = function(){
       printMessages(message);
       return;
     }
-    
+
     //If user is being passed check its valid
     if(!$('#user_info_none').is(':checked')){
       if(!$('#pos-user-form').valid()){
@@ -133,6 +133,9 @@ var loadOrder = function(){
       userdata['no_fee'] = 0;
     }
     $("#user_data input").each(function() {
+      userdata[$(this).attr("name")] = $(this).val();
+    });
+    $("#user_data select").each(function() {
       userdata[$(this).attr("name")] = $(this).val();
     });
     $("#error-message").hide();
@@ -166,16 +169,16 @@ var loadOrder = function(){
     });
     return false;
   });
-   
-  //Load the events 
+
+  //Load the events
   updateEvents();
 }
 
 //Load Dialog Functions
 
 var orderDialogs = function(){
-  
-  //Seat Chart Popup Box, Gets pushed back into Form on open.  
+
+  //Seat Chart Popup Box, Gets pushed back into Form on open.
   $("#seat-chart").dialog({
     bgiframe: false,autoOpen: false,
     height: 'auto',maxHeight: 400,
@@ -185,9 +188,9 @@ var orderDialogs = function(){
         $(this).dialog('close');
       }
     },
-    open: function(){jQuery("#seat-chart").parent().appendTo($("#order-form"));} 
+    open: function(){jQuery("#seat-chart").parent().appendTo($("#order-form"));}
   });
-  
+
   // Opens a dialog to confirm payment
   $("#order_action").dialog({
     bgiframe: false,autoOpen: false,
@@ -195,10 +198,14 @@ var orderDialogs = function(){
     modal: true,
     close: function(event, ui) {
       updateEvents();
+      if (timerid) {
+        clearTimeout(timerid);
+        timerid = -1;
+      }
       refreshOrder();
     }
   });
-  
+
 }
 
 //End of order startup

@@ -103,6 +103,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 	}
 
   private function loadMessages() {
+    global $_SHOP;
     $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
     $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
     $this->json['messages']['Error']   = array();
@@ -474,12 +475,13 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		  addWarning('bad_order_id');
 			return false;
 		}
+
 		$sql = "SELECT order_payment_status
             FROM `Order`
             WHERE order_id="._esc($orderid);
     	$q = ShopDB::query_one_row($sql);
  	  	$this->json['status'] = $q['order_payment_status']=='payed';
-
+      $this->json['show'] = true;
 		return true;
 	}
 
@@ -591,15 +593,16 @@ class ctrlPosAjax extends ctrlWebCheckout {
 
 
   private function _posConfirm () {
+
     if ((int)$_POST['handling_id']==0) { // Checks handling is selected
         addWarning('no_handling_selected');//.print_r($_POST,true);
         return false;
 
-    } elseif ($_POST['user_id']==-2) { //Checks that a user type is selected.
+    } elseif ((int)$_POST['user_id']==-2) { //Checks that a user type is selected.
         addWarning('no_useraddress_selected');
         return false;
 
-    } elseif ($_POST['user_id']==-1) { //if "No User" use the POS user
+    } elseif ((int)$_POST['user_id']==-1) { //if "No User" use the POS user
       // THis is the POS user that the admin account is linked too.
       $user_id = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_user_id'];
       if(!$user_id){
@@ -608,11 +611,15 @@ class ctrlPosAjax extends ctrlWebCheckout {
       }
       $this->__User->load_f($user_id);
 
-    } elseif ($_POST['user_id']==0) {
+    } elseif ((int)$_POST['user_id']==0) {
       //if new user selected put the pos user as the owner of the order
+      $this->json['newuser_id'] = 'new user';
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'];
-      $user_id = $this->__User->register_f(false, $_POST, $errors, 0, '', true);
+      $user_id = $this->__User->register_f( 4, $_POST, 0, '', true);
+      addwarning( "new id: $user_id");
+
       if (!$user_id || hasErrors() ) {
+      	$this->json['newuser_id'] = $user_id ;
         return false;
       } else {
         $this->assign('newuser_id', $user_id);
