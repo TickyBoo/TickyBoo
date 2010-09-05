@@ -16,54 +16,55 @@ class plugin extends model {
   static function load($plugin_name) {
     $query = "select * from `plugins`
               where plugin_name = "._esc($plugin_name);
-    if($event_d=ShopDB::query_one_row($query)) {
-      $event = new plugin;
-      $event->_fill($event_d, false);
-      $event->_unser_extra();
-      return $event;
+    if($plug_d=ShopDB::query_one_row($query)) {
+      $plugin = new plugin;
+      $plugin->_fill($plug_d, false);
+      $plugin->_unser_extra();
+      return $plugin;
     } elseif (file_exists(INC.'plugins'.DS.'plugin.'.$plugin_name.'.php')) {
-      $event = new plugin;
-      $event->plugin_name = $plugin_name;
-      $event->plug($plugin_name);
+      $plugin = new plugin;
+      $plugin->plugin_name = $plugin_name;
+      $plugin->plug($plugin_name);
       //print_r($event);
-      return $event;
+      return $plugin;
     }
+    return null;
   }
 
   static function loadAll($allrecord=true ) {
     $query = "select * from `plugins`
               where ".($allrecord?'1=1':'plugin_enabled=1')."
               order by plugin_priority,plugin_name ";
-    $events = array();
+    $plugins = array();
     if($res=ShopDB::query($query)) {
-      while($event_d=shopDB::fetch_assoc($res)){
-        if (file_exists(INC.'plugins'.DS.'plugin.'.$event_d['plugin_name'].'.php')){
-          $event = new plugin;
-          $event->plug($event_d['plugin_name']);
-          $event->_fill($event_d, false);
-          $event->_unser_extra();
-          $events[$event_d['plugin_name']] = $event;
+      while($plug_d=shopDB::fetch_assoc($res)){
+        if (file_exists(INC.'plugins'.DS.'plugin.'.$plug_d['plugin_name'].'.php')){
+          $plugin = new plugin;
+          $plugin->plug($plug_d['plugin_name']);
+          $plugin->_fill($plug_d, false);
+          $plugin->_unser_extra();
+          $plugins[$plug_d['plugin_name']] = $plugin;
         }
       }
     }
-      if ($allrecord) {
-        $dir = INC .'plugins';
-    	  if ($handle = opendir($dir)) {
-    		  while (false !== ($file = readdir($handle))){
-            if (!is_dir($dir.$file) && preg_match("/^plugin.(.*?\w+).php/", $file, $matches)) {
-              $content = $matches[1];
-              if (!isset($events[$content])) {
-                $event = new plugin(true);
-                $event->plugin_name = $content;
-                $event->plug($content);
-                $events[$content] = $event;
-              }
+    if ($allrecord) {
+      $dir = INC .'plugins';
+  	  if ($handle = opendir($dir)) {
+  		  while (false !== ($file = readdir($handle))){
+          if (!is_dir($dir.$file) && preg_match("/^plugin.(.*?\w+).php/", $file, $matches)) {
+            $content = $matches[1];
+            if (!isset($plugins[$content])) {
+              $plugin = new plugin(true);
+              $plugin->plugin_name = $content;
+              $plugin->plug($content);
+              $plugins[$content] = $plugin;
             }
           }
-    		  closedir($handle);
-      	}
-      }
-      return $events;
+        }
+  		  closedir($handle);
+    	}
+    }
+    return $plugins;
   }
 
 	private function plug($plugname='') {
@@ -80,6 +81,7 @@ class plugin extends model {
             $this->$key = $value;
           }
         }
+
     		return $this->_plug;
       }
 		} else {
@@ -92,15 +94,25 @@ class plugin extends model {
     return parent::save(null, $exclude);
   }
 
+  public function __call($method, $args) {
+    print "Method $method called:\n";
+    var_dump($args);
+    return $this->x;
+  }
+
+
   function call($eventname) {
     global $_SHOP;
     if (!isset($_SHOP->plugins)) {
       $_SHOP->plugins = plugin::loadAll(false);
     }
     $type= substr($eventname,0,1);
-    if (strpos('!?*',$type ) !== false) {
+    if (strpos('%!?*',$type ) !== false) {
       $eventname = substr($eventname,1);
       switch ($type){
+        case '%':
+           $return = false;
+           break;
         case '!':
            $return = true;
            break;
@@ -130,6 +142,9 @@ class plugin extends model {
         $ret = call_user_func_array(array($plugin, 'do'.$eventname ),$args) ;
       //  echo $ret;
         switch ($type){
+          case '%':
+             $return = $return || $ret;
+             break;
           case '!':
              if (!$ret) return false;
              break;
@@ -211,7 +226,7 @@ class plugin extends model {
   function _fill ($data, $nocheck=true){
     if (!empty($data['plugin_name'])) $this->plug($data['plugin_name']);
     $ok = parent::_fill($data, $nocheck);
-  //  if ($this->_plug && !$this->_plug->isInit) $this->_plug->init();
+    if ($this->_plug && !$this->_plug->isInit) $this->_plug->init();
     return $ok;
   }
 }

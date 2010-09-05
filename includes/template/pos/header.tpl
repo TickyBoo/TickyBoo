@@ -38,13 +38,13 @@
 		<title>FusionTicket: Box Office / Sale Point </title>
     <script type="text/javascript" language="javascript">{literal}
     if (console==undefined){
-      var console = Object; 
+      var console = Object;
       console.log = function(){};
     }
     {/literal}</script>
-    
+
     {minify type='css' files='css/formatting.css,css/flick/jquery-ui-1.8.1.custom.css,css/ui.jqgrid.css'}
-    
+
     {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery.ui.js,jquery.ajaxmanager.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.checkboxselect.js,i18n/grid.locale-en.js,jquery.jqGrid.min.js'}
 
 		<script type="text/javascript">
@@ -54,10 +54,10 @@
 			lang.fax_long = '{!fax_long!}';         lang.fax_short = '{!fax_short!}';
 			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
 			lang.not_number = '{!not_number!}';
-		</script>    
+		</script>
     {minify type='js' base='pos/scripts' files='pos.jquery.style.js,pos.jquery.ajax.js,pos.jquery.order.functions.js,pos.jquery.order.js,pos.jquery.order.user.js,pos.jq.forms.js,pos.jq.current.js,pos.jq.current.functions.js'}
-    
-    <!-- 
+
+    <!--
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
     <script type="text/javascript" src="scripts/pos.jquery.order.functions.js"></script>
@@ -68,7 +68,7 @@
     <script type="text/javascript" src="scripts/pos.jq.current.functions.js"></script>
     -->
     <script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
-    
+
 	</head>
 
 	<body>
@@ -89,20 +89,21 @@
 
 				</ul>
 			</div>
-          
+
       <!-- Message Divs -->
-      <div id="error-message-main" title='{!order_error_message!}' class="ui-state-error ui-corner-all center" style="padding: 1em; margin-top: .7em; display:none;" >
-        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-          <span id='error-text-main'>ffff</span>
-        </p>
-      </div>
+    <div id="error-message-main" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
+       <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+          <strong>{!alert!} </strong><span id='error-text-main'></span>
+       </p>
+    </div>
+
       <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all center" style=" padding: 1em; margin-top: .7em; display:none;" >
         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
           <span id='notice-text'>fff</span>
         </p>
       </div>
       <!-- End Message Divs -->
-      
+
       <div style="display:none" id='showdialog'>&nbsp;</div>
 			<div id="right">
 {/if}

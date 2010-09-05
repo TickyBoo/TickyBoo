@@ -140,7 +140,7 @@ var bindCheckoutSubmitForm = function(){
         $("#order_action").dialog('close');
         $("#order_action").html(data.html);
         bindCheckoutSubmitForm();
-        $("#order_action").dialog('open'); 
+        $("#order_action").dialog('open');
       }
     }
   });
@@ -192,9 +192,9 @@ var printMessages = function(messages){
     return;
   }
   if (messages.warning) {
-    $("#error-text").html(messages.warning);
-    $("#error-message").show();
-    setTimeout(function(){$("#error-message").hide();}, 8000);
+    $("#error-text-main").html(messages.warning);
+    $("#error-message-main").show();
+    setTimeout(function(){$("#error-message-main").hide();}, 8000);
   }
   if (messages.notice) {
     $("#notice-text").html(messages.notice);

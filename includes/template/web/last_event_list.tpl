@@ -33,7 +33,7 @@
 <!-- Upcoming Events (last_event_list.tpl) -->
 {assign var='start_date' value=$smarty.now|date_format:"%Y-%m-%d"}
 <p>
-  {event order="event_date,event_time"  ort='on' sub='on' event_status='pub' start_date=$start_date  limit='0,3'}
+  {event order="event_date,event_time"  ort='on' sub='on' event_status='pub' place_map='on' start_date=$start_date  limit='0,3'}
 
     {if $shop_event.tot_count eq 1}
       {include file="event_description.tpl" info_plus ='on'}

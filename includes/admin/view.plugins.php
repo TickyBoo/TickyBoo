@@ -47,7 +47,7 @@ class PluginsView extends AdminView{
     echo "<tr><td class='admin_list_title' colspan='5' align='left'>".con('plugins_title')."</td>";
     echo "</tr>\n";
 
-
+    $showSave =false;
     foreach($plugins as $row){
       echo "<tr class='admin_list_row_$alt'>";
       echo "<td class='admin_list_item' width='150' >";
@@ -70,6 +70,7 @@ class PluginsView extends AdminView{
                  <option value='3' {$sel[3]}>3</option>
                  <option value='2' {$sel[2]}>2</option>
                  <option value='1' {$sel[1]}>1</option></select>";
+        $showSave = true;
       }
       echo "&nbsp;</td>";
       echo "<td class='admin_list_item' width='65' align='center'>";
@@ -90,7 +91,11 @@ class PluginsView extends AdminView{
       echo "</tr>\n";
       $alt=($alt+1)%2;
     }
-    $this->form_foot(5);
+    if ($showSave) {
+      $this->form_foot(5);
+    } else {
+      echo "</table></form>";
+    }
   }
 
   function form ($plugin, $data, $title, $add='add'){

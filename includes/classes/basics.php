@@ -215,6 +215,7 @@ function constructBase($secure=null, $useroot=false) {
   if (($file=='admin') ||  ($file=='pos') ||  ($file=='control') and $useroot ) {
     $dir = dirname($dir);
   }
+  $dir = str_replace('\\','/' , $dir);
   $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME');
   // thanks to Nasi it will now also works with different port numbers
   if (env('SERVER_PORT') != '80') {

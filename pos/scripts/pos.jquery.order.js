@@ -89,7 +89,7 @@ var loadOrder = function(){
   refreshTimer = setInterval(function(){refreshOrder();}, 120000);
 
   $("#order-form").submit(function(){
-    $("#error-message").hide();
+    $("#error-message-main").hide();
     $(this).ajaxSubmit({
       data:{pos:"yes",action:"_addToCart"},
       dataType: "json",
@@ -138,7 +138,7 @@ var loadOrder = function(){
     $("#user_data select").each(function() {
       userdata[$(this).attr("name")] = $(this).val();
     });
-    $("#error-message").hide();
+    $("#error-message-main").hide();
     ajaxQManager.add({
       type:      "POST",
       url:      "ajax.php?x=posconfirm",
@@ -157,7 +157,7 @@ var loadOrder = function(){
   });
 
   $("#cancel").click(function(){
-   $("#error-message").hide();
+   $("#error-message-main").hide();
    ajaxQManager.add({
       type:      "POST",
       url:      "checkout.php?x=poscancel",
