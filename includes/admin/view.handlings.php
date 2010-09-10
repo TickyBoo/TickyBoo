@@ -140,6 +140,7 @@ class HandlingView extends AdminView{
       $this->print_select_assoc('handling_alt_only',$data,$err,array('No'=>'no','Yes'=>'yes'));
 
       echo "<tr ><td colspan='2' class='admin_name'>" . con('handling_fee_settings') ."</td></tr>";
+      $this->print_select_assoc('handling_fee_type',$data,$err,array('sum'=>'handling_fee_sum','min'=>'handling_fee_min','max'=>'handling_fee_max'));
   		$this->print_input('handling_fee_fix',$data,$err,5,10);
   		$this->print_input('handling_fee_percent',$data,$err,5,10);
 

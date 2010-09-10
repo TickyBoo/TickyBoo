@@ -38,8 +38,8 @@ class Handling Extends Model {
   protected $_idName    = 'handling_id';
   protected $_tableName = 'Handling';
   protected $_columns   = array('#handling_id', 'handling_payment', 'handling_shipment', 'handling_fee_fix',
-                                'handling_fee_percent', 'handling_email_template', 'handling_pdf_template',
-                                'handling_pdf_ticket_template', 'handling_html_template',
+                                'handling_fee_percent', 'handling_fee_fix', 'handling_email_template',
+                                'handling_pdf_template', 'handling_pdf_ticket_template', 'handling_html_template',
                                 'handling_sale_mode', 'handling_extra', 'handling_text_shipment', 'handling_text_payment',
                                 'handling_expires_min', '#handling_alt', 'handling_alt_only', 'handling_only_manual_send' );
 
@@ -124,8 +124,18 @@ class Handling Extends Model {
 
 // Calculates fee for tickets
   function calculate_fee ($total){
-
-    return round($this->handling_fee_fix+($total/100.00)*$this->handling_fee_percent,2);
+    $x = $this->handling_fee_fix;
+    $y = ($total/100.00)*$this->handling_fee_percent;
+    switch ($this->handling_fee_type) {
+      case 'min':
+          return round(($x < $y)?$x : $y,2);
+          break;
+      case 'max':
+          return round(($x > $y)?$x : $y,2);
+          break;
+      default:
+        return round(x+y,2);
+    }
   }
 
   /**

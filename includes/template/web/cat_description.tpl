@@ -58,7 +58,7 @@
       {if $shop_category.category_free>0}
         {assign var=js_array value="$js_array unnum_cats[unnum_cats.length]='`$shop_category.category_numbering`';"}
         {capture assign=opt}
-          <option value='{$shop_category.category_id}' {if $shop_category.category_id eq $smarty.request.category_id}selected{/if} />
+          <option value='{$shop_category.category_id}' {if $shop_category.category_id eq $smarty.request.category_id}selected{/if}>
              {$shop_category.category_name} - {valuta value=$shop_category.category_price|string_format:"%.2f"}
           </option>
         {/capture}

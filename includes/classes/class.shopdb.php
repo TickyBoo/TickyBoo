@@ -91,7 +91,7 @@ class ShopDB {
             //Set Session Time Zone.
             //This does not work:
             ShopDB::query("SET time_zone = '".date('P')."'");
-            ShopDB::query("SET NAMES utf8");
+            if (!empty($_SHOP->usUTF8))  ShopDB::query("SET NAMES utf8");
 
             return true;
           } elseif ($canDie) {

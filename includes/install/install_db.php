@@ -280,6 +280,7 @@ $tbls['Handling']['fields'] = array(
   'handling_shipment' => " enum('email','post','entrance','sp') DEFAULT NULL",
   'handling_fee_fix' => " decimal(5,2) DEFAULT NULL",
   'handling_fee_percent' => " decimal(5,2) DEFAULT NULL",
+  'handling_fee_type' => " enum('sum','min','max') NOT NULL DEFAULT 'sum'",
   'handling_email_template' => " tinytext",
   'handling_pdf_template' => " tinytext",
   'handling_pdf_ticket_template' => " tinytext",
