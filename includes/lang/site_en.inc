@@ -1486,4 +1486,8 @@ define('disc_name','Name');
 define('disc_type','Type');
 define('disc_value',"Value");
 
+define('handling_fee_type','Fee calculation type');
+define('handling_fee_sum','Sum of fixed and Percent');
+define('handling_fee_min','Minimum of fixed and Percent');
+define('handling_fee_max','Maximum of fixed and Percent');
 ?>

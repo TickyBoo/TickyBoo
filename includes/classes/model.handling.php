@@ -37,7 +37,7 @@ class Handling Extends Model {
 
   protected $_idName    = 'handling_id';
   protected $_tableName = 'Handling';
-  protected $_columns   = array('#handling_id', 'handling_payment', 'handling_shipment', 'handling_fee_fix',
+  protected $_columns   = array('#handling_id', 'handling_payment', 'handling_shipment', '*handling_fee_type',
                                 'handling_fee_percent', 'handling_fee_fix', 'handling_email_template',
                                 'handling_pdf_template', 'handling_pdf_ticket_template', 'handling_html_template',
                                 'handling_sale_mode', 'handling_extra', 'handling_text_shipment', 'handling_text_payment',
