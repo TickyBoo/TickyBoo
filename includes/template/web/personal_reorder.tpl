@@ -150,7 +150,7 @@
               {assign var="event_date" value=$shop_ticket_min_date}
 				    {/order->tickets}
 
-            {handling www='on' event_date=$event_date}
+            {handling www='on' event_date=$event_date total=$shop_order.order_total_price}
 
             <tr>
               <td class='payment_form'>
@@ -164,7 +164,7 @@
     				    </label>
     				  </td>
     				  <td class='payment_form'>
-                {assign var=fee value="`$shop_handling.handling_fee_percent*$shop_order.order_total_price/100.00+$shop_handling.handling_fee_fix`"} + {$fee|string_format:"%.2f"} {$organizer_currency}
+                + {$shop_handling.fee|string_format:"%.2f"} {$organizer_currency}
     				  </td>
     				</tr>
 

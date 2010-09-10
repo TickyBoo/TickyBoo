@@ -21,14 +21,14 @@
  * The "phpmyticket professional licence" version 1 is available at
  * http://www.phpmyticket.com/ and in the file
  * PROFESSIONAL_LICENCE included in the packaging of this file.
- * For pricing of this licence please contact us via e-mail to 
+ * For pricing of this licence please contact us via e-mail to
  * info@phpmyticket.com.
  * Further contact information is available at http://www.phpmyticket.com/
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/copyleft/gpl.html.
  *
- * Contact info@phpmyticket.com if any conditions of this licencing isn't 
+ * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
  {include file='header.tpl'}
@@ -165,7 +165,7 @@
   		    <td rowspan='7'><img src='{$_SHOP_themeimages}dot.gif' width='1' height='100'></td>
   		    <td colspan='3' align='left'><font size='2'> <b>{!payment!}</b></font></td>
   		  </tr>
-  		  {handling sp='on'}
+  		  {handling sp='on' total=$shop_order.order_total_price}
     		<tr>
     		  <td class='payment_form'>
     		  {if $shop_handling.handling_shipment eq 'sp'}
@@ -181,7 +181,7 @@
     		  </label>
     		  </td>
     		  <td class='payment_form'>
-    			{assign var=fee value="`$shop_handling.handling_fee_percent*$shop_order.order_total_price/100.00+$shop_handling.handling_fee_fix`"} + {$fee|string_format:"%.2f"} {$organizer_currency}
+          + {$shop_handlingfee|string_format:"%.2f"} {$organizer_currency}
     		  </td>
     		</tr>
   		  {/handling}

@@ -59,7 +59,7 @@
                   <tr>
                     <td >
                       {if $shop_category.category_numbering eq 'both'}
-                        {$places_nr[i].0} - {$places_nr[i].1}
+                        {!seat!} {$places_nr[i].0} - {$places_nr[i].1}
                       {elseif $shop_category.category_numbering eq 'rows'}
                         {!row!} {$places_nr[i].0}
                       {elseif $shop_category.category_numbering eq 'seat'}

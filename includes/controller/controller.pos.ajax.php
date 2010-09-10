@@ -381,7 +381,8 @@ class ctrlPosAjax extends ctrlWebCheckout {
   		$this->json['rows'][] = array('id'=> "{$event_item->event_id}|{$category_item->cat_id}|{$seat_item_id}", 'cell'=> $row);
   		$counter++ ;
 		}
-    $sql = 'SELECT `handling_id`, `handling_fee_fix`, `handling_fee_percent`
+    include_once('shop_plugins'.DS.'block.handling.php');
+    $sql = 'SELECT `handling_id`, `handling_fee_fix`, `handling_fee_percent`, `handling_fee_type`
             FROM `Handling`
             WHERE handling_sale_mode LIKE "%sp%"';
 
@@ -395,7 +396,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
     $totalprice = $subprice;
     $handlings = array();
     while ($pay=shopDB::fetch_assoc($res)){
-      $fee = ($subprice*is($pay['handling_fee_percent'],0.0)/100.00) + is($pay['handling_fee_fix'],0.0);
+      $fee = calculate_fee($pay, $subprice);
       if (($_POST['handling_id']== $pay['handling_id'] and $counter and $_POST['no_fee']!=='1')) { // and !$counter and $_POST['no_fee']!==1
         $totalprice += $fee;
       }
