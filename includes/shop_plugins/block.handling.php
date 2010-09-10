@@ -95,7 +95,7 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
 			  $pay['extra'] = unserialize($pay['handling_extra']);
 
 		  }
-
+      $pay['fee'] = calculate_fee ($pay, $params['total']);
 	    $smarty->assign("shop_handling",$pay);
 
 	    $smarty->_SHOP_db_res[]=$res;
@@ -106,4 +106,18 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
   return $content;
 }
 
+  function calculate_fee ($pay, $total){
+    $x = $pay['handling_fee_fix'];
+    $y = ($total/100.00)*$pay['handling_fee_percent'];
+    switch ($pay['handling_fee_type']) {
+      case 'min':
+          return round(($x < $y)?$x : $y,2);
+          break;
+      case 'max':
+          return round(($x > $y)?$x : $y,2);
+          break;
+      default:
+        return round($x+$y,2);
+    }
+  }
 ?>

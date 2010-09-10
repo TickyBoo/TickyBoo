@@ -70,7 +70,7 @@
       		{assign var=min_date value=$cart->min_date_f()}
           {update->view event_date=$min_date}
 
-          {handling www='on' event_date=$min_date}   {* checked="checked" *}
+          {handling www='on' event_date=$min_date total=$total}   {* checked="checked" *}
   				  <tr class="{cycle name='payments' values='TblHigher,TblLower'}">
               <td class='payment_form'>
                 <input  type='radio' id='{$shop_handling.handling_id}_check' class='checkbox_dark' name='handling_id' value='{$shop_handling.handling_id}' />
@@ -82,9 +82,8 @@
      		  			</label>
           		</td>
               <td class='payment_form' align='right'>
-                {assign var=fee value="`$total*$shop_handling.handling_fee_percent/100.00+$shop_handling.handling_fee_fix`"}
-                {if  $fee}
-                  + {gui->valuta value=$fee|string_format:"%.2f"}
+                {if  $shop_handling.fee}
+                  + {gui->valuta value=$shop_handling.fee|string_format:"%.2f"}
                 {/if}&nbsp;
               </td>
         		</tr>

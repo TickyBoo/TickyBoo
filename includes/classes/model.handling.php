@@ -134,7 +134,7 @@ class Handling Extends Model {
           return round(($x > $y)?$x : $y,2);
           break;
       default:
-        return round(x+y,2);
+        return round($x+$y,2);
     }
   }
 

@@ -1003,9 +1003,10 @@ class Order Extends Model {
     if (!$mode) $mode = 'file';
 
     $orderqry = '
-        SELECT * FROM `Order` left join User     on (order_user_id= user_id)
-                              left join Handling on (order_handling_id = handling_id)
-                              left join Discount on (order_discount_id = discount_id)
+        SELECT `Order`.*,User.*, Handling.*, discount_name as orderdiscount_name , discount_cond as orderdiscount_cond
+        FROM `Order` left join User     on (order_user_id= user_id)
+                     left join Handling on (order_handling_id = handling_id)
+                     left join Discount on (order_discount_id = discount_id)
         where order_id = '._esc($order_id);
 
     $seatqry = '
