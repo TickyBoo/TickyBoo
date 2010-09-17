@@ -365,8 +365,9 @@ class install_execute {
    *
    * @return void
    */
-  static function moveOrderNotes(){
-    if(ShopDB::query("SELECT COUNT(*) FROM `Order` WHERE order_note IS NOT NULL")){
+  static function moveOrderNotes($Install){
+    $rec = is(ShopDB::query_one_row("SELECT COUNT(*) FROM `Order` WHERE order_note IS NOT NULL"),array(0));
+    if($rec[0] >0 ){
       $query = "INSERT INTO `order_note`
                 (`onote_order_id`,`onote_subject`,`onote_note`)
                 SELECT order_id,'Old Note',order_note

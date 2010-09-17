@@ -101,12 +101,14 @@ class User_Smarty {
 
 /*The next bit of code creates users */
   function register_f ($ismember, &$member, $mandatory_l=0, $secure='', $short=0 ){
-    if (is_bool($ismember)){ // (!isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
+    if (is_string($ismember)){
+      $type =($ismember =='true')?2:3;
+    } elseif (is_bool($ismember)){
       $type =($ismember)?2:3;
     } elseif (is_integer($ismember)) {
       $type = $ismember;
     } else {
-      addwarning('Invalid_Member_type');
+      addwarning('Invalid_Member_type', gettype($ismember).' '.$ismember );
       return false;
     }
 
