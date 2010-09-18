@@ -953,6 +953,9 @@ define("resend_activation","Resend Activation Email");
 define("act_is_sent","Your Activation Email has been sent to your Inbox!");
 define("act_sent","The activation Email has been sent. Please check your Email for a link.");
 define("act_mess_line","Please check your email to activate your account.<br><br>");
+define("act_mess_line_nm","<b>You may complete this order without activating your account.</b><br>
+          					Please check your email to activate your account for future purchases.<br>"); 
+
 define("act_note","Enter your e-mail address. Click on 'Send'; and a new activation email will be sent to your e-mail address.");
 define("act_norecived","If you have not recived an activation email within a few hours, please click this <strong>link</strong>");
 define("success_activate","You have successfully activated your account.<br /> You may now login.");

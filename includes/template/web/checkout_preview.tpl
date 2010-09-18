@@ -39,7 +39,7 @@
       <tr>
         <td class='TblLower'>
           <span class='title'>{!act_name!}<br><br> </span>
-          {include file="user_registred.tpl"}
+          {include file="user_nm_registered.tpl"}
     		</td>
       </tr>
     </table>
