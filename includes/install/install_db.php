@@ -577,4 +577,17 @@ $tbls['plugins']['key'] = array(
   "UNIQUE KEY `key_plugin_name` (`plugin_name`)");
 $tbls['plugins']['remove'] = array ();
 $tbls['plugins']['engine'] = 'InnoDB';
+
+$tbls['userstats']['fields'] =Array(
+                  "userstats_id"=>" int(11) NOT NULL AUTO_INCREMENT",
+                  "userstatse_timestamp"=>" datetime DEFAULT NULL",
+                  "userstats_ip"=>" varchar(100) DEFAULT NULL",
+                  "userstats_browser"=>" varchar(100) DEFAULT NULL",
+                  "userstats_server"=>" text",
+                  "userstats_referrer"=>" varchar(100) DEFAULT NULL",
+                  "userstats_request_uri"=>" varchar(100) DEFAULT NULL");
+$tbls['userstats']['key'] = array(
+  "PRIMARY KEY (`userstats_id`)");
+$tbls['userstats']['remove'] = array ();
+$tbls['userstats']['engine'] = 'InnoDB';
 ?>

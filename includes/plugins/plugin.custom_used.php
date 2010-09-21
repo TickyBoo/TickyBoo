@@ -46,7 +46,7 @@ class plugin_custom_used extends baseplugin {
   }
 
   function doOrderdecodebarcode($barcode) {
-    return (sscanf(str_pad(hexdec($codebar), 16, "0", STR_PAD_LEFT),"%08d%s"));
+    return (sscanf(str_pad(hexdec($barcode), 16, "0", STR_PAD_LEFT),"%08d%s"));
   }
 
 }

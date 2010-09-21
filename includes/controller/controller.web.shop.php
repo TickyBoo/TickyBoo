@@ -72,6 +72,7 @@ class ctrlWebShop  {
     require_once (INC. 'config'.DS.'init.php' );
     $this->initPlugins();
     $this->smarty->init($context);
+    plugin::call('*Pageload', $this);
   }
 
   public function draw($fond, $isAjax= false) {
