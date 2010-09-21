@@ -184,7 +184,7 @@ class PluginsView extends AdminView{
   function extra_form($hand, &$data, &$err){
     Global $_SHOP;
 
-    $extras = $hand->config();
+    $extras = $hand->config($this);
     if ( $extras) {
       require_once('smarty/Smarty.class.php');
       require_once('classes/smarty.gui.php');

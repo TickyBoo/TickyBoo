@@ -13,7 +13,7 @@ INSERT INTO `Discount` (`discount_id`, `discount_event_id`, `discount_name`, `di
 
 
 INSERT INTO `Event` (`event_id`, `event_name`, `event_text`, `event_short_text`, `event_url`, `event_image`, `event_ort_id`, `event_pm_id`, `event_date`, `event_time`, `event_open`, `event_end`, `event_status`, `event_order_limit`, `event_template`, `event_group_id`, `event_mp3`, `event_rep`, `event_main_id`, `event_type`, `event_total`, `event_free`) VALUES
-(1, 'Demo Banquet', 'Enter details and order information here.', 'Enter short summary of event here.', 'http://demohomepage@demo.com', 'event_image_1.jpg', 1, 2, '2010-11-01', '12:00:00', '11:30:00', '16:00:00', 'unpub', 0, 'Ticket_pdf2', 1, NULL, 'main,sub', 1, 'party'),
+(1, 'Demo Banquet', 'Enter details and order information here.', 'Enter short summary of event here.', 'http://demohomepage@demo.com', 'event_image_1.jpg', 1, 2, '2010-11-01', '12:00:00', '11:30:00', '16:00:00', 'unpub', 0, 'Ticket_pdf2', 1, NULL, 'main,sub', 1, 'party',0,0),
 (2, 'Demo Theater Event', 'Add the details here', 'Put short description of the event here', NULL, 'event_image_2.jpg', 1, 4, '2010-11-01', '14:00:00', '13:30:00', '16:00:00', 'pub', 0, 'Ticket_pdf2', 2, NULL, 'main,sub', 2, '', 50, 46);
 
 

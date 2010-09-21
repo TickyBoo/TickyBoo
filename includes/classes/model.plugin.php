@@ -185,8 +185,8 @@ class plugin extends model {
       $this->delete();
     }
   }
-  function config() {
-    return $this->_plug->config();
+  function config($page) {
+    return $this->_plug->config($page);
   }
 
   function _ser_extra(){
