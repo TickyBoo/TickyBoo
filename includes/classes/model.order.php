@@ -1072,6 +1072,8 @@ class Order Extends Model {
 
     $hand = Handling::load($order['order_handling_id']);
     $order['user_country_name']= gui_smarty::getCountry($order['user_country']);
+    $order['order_seats'] = $seats;
+    $order['pdf_subject'] = $subj;
 
     $paper_size=$_SHOP->pdf_paper_size;
     $paper_orientation=$_SHOP->pdf_paper_orientation;

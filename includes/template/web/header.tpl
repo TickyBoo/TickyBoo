@@ -30,6 +30,12 @@
  * clear to you.
  *}
 {if !$noHeader}
- {include file="$_SHOP_theme/header.tpl" name=$name}
+{include file="$_SHOP_theme/header.tpl" name=$name}
 <div style="display:none" id='showdialog'>this is a nice dialog is it not?</div>
+<script>
+  if (navigator.cookieEnabled == false)
+    {literal}{ {/literal}
+       $.modal("<div>{!cookie_disabled!}</div>");
+    {literal} }{/literal}
+</script>
 {/if}

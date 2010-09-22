@@ -30,7 +30,11 @@
  * clear to you.
  *}
 {if $pm_return.approved}
-  {include file="header.tpl" name=!pay_accept! noHeader=$no_header}
+  {if $Shop_order.order_payment_status eq 'payed'}
+    {include file="header.tpl" name=!pay_accept! noHeader=$no_header}
+  {else}
+    {include file="header.tpl" name=!pay_ispending! noHeader=$no_header}
+  {/if}
 {else}
   {include file="header.tpl" name=!pay_refused! noHeader=$no_header}
 {/if}

@@ -360,7 +360,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
       }
       $row = array($col);
       $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}<br>".
-               formatdate($event_item->event_date)."  ".formatdate($event_item->event_time,con('time_format'));
+               formatdate($event_item->event_date,con('shortdate_format'))."  ".formatdate($event_item->event_time,con('time_format'));
       $row[] = count($seats_ids);
       $col = "{$category_item->cat_name}";
       if ($seatinfo) {

@@ -192,7 +192,7 @@ class Gui_smarty {
       $this->guidata = $params['data'];
     }
     $return ='';
-    If ($method <> 'node') {
+    If ($method <> 'none') {
        $target       = is($params['target']);
        if ($target) $target = 'target="'.$target.'"';
       $return .= "<form action='$url' id='$id' name='$name' method='$method' enctype='$enctype' $target";

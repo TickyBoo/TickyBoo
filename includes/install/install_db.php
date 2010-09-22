@@ -227,6 +227,11 @@ $tbls['Event']['fields'] = array(
   'event_rep' => " set('main','sub') NOT NULL DEFAULT 'main,sub'",
   'event_main_id' => " int(11) DEFAULT NULL",
   'event_type' => " varchar(25) DEFAULT NULL",
+  'event_custom1' => " varchar(50) DEFAULT ''",
+  'event_custom2' => " text",
+  'event_custom3' => " int(11) DEFAULT '0'",
+  'event_custom4' => " datetime DEFAULT '0000-00-00 00:00:00'",
+
   'event_total' => " int(11) NOT NULL DEFAULT '0'",
   'event_free' => " int(11) NOT NULL DEFAULT '0'");
 $tbls['Event']['key'] = array(
@@ -329,6 +334,11 @@ $tbls['Order']['fields'] = array(
   'order_lock' => "enum('0','1') NOT NULL DEFAULT '0'",
   'order_lock_time' => "timestamp NULL DEFAULT '0000-00-00 00:00:00'",
   'order_lock_admin_id' => "int(11) DEFAULT NULL",
+  'order_custom1' => " varchar(50) DEFAULT ''",
+  'order_custom2' => " text",
+  'order_custom3' => " int(11) DEFAULT '0'",
+  'order_custom4' => " datetime DEFAULT '0000-00-00 00:00:00'",
+
   'order_lang' => "varchar(2) DEFAULT NULL");
 
 $tbls['Order']['key'] = array(
@@ -539,31 +549,6 @@ $tbls['Template']['engine'] = 'InnoDB';
 $tbls['Template']['remove'] = array ('template_organizer_id')   ;
 //$tbls['Template']['AUTO_INCREMENT'] = 21;
 
-$tbls['Payment_log']['fields'] = array(
-  'payment_log_id' => " int(11) NOT NULL AUTO_INCREMENT",
-  'payment_log_order_id' => " int(11) NOT NULL DEFAULT '0'",
-  'payment_log_date' => " datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
-  'payment_log_ipn_server_ip' => " varchar(255) NOT NULL DEFAULT ''",
-  'payment_log_ipn_server_info' => " text NOT NULL",
-  'payment_log_ipn_server_result' => " text NOT NULL",
-  'payment_log_action' => " varchar(255) NOT NULL DEFAULT ''",
-  'payment_log_blog' => " text NOT NULL");
-$tbls['Payment_log']['key'] = array(
-  "PRIMARY KEY (`payment_log_id`)",
-  "KEY `payment_log_order_id` (`payment_log_order_id`)");
-$tbls['Payment_log']['engine'] = 'InnoDB';
-$tbls['Payment_log']['remove'] = array ()   ;
-
-$tbls['sessions']['fields'] = array(
-  'session_id'     => " varchar(32) NOT NULL DEFAULT ''",
-  'session_access' => " int(10) unsigned DEFAULT NULL",
-  'session_data'   => " longtext");
-$tbls['sessions']['key'] = array(
-  "PRIMARY KEY (`session_id`)",
-  "KEY `session_access` (`session_access`)");
-$tbls['sessions']['remove'] = array ('Sessions_id', 'Sessions_access','Sessions_data' );
-$tbls['sessions']['engine'] = 'InnoDB';
-
 $tbls['plugins']['fields'] = array(
   'plugin_id'        => " int(11) NOT NULL AUTO_INCREMENT",
   'plugin_name'      => " varchar(40) NOT NULL",
@@ -579,13 +564,13 @@ $tbls['plugins']['remove'] = array ();
 $tbls['plugins']['engine'] = 'InnoDB';
 
 $tbls['userstats']['fields'] =Array(
-                  "userstats_id"=>" int(11) NOT NULL AUTO_INCREMENT",
-                  "userstatse_timestamp"=>" datetime DEFAULT NULL",
-                  "userstats_ip"=>" varchar(100) DEFAULT NULL",
-                  "userstats_browser"=>" varchar(100) DEFAULT NULL",
-                  "userstats_server"=>" text",
-                  "userstats_referrer"=>" varchar(100) DEFAULT NULL",
-                  "userstats_request_uri"=>" varchar(100) DEFAULT NULL");
+  "userstats_id"=>" int(11) NOT NULL AUTO_INCREMENT",
+  "userstatse_timestamp"=>" datetime DEFAULT NULL",
+  "userstats_ip"=>" varchar(100) DEFAULT NULL",
+  "userstats_browser"=>" varchar(100) DEFAULT NULL",
+  "userstats_server"=>" text",
+  "userstats_referrer"=>" varchar(256) DEFAULT NULL",
+  "userstats_request_uri"=>" varchar(256) DEFAULT NULL");
 $tbls['userstats']['key'] = array(
   "PRIMARY KEY (`userstats_id`)");
 $tbls['userstats']['remove'] = array ();

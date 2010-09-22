@@ -25,7 +25,7 @@
     #basic-modal-content {display:none;}
 
     /* Overlay */
-    #simplemodal-overlay {background-color:#ffffff; cursor:wait;}
+    #simplemodal-overlay {background-color:#0f0f0f; cursor:wait;}
 
     /* Container */
     #simplemodal-container { background-color:#ffffff; border:4px solid #004088; padding:12px;}

@@ -954,7 +954,7 @@ define("act_is_sent","Your Activation Email has been sent to your Inbox!");
 define("act_sent","The activation Email has been sent. Please check your Email for a link.");
 define("act_mess_line","Please check your email to activate your account.<br><br>");
 define("act_mess_line_nm","<b>You may complete this order without activating your account.</b><br>
-          					Please check your email to activate your account for future purchases.<br>"); 
+          					Please check your email to activate your account for future purchases.<br>");
 
 define("act_note","Enter your e-mail address. Click on 'Send'; and a new activation email will be sent to your e-mail address.");
 define("act_norecived","If you have not recived an activation email within a few hours, please click this <strong>link</strong>");
@@ -1493,4 +1493,7 @@ define('handling_fee_type','Fee calculation type');
 define('handling_fee_sum','Sum of fixed and Percent');
 define('handling_fee_min','Minimum of fixed and Percent');
 define('handling_fee_max','Maximum of fixed and Percent');
+
+define('pay_ispending',"Payment transaction is pending.");
+define('cookie_disabled','<H1> Warning, you have disabled cookies on your system.</h1> This will not work on this website. Please turn this on, before you order any tickets.');
 ?>
