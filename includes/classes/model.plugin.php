@@ -89,7 +89,7 @@ class plugin extends model {
   	}
   }
 
-  function save ($exclude){
+  function save ($exclude= false){
 		$this->_ser_extra();
     return parent::save(null, $exclude);
   }

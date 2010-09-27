@@ -38,15 +38,15 @@ class plugin_custom_used extends baseplugin {
   public $plugin_actions  = array ('config','install','uninstall','priority','enable','protect');
 
   function doOrderDiscription($order, $discription) {
-    return 'test';
+    return con('OrderDiscription');
   }
 
   function doOrderencodebarcode($order, $ticket, $code) {
-    return str_pad(dechex($code), 10, "0", STR_PAD_LEFT);
+    return str_pad(base_convert($code,10,16), 10, "0", STR_PAD_LEFT);
   }
 
   function doOrderdecodebarcode($barcode) {
-    return (sscanf(str_pad(hexdec($barcode), 16, "0", STR_PAD_LEFT),"%08d%s"));
+    return (sscanf(str_pad(base_convert($barcode,16,10), 16, "0", STR_PAD_LEFT),"%08d%s"));
   }
 
 }

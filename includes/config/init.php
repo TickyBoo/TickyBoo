@@ -166,6 +166,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
      $string = "<h1>Access Denied</h1>";
      $string .= "<p><strong>Why?</strong> :- Please check you submitted a form within the same domain (website address).</p>";
      $string .= "<p><strong>Or</strong> :- Your session does not match your url.</p>";
+     $string .= "<p>Please check your cookie settings and turn it on.</p>";
+
      die($string);
   }
 

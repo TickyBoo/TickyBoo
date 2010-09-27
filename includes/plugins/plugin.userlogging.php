@@ -183,7 +183,7 @@ class plugin_userlogging extends baseplugin {
 			echo '</table><br>';
 
 			/* top REQUEST_URI display */
-			$TopRequests =  $this->GetTopRequests (); $row=true;
+			$TopRequests =  $this->GetTopRequests ($total); $row=true;
       $page->form_head(con(MODA_12),'100%');
 			foreach ($TopRequests as $k => $v) {
 				$class=($row= !$row)?"admin_name":"admin_value";

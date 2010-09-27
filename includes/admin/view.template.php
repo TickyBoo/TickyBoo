@@ -351,8 +351,6 @@ class TemplateView extends AdminView{
       $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
    	}
 
-    $query = "SELECT count(*) FROM Template
-              where template_type = 'pdf'";
 
     $menu = array(
       con("templ_System")=>"?tab=0",
@@ -361,6 +359,8 @@ class TemplateView extends AdminView{
       con("templ_pdf2")=>"?tab=3"
     );
 
+    $query = "SELECT count(*) FROM Template
+              where template_type = 'pdf'";
     if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
       $menu[con("templ_pdf")]= "?tab=4";
    	}
