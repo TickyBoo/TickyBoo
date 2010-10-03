@@ -75,7 +75,9 @@ class ctrlWebShop  {
     plugin::call('*Pageload', $this);
   }
 
-  public function draw($fond, $isAjax= false) {
+  public function draw($fond, $action, $isAjax= false) {
+    $this->assign('action',$action);
+    $this->assign('isAjax',$isAjax);
     $this->smarty->display(is($fond, 'shop') . '.tpl');
     orphanCheck();
     trace("End of shop \n\n\r");

@@ -255,7 +255,15 @@ if (!defined('ft_check')) {die('System intrusion ');}
     if (!$_auth->checkAuth()) {
       exit;
     }
-  //  print_r($_auth);
+
+    if($res = $auth->admin){
+      $_SHOP->admin = $res;
+      unset($res->admin_password);
+    } elseif($res = Admins::load($_SESSION['_SHOP_AUTH_ADMIN_ID'])) {
+      $_SHOP->admin = $res;
+      unset($res->admin_password);
+    }
+   // print_r($_SESSION);
   }
 
   //ini_set("session.gc_maxlifetime", [timeinsec]);
@@ -270,8 +278,12 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 
   function logincallback ($username, $auth){
-    if($res=Admins::load($auth->admin_id) ){
+    global $_SHOP;
+    if($res = $auth->admin){
+      $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
+      $_SESSION['_SHOP_AUTH_ADMIN_ID']=$res->admin_id;
       $res = empt($res->user,$res);
+      $_SHOP->admin = $res;
       unset($res->admin_password);
     //  unset($res->_columns);
       $_SESSION['_SHOP_AUTH_USER_DATA']= (array)$res;

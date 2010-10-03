@@ -136,7 +136,9 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 	if($limit){
 		$cfr='SQL_CALC_FOUND_ROWS';
 	}
-
+  if($params['amounts']){
+     $value =', (select sum(seat_price) from Seat where seat_event_id = event_id and seat_status = "com") as event_paid';
+  }
 	if($params['search']){
 		$where .= "AND (event_name LIKE '%"._esc($params['search'],false)."%'
 			OR event_text LIKE '%"._esc($params['search'],false)."%'
@@ -147,7 +149,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 		$where .= ")";
 	}
 
-    $query="select $cfr * from $from $where $order_by $limit";
+    $query="select {$cfr} * {$value} from {$from} {$where} {$order_by} {$limit}";
     $res=ShopDB::query($query);
 
 	  $part_count=ShopDB::num_rows($res);

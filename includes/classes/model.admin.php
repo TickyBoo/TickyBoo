@@ -186,6 +186,8 @@ class CustomAuthContainer extends Auth_Container {
     //    var_dump(md5($password));
 
         if ($this->verifyPassword($password, $res['admin_password'], $this->cryptType)) {
+           $res  = admins::load ($this->_auth_obj->admin_id);
+           $this->_auth_obj->admin = $res;
            return true;
         }
 //        $this->activeUser = $res[$this->options['usernamecol']];

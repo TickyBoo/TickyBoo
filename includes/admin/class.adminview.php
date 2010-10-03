@@ -56,7 +56,7 @@ class AdminView extends AUIComponent {
   }
 
   function extramenus(&$menu){}
-
+  function execute(){return false;} 
 
   function drawall() {
     // width=200 for menu ...Change it to your preferd width;

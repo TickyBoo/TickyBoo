@@ -54,7 +54,7 @@ class XMLData {
   					$pc=$i;
   				}
   			}
-  			$names[$i]=shopDB::field_name($res,$i);
+  			$names[$i]=shopDB::fieldname($res,$i);
   			$tables[$i]=(strcasecmp($table,shopDB::fieldTable($res,$i))==0);
 
   			if($names[$i]==$pk){

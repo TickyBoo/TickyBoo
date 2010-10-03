@@ -361,6 +361,7 @@ define("admin_login","Login Name"); //used in admin, organizer, and spoint
 define("admin_user_tab","Admins");
 define("admin_id","Admin ID");
 define("admin_inuse","Admin Activated");
+define("admin_ismanager","Is manager");
 define("admin_user_title","System Administrators");
 define("admin_update_title","Modify Administrator");
 	define("admin_add_title","Add System Administrator");
@@ -636,7 +637,7 @@ define("order_event_list_title","Orders by Event");
       define("on_type_ship","Shipping Details Note");
       define("on_type_todo","ToDo");
         define("note","Note");
-        define("admin","Admin");
+        define("admin","Administrator");
         define("ship","Shipping");
     define("onote_private","Personal Note (You can see only)");
     define("onote_subject","Note Subject");
@@ -645,6 +646,9 @@ define("order_event_list_title","Orders by Event");
     define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
     define("onote_resend_sent","Resend \"Sent\" Email.");
     define("onote_resend_payed","Resend \"Paid\" Email.");
+        define("pos","POS-user");
+        define("posman","POS-manager");
+        define("organizer","Event-Manager");
 
 
 	//Action icons

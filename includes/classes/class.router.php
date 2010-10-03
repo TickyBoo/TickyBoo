@@ -58,11 +58,6 @@ class router {
 
   static function draw($page, $module = 'web', $isAjax= false) {
     GLOBAL $action, $_SHOP;
-/*
-  	if ($action { 0 } == '_') {
-  		throw new Exception('Controller [' . $params['controller'] . '] does not allow execution of action [' . $params['action'] . ']');
-  	}
-*/
     if (strpos($module,'/') === false) {
       $controller = 'shop';
     } else {
@@ -82,12 +77,17 @@ class router {
     $_GET['action']     = $action;
     $_POST['action']    = $action;
     //echo $controller,'-',$module, '-',$action;
+/*
+  	if ($action { 0 } == '_') {
+  		throw new Exception('Controller [' . $params['controller'] . '] does not allow execution of action [' . $params['action'] . ']');
+  	}
+*/
 
-		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
 
     require_once ( INC.'config'.DS.'init_'.$module.'.php' );
-    require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
 
+		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
+    require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
   	$c = new $classname($module);
     $c->draw($page, $action, $isAjax);
   }

@@ -107,9 +107,15 @@ class plugin extends model {
       $_SHOP->plugins = plugin::loadAll(false);
     }
     $type= substr($eventname,0,1);
-    if (strpos('%!?*',$type ) !== false) {
+    $args = func_get_args();
+  	array_shift($args);// print_r($args);
+
+    if (strpos('_%!?*',$type ) !== false) {
       $eventname = substr($eventname,1);
       switch ($type){
+        case '_':
+           $return = $args[0];
+           break;
         case '%':
            $return = false;
            break;
@@ -128,8 +134,6 @@ class plugin extends model {
 
     }
     if (!is_array($_SHOP->plugins )) return $return;
-    $args = func_get_args();
-  	array_shift($args);
     // echo "<pre>",$eventname;
 
   //  print_r($args);
@@ -142,6 +146,10 @@ class plugin extends model {
         $ret = call_user_func_array(array($plugin, 'do'.$eventname ),$args) ;
       //  echo $ret;
         switch ($type){
+          case '_':
+             $return  = $ret;
+             $args[0] = $ret;
+             break;
           case '%':
              $return = $return || $ret;
              break;
