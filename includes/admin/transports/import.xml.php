@@ -41,29 +41,29 @@ class import_xml extends AdminView {
 		global $_SHOP;
 
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
-		$this->form_head(import_xml_title);
+		$this->form_head(con('import_xml_title'));
 
-		echo "<tr><td class='admin_name'  width='40%'>".import_xml_file."</td>
+		echo "<tr><td class='admin_name'  width='40%'>".con('import_xml_file')."</td>
 					<td class='admin_value'><input type='file' name='import_xml_file'></td></tr>";
 
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
-  	<input type='hidden' name='import_type' value='xml'>
-		<input type='submit' name='submit' value='".import_xml_submit."'></td></tr>
+    	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
+  		<input type='submit' name='submit' value='".con('import_xml_submit')."'></td></tr>
 		</table></form>";
   }
 
 
   function execute (){
     global $_SHOP;
-
+//    print_r($_FILES);echo 'testing';
 		if(!empty($_FILES['import_xml_file']) and !empty($_FILES['import_xml_file']['name']) and !empty($_FILES['import_xml_file']['tmp_name'])){
 			require_once('classes/class.xmldata.php');
-			echo import_xml_title." : ".$_FILES['import_xml_file']['name']." ... ";
-			flush();
+			echo con('import_xml_title')." : ".$_FILES['import_xml_file']['name']." ... ";
+	//		flush();
 			xmldata::xml2sql($_FILES['import_xml_file']['tmp_name']);
-			echo done;
-			return TRUE;
+			echo con('done');;
+			return false;
     }
   }
 
