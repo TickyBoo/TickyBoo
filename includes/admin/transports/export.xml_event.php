@@ -78,7 +78,8 @@ class export_xml_event extends AdminView {
 			$what[]=array(
 			'table'=>'Event_group',
       'pk'=>'event_group_id',
-			'query'=>"SELECT Event_group.* FROM `Event`,Event_group WHERE `event_group_id`=event_group_id and event_id=$event_id");
+			'query'=>"SELECT Event_group.* FROM `Event` left join Event_group on `event_group_id`=event_group_id
+                WHERE `event_group_id` is not null and event_id=$event_id");
 
 			$what[]=array(
 			'table'=>'Event',
@@ -98,7 +99,8 @@ class export_xml_event extends AdminView {
 			$what[]=array(
 			'table'=>'PlaceMapZone',
       'pk'=>'pmz_id',
-			'query'=>"SELECT PlaceMapZone.* FROM `PlaceMapZone`,PlaceMap2 WHERE `pmz_pm_id`=pm_id and pm_event_id=$event_id");
+			'query'=>"SELECT PlaceMapZone.* FROM `PlaceMapZone` left join PlaceMap2 on `pmz_pm_id`=pm_id
+                WHERE `pmz_pm_id` is not null and pm_event_id=$event_id");
 
 			$what[]=array(
 			'table'=>'PlaceMapPart',
@@ -113,13 +115,14 @@ class export_xml_event extends AdminView {
 			$what[]=array(
 			'table'=>'User',
 			'pk'=>'user_id',
-			'query'=>"SELECT  DISTINCT User.* FROM Seat left join User on seat_user_id=user_id WHERE seat_event_id=$event_id");
+			'query'=>"SELECT  DISTINCT User.* FROM Seat left join User on seat_user_id=user_id
+                WHERE seat_event_id=$event_id  and seat_user_id is not null");
 
 			$what[]=array(
 			'table'=>'Order',
 			'pk'=>'order_id',
 			'query'=>"SELECT  DISTINCT `Order`.* FROM Seat left join `Order` on seat_order_id=order_id
-                WHERE seat_event_id=$event_id ");
+                WHERE seat_event_id=$event_id and seat_order_id is not null");
 
 			$what[]=array(
 			'table'=>'Seat',
