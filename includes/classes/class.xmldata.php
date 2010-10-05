@@ -67,14 +67,17 @@ class XMLData {
   		  $ret='<'.$table.'>'."\n";
   			foreach($row as $i=>$val){
   			  if($tables[$i]){
-  				  $ret.='  <'.$names[$i].($pc==$i?' pk="1"':'').'>'.
+  				  $ret.='  <'.$names[$i].($pc==$i?' pk="1"':'').(is_null($val)?' null="1"':'').'>'.
   					htmlspecialchars($val,ENT_NOQUOTES).'</'.$names[$i].'>'."\n";
   				}
   			}
   			$ret.='</'.$table.'>'."\n";
 
-  			if($out==SQL2XML_OUT_RETURN){$total.=$ret;}
-  			else{echo $ret;}
+  			if($out==SQL2XML_OUT_RETURN){
+          $total.=$ret;
+        }else{
+          echo $ret;
+        }
   		}
   	}
     return $total;
@@ -110,32 +113,32 @@ class XMLData {
    * if the record is already in db uses update,
    * otherwise uses insert
    */
-  function xml2sql($file){
-    $tmp=&new _xmltmp();
+  function xml2sql($file, $asArray= false){
+    $tmp=&new _xmltmp($asArray);
 
   	$xml_parser = xml_parser_create();
-  	xml_parser_set_option($xml_parser,XML_OPTION_CASE_FOLDING,FALSE);
+//  	xml_parser_set_option($xml_parser,XML_OPTION_CASE_FOLDING,FALSE);
+  	xml_parser_set_option($xml_parser,XML_OPTION_TARGET_ENCODING,'utf-8');
   	xml_set_element_handler($xml_parser, array(&$tmp,"startElement"), array(&$tmp,"endElement"));
   	xml_set_character_data_handler($xml_parser, array(&$tmp,"characterData"));
 
   	if (!($fp = fopen($file, "r"))) {
-  		 user_error("could not open XML input file $file");
+  		 addWarning("could not open XML input file",$file);
   		 return;
   	}
 
   	while ($data = fread($fp, 4096)) {
   		 if (!xml_parse($xml_parser, $data, feof($fp))) {
-  				 user_error(sprintf("XML error: %s at line %d",
+  				 addWarning(sprintf("XML error: %s at line %d",
   										 xml_error_string(xml_get_error_code($xml_parser)),
   										 xml_get_current_line_number($xml_parser)));
   				 return;
   		 }
   	}
-
-  	echo "<br>Inserted {$tmp->inserted} row(s), updated {$tmp->updated} row(s)<br>";
+  	addNotice("<br>Inserted {$tmp->inserted} row(s), updated {$tmp->updated} row(s)<br>");
 
   	xml_parser_free($xml_parser);
-  	return TRUE;
+  	return ($asArray)?$tmp->results:TRUE;
   }
 
   function sql2xml_new($query,$table,$out=SQL2XML_OUT_RETURN,$pk=''){
@@ -247,9 +250,17 @@ class _xmltmp{
 	var $value='';
   var $table='';
 	var $pk='';
+  var $isNull = false;
 
-	var $inserted=0;
-	var $updated=0;
+	var $inserted= 0;
+	var $updated = 0;
+  var $asArray = false;
+  var $result  = array();
+
+
+  function __construct($isArray=false) {
+    $this->asArray = $asArray;
+  }
 
 	function startElement($parser, $name, $attrs){
 		$this->depth++;
@@ -264,6 +275,7 @@ class _xmltmp{
 			if($attrs['pk']){
 			  $this->pk=$name;
 			}
+      $this->isNull= ($attrs['null']==1);
 		}
 	}
 
@@ -271,11 +283,13 @@ class _xmltmp{
 
 		//field ends
 		if($this->depth==3){
-			$this->query[$name]=$this->value;
+			$this->query[$name]=($this->isNull)?null:$this->value;
 
 		//row ends
 		}elseif($this->depth==2){
-			$this->write();
+      if ($this->asArray) {
+        $this->result[$this->table][] = $this->query;
+      } else $this->write();
 		}
 
 		$this->depth--;
@@ -291,7 +305,7 @@ class _xmltmp{
 	function write(){
 		global $_SHOP;
 		$query='select count(*) from `'.$this->table.
-		'` where `'.$this->pk.'`='.ShopDB::quote($this->query[$this->pk]);
+		'` where `'.$this->pk.'`='._esc($this->query[$this->pk]);
 
 		if($res = ShopDB::query_one_row($query, false)){
 		  $count=$res[0];

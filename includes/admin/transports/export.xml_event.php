@@ -71,36 +71,49 @@ class export_xml_event extends AdminView {
 			$event_id=_esc((int)$_GET['export_xml_event_event']);
 
 			$what[]=array(
+			'table'=>'Ort',
+      'pk'=>'user_id',
+			'query'=>"SELECT Ort.* FROM `Event`,Ort WHERE `event_ort_id`=ort_id and event_id=$event_id");
+
+			$what[]=array(
+			'table'=>'Event_group',
+      'pk'=>'event_group_id',
+			'query'=>"SELECT Event_group.* FROM `Event`,Event_group WHERE `event_group_id`=event_group_id and event_id=$event_id");
+
+			$what[]=array(
 			'table'=>'Event',
+      'pk'=>'event_id',
 			'query'=>"select * from Event where event_id=$event_id");
 
 			$what[]=array(
 			'table'=>'PlaceMap2',
+      'pk'=>'pm_id',
 			'query'=>"SELECT * FROM `PlaceMap2` WHERE `pm_event_id`=$event_id");
 
 			$what[]=array(
 			'table'=>'Category',
+      'pk'=>'category_id',
 			'query'=>"SELECT * FROM `Category` WHERE `category_event_id`=$event_id");
 
 			$what[]=array(
-			'table'=>'PlaceMapPart',
-			'query'=>"SELECT * FROM `PlaceMapPart` WHERE `pmp_event_id`=$event_id");
-
-			$what[]=array(
 			'table'=>'PlaceMapZone',
+      'pk'=>'pmz_id',
 			'query'=>"SELECT PlaceMapZone.* FROM `PlaceMapZone`,PlaceMap2 WHERE `pmz_pm_id`=pm_id and pm_event_id=$event_id");
 
 			$what[]=array(
+			'table'=>'PlaceMapPart',
+      'pk'=>'pmp_id',
+			'query'=>"SELECT * FROM `PlaceMapPart` WHERE `pmp_event_id`=$event_id");
+
+			$what[]=array(
 			'table'=>'Discount',
+      'pk'=>'discount_id',
 			'query'=>"SELECT * FROM `Discount` WHERE `discount_event_id`=$event_id");
 
 			$what[]=array(
-			'table'=>'Ort',
-			'query'=>"SELECT Ort.* FROM `Event`,Ort WHERE `event_ort_id`=ort_id and event_id=$event_id");
-
-			$what[]=array(
-			'table'=>'Seat',
-			'query'=>"SELECT * FROM `Seat` WHERE `seat_event_id`=$event_id");
+			'table'=>'User',
+			'pk'=>'user_id',
+			'query'=>"SELECT  DISTINCT User.* FROM Seat left join User on seat_user_id=user_id WHERE seat_event_id=$event_id");
 
 			$what[]=array(
 			'table'=>'Order',
@@ -109,9 +122,9 @@ class export_xml_event extends AdminView {
                 WHERE seat_event_id=$event_id ");
 
 			$what[]=array(
-			'table'=>'User',
-			'pk'=>'user_id',
-			'query'=>"SELECT  DISTINCT User.* FROM Seat left join User on seat_user_id=user_id WHERE seat_event_id=$event_id");
+			'table'=>'Seat',
+			'pk'=>'seat_id',
+			'query'=>"SELECT * FROM `Seat` WHERE `seat_event_id`=$event_id");
 
 			$filename=$_GET['export_xml_event_file'];
 			if(empty($filename)){
