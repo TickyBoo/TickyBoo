@@ -51,10 +51,6 @@ class EPH_cash extends payment{
 
   function on_confirm(&$order, $alreadypayed=0.0) {
     global $_SHOP;
-    if (!isset($_POST['cc_name'])) {
-      $user = User::load($_SESSION['_SHOP_USER']);  //'user'
-      $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
-    }
 		$order_id= $order->order_id;
     $alreadypayed=(float) $alreadypayed;//title=\"".con('eph_cash_confirm')."\"
     return "{gui->StartForm  width='100%' id='payment-confirm-form' action='{$_SHOP->root_secured}checkout.php' method='POST' onsubmit='this.submit.disabled=true;return true;'}

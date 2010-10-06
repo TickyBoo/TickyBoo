@@ -260,7 +260,7 @@ class plugin_userlogging extends baseplugin {
 		$sql.=_esc($ip).",";
 		$sql.=_esc($browser).",";
 		$sql.=_esc($referrer).",";
-		$sql.=_esc(print_r($_SERVER,true)).",";
+		$sql.=_esc('').","; //print_r($_SERVER,true) 
 		$sql.=_esc($REQUEST_URI);
 		$sql.=")";
 		ShopDB::Query($sql);

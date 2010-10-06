@@ -507,9 +507,9 @@ class ctrlPosAjax extends ctrlWebCheckout {
 	 * @return placemap html
 	 */
 	private function loadPlaceMap($category){
-
+    global $_SHOP;
     require_once("shop_plugins".DS."function.placemap.php");
-		return placeMapDraw($category); //return the placemap
+		return placeMapDraw($category, true, true, 'pos', 16, -1); //return the placemap
 	}
 
   /**

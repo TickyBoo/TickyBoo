@@ -117,7 +117,7 @@ class XMLData {
     $tmp=&new _xmltmp($asArray);
 
   	$xml_parser = xml_parser_create();
-//  	xml_parser_set_option($xml_parser,XML_OPTION_CASE_FOLDING,FALSE);
+  	xml_parser_set_option($xml_parser,XML_OPTION_CASE_FOLDING,FALSE);
   	xml_parser_set_option($xml_parser,XML_OPTION_TARGET_ENCODING,'utf-8');
   	xml_set_element_handler($xml_parser, array(&$tmp,"startElement"), array(&$tmp,"endElement"));
   	xml_set_character_data_handler($xml_parser, array(&$tmp,"characterData"));

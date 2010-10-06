@@ -279,7 +279,7 @@ class MyCart_Smarty {
 
   function maxSeatsAlowed_f ($event){
     global $_SHOP;
-    $result = $_SHOP->shopconfig_maxorder;
+    if ($result = $_SHOP->shopconfig_maxorder){
     $eventmax = 0;
     $event = (array)$event;
     $eventmax = $event['event_order_limit'];
@@ -290,6 +290,9 @@ class MyCart_Smarty {
       $result -= $has ;
     }
     return $result;
+    } else {
+      return -1;
+    }
   }
 
   /**
