@@ -52,8 +52,7 @@ class EPH_invoice extends payment{
   function on_confirm(&$order, $alreadypayed=0.0) {
     global $_SHOP;
     if (!isset($_POST['cc_name'])) {
-      $user = User::load($_SESSION['_SHOP_USER']);  //'user'
-      $_POST['cc_name'] = "{$user['user_firstname']} {$user['user_lastname']}";
+      $_POST['cc_name'] = "{$order->user_firstname} {$order->user_lastname}";
     }
 		$order_id= $order->order_id;
     $alreadypayed=(float) $alreadypayed;//title=\"".con('eph_cash_confirm')."\"

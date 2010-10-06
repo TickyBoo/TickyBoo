@@ -536,6 +536,7 @@ define("add_multi","Add Sub-Event");
 	define("event_rep","Repeatability");
 		define("event_rep_main","Multiple");
 		define("event_rep_unique","Unique");
+    define("main,sub","Unique");
 	define("event_short_text","Event Short Text");
 	define("event_text","Event Long Text");
 	define("event_url","Homepage");

@@ -129,7 +129,7 @@ select SQL_CALC_FOUND_ROWS *
 			$edate = formatAdminDate( $row["event_date"], false );
 			$etime = formatTime( $row["event_time"] );
 
-      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_$alt' >";
+      echo "<tr id='nameROW_{$row['event_id']}' class='admin_list_row_{$alt}' onclick=''>";
       echo "<td colspan=2 class='admin_list_item' width=150 NOWRAP><nobr> ";
       if (!$history) {
    		  echo "<input type='checkbox' name='cbxEvents[]' id='main_event_".$row['event_main_id']."' value='".$row['event_id']."'>";
@@ -286,8 +286,8 @@ select SQL_CALC_FOUND_ROWS *
 			$this->print_select_pm( 'event_pm_ort_id', $data, $err,(($data['event_main_id'])?($data['event_pm_ort_id']):'main'));
 		} else {
 			$this->print_field_o( 'event_group_name', $data );
-			$this->print_field( 'event_ort_name', $data );
-			$this->print_field_o( 'event_pm_name', $data );
+			$this->print_field(   'ort_name', $data );
+			$this->print_field_o( 'pm_name', $data );
 		}
 
     If ($data['event_rep']=='sub'){
@@ -296,7 +296,7 @@ select SQL_CALC_FOUND_ROWS *
     } elseif ( !$data['event_id'] ) {
 			$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
 		} else {
-			$this->print_field( 'event_rep', $data );
+			$this->print_field( 'event_rep', con($data['event_rep']) );
 		}
 
 
@@ -414,13 +414,18 @@ select SQL_CALC_FOUND_ROWS *
 			$this->form( $row, 0, $history );
       return;
 		} elseif ( $_POST['action'] == 'save' ) {
+
       if (!$event = Event::load($_POST['event_id'], false)) {
         $event = new Event(true);
+        unset($_POST['event_id']);
       }
       if (!$event->fillPost() || !$event->saveEx()) {
 				$this->form( $_POST, 0, $history);
         return;
-			}
+			}elseif (!isset($_POST['event_id']) and $event->event_pm_id) {
+				$this->form( (array)$event, 1, $history);
+        return;
+      }
 
 		} elseif ( $_GET['action'] == 'remove' and $_GET['event_id'] ) {
 			If ($event = Event::load( $_GET['event_id'], false )){

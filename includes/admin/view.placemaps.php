@@ -89,19 +89,9 @@ class PlaceMapView extends AdminView {
       echo "<input type=hidden name=pm_id value='{$data['pm_id']}'>";
 		}
 		$this->form_head( $title );
-		$this->print_field_o( 'pm_id', $data );
-		$this->print_field_o( 'pm_event_id', $data );
-
 		if ( isset($data['pm_event_id']) && $event = Event::load( $data['pm_event_id'], false )) {
 			$live = $event->event_status != 'unpub';
     	echo "<input type=hidden name=pm_event_id value='{$data['pm_event_id']}'>";
-
-			$data['event_name'] = "{$event->event_name}";
-			$data['event_status'] = "{$event->event_status}";
-			$data['event_date'] = "{$event->event_date}  {$event->event_time}";
-			$this->print_field_o( 'event_name', $data );
-			$this->print_field_o( 'event_date', $data );
-			$this->print_field_o( 'event_status', $data );
 		} else {
 			$live = false;
       $event = null;

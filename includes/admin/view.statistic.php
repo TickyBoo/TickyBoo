@@ -280,8 +280,10 @@ class StatisticView extends AdminView{
         $this->plotEventStats($start_date, $end_date, $month, $year);
         break;
       case 2:
+        if (is_object($this->expviewer)) {
         $this->expviewer->setwidth($this->width);
         $this->expviewer->draw(true);
+        }
       break;
     }
   }
