@@ -137,34 +137,38 @@ class PlaceMapView extends AdminView {
 		}
 	}
 
-	function draw() {
+	function draw($showMe=true ) {
 		global $_SHOP;
 		if ( preg_match('/_disc$/', $_REQUEST['action']) ) {
 			require_once ( "admin/view.discounts.php" );
 			$pmp_view = new DiscountView( $this->width );
 			if ( $pmp_view->draw() ) {
 				$event = Event::load( $_REQUEST['discount_event_id'], false );
-				$this->form( $event->event_pm_id, null, con('edit_pm'));
+				if ($showMe) $this->form( $event->event_pm_id, null, con('edit_pm'));
+        return $event->event_id;
 			}
       $this->addJQuery($pmp_view->getJQuery());
 
 		} elseif ( preg_match('/_pmp$/', $_REQUEST['action']) ) {
 			$pmp_view = new PlaceMapPartView( $this->width );
 			if ( $pmp_view->draw() ) {
-				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
+				if ($showMe) $this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
+        return $_REQUEST['pm_event_id'];
 			}
       $this->addJQuery($pmp_view->getJQuery());
 
 		} elseif ( preg_match('/_pmz$/', $_REQUEST['action']) ) {
 			$pmz_view = new PlaceMapZoneView( $this->width );
 			if ( $pmz_view->draw() ) {
-				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
+				if ($showMe) $this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
+         return -$_REQUEST['pm_id'];
 			}
 
 		} elseif ( preg_match('/_category$/', $_REQUEST['action']) ) {
 			$view = new PlaceMapCategoryView( $this->width );
 			if ( $view->draw() ) {
-				$this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
+				if ($showMe) $this->form( $_REQUEST['pm_id'], null, con('edit_pm') );
+        return -$_REQUEST['pm_id'];
 			}
       $this->addJQuery($view->getJQuery());
 
@@ -173,9 +177,11 @@ class PlaceMapView extends AdminView {
       $pm->pm_ort_id = $_REQUEST['pm_ort_id'];
 //    var_dump($_REQUEST['pm_ort_id']);var_dump($_REQUEST);
 			$this->form( (array)$pm, null, con('add_pm') );
+
     } elseif ( $_GET['action'] == 'edit_pm' and (int)$_GET['pm_id'] > 0 ) {
       $pm = PlaceMap::load($_GET['pm_id']);
-      $this->form((array)$pm, null, con('edit_pm'));
+      if ($showMe) $this->form((array)$pm, null, con('edit_pm'));
+      return $pm->pm_event_id;
 
 		} elseif ( $_POST['action'] == 'save_pm' ) {
       if (!$pm = PlaceMap::load((int)$_POST['pm_id'])) {
@@ -183,8 +189,10 @@ class PlaceMapView extends AdminView {
       }
       if ( !$pm->fillPost() || !$pm->saveEx() ) {
         $this->form( $_POST, null , con((isset($_POST['ort_id']))?'edit_pm':'add_pm') );
+        return false;
       } else {
-        $this->form( (array)$pm, null , con('add_pm') );
+        if ($showMe) $this->form( (array)$pm, null , con('add_pm') );
+        return $pm->pm_event_id;
       }
 
     } elseif ( $_GET['action'] == 'copy_pm' and (int)$_GET['pm_id'] > 0 ) {

@@ -239,9 +239,9 @@ select SQL_CALC_FOUND_ROWS *
                                      'alt'  =>con($img_pub[$row['event_status']]['alt'])));
     }
     echo  $this->show_button("view_event.php?action=edit&event_id={$row['event_id']}",'edit',2);
-    echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,
-                             array('image'=>'pm.png',
-                                   'disable'=> !$row['event_pm_id']));
+//    echo  $this->show_button("view_event.php?action=edit_pm&pm_id={$row['event_pm_id']}",'place_map',2,
+//                             array('image'=>'pm.png',
+//                                   'disable'=> !$row['event_pm_id']));
     $pub = ( ($row['event_pm_id'] and $row['event_status'] == 'unpub') or (!$row['event_pm_id'] and
       				$row['event_status'] != 'pub') or ($row["event_status"] == 'nosal') );
     echo  $this->show_button("view_impexp.php?run=report-archive_event&event_id={$row['event_id']}",'Archive',2,
@@ -252,14 +252,22 @@ select SQL_CALC_FOUND_ROWS *
                                    'disable'=> !$pub ));
   }
 
-	function form( $data, $err ) {
+	function form( $data,  $page = 0 ) {
 		global $_SHOP;
 
-		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
 		if ( !$data['event_id'] ) {
-  		$this->form_head(con('event_add_title'));
+  		$title = con('event_add_title');
 		} else {
-  		$this->form_head(con('event_edit_title'));
+  		$title = con('event_edit_title');
+    }
+
+    echo '
+   <div id="accordion">
+	<h3><a href="#">'.$title.'</a></h3>
+	<div style="margin:0;padding:1;">';
+    echo "<table witdh='100%' style='width:100%'>\n";
+		echo "<form method='POST' action='{$_SERVER['PHP_SELF']}' enctype='multipart/form-data'>\n";
+		if ($data['event_id'] ) {
 			echo "<input type='hidden' name='event_id' value='{$data['event_id']}'/>\n";
     }
 		echo "<input type='hidden' name='action' value='save'/>\n";
@@ -293,7 +301,7 @@ select SQL_CALC_FOUND_ROWS *
 
 
 		$this->print_area( 'event_short_text', $data, $err, 3,46,$main );
-		$this->print_large_area( 'event_text', $data, $err,6,80,$main  );
+  		$this->print_large_area( 'event_text', $data, $err,6,108,$main  );
 		$this->print_input( 'event_url', $data, $err, 30, 100, $main  );
 
 		$this->print_date( 'event_date', $data, $err, $main );
@@ -327,6 +335,26 @@ select SQL_CALC_FOUND_ROWS *
 
         //recurrence
 		$this->form_foot(2,$_SERVER['PHP_SELF']);
+	echo "</div>\n";
+  if ($data['event_pm_id']) {
+    echo '<h3><a href="#">'.con('placemap').'</a></h3>
+	      <div style="margin:0;padding:1;">';
+    require_once ( "admin/view.placemaps.php" );
+		$pmp_view = new PlaceMapView( $this->width );
+    $pmp_view->form($data['event_pm_id']);
+    echo '</div>';
+  }
+  echo ' </div>';
+  $this->addJquery('
+	$(function() {
+		$( "#accordion" ).accordion({
+      autoHeight: false,
+      active: '.$page.',
+      animated: "none"
+		});
+	});
+  ');
+
 	}
 
 
@@ -341,10 +369,19 @@ select SQL_CALC_FOUND_ROWS *
   			 preg_match('/_pm$/'  , $_REQUEST['action']) ) {
 			require_once ( "admin/view.placemaps.php" );
 			$pmp_view = new PlaceMapView( $this->width );
-			if ( !$pmp_view->draw($history) ) {
+			if (!$event = $pmp_view->draw(false) ) {
         $this->addJQuery($pmp_view->getJQuery());
 				return;
-			}
+			} else {
+        if ($event <0) {
+          $pm = PlaceMap::load(-$event);
+          $event = $pm->pm_event_id;
+        }
+        $event = Event::load( $event, false );
+			  $row = ( array )$event;
+        $this->form( $row, 1, $history );
+        return;
+      }
 
 		} elseif ( $_REQUEST['action'] == 'publish' ) {
     	  if($this->state_change(1)) {
@@ -361,12 +398,12 @@ select SQL_CALC_FOUND_ROWS *
         $row['event_rep'] = 'sub';
         $row['event_main_id'] = (int)$_GET['event_main_id'];
         unset($row['event_id']);
-  			$this->form( $row, null );
+  			$this->form( $row, 0, $history );
         return;
       }
 		} elseif ( $_REQUEST['action'] == 'add' ) {
       $event = new Event(true);
-			$this->form( (array)$event, null );
+			$this->form( (array)$event, 0, $history );
       return;
 		} elseif ( $_GET['action'] == 'edit' and $_GET['event_id'] ) {
 			$event = Event::load( $_GET['event_id'], false );
@@ -374,14 +411,14 @@ select SQL_CALC_FOUND_ROWS *
 			if ( !$row ) {
 				return $this->table($history);
 			}
-			$this->form( $row, null );
+			$this->form( $row, 0, $history );
       return;
 		} elseif ( $_POST['action'] == 'save' ) {
       if (!$event = Event::load($_POST['event_id'], false)) {
         $event = new Event(true);
       }
       if (!$event->fillPost() || !$event->saveEx()) {
-				$this->form( $_POST, null);
+				$this->form( $_POST, 0, $history);
         return;
 			}
 
