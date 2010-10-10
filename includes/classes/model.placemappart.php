@@ -500,19 +500,22 @@ class PlaceMapPart Extends Model {
     for($j = 0;$j < $this->pmp_height;$j++) {
       for($k = 0;$k < $this->pmp_width;$k++) {
         $seat = $this->data[$j][$k];
-        if ($seat[PM_ZONE] > 0 and $seat[PM_CATEGORY]) {
-          $zone = $this->zones[$seat[PM_ZONE]];
-          $category = $this->categories[$seat[PM_CATEGORY]];
+      	if ($seat[PM_ZONE] > 0) {
+      	  if ($seat[PM_CATEGORY]) {
+            $zone = $this->zones[$seat[PM_ZONE]];
+            $category = $this->categories[$seat[PM_CATEGORY]];
 
-          if ($category->category_numbering == 'none') {
-            continue;
-          } elseif(!$dry_run) {
-            if ($seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
-                                         $zone->pmz_id, $this->pmp_id, $category->category_id)) {
-              $this->data[$j][$k][PM_ID] = $seat_id;
+            if ($category->category_numbering == 'none') {
+              continue;
+            } elseif(!$dry_run) {
+              if ($seat_id = Seat::publish($event_id, $seat[PM_ROW], $seat[PM_SEAT],
+                                           $zone->pmz_id, $this->pmp_id, $category->category_id)) {
+                $this->data[$j][$k][PM_ID] = $seat_id;
+              } else
+                return self::_abort('cant_create_seat_by_pmp');
             } else
-              return self::_abort('cant_create_seat_by_pmp');
-          }
+              return self::_abort('cant_create_seat_missing_cat');
+      	  }
           $stats[$category->category_ident]++;
           $pmps[$category->category_ident] = $this->pmp_id;
         }

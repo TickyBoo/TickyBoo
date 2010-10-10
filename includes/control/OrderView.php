@@ -38,18 +38,18 @@ require_once("classes/smarty.gui.php");
 require_once("admin/class.adminview.php");
 
 class OrderView extends AdminView{
-  
+
   var $page_length=15;
-  
-  function order_details ($order_id){
+
+  function order_details($order_id){
     global $_SHOP;
     $query="select * from `Order`,User where order_id="._esc($order_id)." and order_user_id=user_id";
-    
+
     if(!$order=ShopDB::query_one_row($query)){
       echo "<div class='error'>".con('order_not_found')." $order_id</div>";
       return;
     }
-    
+
     $status=$this->print_order_status($order);
     $order["order_status"]=$status;
 
@@ -203,10 +203,10 @@ class OrderView extends AdminView{
 
   function print_order_status ($order){
     switch($order['order_status']){
-      case 'ord':   return "<font color='blue'>".con('ordered')."</font>";
-      case 'send':  return "<font color='red'>".con('sended')."</font>";
-      case 'payed': return "<font color='green'>".con('payed')."</font>";
-      case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
+      case 'ord':    return "<font color='blue'>".con('ordered')."</font>";
+      case 'send':   return "<font color='red'>".con('sended')."</font>";
+      case 'payed':  return "<font color='green'>".con('payed')."</font>";
+      case 'cancel': return "<font color='#787878'>".con('canceled')."</font>";
       case 'reissue':return "<font color='#787878'>".con('reissued')."</font> (
       <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reissued_id']}'>
       {$order['order_reissued_id']}</a> )";
@@ -215,9 +215,9 @@ class OrderView extends AdminView{
 
   function print_place_status ($place_status){
     switch($place_status){
-      case 'free':  return "<font color='green'>".con('free')."</font>";
+      case 'free': return "<font color='green'>".con('free')."</font>";
       case 'res':  return "<font color='orange'>".con('reserved')."</font>";
-      case 'com': return "<font color='red'>".con('com')."</font>";
+      case 'com':  return "<font color='red'>".con('com')."</font>";
       case 'check':return "<font color='blue'>".con('checked')."</font>";
     }
   }

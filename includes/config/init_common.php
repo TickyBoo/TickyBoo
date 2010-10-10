@@ -50,7 +50,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   require_once('defines.php');
   if (!file_exists(INC.'config'.DS."init_config.php")){
-    echo "<a href='inst/index.php'>Install me now!</a>";
+    echo "<a href='".constructBase(null,true)."inst/index.php'>Install me now!</a>";
     exit;
   }
 
@@ -195,7 +195,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
   //Check if version is uptodate
  // echo INC,'- ', CURRENT_VERSION,';', INSTALL_VERSION;
   if (CURRENT_VERSION <> INSTALL_VERSION){
-    echo "<a href='{$_SHOP->root}inst/index.php'>Upgrade me now!</a>";
+    echo "<a href='{$_SHOP->root_base}inst/index.php'>Upgrade me now!</a>";
     exit;
   }
 
