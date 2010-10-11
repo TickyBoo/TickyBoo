@@ -1501,4 +1501,27 @@ define('handling_fee_max','Maximum of fixed and Percent');
 
 define('pay_ispending',"Payment transaction is pending.");
 define('cookie_disabled','<H1> Warning, you have disabled cookies on your system.</h1> This will not work on this website. Please turn this on, before you order any tickets.');
+?><?php
+define('Click to UnPublish','Click to UnPublish');
+?>
+<?php
+define('New Event','New Event');
+?>
+<?php
+define('Click to Publish','Click to Publish');
+?>
+<?php
+define('placemap','placemap');
+?>
+<?php
+define('cant_create_seat_missing_cat','cant_create_seat_missing_cat');
+?>
+<?php
+define('pm.publish1','pm.publish1');
+?>
+<?php
+define('Click to RePublish','Click to RePublish');
+?>
+<?php
+define('discount_deactivate','discount_deactivate');
 ?>
