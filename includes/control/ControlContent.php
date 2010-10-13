@@ -157,7 +157,7 @@ class ControlContent extends AUIComponent{
             </tr>
           </table>";
 
-      $query="UPDATE Seat set seat_status='check' where seat_id="._esc($ticket['seat_id']);
+      $query="UPDATE Seat set seat_status='check' where seat_id="._esc($seat_id);
 
       if(!ShopDB::query($query)){
           echo "<div class='err'>".con('place_status_not_updated')."</div>";
