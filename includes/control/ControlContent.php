@@ -103,8 +103,8 @@ class ControlContent extends AUIComponent{
                      category_numbering, category_name, category_color,
                      pmz_name, order_payment_status, order_status
               from Seat LEFT JOIN PlaceMapZone ON seat_zone_id=pmz_id
-                        left join Category on seat_category_id=category_id
-                        left join order on seat_order_id= order_id
+                        LEFT JOIN Category on seat_category_id=category_id
+                        LEFT JOIN `Order` on seat_order_id= order_id
               where seat_id="._esc($seat_id)."
   	          AND   seat_code="._esc($ticket_code);
 
@@ -120,7 +120,7 @@ class ControlContent extends AUIComponent{
         return $this->showerror('place_only_reserved');
       } elseif(!in_array($ticket['order_status'],array('ord','pros'))){
         return $this->showerror('order_is_not_valid');
-      } elseif(!in_array($ticket['order_paid_status'],array('payed'))){
+      } elseif(!in_array($ticket['order_payment_status'],array('payed'))){
         return $this->showerror('order_is_not_paid');
       }
 
