@@ -153,10 +153,10 @@ class EPH_paypal extends payment{
         $order->set_payment_status('payed');
     }
     $debug .= $debugx;
-    OrderStatus::statusChange($order_id,$_SHOP->tmp_dir,$debugx,'checkout::notify',$debug.print_r($_POST,true));
-    $handle=fopen($_SHOP->tmp_dir."paypal.log","a");
-    fwrite($handle,$debug);
-    fclose($handle);
+    OrderStatus::statusChange($order_id,'paypal',$debugx,'checkout::notify',$debug.print_r($_POST,true));
+//    $handle=fopen($_SHOP->tmp_dir."paypal.log","a");
+//    fwrite($handle,$debug);
+//    fclose($handle);
     return $return;
   }
 }

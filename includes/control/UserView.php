@@ -77,7 +77,7 @@ class UserView extends AdminView{
   function draw (){
    global $_SHOP;
    $currency=$_SHOP->currency;
-   $user= User::load($this->user_id);
+   $user= User::loadArr($this->user_id);
    $this->print_user($user);
    $query="select * from `Order` where order_user_id ="._esc($this->user_id);
    if(!$res=ShopDB::query($query)){

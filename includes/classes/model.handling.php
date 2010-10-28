@@ -180,7 +180,7 @@ class Handling Extends Model {
       $tpl= &Template::getTemplate($template_name);
 
       $order_d=(array)$order;   //print_r( $order_d);
-      $link= $_SHOP->root."index.php?personal_page=orders&id=";
+      $link= $_SHOP->root_base . "index.php?personal_page=orders&id=";
       $order_d['order_link']=$link;
       $order_d['order_old_status'] = $old_state;
       $order_d['note_subject']=empt($order->emailSubect,"");

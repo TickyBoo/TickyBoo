@@ -56,7 +56,7 @@ class User_Smarty {
   }
 
   function load_f($user_id){
-    $user = User::load($user_id);
+    $user = User::loadArr($user_id);
     $this->_fill($user);
     $this->logged=($user)?($user['active']):false;
     if ($this->active) {
@@ -140,7 +140,7 @@ class User_Smarty {
     $mandatory = convMandatory($mandatory_l);
 
 		if (User::UpdateEx($member, $mandatory_l=0, $short)) {
-		  $user = User::load($this->user_id);
+		  $user = User::loadArr($this->user_id);
       $this->_fill($user);
       $this->logged=$user['active'] ;
       addNotice('successfully_updated_user_details');

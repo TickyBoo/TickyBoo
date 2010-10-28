@@ -152,7 +152,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		}else{
 			$toDate = 'event_date';
 		}
-
+    $this->json['events'] = array(); //assign a blank array.
 		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, event_free es_free
 				FROM Event,
 				Ort
@@ -166,10 +166,11 @@ class ctrlPosAjax extends ctrlWebCheckout {
 				ORDER BY event_date,event_time
 				LIMIT 0,50";
 		if(!$query = ShopDB::query($sql)){
-			return false;
-		}
+		  $option = "<option value='{$evt['event_id']}'>".con('no_event_sets')."</option>";
+			$this->json['events'][] = array ('html'=>$option,'free_seats'=>0);
+		} else {
 		//Load html and javascript in the json var.
-		$this->json['events'] = array(); //assign a blank array.
+
 		//Break down cats and array up with additional details.
 		while($evt = ShopDB::fetch_assoc($query)){
       		$date = formatDate($evt['event_date'],con('shortdate_format'));
@@ -179,6 +180,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 
 			$this->json['events'][strval($evt['event_id'])] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}
+    }
 		return true;
 	}
 
@@ -247,7 +249,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		}
 
 		//Select Events Discounts
-		$this->json['discount_sql'] = $sql = "select discount_id, discount_name, discount_value, discount_type
+		$sql = "select discount_id, discount_name, discount_value, discount_type
 			FROM Discount d
 			WHERE d.discount_event_id = "._esc($eventId);
 		$query = ShopDB::query($sql);

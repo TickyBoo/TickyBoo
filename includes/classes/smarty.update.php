@@ -82,7 +82,7 @@ class Update_Smarty {
 				}
 			}
 			if ( $_SHOP->shopconfig_maxres > 1 ) {
-				if ( isset($_SESSION['_SHOP_USER']) and $user = User::load($_SESSION['_SHOP_USER'])) {
+				if ( isset($_SESSION['_SHOP_USER']) and $user = User::loadArr($_SESSION['_SHOP_USER'])) {
 					require_once ( 'classes/smarty.mycart.php' );
 					$cart = MyCart_Smarty::overview_f();
           $totalResSeats = User::currentTickets($user['user_id'],'resp');

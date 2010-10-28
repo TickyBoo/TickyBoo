@@ -97,6 +97,8 @@ class install_execute {
         array_push($Install->Errors,"Admin user can not be created!".ShopDB::error());
         return true;
       }
+    } else {
+
     }
     self::recalcStats($Install);
     self::moveOrderNotes($Install);

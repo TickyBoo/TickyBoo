@@ -435,7 +435,7 @@ class OrderView extends AdminView{
           OrderNote::TYPE_TODO=>"on_type_todo"
           );
       while($onote=ShopDB::fetch_assoc($res)){
-        $private = ($onote["onote_private"])?con('yes'):con('no');
+        $private = ($onote["onote_private"])?con('onone_isprivate'):'';
         $noteCounts[$onote["onote_type"]] += 1;
         if($onote["onote_type"] == OrderNote::TYPE_PAYMENT){
           unset($noteTypes[OrderNote::TYPE_PAYMENT]);
@@ -443,36 +443,34 @@ class OrderView extends AdminView{
           unset($noteTypes[OrderNote::TYPE_SHIP]);
         }
         echo "<tr class='admin_list_row_$alt'>
-         	      <td class='admin_list_item' width='120'>".formatTime($onote["onote_timestamp"])."</td>
-         	      <td class='admin_list_title' >".$onote["onote_subject"]."</td>
+         	      <td width='150'>".formatTime($onote["onote_timestamp"])."</td>
+         	      <td>".$onote["onote_subject"].$private."</td>
        	      <tr>\n";
         echo "<tr class='admin_list_row_$alt'>
-                <td class='admin_list_item' width='120'>".con('onote_type').": ".con($onote["onote_type"])."</td>
-                <td class='admin_value' ><div style='overflow:hidden;'>".nl2br($onote["onote_note"])."</div></td>
+                <td width='150'>".con('onote_type')." ".con('onote_type_'.$onote["onote_type"])."</td>
+                <td><div style='overflow:hidden;'>".nl2br($onote["onote_note"])."</div></td>
               <tr>\n";
-        echo "<tr class='admin_list_row_$alt'>
-                <td class='admin_value' colspan='2'>".con('onote_private').": ".$private."</td>
-              <tr>\n";
-         $alt=($alt+1)%2;//
+        $alt=($alt+1)%2;//
       }
-      echo "</table>\n";
-      print_r($noteCounts);
+      echo "</table><br>\n";
 
       echo "<form method='POST' action='{$_SERVER['PHP_SELF']}?action=addnote&subtab=3&order_id=".$order_id."' enctype='multipart/form-data'>\n";
-      $this->print_hidden('onote_order_id',array('onote_order_id'=>$order_id));
+      $this->print_hidden('onote_order_id', $order_id);
       $this->form_head(con('order_add_note'));
       $this->print_select_assoc('onote_type',$_REQUEST,$err,$noteTypes);
       $this->print_checkbox('onote_private',$_REQUEST,$err);
       $this->print_input('onote_subject',$_REQUEST,$err,40);
       $this->print_large_area('onote_note',$_REQUEST,$err,8);
+/*
       echo "<tr id=\"on_save_email_ship\" style=\"display:none;\"><td class='' style='text-align:center;'>"
         .$this->Show_button('submit','save_ship',3)."</td><td><label for='onote_set_sent'>".con("onote_set_sent")."</label><input type='checkbox' id='onote_set_sent' name='onote_set_sent' value='1' /></td></tr>";
       echo "<tr id=\"on_save_email_payment\" style=\"display:none;\"><td class='' style='text-align:center;'>"
         .$this->Show_button('submit','save_payment',3)."</td><td><label for='onote_set_payed'>".con("onote_set_payed")."</label><input type='checkbox' id='onote_set_payed' name='onote_set_payed' value='1' /></td></tr>";
       echo "<tr id=\"on_save_email_note\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
         .$this->Show_button('submit','save_note',3)."</td></tr>";
+*/
       $this->form_foot();
-
+/*
       $script = "
       $('#onote_type-select').change(function(){
         if($(this).val() == '".OrderNote::TYPE_SHIP."'){
@@ -498,6 +496,7 @@ class OrderView extends AdminView{
         $this->print_large_area('order_note',$order, $err,10);
         $this->form_foot();
       }
+*/
     }
     return true;
   }

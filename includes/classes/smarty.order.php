@@ -544,7 +544,7 @@ class Order_Smarty {
     $order->emailSubject = $orderNote->onote_subject;
     $order->emailNote = $orderNote->onote_note;
 
-    if($this->_sendNote($orderNote,$order,$_REQUEST)){
+    if($this->_sendNote($orderNote, $order, $_REQUEST)){
       addNotice('successfully_sent_note');
     }
 
@@ -566,11 +566,11 @@ class Order_Smarty {
     }elseif(is($request['onote_set_payed'])==="1"){
       $order->set_payment_status('payed');
     }elseif(isset($request['save_payment'])){
-      $orderNote->sendNote($order);
+      $onote->sendNote($order);
     }elseif(isset($request['save_ship'])){
-      $orderNote->sendNote($order);
+      $onote->sendNote($order);
     }elseif(isset($request['save_note'])){
-      $orderNote->sendNote($order);
+      $onote->sendNote($order);
     }
     if(!hasErrors("__Warning__")){
       return true;
@@ -595,7 +595,7 @@ class Order_Smarty {
     $mode = (int)$params['mode'];
     If (!$mode) $mode =3;
 
-   Order::printOrder($params['order_id'],'', 'stream', $print, $mode);
+    Order::printOrder($params['order_id'], '', 'stream', $print, $mode);
   }
 
   function paymentForOrder($params, $smarty){
@@ -620,26 +620,26 @@ class Order_Smarty {
 
   function secure_url_param($num=FALSE, $nonum=FALSE)
   {
-  if ($num) {
-    $correct = is_numeric($num);
-      if( $correct ) { return $num; }
-      elseif(!$correct ){
-        echo "No Such ID";
-        //$num = cleanNUM($num);
-        $num="1";
-        return $num;
+    if ($num) {
+      $correct = is_numeric($num);
+        if( $correct ) { return $num; }
+        elseif(!$correct ){
+          echo "No Such ID";
+          //$num = cleanNUM($num);
+          $num="1";
+          return $num;
+        }
       }
-    }
-    if ($nonum) {
-    $correct = preg_match('/^[a-z0-9_]*$/i', $nonum);
-      //can also use ctype if you wish instead of preg_match
-      //$correct = ctype_alnum($nonum);
-      if($correct) { return $nonum; }
-      elseif(!$correct) {
-        addWarning("No Such Variable");
-        $nonum="This";
-        return $nonum;
-    }
+      if ($nonum) {
+      $correct = preg_match('/^[a-z0-9_]*$/i', $nonum);
+        //can also use ctype if you wish instead of preg_match
+        //$correct = ctype_alnum($nonum);
+        if($correct) { return $nonum; }
+        elseif(!$correct) {
+          addWarning("No Such Variable");
+          $nonum="This";
+          return $nonum;
+      }
     }
   }
 }
