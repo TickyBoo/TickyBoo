@@ -40,7 +40,7 @@ class install_settings {
   }
 
   static function postcheck($Install) {
-    Install_Request(Array('secure_site','timezone','trace_on'),'SHOP');
+    Install_Request(Array('secure_site','timezone','trace_on','useUTF8'),'SHOP');
     Install_Request(Array('fixed_url'));
     return true;
   }
