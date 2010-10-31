@@ -52,8 +52,8 @@ class install_finish {
       echo "<br>-  <i>includes/config</i>";
     }
 
-    echo "<div><br>You should also delete the <i>inst</i> folder.</div>
-          <br>
+    echo "
+          <br><br><br>
           <ul>
             <li><a href='".BASE_URL."/admin/index.php'   target='_blank'>Go to Admin</a>.</li>
             <li><a href='".BASE_URL."/pos/index.php'     target='_blank'>Go to Box Office</a></li>

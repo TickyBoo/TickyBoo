@@ -50,11 +50,6 @@ class install_license {
   }
 
   static function postcheck($Install) {//int_r($_REQUEST);
-    if($_REQUEST['sla_radio']!=1){
-      array_push($Install->Errors,"You must accept the terms of the software license agreement to install and use this software." );
-      return true;
-    }
-
     $ver = explode('.', phpversion());
 //    print_r($ver) ;
     if ((version_compare(PHP_VERSION, '5.1.0')<0) && (version_compare(PHP_VERSION, '5.4.0')>= 0)){
@@ -117,23 +112,14 @@ class install_license {
   }
 
   static function display($install) {
-    Install_Form_Open ($install->return_pg,'return(Validate_License_page());','Software License Agreement');
+    Install_Form_Open ($install->return_pg,'','Software License Agreement');
     $license = @file_get_contents(ROOT."LICENCE");
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\">
             <tr>
               <td colspan=\"2\">
-                <textarea rows=\"17\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;\">
+                <textarea rows=\"22\" cols=\"45\" readonly=readonly class=\"UI_TextArea\" style=\"width:100%;height:100%;\"  >
                   {$license}
                 </textarea>
-              </td>
-            </tr>
-            <tr> <td height='6px'></td> </tr>
-            <tr>
-              <td colspan=\"2\">
-                <input type=\"radio\" name=\"sla_radio\" id=\"SLA_Agree_Yes\" value=\"1\" />
-                  <label for=\"SLA_Agree_Yes\">I Agree and Accept the terms of the license agreement.</label><br />
-                <input type=\"radio\" name=\"sla_radio\" id=\"SLA_Agree_No\" value=\"0\" checked=\"checked\" />
-                  <label for=\"SLA_Agree_No\">I Disagree with the terms of the license agreement.</label>
               </td>
             </tr>
           </table>\n";

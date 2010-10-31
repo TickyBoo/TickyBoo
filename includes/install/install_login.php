@@ -36,9 +36,17 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_login {
   static function precheck($Install) {
+
     If ($_SESSION['ConfigExist']){
+      $tmp_dir = $GLOBALS['_SHOP']->tmp_dir;
       include (ROOT."includes/config/init_config.php");
       $_SESSION['SHOP']  = (Array)$_SHOP;
+      if (isset($_SHOP->tmp_dir) && $_SHOP->tmp_dir == $tmp_dir) {
+        unset($_SESSION['SHOP']['tmp_dir']);
+      }
+      $_SHOP->tmp_dir = $tmp_dir;
+      $GLOBALS['_SHOP'] = $_SHOP;
+
       $link      = OpenDatabase();
       if ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
         //do nothing here;

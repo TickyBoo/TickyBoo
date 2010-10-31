@@ -86,12 +86,14 @@ class ShopDB {
               }
 
             ShopDB::$link = $link;
-            ShopDB::checkdatabase(true, false);
+            if (strpos('svn',constant('CURRENT_VERSION')) !== false) {
+              ShopDB::checkdatabase(true, false);
+            }
 
             //Set Session Time Zone.
             //This does not work:
             ShopDB::query("SET time_zone = '".date('P')."'");
-            if (!empty($_SHOP->usUTF8))  ShopDB::query("SET NAMES utf8");
+            if (!empty($_SHOP->useUTF8))  ShopDB::query("SET NAMES utf8");
 
             return true;
           } elseif ($canDie) {

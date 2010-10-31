@@ -512,7 +512,7 @@ class orphans {
 
         break;
       case 'Order~zeros':
-        Orphans::clearZeros('Order', array('order_handling_id','order_owner_id'));
+        Orphans::clearZeros('Order', array('order_handling_id','order_owner_id','order_reemited_id'));
         break;
       case 'Order~discount_id':
         if ($fix[4] == 'empty') {

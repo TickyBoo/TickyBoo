@@ -285,8 +285,8 @@ define('user_details_saved_successfully','User details sucessfully saved');
 //Administration Menu - the menu on the left side
 define("index_admin","Home");
 define("administration","Administration");
-define("users_admin","System Managers");
-define("event_admin","Events");
+define("users_admin","User Management");
+define("event_admin","Event Management");
 define("stats","Statistics");
 define("order_admin","Order Overview");
 define("template_admin","Templates");
@@ -309,7 +309,7 @@ define("InfoVenueCount",   	"Venue count:");
 define("InfoEventCount",   	"Event count:");
 define("InfoAdminCount",   	"Admin count:");
 define("system_summary",	"System Summary");
-define("index_admins_count","<b>Admins:</b> %d, <b>Organizers:</b> %d, <b>Controllers:</b> %d, <b>Total:</b> %d");
+define("index_admins_count","<b>Admins:</b> %d, <b>Event-managers:</b> %d, <b>Controllers:</b> %d, <b>Total:</b> %d");
 define("index_user_count","<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d/%d/%d");
 define("index_events_count","<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d");
 define("index_ort_count","%d");
@@ -1237,7 +1237,7 @@ define("order_details","Order details");
 
 //process_select.tpl
 define("order_status_changed","Order Status Changed Successfully");
-define("pos_currenttickets","Current Tickets"); //header.tpl
+define("pos_currenttickets","Overview"); //header.tpl
 define("pos_yourtickets","Assigned Tickets");
 define("pos_alltickets","All Tickets");
 define("pos_paidlist","Paid List");
@@ -1517,5 +1517,25 @@ define('onote_type_note'   ,'note');
 define('onote_type_admin'  ,'admin');
 define('onote_type_payment','payment');
 define('onote_type_todo'   ,'todo');
-define('onote_isprivate',' (<i>private</i>)')
+define('onote_isprivate',' (<i>private</i>)');
+
+//Events
+define("placemap","Event Placemap");
+define("logged_in","User:");
+	define("block","Block Seats");
+	define("assign","Assign Seats");
+	define("clear_selection","Clear Selection");
+	define("reset","Reset");
+	define("confirm_clear","Are you sure you want to clear your selection?");
+//Events Mailer
+define("mailer_description","Use this interface to send emails to patrons attending this event.");
+define("mail_patrons_confirm","Are you sure you want to email all attending patrons?");
+define("mail_patrons","Mail Patrons");
+define("select_template","Select template");
+define("mail_to","Mail to");
+define("attending_patrons","attending patrons");
+define("preview_template","Preview template");
+define("please_select","Please select a template...");
+define("send_email","Send Email");
 ?>
+

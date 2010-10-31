@@ -198,7 +198,7 @@ class install_execute {
     $config .= file_get_contents (ROOT."licence.txt")."\n";
     $config .= "*/\n\n";
     $config .= "// The following settings are automatically filled by the installation procedure:\n\n";
-    $config .= "global \$_SHOP;\n\n";
+ //   $config .= "global \$_SHOP;\n\n";
     $config .= "define(\"CURRENT_VERSION\",\"".INSTALL_VERSION."\");\n\n";
 
     unset($_SESSION['SHOP']['install_dir']);
@@ -211,6 +211,7 @@ class install_execute {
     } else {
       unset ($_SESSION['SHOP']['root']);
       unset ($_SESSION['SHOP']['root_secured']);
+      unset ($_SESSION['SHOP']['tmp_dir']);
     }
     if (!isset($_SESSION['SHOP']['secure_id'])) {
       $_SESSION['SHOP']['secure_id'] = sha1(AUTH_REALM. BASE_URL . uniqid());

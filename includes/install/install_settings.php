@@ -51,6 +51,7 @@ class install_settings {
     $secure    = ($_SESSION['SHOP']['secure_site'])?"checked='checked'":'';
     $fixed_url = ($_SESSION['SHOP']['root'])?"checked='checked'":'';
     $selectedzone = is($_SESSION['SHOP']['timezone'], date_default_timezone_get());
+    $useUTF8 = ($_SESSION['SHOP']['useUTF8'])?"checked='checked'":'';
     echo "<table cellpadding=\"1\" cellspacing=\"2\" width=\"100%\" >
             <tr>
                <td colspan=\"2\" >
@@ -84,6 +85,20 @@ class install_settings {
                    </div>
               </td>
               <td><input type='checkbox' {$fixed_url} name='fixed_url' value='1'></td>
+            </tr>
+            <tr> <td height='6px'></td> </tr>
+            <tr>
+              <td colspan=2><b>Database settings:</b></td>
+            </tr>
+            <tr>
+              <td width='30%' class='has-tooltip'>
+                &nbsp;&nbsp;Use UTF8 to store information:
+                <div id='useUTF8' style='display:none;'>
+                  With this option you can store the information using UTF8.<br/>
+                  Use this option carefully it change the way the information is shown in the shop etc.
+                </div>
+              </td>
+              <td><input type='checkbox' {$useUTF8} name='useUTF8' value='1'></td>
             </tr>
             <tr> <td height='6px'></td> </tr>
             <tr>
