@@ -36,6 +36,21 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 class install_settings {
   static function precheck($Install) {
+    global $_SHOP;
+	echo '|';
+    echo $test = md5(date('R'));
+    echo '| '.$_SHOP->tmp_dir.'ssl_instal.txt';
+    @file_put_contents($_SHOP->tmp_dir.'ssl_instal.txt',$test);
+  	$file = constructBase(false);
+	$file = str_replace('HTTPS','SSL',$file );
+    echo ' | '.$file;
+    echo ' |';
+    echo $testx = @file_get_contents($file.'?do=testhttps');
+    echo '|<br>';
+    $_SESSION['SHOP']['secure_site'] = is($_SESSION['SHOP']['secure_site'], ($test===$testx) );
+    if ($test !== $testx) {
+      array_push($Install->Warnings,'When you want to use fusionticket we highly recommand that you install an SSL certificate to secure your users address information etc.<br> For now we will show an warning that the site is not secure, when the order the tickets.');
+    }
     return true;
   }
 
@@ -47,6 +62,10 @@ class install_settings {
 
   static function display($Install) {
     Install_Form_Open ($Install->return_pg,'','Login to update you system');
+
+
+
+
     $_SESSION['SHOP']['secure_site'] = is($_SESSION['SHOP']['secure_site'], true);
     $secure    = ($_SESSION['SHOP']['secure_site'])?"checked='checked'":'';
     $fixed_url = ($_SESSION['SHOP']['root'])?"checked='checked'":'';

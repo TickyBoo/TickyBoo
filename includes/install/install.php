@@ -46,6 +46,43 @@ if (empty($_REQUEST)) {
 
 include_once 'install_version.php';
 
+/**
+ * shortcut for / or \ (depending on OS)
+ */
+if (!defined('DS')) {
+  define('DS', DIRECTORY_SEPARATOR);
+}
+/**
+ * absolute filesystem path to the root directory of this framework
+ */
+if (!defined('ROOT')) {
+  define('ROOT',(dirname(dirname(dirname(__FILE__)))).DS);
+}
+require_once(ROOT."includes".DS."config".DS."defines.php");
+
+if(function_exists("date_default_timezone_set") and
+  function_exists("date_default_timezone_get")) {
+  @date_default_timezone_set(@date_default_timezone_get());
+}
+
+$_SHOP->tmp_dir= ROOT."includes".DS."temp".DS;
+
+$root = "http://" . $_SERVER['HTTP_HOST'];
+$root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
+define ('BASE_URL',$root);
+
+require_once(ROOT."includes".DS."classes".DS."basics.php");
+require_once(ROOT."includes/classes/class.shopdb.php");
+require_once(ROOT."includes/install/install_base.php");
+
+if (isset($_REQUEST['do']) && $_REQUEST['do']=='testhttps'){
+  die( file_get_contents($_SHOP->tmp_dir.'ssl_instal.txt'));
+} elseif (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
+  session_destroy();
+  echo "<script>window.location.href='{$_SERVER['PHP_SELF']}';</script>";
+  exit;
+}
+
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -109,41 +146,10 @@ include_once 'install_version.php';
 </head>
 <body>
 <?php
-if (isset($_REQUEST['do']) and $_REQUEST['do']=='Cancel'){
-  session_destroy();
-  echo "<script>window.location.href='{$_SERVER['PHP_SELF']}';</script>";
-  exit;
-}
 
 
-/**
- * shortcut for / or \ (depending on OS)
- */
-if (!defined('DS')) {
-  define('DS', DIRECTORY_SEPARATOR);
-}
-/**
- * absolute filesystem path to the root directory of this framework
- */
-if (!defined('ROOT')) {
-  define('ROOT',(dirname(dirname(dirname(__FILE__)))).DS);
-}
-require_once(ROOT."includes".DS."config".DS."defines.php");
 
-if(function_exists("date_default_timezone_set") and
-  function_exists("date_default_timezone_get")) {
-  @date_default_timezone_set(@date_default_timezone_get());
-}
 
-$_SHOP->tmp_dir= ROOT."includes".DS."temp".DS;
-
-$root = "http://" . $_SERVER['HTTP_HOST'];
-$root .= substr($_SERVER['SCRIPT_NAME'], 0, - 15);
-define ('BASE_URL',$root);
-
-require_once(ROOT."includes".DS."classes".DS."basics.php");
-require_once(ROOT."includes/classes/class.shopdb.php");
-require_once(ROOT."includes/install/install_base.php");
 
 foreach($states as $id => $name) {
   define(strtoupper($name), $id);
