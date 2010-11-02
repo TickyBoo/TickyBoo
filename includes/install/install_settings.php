@@ -65,7 +65,7 @@ class install_settings {
 
     $_SESSION['SHOP']['secure_site'] = is($_SESSION['SHOP']['secure_site'], ($test===$testx) );
     if ($test !== $testx) {
-      array_push($Install->Warnings,'When you want to use fusionticket we highly recommand that you install an SSL certificate to secure your users address information etc.<br> For now we will show an warning that the site is not secure, when the order the tickets.');
+      array_push($Install->Warnings,'When you want to use fusionticket we highly recommend that you install an SSL certificate to secure your users address information etc. <br>For now we will show a warning that the site is not secure, when tickets are ordered.');
     }
     return true;
   }
