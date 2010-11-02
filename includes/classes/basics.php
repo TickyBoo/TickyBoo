@@ -218,11 +218,11 @@ function constructBase($secure=null, $useroot=false) {
   $dir = str_replace('\\','/' , $dir);
   $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME');
   // thanks to Nasi it will now also works with different port numbers
-  $base .= $dir;
+ // $base .= $dir;
   if (!in_array(env('SERVER_PORT'), array('80', '443'))) {
 		$base .= ':' . env('SERVER_PORT');
 	}
-//	$base .= $dir;
+	$base .= $dir;
   if (substr($base, -1, 1) != '/') {
     $base .= '/';
   }

@@ -43,7 +43,7 @@ if (empty($_REQUEST)) {
   session_destroy();
   session_start();
 }
-
+error_reporting(E_ALL);
 include_once 'install_version.php';
 
 /**

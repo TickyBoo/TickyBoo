@@ -33,20 +33,32 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
+function get_content($url)
+{
+   $ch = curl_init();
+  	curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER, TRUE)  ;
+  //  curl_setopt($ch,CURLOPT_PORT, 443)  ;
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_HEADER, 0);
+//    curl_setopt ($ch, CURLOPT_TIMEOUT ,2);
 
+    $string = curl_exec ($ch);
+    curl_close ($ch);
+    return $string;
+}
 class install_settings {
   static function precheck($Install) {
     global $_SHOP;
-	echo '|';
     echo $test = md5(date('R'));
-    echo '| '.$_SHOP->tmp_dir.'ssl_instal.txt';
     @file_put_contents($_SHOP->tmp_dir.'ssl_instal.txt',$test);
-  	$file = constructBase(false);
-	$file = str_replace('HTTPS','SSL',$file );
-    echo ' | '.$file;
-    echo ' |';
-    echo $testx = @file_get_contents($file.'?do=testhttps');
-    echo '|<br>';
+  	$file = constructBase(true).'index.php?do=testhttps';
+	//$file = str_replace('https','ssl',$file );
+    echo '|';
+ 	  echo $testx = get_content($file);
+    echo '|';
+
+
     $_SESSION['SHOP']['secure_site'] = is($_SESSION['SHOP']['secure_site'], ($test===$testx) );
     if ($test !== $testx) {
       array_push($Install->Warnings,'When you want to use fusionticket we highly recommand that you install an SSL certificate to secure your users address information etc.<br> For now we will show an warning that the site is not secure, when the order the tickets.');
