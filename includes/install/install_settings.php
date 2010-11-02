@@ -35,8 +35,9 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 function get_content($url)
 {
-   $ch = curl_init();
-  	curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+  $ch = curl_init();
+  if ($ch) {
+   	curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
     curl_setopt($ch,CURLOPT_RETURNTRANSFER, TRUE)  ;
   //  curl_setopt($ch,CURLOPT_PORT, 443)  ;
     curl_setopt ($ch, CURLOPT_URL, $url);
@@ -45,7 +46,8 @@ function get_content($url)
 
     $string = curl_exec ($ch);
     curl_close ($ch);
-    return $string;
+  } else $string = false;
+  return $string;
 }
 class install_settings {
   static function precheck($Install) {
