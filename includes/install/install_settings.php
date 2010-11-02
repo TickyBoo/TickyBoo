@@ -35,17 +35,19 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 function get_content($url)
 {
-  $ch = curl_init();
-  if ($ch) {
-   	curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER, TRUE)  ;
-  //  curl_setopt($ch,CURLOPT_PORT, 443)  ;
-    curl_setopt ($ch, CURLOPT_URL, $url);
-    curl_setopt ($ch, CURLOPT_HEADER, 0);
-//    curl_setopt ($ch, CURLOPT_TIMEOUT ,2);
+  if (function_exists(curl_init)) {
+    $ch = curl_init();
+    if ($ch) {
+     	curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+      curl_setopt($ch,CURLOPT_RETURNTRANSFER, TRUE)  ;
+    //  curl_setopt($ch,CURLOPT_PORT, 443)  ;
+      curl_setopt ($ch, CURLOPT_URL, $url);
+      curl_setopt ($ch, CURLOPT_HEADER, 0);
+  //    curl_setopt ($ch, CURLOPT_TIMEOUT ,2);
 
-    $string = curl_exec ($ch);
-    curl_close ($ch);
+      $string = curl_exec ($ch);
+      curl_close ($ch);
+    } else $string = false;
   } else $string = false;
   return $string;
 }
