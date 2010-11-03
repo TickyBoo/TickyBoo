@@ -118,28 +118,32 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
         for ($k = $left; $k <= $right; $k++) {
             $seat = $pmp->data[$j][$k];
             $sty ='';
-            $res .= "<td {$cspan} class='pm_seatmap' >";
+            $reszz= "&nbsp;";
+            $cspan =($pmp->pmp_shift)?'colspan=2':'';
             if ($seat[PM_ZONE] === 'L') {
                 if ($seat[PM_LABEL_TYPE] == 'RE' and $irow = $pmp->data[$j][$k + 1][PM_ROW]) {
-                    $res .= "<div class='pm_seatmap'>$irow</div>";
+                    $reszz= "<div class='pm_seatmap'>$irow</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'RW' and $irow = $pmp->data[$j][$k - 1][PM_ROW]) {
-                    $res .= "<div class='pm_seatmap'>$irow</div>";
+                    $reszz= "<div class='pm_seatmap'>$irow</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SS' and $iseat = $pmp->data[$j + 1][$k][PM_SEAT]) {
-                    $res .= "<div class='pm_seatmap'>$iseat</div>";
+                    $reszz= "<div class='pm_seatmap'>$iseat</div>";
                 } elseif ($seat[PM_LABEL_TYPE] == 'SN' and $iseat = $pmp->data[$j - 1][$k][PM_SEAT]) {
-                    $res .= "<div class='pm_seatmap'>$iseat</div>";
+                    $reszz= "<div class='pm_seatmap'>$iseat</div>";
                 } else
-                if ($seat[PM_LABEL_TYPE] == 'T' and $seat[PM_LABEL_SIZE] > 0) {
-                  if (strlen($seat[PM_LABEL_TEXT])>3){
-                     $res .= "<img class='pm_seatmap' src='".$_SHOP->images_url."info.gif' alt='{$seat[PM_LABEL_TEXT]}' title='{$seat[PM_LABEL_TEXT]}'>";
+              if ($seat[PM_LABEL_TYPE] == 'T') {
+                  $cspan = 'style="text-align:center;" colspan="'.(($pmp->pmp_shift)? ($seat[PM_LABEL_SIZE]*2):($seat[PM_LABEL_SIZE])).'"';
+                  if ($seat[PM_LABEL_SIZE] == 0) {
+                     continue;
+                  } elseif (strlen($seat[PM_LABEL_TEXT])>3 * $seat[PM_LABEL_SIZE]){
+                     $reszz= "<img class='pm_seatmap' src='".$_SHOP->images_url."info.gif' alt='{$seat[PM_LABEL_TEXT]}' title='{$seat[PM_LABEL_TEXT]}'>";
                   } else {
-                     $res .= "<div class='pm_seatmap'>{$seat[PM_LABEL_TEXT]}</div>";
+                     $reszz= "{$seat[PM_LABEL_TEXT]}";
                   }
                 } else
                 if ($seat[PM_LABEL_TYPE] == 'E') {
-                  $res .= "<img class='pm_seatmap' src='".$_SHOP->images_url."exit.gif' alt='exit' title='exit'>";
+                  $reszz = "<img class='pm_seatmap' src='".$_SHOP->images_url."exit.gif' alt='exit' title='exit'>";
                 } else {
-                  $res .= "<img class='pm_seatmap' style='{$sty};border-color:red' border=0 src='".$_SHOP->images_url."dot.gif' title='{$seat[PM_LABEL_TYPE]}'>";
+                  $reszz = "<img class='pm_seatmap' style='{$sty};border-color:red' border=0 src='".$_SHOP->images_url."dot.gif' title='{$seat[PM_LABEL_TYPE]}'>";
                 }
             } elseif ($seat[PM_ZONE] and $seat[PM_CATEGORY]) {
                 $zone = $zones[$seat[PM_ZONE]];
@@ -167,47 +171,47 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
                 //Empty seats
                 if ($seat[PM_STATUS] == PM_STATUS_FREE) {
                     if ($seat[PM_CATEGORY] == $cat_ident) {
-                        $res .= "<input type='hidden' id='place{$seat[PM_ID]}' name='place[{$seat[PM_ID]}]' value='0'>";
-                        $res .= "<img class='pm_seatmap pm_check' style='{$sty}' id='seat{$seat[PM_ID]}' onclick='javascript:gridClick({$seat[PM_ID]});' src='".$_SHOP->images_url."seatfree.png' title='";
+                        $reszz = "<input type='hidden' id='place{$seat[PM_ID]}' name='place[{$seat[PM_ID]}]' value='0'>";
+                        $reszz .= "<img class='pm_seatmap pm_check' style='{$sty}' id='seat{$seat[PM_ID]}' onclick='javascript:gridClick({$seat[PM_ID]});' src='".$_SHOP->images_url."seatfree.png' title='";
                         if ($print_zone) {
-                            $res .= $zone->pmz_name . ' ';
+                            $reszz .= $zone->pmz_name . ' ';
                         }
                         if (($cat_num & 2) and $seat[PM_ROW] != '0') {
-                            $res .= $l_row . $seat[PM_ROW];
+                            $reszz .= $l_row . $seat[PM_ROW];
                         }
                         if (($cat_num & 1) and $seat[PM_SEAT] != '0') {
-                            $res .= $l_seat . $seat[PM_SEAT];
+                            $reszz .= $l_seat . $seat[PM_SEAT];
                         }
-                        $res .= "'>";
+                        $reszz .= "'>";
                     } else {
-                      $res .= "<img class='pm_seatmap' style='{$sty};background-color:Gainsboro' border=0 src='".$_SHOP->images_url."seatdisable.png'>";
+                      $reszz = "<img class='pm_seatmap' style='{$sty};background-color:Gainsboro' border=0 src='".$_SHOP->images_url."seatdisable.png'>";
                     }
                     ////////////Reserved seats, they will only be selectable if you have area='pos' set in cat...tpl
                 } elseif ($seat[PM_STATUS] == PM_STATUS_RESP && $area === 'pos' && $seat[PM_CATEGORY] == $cat_ident) {
                     $zone = $zones[$seat[PM_ZONE]];
-                    $res .= "<img class='pm_seatmap' style='{$sty}' src='".$_SHOP->images_url."seatselect.png' title='";
+                    $reszz = "<img class='pm_seatmap' style='{$sty}' src='".$_SHOP->images_url."seatselect.png' title='";
                     if ($print_zone) {
-                        $res .= $zone->pmz_name . ': ';
+                        $reszz .= $zone->pmz_name . ': ';
                     }
                     if (($cat_num & 2) and $seat[PM_ROW] != '0') {
-                        $res .= $l_row . $seat[PM_ROW];
+                        $reszz .= $l_row . $seat[PM_ROW];
                     }
                     if (($cat_num & 1) and $seat[PM_SEAT] != '0') {
-                        $res .= $l_seat . $seat[PM_SEAT];
+                        $reszz .= $l_seat . $seat[PM_SEAT];
                     }
-                    $res .= "'>";
+                    $reszz .= "'>";
                 } else {
                   if ($seat[PM_CATEGORY] != $cat_ident) {
                     $sty .= ';background-color:Gainsboro';
                   }
-                  $res .= "<img class='pm_seatmap' style='{$sty}' src='".$_SHOP->images_url."seatused.png'>";
+                  $reszz = "<img class='pm_seatmap' style='{$sty}' src='".$_SHOP->images_url."seatused.png'>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $res .= "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."b.gif'>";
+                $reszz = "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."b.gif'>";
             } else  {
-               $res .= "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."dot.gif' />";
+               $reszz = "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."dot.gif' />";
             }
-            $res .= "</td>";
+            $res .= "<td {$cspan} class='pm_seatmap'>{$reszz}</td>";
             $first ='';
         }
         $res .= $mr[$j % 2]."</tr>";
@@ -257,13 +261,21 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
                       </tr>
                     </table>";
             break;
-        default:
+        case 'north':
             $res = "<table border=0 cellspacing=0 cellpadding=0>
                <tr>
                  <td align='center' valign='middle'>
                    <img src='".$_SHOP->images_url."scene_h_$l.png'>
                  </td>
                </tr>
+               <tr>
+                 <td>
+                   <table border=0 class='pm_table' cellspacing=0 cellpadding=0>$res</table>
+                 </td>
+               </tr>
+             </table>";
+        default:
+            $res = "<table border=0 cellspacing=0 cellpadding=0>
                <tr>
                  <td>
                    <table border=0 class='pm_table' cellspacing=0 cellpadding=0>$res</table>

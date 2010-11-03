@@ -513,9 +513,9 @@ class PlaceMapPart Extends Model {
                 $this->data[$j][$k][PM_ID] = $seat_id;
               } else
                 return self::_abort('cant_create_seat_by_pmp');
-            } else
-              return self::_abort('cant_create_seat_missing_cat');
-      	  }
+            }
+      	  } else
+      	     return self::_abort('cant_create_seat_zone_missing_cat');
           $stats[$category->category_ident]++;
           $pmps[$category->category_ident] = $this->pmp_id;
         }

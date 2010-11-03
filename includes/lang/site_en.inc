@@ -1537,5 +1537,7 @@ define("attending_patrons","attending patrons");
 define("preview_template","Preview template");
 define("please_select","Please select a template...");
 define("send_email","Send Email");
-?>
 
+define('cant_create_seat_zone_missing_cat','Every zone need to have catergory in a placemap part.');
+define('pub_success','publication successed: ');
+?>
