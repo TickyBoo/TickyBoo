@@ -44,5 +44,5 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   require_once("init.php");
   $_SHOP->event_ids = $_SESSION['_SHOP_AUTH_USER_DATA']['control_event_ids'];
-  $_SHOP->currency  = $_SESSION['_SHOP_ORGANIZER_DATA']['organizer_currency'];
+  $_SHOP->currency  = $_SHOP->organizer_data->organizer_currency;
 ?>

@@ -30,7 +30,7 @@
  * clear to you.
  *}
 {if $pm_return.approved}
-  {if $Shop_order.order_payment_status eq 'payed'}
+  {if $shop_order.order_payment_status eq 'payed'}
     {include file="header.tpl" name=!pay_accept! noHeader=$no_header}
   {else}
     {include file="header.tpl" name=!pay_ispending! noHeader=$no_header}
@@ -46,6 +46,7 @@
         {/if}
         <br />
 		    {!order_id!}: <b>{$shop_order.order_id}</b><br/>
+			{!order_payment_status!}: <b>{$shop_order.order_payment_status}</b><br/>
 		    {if $pm_return.transaction_id}
           {!trx_id!}: <b>{$pm_return.transaction_id}</b><br/>
         {/if}

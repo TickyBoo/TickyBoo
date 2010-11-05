@@ -184,7 +184,7 @@ class ControlContent extends AUIComponent{
   global $_SHOP;
     if($_SHOP->event_ids !=''){
       $query="select * from Event left join Ort on event_ort_id=ort_id
-              where event_status!='unpub'
+              where event_status != 'unpub'
               AND   event_rep LIKE '%sub%'
      	        and FIELD(event_id,{$_SHOP->event_ids})>0
               order by event_date, event_time ";

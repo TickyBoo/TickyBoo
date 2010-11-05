@@ -31,60 +31,112 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-//if (!defined('ft_check')) {die('System intrusion ');}
+
+
+if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once('classes/class.payment.php');
 
-class EPH_ebs extends payment{
-  public $extras = array('pm_vpc_AccessCode', 'pm_vpc_Merchant','pm_SECURE_SECRET');
+class EPH_vpc extends payment{
+  public $extras = array('pm_vpc_AccessCode', 'pm_vpc_Merchant','pm_vpc_SECURE_SECRET');
   public $mandatory = array('pm_vpc_AccessCode', 'pm_vpc_Merchant');
 
 
 	function admin_view (){
     return "{gui->view name='pm_vpc_AccessCode'}".
            "{gui->view name='pm_vpc_Merchant'}".
-           "{gui->view name='pm_SECURE_SECRET'}";
+           "{gui->view name='pm_vpc_SECURE_SECRET'}";
 	}
 
   function admin_form (){
     return "{gui->input name='pm_vpc_AccessCode'}".
            "{gui->input name='pm_vpc_Merchant'}".
-           "{gui->view name='pm_SECURE_SECRET'}";
+           "{gui->input name='pm_vpc_SECURE_SECRET'}";
 	}
 
 	function admin_init (){
+	  $this->handling_text_payment    = "Migs";
+	  $this->handling_text_payment_alt= "Migs";
+
     $this->handling_text_payment    = "Virtual Payment Client";
-    $this->pm_SECURE_SECRET  = md5(date('r'));
+    $this->pm_vpc_SECURE_SECRET  = md5(date('r'));
 	}
 
 	function on_confirm(&$order) {
     global $_SHOP;
     return "
-      <form action='https://migs.mastercard.com.au/vpcpay' method='get'>
-        <input type='text' name='vpc_Version' value='1'    >
-        <input type='text' name='vpc_Command' value='pay'  >
-        <input type='text' name='vpc_AccessCode' value='{$this->pm_vpc_AccessCode}'  >
-        <input type='text' name='vpc_MerchTxnRef' value='{$order->order_id}' >
-        <input type='text' name='vpc_Merchant' value='{$this->pm_vpc_Merchant}'    >
-        <input type='text' name='vpc_OrderInfo' value='{$order->order_description()}' >
-        <input type='text' name='vpc_Amount' value='".sprintf("%01F", ($order->order_total_price)*100)."'            >
-        <input type='text' name='vpc_Locale' value='{$order->user_country}'>
-        <input type='text' name='vpc_ReturnURL' value='".$_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode()."'>
-
+      <form action='{$_SHOP->root_secured}checkout.php' method='POST'>
+	    <input type='hidden' name='action' value='submit'>
+	    	<input type='hidden' name='sor' value='{$order->EncodeSecureCode('')}'>
         <div align='right'>
           <input type='submit' value='{!pay!}' name='submitted' alt='{!vpc_pay!}' >
         </div>
       </form>";
   }
 
+  function on_submit(&$order, &$err){
+        global $_SHOP;
+        $amount = sprintf("%01d", ($order->order_total_price)*100);
+	    $url    = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode();
+		$md5HashData = $this->pm_vpc_SECURE_SECRET;
+		$POST = array();
+        $POST['vpc_Version']     ='1';
+        $POST['vpc_Command']     ='pay';
+        $POST['vpc_AccessCode']  = $this->pm_vpc_AccessCode;
+        $POST['vpc_MerchTxnRef'] = $order->order_id;
+        $POST['vpc_Merchant'] 	 = $this->pm_vpc_Merchant;
+        $POST['vpc_OrderInfo']   = $order->order_description();
+        $POST['vpc_Amount'] 	 = $amount;
+        $POST['vpc_Locale']      = $order->user_country;
+        $POST['vpc_ReturnURL']   = $url;
+
+//		$result = $this->digitalOrder($POST);
+
+//Print_r($result);
+
+  	ksort ($POST);
+     //   print_r ($POST);
+		// set a parameter to show the first pair in the URL
+		$appendAmp = 0;
+		$vpcURL ='';
+		foreach($POST as $key => $value) {
+
+			// create the md5 input and URL leaving out any fields that have no value
+			if (strlen($value) > 0) {
+
+				// this ensures the first paramter of the URL is preceded by the '?' char
+				if ($appendAmp == 0) {
+					$vpcURL .= urlencode($key) . '=' . urlencode($value);
+					$appendAmp = 1;
+				} else {
+					$vpcURL .= '&' . urlencode($key) . "=" . urlencode($value);
+				}
+				$md5HashData .= $value;
+			}
+		}
+       // echo $vpcURL;
+		// Create the secure hash and append it to the Virtual Payment Client Data if
+		// the merchant secret has been provided.
+		if (strlen($this->pm_vpc_SECURE_SECRET) > 0) {
+			$vpcURL .= "&vpc_SecureHash=" . strtoupper(md5($md5HashData));
+		}
+
+		// FINISH TRANSACTION - Redirect the customers using the Digital Order
+		// ===================================================================
+		header("Location: https://migs.mastercard.com.au/vpcpay?".$vpcURL);
+
+
+
+	}
+
   function on_return(&$order, $result){
     $vpc_Txn_Secure_Hash = $_GET["vpc_SecureHash"];
     unset($_GET["vpc_SecureHash"]);
-    print_r($_GET);
+   // print_r($_GET);
     // set a flag to indicate if hash has been validated
     $errorExists = false;
 
-    if (strlen($this->vpc_SECURE_SECRET) > 0 && $_GET["vpc_TxnResponseCode"] != "7" && $_GET["vpc_TxnResponseCode"] != "No Value Returned") {
+    if (strlen($this->vpc_SECURE_SECRET) > 0 && is($_GET["vpc_TxnResponseCode"],7) != 7 ) {
 
         $md5HashData = $this->vpc_SECURE_SECRET;
 
@@ -141,25 +193,134 @@ class EPH_ebs extends payment{
     $acqECI          = array_key_exists("vpc_3DSECI", $_GET)           ? $_GET["vpc_3DSECI"]           : "No Value Returned";
     $authStatus      = array_key_exists("vpc_3DSstatus", $_GET)        ? $_GET["vpc_3DSstatus"]        : "No Value Returned";
 
-    // *******************
-    // END OF MAIN PROGRAM
-    // *******************
 
-    // FINISH TRANSACTION - Process the VPC Response Data
-    // =====================================================
-    // For the purposes of demonstration, we simply display the Result fields on a
-    // web page.
+  	$_GET['ResponseMessage'] = $this->getResponseDescription($txnResponseCode);
+  	$_GET['StatusMessage']   = $this->getStatusDescription($verStatus);
 
-    // Show 'Error' in title if an error condition
-    $errorTxt = "";
+    OrderStatus::statusChange($order->order_id,'vpc',$txnResponseCode,'checkout::notify',$debug.print_r($_GET,true));
+    if ($_REQUEST['vpc_3DSXID']) {
+       Order::set_payment_id($order->order_id,'vpc:'.$_REQUEST['vpc_TransactionNo'].'/'.$_REQUEST['vpc_ReceiptNo']);
+    }
+    $info = "Response:<b> {$txnResponseCode}). ".$this->getResponseDescription($txnResponseCode)."</b><br>
+	         Status:<b> {$verStatus}). ".$this->getStatusDescription($verStatus)."</b>";
 
-    // Show this page as an error page if vpc_TxnResponseCode equals '7'
-    if ($txnResponseCode == "7" || $txnResponseCode == "No Value Returned" || $errorExists) {
-        $errorTxt = "Error ";
+    If ($txnResponseCode == "0" || $txnResponseCode == "P") {
+	  if ($txnResponseCode == "P") {
+        $order->set_payment_status('pending');
+	  } else {
+	    $order->order_payment_status = 'payed';
+        $order->set_payment_status('payed');
+	  }
+      return array('approved'=>true,
+                   'transaction_id'=>$_REQUEST['vpc_TransactionNo'].'/'.$_REQUEST['vpc_ReceiptNo'],
+                   'response'=> $info);
+    } else {
+      return array('approved'=>false,
+                   'transaction_id'=>false,
+                   'response'=> "Error:<b>{$txnResponseCode}). {$message }</b></br>".$info);
     }
 
 
   }
+	function digitalOrder($data) {
+//		if (!in_array($this->config->mode, $this->ALLOWED_MODES)) return; // Invalid mode, bail.
+
+//		$mergedData = array_merge($this->VPC_CONSTANTS, $this->config->merchant[$this->config->mode], $data);
+
+		$queryString = $this->__package($data);
+		$response = $this->__process('https://migs.mastercard.com.au/vpcdp', $queryString);
+
+		// Unpackage the response string if the cURL request succeeded.
+		if ($response) {
+			$response = $this->__unpackage($response);
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Internal function where all the juicy curl fun takes place.
+	 * @access private
+	 * @param string $url Required. Url to request
+	 * @param string $postfields Optional. Url encoded query string.
+	 */
+	private function __process($url, $postfields=false) {
+		$ch = curl_init($url);
+
+		// Add in the post fields (this should be always)!
+		if ($postfields !== false) {
+			curl_setopt ($ch, CURLOPT_POST, true);
+			curl_setopt ($ch, CURLOPT_POSTFIELDS, $postfields);
+		}
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, 1);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+
+		// Some localhost/test environments might need relaxed security.
+		if ($this->config->mode == 'test') {
+        	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		}
+
+    $response = curl_exec($ch);
+    $responseInfo = curl_getinfo($ch);
+
+    curl_close($ch);
+
+    // Return null for any requests that didn't return successfully.
+    if (intval($responseInfo['http_code']) != 200) {
+      $response = null;
+		}
+		return $response;
+	}
+
+	/**
+	 * Function to piece together a cohesive query string from the values passed in.
+	 * Fields with empty values will be ignored.
+	 * The query string will have an md5 hash of the query string values added according to Bendigo's protocol.
+	 * NOTE: If the $SECURE_SECRET is left empty - this will not take be done.
+	 * @access private
+	 * @param array $values
+	 * @return string $queryString
+	 */
+	private function __package($values) {
+		$queryString = '';
+	    $hashData = $this->vpc_SECURE_SECRET;
+
+		// 1. The Secure Hash Secret is always first.
+		// 2. Then all DO fields are concatenated to the Secure Hash Secret in alphabetical order of the field name.
+		ksort($values);
+
+		foreach ($values as $key => $val) {
+		    if (strlen($val) > 0) {
+		        $queryString .= $key . '=' . rawurlencode($val) . '&';
+				$hashData .= $val;
+			}
+	    }
+
+		// Remove the trailing '&'.
+		$queryString = substr($queryString, 0, strlen($queryString)-1);
+
+		// Create the secure hash and append it if the merchant secret has been provided.
+		if (strlen($this->config->secureSecret) > 0) {
+		    $queryString = 'vpc_SecureHash=' . strtoupper(md5($hashData)) . '&' . $queryString;
+		}
+
+	    return $queryString;
+	}
+
+	/**
+	 * Convert the $queryString (from the format: key=value&foo=bar)
+	 * into an associative array.
+	 */
+	private function __unpackage($queryString) {
+		$array = array();
+		parse_str($queryString, $array);
+
+		return $array;
+	}
 
   // This method uses the QSI Response code retrieved from the Digital
   // Receipt and returns an appropriate description for the QSI Response Code

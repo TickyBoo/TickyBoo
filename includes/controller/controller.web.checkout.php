@@ -177,13 +177,13 @@ class ctrlWebCheckout extends ctrlWebShop {
       addwarning('order_not_found_or_created');
       return "checkout_preview";
     } else {
-      $this->setordervalues($myorder); //assign order vars
       $this->__MyCart->destroy_f(); // destroy cart
       if(!$myorder->handling){
         $myorder->handling = Handling::load($myorder->order_handling_id);
       }
     	$hand = $myorder->handling; // get the payment handling object
       $confirmtext = $hand->on_confirm($myorder); // get the payment button/method...
+      $this->setordervalues($myorder); //assign order vars
 
    //    ShopDB::commit('UnLock Created Order'); // Dont commit within the processes  will be done at the end.
       if (is_array($confirmtext)) {
@@ -214,9 +214,9 @@ class ctrlWebCheckout extends ctrlWebShop {
       ShopDB::dblogging("submit error ($myorder).");
       return;
     }
-    $this->setordervalues($myorder);
     $hand= $myorder->handling;
     $pm_return = $hand->on_submit($myorder);
+    $this->setordervalues($myorder);
     if (empty($pm_return)) {
       return false;
     } elseif (is_string($pm_return)) {
@@ -254,9 +254,9 @@ class ctrlWebCheckout extends ctrlWebShop {
     }
 
     $hand=$myorder->handling;
-    $this->setordervalues($myorder);
 
     $pm_return = $hand->on_return($myorder, true);
+    $this->setordervalues($myorder);
     If (!$pm_return['approved']) {
        Order::delete($myorder->order_id,'payment_not_approved' );
        $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
@@ -281,11 +281,10 @@ class ctrlWebCheckout extends ctrlWebShop {
       echo "Cancel error ($myorder).\n";
       return;
     }
-
-    $this->setordervalues($myorder);
     $hand=$myorder->handling;
-    Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $pm_return = $hand->on_return($myorder, false );
+    Order::delete($myorder->order_id,'order_canceled_will_paying' );
+    $this->setordervalues($myorder);
     $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
     $this->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);

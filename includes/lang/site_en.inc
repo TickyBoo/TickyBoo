@@ -1540,4 +1540,10 @@ define("send_email","Send Email");
 
 define('cant_create_seat_zone_missing_cat','Every zone need to have catergory in a placemap part.');
 define('pub_success','publication successed: ');
+define('pm_vpc_AccessCode','pm_vpc_AccessCode');
+define('pm_vpc_Merchant','pm_vpc_Merchant');
+define('pm_vpc_SECURE_SECRET','pm_vpc_SECURE_SECRET');
+define('vpc_pay','vpc_pay');
+define('successfully_updated_user_details','successfully_updated_user_details');
+define('payment_not_approved','payment_not_approved');
 ?>
