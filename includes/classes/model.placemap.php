@@ -190,7 +190,6 @@ class PlaceMap Extends Model {
           if (!preg_match('/\.(\w+)$/', $old_img, $ext)) {
             addwarning('img_loading_problem_match');
           } else {
-            print_r($ext);
             $doc_name =  "pm_image_{$this->id}.{$ext[1]}";
             if (!copy ($_SHOP->files_dir .DS. $old_img, $_SHOP->files_dir .DS. $doc_name)) {
               addWarning($name,'img_loading_problem_copy');

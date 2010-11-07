@@ -155,14 +155,14 @@
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel='stylesheet' href='css/flick/jquery-ui-1.8.1.custom.css' />
+    <link rel='stylesheet' href='css/flick/jquery-ui-1.8.6.custom.css' />
 		<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" media="screen" />
 
 
 		<title>FusionTicket: Language editor </title>
 		<link rel="stylesheet" type="text/css" href="css/ingrid.css" media="screen" />
 		<script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.6.custom.min.js"></script>
 
 		<script type="text/javascript" src="scripts/jquery/jquery.jqGrid.min.js"></script>
 

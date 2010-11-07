@@ -227,7 +227,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
             $res = "<table border=0 cellspacing=0 cellpadding=0>
                       <tr>
                         <td>
-                          <table class='pm_table' border=1  cellspacing=0 cellpadding=0>$res</table>
+                          <table class='pm_table' border=1  cellspacing=0 cellpadding=0>$res<br></table>
                         </td>
                       </tr>
                       <tr>
@@ -274,6 +274,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
                  </td>
                </tr>
              </table>";
+          break;
         default:
             $res = "<table border=0 cellspacing=0 cellpadding=0>
                <tr>

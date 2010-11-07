@@ -212,13 +212,12 @@ function constructBase($secure=null, $useroot=false) {
   if ($secure == null) $secure = env('HTTPS');
   $dir  = dirname(env('PHP_SELF'));
   $file = basename($dir);
-  if (($file=='admin') ||  ($file=='pos') ||  ($file=='control') && $useroot ) {
+  if ((($file=='admin') ||  ($file=='pos') ||  ($file=='control')) && $useroot ) {
     $dir = dirname($dir);
   }
   $dir = str_replace('\\','/' , $dir);
   $base = 'http' . (($secure) ? 's' : '') . '://' . env('SERVER_NAME');
   // thanks to Nasi it will now also works with different port numbers
- // $base .= $dir;
   if (!in_array(env('SERVER_PORT'), array('80', '443'))) {
 		$base .= ':' . env('SERVER_PORT');
 	}

@@ -54,13 +54,13 @@ function get_content($url)
 class install_settings {
   static function precheck($Install) {
     global $_SHOP;
-    echo $test = md5(date('R'));
+    $test = md5(date('R'));
     @file_put_contents($_SHOP->tmp_dir.'ssl_instal.txt',$test);
   	$file = constructBase(true).'index.php?do=testhttps';
 	//$file = str_replace('https','ssl',$file );
-    echo '|';
- 	  echo $testx = get_content($file);
-    echo '|';
+    
+ 	  $testx = get_content($file);
+    
 
 
     $_SESSION['SHOP']['secure_site'] = is($_SESSION['SHOP']['secure_site'], ($test===$testx) );

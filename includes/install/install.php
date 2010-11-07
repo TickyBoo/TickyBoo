@@ -43,7 +43,6 @@ if (empty($_REQUEST)) {
   session_destroy();
   session_start();
 }
-error_reporting(E_ALL);
 include_once 'install_version.php';
 
 /**
@@ -88,10 +87,10 @@ if (isset($_REQUEST['do']) && $_REQUEST['do']=='testhttps'){
 <head>
   <title>Fusion Ticket Installation</title>
   <link rel="stylesheet" type="text/css" href="../css/formatting.css" media="screen" />
-  <link rel="stylesheet" type="text/css" href="../css/flick/jquery-ui-1.8.1.custom.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="../css/flick/jquery-ui-1.8.6.custom.css" media="screen" />
   <link rel='stylesheet' href='../css/jquery.tooltip.css' />
   <script type="text/javascript" src="../scripts/jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="../scripts/jquery/jquery-ui-1.8.1.custom.min.js"></script>
+  <script type="text/javascript" src="../scripts/jquery/jquery-ui-1.8.6.custom.min.js"></script>
   <script type="text/javascript" src="../scripts/jquery/jquery.dimensions.min.js"></script>
   <script type="text/javascript" src="../scripts/jquery/jquery.tooltip.min.js"></script>
   <script type="text/javascript" src="../scripts/jquery/jquery.caret.js"></script>
@@ -146,11 +145,6 @@ if (isset($_REQUEST['do']) && $_REQUEST['do']=='testhttps'){
 </head>
 <body>
 <?php
-
-
-
-
-
 foreach($states as $id => $name) {
   define(strtoupper($name), $id);
   require_once(dirname(__FILE__).DS."{$name}.php");

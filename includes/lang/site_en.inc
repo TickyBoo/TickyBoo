@@ -60,7 +60,7 @@ define("continue","Continue");
 define("define","Define");
 define("edit","Edit");
 define("delete","Delete");
-define("login_button","OK");
+define("login_button","Login");
 define("order_it","Order");
 define("order_more_tickets","Order More Tickets");
 define("publish", "Publish" );
@@ -285,15 +285,15 @@ define('user_details_saved_successfully','User details sucessfully saved');
 //Administration Menu - the menu on the left side
 define("index_admin","Home");
 define("administration","Administration");
-define("users_admin","User Management");
+define("users_admin", "User Management");
 define("event_admin","Event Management");
-define("stats","Statistics");
-define("order_admin","Order Overview");
-define("template_admin","Templates");
-define("payment_admin","Order Handlings");
-define("search_order","Search");
+define("stats", "Reporting");
+define("order_admin", "Ticket Tracking");
+define("template_admin", "Templates");
+define("payment_admin", "Order Handlings");
+define("search_order", "Search");
 define("imp_export_admin", "Import /Export");
-define("utils_admin","Utilities");
+define("utils_admin", "Utilities");
 
 //Home
 //System Information
@@ -647,9 +647,9 @@ define("order_event_list_title","Orders by Event");
     define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
     define("onote_resend_sent","Resend \"Sent\" Email.");
     define("onote_resend_payed","Resend \"Paid\" Email.");
-        define("pos","POS-user");
-        define("posman","POS-manager");
-        define("organizer","Event-Manager");
+        define("pos","POS User");
+        define("posman","POS Manager");
+        define("organizer","Event Manager");
 
 
 	//Action icons
@@ -1081,7 +1081,7 @@ define("et_pr","Pop/Rock");
 define("et_theater","Theater");
 
 //forgot_password.tpl
-define("forgot_pwd","Forgot my password.");
+define("forgot_pwd", "Forgot Password");
 define("pwd_forgot","Forgotten your Password?");
 define("forgot_password","Forgotten your Password?");
 define("pwd_err","User not found or other problem occured");
@@ -1153,7 +1153,7 @@ define("confirmemail","Confirm E-mail Address");
 //user_login.tpl
 define("login","Login name");
 define("memberinfo","Please enter your details below. To buy tickets you are required to sign up, it is recommend that you sign up before you reserve tickets.");
-define("register","Register Here");
+define("register","Register");
 
 //user_login_block.tpl - no unique defines
 
@@ -1519,9 +1519,10 @@ define('onote_type_payment','payment');
 define('onote_type_todo'   ,'todo');
 define('onote_isprivate',' (<i>private</i>)');
 
+define("logged_in","User:");
 //Events
 define("placemap","Event Placemap");
-define("logged_in","User:");
+
 	define("block","Block Seats");
 	define("assign","Assign Seats");
 	define("clear_selection","Clear Selection");
