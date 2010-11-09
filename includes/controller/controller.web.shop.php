@@ -76,6 +76,7 @@ class ctrlWebShop  {
   }
 
   public function draw($fond, $action, $isAjax= false) {
+    $this->init();
     $this->assign('action',$action);
     $this->assign('isAjax',$isAjax);
     $this->smarty->display(is($fond, 'shop') . '.tpl');
@@ -116,6 +117,9 @@ class ctrlWebShop  {
       $plugin = "__{$plugin}";
       $this->$plugin  = new $classname($this->smarty);
     }
+  }
+  public function init() {
+
   }
 }
 

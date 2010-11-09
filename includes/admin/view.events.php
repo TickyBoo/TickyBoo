@@ -166,7 +166,7 @@ select SQL_CALC_FOUND_ROWS *
               <input type='checkbox'  onclick=\"checkall();\">&nbsp;<font size=-1>Check/Uncheck All&nbsp;&nbsp; </font>
               ".$this->show_button("javascript: document.frmEvents.action.value=\"publish\";document.frmEvents.submit();","publish",3)."
               ".$this->show_button("javascript: document.frmEvents.action.value=\"unpublish\";document.frmEvents.submit();","unpublish",3)."
-              ".$this->show_button("javascript: javascript: if(confirm(\"" . con('delete_item') . "\")){document.frmEvents.action.value=\"remove_events\";document.frmEvents.submit();","delete",3)."
+              ".$this->show_button("javascript: if(confirm(\"" . con('delete_item') . "\")) {document.frmEvents.action.value=\"remove_events\";document.frmEvents.submit();}","delete",3)."
           	</td>
           </tr>\n";
     }
@@ -252,7 +252,7 @@ select SQL_CALC_FOUND_ROWS *
                                    'disable'=> !$pub ));
   }
 
-	function form( $data,  $page = 0 ) {
+	function form( $data,  $page = 0, $history= false ) {
 		global $_SHOP;
 
 		if ( !$data['event_id'] ) {
@@ -294,18 +294,18 @@ select SQL_CALC_FOUND_ROWS *
 			echo "<input type='hidden' name='event_rep' value='sub'/>\n";
 			echo "<input type='hidden' name='event_main_id' value='{$data['event_main_id']}'/>\n";
     } elseif ( !$data['event_id'] ) {
-			$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
-		} else {
-			$this->print_field( 'event_rep', con($data['event_rep']) );
-		}
+		$this->print_select( 'event_rep', $data, $err, array('unique', 'main') );
+	} else {
+		$this->print_field( 'event_rep', con($data['event_rep']) );
+	}
 
 
-		$this->print_area( 'event_short_text', $data, $err, 3,46,$main );
-  		$this->print_large_area( 'event_text', $data, $err,6,108,$main  );
-		$this->print_input( 'event_url', $data, $err, 30, 100, $main  );
+	$this->print_area( 'event_short_text', $data, $err, 3,46,$main );
+	$this->print_large_area( 'event_text', $data, $err,6,108,$main  );
+	$this->print_input( 'event_url', $data, $err, 30, 100, $main  );
 
-		$this->print_date( 'event_date', $data, $err, $main );
-		if ( !$data['event_id'] ) {
+	$this->print_date( 'event_date', $data, $err, $main );
+	if ( !$data['event_id'] ) {
    		$this->print_select_recurtype("event_recur_type",$data);
     }
 
@@ -332,19 +332,42 @@ select SQL_CALC_FOUND_ROWS *
     });
     ";
     $this->addJQuery($script);
+    echo "<tr ><td colspan='2' class='admin_name'>" . con('event_view_periode') ."</td></tr>";
+    if (!isset($data['event_view_begin_date'])) { 
+		  list($data['event_view_begin_date'],$data['event_view_begin_time']) = explode(' ',$data['event_view_begin']);
+		}
+    if (!isset($data['event_view_end_date'])) { 
+    	list($data['event_view_end_date'],$data['event_view_end_time'])     = explode(' ',$data['event_view_end']);
+    }
+    if (!isset($data['event_custom4_date'])) { 
+  		list($data['event_custom4_date'],$data['event_custom4_time'])     = explode(' ',$data['event_custom4']);
+    }
+    
+		$this->print_date('event_view_begin_date', $data, $err, $main );
+		$this->print_time('event_view_begin_time', $data, $err, $main );
+		$this->print_date('event_view_end_date', $data, $err,  $main );
+		$this->print_time('event_view_end_time', $data, $err,  $main );
+         echo "<tr ><td colspan='2' class='admin_name'>" . con('event_custom_fields') ."</td></tr>";
+		$this->print_input('event_custom1', $data, $err, 30, 100, $main );
+		$this->print_area ('event_custom2', $data, $err, 6 , 70, $main );
+		$this->print_input('event_custom3', $data, $err, 10, 10, $main );
+		$this->print_date ('event_custom4_date', $data, $err, $main );
+		$this->print_time ('event_custom4_time', $data, $err, $main );
 
-        //recurrence
 		$this->form_foot(2,$_SERVER['PHP_SELF']);
-	echo "</div>\n";
+		echo "</div>\n";
+	   
   if ($data['event_pm_id']) {
     echo '<h3><a href="#">'.con('placemap').'</a></h3>
 	      <div style="margin:0;padding:1;">';
     require_once ( "admin/view.placemaps.php" );
 		$pmp_view = new PlaceMapView( $this->width );
-    $pmp_view->form($data['event_pm_id']);
+    $pmp_view->form($data['event_pm_id'], Null, NULL);
     echo '</div>';
-  }
+    
   echo ' </div>';
+  }
+
   $this->addJquery('
 	$(function() {
 		$( "#accordion" ).accordion({
@@ -432,12 +455,13 @@ select SQL_CALC_FOUND_ROWS *
 			  $event->delete();
       }
 		} elseif($_POST['action'] == 'remove_events') {
-		  if(count($_REQUEST['cbxEvents']) > 0)
+		  if(count($_REQUEST['cbxEvents']) > 0) {
 			  foreach($_REQUEST['cbxEvents'] as $eventId){
           $event = Event::load($eventId, false);
           if ($event->event_status !=='pub') {
                 $event->delete();
           }
+        }
 			}
 		}
 		$this->table($history);

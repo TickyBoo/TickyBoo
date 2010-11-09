@@ -277,26 +277,28 @@ class Model {
   }
 
   function fillDate(&$array, $name) {
-		if ( (isset($array["$name-y"]) and strlen($array["$name-y"]) > 0) or
-         (isset($array["$name-m"]) and strlen($array["$name-m"]) > 0) or
-         (isset($array["$name-d"]) and strlen($array["$name-d"]) > 0) ) {
+		if ( (isset($array["$name-y"]) and (int)($array["$name-y"]) > 0) or
+         (isset($array["$name-m"]) and (int)($array["$name-m"]) > 0) or
+         (isset($array["$name-d"]) and (int)($array["$name-d"]) > 0) ) {
 			$y = $array["$name-y"];
 			$m = $array["$name-m"];
 			$d = $array["$name-d"];
 
 			if ( !checkdate($m, $d, $y) ) {
         addError($name, 'invalid');
+        
 			} else {
 				$array[$name] = "$y-$m-$d";
+  		  return true;
 			}
 		}
-    return true;
+    return false;
   }
 
   function fillTime(&$data, $name) {
     global $_SHOP;
-		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
-         (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
+		if ( (isset($data[$name.'-h']) and (int)($data[$name.'-h']) > 0) or
+         (isset($data[$name.'-m']) and (int)($data[$name.'-m']) > 0) ) {
 			$h = $data[$name.'-h'];
 			$m = $data[$name.'-m'];
 			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
@@ -310,9 +312,8 @@ class Model {
 			  $data[$name] = "$h:$m";
         return true;
 			}
-      return false;
 		}
-    return true;
+    return false;
   }
 
   /**

@@ -7,7 +7,7 @@
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-  {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery-ui-1.8.6.custom.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal-1.3.5.js,jquery.countdown.pack.js,jquery.tooltip.min.js'}
+  {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery-ui-1.8.6.custom.min.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal-1.3.5.js,jquery.countdown.pack.js,jquery.tooltip.min.js'}
 
   {minify type='js' files='scripts/shop.jquery.forms.js'}
 

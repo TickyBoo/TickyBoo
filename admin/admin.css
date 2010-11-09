@@ -365,7 +365,7 @@ A.UITabMenuNavOn:hover {
 
 .admin-button:hover {
   font-weight:normal;
-  background:url("../css/ui-lightness/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #DADADA;
+  background:url("../css/flick/images/ui-bg_glass_65_ffffff_1x400.png") repeat-x scroll 50% 50% #DADADA;
   border:1px solid #999999;
   color:#212121;
   outline:medium none;

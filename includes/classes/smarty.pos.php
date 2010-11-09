@@ -52,7 +52,8 @@ class POS_Smarty {
 
 
   function _load (){
-    return $_SESSION['_SHOP_AUTH_USER_DATA'];;
+    global $_SHOP;
+    return $_SHOP->admin;
   }
 
   function _fill ($user){

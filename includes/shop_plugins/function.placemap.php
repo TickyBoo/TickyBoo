@@ -227,7 +227,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
             $res = "<table border=0 cellspacing=0 cellpadding=0>
                       <tr>
                         <td>
-                          <table class='pm_table' border=1  cellspacing=0 cellpadding=0>$res<br></table>
+                          <table class='pm_table' border=1  cellspacing=0 cellpadding=0>$res</table>
                         </td>
                       </tr>
                       <tr>
@@ -298,7 +298,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
               c++;
             } else if (c == 0) {
               alert("'.con('max_seats_reached').'");
-              exit;
+              return;
             }
             jQuery("#maxseats").val(c);';
     }

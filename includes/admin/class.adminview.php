@@ -604,29 +604,11 @@ class AdminView extends AUIComponent {
       echo printMsg($name, $err)."
            </td></tr>\n";
     }
-    function Set_time($name, & $data, & $err) {
-      global $_SHOP;
-  		if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
-           (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
-  			$h = $data[$name.'-h'];
-  			$m = $data[$name.'-m'];
-  			if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
-  				$err[$name] = invalid;
-  			} elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
-  			  $err[$name] = invalid;
-  			} else {
-          if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
-            $h = $h + 12;
-          }
-  			  $data[$name] = "$h:$m";
-  			}
-  		}
-    }
 
     function print_date ($name, &$data, &$err, $suffix = '') {
       global $_SHOP;
       $suffix = self::_check($name, $suffix,$data);
-        if (isset($data[$name])) {
+        if (isset($data[$name]) and !printMsg($name)) {
             $src = $data[$name];
             list($y, $m, $d) = explode("-", $src);
         } else {
@@ -637,39 +619,18 @@ class AdminView extends AUIComponent {
         $nm = $name . "-m";
         echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
               <td class='admin_value'>";
+        $year  = "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'>";
+        $month = "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\">";
+        $day   = "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" >";
         if ($_SHOP->input_date_type == 'iso') {
-          echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
-          echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
-          echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+           echo "{$year} - {$month} - {$day} (yyyy-mm-dd)";
+        } elseif ($_SHOP->input_date_type == 'dmy') {
+           echo "{$day} - {$month} - {$year} (dd-mm-yyyy)";
         } else {
-          if ($_SHOP->input_date_type == 'dmy') {
-            echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
+           echo "{$month} - {$day} - {$year} (mm-dd-yyyy)";
           }
-          echo "<input type='text' name='$name-m' value='$m' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$name-y'])\"> - ";
-          IF ($_SHOP->input_date_type == 'mdy') {
-            echo "<input type='text' name='$name-d' value='$d' size='2' maxlength='2' onKeyDown=\"TabNext(this,'down',2)\" onKeyUp=\"TabNext(this,'up',2,this.form['$nm'])\" > - ";
-          }
-          echo "<input type='text' name='$name-y' value='$y' size='4' maxlength='4'> (dd-mm-yyyy)";
-        }
-        echo "".printMsg($name, $err)."
+        echo " ".printMsg($name)."
               </td></tr>\n";
-    }
-
-    function set_date($name,&$data, &$err) {
-  		if ( (isset($data["$name-y"]) and strlen($data["$name-y"]) > 0) or
-           (isset($data["$name-m"]) and strlen($data["$name-m"]) > 0) or
-           (isset($data["$name-d"]) and strlen($data["$name-d"]) > 0) ) {
-  			$y = $data["$name-y"];
-  			$m = $data["$name-m"];
-  			$d = $data["$name-d"];
-
-  			if ( !checkdate($m, $d, $y) ) {
-  				$err[$name] = invalid;
-  			} else {
-  				$data[$name] = "$y-$m-$d";
-  			}
-  		}
-
     }
 
     function print_url ($name, &$data, $prefix = ''){
@@ -715,22 +676,30 @@ class AdminView extends AUIComponent {
 
     function print_color ($name, &$data, &$err) {
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
-        <td class='admin_value'>
-        <select id='{$name}-select' name='$name'>\n";
-
+        <td class='admin_value'>";
         if ($act = $data[$name]){
-          echo "<option value='$act'style='color:$act;' selected>$act</option>\n";
+          echo "<input type='hidden' id='{$name}_text' name='$name' value='$act'>\n
+        		<div id='colorSelector'><div style='background-color: $act'></div></div>";
+         }else{
+         	echo "<input type='hidden' id='{$name}_text' name='$name' >\n
+        		<div id='colorSelector'><div style='background-color: #0000ff'></div></div>";
         }
-        for($r = 16;$r < 256;$r += 64) {
-            for($g = 16;$g < 256;$g += 64) {
-                for($b = 16;$b < 256;$b += 64) {
-                    $color = '#' . dechex($r) . dechex($g) . dechex($b);
-                    echo "<option value='$color'style='color:$color;'>$color</option>\n";
+       
+       echo "<script>$('#colorSelector').ColorPicker({
+								color: '#0000ff',
+								onShow: function (colpkr) {
+									$(colpkr).fadeIn(500);
+									return false;
+								},
+								onHide: function (colpkr) {
+									$(colpkr).fadeOut(500);
+									return false;
+								},
+								onChange: function (hsb, hex, rgb) {
+									$('#colorSelector div').css('backgroundColor', '#' + hex);
+									$('#{$name}_text').val('#' + hex);
                 }
-            }
-        }
-
-        echo "</select>";
+							});</script>";
     }
 
     function view_file ($name, &$data, &$err, $type = 'img', $prefix = '') {

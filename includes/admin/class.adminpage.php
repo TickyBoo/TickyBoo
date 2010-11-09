@@ -196,19 +196,6 @@ class AdminPage extends AUIComponent {
   <DIV style="MARGIN-TOP: 0.35em; MARGIN-Bottom: 0.35em; DISPLAY: none" id=notice-message class="ui-state-highlight ui-corner-all" title="Order Notice Message">
   <P><SPAN style="FLOAT: left; MARGIN-RIGHT: 0.3em" class="ui-icon ui-icon-info"></SPAN><div id=notice-text>fff</div> </P></DIV>
     ';
-/*
-      echo"
-          <div id=\"error-message\" title='{!order_error_message!}' class=\"ui-state-error ui-corner-all\" style=\"padding: 1em; margin-top: .7em; display:none;\" >
-             <p><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span>
-                <span id='error-text'>ffff</span>
-             </p>
-          </div>
-          <div id=\"notice-message\" title='{!order_notice_message!}' class=\"ui-state-highlight ui-corner-all\" style=\" padding: 1em; margin-top: .7em; display:none;\" >
-             <p><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span>
-                <div id='notice-text'>fff</div>
-             </p>
-          </div>";
-          */
   }
 
   function drawFoot() {

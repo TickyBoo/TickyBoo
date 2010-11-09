@@ -80,7 +80,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
 
     if($params['search']){
-      $params['search']=_ESC($params['event_search']);
+      $params['search']=_ESC($params['search']);
       //$where .= " AND (event_name like '{$params['event_search']}' or event_text like '{$params['event_search']}' or event_short_text like '{$params['event_search']}') ";
       $where .= " AND
       (event_name like '%{$params['search']}%'
@@ -139,15 +139,6 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
   if($params['amounts']){
      $value =', (select sum(seat_price) from Seat where seat_event_id = event_id and seat_status = "com") as event_paid';
   }
-	if($params['search']){
-		$where .= "AND (event_name LIKE '%"._esc($params['search'],false)."%'
-			OR event_text LIKE '%"._esc($params['search'],false)."%'
-			OR event_date LIKE '%"._esc($params['search'],false)."%' ";
-		if($params['ort']){
-			$where .= "OR ort_name LIKE '%"._esc($params['search'],false)."%' ";
-		}
-		$where .= ")";
-	}
 
     $query="select {$cfr} * {$value} from {$from} {$where} {$order_by} {$limit}";
     $res=ShopDB::query($query);

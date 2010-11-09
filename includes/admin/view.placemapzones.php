@@ -94,7 +94,7 @@ class PlaceMapZoneView extends AdminView {
     $this->form_head(con('pm_zone'));
     $this->print_field_o('pmz_id', $data, $err);
     $this->print_field_o('pmz_ident', $data);
-    $this->print_field_o('pmz_pm_id', $data);
+    //$this->print_field_o('pmz_pm_id', $data);
     $this->print_input('pmz_name', $data, $err, 30, 50);
     $this->print_input('pmz_short_name', $data, $err, 4, 10);
     $this->print_color('pmz_color', $data, $err);

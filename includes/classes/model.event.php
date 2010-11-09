@@ -41,6 +41,7 @@ class Event Extends Model {
                                 'event_image', '#event_ort_id', '#event_pm_id', 'event_timestamp', 'event_date', 'event_time',
                                 'event_open', 'event_end', '*event_status', 'event_order_limit', 'event_template',
                                 '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type',
+								'event_custom1', 'event_custom2', 'event_custom3', 'event_custom4',
                                 'event_total', 'event_free');
 
   function load ($id, $only_published=TRUE){
@@ -173,6 +174,11 @@ class Event Extends Model {
   }
 
   function CheckValues(&$data) {
+     $t1 = $this->fillDate($data,'event_custom4_date');
+      $t2 = $this->fillTime($data,'event_custom4_time');
+      if ($t1 || $t2) {
+         $data['event_custom4']    = is($data['event_custom4_date'],'0000-00-00').' '.is($data['event_custom4_time'],'00:00').':00';
+      }
     if (!$data['event_status'] and !$this->event_status) $data['event_status']='unpub';
 		$this->fillTime($data,'event_time');
 		$this->fillTime($data,'event_open');

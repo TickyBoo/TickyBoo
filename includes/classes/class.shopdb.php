@@ -86,7 +86,8 @@ class ShopDB {
               }
 
             ShopDB::$link = $link;
-            if (strpos('svn',constant('CURRENT_VERSION')) !== false) {
+
+            if (strpos(constant('CURRENT_VERSION'),'svn') !== false) {
               ShopDB::checkdatabase(true, false);
             }
 

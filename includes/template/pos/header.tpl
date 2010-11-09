@@ -45,7 +45,7 @@
 
     {minify type='css' files='css/formatting.css,css/flick/jquery-ui-1.8.6.custom.css,css/ui.jqgrid.css'}
 
-    {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery-ui-1.8.6.custom.js,jquery.ajaxmanager.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.checkboxselect.js,i18n/grid.locale-en.js,jquery.jqGrid.min.js'}
+    {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery-ui-1.8.6.custom.min.js,jquery.ajaxmanager.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.checkboxselect.js,i18n/grid.locale-en.js,jquery.jqGrid.min.js'}
 
 		<script type="text/javascript">
       var address = '{$_SHOP_root}';

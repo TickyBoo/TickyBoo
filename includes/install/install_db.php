@@ -184,9 +184,9 @@ $tbls['Event']['fields'] = array(
   'event_rep' => " set('main','sub') NOT NULL DEFAULT 'main,sub'",
   'event_main_id' => " int(11) DEFAULT NULL",
   'event_type' => " varchar(25) DEFAULT NULL",
-  'event_custom1' => " varchar(50) DEFAULT ''",
+  'event_custom1' => " varchar(50) DEFAULT NULL",
   'event_custom2' => " text",
-  'event_custom3' => " int(11) DEFAULT '0'",
+  'event_custom3' => " int(11) DEFAULT NULL",
   'event_custom4' => " datetime DEFAULT '0000-00-00 00:00:00'",
 
   'event_total' => " int(11) NOT NULL DEFAULT '0'",
@@ -291,9 +291,9 @@ $tbls['Order']['fields'] = array(
   'order_lock' => "enum('0','1') NOT NULL DEFAULT '0'",
   'order_lock_time' => "timestamp NULL DEFAULT '0000-00-00 00:00:00'",
   'order_lock_admin_id' => "int(11) DEFAULT NULL",
-  'order_custom1' => " varchar(50) DEFAULT ''",
+  'order_custom1' => " varchar(50) DEFAULT NULL",
   'order_custom2' => " text",
-  'order_custom3' => " int(11) DEFAULT '0'",
+  'order_custom3' => " int(11) DEFAULT NULL",
   'order_custom4' => " datetime DEFAULT '0000-00-00 00:00:00'",
 
   'order_lang' => "varchar(2) DEFAULT NULL");

@@ -59,6 +59,7 @@ class Order Extends Model {
                                 '*order_payment_status', 'order_payment_id', 'order_handling_id','order_order_set',
                                 '*order_status', 'order_fee', '*order_place', '#order_owner_id',
                                 '~order_date_expire', 'order_responce', 'order_responce_date',
+								'order_custom1', 'order_custom2', 'order_custom3', 'order_custom4',
                                 'order_note', 'order_discount_price', 'order_discount_promo', 'order_discount_id', 'order_lang'); //, 'order_lock', 'order_lock_time', '#order_lock_admin_id'
   public $places=array();
   public $tickets = array();
