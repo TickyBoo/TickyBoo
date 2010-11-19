@@ -1547,4 +1547,10 @@ define('pm_vpc_SECURE_SECRET','pm_vpc_SECURE_SECRET');
 define('vpc_pay','vpc_pay');
 define('successfully_updated_user_details','successfully_updated_user_details');
 define('payment_not_approved','payment_not_approved');
+
+  define("cc_name","Credit card owner name");
+  define("cc_number","Credit card number");
+  define("cc_exp","Expiry Date");
+  define("cc_code","Checknumber");
+
 ?>
