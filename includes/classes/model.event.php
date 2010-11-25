@@ -101,6 +101,7 @@ class Event Extends Model {
                       event_pm_id={$new_pm_id}
                     where event_id={$this->event_id}";
             ShopDB::query($query);
+            $this->event_pm_id = $new_pm_id;
           } else {
             return self::_abort('Cant find selected placemap.');
           }
@@ -191,7 +192,9 @@ class Event Extends Model {
       $this->_columns   = array('#event_id', '*event_name', 'event_text', 'event_short_text', 'event_url',
                                 'event_image', '*event_ort_id', '#event_pm_id', '*event_date', '*event_time',
                                 'event_open', 'event_end', '*event_status', '*event_order_limit', 'event_template',
-                                '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type');
+                                '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type',
+                                'event_custom1', 'event_custom2', 'event_custom3', 'event_custom4',
+                                'event_total', 'event_free');
 
     }
 

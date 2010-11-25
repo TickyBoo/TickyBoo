@@ -85,15 +85,16 @@ select SQL_CALC_FOUND_ROWS *
 */
     $wherex = (!$history)?"event_status = 'pub' or ":"event_status != 'pub' AND ";
     $where  = "and ((event_rep!='main' and  ({$wherex} TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
-    $where .= "     or (event_rep='main' and ((select COALESCE(count(*),0)
-                                               from Event main
-                                               where main.event_main_id = Event.event_id
-                                               and main.event_status!='trash'
-                                               and  (main.{$wherex} TO_DAYS(main.event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ))) > 0)
-                                             OR
-                                             ((select COALESCE(count(*),0)
-                                               from Event main
-                                               where main.event_main_id = Event.event_id) = 0) and event_rep='main')";
+	  $where .= "OR     (Event.event_rep='main' and (((select COALESCE(count(*),0)
+	                                             from Event main
+	                                             where main.event_main_id = Event.event_id
+	                                             and main.event_status!='trash'
+	                                             and  (main.{$wherex} TO_DAYS(main.event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) > 0)
+	                                             ".((!$history)?"OR
+	                                           ((select COALESCE(count(*),0)
+	                                             from Event main
+	                                             where main.event_main_id = Event.event_id and main.event_status!='trash') = 0)":"").")))";
+
     $_REQUEST['page'] = is($_REQUEST['page'],1);
   //  $this->page_length = 2;
     $recstart = ($_REQUEST['page']-1)* $this->page_length;
@@ -333,16 +334,16 @@ select SQL_CALC_FOUND_ROWS *
     ";
     $this->addJQuery($script);
     echo "<tr ><td colspan='2' class='admin_name'>" . con('event_view_periode') ."</td></tr>";
-    if (!isset($data['event_view_begin_date'])) { 
+    if (!isset($data['event_view_begin_date'])) {
 		  list($data['event_view_begin_date'],$data['event_view_begin_time']) = explode(' ',$data['event_view_begin']);
 		}
-    if (!isset($data['event_view_end_date'])) { 
+    if (!isset($data['event_view_end_date'])) {
     	list($data['event_view_end_date'],$data['event_view_end_time'])     = explode(' ',$data['event_view_end']);
     }
-    if (!isset($data['event_custom4_date'])) { 
+    if (!isset($data['event_custom4_date'])) {
   		list($data['event_custom4_date'],$data['event_custom4_time'])     = explode(' ',$data['event_custom4']);
     }
-    
+
 		$this->print_date('event_view_begin_date', $data, $err, $main );
 		$this->print_time('event_view_begin_time', $data, $err, $main );
 		$this->print_date('event_view_end_date', $data, $err,  $main );
@@ -356,7 +357,7 @@ select SQL_CALC_FOUND_ROWS *
 
 		$this->form_foot(2,$_SERVER['PHP_SELF']);
 		echo "</div>\n";
-	   
+
   if ($data['event_pm_id']) {
     echo '<h3><a href="#">'.con('placemap').'</a></h3>
 	      <div style="margin:0;padding:1;">';
@@ -364,7 +365,7 @@ select SQL_CALC_FOUND_ROWS *
 		$pmp_view = new PlaceMapView( $this->width );
     $pmp_view->form($data['event_pm_id'], Null, NULL);
     echo '</div>';
-    
+
   echo ' </div>';
   }
 
@@ -577,21 +578,19 @@ select SQL_CALC_FOUND_ROWS *
   }
 
   function state_change_event ($state, $event) {
-
+    $date = $event->event_name;
     if ($event->event_rep == 'sub'){
-       $date = formatAdminDate($sub->event_date);
-    } else {
-       $date = $event->event_name;
+       $date .= ' @ '. formatAdminDate($event->event_date);
     }
 
     if ($state == 1 and $event->event_status == 'unpub') {
-         $oke = $event->publish($stats, $pmps);
-         $result = 'pub_';
-         $oldstate = 'unpub';
+       $oke = $event->publish($stats, $pmps);
+       $result = 'pub_';
+       $oldstate = 'unpub';
     } elseif ($state == 1 and $event->event_status == 'nosal') {
-         $oke = $event->restart_sales();
-         $result = 'restart_';
-         $oldstate = 'nosal';
+       $oke = $event->restart_sales();
+       $result = 'restart_';
+       $oldstate = 'nosal';
     } elseif($state == 2 and $event->event_status == 'pub') {
        $oke = $event->stop_sales();
        $result = 'stop_';
@@ -770,17 +769,19 @@ select SQL_CALC_FOUND_ROWS *
 
       $sel[$data[$name]] = " selected ";
 
-      echo "<tr><td class='admin_name'  width='40%'>{$suffix}" . con($name) . "</td>
+      $result =  "<tr><td class='admin_name'  width='40%'>{$suffix}" . con($name) . "</td>
             <td class='admin_value'>
              <select name='$name'>
              <option value=''></option>\n";
-
+      $show = false;
       while ($v = shopDB::fetch_row($res)) {
-          echo "<option value='{$v[0]}' " . $sel[$v[0]] . ">{$v[1]}</option>\n";
+          $result .=   "<option value='{$v[0]}' " . $sel[$v[0]] . ">{$v[1]}</option>\n";
+          $show = true;
       }
 
-      echo "</select>". printMsg($name, $err). "
+      $result .= "</select>". printMsg($name, $err). "
             </td></tr>\n";
+      return ($result)?$result:'';
   }
 
 

@@ -122,7 +122,7 @@ class EPH_paypal extends payment{
     $debug  = "date: ".date('r')."\n";
     $debug .= "url: $url\n";
 
-    $order_id    = $_POST['invoice'];
+    $order_id    = $order->order_id;
     $order_total = $order->order_total_price;
 
     $debug .= "Order_id : $order_id\n";

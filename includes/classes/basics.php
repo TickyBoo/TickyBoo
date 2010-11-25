@@ -303,7 +303,7 @@ function con($name, $default='') {
   } elseif ($default) {
     return $default;
   } elseif ($name) {
-    if (isset($_SHOP->AutoDefineLangs)  and $_SHOP->AutoDefineLangs) {
+    if (is($_SHOP->AutoDefineLangs, false)) {
       if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
         $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
         file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
@@ -506,7 +506,7 @@ function trace($content, $addDate=false, $addtrace=false){
       }
     }
     if ($addDate){
-      $_SHOP->trace_subject = 'ErrorLog: '.$_shop->root.$content;
+      $_SHOP->trace_subject = 'ErrorLog: '.$_SHOP->root.$content;
       $_SHOP->tracelog = '';
       $_SHOP->TraceOrphan = md5(getOphanData());
     }
@@ -758,7 +758,7 @@ function printMsg($key, $err = null, $addspan=true) {
         break;
       default:
         $output = str_ireplace('<br>',' ' , $output);
-        $output = "<img class='err error' src='{$_SHOP->images_url}unchecked.gif' /><span class='err error'>{$output}</span>";
+        $output = "<img class='err error' src='{$_SHOP->images_url}error.png' /><span class='err error'>{$output}</span>";
     }
   }
 
@@ -793,19 +793,18 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
     E_COMPILE_WARNING => 'Compile warning',
     E_USER_ERROR      => 'User error',
     E_USER_WARNING    => 'User warning',
-    E_USER_NOTICE     => 'User notice');
+    E_USER_NOTICE     => 'User notice',
+    E_RECOVERABLE_ERROR => 'Recoverable error');
   if(defined('E_STRICT'))
     $errortype[E_STRICT] = 'runtime notice';
 
-  $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE | E_ERROR | E_WARNING;
+  $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE | E_ERROR | E_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
 
   //...blah...
-
+  $error = is($errortype[$errno],$errno); 
   if ($errno & $user_errors) {
-    writeLog( "{$errortype[$errno]}: $errstr, $error_file @ $error_line", FT_ERROR);
+    writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
   }
   //  writeLog( print_r($error_context, true), FT_ERROR);
 }
-
-set_error_handler("customError");
 ?>

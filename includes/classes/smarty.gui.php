@@ -74,25 +74,94 @@ class Gui_smarty {
   function url($params, $smarty, $skipnames){
     GLOBAL $_SHOP;
     if (isset($params['surl'])) {
-      return $_SHOP->root_secured.$params['surl'];
+      return $_SHOP->root_secured.'?'.$params['surl'];
     } elseif (isset($params['url'])) {
-      return $_SHOP->root.$params['url'];
+      return $_SHOP->root.'?'.$params['url'];
     } else {
       If (!is_array($skipnames)) {$skipnames= array();}
     //  print_r($params);
       $urlparams ='';
       foreach ($params as $key => $value) {
-        if (!in_array($key,array('action','controller','module')) and
-            !in_array($key,$skipnames)) {
+        if ($params['secure']) {
+          unset($params['secure']);
+          $secure = true;
+        } else $secure = false;
+        if (!in_array($key,$skipnames)) {
           $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
         }
       }
-      return $_SERVER['PHP_SELF']. $urlparams;
+      $urlparams .= (($urlparams)?'?':'').urlparams;
+
+      If ($secure) {
+        $result = $_SHOP->root_secure;
+      } elseif (isset($params['url'])) {
+        $result = $_SHOP->root_secure;
+      }
+      
+      return $result.$urlparams;
      // print_r($urlparams);
 
    //   return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
     }
   }
+
+  /** 
+    *   Smarty {currenturl} plugin 
+    * 
+    *   Type:      function 
+    *   Name:      currenturl 
+    *   Purpose:   returns the url with the new and merged parameters 
+    *   Parameters:   - a key=value pair for the parameter string 
+    * 
+    *   ChangeLog: 
+    *   - 1.0 initial release 
+    * 
+    *   @version 1.0 
+    *   @author Bastian Friedrich 
+    *   @param array 
+    *   @param Smarty 
+    *   @return string 
+    */ 
+
+   function currenturl($params, 
+                              &$smarty) 
+   { 
+   	  global $_SHOP;
+      $queryHash   = Array(); 
+
+      //   write the parameters of the current url 
+      //   in a key-value pair hash/array 
+      foreach(explode('&', $_SERVER['QUERY_STRING']) as $value) 
+      { 
+         $results = explode('=', $value); 
+
+         //   continue by empty key-value pair 
+         if (empty($results[0]) && 
+            empty($results[1])) 
+         { 
+            continue; 
+         } 
+
+         $queryHash[$results[0]] = $results[1]; 
+      } 
+
+      //   merge parameters from the current url 
+      //   with the new parameters 
+      //   notice: the same keys will be overwritten 
+      $paramHash         = array_merge(   $queryHash, 
+                                 $params); 
+      $paramStringHash   = Array(); 
+
+      //   write the new hash/array in the query 
+      //   syntax 
+      foreach ($paramHash as $key => $value) 
+      { 
+         array_push($paramStringHash, $key.'='.$value); 
+      } 
+
+      //   return the url with the new parameters 
+      return $_SERVER['PHP_SELF'].'?'.implode('&', $paramStringHash); 
+   } 
 
   function print_r($params, $smarty) {
     return '<pre>'.print_r($params['var'],true).'</pre>';

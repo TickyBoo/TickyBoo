@@ -120,8 +120,8 @@ class Model {
   function insert($exclude=null){
   // $this->_idName
   // unset($this->$this->_idName);
-    $values  = join(",", $this->quoteColumnVals($exclude));
-    $query = "INSERT INTO `{$this->_tableName}` SET $values ";
+    $values  = join(",\n    ", $this->quoteColumnVals($exclude));
+    $query = "INSERT INTO `{$this->_tableName}` SET\n    $values ";
     if (ShopDB::query($query)) {
       $this->{$this->_idName} = ShopDB::insert_id();
       return $this->id;
@@ -130,11 +130,11 @@ class Model {
   }
 
   function update($exclude=null){
-    $values  = join(", \n    ", $this->quoteColumnVals($exclude));
+    $values  = join(",\n    ", $this->quoteColumnVals($exclude));
 
     $sql = "UPDATE `{$this->_tableName}` SET \n    $values";
     if ($this->_idName){
-      $sql .= " WHERE `{$this->_idName}` = "._esc($this->id)  ;
+      $sql .= "\nWHERE `{$this->_idName}` = "._esc($this->id)  ;
     }
     $sql .= " LIMIT 1";
     if ($data = ShopDB::query($sql)) {
@@ -286,7 +286,7 @@ class Model {
 
 			if ( !checkdate($m, $d, $y) ) {
         addError($name, 'invalid');
-        
+
 			} else {
 				$array[$name] = "$y-$m-$d";
   		  return true;

@@ -49,7 +49,7 @@ class MySmarty extends Smarty {
   public function __construct($controllor) {
     global $_SHOP;
 
-    $this->exception_handler = array($this, exception_handler);
+    $this->exception_handler = array($this, 'exception_handler');
     $this->controllor = $controllor;
 
     parent::__construct();
@@ -61,13 +61,11 @@ class MySmarty extends Smarty {
     $controllor->loadPlugins(array('gui'));
     if (isset($this->smarty->register)) {
       $this->smarty->register->templateFunction('showTheme', array(&$this,'_SetTheme'));
-      $this->smarty->register->templateFunction('redirect', array(&$this,'_ReDirect'));
       $this->smarty->register->templateFunction('con', 'con');
       $this->smarty->register->block('menuBlock', array(&$this,'_setMenuBlock'));
       $this->smarty->register->prefilter(array(&$this,'Con_prefilter'));
     } else {
       $this->register_Function('showTheme', array(&$this,'_SetTheme'));
-      $this->register_Function('redirect', array(&$this,'_ReDirect'));
 //      $this->smarty->register_Function('con', 'con');
       $this->register_Block('menuBlock', array(&$this,'_setMenuBlock'));
 //      $this->smarty->register_prefilter(array(&$this,'Con_prefilter'));
@@ -162,35 +160,6 @@ class MySmarty extends Smarty {
     } else {
       $this->ShowThema = true;
     }
-  }
-
-  public function _URL( $params, $smarty, $skipnames= array()){
-    Global $_CONFIG;
-    If (isset($params['url'])) {
-      return $_CONFIG->root.$params['url'];
-    } else {
-      If (!is_array($skipnames)) {$skipnames= array();}
-    //  print_r($params);
-      $urlparams ='';
-      foreach ($params as $key => $value) {
-        if (!in_array($key,array('action','controller','module')) and
-            !in_array($key,$skipnames)) {
-          $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
-        }
-      }
-   //   $urlparams = substr($urlparams,1);
-     // print_r($urlparams);
-      return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
-    }
-  }
-
-  public function _ReDirect( $params, $smarty){
-    If (isset($params['_status'])) {
-      $status = $params['_status'];
-      unset($params['_status']);
-    }
-    $this->controller->redirect($this->_URL($params, $smarty), $status);
-    die;
   }
 
   function Con_prefilter($source, $smarty) {

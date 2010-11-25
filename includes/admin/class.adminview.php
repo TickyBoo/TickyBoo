@@ -605,7 +605,7 @@ class AdminView extends AUIComponent {
            </td></tr>\n";
     }
 
-    function print_date ($name, &$data, &$err, $suffix = '') {
+    function print_date ($name, &$data, $datetime= 'D', $suffix = '') {
       global $_SHOP;
       $suffix = self::_check($name, $suffix,$data);
         if (isset($data[$name]) and !printMsg($name)) {
@@ -681,12 +681,12 @@ class AdminView extends AUIComponent {
           echo "<input type='hidden' id='{$name}_text' name='$name' value='$act'>\n
         		<div id='colorSelector'><div style='background-color: $act'></div></div>";
          }else{
-         	echo "<input type='hidden' id='{$name}_text' name='$name' >\n
-        		<div id='colorSelector'><div style='background-color: #0000ff'></div></div>";
+         	echo "<input type='hidden' id='{$name}_text' name='$name' value=''>\n
+        		<div id='colorSelector'><div style='background-color: #FFFFFF' ></div></div>";
         }
        
        echo "<script>$('#colorSelector').ColorPicker({
-								color: '#0000ff',
+								color: '#ffffff',
 								onShow: function (colpkr) {
 									$(colpkr).fadeIn(500);
 									return false;
@@ -700,6 +700,7 @@ class AdminView extends AUIComponent {
 									$('#{$name}_text').val('#' + hex);
                 }
 							});</script>";
+       echo "<div style=''>".printMsg($name, $err)."</div></td></tr>\n";
     }
 
     function view_file ($name, &$data, &$err, $type = 'img', $prefix = '') {

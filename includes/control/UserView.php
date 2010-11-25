@@ -76,7 +76,6 @@ class UserView extends AdminView{
    }
   function draw (){
    global $_SHOP;
-   $currency=$_SHOP->currency;
    $user= User::loadArr($this->user_id);
    $this->print_user($user);
    $query="select * from `Order` where order_user_id ="._esc($this->user_id);
@@ -89,7 +88,7 @@ class UserView extends AdminView{
    while($order=shopDB::fetch_assoc($res)){
      echo "<tr><td class='order_item'>".$order["order_id"]."</td>
                <td class='order_item' colspan='6'>".con('tickets_nr')." ".$order["order_tickets_nr"].
-	       " - $currency ".$order["order_total_price"]." - ".con('date')."  ".$order["order_date"].
+	       " - ".valuta($order["order_total_price"]_." - ".con('date')."  ".$order["order_date"].
 	       " - ".$order["order_shipment_mode"]." - ".
 	       $this->print_order_status($order["order_status"])."
 	       <a href='view_order.php?action=details&order_id=".$order["order_id"]."'>
@@ -117,9 +116,8 @@ class UserView extends AdminView{
 	       <td class='ticket_item'>".$ticket["category_name"]."</td>
 	       <td class='ticket_item'>$place</td>
 	       <td class='ticket_item'>".$ticket["discount_name"]."</td>
-	       <td class='ticket_item' align='right'>".$ticket["seat_price"]."$currency </td>
-	       <td class='ticket_item' align='right'>".
-	        $this->print_place_status($ticket["seat_status"])."</td>
+	       <td class='ticket_item' align='right'>".valuta($ticket["seat_price"])."</td>
+	       <td class='ticket_item' align='right'>".$this->print_place_status($ticket["seat_status"])."</td>
 	       <tr>";
       }
    }

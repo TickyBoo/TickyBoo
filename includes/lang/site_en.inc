@@ -54,7 +54,7 @@ define("admin_list","List");
 define("cancel","Cancel Order?");
 define("checkout","Check Out");
 define("clear","Clear");
-define("clear_selection","Clear Selection");
+
 define("close","Close");
 define("continue","Continue");
 define("define","Define");
@@ -402,6 +402,7 @@ define("ort_admin_tab","Venues");
 define("ort_admin","Venues");
 define("ort_title","Venues");
 	define("ort_add_title","Add Venue");
+	define("ort_insert_title","Add Venue");
 	define("ort_update_title","Modify Venue");
 		define("ort_id","Venue ID");
 		define("ort_name","Venue Name");
@@ -983,7 +984,7 @@ define("shopcart","Shopping Cart");
 define("no_tick_res","You have No Tickets Reserved.");
 define("valid_tickets","Valid Tickets:");
 define("expired_tickets","Expired Tickets:");
-define("tick_exp_in","Tickets expire in ");
+define("tick_exp_in","Expiring in ");
 define("x_tick","x Tickets");
 define("tot_tick_price","Total Ticket Price:");
 
@@ -1213,7 +1214,7 @@ define("without_fee","Without Fee");
 //header.tpl
 //define("box_office","Box Office");
 //define("ajax_beta","<i>[AJAX Beta]</i>");
-define("box_office","<h2>Box Office<span style='color:red; font-size:14px;'><i>[AJAX Beta]</i></span></h2>");
+define("box_office","<h2>Box Office</h2>");
 
 
 //order.tpl
@@ -1502,10 +1503,7 @@ define('handling_fee_max','Maximum of fixed and Percent');
 define('pay_ispending',"Payment transaction is pending.");
 define('cookie_disabled','<H1> Warning, you have disabled cookies on your system.</h1> This will not work on this website. Please turn this on, before you order any tickets.');
 
-define('placemap','placemap');
-define('discount_deactivate','Deactivate');
-define('print_invoice','Print invoice');
-define('print_tickets','Print tickets');
+
 
 define('user','user');
 define('NotPaid','Not paid');
@@ -1523,11 +1521,15 @@ define("logged_in","User:");
 //Events
 define("placemap","Event Placemap");
 
+define('placemap','placemap');
+define('discount_deactivate','Deactivate');
+define('print_invoice','Print invoice');
+define('print_tickets','Print tickets');
 	define("block","Block Seats");
 	define("assign","Assign Seats");
 	define("clear_selection","Clear Selection");
 	define("reset","Reset");
-	define("confirm_clear","Are you sure you want to clear your selection?");
+	define("confirm_clear", "Are you sure you want to clear your selection?");
 //Events Mailer
 define("mailer_description","Use this interface to send emails to patrons attending this event.");
 define("mail_patrons_confirm","Are you sure you want to email all attending patrons?");
@@ -1538,6 +1540,8 @@ define("attending_patrons","attending patrons");
 define("preview_template","Preview template");
 define("please_select","Please select a template...");
 define("send_email","Send Email");
+define("include_invoice","Include Invoice");
+define("include_tickets","Include Tickets");
 
 define('cant_create_seat_zone_missing_cat','Every zone need to have catergory in a placemap part.');
 define('pub_success','publication successed: ');

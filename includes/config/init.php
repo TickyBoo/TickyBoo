@@ -39,6 +39,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
+  
   global $_SHOP;
   if(function_exists("mb_internal_encoding")) {
     mb_internal_encoding("UTF-8");
@@ -61,7 +62,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     require_once "Auth/Auth.php";
     require_once "classes/model.admin.php";
   }
-
+  set_error_handler("customError");
   //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
 
@@ -256,8 +257,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
       exit;
     }
 
-    if($res = $auth->admin){
-      $_SHOP->admin = $res;
+    if(isset($_auth->admin)){
+      $_SHOP->admin = $_auth->admin;
       unset($res->admin_password);
     } elseif($res = Admins::load($_SESSION['_SHOP_AUTH_ADMIN_ID'])) {
       $_SHOP->admin = $res;

@@ -48,12 +48,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   global $_SHOP;
 
+
   require_once('defines.php');
   if (!file_exists(INC.'config'.DS."init_config.php")){
     echo "<a href='".constructBase(null,true)."inst/index.php'>Install me now!</a>";
     exit;
   }
-
+  if(!isset($_SHOP)) $_SHOP = new stdClass();
  /*
 	if (ini_get('register_globals')) {
 

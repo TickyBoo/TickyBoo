@@ -101,7 +101,7 @@ class plugin extends model {
   }
 
 
-  function call($eventname) {
+  static function call($eventname) {
     global $_SHOP;
     if (!isset($_SHOP->plugins)) {
       $_SHOP->plugins = plugin::loadAll(false);
@@ -132,7 +132,8 @@ class plugin extends model {
           $return = '';
       }
 
-    }
+    } else $return = null;
+    
     if (!is_array($_SHOP->plugins )) return $return;
     // echo "<pre>",$eventname;
 
@@ -286,7 +287,7 @@ abstract class basePlugin {
 
 	### Core plugin functionality ###
 	final public function __construct( $p_base ) {
-    $this->plugin = $plugin;
+    $this->plugin = $p_base;
 	}
 
 	/**
