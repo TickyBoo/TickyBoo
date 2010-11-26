@@ -33,7 +33,11 @@
  *}
 {include file="header.tpl"}
 <br />
-{capture assign="tabview"}{!pos_reservedlist!}|{!pos_unpaidlist!}|{!pos_unsentlist!}|{!pos_yourtickets!}|{!pos_alltickets!}{/capture}
+{if !$update->can_reserve()}
+{capture assign="tabview"}{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture}
+{else}
+{capture assign="tabview"}{!pos_reservedlist!}~0|{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture}
+{/if}
 {gui->Tabbar menu=$tabview}
 
 {* Check for update note first *}
@@ -47,7 +51,7 @@
 {elseif $smarty.post.action eq "resendnote"}
   {order->resend_note}
 {/if}
-    
+
 {if $TabBarid == 0} {* eq "reserved" *}
   {if $smarty.request.order_id}
     {include file="process_view.tpl" status="res"}
@@ -81,14 +85,14 @@
   {else}
     {include file="process_list.tpl" not_status="send" status="payed" hand_shipment='post,sp'}
   {/if}
-  
+
 {elseif $TabBarid == 3} {*  eq "pos owned orders" *}
   {if $smarty.request.order_id}
     {include file="process_view.tpl" place='pos'}
   {else}
     {include file="process_list.tpl" place='pos'}
   {/if}
-  
+
 {elseif $TabBarid == 4} {*  eq "all paid orders" *}
   {if $smarty.request.order_id}
     {include file="process_view.tpl" status="payed,send" orderby="order_date DESC" cur_order_dir="DESC"}

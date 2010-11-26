@@ -34,7 +34,8 @@
 
 // het random nr. aanmaken en gecodeerd opslaan in php sessie
 define('ft_check','shop');
-require_once('includes/classes/basics.php');
+//require_once('includes/config/defines.php');
+//require_once('includes/classes/basics.php');
 
 session_name('ShopSession');
 session_start();
@@ -103,4 +104,44 @@ header("Pragma: no-cache");
 header ("Content-type: image/gif");
 imagegif($im);
 imagedestroy($im);
+// =====================================
+function strip_tags_in_big_string($textstring){
+  $safetext = '';
+  while (strlen($textstring) != 0)
+  {
+    $temptext = strip_tags(substr($textstring,0,1024));
+    $safetext .= $temptext;
+    $textstring = substr_replace($textstring,'',0,1024);
+  }
+  return $safetext;
+}
+
+function wp_entities($string, $encode = 1){
+  $a = (int) $encode;
+
+  if($a == 1) {
+    $original = array("'"=>"&%39;",  "\""=> "&%34;" ,"("=>"&#40;"    ,")"=> "&#41;", "`" =>"&apos;" );//,"#"=>"&%35;"
+    return strtr( $string, $original);
+  } else {
+    $original = array("'"   ,"\""   ,"#"    ,"("    ,")", "`"  );
+    $entities = array("&%39;","&%34;","&%35;","&#40;","&#41;","&apos;");
+    return str_replace($entities, $original, $string);
+  }
+}
+
+function clean($string, $type='ALL') {
+
+  switch (strtolower($type)) {
+    case 'revert':
+      return  htmlspecialchars_decode(wp_entities($string,0),ENT_QUOTES );
+      break;
+    case 'all'  : $string = strip_tags_in_big_string ($string);
+    case 'strip': $string = html_entity_decode($string, ENT_QUOTES,'UTF-8');
+    case 'html' : $string = htmlentities($string, ENT_QUOTES, "UTF-8");
+    case 'htmlz' : $string = wp_entities($string);
+
+  }
+  return $string;
+}
+
 ?>

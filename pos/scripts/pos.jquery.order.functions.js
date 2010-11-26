@@ -11,6 +11,10 @@ var clearOrder = function(){
   $("#date-to").val('');
   $("#ft-event-free-seats").html('');
   $("#ft-cat-free-seats").html('');
+	$("#user_data :input").each(function() {
+  	$(this).val('');
+	});
+
   //$("#continue").attr("type","button");
   unBindSeatChart();
   updateEvents();

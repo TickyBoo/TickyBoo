@@ -1,7 +1,7 @@
 var catData = new Object();
 var refreshTimer = null;
 var eventData = new Object();
-
+var timerid = 0;
 var loadOrder = function(){
 
   orderDialogs();

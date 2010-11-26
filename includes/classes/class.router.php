@@ -34,11 +34,13 @@
 
 require_once ( dirname(dirname(__FILE__)).'/config/defines.php' );
 require_once ( INC.'classes'.DS.'basics.php' );
+
 if (file_exists(LIBS.'FirePHPCore'.DS.'fb.php' )) {
   require_once ( LIBS.'FirePHPCore'.DS.'fb.php' );
+  require_once ( LIBS.'FirePHPCore'.DS.'FirePHP.class.php' );
   FB::setEnabled(true);
-
 }
+
 
 class router {
 	/**

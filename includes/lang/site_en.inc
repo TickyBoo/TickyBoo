@@ -1004,7 +1004,7 @@ define("cart_cont_mess","Please check your order. You have a limited time before
 //cat_description.tpl
 define("cat_description","Seating Sections and Prices");
 define("tickets_available","Available:");
-define("category_sold","Category Sold");
+define("category_sold","Sold out");
 define("Discount_for","With Discount:");
 define("prices_in","Prices in");
 define("Please_login","Please Login or Register to Reserve Seats.");
@@ -1013,7 +1013,7 @@ define("order_limit","Order Limit"); //category.tpl
 define("old_event","<center><B>This event is expired and can not be ordered anymore.</b></center>");
 
 //category.tpl
-define("select_seat","1. Select your seat(s) please");
+define("select_seat","1. Select your seat(s)");
 define("click_on_reserve","2.Click on 'Reserve'");
 define("number_seats","Number of seats");
 define("only_rows_numbered","Only rows numbered");
@@ -1168,7 +1168,7 @@ define("guest_info", "Fill your details here, so that the ticket can be sent to 
 					 <br> Already a regular customer? Fill at the right side, your email address and password.");
 define("pwd_min", " (min 6 letters)");
 define("user_nospam", "Security Code");
-define("nospam_info", "<------ Enter This Code ------>.");
+define("nospam_info", "Enter this code >>>");
 define("agrement","I have read and agree to the General Terms of Sale.");
 define("mayuse","I agree that {\$organizer->organizer_name} may use my details to send me information about future events and other {\$organizer->organizer_name} related matters, and that they will not pass on my details to any 3rd party.");
 define("member_info","Please enter your email address and password");

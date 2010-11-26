@@ -47,6 +47,7 @@
       {gui->checkbox name='onote_private'}
       {gui->input name='onote_subject' size=40}
       {gui->area name='onote_note' rows=8}
+{*
       <tr class="admin_list_row_0" id="on_save_email_ship" style="display:none;">
         <td class='' style='text-align:center;'>
           <button type="submit" name="save_ship" id="save_ship">{!save_ship!}</button>
@@ -91,6 +92,7 @@
       }).change();
       {/literal}
       </script>
+*}
       {gui->EndForm }
     </td>
   </tr>

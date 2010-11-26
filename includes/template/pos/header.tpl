@@ -31,17 +31,16 @@
  *}
 {if $smarty.request.ajax neq "yes"}
 <html>
-
 	<head>
 		<meta http-equiv="Content-Language" content="English" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>FusionTicket: Box Office / Sale Point </title>
-    <script type="text/javascript" language="javascript">{literal}
+{*    <script type="text/javascript" language="javascript">{literal}
     if (console==undefined){
       var console = Object;
       console.log = function(){};
     }
-    {/literal}</script>
+    {/literal}</script> *}
 
     {minify type='css' files='css/formatting.css,css/flick/jquery-ui-1.8.6.custom.css,css/ui.jqgrid.css'}
 
@@ -55,18 +54,26 @@
 			lang.email_valid = '{!email_valid!}';   lang.email_match = '{!email_match!}';
 			lang.not_number = '{!not_number!}';
 		</script>
-    {minify type='js' base='pos/scripts' files='pos.jquery.style.js,pos.jquery.ajax.js,pos.jquery.order.functions.js,pos.jquery.order.js,pos.jquery.order.user.js,pos.jq.forms.js,pos.jq.current.js,pos.jq.current.functions.js'}
+    {* minify type='js' base='pos/scripts' files='pos.jquery.style.js,
+                                                  pos.jquery.ajax.js,
+                                                  pos.jquery.order.functions.js,
+                                                  pos.jquery.order.js,
 
-    <!--
+                                                  pos.jquery.order.user.js,
+                                                  pos.jq.forms.js,
+                                                  pos.jq.current.js,
+                                                  pos.jq.current.functions.js' *}
+
 		<script type="text/javascript" src="scripts/pos.jquery.style.js"></script>
 		<script type="text/javascript" src="scripts/pos.jquery.ajax.js"></script>
     <script type="text/javascript" src="scripts/pos.jquery.order.functions.js"></script>
     <script type="text/javascript" src="scripts/pos.jquery.order.js"></script>
+
 		<script type="text/javascript" src="scripts/pos.jquery.order.user.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.forms.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.current.js"></script>
     <script type="text/javascript" src="scripts/pos.jq.current.functions.js"></script>
-    -->
+
     <script type="text/javascript" src="../scripts/jquery/DD_roundies.js"></script>
 
 	</head>

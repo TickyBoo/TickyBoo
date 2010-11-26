@@ -97,7 +97,7 @@ class Gui_smarty {
       } elseif (isset($params['url'])) {
         $result = $_SHOP->root_secure;
       }
-      
+
       return $result.$urlparams;
      // print_r($urlparams);
 
@@ -105,63 +105,63 @@ class Gui_smarty {
     }
   }
 
-  /** 
-    *   Smarty {currenturl} plugin 
-    * 
-    *   Type:      function 
-    *   Name:      currenturl 
-    *   Purpose:   returns the url with the new and merged parameters 
-    *   Parameters:   - a key=value pair for the parameter string 
-    * 
-    *   ChangeLog: 
-    *   - 1.0 initial release 
-    * 
-    *   @version 1.0 
-    *   @author Bastian Friedrich 
-    *   @param array 
-    *   @param Smarty 
-    *   @return string 
-    */ 
+  /**
+    *   Smarty {currenturl} plugin
+    *
+    *   Type:      function
+    *   Name:      currenturl
+    *   Purpose:   returns the url with the new and merged parameters
+    *   Parameters:   - a key=value pair for the parameter string
+    *
+    *   ChangeLog:
+    *   - 1.0 initial release
+    *
+    *   @version 1.0
+    *   @author Bastian Friedrich
+    *   @param array
+    *   @param Smarty
+    *   @return string
+    */
 
-   function currenturl($params, 
-                              &$smarty) 
-   { 
+   function currenturl($params,
+                              &$smarty)
+   {
    	  global $_SHOP;
-      $queryHash   = Array(); 
+      $queryHash   = Array();
 
-      //   write the parameters of the current url 
-      //   in a key-value pair hash/array 
-      foreach(explode('&', $_SERVER['QUERY_STRING']) as $value) 
-      { 
-         $results = explode('=', $value); 
+      //   write the parameters of the current url
+      //   in a key-value pair hash/array
+      foreach(explode('&', $_SERVER['QUERY_STRING']) as $value)
+      {
+         $results = explode('=', $value);
 
-         //   continue by empty key-value pair 
-         if (empty($results[0]) && 
-            empty($results[1])) 
-         { 
-            continue; 
-         } 
+         //   continue by empty key-value pair
+         if (empty($results[0]) &&
+            empty($results[1]))
+         {
+            continue;
+         }
 
-         $queryHash[$results[0]] = $results[1]; 
-      } 
+         $queryHash[$results[0]] = $results[1];
+      }
 
-      //   merge parameters from the current url 
-      //   with the new parameters 
-      //   notice: the same keys will be overwritten 
-      $paramHash         = array_merge(   $queryHash, 
-                                 $params); 
-      $paramStringHash   = Array(); 
+      //   merge parameters from the current url
+      //   with the new parameters
+      //   notice: the same keys will be overwritten
+      $paramHash         = array_merge(   $queryHash,
+                                 $params);
+      $paramStringHash   = Array();
 
-      //   write the new hash/array in the query 
-      //   syntax 
-      foreach ($paramHash as $key => $value) 
-      { 
-         array_push($paramStringHash, $key.'='.$value); 
-      } 
+      //   write the new hash/array in the query
+      //   syntax
+      foreach ($paramHash as $key => $value)
+      {
+         array_push($paramStringHash, $key.'='.$value);
+      }
 
-      //   return the url with the new parameters 
-      return $_SERVER['PHP_SELF'].'?'.implode('&', $paramStringHash); 
-   } 
+      //   return the url with the new parameters
+      return $_SERVER['PHP_SELF'].'?'.implode('&', $paramStringHash);
+   }
 
   function print_r($params, $smarty) {
     return '<pre>'.print_r($params['var'],true).'</pre>';
@@ -358,8 +358,8 @@ class Gui_smarty {
   {
     $name = is($params['name']   );
     $rows = is($params['rows'], 6);
-    $cols = is($params['cols'],40);
-    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
+    $cols = is($params['cols'],80);
+    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' style='width:100%;' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
   }
 
   function inputTime ($params, $smarty) //($name, &$data, &$err,  = '')
@@ -389,6 +389,7 @@ class Gui_smarty {
   function selection ($params, $smarty) //($name, &$data, &$err, $opt)
   {
     $name = is($params['name']);
+    $style = is($params['style']);
     $opt  = is($params['options']);
     $prefix = is($params['prefix']);
     $mult =   is($params['multiselect']);
@@ -405,7 +406,7 @@ class Gui_smarty {
     // $val=array('both','rows','none');
     $sel[$value] = " selected ";
 
-    $return = "<select id='{$name}-select' name='$name' $mult>\n";
+    $return = "<select id='{$name}-select' name='$name' $mult $style>\n";
 
     foreach($opt as $v => $n) {
         if (is_array($n)) {
@@ -435,7 +436,7 @@ class Gui_smarty {
   function getCountry($name){
     global $_SHOP, $_COUNTRY_LIST;
     self::Loadcountrys();
-    return $_COUNTRY_LIST[$val];
+    return $_COUNTRY_LIST[$name];
   }
 
   function viewCountry($params, $smarty){
@@ -654,7 +655,8 @@ class Gui_smarty {
       $a =0;
       $menu = array();
       foreach ($opt as $key) {
-        $menu[$key] = "?tab={$a}";
+        $val  = explode('~',$key);
+        $menu[$val[0]] = "?tab=".is($val[1],$a);
         $a++;
       }
     }
