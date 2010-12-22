@@ -37,7 +37,11 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
   if ($repeat) {
     $from='Event';
-    $where="where event_status='pub'";
+    if($params['event_status']){
+      $where="where event_status="._esc($params['event_status']);
+    } else {
+      $where="where event_status='pub'";
+    }
 
     if($params['order']){
 			$params['order']=_esc($params['order'], false);

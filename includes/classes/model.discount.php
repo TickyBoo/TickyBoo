@@ -106,6 +106,12 @@ class Discount  Extends Model {
       if (!($count = ShopDB::query_one_row($query)) || (int)$count['count']) {
         return addWarning('in_use');
       }
+      $query = "SELECT count(*) count
+                from `Order'
+                where order_discount_id="._esc($this->id);
+      if (!($count = ShopDB::query_one_row($query)) || (int)$count['count']) {
+        return addWarning('in_use');
+      }
       if (!parent::delete()){
         return self::_abort('cant delete discount');
       } else

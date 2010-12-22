@@ -63,6 +63,7 @@ class Gui_smarty {
     $smarty->register_function('print_r', array($this,'print_r'));
     $smarty->register_function('printMsg', array($this,'printMsg'));
     $smarty->register_modifier('clean', 'smarty_modifier_clean');
+    $smarty->register_function('weeksofyear', 'weeksofyear');
 
   }
 
@@ -286,27 +287,37 @@ class Gui_smarty {
     $title    = is($params['title'], con('gui_save','submit'));
     $class    = is($params['class'], $this->gui_value);
     $noreset  = is($params['noreset'], false);
+    $show  = is($params['showbuttons'], true);
     $onclick  = is($params['onclick'],'');
-    $return = "<tr class='$class' ><td colspan='2' style='text-align:{$align};'>\n".
-              "<input type='submit' name='$name'  id='$name' value='{$title}'  style='float:none;' >";
+    if ($show) {
+     $return = "<tr class='$class' ><td style='text-align:{$align};' colspan='2'>\n".
+        //        $this->jbutton(array('url'=>'submit', 'name'=>$name, 'title'=>$title), $smarty );
+
+    $return = "<input type='submit' name='$name'  id='$name' value='{$title}'  style='float:none;' >";
     if (!$noreset) {
-      $return .= "&nbsp; <input type='reset' name='reset' value='" . con('gui_reset','reset') . "' >\n";
+        $return .= "&nbsp; ".
+          "<input type='reset' name='reset'  id='reset' style='float:none;' >";
+//      $this->jbutton(array('url'=>'reset', 'name'=>'reset'), $smarty );
     }
     $return .= "</td></tr>\n";
-    if ($this->FormDepth) {
-      $return .= "</form>\n";
-      $this->FormDepth --;
     }
-    return $return. "</table>\n";
+    $return .=  "</table>\n";
+    if ($this->FormDepth) {
+      $this->FormDepth --;
+      $return .= "</form>\n";
+    }
+    return $return;
   }
 
   function setShowLabel($params, $smarty) {
     $this->_ShowLabel =is($params['set'],$this->_ShowLabel);
   }
 
-  private function showlabel($name, $value, $nolabel=false,$options=array()) {
+  private function showlabel($name, $value, $params=array()) {
+    $nolabel  = is($params['nolabel'],false);
+    $caption  = is($params['caption'],con($name));
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr id='{$name}-tr' class='shop-tr'><td id='{$name}-label' class='{$this->gui_name}' width='40%'>" . con($name) . "</td>".
+      $return = "<tr id='{$name}-tr' class='shop-tr'><td id='{$name}-label' class='{$this->gui_name}' width='40%'>{$caption}</td>".
                 "    <td id='{$name}-value' class='{$this->gui_value}'>{$value}";
       $return .= printMsg($name);
       return $return."</td></tr>\n";
@@ -320,9 +331,8 @@ class Gui_smarty {
     $name = is($params['name']);
     $Option = is($params['option'], false);
     $value  = is($params['value'],$this->guidata[$name]);
-    $nolabel  = is($params['nolabel'],false);
     If (!$Option or $this->values[$name]) {
-      return $this->showlabel($name, $value, $nolabel);
+      return $this->showlabel($name, $value, $params);
     }
   }
 
@@ -351,7 +361,7 @@ class Gui_smarty {
     if ($this->guidata[$name]) {
       $chk = 'checked';
     }
-    return $this->showlabel($name, "<input type='checkbox' id='$name' name='$name' value='1' $chk>");
+    return $this->showlabel($name, "<input type='checkbox' id='$name' name='$name' value='1' $chk>",$params);
   }
 
   function area ($params, $smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
@@ -359,7 +369,7 @@ class Gui_smarty {
     $name = is($params['name']   );
     $rows = is($params['rows'], 6);
     $cols = is($params['cols'],80);
-    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' style='width:100%;' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>");
+    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' style='width:100%;' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>",$params);
   }
 
   function inputTime ($params, $smarty) //($name, &$data, &$err,  = '')
@@ -367,9 +377,17 @@ class Gui_smarty {
     require_once('class.datetimeselect.php');
     $name = is($params['name']    );
     $timeselect = new DateTimeSelect('t', $name, $this->guidata[$name],0);
-    return $this->showlabel($name, $timeselect->selectbox);
+    return $this->showlabel($name, $timeselect->selectbox,$params);
   }
 
+
+  public function getJQuery(){
+    return $this->jScript;
+  }
+
+  protected function addJQuery($script){
+    $this->jScript .= $script."\n";
+  }
   function inputDate ($params, $smarty) //($name, &$data, &$err,  = '')
   {
     require_once('class.datetimeselect.php');
@@ -377,13 +395,13 @@ class Gui_smarty {
     $type = is($params['type'],'d' );
     $range = is($params['range'],5    );
     $timeselect = new DateTimeSelect($type, $name, $this->guidata[$name],$range);
-    return $this->showlabel($name, $timeselect->selectbox);
+    return $this->showlabel($name, $timeselect->selectbox, $params);
   }
 
   function viewUrl ($params, $smarty) //($name, &$data,  = '')
   {
     $name = is($params['name']    );
-    return $this->showlabel($name, "<a href='{$this->guidata[$name]}' target='blank'>{$this->guidata[$name]}</a>",$params['nolabel']);
+    return $this->showlabel($name, "<a href='{$this->guidata[$name]}' target='blank'>{$this->guidata[$name]}</a>",$params['nolabel'] ,$params);
   }
 
   function selection ($params, $smarty) //($name, &$data, &$err, $opt)
@@ -393,12 +411,16 @@ class Gui_smarty {
     $opt  = is($params['options']);
     $prefix = is($params['prefix']);
     $mult =   is($params['multiselect']);
+    $size =   is($params['size']);
     $con  =   is($params['con']);
+    $class  =   is($params['class']);
     $nokey =  is($params['nokey'], false);
     $nolabel = is($params['nolabel'], false);
-    $mult = ($mult)?'multiple':'';
+    $mult = ($mult)?"multiple":'';
+    $mult .= ($size)?" size='$size'":'';
     $value = is($params['value'], $this->guidata[$name]);
-
+    if ($style) $style = "style='{$style}' ";
+    if ($class) $class = "class='{$class}' ";
     If (!is_array($opt)) {
       $opt  = explode('|',$opt);
     }
@@ -406,7 +428,7 @@ class Gui_smarty {
     // $val=array('both','rows','none');
     $sel[$value] = " selected ";
 
-    $return = "<select id='{$name}-select' name='$name' $mult $style>\n";
+    $return = "<select {$class}{$style} id='$name' name='$name' $mult value=$value>\n";
 
     foreach($opt as $v => $n) {
         if (is_array($n)) {
@@ -420,7 +442,7 @@ class Gui_smarty {
         $return .= "<option value='". htmlspecialchars($v)."' {$sel[$v]}>" .  htmlspecialchars($cap) . "</option>\n";
     }
 
-    return $this->showlabel($name, $return. "</select>", $nolabel);
+    return $this->showlabel($name, $return. "</select>", $params);
   }
 
   protected function loadCountrys() {
@@ -439,6 +461,13 @@ class Gui_smarty {
     return $_COUNTRY_LIST[$name];
   }
 
+
+  function getCountryName($params){
+    global $_SHOP, $_COUNTRY_LIST;
+    $name     = is($params['name']);
+    self::Loadcountrys();
+    return $_COUNTRY_LIST[$name];
+  }
   function viewCountry($params, $smarty){
     global $_SHOP, $_COUNTRY_LIST;
     $this->Loadcountrys();
@@ -519,7 +548,7 @@ class Gui_smarty {
         }
     }
 
-    return $this->showlabel($name, $return."</select>");
+    return $this->showlabel($name, $return."</select>",$params);
   }
 
   function viewFile ($params, $smarty) //($name, &$data, &$err, $type = 'img',  = '')
@@ -535,7 +564,7 @@ class Gui_smarty {
       } else {
         $return = "<a class=link href='$src'>{$this->guidata[$name]}</a>";
       }
-      return $this->showlabel($name, $return, $params['nolabel']);
+      return $this->showlabel($name, $return, $params);
     }
   }
 
@@ -545,7 +574,7 @@ class Gui_smarty {
     $type = is($params['type'],'img');
 
     if (!$this->guidata[$name]) {
-        return $this->showlabel($name, "<input type='file' name='$name'>");
+        return $this->showlabel($name, "<input type='file' name='$name'>",$params);
     } else {
       $src = $this->user_file($this->guidata[$name]);
 
@@ -563,7 +592,7 @@ class Gui_smarty {
           $return = "<a href='$src'>{$this->guidata[$name]}</a>";
       }
       return $this->showlabel($name, $return . "<br><br><input type='file' size=35 name='$name'>".
-                       "<input type='checkbox'  name='remove_$name' value='1'>" . con("remove_image")."<br>");
+                       "<input type='checkbox'  name='remove_$name' value='1'>" . con("remove_image")."<br>",$params);
     }
   }
 
@@ -582,13 +611,10 @@ class Gui_smarty {
     $breaker = ( strpos($url,'?')===false)?'?':'&';
     $output = '';
     if ($offset<0) {$offset=0;}
-    if ($offset !=0)
-      {
+    if ($offset !=0){
       $output .= "<a href='".$url.$breaker.$name."= 0'>".con('nav_first')."</a>&nbsp;";
       $output .= "<a href='".$url.$breaker.$name."=".($offset-$stepsize)."'>".con('nav_prev')."</a>&nbsp;";
-      }
-    else
-      {
+    } else {
       $output .= con('nav_first')."&nbsp;";
       $output .= con('nav_prev')."&nbsp;";
       }
@@ -600,31 +626,24 @@ class Gui_smarty {
     $pages=intval($matches/$stepsize);
     if ($matches%$stepsize) {$pages++;}
     $start = 1;
-    if ($offpages >= intval($maxpages/2))
-         {
+    if ($offpages >= intval($maxpages/2)){
          $start = $offpages - intval($maxpages/2);
          If ($start < 2) $start =2;
          //if ($start >= $pages-$maxpages) $start = $pages-$maxpages;
          $output .= '...&nbsp;';
          }
-    for ($i=$start;$i<=$pages;$i++)
-         {
-         if (($i-$start == $maxpages) and ($i<$pages))
-             {
+    for ($i=$start;$i<=$pages;$i++) {
+      if (($i-$start == $maxpages) and ($i<$pages)) {
              $output .= '...&nbsp;';
              break;
              }
-         if ($offpages+1 == $i)
-             {
+      if ($offpages+1 == $i){
              $output .= "<b>[$i]</b>&nbsp;";
-             }
-         else
-             {
+      } else {
              $output .= "<a href='".$url.$breaker.$name."=".($stepsize*($i-1))."'>".$i."</a>&nbsp;";
              }
          }
-    if (!($offset+$stepsize >= $matches))
-         {
+    if (!($offset+$stepsize >= $matches)) {
          $output .= "<a href='".$url.$breaker.$name."=".($offset+$stepsize)."'>".con('nav_next')."</a>&nbsp;";
          $output .= "<a href='".$url.$breaker.$name."=".($matches-$stepsize)."'>".con('nav_last')."</a>&nbsp;";
          }
@@ -677,7 +696,7 @@ class Gui_smarty {
            "  </td><td align='right'>\n".
            "     <img src='".makeURL('Captcha/'.$name)."' alt=''  border=1>\n".
            "  </td></tr>\n".
-           "</table>\n");
+           "</table>\n",$params);
   }
 
   function delayedLocation($params, $smarty) { //($url){
@@ -742,5 +761,11 @@ class Gui_smarty {
 function smarty_modifier_clean($string, $type='ALL') {
   return clean($string, $type);
 }
+
+
+  function weeksofyear($year){
+    $result = idate("W",mktime(0,0,0,12,28, $year)); //idate('W', strtotime("31 dec ".is($params,$_SESSION['settings']['jaar'])));
+    return $result;
+  }
 
 ?>

@@ -242,8 +242,10 @@ class ShopDB {
   			}
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
-        trace($query, false, true);
         $query = ShopDB::replacePrefix($query);
+        if (!is($_SHOP->skiptrace, false)) {
+          trace($query, false, true);
+        }
         $res = ShopDB::$link->query($query);
         if (!$res) {
             $_SHOP->db_errno  = ShopDB::$link->errno ;
@@ -268,6 +270,7 @@ class ShopDB {
           //TODO: Check this line - Warning: Attempt to assign property of non-object classes\ShopDB.php
           $res->query = $query;
         }
+        $_SHOP->skiptrace = false;
         return $res;
     }
 

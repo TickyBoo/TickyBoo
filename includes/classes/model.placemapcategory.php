@@ -36,7 +36,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class PlaceMapCategory Extends Model {
   protected $_idName    = 'category_id';
   protected $_tableName = 'Category';
-  protected $_columns   = array( '#category_id', '#category_event_id', 'category_price', 'category_name',
+  protected $_columns   = array( '#category_id', '#category_event_id', '*category_price', 'category_name',
                                  '*category_pm_id', '#category_pmp_id', 'category_ident', '*category_numbering',
                                  'category_size', 'category_max', 'category_min', 'category_template',
                                  '*category_color', 'category_data', 'category_free');

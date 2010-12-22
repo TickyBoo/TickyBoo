@@ -65,19 +65,21 @@ class User_Smarty {
   }
 
   function login ($params,$smarty){
-  	$this->login_f($params['username'],$params['password']);
+    $url = is($params['uri'], $_SERVER["REQUEST_URI"]);
+    $this->login_f($params['username'],$params['password'],$url);
   }
 
-  function login_f ($username, $password){
+  function login_f ($username, $password, $url){
     if ($user = User::Login($username, $password)) {
     	$this->_fill($user);
     	$this->logged=true;
     	$this->is_member  = true;
       $this->new_member = false;
       $_SESSION['_NEW_MEMBER']= false;
-  	  $url = ($params['uri'])?$params['uri']:$_SERVER["REQUEST_URI"];
+      if ($url) {
       echo "<script>window.location.href='{$url}';</script>";
       exit;
+      }
     }
   }
 

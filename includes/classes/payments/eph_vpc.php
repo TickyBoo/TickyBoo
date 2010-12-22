@@ -201,9 +201,16 @@ class EPH_vpc extends payment{
     if ($_REQUEST['vpc_3DSXID']) {
        Order::set_payment_id($order->order_id,'vpc:'.$_REQUEST['vpc_TransactionNo'].'/'.$_REQUEST['vpc_ReceiptNo']);
     }
-    $info = "Response:<b> {$txnResponseCode}). ".$this->getResponseDescription($txnResponseCode)."</b><br>
-	         Status:<b> {$verStatus}). ".$this->getStatusDescription($verStatus)."</b>";
-
+    //$info = "Response:<b> ".$this->getResponseDescription($txnResponseCode)." ({$txnResponseCode})</b><br>
+	//         Status:<b> ".$this->getStatusDescription($verStatus)." ({$verStatus})</b>";
+	$info =  "<tr>
+				        <td>Response</td>
+				        <td>".$this->getResponseDescription($txnResponseCode)." ({$txnResponseCode})</td>
+				    </tr>"/*
+				    <tr>
+				        <td>Status</td>
+				        <td>".$this->getStatusDescription($verStatus)." ({$verStatus})</td>
+				    </tr>"*/;
     If ($txnResponseCode == "0" || $txnResponseCode == "P") {
 	  if ($txnResponseCode == "P") {
         $order->set_payment_status('pending');
@@ -217,7 +224,10 @@ class EPH_vpc extends payment{
     } else {
       return array('approved'=>false,
                    'transaction_id'=>false,
-                   'response'=> "Error:<b>{$txnResponseCode}). {$message }</b></br>".$info);
+                   'response'=> "<tr><td>Response</td><td>{$message} ({$txnResponseCode})</td></tr>" /*<tr>
+				        <td>Status</td>
+				        <td>".$this->getStatusDescription($verStatus)." ({$verStatus})</td>
+				    </tr>"*/);
     }
 
 

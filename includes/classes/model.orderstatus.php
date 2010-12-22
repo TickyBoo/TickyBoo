@@ -16,7 +16,7 @@ class OrderStatus{
   public function statusChange($orderId, $newStatus=false, $updatedBy=NULL, $action=false, $description=false,$data=''){
 
     if(is_numeric($orderId)){
-      $sql = "SELECT *
+      $sql = "SELECT os_status_to
             FROM order_status
             WHERE os_order_id = "._esc($orderId)."
             ORDER BY os_changed DESC, os_id DESC
@@ -44,36 +44,17 @@ class OrderStatus{
       if(empty($newStatus)){
         $newStatus=$query['os_status_to'];
       }
-      if(is_array($data)){ $data = (object)$data;}
-      if(is_object($data)){ $data = "'".serialize($data)."'"; 
+      if(is_object($data)|| is_array($data)){
+        $data = _esc(serialize($data));
       }else{
         $data = _esc($data);
       }
 
 
-      $sql = "INSERT INTO order_status (
-                `os_id`,
-                `os_order_id`,
-                `os_changed`,
-                `os_status_from`,
-                `os_status_to`,
-                `os_changed_by`,
-                `os_action`,
-                `os_description`,
-                `os_data`
-              ) VALUES (
-                null,
-                "._esc($orderId).",
-                CURRENT_TIMESTAMP,
-                ".$oldStatus.",
-                "._esc($newStatus).",
-                null,
-                ".$action.",
-                ".$description.",
-                ".$data."
-              )";
+      $sql = "INSERT INTO order_status (`os_order_id`, `os_changed`, `os_status_from`, `os_status_to`, `os_changed_by`, `os_action`, `os_description`, `os_data`)
+              VALUES ( "._esc($orderId).", CURRENT_TIMESTAMP, ".$oldStatus.", "._esc($newStatus).", null, ".$action.", ".$description.", ".$data." )";
       if(!$res=ShopDB::query($sql) || ShopDB::num_rows($res)<>1){
-        ShopDB::rollback("Failed to insert status row.");
+      //  ShopDB::rollback("Failed to insert status row.");
         return false;
       }
       return true;

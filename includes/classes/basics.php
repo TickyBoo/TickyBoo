@@ -305,7 +305,8 @@ function con($name, $default='') {
   } elseif ($name) {
     if (is($_SHOP->AutoDefineLangs, false)) {
       if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
-        $addcon = "<?php\ndefine('{$name}','{$name}');\n?>\n";
+        $namex= _esc($name, false);
+        $addcon = "\n<?php\ndefine('{$namex}','{$namex}');\n?>";
         file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
         define($name,$name);
       }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
@@ -398,7 +399,7 @@ function check_system() {
               AND order_date_expire IS NOT NULL
               AND order_date_expire <= NOW()
               AND order_status = 'ord'
-              AND order_payment_status  != 'payed'
+              AND order_payment_status  = 'none'
               AND order_shipment_status != 'send'";
 
     if($resultOrder=ShopDB::query($query)){
@@ -499,9 +500,10 @@ function trace($content, $addDate=false, $addtrace=false){
 
   if(is($_SHOP->trace_on,false)){
     if ($addtrace){
-      $traceArr = debug_backtrace();
-      if(isset($traceArr) && count($traceArr) > 3) {
-        $errString = '=> '.basename($traceArr[2]['file']).' '.$traceArr[2]['line'].':';
+      $traceArr = debug_backtrace(false);
+      if(isset($traceArr) && count($traceArr) > 2) {
+        $x = (strpos('shopdb.', $traceArr[1]['file'])===false)?1:2;
+        $errString = '=> '.basename($traceArr[$x]['file']).' '.$traceArr[$x]['line'].':';
         $content = $errString ."\n". $content;
       }
     }

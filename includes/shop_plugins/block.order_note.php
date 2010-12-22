@@ -95,7 +95,7 @@ function smarty_block_order_note ($params, $content, $smarty, &$repeat) {
   $repeat=!empty($onote);
 
   if($onote){
-    $onote["onote_private"] = ($onote["onote_private"])?con('yes'):con('no');
+    $onote["onote_privatetxt"] = ($onote["onote_private"])?con('yes'):con('no');
     $smarty->assign("order_onote",$onote);
     $smarty->_SHOP_db_res[]=$res;
   }

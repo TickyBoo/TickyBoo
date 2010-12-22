@@ -33,15 +33,26 @@ var loadUser = function(mycolNames){
 	$('#user_info_search').click(function(){
     	$('#search_user').show();
     	$('#user_data').show();
+    	$('form#pos-user-form').unbind('keypress');
+    	$('form#pos-user-form').bind('keypress',function(e){
+            if(e.which == 13){
+                $('#search_user').click();
+             }});
     	
 	    if ($('#user_id').val() <=0) {
 	    	$('#user_id').val(-2);
      	}
+	    
     });
 	
 	$('#user_info_new').click(function(){
     	$('#search_user').hide();
     	$('#user_data').show();
+    	$('form#pos-user-form').unbind('keypress');
+    	$('form#pos-user-form').bind('keypress',function(e){
+            if(e.which == 13){
+                $('#pos-user-form').submit();
+             }});
       	if (($('#user_id').val() <=0) || confirm('Are you sure you want to create a new user?')) {
         	$("#user_data :input").each(function() {
            		$(this).val('');
@@ -52,6 +63,12 @@ var loadUser = function(mycolNames){
         	$('#user_info_search').click();
       	}
     });
+    
+	$('form#pos-user-form').unbind('keypress');
+	$('form#pos-user-form').bind('keypress',function(e){
+        if(e.which == 13){
+            $('#pos-user-form').submit();
+         }});
     
 	$("#search-dialog").dialog({
 		bgiframe: false,

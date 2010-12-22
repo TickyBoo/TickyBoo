@@ -199,7 +199,7 @@ class User extends Model{
     	    $userup->user_status = $status;
     	    if (ShopDB::Begin()){
             if ($userup->save()){
-              addNotice("saved user");
+              addNotice("save_successful");
               $set = array();
               if ($user['username']<> $data['user_email']) {
                 $set[] = "username="._esc($data['user_email']);
@@ -263,7 +263,7 @@ class User extends Model{
         			FROM auth LEFT JOIN User ON auth.user_id=User.user_id
         			WHERE auth.username="._esc($email);
 	    if (!$row=ShopDB::query_one_row($query)) {
-	  		addWarning("log_err_wrong_usr");
+	  		addWarning("log_err_wrong_usr_activation_email");
 	  	} elseif ($row['active']==null) {
 	  		addWarning("log_err_isactive");
 	 	} else {

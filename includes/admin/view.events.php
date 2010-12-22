@@ -348,12 +348,12 @@ select SQL_CALC_FOUND_ROWS *
 		$this->print_time('event_view_begin_time', $data, $err, $main );
 		$this->print_date('event_view_end_date', $data, $err,  $main );
 		$this->print_time('event_view_end_time', $data, $err,  $main );
-         echo "<tr ><td colspan='2' class='admin_name'>" . con('event_custom_fields') ."</td></tr>";
-		$this->print_input('event_custom1', $data, $err, 30, 100, $main );
-		$this->print_area ('event_custom2', $data, $err, 6 , 70, $main );
-		$this->print_input('event_custom3', $data, $err, 10, 10, $main );
-		$this->print_date ('event_custom4_date', $data, $err, $main );
-		$this->print_time ('event_custom4_time', $data, $err, $main );
+        // echo "<tr ><td colspan='2' class='admin_name'>" . con('event_custom_fields') ."</td></tr>";
+		//$this->print_input('event_custom1', $data, $err, 30, 100, $main );
+		//$this->print_area ('event_custom2', $data, $err, 6 , 70, $main );
+		//$this->print_input('event_custom3', $data, $err, 10, 10, $main );
+		//$this->print_date ('event_custom4_date', $data, $err, $main );
+		//$this->print_time ('event_custom4_time', $data, $err, $main );
 
 		$this->form_foot(2,$_SERVER['PHP_SELF']);
 		echo "</div>\n";

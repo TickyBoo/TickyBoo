@@ -98,11 +98,12 @@ class EmailSwiftSender {
     $log->el_failed = ($ret)?'no': 'yes';
     $log->el_log = empt($logger->dump(),'');
     $log->el_bad_emails = serialize(empt($failedAddr,''));
+    $_SHOP->skiptrace = true;
     $log->save();
 
     if(!$ret || $ret < 1){
       Shopdb::dblogging("email '{$type}' errors:\n".$logger->dump());
-      addWarning('failed_send_to:',print_r($swiftMessage->getTo(),true));
+      addWarning('failed_send_to',print_r($swiftMessage->getTo(),true));
       return false;
     }else{
       return $ret;

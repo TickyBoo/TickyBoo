@@ -75,7 +75,7 @@ class HandlingView extends AdminView{
     					echo "+";
     				}
     				if($fixe > 0){
-    					echo $fixe." ".$_SHOP->organizer_data->currency;
+    					echo valuta($fixe);
     				}
   				echo "</td>\n";
   				echo "<td width='30' class='admin_list_item'>$handling_mode_web</td>\n";

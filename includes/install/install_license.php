@@ -56,8 +56,8 @@ class install_license {
       array_push($Install->Errors,"FAILED: PHP version 5.2.x is required, You have php version " .phpversion() . ". Please update your server." );
     }elseif (version_compare(PHP_VERSION, '5.2.1')<0){
       array_push($Install->Warnings,"WARNING: To take full advantage of the power of Fusion Ticket your server must have php 5.2.x .<br> You have php version " . phpversion() . ". Please update your server.");
-    }elseif (version_compare(PHP_VERSION, '5.3.0')>=0){
-      array_push($Install->Warnings,"WARNING: this program works best with php version 5.2.x.<br> You have php version " . phpversion() . ". This should not be a problem.");
+    }elseif (version_compare(PHP_VERSION, '5.3.2')>=0){
+      array_push($Install->Warnings,"WARNING: This program works best with php version 5.2.x.<br> You have php version " . phpversion() . ". This should not be a problem.");
     }
 
     if (!function_exists('mysqli_connect')){
@@ -66,6 +66,9 @@ class install_license {
     if (!function_exists('curl_init')){
       $_SESSION['SHOP']['url_post_method'] ='fso';
       array_push($Install->Warnings,"<a href='http://ch2.php.net/manual/en/ref.curl.php'>cURL</a> is not compiled in your php. cURL is used by paypal or authorize.net payment methods - you will be unable to use those. Install curl, or configure another network library in <i>'includes/config/init_common.php'");
+    }
+    if (!extension_loaded('openssl')) {
+      array_push($Install->Warnings,"OpenSSL is not loaded in your php configuration. OpenSSL is used by paypal or authorize.net payment methods - you will be unable to use those. Please install OpenSSL.");
     }
     if (!function_exists('iconv')){
       array_push($Install->Warnings,"<a href='http://ch2.php.net/manual/en/ref.iconv.php'>iconv</a> is not compiled in your php. iconv is used to enable non-latin alphabets in PDF templates.");

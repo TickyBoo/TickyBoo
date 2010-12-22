@@ -94,12 +94,12 @@ class Admins extends Model {
 
   function delete() {
     if($this->isDeleteSelf() || $this->isLastAdmin()){
-      return false;
+      return addWarning('cant_delete_user');;
     }
     if(stripos($this->admin_status,"pos") !== FALSE){
       $query = "SELECT count(*)
                 FROM `Order`
-                Where order_user_id="._esc($this->admin_id);
+                Where order_user_id="._esc($this->user_id);
       //var_dump($res = ShopDB::query_one_row($query, false));
       if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
         return addWarning('in_use');

@@ -206,12 +206,12 @@ define("invalid_number","Invalid Credit Card Number!");
 define("log_err_isactive", "That account is allready active.");
 define("log_err_mailnotsend", "The Activation Email <b>could not</b> be sent, please check you have entered the correct email address.");
 define("log_err_not_act","You are Not Activated!");
-define("log_err_not_act_info","<br />Please activate your account!
-	<p>Please check your email for the activation email. Also check your spam folder. Then follow the link to activate your account</p>
-	<p>If you still haven't recieved anything after an hour please click <a href='resend_activation.php'HERE</a> to resend activation email.</p>");
+define("log_err_not_act_info","<br />Your account is not yet activated.
+	<p>Please check your email to activate your account. Don't forget to check the spam folder.</p>
+	<p>If you haven't received any email yet, please click <a href='resend_activation.php'HERE</a> to resend the activation email.</p>");
 define("log_err_wrong_usr","Wrong Username or Password!");
-define("log_err_wrong_usr_info","<p>Please try again, remembering that the username and password are case sensitive.<br />
-		If you have forgoten your username or password please click <a href='forgot_password.php' onclick='showDialog(this);return false;' >here</a></p>");
+define("log_err_wrong_usr_info","Wrong Username or Password.
+		If you have forgoten your password, click <a href='forgot_password.php' onclick='showDialog(this);return false;' >here</a>");
 define("mand_all", "All Input Fields are Required!");
 define("mandatory","Field Required!");
 define("MP3_loading_problem","Problem Loading MP3 File!");
@@ -234,11 +234,11 @@ define('order_notice_message','Order Notice Message');
 define('order_payed_already','Order Already Paid');
 define('order_payed_total','Total Paid');
 define("pass_not_egal","Passwords Do Not Match!");
-define("pass_match","Passwords Do Not Match!");
-define("pass_too_short","Password too Short!");
-define("phone_long","The Phone Number is too Long!");
-define("phone_short","The Phone Number is too Short!");
-define("places_empty","Select a Seat, Please!");
+define("pass_match","Passwords do not match");
+define("pass_too_short","Password is too short");
+define("phone_long","The Phone Number is too long");
+define("phone_short","The Phone Number is too short");
+define("places_empty","Please select your seats");
 define("places_occupied","Sorry! The selected seats were taken by another customer.");
 define("places_remains"," Remaining seats");
 define("places_toomuch","This Number of Seats can Not be Reserved!");
@@ -274,7 +274,7 @@ define('search_choice_event','Choose an Event to Search!');
 define('search_choice_seat_row_nr','Choose a Seat/Row to Search!');
 define('Options_saved','Options Saved!');
 define('update_error','Update Error!');
-define('user_details_saved_successfully','User details sucessfully saved');
+define('user_details_saved_successfully','User details sucessfully updated');
 
 
 //------------------------------------------------------
@@ -360,7 +360,7 @@ define("admin_login","Login Name"); //used in admin, organizer, and spoint
 
 define("admin_user_tab","Admins");
 define("admin_id","Admin ID");
-define("admin_inuse","Admin Activated");
+define("admin_inuse","Enabled?");
 define("admin_ismanager","Is manager");
 define("admin_user_title","System Administrators");
 define("admin_update_title","Modify Administrator");
@@ -950,7 +950,7 @@ define("no_event_sets","No Events Scheduled");
 define("act_name","Activate Account"); //checkout_preview
 define("act_enter_title","Place your Activation Code here:");
 
-define("act_enter_code","Complete your activation by entering the activation code, sent to you by Email, in the box below. Or click on the link in the Email.");
+define("act_enter_code","Complete your activation by entering the activation code sent to you by Email in the box below, or click on the link in the Email.<br/>If you have already activated your account, please press [activate] also.");
 define("act_code","Activation code:");
 define("act_send","Send");
 
@@ -958,7 +958,7 @@ define("act_notarr","Activation Email still not arrived?");
 define("resend_activation","Resend Activation Email");
 define("act_is_sent","Your Activation Email has been sent to your Inbox!");
 define("act_sent","The activation Email has been sent. Please check your Email for a link.");
-define("act_mess_line","Please check your email to activate your account.<br><br>");
+define("act_mess_line","Please check your email to activate your account.<br>");
 define("act_mess_line_nm","<b>You may complete this order without activating your account.</b><br>
           					Please check your email to activate your account for future purchases.<br>");
 
@@ -981,7 +981,7 @@ define("total_price","Total Price"); //personal_order.tpl, personal_orders.tpl
 
 //cart_resume.tpl
 define("shopcart","Shopping Cart");
-define("no_tick_res","You have No Tickets Reserved.");
+define("no_tick_res","You have no reserved tickets.");
 define("valid_tickets","Valid Tickets:");
 define("expired_tickets","Expired Tickets:");
 define("tick_exp_in","Expiring in ");
@@ -1003,7 +1003,7 @@ define("cart_cont_mess","Please check your order. You have a limited time before
 
 //cat_description.tpl
 define("cat_description","Seating Sections and Prices");
-define("tickets_available","Available:");
+define("tickets_available","Availability");
 define("category_sold","Sold out");
 define("Discount_for","With Discount:");
 define("prices_in","Prices in");
@@ -1013,6 +1013,7 @@ define("order_limit","Order Limit"); //category.tpl
 define("old_event","<center><B>This event is expired and can not be ordered anymore.</b></center>");
 
 //category.tpl
+define("select_seat_head","Select your seat(s)");
 define("select_seat","1. Select your seat(s)");
 define("click_on_reserve","2.Click on 'Reserve'");
 define("number_seats","Number of seats");
@@ -1025,16 +1026,18 @@ define("tnx_order_mess","Thank you very much! Your order was registered. To pay 
 //checkout_preview.tpl
 define("shopping_cart_check_out","Select Payment Method");
 define("Handling_cont_mess","Check your tickets, Check your details and then select your payment and click 'Order'.");
-define("handlings","Payments");
+define("handlings","Payment Methods");
 define("payment","Payment"); //personal_order.tpl
 define("shipment","Shipment"); //personal_order.tpl
+define("order_not_found_or_created","Cannot proceed with order.");
 define("limit","Unfortunately, you have exceeded the amount of allowed reserved tickets. To check your orders click <a href='index.php?personal_page=orders'>here</a>.");
 define("orclick"," Or Click to:");
 define('freeTicketCode', 'Discount Code:');
 //checkout_result.tpl
 define("pay_accept","Payment Method Accepted");
 define("pay_refused","Payment Method Not Accepted");
-define("pay_reg","Payment Registered");
+define("pay_reg", "Your payment was successful. <br/><br/>Your electronic ticket has been sent to your email address.<br/><br/> Please make sure you have a printed copy to present when collecting your physical ticket.<br/><br/><span>Note: if you don't find your electronic ticket in your inbox please check your Spam/Junk folder. To avoid our emails being seen as junk, please add our \"From\" address to your Address Book.</span>");
+define("pay_error","There was an error proccessing your request.");
 define("trx_id","Transation ID");
 define("orderdeleted","Order Deleted");
 define("printinvoice","Print Invoice");
@@ -1042,7 +1045,7 @@ define("printtickets","Print Tickets");
 
 //discount.tpl
 define("discounts","Discounts");
-define("place_nr","Seat nr");
+define("place_nr","Seat");
 define("unassigned_seat","Unassigned");
 
 //event.tpl
@@ -1145,7 +1148,7 @@ define("program","Program");
 define("div_dates","Multiple Dates");
 
 //user_address/tpl
-define("your_addr","Your Address");
+define("your_addr","Shipment details");
 
 
 //user_form.tpl
@@ -1159,6 +1162,8 @@ define("register","Register");
 //user_login_block.tpl - no unique defines
 
 //user_register.tpl
+define("alreadymember","Already a Member?");
+define("alreadymembertext","to the site with your username and password on your right.");
 define("becomemember","Become a Member");
 define("pers_info","Personal Information");
 define("user_notice","To order your tickets please complete the following fields and click on 'Continue'. Fields with (*) are mandatory. This information will stay confidential. We will not give out your information or sell it to others. You can also choose to become a member and never fill this form again.");
@@ -1239,13 +1244,13 @@ define("order_details","Order details");
 //process_select.tpl
 define("order_status_changed","Order Status Changed Successfully");
 define("pos_currenttickets","Overview"); //header.tpl
-define("pos_yourtickets","Assigned Tickets");
-define("pos_alltickets","All Tickets");
-define("pos_paidlist","Paid List");
-define("pos_unsentlist","UnSent List");
+define("pos_yourtickets","Owned Orders");
+define("pos_alltickets","All Paid/Sent Orders");
+define("pos_paidlist","Paid orders");
+define("pos_unsentlist","UnSent Orders");
 
 define("pos_unpaidlist","UnPaid List");
-define("pos_reservedlist","Reserved List");
+define("pos_reservedlist","Reserved Orders");
 
 //process_view.tpl
 define("paymentstatus","Payment Status");
@@ -1276,7 +1281,7 @@ define("open_with_acrobat","Open Orders in Acrobat");
 define("preferences","Preferences");
 define("send_orders_printer","Send Orders to Printer");
 
-define("select_country","Select Country");
+define("select_country","Select Country...");
 define("eph_cash_confirm","The order is created, press 'Pay' to continue.");
 
 //------------------------------------------------------
@@ -1323,7 +1328,7 @@ define("tmp_subtotal","SubTotal:");
 define("tmp_fee","Handling Fee:");
 define("tmp_order_total","Total:");
 define("tmp_thank_you","Thank You!");
-define("tmp_inv_message","Your seats have been reserved. Please pay this invoice within 10 days. ");
+define("tmp_inv_message","Your tickets have been reserved. Please pay this invoice within 10 minutes.");
 
 //Tickets
 define("tmp_flourish"," Presents");
@@ -1414,10 +1419,10 @@ define ('republish_old_event',"Are you sure you want to publish this archived ev
 define('UnPublished','UnPublished');
 define('restart__failure','restart__failure');
 define('plugins_tab','Plugins');
-define('category_pm_id','category_pm_id');
-define('category_pmp_id','category_pmp_id');
+define('category_pm_id','Seat Chart ID');
+define('category_pmp_id','Seat Chart Part ID');
 define('publish7','publish7');
-define('pub__failure','pub__failure');
+define('pub__failure','The following event failed to publish:');
 define('export_entrant_withseats','Export with seat numbers');
 
 define('mollie_status_canceled','You have canceled the order while in iDeal');

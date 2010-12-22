@@ -33,7 +33,7 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 	text-align: left;
 }
 
-#footer { font-size: 11px; text-align: center; border-top: 1px solid #ccc; padding: padding: 0px 5px 0px 5px;  display: block; overflow: auto; width:100%; }
+#footer { font-size: 11px; text-align: center; border-top: 1px solid #ccc; padding: 0px 5px 0px 5px; display: block; overflow: auto; width: 1020px; line-height: 2em; }
 
 #footer a{ font-family:Verdana; color:#FF7A09; font-weight:bold; text-decoration:none; cursor: pointer;}
 

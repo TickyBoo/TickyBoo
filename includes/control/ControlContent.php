@@ -194,16 +194,17 @@ class ControlContent extends AUIComponent{
       }
 
       echo "
-        <table width='100%' class='event_list'  cellpadding='2'>
-          <tr><td colspan='6' class='event_list_title' align='center'>".con('control_events_list')."</td></tr>
-          <tr class='event_list_subtitle'>
-            <td width='200' class='event_list_td'>".con('event')."</td>
-            <td width='200' class='event_list_td'>".con('date')."</td>
-            <td width='200' class='event_list_td'>".con('ort')."</td>
-            <td width='50' class='event_list_td' align='right'>".con('checked')."</td>
-            <td width='50' class='event_list_td' align='right'>".con('com')."</td>
-            <td width='50' class='event_list_td' align='right'>".con('free')."</td>";
-
+        <table width='100%' class='admin_list'  cellpadding='2'>
+          <tr><td colspan='6' class='admin_list_title' align='center'>".con('control_events_list')."</td></tr>
+          <tr class='admin_list_header'>
+            <td width='200' >".con('event')."</td>
+            <td width='200' >".con('date')."</td>
+            <td width='200' >".con('ort')."</td>
+            <td width='50' align='right'>".con('free')."</td>
+            <td width='50' align='right'>".con('com')."</td>
+            <td width='50' align='right'>".con('checked')."</td>
+          </tr>";
+      $alt = 0;
       while($event=shopDB::fetch_assoc($events)){
         $query_ev="SELECT seat_status, COUNT(*) as count FROM Seat where
                    seat_event_id='{$event['event_id']}' GROUP BY seat_status";
@@ -220,17 +221,17 @@ class ControlContent extends AUIComponent{
         $etime=formatTime($event["event_time"]);
 
         echo "
-          <tr class='event_list_tr0'>
+          <tr class='admin_list_row_$alt'>
       	    <td width='200' class='event_list_td' valign='top'>
                <a href='{$_SERVER['PHP_SELF']}?event_id={$event['event_id']}&event_name={$event['event_name']}'>{$event['event_name']}</a>
             </td>
             <td width='200' class='event_list_td' valign='top'>$edate - $etime</td>
             <td width='200' class='event_list_td' valign='top'>{$event['ort_name']} - {$event['ort_city']}</td>
-            <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["check"]."</td>
-            <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["com"]."</td>
             <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["free"]."</td>
+            <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["com"]."</td>
+            <td width='50' class='event_list_td' align='right' valign='top'>".$ev_stat["check"]."</td>
           </tr>";
-
+          $alt = ($alt + 1) % 2;
       }
       echo "</table>";
     }else{

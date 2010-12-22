@@ -33,8 +33,12 @@
  */
 
 define('ft_check','shop');
-
-$action ='/'.(isset($_REQUEST['action']) and $_REQUEST['action'])?$_REQUEST['action']:'index';
+if (isset($_REQUEST['action'])) {
+	$action = '/'.$_REQUEST['action'];
+}
+else {
+	$action ='/'.'index';
+}
 require_once('includes/classes/class.router.php');
 router::draw($action, 'web/checkout');
 

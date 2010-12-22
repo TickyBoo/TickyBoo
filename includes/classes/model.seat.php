@@ -37,7 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class Seat  Extends Model {
 
   const STATUS_FREE = 'free';
-  const STATUS_ORDERED = 'ord';
+  const STATUS_ORDERED = 'com';
   const STATUS_RESERVED = 'resp';
   const STATUS_HOLD = 'res';
   const STATUS_CANCELED = 'cancel';

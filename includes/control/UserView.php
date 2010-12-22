@@ -88,11 +88,11 @@ class UserView extends AdminView{
    while($order=shopDB::fetch_assoc($res)){
      echo "<tr><td class='order_item'>".$order["order_id"]."</td>
                <td class='order_item' colspan='6'>".con('tickets_nr')." ".$order["order_tickets_nr"].
-	       " - ".valuta($order["order_total_price"]_." - ".con('date')."  ".$order["order_date"].
+	       " - ".valuta($order["order_total_price"])." - ".con('date')."  ".$order["order_date"].
 	       " - ".$order["order_shipment_mode"]." - ".
 	       $this->print_order_status($order["order_status"])."
 	       <a href='view_order.php?action=details&order_id=".$order["order_id"]."'>
-	       <img src=\"".$_SHOP->images_url."view.png\" border='0'/></a></td><tr>";
+         <img src='".$_SHOP->images_url."view.png' border='0'/></a></td><tr>";
      $query="select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,Event,Category where seat_order_id="._esc($order["order_id"])."
                AND seat_event_id=event_id AND seat_category_id= category_id";
      if(!$res1=ShopDB::query($query)){

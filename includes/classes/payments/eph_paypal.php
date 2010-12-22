@@ -132,7 +132,7 @@ class EPH_paypal extends payment{
 
     $result=$this->url_post($url,$_POST);
 
-//    $debug.=print_r($_POST,true);
+   // $debug .= print_r($this->debug,true);
 
     $debug .= "res : $result\n";
 

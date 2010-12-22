@@ -51,7 +51,7 @@ class SearchView extends AdminView{
     $this->print_input('user_email',$data, $err,25,100);
     echo "<tr><td class='admin_name'>".con('user_status')."</td><td class='admin_value'>
           <select name='user_status'>
-            <option value='0'>------</option>
+            <option value='0'></option>
           	<option value='1'>".con('sale_point')."</option>
             <option value='2'>".con('member')."</option>
           	<option value='3'>".con('guest')."</option>
@@ -60,31 +60,42 @@ class SearchView extends AdminView{
   }
 
   function patronTable (&$data){
-    if(!($data["user_lastname"] or $data["user_firstname"] or $data["user_zip"]
-        or $data["user_city"] or $data["user_phone"] or $data["user_email"] or $data["user_status"])){
-      return addWarning('search_choice_one_field');
-    }
-
+    global $_SHOP;
+//    if(!($data["user_lastname"] or $data["user_firstname"] or $data["user_zip"]
+//        or $data["user_city"] or $data["user_phone"] or $data["user_email"] or $data["user_status"])){
+//      return addWarning('search_choice_one_field');
+//    }
+    $count = 0;
     if($data["user_lastname"]){
-      $query_type[]= "user_lastname LIKE ".ShopDB::quote($data['user_lastname'].'%');
+      $query_type[]= "user_lastname LIKE "._esc($data['user_lastname'].'%');
+      $count++;
     }
     if($data["user_firstname"]){
-      $query_type[]= "user_firstname LIKE ".ShopDB::quote($data['user_firstname'].'%');
+      $query_type[]= "user_firstname LIKE "._esc($data['user_firstname'].'%');
+      $count++;
     }
     if($data["user_zip"]){
-      $query_type[]= "user_zip LIKE ".ShopDB::quote($data['user_zip'].'%');
+      $query_type[]= "user_zip LIKE "._esc($data['user_zip'].'%');
+      $count++;
     }
     if($data["user_city"]){
-      $query_type[]= "user_city LIKE ".ShopDB::quote($data['user_city'].'%');
+      $query_type[]= "user_city LIKE "._esc($data['user_city'].'%');
+      $count++;
     }
     if($data["user_phone"]){
-      $query_type[]= "user_phone LIKE ".ShopDB::quote($data['user_phone'].'%');
+      $query_type[]= "user_phone LIKE "._esc($data['user_phone'].'%');
+      $count++;
     }
     if($data["user_email"]){
-      $query_type[]= "user_email LIKE ".ShopDB::quote($data['user_email'].'%');
+      $query_type[]= "user_email LIKE "._esc($data['user_email'].'%');
+      $count++;
     }
     if($data["user_status"]){
-      $query_type[]= "user_status=".ShopDB::quote($data['user_status']);
+      $query_type[]= "user_status="._esc($data['user_status']);
+    //  $count++;
+    }
+    if ($count <2) {
+      return addWarning('search_choice_two_fields');
     }
 
     $query="select * from User where ". implode("\n AND ",$query_type);
@@ -122,8 +133,12 @@ class SearchView extends AdminView{
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n
           <input type='hidden' name='action' value='search_place'/>\n";
     $this->form_head(con("search_title_place"));
-    $query="select event_id,event_name,event_date,event_time from Event where event_rep LIKE '%sub%'
-            and event_pm_id IS NOT NULL order by event_date,event_time";
+    $query="select event_id,event_name,event_date,event_time 
+            from Event 
+            where event_rep LIKE '%sub%'
+            and field(event_status, 'trash','unpub')=0
+            and event_pm_id IS NOT NULL 
+            order by event_date,event_time";
     if(!$res=ShopDB::query($query)){
       user_error(shopDB::error());
       return;

@@ -39,6 +39,8 @@ require_once ("controller.web.shop.php");
 
 
 class ctrlWebCheckout extends ctrlWebShop {
+  private $secureType = false;
+  private $secureCode = '';
 
   public function __construct($context='web') {
     parent::__construct($context);
@@ -48,8 +50,9 @@ class ctrlWebCheckout extends ctrlWebShop {
   public function draw($page, $action, $isAjax= false) {
     GLOBAL $_SHOP;
     if (!$action) {$action = 'index';}
-    ShopDB::begin('Running the Checkout pages'); //Buggy
-    if (isset($_REQUEST['sor']) || isset($_REQUEST['cbr'])) {
+    ShopDB::begin('Running the Checkout pages');
+    $this->getSecurecode();
+    if ($this->secureType) {
     	if (is_callable(array($this,'action'.$action)) and ($fond = call_user_func_array(array($this,'action'.$action),array()))) {
     		$this->smarty->display($fond . '.tpl');
     	}
@@ -166,12 +169,14 @@ class ctrlWebCheckout extends ctrlWebShop {
   protected function _confirm($origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
     if (!isset($_SESSION['_SHOP_order'])) {
       $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
- 	  } else {
-      $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+ 	  } elseif ($this->secureType) {
+      $myorder = Order::DecodeSecureCode($this->secureCode, true);
       if(is_numeric($myorder)) {
-        echo "Cancel error ($myorder).\n";
+        echo "Confirm error ($myorder).\n";
         return;
       }
+// 	  } else {
+
     }
     if (!$myorder) {
       addwarning('order_not_found_or_created');
@@ -209,7 +214,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   protected function  _submit() {
-    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
       ShopDB::dblogging("submit error ($myorder).");
       return;
@@ -235,7 +240,7 @@ class ctrlWebCheckout extends ctrlWebShop {
 
 
   function actionPrint () {
-    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
       ShopDB::dblogging("Print error ($myorder).");
       return;
@@ -247,7 +252,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   function actionAccept () {
-    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
       echo "accept error ($myorder).\n";
       return;
@@ -259,7 +264,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     $this->setordervalues($myorder);
     If (!$pm_return['approved']) {
        Order::delete($myorder->order_id,'payment_not_approved' );
-       $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
+       $pm_return['response'] .= "<tr><td></td><td><p class='notice'>".con('orderdeleted')."</p></td></tr>";
 
     }
     $this->assign('pm_return',$pm_return);
@@ -269,14 +274,14 @@ class ctrlWebCheckout extends ctrlWebShop {
 
   function actionPosCancel () {
  		$this->__MyCart->destroy_f(); // destroy cart
-    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if ($myorder) {
        Order::delete($myorder->order_id,'pos_manual_canceled' );
     }
   }
 
   function actionCancel () {
-    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
       echo "Cancel error ($myorder).\n";
       return;
@@ -285,26 +290,26 @@ class ctrlWebCheckout extends ctrlWebShop {
     $pm_return = $hand->on_return($myorder, false );
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $this->setordervalues($myorder);
-    $pm_return['response'] .= "<div class='error'>".con('orderdeleted')."</div>";
+    $pm_return['response'] .= "<tr><td></td><td><p class='notice'>".con('orderdeleted')."</p></td></tr>";
     $this->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
   }
 
-	function actionNotify ($type="sor") {
-		if($type == "sor"){
-      $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+	function actionNotify () {
+		if($this->secureType == "sor"){
+      $myorder = Order::DecodeSecureCode($this->secureCode, true);
       if(is_numeric($myorder)) {
 		   		header('HTTP/1.1 502 Action not allowed', true, 502);
-		   		ShopDB::dblogging("notify error ($test): $myorder->order_id\n". print_r($myorder, true));
+		   		ShopDB::dblogging("accept error ($myorder)");
 		   		return;
 			}
-			ShopDB::dblogging("notify  ($test): $myorder->order_id.\n");
+			ShopDB::dblogging("notify message for order: $myorder->order_id.\n");
 
 			$hand= $myorder->handling;
 			$hand->on_notify($myorder);
-		}elseif($type == "cbr"){
-			$hand = Handling::decodeEPHCallback($this->getsecurecode($type), true);
+		}elseif($this->secureType == "cbr"){
+			$hand = Handling::decodeEPHCallback($this->secureCode, true);
 			if($hand == null){
 				header('HTTP/1.1 502 Action not allowed', true, 502);
 				ShopDB::dblogging("notify error : ($hand)\n". print_r($hand, true));
@@ -316,9 +321,9 @@ class ctrlWebCheckout extends ctrlWebShop {
  	}
 
   function actionPayment (){
-    $myorder = Order::DecodeSecureCode($this->getsecurecode(), true);
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
-      echo "Cancel error ($myorder).\n";
+      echo "Payment error ($myorder).\n";
       return;
     }
     return $this->_payment($myorder);
@@ -364,21 +369,26 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
 
-	function getsecurecode($type='sor') {
-		if (isset($_POST[$type])) {
-     		$return = urldecode( $_POST[$type]);
-	 	} elseif (isset($_GET[$type])) {
-     	$return = $_GET[$type];
-    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
+	private function getsecurecode($type='sor') {
+    if (isset($_REQUEST['sor'])) {
+      $this->secureType = 'sor';
+    }elseif( isset($_REQUEST['cbr'])) {
+      $this->secureType = 'cbr';
+    } else return false;
+		if (isset($_POST[$this->secureType])) {
+     		$this->secureCode = urldecode( $_POST[$this->secureType]);
+	 	} elseif (isset($_GET[$this->secureType])) {
+     	$this->secureCode = $_GET[$this->secureType];
+/*    } elseif (strlen( $_SERVER["PATH_INFO"])>1) {
      	$return = substr($action, 1);
     } else {
-      echo "<pre>";
+      echo "getsecurecode: <pre>";
      	print_r($_REQUEST); Print_r($_SERVER);
       echo "</pre>";
-     	$return ='';
+     	$return =''; */
     }
     //  echo $return;
-    	return $return;
+    	return true;
   }
 
   /**

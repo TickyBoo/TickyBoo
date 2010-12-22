@@ -68,7 +68,7 @@
 {assign var='length' value='15'}
 
 {assign var='dates' value="fromd=`$smarty.get.fromd`&fromm=`$smarty.get.fromm`&fromy=`$smarty.get.fromy`&tod=`$smarty.get.tod`&tom=`$smarty.get.tom`&toy=`$smarty.get.toy`"}
-{assign var='pos' value="first=`$smarty.get.first`"}
+{assign  var='firstpos' value="first=`$smarty.get.first`"}
 
 {if $smarty.get.fromy and $smarty.get.fromm and $smarty.get.fromd}
     {assign var='from' value="`$smarty.get.fromy`-`$smarty.get.fromm`-`$smarty.get.fromd`"}
@@ -91,7 +91,7 @@
           <td>{!actions!}</td>
         </tr>
 
-        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to order=$orderby}
+        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to order=$orderby owner_id=$pos->user_id}
           {counter print=false assign=count}
           {if $count lt ($length+1)}
 
@@ -118,7 +118,7 @@
                 <a href='view.php?order_id={$shop_order.order_id}'>
                   <img src='{$_SHOP_themeimages}view.png' border='0'>
                 </a>
-                {include file='process_actions.tpl' $shop_order=$shop_order}
+                {include file='process_actions.tpl' shop_order=$shop_order}
               </td>
             </tr>
           {/if}

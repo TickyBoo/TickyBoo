@@ -46,7 +46,7 @@ class Event Extends Model {
 
   function load ($id, $only_published=TRUE){
     $pub=($only_published)?"and event_status='pub'":'';
-    $query="select Event.*, pm_name, ort_name, event_group_name
+    $query="select Event.*, pm_name, ort_name, ort_country, event_group_name
             from Event LEFT JOIN Ort ON event_ort_id=ort_id
                        LEFT JOIN PlaceMap2 pm ON event_pm_id=pm_id
                        LEFT JOIN Event_group eg ON eg.event_group_id= Event.event_group_id

@@ -183,11 +183,11 @@ class Order_Smarty {
 
     if ($repeat) {
       $from= " FROM `Order` ";
-      $where = " WHERE 1=1 AND Order.order_status!='trash'";
+      $where = " WHERE Order.order_status!='trash'";
 
       if($params['user_id']){
         $user_id=$this->secure_url_param($params['user_id']);
-        $where .= " AND order_user_id='{$user_id}' AND Order.order_status!='trash' ";
+        $where .= " AND order_user_id='{$user_id}'";
   /*    }else if($this->user_auth_id){
            $where="where order_user_id='{$this->user_auth_id}' AND Order.order_status!='trash'";
   */
@@ -233,8 +233,7 @@ class Order_Smarty {
 
       /* Filter Handling */
       if($params['handling'] || $params['not_hand_payment'] || $params['not_hand_shipment'] || $params['hand_shipment'] || $params['hand_payment']){
-      	$from.=',Handling ';
-      	$where.=' AND handling_id = order_handling_id';
+      	$from .= ' left join Handling on handling_id = order_handling_id';
 
         //Not these payment types
       	if($params['not_hand_payment']){
@@ -282,8 +281,7 @@ class Order_Smarty {
 
       //Grab user details too
       if($params['user']){
-        $from.=',User';
-        $where.=' and order_user_id=user_id';
+        $from.=' left join User on order_user_id=user_id';
       }
       //Order Location
       if($params['place']) {
@@ -294,13 +292,48 @@ class Order_Smarty {
         $where .=" AND order_shipment_status != 'send' ";
       }
 
-      if($params['order']){
-        $order_by="order by {$params['order']}";
+      if($params['start_date']){
+        $where .= " and order_date>='{$params['start_date']}'";
       }
 
-      if($params['order_id']){
-          $order_id=$this->secure_url_param($params['order_id']);
-          $where .= " and order_id='{$order_id}'";
+      if($params['end_date']){
+        $where .= " and order_date<='{$params['end_date']}'";
+      }
+
+      if($params['owner_id']){
+        $where .= " and order_owner_id='{$params['owner_id']}'";
+      }
+
+      if($param['order_search']) {
+        if(!$_POST['seach_order_id']) {
+          addwarning('search_orderid_missing');
+          $where = ' 1 = 0 ';
+        } else {
+          $where .=" and order_id='{$_POST['seach_order_id']}'";
+          if(!$params['user']){
+            $from.=' left join User on order_user_id=user_id';
+          }
+
+          $searchcount =0;
+          if($_POST['search_patron']){
+            $where .= " and ({User.user_lastname} like "._esc('%'.clean($_POST['search_patron']).'%').") \n";
+            $searchcount++;
+          }
+          if($_POST['search_phone']){
+            $where .= " and ({User.user_phone} like "._esc('%'.clean($_POST['search_phone']).'%').") \n";
+            $searchcount++;
+          }
+          if($_POST['search_email']){
+            $where .= " and ({User.user_email} like "._esc('%'.clean($_POST['search_email']).'%').") \n";
+            $searchcount++;
+          }
+          if (!$searchcount) {
+            addwarning('search_orderid_patron');
+            $where = ' 1 = 0 ';
+          }
+        }
+      } elseif($params['order_id']){
+          $where .= " and order_id="._esc($params['order_id']);
       }
       if($params['curr_order_id']){
           $direction = explode(" ",$params['curr_order_id']);
@@ -312,16 +345,10 @@ class Order_Smarty {
           }
 
       }
-      if($params['order_by_date']){
-        $order_by .= " ORDER BY order_date {$params['order_by_date']}";
-      }
-
-      if($params['start_date']){
-        $where .= " and order_date>='{$params['start_date']}'";
-      }
-
-      if($params['end_date']){
-        $where .= " and order_date<='{$params['end_date']}'";
+      if($params['order']){
+        $order_by =" order by {$params['order']}";
+      } elseif($params['order_by_date']){
+        $order_by = " ORDER BY order_date {$params['order_by_date']}";
       }
 
       if($params['first']){

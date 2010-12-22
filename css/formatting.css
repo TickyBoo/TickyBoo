@@ -356,9 +356,10 @@ A.UITabMenuNavOn:hover {
 /* Form Validation */
 input.form-error { border: 1px solid red; width: auto; }
 label.form-error {
-	background: url('../images/theme/default/unchecked.gif') no-repeat;
+	background: url('../images/theme/default/error.png') no-repeat;
 	padding-left: 16px;
 	margin-left: .3em;
+	color: red;
 	}
 label.form-valid {
 	background: url('../images/theme/default/checked.gif') no-repeat;

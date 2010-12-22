@@ -147,6 +147,9 @@ var loadOrder = function(){
       success:function(data, status){
         printMessages(data.messages);
         if(data.status){
+        	$("#user_data :input").each(function() {
+          	$(this).val('');
+        	});
           $("#order_action").html(data.html);
           $("#order_action").dialog('open');
           bindCheckoutSubmitForm();
@@ -167,6 +170,10 @@ var loadOrder = function(){
         refreshOrder();
       }
     });
+    	$("#user_data :input").each(function() {
+        	$(this).val('');
+      	});
+
     return false;
   });
 

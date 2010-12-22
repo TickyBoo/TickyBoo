@@ -248,12 +248,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
       $_SESSION = array();
       session_destroy();
       $_auth->start();
+      orphancheck();
       exit;
     } else {
       $_auth->start();
     }
 
     if (!$_auth->checkAuth()) {
+      orphancheck();
       exit;
     }
 
@@ -290,6 +292,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
       $_SESSION['_SHOP_AUTH_USER_DATA']= (array)$res;
     }	else {
       session_destroy();
+      orphancheck();
       exit;
     }
 

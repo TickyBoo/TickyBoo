@@ -640,6 +640,42 @@ class AdminView extends AUIComponent {
     </td></tr>\n";
     }
 
+  function Set_time($name, & $data, & $err) {
+    global $_SHOP;
+    if ( (isset($data[$name.'-h']) and strlen($data[$name.'-h']) > 0) or
+    (isset($data[$name.'-m']) and strlen($data[$name.'-m']) > 0) ) {
+      $h = $data[$name.'-h'];
+      $m = $data[$name.'-m'];
+      if ( !is_numeric($h) or $h < 0 or $h >= $_SHOP->input_time_type ) {
+        $err[$name] = invalid;
+      } elseif ( !is_numeric($m) or $h < 0 or $m > 59 ) {
+        $err[$name] = invalid;
+      } else {
+        if (isset($data[$name.'-f']) and $data[$name.'-f']==='PM') {
+          $h = $h + 12;
+        }
+        $data[$name] = "$h:$m";
+      }
+    }
+  }
+
+  function set_date($name,&$data, &$err) {
+    if ( (isset($data["$name-y"]) and strlen($data["$name-y"]) > 0) or
+      (isset($data["$name-m"]) and strlen($data["$name-m"]) > 0) or
+    (isset($data["$name-d"]) and strlen($data["$name-d"]) > 0) ) {
+      $y = $data["$name-y"];
+      $m = $data["$name-m"];
+      $d = $data["$name-d"];
+
+      if ( !checkdate($m, $d, $y) ) {
+        $err[$name] = invalid;
+      } else {
+        $data[$name] = "$y-$m-$d";
+      }
+    }
+
+  }
+
     function print_select ($name, &$data, &$err, $opt, $actions=''){
         // $val=array('both','rows','none');
         $sel[$data[$name]] = " selected ";
@@ -789,6 +825,7 @@ class AdminView extends AUIComponent {
     echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
             <td class='admin_value'><select id='{$name}-select' name='$name'>";
     $si[$selected]=' selected';
+    echo "<option value=''>".con("please_select")."</option>";
     foreach ($_COUNTRY_LIST as $key=>$value){
       $si[$key] = (isset($si[$key]))?$si[$key]:'';
       echo "<option value='$key' {$si[$key]}>$value</option>";

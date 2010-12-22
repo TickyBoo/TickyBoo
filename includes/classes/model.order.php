@@ -1015,6 +1015,7 @@ class Order Extends Model {
                            left join Event    on event_id = seat_event_id
                            left join Ort      on ort_id = event_ort_id
                            left join Category on category_id = seat_category_id
+                           left join PlaceMap2 on event_pm_id = pm_id
                            left join PlaceMapZone on seat_zone_id = pmz_id
                            left join PlaceMapPart on seat_pmp_id = pmp_id
         WHERE seat_order_id = '._esc($order_id);

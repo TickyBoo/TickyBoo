@@ -37,7 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class User extends Model{
   protected $_idName    = 'user_id';
   protected $_tableName = 'User';
-  protected $_columns   = array('#user_id', '*user_lastname', '*user_firstname', '*user_address', 'user_address1',
+  protected $_columns   = array('#user_id', '*user_lastname', 'user_firstname', '*user_address', 'user_address1',
                                 '*user_zip', '*user_city', 'user_state', '*user_country', 'user_phone', 'user_fax' ,
                                 '*user_email', '*user_status', 'user_prefs', 'user_created', 'user_custom1', 'user_custom2',
                                 'user_custom3', 'user_custom4', 'user_owner_id', 'user_lastlogin', 'user_order_total',
@@ -46,6 +46,15 @@ class User extends Model{
   var $is_member = false;
 
   static function load ($user_id){
+    $user = new User(false);
+    if ($arr = self::loadArr($user_id)) {
+      $user->_fill($arr);
+      return $user;
+    }
+  }
+
+
+  static function loadArr ($user_id){
     $query="select User.*, auth.active
             from User left join auth on auth.user_id=User.user_id
             where User.user_id='$user_id'";
@@ -298,8 +307,11 @@ class User extends Model{
   }
 
   function CheckValues (&$data, $status=1, $mandatory=array(), $secure='', $short=true) {
-    if (!isset($data['user_id']) and ($status <>4)) {
+    if (!isset($data['user_id']) and !(in_array($status, array(1,4)))) {
       $mandatory[]='check_condition';
+    }
+    if (!(in_array($status, array(1)))) {
+      $mandatory[]='user_firstname';
     }
     parent::CheckValues ($data, $mandatory);
 
@@ -332,6 +344,13 @@ class User extends Model{
     }
 
     return !hasErrors();
+  }
+
+  function _fill(&$arr , $nocheck=true)  {
+    if ($this->user_status == 1) {
+      $arr["user_lastname"] = $arr["kasse_name"];
+    }
+    return parent::_fill($arr , $nocheck);
   }
 
   function cleanup($user_id = 0, $delete=false, $inclTrash=true){

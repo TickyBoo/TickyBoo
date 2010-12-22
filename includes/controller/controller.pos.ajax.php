@@ -180,7 +180,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 
 			$this->json['events'][strval($evt['event_id'])] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}
-		if (count()==0) {
+		if (count($this->json['events'])==0) {
 		  $option = "<option value='{$evt['event_id']}'>".con('no_event_sets')."</option>";
 		  $this->json['events'][] = array ('html'=>$option,'free_seats'=>0);
         }		

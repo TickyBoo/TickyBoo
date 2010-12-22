@@ -9,13 +9,18 @@
         {counter assign='row' print=false}
         <tr class='admin_list_row_{$row%2}'>
          	<td class='admin_info' width='180'><strong>{$order_onote.onote_timestamp}</strong></td>
-          <td class='admin_info' >{$order_onote.onote_subject}</td>
+          <td class='admin_info' >
+            {$order_onote.onote_subject}
+            {if $order_onote.onote_private}
+               <span style="text-align:right; " >{!onote_isprivate!}</span>
+            {/if}
+          </td>
         </tr>
         <tr class='admin_list_row_{$row%2}'>
           <td class='admin_info' width='180'><strong>{!onote_type!}</strong> : {$order_onote.onote_type}</td>
           <td class='admin_info' ><div style='overflow:hidden;'>{$order_onote.onote_note}</div></td>
         </tr>
-        <tr class='admin_list_row_{$row%2}'>
+ {*       <tr class='admin_list_row_{$row%2}'>
           <td class='admin_info' colspan='2'>
             <p style="float:left;"  >{!onote_private!} : {$order_onote.onote_private}</p>
             
@@ -31,7 +36,7 @@
             {/if}
             </form>
           </td>
-        </tr>
+        </tr> *}
         {/order_note}
       </table>
     </td>
@@ -39,7 +44,7 @@
   <tr>
     <td colspan="2">
       
-      {gui->StartForm title=!order_add_note! name=order_add_note width='100%' action=$smarty.server.REQUEST_URI data=$smarty.post}
+      {gui->StartForm name=order_add_note width='100%' action=$smarty.server.REQUEST_URI data=$smarty.post}
       {gui->hidden name='action' value='addnote'}
       {gui->hidden name='onote_order_id' value=$order.order_id }
       {gui->hidden name='order_id' value=$order.order_id }

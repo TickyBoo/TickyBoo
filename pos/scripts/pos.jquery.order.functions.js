@@ -15,7 +15,6 @@ var clearOrder = function(){
   	$(this).val('');
 	});
 
-  //$("#continue").attr("type","button");
   unBindSeatChart();
   updateEvents();
   return false;
