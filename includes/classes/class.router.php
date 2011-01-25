@@ -90,7 +90,7 @@ class router {
 
 		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
     require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
-  	$c = new $classname($module);
+  	$c = new $classname($module, $page);
     $c->draw($page, $action, $isAjax);
   }
 /**
@@ -159,7 +159,7 @@ class router {
 			return '';
 		}
 
-*/
+* /
 
 		if ($params['isAjax'] == 1) {
 			header('Content-Type: application/xml');
@@ -172,7 +172,7 @@ class router {
  * extract,clean and dequote any given get/post-parameters
  * find out which controller and view we should use
  * @param string $url raw url (see dispatch())
- */
+ * /
 	private function constructParams($url) {
     global $_SHOP;
 
@@ -240,19 +240,6 @@ class router {
 
 		return $params;
 	}
-
-/**
- * tries to construct the base url under which this framework can be called from the browser. adds a "/" at the end
  */
-	private function constructBase() {
-		$base = 'http' . (env('https') != '' ? 's' : '') . '://' .
-		env('SERVER_NAME') . (env('SERVER_PORT') != '80' ? (':' . env('SERVER_PORT')) : '') .
-		(dirname(env('PHP_SELF')));
-		if (substr($base, -1, 1) != '/') {
-			$base .= '/';
-		}
-		return $base;
-	}
-
-} //class
+}
 ?>

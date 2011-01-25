@@ -94,7 +94,7 @@
    </table>
   </div>
   <script type="text/javascript">
-  var timerid = 0;
+ // var timerid = 0;
   var orderid = {$shop_order.order_id};
   {if !$smarty.request.ajax and !$no_header and !$no_footer}
     {literal}
@@ -105,7 +105,7 @@
           height: 'auto',
           width: 'auto',
           modal: true,
-          close: function(event, ui) { confirm('test');
+          close: function(event, ui) {
             if (timerid) {
               clearTimeout(timerid);
               timerid = -1;

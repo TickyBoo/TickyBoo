@@ -246,8 +246,7 @@ class plugin_userlogging extends baseplugin {
     $REQUEST_URI = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 
 		$referrer = getenv("HTTP_REFERER");
-		if (isset( $_SERVER["HTTP_COOKIE"]))
-            {
+		if (isset( $_SERVER["HTTP_COOKIE"])){
 		    $referrer = str_replace("&".$_SERVER["HTTP_COOKIE"],'',$referrer);
 		    $referrer = str_replace("?".$_SERVER["HTTP_COOKIE"],'',$referrer);
 
@@ -260,7 +259,7 @@ class plugin_userlogging extends baseplugin {
 		$sql.=_esc($ip).",";
 		$sql.=_esc($browser).",";
 		$sql.=_esc($referrer).",";
-		$sql.=_esc('').","; //print_r($_SERVER,true) 
+		$sql.=_esc(print_r($_SERVER,true)).","; //print_r($_SERVER,true)
 		$sql.=_esc($REQUEST_URI);
 		$sql.=")";
 		ShopDB::Query($sql);

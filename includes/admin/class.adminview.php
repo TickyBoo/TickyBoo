@@ -35,7 +35,6 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("classes/AUIComponent.php");
-require_once("admin/class.adminpage.php");
 
 class AdminView extends AUIComponent {
   static $labelwidth = '40%';
@@ -45,7 +44,7 @@ class AdminView extends AUIComponent {
   var $page_length = 15;
   private $jScript = "";
 
-  function __construct ($width=0){
+  function __construct ($width=0, $dummy=null){
      if ($width) {
        $this->width = $width;
      }
@@ -89,12 +88,15 @@ class AdminView extends AUIComponent {
 
   function form_foot($colspan = 2, $backlink='', $submit='save', $showreset=true ) {
       echo "<tr  class='admin_value' ><td>";
-      if ($backlink) {
+      if (!is_array($backlink) and $backlink) {
         echo  $this->show_button($backlink,'admin_list',3);
       }
       $colspan = $colspan-1;
       echo "&nbsp;</td><td align='right' class='admin_value' colspan='{$colspan}'>";
       echo $this->Show_button('submit',$submit,3);
+      if (is_array($backlink)) {
+        echo  $this->show_button($backlink['href'],$backlink['name'],3,$backlink);
+      }
       if ($showreset) {
         echo $this->Show_button('reset','res',3);
       }
@@ -668,7 +670,7 @@ class AdminView extends AUIComponent {
       $d = $data["$name-d"];
 
       if ( !checkdate($m, $d, $y) ) {
-        $err[$name] = invalid;
+        adderror($name,'invalid');
       } else {
         $data[$name] = "$y-$m-$d";
       }
@@ -720,7 +722,6 @@ class AdminView extends AUIComponent {
          	echo "<input type='hidden' id='{$name}_text' name='$name' value=''>\n
         		<div id='colorSelector'><div style='background-color: #FFFFFF' ></div></div>";
         }
-       
        echo "<script>$('#colorSelector').ColorPicker({
 								color: '#ffffff',
 								onShow: function (colpkr) {
@@ -935,9 +936,8 @@ class AdminView extends AUIComponent {
   // make tab menus using html tables
   // vedanta_dot_barooah_at_gmail_dot_com
 
-  function PrintTabMenu($linkArray, $activeTab=0, $menuAlign="center") {
+  function PrintTabMenu($linkArray, &$activeTab, $menuAlign="center", $param='tab') {
     Global $_SHOP;
-  	$tabCount=0;
 
   	$str= "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0  class=\"UITabMenuNav\">\n";
   	$str.= "<tr>\n";
@@ -945,18 +945,14 @@ class AdminView extends AUIComponent {
       $str.= "<td width=\"100%\" align=\"left\">&nbsp;</td>\n";
     }
   	foreach ($linkArray as $k => $v){
-      $menuStyle=($tabCount==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
+      if (!is_integer($activeTab)) $activeTab = $v;
+      $menuStyle=($v==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
       $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->images_url."left_arc.gif\"></td>\n";
       $str.= "<td nowrap=\"nowrap\" height=\"16\" align=\"center\" valign=\"middle\" class=\"$menuStyle\">\n";
-//      if($tabCount!=$activeTab)
-        $str.= "<a class='$menuStyle' href='$v'>";
-      $str.= $k;
-//      if($tabCount!=$activeTab)
-        $str.= "</a>";
+      $str.= "      <a class='$menuStyle' href='?{$param}={$v}'>".$k."</a>";
       $str.= "</td>\n";
       $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->images_url."right_arc.gif\"></td>\n";
       $str.= "<td width=\"1pt\">&nbsp;</td>\n";
-      $tabCount++;
     }
   	if($menuAlign=="left"){
       $str.= "<td width=\"100%\" align=\"right\">&nbsp;</td>";

@@ -1,0 +1,322 @@
+<?php
+/**
+%%%copyright%%%
+ *
+ * FusionTicket - ticket reservation system
+ *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *
+ * Original Design:
+ *	phpMyTicket - ticket reservation system
+ * 	Copyright (C) 2004-2005 Anna Putrino, Stanislav Chachkov. All rights reserved.
+ *
+ * This file is part of FusionTicket.
+ *
+ * This file may be distributed and/or modified under the terms of the
+ * "GNU General Public License" version 3 as published by the Free
+ * Software Foundation and appearing in the file LICENSE included in
+ * the packaging of this file.
+ *
+ * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
+ * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ *
+ * Any links or references to Fusion Ticket must be left in under our licensing agreement.
+ *
+ * By USING this file you are agreeing to the above terms of use. REMOVING this licence does NOT
+ * remove your obligation to the terms of use.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/copyleft/gpl.html.
+ *
+ * Contact help@fusionticket.com if any conditions of this licencing isn't
+ * clear to you.
+ */
+
+if (!defined('ft_check')) {die('System intrusion ');}
+
+
+
+/*/Check page is secure
+if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+$url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
+echo "<script>window.location.href='$url';</script>"; exit;
+//header("Location: https://"$_SHOP->root_secured.$_SERVER['SCRIPT_NAME']);exit;}
+}
+//remove the www. to stop certificate errors.
+if(("https://".$_SERVER['SERVER_NAME']."/") != ($_SHOP->root_secured)) {
+$url = $_SHOP->root_secured.$_SERVER['REQUEST_URI'];
+echo "<script>window.location.href='$url';</script>"; exit;
+}*/
+
+//require_once (CLASSES.'class.smarty.php');
+require_once("classes/AUIComponent.php");
+
+// remove the # below under linux to get a list of locale tags.
+
+#  print_r(list_system_locales());
+
+
+
+class ctrlAdminMain extends AUIComponent  {
+  protected $menu_width =  200;
+  protected $body_width =  '100%';
+  public    $width      = 1000;
+  protected $key        = array();  // depricated
+  protected $title      = '';
+  protected $executed   = false;
+
+  public function __construct($context='action', $fond='index') {
+    global $_SHOP;
+    require_once ("admin/class.adminmenu.php");
+    $menu = new MenuAdmin();
+    if (is_object($_SHOP->admin) and ! $_SHOP->admin->isAllowed($fond.'_admin')) {
+       $fond= 'index';
+    }
+    $menu->current_page = $fond;
+    require_once ("admin/view.{$fond}.php");
+    $fond = str_replace('.','' ,$fond );
+    $classname = "{$fond}View";
+    $body = new $classname($this->body_width);
+    $this->executed = $body->execute();
+    if (!$this->executed) {
+      $this->width = $body->page_width;
+      $this->title = $body->title;
+      if ($body->ShowMenu) {
+        $menu = array($menu);
+        $body->extramenus($menu);
+        $this->setmenu($menu);
+      }
+      $this->setbody($body);
+    }
+    plugin::call('*Pageload', $this);
+  }
+
+  public function draw($fond, $action, $isAjax= false) {
+    if (!$this->executed) {
+      ob_start();
+      $this->drawcontent();
+      $content = ob_get_contents();
+      ob_end_clean();
+
+      $this->drawHead();
+      echo $content;
+      $this->drawFoot();
+    }
+
+    orphanCheck();
+    trace("End of shop \n\n\r");
+  }
+
+  protected function checkSSL(){
+    global $_SHOP;
+//    print_r($_SERVER);
+    if ($_SHOP->secure_site) {
+      $url = $_SHOP->root_secured.basename($_SERVER['SCRIPT_NAME']);
+      if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+        header("Location: $url");
+        exit;
+      }
+    } elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
+      addWarning('This_page_is_not_secure');
+    }
+    /* */
+  }
+
+  // depricated
+  function addKey($kk) {
+      array_push($this->key, $kk);
+  }
+
+  function setTitle($title){
+      $this->title = $title;
+  }
+
+  function getTitle(){
+      return $this->title;
+  }
+
+  public function setJQuery($script){
+    $this->set('jquery',$script);
+  }
+
+  function setMenu($menu) {
+    $this->set("menu",$menu);
+    if (is_object($menu)) {$menu->setWidth($this->menu_width-10);}
+  }
+
+  function setBody($body) {
+    $this->set("body", $body);
+  }
+
+  function drawOrganizer () {
+      global $_SHOP;
+      echo "<font color='#555555'><b>" . con('welcome') . " " .
+        ((is_object($_SHOP->organizer_data))?
+          $_SHOP->organizer_data->organizer_name:
+          $_SHOP->organizer_data['organizer_name']) . "</b></font>";
+  }
+
+  function drawHead(){
+    global $_SHOP;
+    if (!isset($_SERVER["INTERFACE_LANG"]) or !$_SERVER["INTERFACE_LANG"]) {
+        $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
+    }
+    if (isset($_SHOP->system_status_off) and $_SHOP->system_status_off) {
+        AddWarning('system_halted');
+    }
+     //+'&href={$_SERVER["REQUEST_URI"]}'
+    echo "<head>
+    <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
+    <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
+    <title>" . $this->getTitle() . "</title>
+    <link rel='stylesheet' href='../css/flick/jquery-ui-1.8.1.custom.css' />
+    <link rel='stylesheet' href='../css/jquery.tooltip.css' />
+     <link rel='stylesheet' media='screen' type='text/css' href='../css/colorpicker/layout.css' />
+    <link rel='stylesheet' media='screen' type='text/css' href='../css/colorpicker/colorpicker.css' />
+
+    <link rel='stylesheet' href='admin.css' />
+
+    <link rel='shortcut icon' type='images/png' href='../images/favicon.png' />
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.8.1.custom.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.caret.js\"></script>
+     <script type=\"text/javascript\" src=\"../scripts/jquery/colorpicker/colorpicker.js\"></script>
+    <script type=\"text/javascript\" >
+      function set_lang(box)
+      {
+      	lang = box.options[box.selectedIndex].value;
+      	if (lang) location.href = '?setlang='+lang;
+      }
+      $(document).ready(function(){
+        var msg = '".printMsg('__Warning__', null, false)."';
+        if(msg) {
+          $('#error-text').html(msg);
+          $('#error-message').show();
+          setTimeout(function()".'{'."$('#error-message').hide();}, 10000);
+        }
+        var msg = '".printMsg('__Notice__', null, false)."';
+        if(msg) {
+          $('#notice-text').html(msg);
+          $('#notice-message').show();
+          setTimeout(function()".'{'."$('#notice-message').hide();}, 10000);
+        }
+      });
+      
+      var field_length=0;
+
+      function TabNext(obj,event,len,next_field) {
+        if (event == 'down') {
+          field_length=obj.value.length;
+        }
+        else if (event == 'up') {
+          if (obj.value.length != field_length) {
+            field_length=obj.value.length;
+            if (field_length == len) {
+              next_field.focus();
+            }
+          }
+        }
+      }
+      
+    </script>
+  </head>
+  <body >
+  	<div id='wrap'>
+       <div  id='header'>
+          <img src=\"".$_SHOP->images_url."logo.png\" border='0'/>
+          <h2>".con('administration')."</h2>
+       </div>
+       <div id='navbar'>
+         <table width='100%'>
+           <tr>
+             <td>&nbsp;";
+      $this->drawOrganizer();
+      echo "
+             </td>
+             <td  align='right'>&nbsp;";
+  //        echo "<select name='setlang' onChange='set_lang(this)'>";
+
+  //        $sel[$_SHOP->lang] = "selected";
+  //        foreach($_SHOP->langs_names as $lang => $name) {
+  //            echo"<option value='$lang' {$sel[$lang]}>$name</option>";
+  //        }
+  //        echo "</select>";
+      echo'
+             </td>
+           </tr>
+         </table>
+       </div><br>
+       <DIV style="MARGIN-TOP: 0.35em;MARGIN-Bottom: 0.35em; DISPLAY: none" id=error-message class="ui-state-error ui-corner-all" title="Order Error Message">
+          <P><SPAN style="FLOAT: left; MARGIN-RIGHT: 0.3em" class="ui-icon ui-icon-alert"></SPAN><div id=error-text>ffff<br>tttttcv ttt </div> </P>
+       </DIV>
+       <DIV style="MARGIN-TOP: 0.35em; MARGIN-Bottom: 0.35em; DISPLAY: none" id=notice-message class="ui-state-highlight ui-corner-all" title="Order Notice Message">
+          <P><SPAN style="FLOAT: left; MARGIN-RIGHT: 0.3em" class="ui-icon ui-icon-info"></SPAN><div id=notice-text>fff</div> </P>
+       </DIV>
+    ';
+  }
+
+  function drawContent() {
+    echo "<table border=0 width='" . $this->width . "' class='aui_bico'><tr>";
+    if ($menu = $this->items["menu"]) {
+      echo "<td class='aui_bico_menu' width='" . $this->menu_width . "' valign=top>\n";
+      $this->drawChild($menu);
+      echo "</td>";
+    }
+    echo "<td class=aui_bico_body valign=top>";
+
+    $body = $this->items["body"];
+    if (is_object($body)) {
+      If ($menu) {
+        $body->setWidth($this->width - $this->menu_width);
+      } else {
+        $body->setWidth($this->width);
+      }
+    }
+    $this->drawChild($body);
+    echo"</td></tr></table>\n";
+
+
+    if(is_object($body)){
+      $this->setJQuery($body->getJQuery());
+    }
+  }
+
+
+  function drawFoot() {
+    global $_SHOP;
+
+    echo "
+      <br><br>
+      <script type=\"text/javascript\">
+        $(document).ready(function(){
+          $(\"a[class*='has-tooltip']\").tooltip({
+            delay:40,
+            showURL:false,
+            bodyHandler: function() {
+              if($(this).children('div').html() != ''){
+                return $(this).children('div').html();
+              }else{
+                return false;
+              }
+            }
+          });
+          ". is($this->items['jquery'],'') ."
+        });
+      </script>
+      <div id='footer'>
+     		 <!-- To comply with our GPL please keep the following link in the footer of your site -->
+				 Grapes Boxoffice, built by <a href='http://www.grapestech.com' target='_blank'>Grapes Technologies</a> | Powered By <a href='http://fusionticket.org' target='_blank'>Fusion Ticket</a>
+			</div>
+		</div>\n";
+    if (strpos(constant('CURRENT_VERSION'),'svn') !== false) {
+      //print_r($_SHOP->Messages);
+    }
+echo "
+	</body>
+</html>";
+  }
+}
+
+?>

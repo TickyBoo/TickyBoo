@@ -76,7 +76,7 @@ class User_Smarty {
     	$this->is_member  = true;
       $this->new_member = false;
       $_SESSION['_NEW_MEMBER']= false;
-      if ($url) {
+      if ($url && strrpos($url,"activation.php") == false) {
       echo "<script>window.location.href='{$url}';</script>";
       exit;
       }

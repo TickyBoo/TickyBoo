@@ -56,6 +56,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 	private $json    = array();
 	private $action  = "";
 	private $actionName = "";
+  private $ErrorsAsWarning = false;
 
   public function draw($page, $action) {
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
@@ -104,8 +105,6 @@ class ctrlPosAjax extends ctrlWebCheckout {
 
   private function loadMessages() {
     global $_SHOP;
-    $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
-    $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
     $this->json['messages']['Error']   = array();
     if (isset($_SHOP->Messages['__Errors__'])) {
       $err = $_SHOP->Messages['__Errors__'];
@@ -114,9 +113,14 @@ class ctrlPosAjax extends ctrlWebCheckout {
         foreach($value as $val){
           $output .= $val. "</br>";
         }
+        if ($this->ErrorsAsWarning ) {
+          addWarning('', '* error <b>'.con($key) .'</b>: '.$output);
+        }
         $this->json['messages']['Error'][$key] = $output;
       }
     }
+    $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
+    $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
   }
 
 	/**
@@ -141,6 +145,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 	 * @return boolean : if function returned anything sensisble.
 	 */
 	private function getEvents(){
+	  global $_SHOP;
 		//Check for date filters
 		if($this->request['datefrom']){
 			$fromDate = $this->request['datefrom'];
@@ -154,10 +159,8 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		}
     $this->json['events'] = array(); //assign a blank array.
 		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, event_free es_free
-				FROM Event,
-				Ort
-				WHERE 1=1
-				AND ort_id = event_ort_id
+				FROM Event left join 	Ort on ort_id = event_ort_id
+				where 1=1
 				AND event_date >= "._esc($fromDate)."
 				AND event_date <= ".$toDate."
 				and event_rep LIKE '%sub%'
@@ -239,7 +242,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 			if(strtolower($cat['category_numbering']) != 'none'){
 				$numbering = true; // If there should be a placemap set to true otherwise leave as false to show qty box.
 				//Load Place Map
-      $placemap = "<div style='overflow: auto; height: 450px; width:800px;' align='center' valign='center'>";
+      $placemap = "<div style='overflow: auto; height: 500px; width:800px;' align='center' valign='center'>";
 			$placemap .= $this->loadPlaceMap($cat);
       $placemap .= "</div>";
 			}
@@ -285,6 +288,71 @@ class ctrlPosAjax extends ctrlWebCheckout {
 //		}
 		return true;
 	}
+
+  /**
+   * PosAjax::getDiscounts()
+   *
+   * @param categories_only (true|false) will only return the categories if set true else grabs discounts too.
+   *
+   * Will return:
+   * |- enable_discounts (true|false)
+   * |- discounts
+   * 		|- id (number)
+   * 			|- html (discount option)
+   * 			|- type (fixed|percent)
+   * 			 - price (number)
+   * 		|- id.. (number)
+   *
+   * @return boolean as to whether the JSON should be compiled or not.
+   */
+  private function getDiscounts(){
+    if(!isset($this->request['event_id'])){
+      return false;
+    }else{
+      $eventId = &$this->request['event_id'];
+      $catId   = &$this->request['cat_id'];
+    }
+    if(!is_numeric($eventId)){
+      return false;
+    }
+
+    //Select Events Discounts
+    $sql = "select discount_id, discount_name, discount_value, discount_type
+    	FROM Discount d
+    	WHERE  discount_active=\"yes\"
+    	and discount_event_id = "._esc($eventId);
+    if ($catId) {
+       $sql .=  " AND (discount_category_id="._esc($catId)." OR discount_category_id is null)";
+    }
+    $query = ShopDB::query($sql);
+
+    //We count the number of rows to see if we should bother running through discounts.
+    $numRows = ShopDB::num_rows($query);
+
+    //		if($numRows > 0){
+    //Define json array for discounts
+    $this->json['enable_discounts'] = false; //enable discounts.
+    $this->json['discounts'] = array(); //assign a blank array.
+    //Add the  "None Discount"
+    $this->json['discounts'][] = array('html'=>"<option value='0' selected='selected'> ".con('normal')." </option>",'type'=>'fixed','price'=>0);
+    while($disc = ShopDB::fetch_assoc($query)){
+      //Check to see if percent or fixed
+      $this->json['enable_discounts'] = true; //enable discounts.
+      if(strtolower($disc['discount_type']) == 'percent' ){
+        $option = "<option value='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."%</option>";
+        $type = "percent";
+      }else{
+        $option = "<option value='".$disc['discount_id']."'>".$disc['discount_name']." - ".$disc['discount_value']."</option>";
+        $type = "fixed";
+      }
+      //Load up each row
+      $this->json['discounts'][] = array('html'=>$option,'type'=>$type,'price'=>$disc['discount_value']);
+    }
+    //		}else{
+    //			$this->json['enable_discounts'] = false; //disable discounts.
+    //		}
+    return true;
+  }
 
 
 
@@ -459,7 +527,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 	   	$this->json['POST'] = $where;
 
 		$sql = "SELECT user_id, CONCAT_WS(', ',user_lastname, user_firstname) AS user_data,
-               	user_zip, user_city, user_email
+               	user_zip, user_phone, user_city, user_email
 				FROM `User`
         		WHERE {$where}";// and user_owner_id =". $_SESSION['_SHOP_AUTH_USER_DATA'][;
 		$query = ShopDB::query($sql);
@@ -619,12 +687,20 @@ class ctrlPosAjax extends ctrlWebCheckout {
       $this->__User->load_f($user_id);
 
     } elseif ((int)$_POST['user_id']==0) {
+    
+      $query="SELECT count(*) as count
+              from User
+              where user_email="._esc($_POST['user_email']);
+      if($row = ShopDB::query_one_row($query) and $row['count']>0){
+        addWarning('useralreadyexist');
+        return false;
+      }
       //if new user selected put the pos user as the owner of the order
       $this->json['newuser_id'] = 'new user';
       $_POST['user_owner_id'] = $_SESSION['_SHOP_AUTH_USER_DATA']['admin_id'];
       $user_id = $this->__User->register_f( 4, $_POST, 0, '', true);
-      addwarning( "new id: $user_id");
-
+     // addwarning( "new id: $user_id");
+      $this->ErrorsAsWarning = true;
       if (!$user_id || hasErrors() ) {
       	$this->json['newuser_id'] = $user_id ;
         return false;

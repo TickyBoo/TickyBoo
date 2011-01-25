@@ -69,7 +69,7 @@ class EPH_vpc extends payment{
 	    <input type='hidden' name='action' value='submit'>
 	    	<input type='hidden' name='sor' value='{$order->EncodeSecureCode('')}'>
         <div align='right'>
-          <input type='submit' value='{!pay!}' name='submitted' alt='{!vpc_pay!}' >
+          <input type='submit' value='{!pay!}' name='submitted' alt='{!vpc_pay!}' class='payButton' >
         </div>
       </form>";
   }

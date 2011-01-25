@@ -34,9 +34,9 @@
 {include file="header.tpl"}
 <br />
 {if !$update->can_reserve()}
-{capture assign="tabview"}{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture}
+{capture assign="tabview"}{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture|{!pos_othertickets!}~5}
 {else}
-{capture assign="tabview"}{!pos_reservedlist!}~0|{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture}
+{capture assign="tabview"}{!pos_reservedlist!}~0|{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture|{!pos_othertickets!}~5}
 {/if}
 {gui->Tabbar menu=$tabview}
 
@@ -98,6 +98,13 @@
     {include file="process_view.tpl" status="payed,send" orderby="order_date DESC" cur_order_dir="DESC"}
   {else}
     {include file="process_list.tpl" status="payed,send" orderby="order_date DESC"}
+  {/if}
+
+{elseif $TabBarid == 5} {*  eq "search other orders" *}
+  {if $smarty.request.order_id}
+    {include file="process_view.tpl" status="" orderby="order_date DESC" cur_order_dir="DESC" order_search='on'}
+  {else}
+    {include file="process_list.tpl" status="" orderby="order_date DESC" order_search='on' }
   {/if}
 
 {/if}

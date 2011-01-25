@@ -42,9 +42,9 @@
                   <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
                     <img border='0' src='{$_SHOP_images}printer.gif'>
                   </a>
-                  {if $shop_order.payment_status eq 'none'}
+                  {* if $shop_order.payment_status eq 'none' *}
                   <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$firstpos}{literal}";}{/literal}'>
                     <img border='0' src='{$_SHOP_images}trash.png'>
                   </a>
-                  {/if}
+                  {*/if*}
                 {/if}

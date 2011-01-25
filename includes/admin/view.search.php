@@ -133,9 +133,9 @@ class SearchView extends AdminView{
     echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>\n
           <input type='hidden' name='action' value='search_place'/>\n";
     $this->form_head(con("search_title_place"));
-    $query="select event_id,event_name,event_date,event_time 
-            from Event 
-            where event_rep LIKE '%sub%'
+    $query="SELECT event_id,event_name,event_date,event_time, event_status
+            FROM Event
+            WHERE event_rep LIKE '%sub%'
             and field(event_status, 'trash','unpub')=0
             and event_pm_id IS NOT NULL 
             order by event_date,event_time";
@@ -149,7 +149,7 @@ class SearchView extends AdminView{
     while($event=shopDB::fetch_assoc($res)){
       $date=formatAdminDate($event["event_date"]);
       $time=formatTime($event["event_time"]);
-      echo "<option value='{$event["event_id"]}'>".$event["event_name"]." - $date - $time </option>";
+      echo "<option value='{$event["event_id"]}'>".$event['event_status'].'|'.$event["event_name"]." - $date - $time </option>";
     }
 
     echo "</select>".printMsg('event_id')."</td></tr>";
@@ -160,6 +160,7 @@ class SearchView extends AdminView{
   }
 
   function PlacesTable (&$data){
+    global $_SHOP;
     if(empty($data["event_id"])){
       addError("event_id", 'mandatory');
     }
@@ -342,13 +343,15 @@ class SearchView extends AdminView{
     }
     $_SHOP->trace_subject .= "[tab:{$_SESSION['_SEARCH_tab']}]";
 
-    $menu = array( con("patron_tab")=>"?tab=0", con("seat_tab")=>'?tab=1',
-                   con("order_tab")=>"?tab=2",  con("barcode_tab")=>"?tab=3");
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_SEARCH_tab'], "left");
+    $menu = array( con("patron_tab") =>0 , 
+                   con("seat_tab")   =>1 ,
+                   con("order_tab")   =>2,  
+                   con("barcode_tab") =>3);
+    echo $this->PrintTabMenu($menu, $_SESSION['_SEARCH_tab'], "left");
 
     if ((int) $_REQUEST['order_id']){
       require_once("admin/view.orders.php");
-      $view = new OrderView($this->width);
+      $view = new OrdersView($this->width);
       if ($view->draw(true)) return;
       //$view->order_details($_REQUEST['order_id']);
     }elseif ($_REQUEST['action']=='user_detail'){

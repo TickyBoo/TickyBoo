@@ -55,6 +55,20 @@ $tbls['Admin']['engine'] = 'InnoDB';
 $tbls['Admin']['remove'] = array ('control_organizer_id','admin_level')   ;
 
 
+$tbls['adminlink']['fields'] = array(
+  'adminlink_id' => " int(11) NOT NULL AUTO_INCREMENT ",
+  'adminlink_event_id' => " int(11) DEFAULT NULL",
+  'adminlink_admin_id' => " int(11) DEFAULT NULL",
+  'adminlink_pos_id'   => " int(11) DEFAULT NULL",
+  'adminlink_admgroup_id' => " int(11) DEFAULT NULL");
+
+$tbls['adminlink']['key'] = array(
+  "PRIMARY KEY (`adminlink_id`)",
+  "UNIQUE KEY `adminlink_records` (`adminlink_event_id`,`adminlink_admin_id`,`adminlink_pos_id`,`adminlink_admgroup_id`)"
+  );
+$tbls['adminlink']['engine'] = 'InnoDB';
+$tbls['adminlink']['remove'] = array ();
+
 $tbls['admingroups']['fields'] = array(
   'admingroup_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admingroup_name' => " varchar(50) NOT NULL DEFAULT ''",
@@ -147,6 +161,7 @@ $tbls['CC_Info']['remove'] = array ('cc_info_organizer_id');
 $tbls['Discount']['fields'] = array(
   'discount_id' => " int(11) NOT NULL AUTO_INCREMENT",
   'discount_event_id' => " int(11) DEFAULT NULL",
+  'discount_category_id' => " int(11) DEFAULT NULL",
   'discount_name' => " varchar(50) NOT NULL DEFAULT ''",
   'discount_type' => " varchar(7) NOT NULL DEFAULT ''",
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
@@ -169,6 +184,7 @@ $tbls['Event']['fields'] = array(
   'event_short_text' => " text",
   'event_url' => " varchar(100) DEFAULT NULL",
   'event_image' => " varchar(100) DEFAULT NULL",
+  'event_webshop' => " varchar(10) DEFAULT NULL", 
   'event_ort_id' => " int(11) DEFAULT NULL",
   'event_pm_id' => " int(11) DEFAULT NULL",
   'event_timestamp' => " timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'",

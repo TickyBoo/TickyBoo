@@ -38,7 +38,7 @@ class Event Extends Model {
   protected $_idName    = 'event_id';
   protected $_tableName = 'Event';
   protected $_columns   = array('#event_id', 'event_created', '*event_name', 'event_text', 'event_short_text', 'event_url',
-                                'event_image', '#event_ort_id', '#event_pm_id', 'event_timestamp', 'event_date', 'event_time',
+                                'event_image', '#event_ort_id', 'event_webshop', '#event_pm_id', 'event_timestamp', 'event_date', 'event_time',
                                 'event_open', 'event_end', '*event_status', 'event_order_limit', 'event_template',
                                 '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type',
 								'event_custom1', 'event_custom2', 'event_custom3', 'event_custom4',
@@ -190,7 +190,7 @@ class Event Extends Model {
   	}
     if ( strpos($data['event_rep'],'sub')!== false ){
       $this->_columns   = array('#event_id', '*event_name', 'event_text', 'event_short_text', 'event_url',
-                                'event_image', '*event_ort_id', '#event_pm_id', '*event_date', '*event_time',
+                                'event_image', 'event_webshop', '*event_ort_id', '#event_pm_id', '*event_date', '*event_time',
                                 'event_open', 'event_end', '*event_status', '*event_order_limit', 'event_template',
                                 '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type',
                                 'event_custom1', 'event_custom2', 'event_custom3', 'event_custom4',
@@ -283,9 +283,8 @@ class Event Extends Model {
         return self::_abort('discount_delete_failed');
       }
 
-      $query="DELETE e.*
-              FROM Event e
-              WHERE e.event_id="._esc($this->id);
+      $query="DELETE FROM Event
+              WHERE event_id="._esc($this->id);
       if(!ShopDB::query($query)){
         return self::_abort('event_delete_failed');
       }
@@ -329,7 +328,7 @@ class Event Extends Model {
       if( ShopDB::commit('Event publised')){
         return TRUE;
       }
-    } else {
+    }else {
       return true;
     }
   }
@@ -385,6 +384,7 @@ class Event Extends Model {
 
       $names[]='event_url';
       $names[]='event_image';
+      $names[]='event_webshop';
       $names[]='event_name';
       //$names[]='event_ort_id';
       //$names[]='event_categories_nr';

@@ -37,17 +37,18 @@ require_once("admin/class.adminview.php");
 
 class OrtView extends AdminView {
   function table () {
-    $query = "SELECT * FROM Ort ";
+    $query = "SELECT * FROM Ort order by ort_country desc";
     $res = ShopDB::query($query);
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellpadding='2' cellspacing='1'>\n";
-    echo "<tr><td class='admin_list_title' colspan='2' align='left'>" . con('ort_title') . "</td>";
+    echo "<tr><td class='admin_list_title' colspan='3' align='left'>" . con('ort_title') . "</td>";
     echo "<td colspan='1' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add_venue",3)."</td>";
     echo "</tr>\n";
     if ($res) {
       while ($row = ShopDB::fetch_assoc($res)) {
           echo "<tr class='admin_list_row_$alt'>";
           echo "<td class='admin_list_item' width='50%'>{$row['ort_name']}</td>\n";
+          echo "<td class='admin_list_item'>".$this->getCountry($row['ort_country'])."</td>\n";
           echo "<td class='admin_list_item'>{$row['ort_city']}</td>\n";
           echo "<td class='admin_list_item'width='65' align='right' nowrap><nowrap>";
           echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&ort_id={$row['ort_id']}","edit",2);

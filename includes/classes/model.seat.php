@@ -42,6 +42,7 @@ class Seat  Extends Model {
   const STATUS_HOLD = 'res';
   const STATUS_CANCELED = 'cancel';
   const STATUS_TRASH = 'trash';
+  const STATUS_SENT = 'sent';
 
 
   protected $_idName    = 'seat_id';

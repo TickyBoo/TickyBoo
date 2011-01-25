@@ -47,37 +47,48 @@ class IndexView extends AdminView {
       $_SESSION['_INDEX_tab'] = (int)$_REQUEST['tab'];
     }
     $_SHOP->trace_subject .= "[tab:{$_SESSION['_INDEX_tab']}]";
-
-    $menu[con("index_admin_tab")]= "?tab=0";
-    $menu[con("owner_tab")]      = '?tab=1';
-    $menu[con("shopconfig_tab")] = "?tab=2";
+    plugin::call('AddACLResource','index_default_info', 'organizer' );
+   plugin::call('AddACLResource','index_default_specs', 'admin' );
+    plugin::call('AddACLResource','index_owner_info', 'admin' );
+    plugin::call('AddACLResource','index_settings_info','admin' );
+    plugin::call('AddACLResource','index_upgrade_system','admin' );
+    if ($_SHOP->admin->isAllowed('index_default_info')) { $menu[con("index_admin_tab")]=0;}
+    if ($_SHOP->admin->isAllowed('index_owner_info')) $menu[con("owner_tab")]=1;
+    if ($_SHOP->admin->isAllowed('index_settings_info')) $menu[con("shopconfig_tab")]=2;
     if($_SHOP->software_updater_enabled){
-      $menu[con("version_updater")] = "?tab=3";
+      if ($_SHOP->admin->isAllowed('index_upgrade_system')) $menu[con("version_updater")]=3;
+    }
+    if (!in_array((int)$_SESSION['_INDEX_tab'], array_values($menu))) {
+      $_SESSION['_INDEX_tab'] = reset($menu);
     }
 
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_INDEX_tab'], "left");
+    echo $this->PrintTabMenu($menu, $_SESSION['_INDEX_tab'], "left");
 
     switch ((int)$_SESSION['_INDEX_tab']){
       case 0:
-        $licention = file_get_contents (ROOT."licence.txt");
-        $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->hasNewVersion(),$this->width,1);
+        //$licention = file_get_contents (ROOT."licence.txt");
+        $licention = "";
+        //$this->form_head(con("grapes_copyright").con('current_version').'&nbsp;'.CURRENT_VERSION,$this->width,1);
+        echo "<table cellpadding='2'><tr><td>".con("grapes_copyright")."</td></tr>";
         echo "<tr><td class='admin_value'>" ;
         echo "<p><pre>",htmlspecialchars($licention),'</pre></p>';
         echo "</td></tr>";
 		    echo "</table>\n<br>";
-
-      	$this->form_head( con('system_summary'),$this->width,2);
-        $this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
-        $this->print_field('InfoPhpVersion',  phpversion ());
-        $this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
-        $this->print_field('InfoMysqlDB'     ,$_SHOP->db_name);
-        $this->print_field('InfoAdminCount',  $this->Admins_Count ());
-        $this->print_field('InfoUserCount',   $this->Users_Count ());
-        $this->print_field('InfoEventCount',  $this->Events_Count ());
-		    echo "</table>\n";
+        if ($_SHOP->admin->isAllowed('index_default_specs')) {
+          $this->form_head( con('system_summary'),$this->width,2);
+          self::$labelwidth = '25%';
+          //$this->print_field('InfoWebVersion',  $_SERVER['SERVER_SOFTWARE']);
+          //$this->print_field('InfoPhpVersion',  phpversion ());
+          //$this->print_field('InfoMysqlVersion',ShopDB::GetServerInfo ());
+          //$this->print_field('InfoMysqlDB'     ,$_SHOP->db_name);
+          $this->print_field('InfoAdminCount',  $this->Admins_Count ());
+          $this->print_field('InfoUserCount',   $this->Users_Count ());
+          $this->print_field('InfoEventCount',  $this->Events_Count ());
+          echo "</table>\n";
+        }
         break;
 
-      case 1:
+      case 1 :
         $viewer = new OrganizerView($this->width);
         $viewer->draw();
         break;

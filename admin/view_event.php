@@ -34,9 +34,6 @@
 
 
 define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.tabs.events.php");
-//print cart update
-$body=new EventTabsView();
-$body->drawall();
+require_once('../includes/classes/class.router.php');
+router::draw('tabs.events', 'admin/main');
 ?>

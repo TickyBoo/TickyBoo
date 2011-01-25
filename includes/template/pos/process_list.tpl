@@ -70,28 +70,32 @@
 {assign var='dates' value="fromd=`$smarty.get.fromd`&fromm=`$smarty.get.fromm`&fromy=`$smarty.get.fromy`&tod=`$smarty.get.tod`&tom=`$smarty.get.tom`&toy=`$smarty.get.toy`"}
 {assign  var='firstpos' value="first=`$smarty.get.first`"}
 
-{if $smarty.get.fromy and $smarty.get.fromm and $smarty.get.fromd}
-    {assign var='from' value="`$smarty.get.fromy`-`$smarty.get.fromm`-`$smarty.get.fromd`"}
+{if $smarty.request.fromy and $smarty.request.fromm and $smarty.request.fromd}
+    {assign var='from' value="`$smarty.request.fromy`-`$smarty.request.fromm`-`$smarty.request.fromd`"}
 {/if}
 
-{if $smarty.get.toy and $smarty.get.tom and $smarty.get.tod}
-    {assign var='to' value="`$smarty.get.toy`-`$smarty.get.tom`-`$smarty.get.tod` 23:59:59.999999"}
+{if $smarty.request.toy and $smarty.request.tom and $smarty.request.tod}
+    {assign var='to' value="`$smarty.request.toy`-`$smarty.request.tom`-`$smarty.request.tod` 23:59:59.999999"}
 {/if}
 
 <table border='0' width='100%' >
   <tr>
     <td>
-      <table width='100%' cellspacing='1' cellpadding='5' border=0 >
+      {if $order_search}
+        {include file='process_orderselect.tpl'}
+      {else}
       {include file='process_dateselect.tpl'}
-      <tr class='subtitle'>
+      {/if}
+      <table width='100%'  class='admin_list' cellspacing='1' cellpadding='5' border=0 >
+      <tr class='admin_list_header'>
           <td>ID</td>
           <td>{!total_price!}</td>
           <td>{!tickets!}</td>
           <td>{!timestamp!}</td>
           <td>{!actions!}</td>
         </tr>
-
-        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to order=$orderby owner_id=$pos->user_id}
+        {assign var='orderby' value='order_id desc'}
+        {order->order_list not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent first=$smarty.get.offset length=$length start_date=$from end_date=$to order=$orderby owner_id=$pos->user_id order_search=$order_search}
           {counter print=false assign=count}
           {if $count lt ($length+1)}
 

@@ -167,19 +167,21 @@ class ctrlWebCheckout extends ctrlWebShop {
   }
 
   protected function _confirm($origin="www",$user_id=0, $no_fee=0, $no_cost=0) {
-    if (!isset($_SESSION['_SHOP_order'])) {
-      $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
- 	  } elseif ($this->secureType) {
+    if ($this->secureType) {
       $myorder = Order::DecodeSecureCode($this->secureCode, true);
       if(is_numeric($myorder)) {
         echo "Confirm error ($myorder).\n";
         return;
       }
-// 	  } else {
-
+    } elseif (!isset($_SESSION['_SHOP_order'])) {
+      $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
+ 	  } else {
+      $myorder = Order::load($_SESSION['_SHOP_order'], true, true, true, true);
     }
     if (!$myorder) {
-      addwarning('order_not_found_or_created');
+      $pm_return['response'] = "<tr><td></td><td><p class='notice'>".con('order_not_found_or_created')."</p></td></tr>";
+      //$this->assign('pm_return',$pm_return);
+     // unset( $_SESSION['_SHOP_order']);
       return "checkout_preview";
     } else {
       $this->__MyCart->destroy_f(); // destroy cart
@@ -200,7 +202,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       	return "checkout_result";
       } else {
  			  if ($hand->is_eph()) {
-    		  $_SESSION['_SHOP_order'] = true;
+    		  $_SESSION['_SHOP_order'] = $myorder->order_id;
    			}
     		$this->__Order->obj = $myorder;
       	$this->assign('confirmtext', $confirmtext);
@@ -264,7 +266,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     $this->setordervalues($myorder);
     If (!$pm_return['approved']) {
        Order::delete($myorder->order_id,'payment_not_approved' );
-       $pm_return['response'] .= "<tr><td></td><td><p class='notice'>".con('orderdeleted')."</p></td></tr>";
+       $pm_return['response'] .= "<tr><td colspan='2'><p class='notice'>".con('orderdeleted')."</p></td></tr>";
 
     }
     $this->assign('pm_return',$pm_return);
@@ -290,7 +292,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     $pm_return = $hand->on_return($myorder, false );
     Order::delete($myorder->order_id,'order_canceled_will_paying' );
     $this->setordervalues($myorder);
-    $pm_return['response'] .= "<tr><td></td><td><p class='notice'>".con('orderdeleted')."</p></td></tr>";
+    $pm_return['response'] .= "<tr><td colspan='2'><p class='notice'>".con('orderdeleted')."</p></td></tr>";
     $this->assign('pm_return',$pm_return);
     unset( $_SESSION['_SHOP_order']);
     return "checkout_result";
@@ -361,7 +363,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       return "checkout_result";
     } else {
       if ($hand->is_eph()) {
-        $_SESSION['_SHOP_order'] = true;
+        $_SESSION['_SHOP_order'] = $orderInput->order_id;
  			}
       $this->assign('confirmtext', $confirmtext);
    		return "checkout_confirm";
@@ -411,12 +413,12 @@ class ctrlWebCheckout extends ctrlWebShop {
       foreach($aOrder->places as $ticket){
     		$seats[$ticket->id]=TRUE;
       }
-    } else {
+    } /* else {
       echo "<pre>";
 
-      print_r($aOrder);
+      //print_r($aOrder);
       echo "</pre>";
-    }
+    } */
     $this->smarty->assign('order_success',true);
     $this->smarty->assign('order_id',$aOrder->order_id);
     $this->smarty->assign('order_fee',$aOrder->order_fee);

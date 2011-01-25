@@ -33,18 +33,14 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("admin/class.adminview.php");
+require_once("admin/class.exportview.php");
 
 
-class StatisticView extends AdminView{
-    var $img_pub;
+class StatisticView extends ExportView{
+    var $img_pub = array ('pub' => '../images/grun.png',
+                          'unpub' => '../images/rot.png',
+                          'nosal' => '../images/grey.png');
 
-    function fill_images()
-    {
-        $this->img_pub['pub']   = '../images/grun.png';
-        $this->img_pub['unpub'] = '../images/rot.png';
-        $this->img_pub['nosal'] = '../images/grey.png';
-    }
 
   function plotEventStats ($start_date, $end_date, $month, $year) {
     global $_SHOP;
@@ -150,7 +146,7 @@ class StatisticView extends AdminView{
 
     $query = "select event_free, event_total, event_id,event_name,event_date,event_time, event_status
              from Event
-             where event_status != 'unpub'
+             where field(event_status, 'trash','unpub')=0
       	     and event_date >= '$start_date'
       	     and event_date <= '$end_date'
       	     and event_rep LIKE '%sub%'
@@ -167,7 +163,7 @@ class StatisticView extends AdminView{
     echo "<tr><td class='admin_list_title' colspan='5' align='center'>
           <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . ($month == 1?12:$month - 1) . "&year=" . ($month == 1?$year - 1:$year) . "'><<<<< </a>
 	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" .
-    event_stats_title . " " .
+    con('event_stats_title') . " " .
     strftime ("%B %Y", mktime (0, 0, 0, $month, 1, $year)) .
     "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	  <a class='link' href='{$_SERVER["PHP_SELF"]}?month=" . (($month < 12)?($month + 1):1) . "&year=" . ($month < 12?$year:$year + 1) . "'>>>>>></a></td></tr>\n";
@@ -192,6 +188,7 @@ class StatisticView extends AdminView{
           return;
         }
         $alt = 0;
+        $sum_gain = 0;
         while ($cat = shopDB::fetch_assoc($res)){
           $tot = $cat["category_size"];
           $free = $cat["category_free"];
@@ -211,7 +208,7 @@ class StatisticView extends AdminView{
                     <td width='180'>" .$cat["category_name"] . "</td>
                     <td width='125' align='right' >$percent%</td>
   	                <td width='125' align='right' >$saled/$tot</td>
-                    <td align='right'> " . sprintf("%1.2f", $gain) . " $curr</td>
+                    <td align='right'> " . valuta(sprintf("%1.2f", $gain)) . "</td>
                 </tr>";
           $alt = ($alt + 1) % 2;
         }
@@ -220,7 +217,7 @@ class StatisticView extends AdminView{
                 <td width='200' colspan='2'>&nbsp;&nbsp;</td>
                 <td width='125' align='right' >$evpercent%</td>
                 <td width='125' align='right' >$evsaled/$evtot</td>
-                <td align='right'>  " . sprintf("%1.2f", $sum_gain) . " $curr</td>
+                <td align='right'>  " . valuta(sprintf("%1.2f", $sum_gain)) . "</td>
               </tr>";
    //     echo "<tr><td colapsn='5'></td></tr>";
     	  echo "</table><br>\n";
@@ -234,49 +231,17 @@ class StatisticView extends AdminView{
   function draw ()
   {
     global $_SHOP;
-    $this->fill_images();
-    if (!($_GET['month'] or $_GET['year'])){
-      $date = date('Y-m-1');
 
-      $query = "select event_date from Event where event_date>='$date' order by event_date,event_time limit 1";
-      if ($row = ShopDB::query_one_row($query, false) and !empty($row[0])){
-        list($year, $month) = split('-', $row[0]);
-        $start_date = "$year-$month-1";
-        $end_date = "$year-$month-31";
-      }else{
-        $start_date = date("Y-m-01");
-        $end_date = date("Y-m-31");
-        $month = date("m");
-        $year = date("Y");
-      }
-    }elseif (!($_GET["month"] and $_GET["year"])){
-      $start_date = date("Y-m-01");
-      $end_date = date("Y-m-31");
-      $month = date("m");
-      $year = date("Y");
-    }else{
-      $start_date = $_GET["year"] . "-" . $_GET["month"] . "-01";
-      $end_date = $_GET["year"] . "-" . $_GET["month"] . "-31";
-      $month = $_GET["month"];
-      $year = $_GET["year"];
-      $mydate = "&month={$_GET["month"]}&year={$_GET["year"]}";
+    $menu = $this->loadMenuArray();
+    echo $this->PrintTabMenu($menu, $_SESSION['_STATS_tab'], "left");
 
-    }
-
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_STATS_tab'] = (int)$_REQUEST['tab'];
-    }
-
-
-    $menu = array(con('show_text_stats')=>"?tab=0&month={$month }&year={$year}",
-                  con('show_grafik_stats')=>"?tab=1&month={$month }&year={$year}",
-                  con('show_stat_reports')=>"?tab=2&month={$month }&year={$year}");
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_STATS_tab'], "left");
     switch ((int)$_SESSION['_STATS_tab']){
       case 0:
+        $this->getSearchDate($start_date, $end_date, $month, $year);
         $this->eventStats($start_date, $end_date, $month, $year);
         break;
       case 1:
+        $this->getSearchDate($start_date, $end_date, $month, $year);
         $this->plotEventStats($start_date, $end_date, $month, $year);
         break;
       case 2:
@@ -287,13 +252,27 @@ class StatisticView extends AdminView{
       break;
     }
   }
+  function loadMenuArray(){
+    global $_SHOP;
+    if ($_SHOP->admin->isAllowed('admin')) {$menu[con('show_text_stats')]=0;}
+    if ($_SHOP->admin->isAllowed('admin')) {$menu[con('show_grafik_stats')]=1;}
+    if ($_SHOP->admin->isAllowed('admin')) {$menu[con('show_stat_reports')]=2;}
+   //  var_dump($menu);
+    return $menu;
+  }
+
   function execute (){
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_STATS_tab'] = (int)$_REQUEST['tab'];
+    } elseif (!isset($_SESSION['_STATS_tab']))  {
+
+      $menu = $this->loadMenuArray();
+      $_SESSION['_STATS_tab'] = reset($menu);
     }
-    if ((int)$_SESSION['_STATS_tab']==2){
+
+    if (isset($_SESSION['_STATS_tab']) && (int)$_SESSION['_STATS_tab']==2){
         require('view.transports.php');
-        $this->expviewer = new ImpExpView($this->width);
+        $this->expviewer = new TransportsView($this->width);
         return $this->expviewer->execute();
 
     }

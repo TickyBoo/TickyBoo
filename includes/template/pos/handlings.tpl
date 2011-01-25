@@ -59,6 +59,7 @@
   		  </td>
   		</tr>
     {/handling}
+    {* possibly never used 
     <tr>
       <td class='user_item' height='16' colspan='2'>
          {!without_fee!}
@@ -67,6 +68,7 @@
         <input type='checkbox' class='checkbox' name='no_fee' id='no_fee' value='1'>
       </td>
     </tr>
+    *}
   {*
     <tr>
       <td class='user_item' height='16' colspan='2'>

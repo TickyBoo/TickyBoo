@@ -1,4 +1,4 @@
-<?php
+<?PHP
 /**
 %%%copyright%%%
  *
@@ -32,12 +32,34 @@
  * clear to you.
  */
 
+if (!defined('ft_check')) {die('System intrusion ');}
 
+class Adminlink Extends Model {
+  protected $_idName    = 'adminlink_id';
+  protected $_tableName = 'adminlink';
+  protected $_columns   = array( 'adminlink_id','#adminlink_event_id', '#adminlink_admin_id', '#adminlink_pos_id',
+                                 '#adminlink_admgroup_id');
 
-define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.eventgroup.php");
-//print cart update
-$body=new EventGroupView();
-$body->drawall();
+  function create($event_id, $admin_id=null, $pos_id =null, $admgroup_id=null){
+      $eg=new Adminlink();
+      $eg->adminlink_event_id = $event_id;
+      $eg->adminlink_admin_id = $admin_id;
+      $eg->adminlink_pos_id = $pos_id;
+      $eg->adminlink_admgroup_id = $admgroup_id;
+      $eg->save();
+      return $eg;
+  }
+
+  function load ($id=0){
+    $query="select *
+            from adminlink
+            where adminlink_id="._esc($id);
+    if($res=ShopDB::query_one_row($query)){
+      $eg=new Adminlink;
+      $eg->_fill($res);
+      return $eg;
+    }
+  }
+
+}
 ?>

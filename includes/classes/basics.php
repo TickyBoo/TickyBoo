@@ -510,7 +510,9 @@ function trace($content, $addDate=false, $addtrace=false){
     if ($addDate){
       $_SHOP->trace_subject = 'ErrorLog: '.$_SHOP->root.$content;
       $_SHOP->tracelog = '';
-      $_SHOP->TraceOrphan = md5(getOphanData());
+      if(is($_SHOP->trace_on,'')!='TRACEONLY' && file_exists($_SHOP->trace_dir.'last_orpanckeck.log')){
+        $_SHOP->TraceOrphan = file_get_contents($_SHOP->trace_dir.'last_orpanckeck.log');
+      }
     }
     $_SHOP->tracelog .= $content."\n";
   }
@@ -540,7 +542,14 @@ function getophandata(){
 function orphanCheck(){
   global $_SHOP, $orphancheck;
   if(is($_SHOP->trace_on,false)){
+    $file = $_SHOP->trace_dir.'trace'.'.'.date('Y-m-d') . '.log';
+    $content = date('c',time()).' : '.$_SHOP->trace_subject."\n". $_SHOP->tracelog."\n";
+    if ($_SHOP->trace_on=='TRACEONLY') {
+      file_put_contents($file, $content ,FILE_APPEND);
+    } else {
     $text =getOphanData();
+      file_put_contents($_SHOP->trace_dir.'last_orpanckeck.log',md5($text),LOCK_EX );
+
     trace("\n\nOrphan Check Dump: ".$text);
     if ($_SHOP->TraceOrphan <> md5($text) || stripos($_SHOP->trace_on,'ALL') !== false) {
       $content = date('c',time()).' : '.$_SHOP->trace_subject."\n". $_SHOP->tracelog."\n";
@@ -553,6 +562,7 @@ function orphanCheck(){
       }
     }
   }
+}
 }
 
 function SendMail($message, $subject, $toaddress) {
@@ -808,5 +818,30 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
     writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
   }
   //  writeLog( print_r($error_context, true), FT_ERROR);
+   
+}
+
+function getIpAddress() {
+
+	$ip = "";
+	
+	if($_SERVER) {
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}elseif(isset($_SERVER['HTTP_CLIENT_IP'])){
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}else{
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+	} else {
+		if(getenv('HTTP_X_FORWARDED_FOR')){
+			$ip = getenv('HTTP_X_FORWARDED_FOR');
+		}elseif(getenv('HTTP_CLIENT_IP')){
+			$ip = getenv('HTTP_CLIENT_IP');
+		}else{
+			$ip = getenv('REMOTE_ADDR');
+		}
+	}
+	return $ip;
 }
 ?>

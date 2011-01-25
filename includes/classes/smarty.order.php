@@ -292,45 +292,40 @@ class Order_Smarty {
         $where .=" AND order_shipment_status != 'send' ";
       }
 
-      if($params['start_date']){
-        $where .= " and order_date>='{$params['start_date']}'";
-      }
-
-      if($params['end_date']){
-        $where .= " and order_date<='{$params['end_date']}'";
-      }
 
       if($params['owner_id']){
         $where .= " and order_owner_id='{$params['owner_id']}'";
       }
 
-      if($param['order_search']) {
-        if(!$_POST['seach_order_id']) {
-          addwarning('search_orderid_missing');
-          $where = ' 1 = 0 ';
-        } else {
-          $where .=" and order_id='{$_POST['seach_order_id']}'";
+      if($params['order_search']) {
           if(!$params['user']){
             $from.=' left join User on order_user_id=user_id';
           }
 
           $searchcount =0;
+        $where = 'where 1=1 ';
+        if($_POST['seach_order_id']) {
+          $where .=" and order_id='{$_POST['seach_order_id']}'";
+          $searchcount++;
+        }
+
           if($_POST['search_patron']){
-            $where .= " and ({User.user_lastname} like "._esc('%'.clean($_POST['search_patron']).'%').") \n";
+          $where .= " and (User.user_lastname like "._esc('%'.clean($_POST['search_patron']).'%').") \n";
             $searchcount++;
           }
           if($_POST['search_phone']){
-            $where .= " and ({User.user_phone} like "._esc('%'.clean($_POST['search_phone']).'%').") \n";
+          $where .= " and (User.user_phone like "._esc('%'.clean($_POST['search_phone']).'%').") \n";
             $searchcount++;
           }
           if($_POST['search_email']){
-            $where .= " and ({User.user_email} like "._esc('%'.clean($_POST['search_email']).'%').") \n";
+          $where .= " and (User.user_email like "._esc('%'.clean($_POST['search_email']).'%').") \n";
             $searchcount++;
           }
           if (!$searchcount) {
+          if ($_POST['search_submit']) {
             addwarning('search_orderid_patron');
-            $where = ' 1 = 0 ';
           }
+          $where = ' where 1 = 0 ';
         }
       } elseif($params['order_id']){
           $where .= " and order_id="._esc($params['order_id']);
@@ -345,6 +340,15 @@ class Order_Smarty {
           }
 
       }
+
+      if($params['start_date']){
+        $where .= " and order_date>='{$params['start_date']}'";
+      }
+
+      if($params['end_date']){
+        $where .= " and order_date<='{$params['end_date']}'";
+      }
+
       if($params['order']){
         $order_by =" order by {$params['order']}";
       } elseif($params['order_by_date']){

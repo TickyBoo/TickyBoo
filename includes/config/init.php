@@ -149,7 +149,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
       if (!isset($_SESSION['tokens'][$name])) {
         $accepted = false;
       } else {
-        $testme = sha1 ($key.'~'.$_SESSION['tokens'][$name]['n'].'~'.$_SERVER["REMOTE_ADDR"]);
+        $testme = sha1 ($key.'~'.$_SESSION['tokens'][$name]['n'].'~'.getIpAddress());
         if(strcmp($testme, $value )<>0 ) {
           $accepted = false;
         }
@@ -285,7 +285,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     if($res = $auth->admin){
       $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
       $_SESSION['_SHOP_AUTH_ADMIN_ID']=$res->admin_id;
-      $res = empt($res->user,$res);
+    //  $res = empt($res->user,$res);
       $_SHOP->admin = $res;
       unset($res->admin_password);
     //  unset($res->_columns);

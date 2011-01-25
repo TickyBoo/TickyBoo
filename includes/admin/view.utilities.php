@@ -417,10 +417,10 @@ HTML;
       $_SESSION['_UTILS_tab'] = (int)$_REQUEST['tab'];
     }
 
-    $menu = array( con("orphan_tab")=>"?tab=0", con("garbage_tab")=>'?tab=1',
-                   con("emaillog_tab")=>"?tab=2",  con("backup_tab")=>"?tab=3",
-                   con("plugins_tab")=>"?tab=4");
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_UTILS_tab'], "left");
+    $menu = array( con("orphan_tab")=>0, con("garbage_tab")=>1,
+                   con("emaillog_tab")=>2,  con("backup_tab")=>3,
+                   con("plugins_tab")=>4);
+    echo $this->PrintTabMenu($menu, $_SESSION['_UTILS_tab'], "left");
 
     if(isset($_GET['fix'])){
       Orphans::dofix($_GET['fix']);

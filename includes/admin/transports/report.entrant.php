@@ -43,7 +43,11 @@ class report_entrant extends AdminView {
   function xl_form (&$data,&$err){
 		global $_SHOP;
 
-		$query = "select * from Event where event_rep LIKE '%sub%' ORDER BY event_date,event_time,event_name";
+    $query = "select * from Event
+              where event_rep LIKE '%sub%'
+              and event_pm_id IS NOT NULL
+              and field(event_status, 'trash','unpub')=0
+              ORDER BY event_date,event_time,event_name";
 
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_assoc($res)){
@@ -59,10 +63,10 @@ class report_entrant extends AdminView {
 		$this->print_checkbox('export_entrant_withseats',$data,$err);
 
 		echo "
-		<tr><td align='center' class='admin_value' colspan='2'>
+		<tr><td align='right' class='admin_value' colspan='2'>
   		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
-
-		<input type='submit' name='submit' value='".con('export_xml_event_submit')."'></td></tr>
+      <input type='submit' name='submit' value='".con('export_xml_event_submit')."'>
+	  	<input type='reset' name='reset' value='".con('res')."'></td></tr>
 		</table></form>";
   }
 

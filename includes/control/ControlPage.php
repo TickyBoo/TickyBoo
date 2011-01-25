@@ -84,6 +84,7 @@ class ControlPage extends AUIComponent {
     <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
     <title>" . $this->getTitle() . "</title>
     <link rel='stylesheet' href='style.css'>
+    <link rel='shortcut icon' type='images/png' href='{$_SHOP->images_url}favicon.png' />
 
     <script><!--
     function init(){if(document.f && document.f.codebar){document.f.codebar.focus();}}

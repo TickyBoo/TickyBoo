@@ -464,7 +464,7 @@ class Handling Extends Model {
 
     $options["{$handle_id}"] = con('always_show_handling');
     if ($include)
-			$options["1"] = $include;
+			$options["-1"] = $include;
 
 		while ($row=shopDB::fetch_assoc($result)) {
 			$id=$row["handling_id"];

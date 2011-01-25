@@ -134,10 +134,10 @@ class DiscountView extends AdminView {
     $this->print_field_o('discount_activate', $data);
 
     $this->print_input('discount_name', $data, $err, 30, 50);
-//    if (is_null($data['discount_event_id'])) {
-      $this->print_input('discount_promo', $data, $err, 15, 15);
-//    }
-
+    $this->print_input('discount_promo', $data, $err, 15, 15);
+    if (!is_null($data['discount_event_id'])) {
+       $this->print_Category('discount_category_id', $data, $data['discount_event_id']);
+    }
 
     $this->print_select ("discount_type", $data, $err, array("fixe", "percent"));
 
@@ -209,6 +209,27 @@ class DiscountView extends AdminView {
       $this->table(null, false);
     }
   }
+
+  function print_Category($name, $data, $event_id) {
+    global $_SHOP;
+    $query="SELECT category_id, category_name
+            FROM Category
+            WHERE category_event_id = "._esc($event_id)."
+            order by category_name";
+    if($res=ShopDB::query($query)){
+      echo "<tr><td class='admin_name'>".con($name)."</td>
+                <td class='admin_value'>
+                  <select name='{$name}'>";
+      echo "<option value='' $sel></option>";
+      while($event=shopDB::fetch_assoc($res)){
+        $sel = ($event["category_id"] == $data[$name])? 'selected':'';
+        echo "<option value='{$event["category_id"]}' $sel>{$event["category_name"]}</option>";
+      }
+
+      echo "</select>".printMsg($name)."</td></tr>";
+    }
+  }
+
 }
 
 ?>

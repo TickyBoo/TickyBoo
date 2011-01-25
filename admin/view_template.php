@@ -36,13 +36,7 @@
 
 
 define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.template.php");
+require_once('../includes/classes/class.router.php');
+router::draw('template', 'admin/main');
 
-
-//print cart update
-$body=new TemplateView();
-if (!$body->show_pdf()) {
-  $body->drawall();
-}
 ?>

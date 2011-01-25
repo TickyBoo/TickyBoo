@@ -130,7 +130,7 @@ class ImpExpView extends AdminView {
 		if($this->runobject){
     	$this->runobject->setwidth($this->width);
 			$this->runobject->draw();
-      echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center>";
+      echo "<center><a class='link' href='{$_SERVER['PHP_SELF']}'>" . con('admin_list') . "</a></center><br />";
 		}elseif($ShowReports){
 		    $this->reportList();
     } else {

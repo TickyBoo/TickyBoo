@@ -346,6 +346,19 @@ class User extends Model{
     return !hasErrors();
   }
 
+  function delete() {
+   $query = "SELECT count(*)
+              FROM `Order`
+              Where order_user_id="._esc($this->user_id)."
+              or    order_owner_id="._esc($this->user_id);
+    //var_dump($res = ShopDB::query_one_row($query, false));
+    if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
+      return addWarning('in_use');
+    }
+
+    return parent::delete();
+  }
+
   function _fill(&$arr , $nocheck=true)  {
     if ($this->user_status == 1) {
       $arr["user_lastname"] = $arr["kasse_name"];

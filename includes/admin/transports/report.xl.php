@@ -39,7 +39,12 @@ require_once 'Spreadsheet/Excel/Writer.php';
 class report_xl extends AdminView {
 
   function xl_form (&$data,&$err){
-		$query = "select * from Event where event_rep LIKE '%sub%' ORDER BY event_date,event_time,event_name";
+    global $_SHOP;
+		$query = "select * from Event
+              where event_rep LIKE '%sub%'
+              and event_pm_id IS NOT NULL
+              and field(event_status, 'trash','unpub')=0
+              ORDER BY event_date,event_time,event_name";
      $event[0]='';
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_assoc($res)){
@@ -52,9 +57,10 @@ class report_xl extends AdminView {
     echo "<table class='admin_list' border='0' width='$this->width' cellspacing='1' cellpadding='5'>";
     echo "<tr><td colspan='2' class='admin_list_title'>".con('xl_view_title')."</td></tr>";
 		$this->print_select_assoc('export_entrant_event',$data,$err,$event);
+    $data['xl_start'] = is($data['xl_start'], date('Y-m-d'));
     $this->print_date('xl_start',$data,$err);
     $this->print_date('xl_end',$data,$err);
-    echo "<tr><td align='center' class='admin_value' colspan='2'>
+    echo "<tr><td align='right' class='admin_value' colspan='2'>
 
 		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
 
@@ -65,8 +71,8 @@ class report_xl extends AdminView {
   }
 
   function xl_check (&$data) {
-    $this->set_date('xl_start', $date, $err);
-    $this->set_date('xl_end', $date, $err);
+    $this->set_date('xl_start', $data, $err);
+    $this->set_date('xl_end',   $data, $err);
     return empty($err);
   }
 
@@ -99,6 +105,7 @@ class report_xl extends AdminView {
     $format_titler->setPattern(1);
     $format_titler->setFgColor(26);
     $format_titler->setbottom(1);
+    $format_titler->setBgColor(26);
 
     $format_price =& $workbook->addFormat();
     $format_price->setNumFormat('#,##0.00;-#,##0.00');
@@ -131,7 +138,6 @@ class report_xl extends AdminView {
 
     $format_rightb =&$workbook->addFormat(array('Align'=>'right'));
     $format_rightb->setBold();
-    $format_titler->setBgColor(26);
 
     
     // The actual data
@@ -303,24 +309,31 @@ class report_xl extends AdminView {
        return FALSE;
      }else{
        $query="
-               select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id
+               select *, u.*, p.user_lastname pos_office,
+                      p.user_city pos_city, p.user_country pos_country,
+                      p1.user_lastname physic_office,
+                      p1.user_city physic_city, p1.user_country physic_country
+               from Seat LEFT JOIN `Discount` ON seat_discount_id=discount_id
                                   LEFT JOIN `Order` on seat_order_id=order_id
-                                  LEFT JOIN User on seat_user_id=user_id
-                                  LEFT JOIN Event on seat_event_id=event_id
-                                  LEFT JOIN Category on seat_category_id=category_id
-                                  LEFT JOIN Ort on  event_ort_id=ort_id
+                        LEFT JOIN `User` p on order_owner_id= p.user_id
+                        LEFT JOIN `User` p1 on seat_pos_id= p1.user_id
+                        LEFT JOIN `User` u on seat_user_id= u.user_id
+                        LEFT JOIN `Event` on seat_event_id=event_id
+                        LEFT JOIN `Category` on seat_category_id=category_id
+                        LEFT JOIN `Ort` on  event_ort_id=ort_id
+                        LEFT JOIN `Handling` on order_handling_id = handling_id
                ";
        $where = array('order_id is not null');
        if ($_POST['export_entrant_event']) {
          $where[] = 'event_id = '._esc($_POST['export_entrant_event']);
-       } else {
-         if ($_POST['export_entrant_event']) {
+       }// else {
+         if ($_POST['xl_start']) {
            $where[] = 'order_date >= '._esc($_POST["xl_start"]);
          }
-         if ($_POST['export_entrant_event']) {
+         if ($_POST['xl_end']) {
            $where[] = "order_date <= "._esc($_POST["xl_end"]);
          }
-       }
+      // }
        $where = implode(' and ', $where);
        if ($where) $query .= 'where '.$where;
 

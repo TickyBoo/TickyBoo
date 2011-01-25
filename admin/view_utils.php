@@ -35,12 +35,6 @@
 
 
 define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.utilities.php");
-
-
-
-//print cart update
-$body=new UtilitiesView();
-$body->drawall();
+require_once('../includes/classes/class.router.php');
+router::draw('utilities', 'admin/main');
 ?>

@@ -91,7 +91,7 @@ class Gui_smarty {
           $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
         }
       }
-      $urlparams .= (($urlparams)?'?':'').urlparams;
+      $urlparams .= (($urlparams)?'?':'').$urlparams;
 
       If ($secure) {
         $result = $_SHOP->root_secure;
@@ -124,8 +124,7 @@ class Gui_smarty {
     *   @return string
     */
 
-   function currenturl($params,
-                              &$smarty)
+   function currenturl($params, &$smarty, $skipnames)
    {
    	  global $_SHOP;
       $queryHash   = Array();
@@ -152,12 +151,14 @@ class Gui_smarty {
       $paramHash         = array_merge(   $queryHash,
                                  $params);
       $paramStringHash   = Array();
-
+    If (!is_array($skipnames)) {$skipnames= array();}
       //   write the new hash/array in the query
       //   syntax
       foreach ($paramHash as $key => $value)
       {
+      	if (!in_array($key,$skipnames)) {
          array_push($paramStringHash, $key.'='.$value);
+      }
       }
 
       //   return the url with the new parameters
@@ -208,7 +209,7 @@ class Gui_smarty {
     $_SESSION['tokens'][$name]['t'] = time();
     $token = $_SESSION['tokens'][$name]['n'];
     $name = $name.'_'.base_convert(mt_rand(), 10,36);
-    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'~'.$token.'~'.$_SERVER["REMOTE_ADDR"]))."'/>";
+    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'~'.$token.'~'.getIpAddress()))."'/>";
   }
 /**
  * build a href link
@@ -316,8 +317,9 @@ class Gui_smarty {
   private function showlabel($name, $value, $params=array()) {
     $nolabel  = is($params['nolabel'],false);
     $caption  = is($params['caption'],con($name));
+    $mandatory = $params['mandatory'] ? "*" :"";
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr id='{$name}-tr' class='shop-tr'><td id='{$name}-label' class='{$this->gui_name}' width='40%'>{$caption}</td>".
+      $return = "<tr id='{$name}-tr' class='shop-tr'><td id='{$name}-label' class='{$this->gui_name}' width='40%'>{$caption} {$mandatory}</td>".
                 "    <td id='{$name}-value' class='{$this->gui_value}'>{$value}";
       $return .= printMsg($name);
       return $return."</td></tr>\n";
@@ -350,9 +352,9 @@ class Gui_smarty {
     $size = is($params['size'], 30);
     $max  = is($params['maxlength'] ,100);
     $value  = is($params['value'],$this->guidata[$name]);
-
+	$disabled = $params['disabled'] ? "disabled" :"";
     return $this->showlabel($name, "<input type='$type' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) .
-           "' size='$size' maxlength='$max'>");
+           "' size='$size' maxlength='$max' $disabled>",$params);
   }
 
   function checkbox ($params, $smarty) //($name, &$data, &$err, $size = '', $max = '')
@@ -380,6 +382,134 @@ class Gui_smarty {
     return $this->showlabel($name, $timeselect->selectbox,$params);
   }
 
+  function button($params, $smarty ){
+    global $_CONFIG;
+    $name = is($params['name']    );
+    $url  = is($params['url']    );
+    $type  = is($params['type'], 2);
+    $classes = is($params['classes'],'');
+    $style   = is($params['style'],'');
+    $idname  = is($params['id'], $name);
+    $disabled= is($params['disable'],false);
+    $onclick = is($params['onclick'], '');
+
+    if(!empt($name,false)){
+        return;
+    }
+    $button = false;
+    $text = false;
+    $icon = false;
+    $disClass = '';
+    $disAtr = '';
+
+    //Find what to show
+    if($type===1 || $type >= 3){
+      $text = $name;
+    }
+    if(is($params['image'],false)){
+      $icon = true;
+      $image = $params['image'];
+    }elseif($type===2 || $type >= 3){
+      $iconArr = array(
+        'add'=>array('image'=>'ui-icon-plusthick'),
+        'edit'=>array('image'=>'ui-icon-pencil'),
+        'view'=>array('image'=>'ui-icon-comment'),
+        'list'=>array('image'=>'ui-icon-arrowthick-1-w'),
+        'delete'=>array('image'=>'ui-icon-trash'),
+        'remove'=>array('image'=>'ui-icon-trash'),
+        'home'=>array('image'=>'ui-icon-home')
+        );
+      foreach($iconArr as $icoNm=>$iconDtl){
+        $name2 = strtolower($name);
+        if(preg_match('/'.$icoNm.'/',$name2)){
+          $icon = $icoNm;
+          $image = $iconDtl['image'];
+          break;
+        };
+      }
+      if(!$icon){
+        $text = $name;
+      }
+    }
+    //Is it a button?
+    if($url=='submit' || $url=='reset'|| $url=='button'){
+      $button = true;
+    }
+    //Extra options
+    if ($onclick) {
+      $onclick = ' onclick="'.$onclick.'"';
+    }
+    if($disabled){
+      $disAtr = " disabled='disabled' ";
+      $disClass = " ui-state-disabled ";
+      if (!$button) $url = '';
+      $onclick = '';
+    }
+    //Tooltip stuff
+    $toolTipName = $this->hasToolTip($name);
+    $hasTTClass = 'has-tooltip';
+    $toolTipText = con($toolTipName);
+    if(is($params['showtooltip'], false)===false){
+      $hasTTClass = '';
+      $title = is($params['title'],con($name));
+
+    }elseif(empt($params['tooltiptext'],false)){
+      $toolTipText = $params['tooltiptext'];
+      $toolTipName = empt($toolTipName,$name."-tooltip");
+
+    }elseif(!empt($toolTipName,false)){
+      $hasTTClass = '';
+      $title = con($name);
+    }
+
+    $alt     = is($params['alt'],is($title,con($name)));
+    if ($alt) {
+      $alt = " alt='{$alt}'";
+    }
+    $rtn = "";
+
+    //If image bolt on image css for button
+    if($icon && $image){
+      $css = "{icons: {primary: '{$image}' }";
+      if (!$text) $css .= ', text: false';
+      $css .= '}';
+     }else{ $css = ''; }
+    if ($style) $style=" style='{$style}'";
+    $class= trim("{$hasTTClass} {$classes} {$disClass}");
+    if ($class) $class=" class='{$class}'";
+
+    if(!$button){
+      $rtn .= "<a id='{$idname}'{$class}{$style} href='".empt($url,'#')."' title='{$title}'{$onclick}{$alt}>";
+    }else{
+      $rtn .= "<button $disAtr type='{$url}' name='{$name}' id='{$idname}'{$class}{$style}{$onclick}{$alt}>";
+    }
+    $this->addJQuery("$(\"#{$idname}\").button({$css});");
+/*    if($icon && $image && $text){
+      $rtn .= "   <span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
+    }elseif($icon && $image){
+      $rtn .= "   <span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; ' title='{$title}' ></span>";
+    }
+*/
+    if($text){
+      $rtn .= con($text);
+    } else {
+      $rtn .= $title;
+    }
+     //Add on the Tooltip div for the text
+/*    if(!empty($hasTTClass)){
+      $rtn .= "<div id='{$toolTipName}' style='display:none;'>{$toolTipText}</div>";
+    } */
+    if(!$button){
+      $rtn .= "</a>";
+    }else{
+      $rtn .= "</button>\n";
+    }
+    return $rtn;//. $disabled;
+  }
+
+  function hasErrors () {
+    return hasErrors();
+  }
 
   public function getJQuery(){
     return $this->jScript;
@@ -388,6 +518,16 @@ class Gui_smarty {
   protected function addJQuery($script){
     $this->jScript .= $script."\n";
   }
+
+
+  protected function hasToolTip($constantName){
+    if( defined($constantName."-tooltip")){
+      return false;
+    }else{
+      return $constantName."-tooltip";
+    }
+  }
+
   function inputDate ($params, $smarty) //($name, &$data, &$err,  = '')
   {
     require_once('class.datetimeselect.php');
@@ -606,7 +746,7 @@ class Gui_smarty {
    // If ($matches<=$stepsize ) {return "";}
 
     //TODO: Should this be using a new pagnation method?
-    $url     = $this->url( $params, $smarty, array('name',$name,'maxpages','count','length'));
+    $url     = $this->currenturl( $params, $smarty, array('name',$name,'maxpages','count','length','action'));
 
     $breaker = ( strpos($url,'?')===false)?'?':'&';
     $output = '';
@@ -675,10 +815,16 @@ class Gui_smarty {
       $menu = array();
       foreach ($opt as $key) {
         $val  = explode('~',$key);
-        $menu[$val[0]] = "?tab=".is($val[1],$a);
+        $menu[$val[0]] = (int) is($val[1],$a); //"?tab=".
         $a++;
       }
     }
+    if (isset($_REQUEST['tab'])) {
+      $_SESSION[$TabBarid] = (int)$_REQUEST['tab'];
+    } elseif (!isset($_SESSION[$TabBarid])) {
+      $_SESSION[$TabBarid] = (int)reset($menu);
+    }
+  //  var_dump($_SESSION);
     $smarty->assign($TabBarid, $_SESSION[$TabBarid]);
     return  AdminView::PrintTabMenu($menu, $_SESSION[$TabBarid], $menuAlign);
   }

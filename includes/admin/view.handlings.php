@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
-class HandlingView extends AdminView{
+class HandlingsView extends AdminView{
 
   function table (){
 		global $_SHOP;

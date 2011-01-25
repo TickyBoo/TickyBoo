@@ -33,9 +33,6 @@
  */
 
 define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.handlings.php");
-//print cart update
-$body=new HandlingView();
-$body->drawall();
+require_once('../includes/classes/class.router.php');
+router::draw('handlings', 'admin/main');
 ?>

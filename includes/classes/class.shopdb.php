@@ -56,7 +56,7 @@ class ShopDB {
         unset($_SHOP->db_errno);
         unset($_SHOP->db_error);
 
-        trace("Database Init\n=============================================", true);
+      //  trace("Database Init\n=============================================", true);
 
         if (!isset(ShopDB::$link)) {
           if (isset($_SHOP->db_name)) {

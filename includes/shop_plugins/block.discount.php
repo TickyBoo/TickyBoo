@@ -47,9 +47,10 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
         }
 
         if($params['category_id']){
-        	$from .=" left join Event on discount_event_id=event_id
-                    left join Category ON event_id=category_event_id ";
-        	$where .= " AND category_id="._esc($params['category_id']);
+//        	$from .=" left join Event on discount_event_id=event_id
+//                    left join Category ON event_id=category_event_id ";
+//        	$where .= " AND category_id="._esc($params['category_id']);
+            $where .= " AND (discount_category_id="._esc($params['category_id'])." OR discount_category_id is null)";
         }
 
         if ($params['event_id']) {

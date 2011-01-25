@@ -37,11 +37,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
   if ($repeat) {
     $from='Event';
-    if($params['event_status']){
-      $where="where event_status="._esc($params['event_status']);
-    } else {
       $where="where event_status='pub'";
-    }
 
     if($params['order']){
 			$params['order']=_esc($params['order'], false);
@@ -54,6 +50,19 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
     if($params['ort']){
       $from.=' LEFT JOIN Ort ON ort_id=event_ort_id';
+    }
+
+  if($params['search']){
+      $params['search']=_ESC($params['search'],false);
+      $where .= " AND
+      (event_name like '%{$params['search']}%'
+      or event_text like '%{$params['search']}%'
+      or event_short_text like '%{$params['search']}%'\n";
+      if($params['ort']){
+        $where .= "or ort_name like '%{$params['search']}%'
+                   or ort_city like '%{$params['search']}%'\n";
+      }
+      $where .= ") ";
     }
 
     if($params['place_map']){
@@ -81,21 +90,6 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
     }
 
     $limit=($params['limit'])?'limit '._esc($params['limit'],false):'';
-
-
-    if($params['search']){
-      $params['search']=_ESC($params['search']);
-      //$where .= " AND (event_name like '{$params['event_search']}' or event_text like '{$params['event_search']}' or event_short_text like '{$params['event_search']}') ";
-      $where .= " AND
-      (event_name like '%{$params['search']}%'
-      or event_text like '%{$params['search']}%'
-      or event_short_text like '%{$params['search']}%'\n";
-      if($params['ort']){
-        $where .= "or ort_name like '%{$params['search']}%'
-                   or ort_city like '%{$params['search']}%'\n";
-      }
-      $where .= ") ";
-    }
 
 
     if($params['event_type']){

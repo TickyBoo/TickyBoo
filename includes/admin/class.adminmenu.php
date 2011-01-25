@@ -36,51 +36,54 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("classes/AUIComponent.php");
 
 class MenuAdmin extends AUIComponent {
+  function __construct(){
+    $menu_items = array (
+    	"index.php" 	    	=> "index_admin|control",
+    	"view_users.php"	  => "tabs.admins_admin|admin",
+    	"view_event.php"	  => "tabs.events_admin|admin",
+    	"view_banners.php"  => "banner_admin|admin",
+    	"view_stats.php"	  => "statistic_admin|organizer",
+    	"view_order.php"	  => "orders_admin|admin",
+    	"view_template.php"	=> "template_admin|admin",
+    	"view_handling.php"	=> "handlings_admin|admin",
+    	"view_search.php"	  => "search_admin|admin",
+    	"view_impexp.php"	  => "transports_admin|admin",
+    	"view_utils.php"	  => "utilities_admin|admin"
+    );
 
+    $menu_items = plugin::call('_adminMenuItems',$menu_items);
+   
+    foreach($menu_items as $link => $text){
+      list($txt,$role) = explode('|',$text );
+      plugin::call('AddACLResource',$txt, $role );
+      $this->menu_items[$link] = $txt;
+    }
+  }
   function draw () {
     global $_SHOP;
-		// Get the current filename
-		$current_script_name=$_SERVER["SCRIPT_NAME"];
-		$exploded_script_name=explode("/",$current_script_name);
-		$current_file_name = $exploded_script_name[count($exploded_script_name) - 1];
 
 		// Specify menu items in an array
 		//  "file name" 		=> "text_define"    (text define from /includes/lang/site_XX.inc)
-		$menu_items = array (
-			"index.php" 		=> "index_admin",
-			"view_users.php"	=> "users_admin",
-			"view_event.php"	=> "event_admin",
-			"view_stats.php"	=> "stats",
-			"view_order.php"	=> "order_admin",
-			"view_template.php"	=> "template_admin",
-			"view_handling.php"	=> "payment_admin",
-			"view_search.php"	=> "search_order",
-			"view_impexp.php"	=> "imp_export_admin",
-			"view_utils.php"	=> "utils_admin"
-		);
 
+ //   plugin::call('ACLShow');
 		// Begin drawing the menu table
 		echo "<center>
         <table width='{$this->width}' class='menu_admin' cellspacing='1' >
         <tr><td  class='menu_admin_title'>" . con('administration') . "</td></tr>";
 
 		// Loop through the menu item array and put the'menu_admin_link_selected'-class on the linkt to current file
-		foreach($menu_items as $link => $text){
-			echo "<tr><td  class='menu_admin_item'><a href={$link} ";
-			if ($link==$current_file_name){
-				echo "class='menu_admin_link_selected'>";
-			} else {
-				echo "class='menu_admin_link'>";
-			}
-			echo con($text);
-			echo "</a></td></tr>";
-		}
-		// Continue and close the menu table below
-
-      /*
-     if($_SHOP->is_admin){
-       echo "<tr><td  class='menu_admin_item'><a href='$_SHOP->php_myadmin' class='menu_admin_link'>PHP MyAdmin</a></td></tr>";
-     }*/
+		foreach($this->menu_items as $link => $text){
+     // if ($_SHOP->admin->isAllowed($text)) {
+			  echo "<tr><td  class='menu_admin_item'><a href={$link} ";
+  			if ($text=="{$this->current_page}_admin"){
+  				echo "class='menu_admin_link_selected'>";
+  			} else {
+  				echo "class='menu_admin_link'>";
+  			}
+  			echo con($text);
+  			echo "</a></td></tr>";
+  		}
+	//	}
     echo "<tr><td></td></tr>";
     echo "<tr><td  class='menu_admin_item'>
      <a href='{$_SERVER["PHP_SELF"]}?action=logout' class='menu_admin_link'>" . con('logout') . "</a></td></tr>

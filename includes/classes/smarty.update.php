@@ -62,7 +62,9 @@ class Update_Smarty {
 		$enabled['can_reserve'] = false;
 		$event_date = $params['event_date'];
 		if ( !$event_date ) {
-			die( "No Event Date" );
+			addwarning( "no_event_data" );
+		  $smarty->assign( "update_view", $enabled );
+		  return false;
 		}
 		if ( $_SHOP->shopconfig_restime > 0 ) {
 			$enabled['can_reserve'] = true;

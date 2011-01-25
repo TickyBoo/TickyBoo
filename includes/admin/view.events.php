@@ -84,7 +84,7 @@ select SQL_CALC_FOUND_ROWS *
               limit 0,15
 */
     $wherex = (!$history)?"event_status = 'pub' or ":"event_status != 'pub' AND ";
-    $where  = "and ((event_rep!='main' and  ({$wherex} TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
+    $where  = "and ((event_rep !='main' and  ({$wherex} TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
 	  $where .= "OR     (Event.event_rep='main' and (((select COALESCE(count(*),0)
 	                                             from Event main
 	                                             where main.event_main_id = Event.event_id
@@ -211,8 +211,6 @@ select SQL_CALC_FOUND_ROWS *
       }
       if ($main_name !== $row['event_name']) {
         echo  '&nbsp;'. showstr( $row['event_name'], 28 ) ;
-
-
       }
 
       echo "&nbsp;</nobr></td>
@@ -228,7 +226,13 @@ select SQL_CALC_FOUND_ROWS *
 	}
 
   function showbuttons($img_pub, $row, $history) {
-    if ($history) {
+    if ($row['event_rep'] =='main') {
+      echo $this->show_button("{$img_pub[$row['event_status']]['link']}{$row['event_id']}",
+                              $img_pub[$row['event_status']]['title'],2,
+                               array('image'=>$img_pub[$row['event_status']]['src'],
+                                     'alt'  =>con($img_pub[$row['event_status']]['alt']),
+                                     'disable'=>true));
+    } elseif ($history) {
       echo $this->show_button("javascript:if(confirm(\"".con('republish_old_event')."\")){location.href=\"{$img_pub[$row['event_status']]['link']}{$row['event_id']}\";}",
                               $img_pub[$row['event_status']]['title'],2,
                                array('image'=>$img_pub[$row['event_status']]['src'],
@@ -616,6 +620,7 @@ select SQL_CALC_FOUND_ROWS *
       global $_SHOP;
       $varNum = 0;
       $log    = '';
+      $errs = false;
       if (count($_REQUEST['cbxEvents']) > 0) {
       	foreach($_REQUEST['cbxEvents'] as $eventID) {
           if ($event = Event::load($eventID, false)) {

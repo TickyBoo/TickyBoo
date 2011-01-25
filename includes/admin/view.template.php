@@ -353,19 +353,19 @@ class TemplateView extends AdminView{
 
 
     $menu = array(
-      con("templ_System")=>"?tab=0",
-      con("templ_email")=>'?tab=1',
+      con("templ_System")=>0,
+      con("templ_email")=>1,
 //      con("templ_swift")=>'?tab=2',  //the newshift system needs to be extended
-      con("templ_pdf2")=>"?tab=3"
+      con("templ_pdf2")=>3
     );
 
     $query = "SELECT count(*) FROM Template
               where template_type = 'pdf'";
     if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
-      $menu[con("templ_pdf")]= "?tab=4";
+      $menu[con("templ_pdf")]= 4;
    	}
 
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_TEMPLATE_tab'], "left");
+    echo $this->PrintTabMenu($menu, $_SESSION['_TEMPLATE_tab'], "left");
 
     $type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
 

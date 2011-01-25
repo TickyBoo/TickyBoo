@@ -1,6 +1,8 @@
 var loadUser = function(mycolNames){
 	$('#search_user').hide();
 
+	$('#user_data').show();
+	
 	$('#users_table').jqGrid({
 		url:'ajax.php?x=users',
 		datatype: 'json',
@@ -104,6 +106,7 @@ var loadUser = function(mycolNames){
 	});
 
   $('#search_user').click(function() {
+	  if ($("#user_firstname").val() != "" && $("#user_lastname").val() != "" || $("#user_email").val() != "" || $("#user_phone").val() != "") {
     	var i=0;
     	var data = $('#users_table').getGridParam('postData');
     	$('#users_table').clearGridData();
@@ -115,13 +118,11 @@ var loadUser = function(mycolNames){
          		}
      	  	}
       	});
-    	if ( i >2) {
         $('#users_table').setGridParam('postData', data);
         $('#users_table').trigger("reloadGrid");
         $("#search-dialog").dialog('open');
-    	} else {
-	  		alert('You need to fill atliest 3 personal address fields,\n with minimal 2 characters, before you can search.');
      	}
+	  else alert('Please provide either of the following to search:\nFull name\nEmail Address\nPhone Number');
 	});
 }
 

@@ -35,10 +35,6 @@
 
 
 define('ft_check','admin');
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.statistic.php");
-$body=new StatisticView();
-if(!$body->execute()){
-  $body->drawall();
-}
+require_once('../includes/classes/class.router.php');
+router::draw('statistic', 'admin/main');
 ?>

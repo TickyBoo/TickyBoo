@@ -36,11 +36,6 @@
 
 define('ft_check','admin');
 session_cache_limiter("must-revalidate");
-
-require_once("../includes/config/init_admin.php");
-require_once ("admin/view.transports.php");
-$body=new ImpExpView();
-if(!$body->execute()){
-  $body->drawall();
-}
+require_once('../includes/classes/class.router.php');
+router::draw('transports', 'admin/main');
 ?>

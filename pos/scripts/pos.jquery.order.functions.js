@@ -14,7 +14,7 @@ var clearOrder = function(){
 	$("#user_data :input").each(function() {
   	$(this).val('');
 	});
-
+  $('#user_id').val(0);
   unBindSeatChart();
   updateEvents();
   return false;
@@ -27,7 +27,7 @@ var eventIdChange = function(){
       type:      "POST",
       url:      "ajax.php?x=cat",
       dataType:   "json",
-      data:      {"pos":true,"action":"categories","event_id":eventId},
+      data:      {"pos":true,"action":"categories","event_id":eventId, "categories_only":true},
       success:function(data, status){
         printMessages(data.messages);
         catData = data; //set cat var
@@ -36,19 +36,10 @@ var eventIdChange = function(){
         $.each(data.categories,function(){
           $("#cat-select").append(this.html);
         });
+        $("#discount-name").hide();
         $("#cat-select").show().change();
         //Check catData for discounts...
-        if(catData.enable_discounts){
-          $("#discount-select").html("");
-          $.each(catData.discounts,function(){
-            $("#discount-select").append(this.html);
-          });
-          $("#discount-name").show();
-          $("#discount-select").show();
-        }else{
-          $("#discount-name").hide();
-          $("#discount-select").html("<option value='0'></option>"); //hide().
-        }
+
       }
     });
     $("#ft-event-free-seats").html(eventData.events[eventId].free_seats);

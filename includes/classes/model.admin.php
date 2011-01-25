@@ -10,43 +10,25 @@ include_once 'Auth/Container.php';
 class Admins extends Model {
   protected $_idName    = 'admin_id';
   protected $_tableName = 'Admin';
-  protected $_columns   = array( 'admin_id', '*admin_login', '*admin_password', 'admin_status',
-                                 '#admin_user_id', 'admin_ismaster','*admin_inuse','control_event_ids');
+  protected $_columns   = array( 'admin_id', '*admin_login', '*admin_password', '*admin_status', 'admin_email','#admin_user_id',
+                                 'admin_ismaster','*admin_inuse');
 
-  function __construct($filldefs= false, $admintype='') {
-    parent::__construct($filldefs);
-    if ( $admintype=='pos') {
-      $this->user = new User($filldefs);
-    }
-    $this->admin_status =$admintype;
-  }
-
-  function load ($id = 0){
+  static function load ($id = 0){
     $query = "select *
               from Admin
               where admin_id = "._esc($id);
     if ($row = ShopDB::query_one_row($query)){
-      $adm = new Admins(false, $row['admin_status']);
-      if ($adm->admin_status =='pos') {
+      $adm = new Admins(false);
+      $adm->_fill($row);
+      if ($row['admin_status'] =='pos' || $row['admin_status'] =='posman' ) {
         $query = "select *
                   from User
                   where user_id = "._esc($row['admin_user_id']);
         $rowx = ShopDB::query_one_row($query);
-      } else $rowx = array();
-      $adm->_fill($row);
       $adm->_fill($rowx);
+    }
       return $adm;
     }
-  }
-
-  function saveEx() {
-    if ($this->admin_status =='pos') {
-      $this->admin_user_id = $this->user->saveEx();
-    }
-    if (($this->admin_status !=='pos') || ($this->admin_user_id)) {
-      return parent::saveEx();
-    }
-    return false;
   }
 
   function CheckValues(&$data) {
@@ -64,6 +46,16 @@ class Admins extends Model {
         addError('admin_login','already_exist');
       }
     }
+    if (strpos($data['admin_status'], 'pos') ===0 && empty($data['admin_user_id'])) {
+      addError('admin_user_id','mandatory');
+    }
+
+    if(!empty($data['admin_email'])){
+      if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $data['admin_email'])){
+        addError('admin_email','not_valid_email');
+      }
+    }
+
     if(!$this->admin_id && empty($data['password1']) ){
         addError('password1','mandatory');
     } elseif(!empty($data['password1']) and strlen($data['password1'])<5){
@@ -80,16 +72,7 @@ class Admins extends Model {
     if(is_array($data['control_event_ids'])){
       $data['control_event_ids'] = implode(',', $data['control_event_ids']);
     }
-    $data['user_lastname'] = $data['kasse_name'];
-    $data['user_firstname'] = 'POS:';
     return parent::CheckValues($data);
-  }
-
-  function _fill($arr , $nocheck=true)  {
-    if (parent::_fill($arr , $nocheck)){
-      return (!$this->user) || $this->user->_fill($arr , $nocheck);
-    } else
-      return false;
   }
 
   function delete() {
@@ -106,8 +89,8 @@ class Admins extends Model {
       }
 
     }
-    if (parent::delete() and $this->user) {
-      return $this->user->delete();
+  //  if (parent::delete() and $this->user) {
+  //    return $this->user->delete();
     }
   }
 
@@ -135,6 +118,52 @@ class Admins extends Model {
     }
     return false;
   }
+
+  public function isAllowed($Resource, $login = false ) {
+  //  print_r($this->admin_status);
+    if (plugin::call('%isACL')) {
+       return plugin::call('%isAllowedACL', $this->admin_status, $Resource );
+    } elseif ($login) { // this ia only used when the ACL manager is not installed.
+       return $this->admin_status == $Resource ||
+             ($Resource == 'organizer' && $this->admin_status == 'admin') ||
+             ($Resource == 'pos' && $this->admin_status == 'posman');
+    }
+    return true;
+}
+
+  public function getEventLinks(){
+    global $_SHOP;
+    if (!isset($_SHOP->event_ids)) {
+      $query="select adminlink_event_id from adminlink
+              where adminlink_event_id is not null ";
+      if (isset($this->user_id)) {
+         $query .= "and adminlink_pos_id = {$this->user_id}";
+      } elseif (isset($this->admin_id)) {
+         $query .= "and adminlink_admin_id = {$this->admin_id}";
+      } else
+        return array();
+      $list = array();
+      if($res=ShopDB::query($query)){
+        while($event_d=shopDB::fetch_array($res)){
+          $list[]=$event_d[0];
+        }
+      }
+      $_SHOP->event_ids = implode(', ', $list);
+    }
+    return $_SHOP->event_ids;
+  }
+
+  public function getEventRestriction($prefix='', $sefix='AND') {
+    $result ='';
+    if (($this->admin_status=='organizer' || $this->admin_status=='posman') && ($list=$this->getEventLinks())) {
+      $result = "{$sefix} (field({$prefix}event_id, {$list}) or (select  count(*) from `adminlink` where adminlink_event_id = {$prefix}event_id) = 0)";
+    }
+    return $result;
+  }
+
+  static function addResource($Resource) {
+    return  plugin::call('%addResourceACL', $Resource );
+  }
 }
 
 class CustomAuthContainer extends Auth_Container {
@@ -154,14 +183,12 @@ class CustomAuthContainer extends Auth_Container {
 
     function fetchData($username, $password) {
         // Check If valid etc
-        $query = "select admin_id, admin_password
+        $query = "select admin_id, admin_password, admin_status
                   from Admin
                   where admin_login = "._esc($username)."
-                  and   (admin_status like '{$this->admin_status}'";
-        if ($this->admin_status == 'organizer'){
-          $query .= " or admin_status like 'admin'";
-        }
-        $res = ShopDB::query_one_row($query.')');
+                  and   admin_inuse = 'Yes'";
+
+        $res = ShopDB::query_one_row($query);
 
         if (!is_array($res)) {
             $this->activeUser = '';
@@ -172,23 +199,10 @@ class CustomAuthContainer extends Auth_Container {
         $password = trim($password, "\r\n");
         $res['admin_password'] = trim($res['admin_password'], "\r\n");
 
-        // If using Challenge Response md5 the pass with the secret
-        if ($isChallengeResponse) {
-            $res['admin_password'] = md5($res['admin_password'].$this->_auth_obj->session['loginchallenege']);
-
-            // UGLY cannot avoid without modifying verifyPassword
-            $res['admin_password'] = md5($res['admin_password']);
-
-            //print " Hashed Password [{$res[$this->options['passwordcol']]}]<br/>\n";
-        }
-
-   //     var_dump( $res['admin_password']);
-    //    var_dump(md5($password));
-
         if ($this->verifyPassword($password, $res['admin_password'], $this->cryptType)) {
            $res  = admins::load ($this->_auth_obj->admin_id);
            $this->_auth_obj->admin = $res;
-           return true;
+           return $res->isAllowed($this->admin_status, true) ;
         }
 //        $this->activeUser = $res[$this->options['usernamecol']];
         return false;

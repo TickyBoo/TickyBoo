@@ -126,7 +126,7 @@ define("password","Password");
 define("password1", "Choose Password");
 define("password2","Repeat Password");
 define("new_password","New Password");
-define("old_password","Old Password");
+define("old_password","Current Password");
 define("confirmpassword","Confirm Password");
 
 //Globals
@@ -153,7 +153,7 @@ define("user_address2","Address 2");
 define("user_city","City");
 define("user_state","State");
 define("user_state_name","State");
-define("user_zip","Zip");
+define("user_zip","PO Box");
 define("user_country","Country");
 define("user_country_name","Country");
 define("user_phone","Phone");
@@ -206,20 +206,20 @@ define("invalid_number","Invalid Credit Card Number!");
 define("log_err_isactive", "That account is allready active.");
 define("log_err_mailnotsend", "The Activation Email <b>could not</b> be sent, please check you have entered the correct email address.");
 define("log_err_not_act","You are Not Activated!");
-define("log_err_not_act_info","<br />Your account is not yet activated.
+define("log_err_not_act_info","Your account is not yet activated.
 	<p>Please check your email to activate your account. Don't forget to check the spam folder.</p>
-	<p>If you haven't received any email yet, please click <a href='resend_activation.php'HERE</a> to resend the activation email.</p>");
+	<p>If you haven't received any email yet, please click <a href='resend_activation.php'>here</a> to resend the activation email.</p>");
 define("log_err_wrong_usr","Wrong Username or Password!");
 define("log_err_wrong_usr_info","Wrong Username or Password.
 		If you have forgoten your password, click <a href='forgot_password.php' onclick='showDialog(this);return false;' >here</a>");
-define("mand_all", "All Input Fields are Required!");
+define("mand_all", "All input fields are Required.");
 define("mandatory","Field Required!");
 define("MP3_loading_problem","Problem Loading MP3 File!");
 define('missing_pm_ord_id','Error: this placemap cant be saved, venue is missing');
 define("nosale_confirm_msg","Remove from Sale?");
 define("new_order_created","New Order Created");
 define("not_number","Enter a Number Without -()!");
-define("not_valid_email","E-mail is Invalid!");
+define("not_valid_email","E-mail is invalid.");
 define("no_result","No Result!");
 define("old_order_canceled","Old Order Cancelled!");
 define("order_allready_cancelled","Order Allready Cancelled!");
@@ -239,7 +239,7 @@ define("pass_too_short","Password is too short");
 define("phone_long","The Phone Number is too long");
 define("phone_short","The Phone Number is too short");
 define("places_empty","Please select your seats");
-define("places_occupied","Sorry! The selected seats were taken by another customer.");
+define("places_occupied","The selected seats have been already reserved");
 define("places_remains"," Remaining seats");
 define("places_toomuch","This Number of Seats can Not be Reserved!");
 define("pwd_not_thesame", "The Passwords Entered Do Not Match!");
@@ -255,7 +255,7 @@ define("split_pm","Split Seat Chart");
 define("Status_is_pub","This Event is Published!");
 define("stop_success","Successfully Stopped!");
 define("system_halted","<b>SYSTEM IS HALTED!<b>");
-define('This_page_is_not_secure','Atention: Your Registration and Order Details are not encrypted however payments using Paypal will use secure pages (SSL).');
+define('This_page_is_not_secure','Atention: Your Registration and Order Details are not encrypted. However payments using Paypal will use secure pages (SSL).');
 define("ticket_deleted","Ticket Deleted!");
 define("ticket_not_found","Ticket Not Found in Database!");
 define("tickets_printing","Tickets are Printing. Please Wait!");
@@ -285,15 +285,15 @@ define('user_details_saved_successfully','User details sucessfully updated');
 //Administration Menu - the menu on the left side
 define("index_admin","Home");
 define("administration","Administration");
-define("users_admin", "User Management");
-define("event_admin","Event Management");
-define("stats", "Reporting");
-define("order_admin", "Ticket Tracking");
+define("tabs.admins_admin", "User Management");
+define("tabs.events_admin", "Event Management");
+define("statistic_admin", "Reporting");
+define("orders_admin", "Ticket Tracking");
 define("template_admin", "Templates");
-define("payment_admin", "Order Handlings");
-define("search_order", "Search");
-define("imp_export_admin", "Import /Export");
-define("utils_admin", "Utilities");
+define("handlings_admin", "Order Handlings");
+define("search_admin", "Search");
+define("transports_admin", "Import /Export");
+define("utilities_admin", "Utilities");
 
 //Home
 //System Information
@@ -365,12 +365,6 @@ define("admin_ismanager","Is manager");
 define("admin_user_title","System Administrators");
 define("admin_update_title","Modify Administrator");
 	define("admin_add_title","Add System Administrator");
-
-//Organizers
-define("organizer_tab","Organizers");
-define("organizer_user_title","Event Organizers");
-define("organizer_add_title","Add an Event Organizer");
-define("organizer_update_title","Modify Event Organizer");
 
 //Sale Points
 define("spoint_tab","Sale Points");
@@ -577,6 +571,8 @@ define("add_multi","Add Sub-Event");
 //Discounts
 define("discount_title","Discounts");
 define("discount_add_title","Add a Discount");
+define("discount_category_id","Event Category");
+define('discount_cond','Discount Conditions');
 define("discount_update_title","Modify Discount");
 	define("discount_id","Discount ID");
 	define("discount_name","Discount Name");
@@ -603,6 +599,8 @@ define("order_event_list_title","Orders by Event");
 	define("order_type_sended","Sent");
 	define("order_type_reserved","Reserved");
 	define("purge","Purge");
+	define("order_patron","Customer");
+	define("order_place","Created By");
 
 	//View Order
 	define("order_nr","Order #: ");
@@ -616,6 +614,7 @@ define("order_event_list_title","Orders by Event");
 
 		define("send","Sent");
 	define("order_payment_status","Payment Status");
+	define("order_payed_total_view","Order Total");
 	define("order_payment_id","Payment ID");
 	define("order_status","Status");
 	define("processed","Processed");
@@ -641,13 +640,6 @@ define("order_event_list_title","Orders by Event");
         define("note","Note");
         define("admin","Administrator");
         define("ship","Shipping");
-    define("onote_private","Personal Note (You can see only)");
-    define("onote_subject","Note Subject");
-    define("onote_note","Note Details");
-    define("onote_set_sent","On \"Save &amp; Email\" Set Order To Sent.");
-    define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
-    define("onote_resend_sent","Resend \"Sent\" Email.");
-    define("onote_resend_payed","Resend \"Paid\" Email.");
         define("pos","POS User");
         define("posman","POS Manager");
         define("organizer","Event Manager");
@@ -684,7 +676,7 @@ define("order_event_list_title","Orders by Event");
 	define("change_order_to_send","Mark 'Sent'");
 	define("change_order_to_no_payed","Mark 'Not Paid'");
 	define("reissue_order_menu","Update this Order and Issue with new tickets.");
-	define("cancel_order","Mark 'Canceled' and Delete Tickets");
+	define("cancel_order","Mark `Canceled` and Delete Tickets");
 
 //Templates
 define("templ_System","System Emails");
@@ -809,8 +801,8 @@ define("handling_update_title","Modify the Payment Type");
 
 
 //Search
-define("patron_tab","Patron");
-define("search_title_user","Search for Patron");
+define("patron_tab","Customer");
+define("search_title_user","Search for Customer");
 	define("sale_point","POS");
 	define("guest","Guest");
 
@@ -851,7 +843,7 @@ define("export_xml_event_file","Filename");
 		define("xl_start","Start Date");
 		define("xl_end","End Date");
 		define("generate_xl","Generate Sales Worksheet");
-			define("seat_id","Seat ID");
+			define("seat_id","Ticket Number");
 			define("seat_price","Seat Price");
 
 	define("export_cc","Credit Cards");
@@ -948,6 +940,7 @@ define("no_event_sets","No Events Scheduled");
 
 //user_activate.tpl - resend_activation.tpl - user_registred.tpl
 define("act_name","Activate Account"); //checkout_preview
+define("act_done","Account Activated"); //checkout_preview
 define("act_enter_title","Place your Activation Code here:");
 
 define("act_enter_code","Complete your activation by entering the activation code sent to you by Email in the box below, or click on the link in the Email.<br/>If you have already activated your account, please press [activate] also.");
@@ -956,8 +949,8 @@ define("act_send","Send");
 
 define("act_notarr","Activation Email still not arrived?");
 define("resend_activation","Resend Activation Email");
-define("act_is_sent","Your Activation Email has been sent to your Inbox!");
-define("act_sent","The activation Email has been sent. Please check your Email for a link.");
+define("act_is_sent","Your Activation Email has been sent to your inbox.");
+define("act_sent","The activation Email has been sent. Please check your Email for the activation code or link.");
 define("act_mess_line","Please check your email to activate your account.<br>");
 define("act_mess_line_nm","<b>You may complete this order without activating your account.</b><br>
           					Please check your email to activate your account for future purchases.<br>");
@@ -975,6 +968,7 @@ define("calendar","Calendar");
 
 //cart_content.tpl
 define("cart_empty","Your Cart is Empty.");
+define("cart_empty_or_invalid","The cart is empty or invalid. Please add tickets.");
 define("total","Total");
 define("expires_in","Expires in");
 define("total_price","Total Price"); //personal_order.tpl, personal_orders.tpl
@@ -1036,7 +1030,8 @@ define('freeTicketCode', 'Discount Code:');
 //checkout_result.tpl
 define("pay_accept","Payment Method Accepted");
 define("pay_refused","Payment Method Not Accepted");
-define("pay_reg", "Your payment was successful. <br/><br/>Your electronic ticket has been sent to your email address.<br/><br/> Please make sure you have a printed copy to present when collecting your physical ticket.<br/><br/><span>Note: if you don't find your electronic ticket in your inbox please check your Spam/Junk folder. To avoid our emails being seen as junk, please add our \"From\" address to your Address Book.</span>");
+define("pay_reg", "Your payment was successful.");
+define("pay_reg_desc", "Your electronic ticket has been sent to your email address.<br/><br/> Please make sure you have a printed copy to present when collecting your physical ticket.<br/><br/><span>Note: if you don't find your electronic ticket in your inbox please check your Spam/Junk folder or <a href='contact.php'>contact us</a>. To avoid our emails being seen as junk, please add our \"From\" address to your Address Book.</span>");
 define("pay_error","There was an error proccessing your request.");
 define("trx_id","Transation ID");
 define("orderdeleted","Order Deleted");
@@ -1088,6 +1083,8 @@ define("et_theater","Theater");
 define("forgot_pwd", "Forgot Password");
 define("pwd_forgot","Forgotten your Password?");
 define("forgot_password","Forgotten your Password?");
+define("forgot_password_ok","Your password has been reset");
+define("forgot_password_ok_desc","We have generated a new password for you and sent it to your email.");
 define("pwd_err","User not found or other problem occured");
 define("pwd_is_sent","Your new password was sent to your e-mail");
 define("pwd_note","Enter your e-mail address here. Click on 'Send Password' and a new password will be emailed to you");
@@ -1112,6 +1109,7 @@ define("reserv_cancel","WARNING this is a one way proccess!");
 define("notpaid","Not Paid");
 
 define("paid","Paid");
+define("sold","Sold");
 define("manual_payment","Set to Paid: ");
 define("payhere","<br><br>To Pay Now, Check Here:");
 define("notsent","Not Sent");
@@ -1273,8 +1271,8 @@ define("cancel_ticket","Cancel Ticket");
 define("reissued","Re-issued");
 
 //user.tpl
-define("exist_user","Existing");
-define("new_partron","New Patron");
+define("exist_user","Existing Customer");
+define("new_partron","New Customer");
 
 //view_options.tpl
 define("open_with_acrobat","Open Orders in Acrobat");
@@ -1345,7 +1343,7 @@ define("tmp_details","Ticket Details");
 define("tmp_type","Type: ");
 define("tmp_discount","Discount: ");
 
-define("tmp_conditions","<b>NOTE TO PURCHASER: TREAT THESE TICKETS AS YOU WOULD ANY OTHER VALUABLE OR CASH.</b>
+define("tmp_conditions","<b>NOTE TO PURCHASER: TREAT THIS E-TICKET AS YOU WOULD ANY OTHER VALUABLE OR CASH. YOU WILL NEED TO PRINT THIS AND PRESENT IT WHEN COLLECTING YOUR PHYSICAL TICKET.</b>
 Unauthorized duplication, alteration, or sale of this ticket may prevent admittance to the event.
 Present this page at the time of admission to be scanned.
 The unique bar code on this ticket allows only one entry per ticket.");
@@ -1477,6 +1475,8 @@ define('discount_promo_for', 'Discount promocode for&nbsp;');
 //Sales Data Report
 
 define('rep_ord_id','Order #');
+define('rep_sale_date','Sale Date');
+define('hand_payment_text','Payment Method');
 
 define('user_title','Customer Information');
 define('cust_id','ID');
@@ -1506,14 +1506,17 @@ define('handling_fee_min','Minimum of fixed and Percent');
 define('handling_fee_max','Maximum of fixed and Percent');
 
 define('pay_ispending',"Payment transaction is pending.");
-define('cookie_disabled','<H1> Warning, you have disabled cookies on your system.</h1> This will not work on this website. Please turn this on, before you order any tickets.');
+define('cookie_disabled','<h1> Warning, you have disabled cookies on your system.</h1> This will not work on this website. Please turn this on, before you order any tickets.</h1>');
 
-
-
+define('admin_user_id','Sale Point user');
+define('admin_status','Role of user');
+define('admin_email','Email address');
+define('admin_posuser_title',"Sale Point Administrators");
 define('user','user');
 define('NotPaid','Not paid');
 define('Shipment','Shipment');
-
+define('shipment_type','Shipment Type');
+define('shipment_address','Shipment Address');
 define('order_owner_id','Create by POS');
 
 define('onote_type_note'   ,'note');
@@ -1521,13 +1524,22 @@ define('onote_type_admin'  ,'admin');
 define('onote_type_payment','payment');
 define('onote_type_todo'   ,'todo');
 define('onote_isprivate',' (<i>private</i>)');
+  define("onote_private","Personal Note (You can see only)");
+  define("onote_subject","Note Subject");
+  define("onote_note","Note Details");
+  define("onote_set_sent","On \"Save &amp; Email\" Set Order To Sent.");
+  define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
+  define("onote_resend_sent","Resend \"Sent\" Email.");
+  define("onote_resend_payed","Resend \"Paid\" Email.");
+
 
 define("logged_in","User:");
 //Events
 define("placemap","Event Placemap");
 
 define('placemap','placemap');
-define('discount_deactivate','Deactivate');
+define('discount_deactivate','Deactivate Discount');
+define('discount_activate','Activate Discount');
 define('print_invoice','Print invoice');
 define('print_tickets','Print tickets');
 	define("block","Block Seats");
@@ -1535,26 +1547,28 @@ define('print_tickets','Print tickets');
 	define("clear_selection","Clear Selection");
 	define("reset","Reset");
 	define("confirm_clear", "Are you sure you want to clear your selection?");
+define("delete_link_error","Can't delete an admin link when there are seats associated to this pos");
+/
 //Events Mailer
-define("mailer_description","Use this interface to send emails to patrons attending this event.");
-define("mail_patrons_confirm","Are you sure you want to email all attending patrons?");
-define("mail_patrons","Mail Patrons");
+define("mailer_description","Use this interface to send emails to customers attending this event.");
+define("mail_patrons_confirm","Are you sure you want to email all attending customers?");
+define("mail_patrons","Mail Customers");
 define("select_template","Select template");
 define("mail_to","Mail to");
-define("attending_patrons","attending patrons");
+define("attending_patrons","attending customers");
 define("preview_template","Preview template");
-define("please_select","Please select a template...");
+define("please_select_template","Please select a template.");
 define("send_email","Send Email");
 define("include_invoice","Include Invoice");
 define("include_tickets","Include Tickets");
 
 define('cant_create_seat_zone_missing_cat','Every zone need to have catergory in a placemap part.');
-define('pub_success','publication successed: ');
+define('pub_success','The following event has been successfuly published: ');
 define('pm_vpc_AccessCode','pm_vpc_AccessCode');
 define('pm_vpc_Merchant','pm_vpc_Merchant');
 define('pm_vpc_SECURE_SECRET','pm_vpc_SECURE_SECRET');
 define('vpc_pay','vpc_pay');
-define('successfully_updated_user_details','successfully_updated_user_details');
+define('successfully_updated_user_details','Your profile has been successfully updated.');
 define('payment_not_approved','payment_not_approved');
 
   define("cc_name","Credit card owner name");

@@ -34,9 +34,8 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 
 require_once("admin/class.adminview.php");
-require_once ('view.admins.php');
 
-class UserTabsView extends AdminView {
+class tabsAdminsView extends AdminView {
 
   function draw() {
       global $_SHOP;
@@ -45,31 +44,23 @@ class UserTabsView extends AdminView {
       $_SESSION['_ADMIN_tab'] = (int)$_REQUEST['tab'];
     }
     $_SHOP->trace_subject .= "[tab:{$_SESSION['_ADMIN_tab']}]";
-    $menu = array(	con("admin_user_tab")=>"?tab=0",
-    				con("organizer_tab")=>'?tab=1',
-    				con("spoint_tab")=>"?tab=2",
-    				con("control_tab")=>"?tab=3");
-    echo $this->PrintTabMenu($menu, (int)$_SESSION['_ADMIN_tab'], "left");
+    $menu = array(con("admin_user_tab")=>0,
+          				con("spoint_tab")=>1);
+    echo $this->PrintTabMenu($menu, $_SESSION['_ADMIN_tab'], "left");
 
     switch ((int)$_SESSION['_ADMIN_tab']) {
      case 0:
-         $viewer = new AdminUserView($this->width);
-         $viewer->draw('admin');
+         require_once ('view.adminusers.php');
+         $viewer = new AdminUsersView($this->width);
+         $viewer->draw();
+         $this->addJQuery($viewer->getJQuery());
          break;
 
      case 1:
-         $viewer = new AdminUserView($this->width);
-         $viewer->draw('organizer');
-         break;
-
-     case 2:
-         $viewer = new AdminUserView($this->width);
-         $viewer->draw('pos');
-         break;
-
-     case 3:
-         $viewer = new AdminUserView($this->width);
-         $viewer->draw('control');
+         require_once ('view.spoints.php');
+         $viewer = new SpointsView($this->width);
+         $viewer->draw();
+         $this->addJQuery($viewer->getJQuery());
          break;
      }
   }

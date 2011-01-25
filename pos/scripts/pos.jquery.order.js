@@ -11,9 +11,9 @@ var loadOrder = function(){
     datatype: 'json',
     mtype: 'POST',
     postData: {"pos":true,"action":"CartInfo"},
-    colNames: ['Expire_in','Event','Count','Tickets','Price','Total'],
+    colNames: ['Expire in','Event','Count','Tickets','Price','Total'],
     colModel :[
-        {name:'Expire_in',  index:'Expire_in',  width:100, sortable:false },
+        {name:'Expire in',  index:'Expire_in',  width:100, sortable:false },
         {name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
         {name:'Count',      index:'Count',      width: 55, sortable:false, resizable: false, align:'right' },
         {name:'Tickets',    index:'Tickets',    width:210, sortable:false, resizable: false                },
@@ -67,8 +67,28 @@ var loadOrder = function(){
   $("#cat-select").change(function(){
     if($("#event-id").val() > 0 && $("#cat-select").val() > 0 ){
       var catId = $("#cat-select").val();
+      var eventId = $("#event-id").val();
       $("#ft-cat-free-seats").html(catData.categories[catId].free_seats);
       updateSeatChart();
+      ajaxQManager.add({
+        type:      "POST",
+        url:      "ajax.php?x=Discount",
+        dataType:   "json",
+        data:      {"pos":true,"action":"discounts","event_id": eventId, "cat_id":catId },
+        success:function(data, status){
+          if(data.enable_discounts){
+            $("#discount-select").html("");
+            $.each(data.discounts,function(){
+              $("#discount-select").append(this.html);
+            });
+            $("#discount-name").show();
+            $("#discount-select").show();
+          }else{
+            $("#discount-name").hide();
+            $("#discount-select").html("<option value='0'></option>"); //hide().
+          }
+        }
+      });
     }
   });
   $('#no_fee').click(function(){ refreshOrder(); });
@@ -150,6 +170,7 @@ var loadOrder = function(){
         	$("#user_data :input").each(function() {
           	$(this).val('');
         	});
+          $('#user_id').val(0);
           $("#order_action").html(data.html);
           $("#order_action").dialog('open');
           bindCheckoutSubmitForm();
@@ -173,6 +194,7 @@ var loadOrder = function(){
     	$("#user_data :input").each(function() {
         	$(this).val('');
       	});
+    	$('#user_id').val(0);
 
     return false;
   });

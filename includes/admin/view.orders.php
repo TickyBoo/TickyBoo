@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
-class OrderView extends AdminView{
+class OrdersView extends AdminView{
   var $page_length=15;
 
   function tableByHandling (){
@@ -322,13 +322,13 @@ class OrderView extends AdminView{
        user_error(shopDB::error());
        return true;
     }
-    $data = "&action=details&order_id=".(int)$order_id;
-    $menu = array( con("order_details_tickettab")=>"?subtab=0".$data,
-                   con("order_details_usertab")=>'?subtab=1'.$data,
-                   con("order_details_logtab")=>'?subtab=2'.$data,
-                   con("order_details_notetab")=>'?subtab=3'.$data);
-    echo $this->PrintTabMenu($menu, (int)$_REQUEST['subtab'], "left");
+    $data = "&action=details&order_id=".(int)$order_id.'&subtab';
+    $menu = array( con("order_details_tickettab")=>"0",
+                   con("order_details_usertab")=>'1',
+                   con("order_details_logtab")=>'2',
+                   con("order_details_notetab")=>'3');
     $_REQUEST['subtab'] = (int)$_REQUEST['subtab'];
+    echo $this->PrintTabMenu($menu, $_REQUEST['subtab'], "left", $data);
 
     //Each Order Sub Tab
     if ($_REQUEST['subtab']==0) { //Tickets
@@ -510,8 +510,12 @@ class OrderView extends AdminView{
       if(isset($_REQUEST['tab'])) {
         $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
       }
-      $menu = array( con("orders_handlings_tab")=>"?tab=0", con("orders_event_tab")=>'?tab=1');
-      echo $this->PrintTabMenu($menu, (int)$_SESSION['_overview_tab'], "left");
+      if(!isset( $_SESSION['_overview_tab'])) {
+        $_SESSION['_overview_tab'] = 2;
+      }
+      $menu = array( con("orders_handlings_tab")=>"0",
+                     con("orders_event_tab")=>'1');
+      echo $this->PrintTabMenu($menu, $_SESSION['_overview_tab'], "left");
     }
 
     if(!isset($_REQUEST['order_id'])){
@@ -675,6 +679,13 @@ class OrderView extends AdminView{
   }
 
   function extramenus(&$menu) {
+    if(isset($_REQUEST['tab'])) {
+      $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
+    }
+    if ( is($_SESSION['_overview_tab'],2)==2) {
+      return false;
+    }
+
     $menu[]="
     <table width='190' class='menu_admin' cellspacing='2'>
     <tr><td align='left' class='menu_admin_title'>".con('legende')."</td></tr>
