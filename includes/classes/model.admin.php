@@ -91,7 +91,7 @@ class Admins extends Model {
     }
   //  if (parent::delete() and $this->user) {
   //    return $this->user->delete();
-    }
+   // }
   }
 
   private function isLastAdmin(){

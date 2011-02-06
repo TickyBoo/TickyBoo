@@ -337,7 +337,7 @@ select SQL_CALC_FOUND_ROWS *
     });
     ";
     $this->addJQuery($script);
-    echo "<tr ><td colspan='2' class='admin_name'>" . con('event_view_periode') ."</td></tr>";
+    echo "<tr ><td colspan='2' class='admin_name_header'>" . con('event_view_periode') ."</td></tr>";
     if (!isset($data['event_view_begin_date'])) {
 		  list($data['event_view_begin_date'],$data['event_view_begin_time']) = explode(' ',$data['event_view_begin']);
 		}

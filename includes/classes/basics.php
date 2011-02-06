@@ -443,22 +443,8 @@ function formatDate($edate, $format="%m/%d/%Y" ){
  }
 
 function formatAdminDate($edate,$year4=true){
-  if(function_exists("date_parse")){
-    $dateArr = date_parse($edate);
-    if ($year4) {
-      $pdate = $dateArr['day']."-".$dateArr['month']."-".$dateArr['year'];
-       } else {
-         $pdate = $dateArr['day']."-".$dateArr['month']."-".substr($dateArr['year'], -2);
-       }
-  }else{
-    ereg ("([0-9]{4})-([0-9]{2})-([0-9]{2})", $edate, $regs);
-    if ($year4) {
-      $pdate = $regs[3]."-".$regs[2]."-".$regs[1];
-    } else {
-      $pdate = $regs[3]."-".$regs[2]."-".substr($regs[1], -2);
-     }
-  }
-   return $pdate;
+  $format =(defined('admin_date_format'))?constant('admin_date_format'):(($year4)?'Y':'y').'-m-d';
+  return date($format,strtotime($edate));
 }
 
 function formatTime($time){

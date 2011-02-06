@@ -144,7 +144,7 @@ class router {
 			}
 
    		$c->_dispatch($params);
-
+	}
 
 /* Disabled for development.
 

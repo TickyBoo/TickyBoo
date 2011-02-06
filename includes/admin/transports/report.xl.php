@@ -328,10 +328,10 @@ class report_xl extends AdminView {
          $where[] = 'event_id = '._esc($_POST['export_entrant_event']);
        }// else {
          if ($_POST['xl_start']) {
-           $where[] = 'order_date >= '._esc($_POST["xl_start"]);
+           $where[] = 'date(order_date) >= '._esc($_POST["xl_start"]);
          }
          if ($_POST['xl_end']) {
-           $where[] = "order_date <= "._esc($_POST["xl_end"]);
+           $where[] = "date(order_date) <= "._esc($_POST["xl_end"]);
          }
       // }
        $where = implode(' and ', $where);

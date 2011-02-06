@@ -1548,7 +1548,7 @@ define('print_tickets','Print tickets');
 	define("reset","Reset");
 	define("confirm_clear", "Are you sure you want to clear your selection?");
 define("delete_link_error","Can't delete an admin link when there are seats associated to this pos");
-/
+
 //Events Mailer
 define("mailer_description","Use this interface to send emails to customers attending this event.");
 define("mail_patrons_confirm","Are you sure you want to email all attending customers?");

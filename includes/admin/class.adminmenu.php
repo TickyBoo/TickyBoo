@@ -41,7 +41,7 @@ class MenuAdmin extends AUIComponent {
     	"index.php" 	    	=> "index_admin|control",
     	"view_users.php"	  => "tabs.admins_admin|admin",
     	"view_event.php"	  => "tabs.events_admin|admin",
-    	"view_banners.php"  => "banner_admin|admin",
+ //   	"view_banners.php"  => "banner_admin|admin",
     	"view_stats.php"	  => "statistic_admin|organizer",
     	"view_order.php"	  => "orders_admin|admin",
     	"view_template.php"	=> "template_admin|admin",
@@ -52,7 +52,7 @@ class MenuAdmin extends AUIComponent {
     );
 
     $menu_items = plugin::call('_adminMenuItems',$menu_items);
-   
+
     foreach($menu_items as $link => $text){
       list($txt,$role) = explode('|',$text );
       plugin::call('AddACLResource',$txt, $role );

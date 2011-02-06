@@ -140,7 +140,7 @@ class EventLinksView extends AdminView {
       	$allowDeletion = true;
 	      $toolTipText = "Remove {$row['user_lastname']}?";
       	
-      }
+      } else $allowDeletion = false;
           echo $this->show_button("javascript:if(confirm(\"".con('al_remove_pos')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_al&adminlink_id={$row['adminlink_id']}&event_id={$event_id}\";}","remove",2,
           array('tooltiptext'=>$toolTipText, 'disable'=>!$allowDeletion));
           echo "</nowrap></td>\n";

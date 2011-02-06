@@ -66,7 +66,7 @@
         <b>{!total_price!}</b>
       </td>
       <td align='right'>
-       <b> {valuta value=$cart->total_price_f()|string_format:"%.2f"}</b> {* //it seems this is not needed: |string_format:"%.2f" *}
+       <b> {valuta value=$cart->total_price_f()}</b> {* //it seems this is not needed: |string_format:"%.2f" *}
       </td>
       <td>&nbsp;</td>
     </tr>

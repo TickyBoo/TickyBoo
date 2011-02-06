@@ -44,5 +44,4 @@ if(is($_GET['action'],'')=='print' and is($_GET['order_id'],0) > 0){
 }
 require_once('../includes/classes/class.router.php');
 router::draw('orders', 'admin/main');
-
 ?>

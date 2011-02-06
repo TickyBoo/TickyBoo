@@ -239,7 +239,7 @@ class OrdersView extends AdminView{
 
       echo "<tr class='admin_order_$alt'><td class='admin_list_item'>".$row["order_id"]."</td>
       <td class='admin_list_item'>".$row["order_total_price"]."</td>
-      <td class='admin_list_item'>".$row["order_date"]."</td>";
+      <td class='admin_list_item'>".formatAdminDate($row["order_date"])."</td>";
 
       $com=$this->order_commands($row,TRUE);
       echo "<td class='admin_list_item' align='right' width=130>".$com["details"].$com["print"]." ".$com["send"].$com["payed"].$com["reissue"].$com["delete"]."</td>";
@@ -289,8 +289,8 @@ class OrdersView extends AdminView{
     if ($order['order_discount_price'] <>0.0) {
       $this->print_field_o('order_discount_price',$order);
     }
-    $this->print_field('order_total_price',$order);
-    $this->print_field('order_date',$order);
+    $this->print_field('order_total_price',$order ,'','valuta');
+    $this->print_field('order_date',$order,'','date');
 
     $order['order_shipment_status']=con($order['order_shipment_status']);
     $order['order_payment_status'] =con($order['order_payment_status']);

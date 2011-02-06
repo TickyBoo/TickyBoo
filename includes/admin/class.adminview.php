@@ -325,9 +325,18 @@ class AdminView extends AUIComponent {
 
   }
 
-  function print_field ($name, $data, $prefix='') {
+  function print_field ($name, $data, $prefix='',$fieldtype='') {
       echo "<tr id='{$name}-tr'><td class='admin_name' width='".self::$labelwidth."'>$prefix" , con($name) , "</td>
-            <td class='admin_value'>",(is_array($data))?$data[$name]:$data ,"</td></tr>\n";
+          <td class='admin_value'>";
+    $data = (is_array($data))?$data[$name]:$data;
+    if ($fieldtype == 'valuta') {
+      echo valuta($data);
+    } elseif ($fieldtype == 'date') {
+       echo formatAdminDate($data);
+    } else {
+       echo $data;
+    }
+    echo "</td></tr>\n";
   }
 
   function print_field_o ($name, $data, $prefix='') {

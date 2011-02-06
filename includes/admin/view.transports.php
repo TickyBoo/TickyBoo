@@ -35,7 +35,7 @@
 if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
-class ImpExpView extends AdminView {
+class TransportsView extends AdminView {
 
 	//selected export
 	var $runtype ;

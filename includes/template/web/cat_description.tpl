@@ -30,6 +30,9 @@
  * clear to you.
  *}
 {if $shop_event.event_pm_id}
+	{assign var=event_has_seats value="false"}
+  <form name='catselect' method='post' action='index.php'>
+    {ShowFormToken}
   <br>
   <table border=0 class='table_midtone'>
     <tr>
@@ -37,15 +40,29 @@
         {!cat_description!}
       </td>
     </tr>
+		<tr>
+      <th></th>
+			<th>{!category!}</th>
+			<th>{!price!}</th>
+			<th>{!tickets_available!}</th>
+		</tr>
     {category event_id=$shop_event.event_id stats="on"}
       <tr class="{cycle name='events' values="TblHigher,TblLower"}">
+        <td>
+    		  {if $user->mode() neq '-1' or $user->logged}
+            <span id="catcolor" style="background-color:{$shop_category.category_color}">
+              <input type="radio" id="category_id_{$shop_category.category_id}" name="category_id" value="{$shop_category.category_id}" {if $category_id eq $shop_category.category_id}checked{/if} onClick="setNum('{$shop_category.category_numbering}')" {if $shop_category.category_free == 0}disabled="true"{/if}>
+            </span>
+          {/if}
+        </td>
         <td><b>{$shop_category.category_name}</b></td>
         <td align='right'>
-          {valuta value=$shop_category.category_price|string_format:"%.2f"}
+          {valuta value=$shop_category.category_price}
         </td>
         <td align='left' width='25%'>
           {if $shop_category.category_free>0}
-            {if $shop_category.category_free/$shop_category.category_size ge 0.2}
+          	{assign var=event_has_seats value="true"}
+	          {if $shop_category.category_free/$shop_category.category_size ge 0.2}
               <font>{!tickets_available!} {$shop_category.category_free}</font>
             {else}
               <font color='Yellow'>{!tickets_available!} {$shop_category.category_free}</font>
@@ -55,61 +72,28 @@
           {/if}
         </td>
       </tr>
-      {if $shop_category.category_free>0}
-        {assign var=js_array value="$js_array unnum_cats[unnum_cats.length]='`$shop_category.category_numbering`';"}
-        {capture assign=opt}
-          <option value='{$shop_category.category_id}' {if $shop_category.category_id eq $smarty.request.category_id}selected{/if}>
-             {$shop_category.category_name} - {valuta value=$shop_category.category_price|string_format:"%.2f"}
-          </option>
-        {/capture}
-        {assign var=opt_array value="$opt_array $opt"}
-      {/if}
+      <tr>
+        <td colspan='4'>
+          {!Discount_for!}
+          {discount event_id=$shop_event.event_id cat_price=$shop_category.category_price}
+            &nbsp;
+            <span class='note'>
+               {$shop_discount.discount_name}:
+                {valuta value=$shop_discount.discount_price|string_format:"%.2f"}
+            </span> &nbsp;
+          {/discount}
+        </td>
+      </tr>
     {/category}
-    <tr>
-      <td colspan='3'>
-        {discount event_id=$shop_event.event_id cat_price=$shop_category.category_price}
-          &nbsp;
-          <span class='note'>
-            {!Discount_for!} {$shop_discount.discount_name}:
-              {valuta value=$shop_discount.discount_price|string_format:"%.2f"}
-          </span><br>
-        {/discount}
-      </td>
-    </tr>
      <tr>
       <td colspan='3' align='left' class='note'>
         {!prices_in!} {$organizer_currency}
       </td>
     </tr>
   </table>
-  <br>
-
-  <script><!--
-  var unnum_cats=new Array;
-  {$js_array}
-
-  {literal}
-
-  function getElement(id){
-       if(document.all) {return document.all(id);}
-       if(document.getElementById) {return document.getElementById(id);}
-  }
-
-  function setQtyShown(){
-        if(cat_select_e=getElement('cat_select')){
-           if(qty_e=getElement('qqq')){
-             if(unnum_cats[cat_select_e.selectedIndex]=='none'){
-               qty_e.style.display='block';
-             }else{
-               qty_e.style.display='none';
-             }
-           }
-         }
-       }
-   -->
-  </script>
   {/literal}
   {if $user->mode() eq '-1' and !$user->logged}
+      <br />
     	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
       	<tr>
     			<td class='TblLower'>
@@ -118,19 +102,82 @@
 			</tr>
 		</table> <br/>   <br/>
   {elseif $shop_event.event_date ge $smarty.now|date_format:"%Y-%m-%d"}
-    <form name='catselect' method='post' action='index.php'>
-      {ShowFormToken}
-      <table  class='table_midtone'>
-        <tr>
-          <td class='title2' colspan='3' >
-            {!select_category!}
-          </td>
-        </tr>
-        <tr>
+    <div id='num-tickets' style='visibility:hidden;'>
+      <label>
+  			{!select_qty!}:
+				{cart->maxSeatsAlowed event=$shop_event}
+                <select name='qty' id='qty'  class="styled">
+                  {section name="myLoop" start=0 loop=$seatlimit+1}
+                    <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
+                  {/section}
+                </select>
+                <span class="limit">{if $seatlimit>0}
+                   ({!order_limit!} {$seatlimit})
+                {/if}</span>
+		  </label>
+	  </div>
+	      <!-- Steps -->
+    {if $event_has_seats == "true"}
+			<div class="next">
+		        <input type='hidden' name='event_id' value='{$shop_event.event_id}'>
+		        <button title="Next" onClick="return validateSelection();">Next</button>
+			</div>
+  	{/if}
+    </form>
+		{literal}
+			<script>
+					mode = 'both';
+					function setNum(cat_mode) {
+						if (cat_mode != 'none') {
+							$("#num-tickets").css({visibility: "hidden", display: ""});
+							mode = 'both';
+						}
+						else {
+							$("#num-tickets").css({visibility: "visible", display: ""});
+							mode = 'none';
+						}
+						$("#qty").val(0);
+					}
 
-          {if $shop_event.pm_image}
+					function validateSelection() {
+						if (mode == 'none') {
+							bool= ($('#qty').val() != 0 && $('input[name=category_id]:checked').val() != "");
+							if (!bool) {
+								showErrorMsg('Please select your category and the number of tickets');
+								$("html,body").animate({
+			        				scrollTop: $("#error-message").offset().top
+									}, 1000, function(){
+									        //scroll complete function
+									});
+								return false;
+							}
+						} else {
+							bool= $('input[name=category_id]:checked').val() != null;
+							if (!bool) {
+								showErrorMsg('Please select your category');
+								$("html,body").animate({
+			        				scrollTop: $("#error-message").offset().top
+									}, 1000, function(){
+									        //scroll complete function
+									});
+								return false;
+							}
+						}
+						$('#catselect').submit();
+					}
+			</script>
+			{/literal}
+      {if $shop_event.pm_image}
+        <br>
+        <table  class='table_midtone'>
+          <tr>
+            <td class='title2' colspan='3' >
+              {!select_category!}
+            </td>
+          </tr>
+          <tr>
             <td colspan='3'>
-              <img src="files/{$shop_event.pm_image}"  border='0'  usemap="#ort_map">
+              <img class="chartmap" src="files/{$shop_event.pm_image}"  border='0'  usemap="#ort_map">
               <map name="ort_map">
                 {category event_id=$shop_event.event_id stats="on"}
                   {if $shop_category.category_free gt 0}
@@ -139,37 +186,10 @@
                 {/category}
               </map>
             </td>
-          {else}
-
-            <td width='50%' align='left'>
-              <select name='category_id' onchange='setQtyShown()' id='cat_select' style="float:right;" class="select">
-                 {$opt_array}
-              </select>
-            </td>
-            <td  align='left'>
-              <div id='qqq'  align='left' style='font-size:9px; float:left;'>x
-                {cart->maxSeatsAlowed event=$shop_event}
-                <select style="float:none;"  name='qty' >
-                  {section name="myLoop" start=0 loop=$seatlimit+1}
-                    <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
-                  {/section}
-                </select>
-                {if $seatlimit>0}
-                   ({!order_limit!} {$seatlimit})
-                {/if}
-              </div>
-            </td>
-            <td  align='right'>
-              <input type='submit' name='submit_cat' value='{!continue!}'>
-              <input type='hidden' name='event_id' value='{$shop_event.event_id}'>
-            </td>
-          {/if}
         </tr>
       </table>
-    </form><br>
-    <script><!--
-    setQtyShown();
-    --></script>
+    {/if}
+    <br>
   {else}
     	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
       	<tr>
