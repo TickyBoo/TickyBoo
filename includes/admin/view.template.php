@@ -37,6 +37,8 @@ require_once("admin/class.adminview.php");
 
 
 class TemplateView extends AdminView{
+  private $types = array('systm','email', 'swift', 'pdf2','pdf');
+
   function show_pdf() {
     if ($_GET['action'] == 'view' and $_SESSION['_TEMPLATE_tab']=='3'){
       $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
@@ -343,10 +345,20 @@ class TemplateView extends AdminView{
     ";
     $this->addJQuery($script);
   }
+  function execute(){
+   $type =  $this->types[(int)$_SESSION['_TEMPLATE_tab']];
+    if (($_GET['action'] == 'view') and ($type=='pdf2')){
+      $query = "SELECT * FROM Template WHERE template_id="._esc($_GET['template_id']);
+      if (!$row = ShopDB::query_one_row($query)){
+        return 0;
+      }
+      $this->template_view($row, $type);
+      return 1;
+    }
+  }
 
   function draw (){
     global $_SHOP;
-    $types = array('systm','email', 'swift', 'pdf2','pdf');
     if(isset($_REQUEST['tab'])) {
       $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
    	}
@@ -359,15 +371,9 @@ class TemplateView extends AdminView{
       con("templ_pdf2")=>3
     );
 
-    $query = "SELECT count(*) FROM Template
-              where template_type = 'pdf'";
-    if ($res = ShopDB::query_one_row($query, false) and $res[0] >0) {
-      $menu[con("templ_pdf")]= 4;
-   	}
-
     echo $this->PrintTabMenu($menu, $_SESSION['_TEMPLATE_tab'], "left");
 
-    $type =  $types[(int)$_SESSION['_TEMPLATE_tab']];
+    $type =  $this->types[(int)$_SESSION['_TEMPLATE_tab']];
 
 
 		if ($_POST['action'] == 'insert'){
