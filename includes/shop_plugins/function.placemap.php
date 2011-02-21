@@ -36,7 +36,7 @@ function smarty_function_placemap($params, $smarty){
 
     $pz = preg_match(strtolower('/no|0|false/'), $params['print_zone']);
     $imagesize = is ($params['imagesize'], 16);
-    return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area'], $imagesize, $params['seatlimit']);
+    return placeMapDraw($params['category'], $params['restrict'], !$pz, $params['area'], $imagesize, is($params['seatlimit'],15));
 
 }
 
