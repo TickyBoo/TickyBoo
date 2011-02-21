@@ -41,6 +41,8 @@ session_name('ShopSession');
 session_start();
 
 if (isset($_POST['check'])) {
+  writelog(print_r($_SESSION['_NoSpam'],true));
+  writelog(print_r($_POST,true));
   $check = $_SESSION['_NoSpam'][clean($_POST['name'])] == md5(strtoupper ($_POST['check']));
   echo json_encode($check);
   exit;
@@ -142,6 +144,24 @@ function clean($string, $type='ALL') {
 
   }
   return $string;
+}
+function writeLog($what, $where = FT_DEBUG){
+  Global $_SHOP;
+  if ($where < 0) { return; }
+
+  $logname = 'error';
+  if ($where == FT_DEBUG) {
+    $logname = 'debug';
+  }
+  if (!isset($_SHOP->hasloged[$where])){
+    $what = date('d.m.Y H:i ') ."--------------------------------\n". $what;
+    $_SHOP->hasloged[$where] =1;
+  }
+  $h = fopen('includes/temp/' . $logname.'.'.date('Y-m-d') . '.log', 'a');
+  if ($h) {
+    fwrite($h,utf8_encode($what . "\n"));
+    fclose($h);
+  }
 }
 
 ?>
