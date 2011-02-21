@@ -62,7 +62,7 @@ $(window).load(function(){
           data: {
             name: "user_nospam",
             check: function() {
-              return $("#user_nospam").val();
+              return $('input[name$="user_nospam"]').val();
             }
           }
   			}
