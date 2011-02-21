@@ -31,6 +31,10 @@
  *}
 
 
-{include file="header.tpl" name=!agb_name! header=!agb_info!}
+{include file="header.tpl" name=!agb_name! }
+<br>
+<p><h3>This file is a demo document.</h3> <br><br>Please copy the <b>includes/template/web/agb.tpl</b>
+to <b>includes/template/web/custom/agb.tpl</b> and change this text as you like it to be. </p>
+<br>
 
 {include file="footer.tpl"}

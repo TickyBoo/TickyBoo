@@ -283,14 +283,13 @@ select SQL_CALC_FOUND_ROWS *
     }
 		$this->print_field_o('event_id', $data);
 		$this->print_input('event_name', $data, $err, 30, 100, $main );
-		if ( !$data['event_id'] ) {
-			$this->print_select_group( 'event_group_id', $data, $err, $main );
+	  $this->print_select_group( 'event_group_id', $data, $err, $main );
+	  if ( !$data['event_id'] ) {
       If ($data['event_ort_id'] && empty($data['event_pm_ort_id'] )) {
         $data['event_pm_ort_id'] = ((int)$data['event_pm_id']).','.$data['event_ort_id'];
       }
 			$this->print_select_pm( 'event_pm_ort_id', $data, $err,(($data['event_main_id'])?($data['event_pm_ort_id']):'main'));
 		} else {
-			$this->print_field_o( 'event_group_name', $data );
 			$this->print_field(   'ort_name', $data );
 			$this->print_field_o( 'pm_name', $data );
 		}

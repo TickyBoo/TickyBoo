@@ -14,14 +14,9 @@
   <!--Start Image Mapping-->
   <script type="text/javascript" src="scripts/jquery/jquery.maphilight.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery.metadata.min.js"></script>
-  
-  {literal}
-  <script>$(function() {
-		$('.chartmap').maphilight();
-	});</script>
-  {/literal}
+
   <!--End Image Mapping-->
-  
+
   <script type="text/javascript">
   	var lang = new Object();
   	lang.required = '{!mandatory!}';        lang.phone_long = '{!phone_long!}'; lang.phone_short = '{!phone_short!}';

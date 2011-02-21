@@ -105,7 +105,6 @@ class MyCart_Smarty {
 
   function remove_item_f ($event_id, $cat_id, $item_id){
     if($cart=$_SESSION['_SMART_cart']){
-
       if($places=$cart->remove_place($event_id,$cat_id,$item_id)){
         Seat::free(session_id(),$event_id,$cat_id,$places);
       }

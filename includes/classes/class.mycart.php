@@ -277,7 +277,9 @@ class EventItem {
     global $_SHOP;
     if($this->not_load){
 
-      	$qry="select * from Event, Ort where event_id='{$this->event_id}' and event_ort_id=ort_id";
+      $qry="select event_name,event_date, event_time, event_ort_id, ort_name, ort_city, event_order_limit
+            from Event left join Ort on event_ort_id=ort_id
+            where event_id='{$this->event_id}' ";
 		//echo $qry;
       	if($result=ShopDB::query($qry) and $obj=shopDB::fetch_object($result)){
 	        $this->event_name=$obj->event_name;
@@ -498,10 +500,10 @@ class PlaceItem {
       $res= $this->count()*$price;
       if($discs=$this->discounts){
         foreach($discs as $discount){
-	  if($discount){
+          if($discount){
             $res-=$discount->total_value($price,1);
-	  }
-	}
+          }
+        }
       }
       return $res;
     }
@@ -550,5 +552,6 @@ class PlaceItem {
       return FALSE;
     }
   }
+
 }
 ?>

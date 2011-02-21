@@ -188,6 +188,11 @@
             </td>
         </tr>
       </table>
+      {literal}
+      <script>$(function() {
+    		$('.chartmap').maphilight();
+    	});</script>
+      {/literal}
     {/if}
     <br>
   {else}

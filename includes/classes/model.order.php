@@ -1052,6 +1052,8 @@ class Order Extends Model {
         $order['bill'][$key]=array(
           'event_name'=>$data['event_name'],
           'event_date'=>$data['event_date'],
+          'event_time'=>$data['event_time'],
+          'event_open'=>$data['event_open'],
           'ort_name'=>$data['ort_name'],
           'ort_city'=>$data['ort_city'],
           'qty'=>1,
