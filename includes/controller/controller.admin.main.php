@@ -169,7 +169,7 @@ class ctrlAdminMain extends AUIComponent  {
     <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
     <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
     <title>" . $this->getTitle() . "</title>
-    <link rel='stylesheet' href='../css/flick/jquery-ui-1.8.1.custom.css' />
+    <link rel='stylesheet' href='../css/flick/jquery-ui-1.8.6.custom.css' />
     <link rel='stylesheet' href='../css/jquery.tooltip.css' />
      <link rel='stylesheet' media='screen' type='text/css' href='../css/colorpicker/layout.css' />
     <link rel='stylesheet' media='screen' type='text/css' href='../css/colorpicker/colorpicker.css' />
@@ -178,7 +178,7 @@ class ctrlAdminMain extends AUIComponent  {
 
     <link rel='shortcut icon' type='images/png' href='../images/favicon.png' />
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.8.1.custom.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.8.6.custom.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>
     <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.caret.js\"></script>
@@ -203,7 +203,7 @@ class ctrlAdminMain extends AUIComponent  {
           setTimeout(function()".'{'."$('#notice-message').hide();}, 10000);
         }
       });
-      
+
       var field_length=0;
 
       function TabNext(obj,event,len,next_field) {
@@ -219,7 +219,7 @@ class ctrlAdminMain extends AUIComponent  {
           }
         }
       }
-      
+
     </script>
   </head>
   <body >
