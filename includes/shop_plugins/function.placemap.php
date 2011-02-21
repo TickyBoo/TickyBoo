@@ -207,7 +207,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
                   $reszz = "<img class='pm_seatmap' style='{$sty}' src='".$_SHOP->images_url."seatused.png'>";
                 }
             } elseif ($seat[PM_ZONE]) {
-                $reszz = "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."b.gif'>";
+                $reszz = "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."dot.gif'>";
             } else  {
                $reszz = "<img class='pm_seatmap' style='{$sty}' border=0 src='".$_SHOP->images_url."dot.gif' />";
             }
