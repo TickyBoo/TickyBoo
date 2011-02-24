@@ -39,7 +39,7 @@
  */
 if (!defined('ft_check')) {die('System intrusion ');}
 
-  
+
   global $_SHOP;
   if(function_exists("mb_internal_encoding")) {
     mb_internal_encoding("UTF-8");
@@ -55,14 +55,15 @@ if (!defined('ft_check')) {die('System intrusion ');}
 // mb_
 
 //check if the site is online
-  require_once("classes/class.shopdb.php");
   require_once("classes/basics.php");
+  set_error_handler("customError");
+
+  require_once("classes/class.shopdb.php");
   require_once("classes/class.model.php");
   if(isset($_SHOP->auth_required)){
     require_once "Auth/Auth.php";
     require_once "classes/model.admin.php";
   }
-  set_error_handler("customError");
   //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
 

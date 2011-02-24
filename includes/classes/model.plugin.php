@@ -89,9 +89,9 @@ class plugin extends model {
   	}
   }
 
-  function save ($exclude= false){
+  function save($id = null, $exclude= false){
 		$this->_ser_extra();
-    return parent::save(null, $exclude);
+    return parent::save($id, $exclude);
   }
 
   public function __call($method, $args) {
@@ -133,7 +133,7 @@ class plugin extends model {
       }
 
     } else $return = null;
-    
+
     if (!is_array($_SHOP->plugins )) return $return;
     // echo "<pre>",$eventname;
 
@@ -232,7 +232,7 @@ class plugin extends model {
 		return parent::CheckValues($data);
 	}
 
-  function _fill ($data, $nocheck=true){
+  function _fill (& $data, $nocheck=true){
     if (!empty($data['plugin_name'])) $this->plug($data['plugin_name']);
     $ok = parent::_fill($data, $nocheck);
     if ($this->_plug && !$this->_plug->isInit) $this->_plug->init();
@@ -327,7 +327,7 @@ abstract class basePlugin {
 	}
 
   function __get($name) {
-    if ($this->handling and ($result = $this->handling->$name)) {
+    if ($this->plugin and ($result = $this->plugin->$name)) {
       return $result;
     } else {
       return false;
@@ -335,8 +335,8 @@ abstract class basePlugin {
   }
 
 	function __set($name, $value) {
-		if ($this->handling) {
-	  		return $this->handling->$name = $value;
+		if ($this->plugin) {
+	  		return $this->plugin->$name = $value;
 		} else {
 	  		return false;
 		}

@@ -181,7 +181,7 @@ class CustomAuthContainer extends Auth_Container {
       return true;
     }
 
-    function fetchData($username, $password) {
+    function fetchData($username, $password, $isChallengeResponse=false) {
         // Check If valid etc
         $query = "select admin_id, admin_password, admin_status
                   from Admin

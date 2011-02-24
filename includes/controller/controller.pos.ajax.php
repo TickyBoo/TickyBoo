@@ -49,6 +49,12 @@ $fond = 0;
 
 require_once(CLASSES."jsonwrapper.php"); // Call the real php encoder built into 5.2+
 
+  //include_once('CONFIG'.DS.'init_config.php');
+//  var_dump($_SHOP->timezone);
+  if(function_exists("date_default_timezone_set")) {
+    @date_default_timezone_set($_SHOP->timezone);
+  }
+
 require_once ("controller.web.checkout.php");
 
 class ctrlPosAjax extends ctrlWebCheckout {
@@ -59,6 +65,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
   private $ErrorsAsWarning = false;
 
   public function draw($page, $action) {
+
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
   		$this->request    = $_REQUEST;
   		$this->actionName = $action;
@@ -186,7 +193,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		if (count($this->json['events'])==0) {
 		  $option = "<option value='{$evt['event_id']}'>".con('no_event_sets')."</option>";
 		  $this->json['events'][] = array ('html'=>$option,'free_seats'=>0);
-        }		
+        }
     }
 		return true;
 	}
@@ -687,7 +694,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
       $this->__User->load_f($user_id);
 
     } elseif ((int)$_POST['user_id']==0) {
-    
+
       $query="SELECT count(*) as count
               from User
               where user_email="._esc($_POST['user_email']);

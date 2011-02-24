@@ -50,7 +50,7 @@ echo "<script>window.location.href='$url';</script>"; exit;
 
 //require_once (CLASSES.'class.smarty.php');
 require_once("classes/AUIComponent.php");
-
+require_once('shop_plugins/function.minify.php');
 // remove the # below under linux to get a list of locale tags.
 
 #  print_r(list_system_locales());
@@ -169,20 +169,15 @@ class ctrlAdminMain extends AUIComponent  {
     <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
     <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
     <title>" . $this->getTitle() . "</title>
-    <link rel='stylesheet' href='../css/flick/jquery-ui-1.8.6.custom.css' />
-    <link rel='stylesheet' href='../css/jquery.tooltip.css' />
-     <link rel='stylesheet' media='screen' type='text/css' href='../css/colorpicker/layout.css' />
-    <link rel='stylesheet' media='screen' type='text/css' href='../css/colorpicker/colorpicker.css' />
+    <link rel='shortcut icon' type='images/png' href='../images/favicon.png' />
 
+    ".minify('css','','')."
+    ".minify('css','colorpicker/layout.css,colorpicker/colorpicker.css','css')."
     <link rel='stylesheet' href='admin.css' />
 
-    <link rel='shortcut icon' type='images/png' href='../images/favicon.png' />
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery-ui-1.8.6.custom.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.dimensions.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.tooltip.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../scripts/jquery/jquery.caret.js\"></script>
-     <script type=\"text/javascript\" src=\"../scripts/jquery/colorpicker/colorpicker.js\"></script>
+    ".minify('js','','scripts/jquery')."
+    ".minify('js','jquery.dimensions.min.js,jquery.caret.js,colorpicker/colorpicker.js','scripts/jquery')."
+
     <script type=\"text/javascript\" >
       function set_lang(box)
       {
@@ -289,6 +284,16 @@ class ctrlAdminMain extends AUIComponent  {
 
     echo "
       <br><br>
+      <div id='footer'>
+     		 <!-- To comply with our GPL please keep the following link in the footer of your site -->
+				 Copyright &copy; 2011 by <b>Fusion Ticket solutions Limited </b> | Powered By <a href='http://fusionticket.org' target='_blank'>Fusion Ticket</a>
+			</div>
+
+		</div>\n";
+    if (strpos(constant('CURRENT_VERSION'),'svn') !== false) {
+      print_r($_SHOP->Messages);
+    }
+echo "
       <script type=\"text/javascript\">
         $(document).ready(function(){
           $(\"a[class*='has-tooltip']\").tooltip({
@@ -305,15 +310,7 @@ class ctrlAdminMain extends AUIComponent  {
           ". is($this->items['jquery'],'') ."
         });
       </script>
-      <div id='footer'>
-     		 <!-- To comply with our GPL please keep the following link in the footer of your site -->
-				 Grapes Boxoffice, built by <a href='http://www.grapestech.com' target='_blank'>Grapes Technologies</a> | Powered By <a href='http://fusionticket.org' target='_blank'>Fusion Ticket</a>
-			</div>
-		</div>\n";
-    if (strpos(constant('CURRENT_VERSION'),'svn') !== false) {
-      //print_r($_SHOP->Messages);
-    }
-echo "
+
 	</body>
 </html>";
   }

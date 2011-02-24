@@ -572,6 +572,17 @@ class ShopDB {
         $handle=@fopen($_SHOP->tmp_dir."shopdb.".date('Y-m-d') .".log","a");
         @fwrite($handle, date('c',time()).' '. $debug."\n");
         @fclose($handle);
+
+        require_once("classes/class.restservice.client.php");
+        try{
+          $rsc = new RestServiceClient('http://cpanel.fusionticket.org/reports/querys.xml'); //cpanel.fusionticket.org
+          $rsc->subject  = "{$_SHOP->db_errno}: {$_SHOP->db_error}";
+          $rsc->data     =  gzcompress($debug);
+          $rsc->excuteRequest();
+        }catch(Exception $e){
+          print_r($e->getMessage());
+        }
+
     }
 
     static function checkdatabase($update=false, $viewonly=false){

@@ -537,11 +537,11 @@ function orphanCheck(){
     if ($_SHOP->trace_on=='TRACEONLY') {
       file_put_contents($file, $content ,FILE_APPEND);
     } else {
-      $text =getOphanData();
+      echo $text =getOphanData() . 'xx';
       file_put_contents($_SHOP->trace_dir.'last_orpanckeck.log',md5($text),LOCK_EX );
-      if ($_SHOP->TraceOrphan <> md5($text)) {
-        trace("\n\nOrphan Check Dump: ".$text);
-      }
+
+      trace("\n\nOrphan Check Dump: ".$text);
+      $_SHOP->TraceOrphan = '';
       if ($_SHOP->TraceOrphan <> md5($text) || stripos($_SHOP->trace_on,'ALL') !== false) {
 
         $content = date('c',time()).' : '.$_SHOP->trace_subject."\n". $_SHOP->tracelog."\n";
@@ -549,14 +549,14 @@ function orphanCheck(){
         file_put_contents($file, $content ,FILE_APPEND);
 
         if ($_SHOP->TraceOrphan <> md5($text) && stripos($_SHOP->trace_on, 'SEND') !== false) {
+          echo ('Orphan_error_send');
           require_once("classes/class.restservice.client.php");
           try{
-            $rsc = new RestServiceClient('http://cpanel.fusionticket.org/reports/orphans.xml'); //cpanel.fusionticket.org
-            $rsc->subject    = $_SHOP->trace_subject;
-            $rsc->data  = gzcompress (file_get_contents($file));
-            $rsc->orphan = $text;
+            $rsc = new RestServiceClient('http://localhost/report/orphans.xml'); //cpanel.fusionticket.org
+            $rsc->subject = $_SHOP->trace_subject;
+            $rsc->data    = gzcompress (file_get_contents($file));
             $rsc->excuteRequest();
-          //  print_r($rsc->getResponse());
+            print_r($rsc);
           }catch(Exception $e){
             print_r($e->getMessage());
           }
@@ -796,7 +796,6 @@ function list_system_locales(){
 
 
 function customError($errno, $errstr, $error_file, $error_line, $error_context) {
-  GLOBAL $_SHOP;
   $errortype = array(
     E_ERROR           => 'Error',
     E_WARNING         => 'Warning',
@@ -817,18 +816,11 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
 
   //...blah...
   $error = is($errortype[$errno],$errno);
-  writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
   if ($errno & $user_errors) {
-    require_once("classes/class.restservice.client.php");
-    try{
-      $rsc = new RestServiceClient('http://cpanel.fusionticket.org/reports/errors.xml'); //cpanel.fusionticket.org
-      $rsc->subject  = "{$error}: $errstr, $error_file @ $error_line";
-      $rsc->excuteRequest();
-    //  print_r( $rsc->getResponse());
-    }catch(Exception $e){
-      print_r($e->getMessage());
-    }
+    writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
   }
+  //  writeLog( print_r($error_context, true), FT_ERROR);
+
 }
 
 function getIpAddress() {

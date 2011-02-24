@@ -33,7 +33,17 @@ h2 { margin: 0 0 10px; padding: 10px 0 3px; }
 	text-align: left;
 }
 
-#footer { font-size: 11px; text-align: center; border-top: 1px solid #ccc; padding: 0px 5px 0px 5px; display: block; overflow: auto; width: 805px }
+#footer {
+  font-size: 11px;
+  text-align: center;
+  vertical-align: bottom;
+  border-top: 1px solid #ccc;
+
+  display: block;
+  overflow: auto;
+  height: 15;
+  width: 805px;
+}
 
 #footer a{ font-family:Verdana; color:#FF7A09; font-weight:bold; text-decoration:none; cursor: pointer;}
 
@@ -122,21 +132,15 @@ tr.admin_list_row_1:hover {background-color:#Faede4}
 
 }
 
-.menu_admin_link{font-size: 12px;
-
-                  padding-left: 25px;
-
-		  padding-top: 2px;
-
-		  padding-bottom: 2px;
-
-		  text-decoration:none;
-
-		  color:#000000;
-
-		  display:block;
-
-		  }
+.menu_admin_link{
+  font-size: 12px;
+  padding-left: 25px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-decoration:none;
+  color:#000000;
+  display:block;
+}
 
 .menu_admin_link:hover{font-size: 12px;
 

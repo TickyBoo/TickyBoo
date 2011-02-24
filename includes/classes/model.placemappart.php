@@ -475,7 +475,7 @@ class PlaceMapPart Extends Model {
               $category_name = "{$this->pmp_name} {$old_cat->category_name}";
             }
 
-            $cat = PlaceMapCategory.create( $this->pmp_pm_id,
+            $cat = PlaceMapCategory::create( $this->pmp_pm_id,
                                             $category_name,
                                             $old_cat->category_price,
                                             $old_cat->category_template,

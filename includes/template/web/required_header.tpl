@@ -1,19 +1,13 @@
   <!-- Required Header .tpl Start -->
-  <!--
-  <link rel="stylesheet" type="text/css" href="css/flick/jquery-ui-1.8.1.custom.css" media="screen" />
-  <link rel='stylesheet' href='css/jquery.tooltip.css' media="screen" />
-   -->
-  {minify type='css' files='css/flick/jquery-ui-1.8.6.custom.css,css/jquery.tooltip.css'}
-
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-  {minify type='js' base='scripts/jquery' files='jquery.min.js,jquery-ui-1.8.6.custom.min.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal-1.3.5.js,jquery.countdown.pack.js,jquery.tooltip.min.js'}
+  {minify type='css'}
 
+  {minify type='js' base='scripts/jquery'} {* Shows the default list *}
+  {minify type='js' base='scripts/jquery' files='jquery.countdown.pack.js,query.maphilight.js,jquery.metadata.min.js"}
   {minify type='js' files='scripts/shop.jquery.forms.js'}
 
   <!--Start Image Mapping-->
-  <script type="text/javascript" src="scripts/jquery/jquery.maphilight.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.metadata.min.js"></script>
 
   <!--End Image Mapping-->
 

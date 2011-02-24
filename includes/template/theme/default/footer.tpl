@@ -37,7 +37,7 @@
   </tr>
 </table>
 </div>
-	<div class="footer"  valign="top">
+	<div class="footer">
 		<hr width="100%" />
 		<!-- To comply with our GPL please keep the following link in the footer of your site -->
     <!-- Failure to abide by these rules may result in the loss of all support and/or site status. -->

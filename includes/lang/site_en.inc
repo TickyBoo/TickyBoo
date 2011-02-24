@@ -600,7 +600,6 @@ define("order_event_list_title","Orders by Event");
 	define("order_type_reserved","Reserved");
 	define("purge","Purge");
 	define("order_patron","Customer");
-	define("order_place","Created By");
 
 	//View Order
 	define("order_nr","Order #: ");
@@ -1537,7 +1536,6 @@ define("logged_in","User:");
 //Events
 define("placemap","Event Placemap");
 
-define('placemap','placemap');
 define('discount_deactivate','Deactivate Discount');
 define('discount_activate','Activate Discount');
 define('print_invoice','Print invoice');
