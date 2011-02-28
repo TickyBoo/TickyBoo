@@ -4,7 +4,7 @@
   {minify type='css'}
 
   {minify type='js' base='scripts/jquery'} {* Shows the default list *}
-  {minify type='js' base='scripts/jquery' files='jquery.countdown.pack.js,query.maphilight.js,jquery.metadata.min.js"}
+  {minify type='js' base='scripts/jquery' files='jquery.countdown.pack.js,jquery.maphilight.js,jquery.metadata.min.js"}
   {minify type='js' files='scripts/shop.jquery.forms.js'}
 
   <!--Start Image Mapping-->

@@ -207,6 +207,7 @@ class Gui_smarty {
       $_SESSION['tokens'][$name]['n'] = md5(mt_rand());
     }
     $_SESSION['tokens'][$name]['t'] = time();
+    $_SESSION['tokens'][$name]['ip'] = getIpAddress();
     $token = $_SESSION['tokens'][$name]['n'];
     $name = $name.'_'.base_convert(mt_rand(), 10,36);
     return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'~'.$token.'~'.getIpAddress()))."'/>";

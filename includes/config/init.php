@@ -158,10 +158,16 @@ if (!defined('ft_check')) {die('System intrusion ');}
       break;
     }
   }
+  echo  getIpAddress();
   if (!$accepted) {
      $tokens = print_r($_SESSION['tokens'], true);
-     trace('% Tokens '.(($tokens)?$tokens:'NOT FOUND !!!'));
-     trace("% Token {$name}, {$value}, {$testme}");
+     writeLog('% Tokens '.(($tokens)?$tokens:'NOT FOUND !!!'));
+     writeLog("% Token {$name}, {$value}, {$testme}");
+    writeLog('% used IP: '.getIpAddress());
+    writeLog(print_r($_SERVER,true));
+     writeLog(print_r($_ENV,true));
+    writeLog('     ---------------------------------------------------');
+
      orphancheck();
      session_unset();
      session_destroy();
