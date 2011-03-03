@@ -124,8 +124,11 @@ if (!defined('ft_check')) {die('System intrusion ');}
       $_SHOP->$key = $value;
     }
   }
-//  print_r($res);
-//starting a new session
+
+//  echo "<pre>";
+//  print_r($_SHOP);
+//  echo "</pre>";
+  //starting a new session
 
   session_name($_SHOP->session_name);
 
@@ -158,7 +161,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
       break;
     }
   }
-  echo  getIpAddress();
+//  echo  getIpAddress();
   if (!$accepted) {
      $tokens = print_r($_SESSION['tokens'], true);
      writeLog('% Tokens '.(($tokens)?$tokens:'NOT FOUND !!!'));

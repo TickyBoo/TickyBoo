@@ -1,10 +1,10 @@
 $(document).ready(function(){
 	$(document).checkboxAreaSelect();
-  
+
   //bindLinks();
-  
-  console.log(address);
-  
+
+ // console.log(address);
+
 	$(".loading").ajaxSend(function(evt, request, settings){
 		$(this).show();
 	});

@@ -73,12 +73,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 	}
 */
- //Shopping cart and place reservation delay
+
+  //Shopping cart and place reservation delay
   //how many times the place can stay reserved
-  $_SHOP->res_delay=660;
+//  $_SHOP->res_delay=660;
 
   //the same value for the shopping cart, usually smaller
-  $_SHOP->cart_delay=$_SHOP->res_delay-60;
+//  $_SHOP->cart_delay=$_SHOP->res_delay-60;
 
 
 //  $_SHOP->dir_mode=0755;
