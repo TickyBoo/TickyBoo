@@ -42,7 +42,7 @@ class Organizer  Extends Model {
                                  'organizer_fax', '*organizer_email', 'organizer_place',
                                  'organizer_phone','*organizer_currency', 'organizer_logo');
 
-  function load ($dummy = 0){
+  public static function load ($dummy = 0){
     $query = "select * from Organizer limit 1";
     if ($row = ShopDB::query_one_row($query)){
       $org = new Organizer();

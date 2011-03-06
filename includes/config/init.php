@@ -140,36 +140,18 @@ if (!defined('ft_check')) {die('System intrusion ');}
     session_start();
     $_SESSION['_SHOP_SYS_SECURE_ID'] = $_SHOP->secure_id;
   }
-// check the order system for outdated orders and reservations
-
-  check_system();
 
 //authentifying (if needed)
-  $accepted = true;
-  foreach ($_POST as  $key => $value) {
-    if (substr($key,0,3) === '___') {
-      $key  = substr($key, 3) ;
-      $name = substr($key, 0, strpos($key,'_'));
-      if (!isset($_SESSION['tokens'][$name])) {
-        $accepted = false;
-      } else {
-        $testme = sha1 ($key.'~'.$_SESSION['tokens'][$name]['n'].'~'.getIpAddress());
-        if(strcmp($testme, $value )<>0 ) {
-          $accepted = false;
-        }
-      }
-      break;
-    }
-  }
-//  echo  getIpAddress();
+  require_once "classes/class.secure.php";
+  $accepted = Secure::CheckTokens();
   if (!$accepted) {
      $tokens = print_r($_SESSION['tokens'], true);
      writeLog('% Tokens '.(($tokens)?$tokens:'NOT FOUND !!!'));
      writeLog("% Token {$name}, {$value}, {$testme}");
-    writeLog('% used IP: '.getIpAddress());
-    writeLog(print_r($_SERVER,true));
+     writeLog('% used IP: '.getIpAddress());
+     writeLog(print_r($_SERVER,true));
      writeLog(print_r($_ENV,true));
-    writeLog('     ---------------------------------------------------');
+     writeLog('     ---------------------------------------------------');
 
      orphancheck();
      session_unset();
@@ -181,6 +163,9 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
      die($string);
   }
+
+  // check the order system for outdated orders and reservations
+  check_system();
 
 
 //loading language file

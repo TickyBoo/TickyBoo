@@ -202,15 +202,11 @@ class Gui_smarty {
 
 
   function showFormToken ($params, $smarty) {
-    $name = str_replace('_','', is($params['name'],'FormToken'));
-    if (!isset($_SESSION['tokens'][$name])) {
-      $_SESSION['tokens'][$name]['n'] = md5(mt_rand());
-    }
-    $_SESSION['tokens'][$name]['t'] = time();
-    $_SESSION['tokens'][$name]['ip'] = getIpAddress();
-    $token = $_SESSION['tokens'][$name]['n'];
-    $name = $name.'_'.base_convert(mt_rand(), 10,36);
-    return "<input type='hidden' name='___{$name}' value='".htmlspecialchars(sha1 ($name.'~'.$token.'~'.getIpAddress()))."'/>";
+    global $_SHOP;
+    $name  = str_replace('_','', is($params['name'],'FormToken'));
+    $token = Secure::getFormToken($name, is($_SHOP->first_Token,false));
+    $_SHOP->first_Token = false;
+    return "<input type='hidden' name='___{$name}_{$token}' value='".htmlspecialchars(sha1 (md5(mt_rand()).'~'.$token.'~'.getIpAddress()))."'/>";
   }
 /**
  * build a href link
