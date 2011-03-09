@@ -192,7 +192,8 @@ class Payment {
   	$info =curl_exec($ch);
     if ($info === false)
     {
-        $this->debug .=  'curl_error = ' . curl_error($ch);
+        $this->debug .=  'curl_error = ' . curl_error($ch)."\n";
+        $this->debug .= 'curl_info = '.print_r(curl_getinfo($ch), true)."\n";
     }
 
     $this->debug .= 'curl_info = '.print_r(curl_getinfo($ch), true)."\n";

@@ -34,9 +34,9 @@
 {include file="header.tpl"}
 <br />
 {if !$update->can_reserve()}
-{capture assign="tabview"}{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture|{!pos_othertickets!}~5}
+{capture assign="tabview"}{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture}
 {else}
-{capture assign="tabview"}{!pos_reservedlist!}~0|{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture|{!pos_othertickets!}~5}
+{capture assign="tabview"}{!pos_reservedlist!}~0|{!pos_unpaidlist!}~1|{!pos_unsentlist!}~2|{!pos_yourtickets!}~3|{!pos_alltickets!}~4{/capture}
 {/if}
 {gui->Tabbar menu=$tabview}
 
