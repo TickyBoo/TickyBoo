@@ -11,7 +11,7 @@ class Admins extends Model {
   protected $_idName    = 'admin_id';
   protected $_tableName = 'Admin';
   protected $_columns   = array( 'admin_id', '*admin_login', '*admin_password', '*admin_status', 'admin_email','#admin_user_id',
-                                 'admin_ismaster','*admin_inuse');
+                                 'admin_ismaster','*admin_inuse','control_event_ids');
 
   static function load ($id = 0){
     $query = "select *
@@ -131,11 +131,13 @@ class Admins extends Model {
     return true;
 }
 
-  public function getEventLinks(){
-    global $_SHOP;
-    if (!isset($_SHOP->event_ids)) {
-      $query="select adminlink_event_id from adminlink
-              where adminlink_event_id is not null ";
+    public function getEventLinks(){
+      global $_SHOP;
+      if (isset($this->control_event_ids)) {
+        $_SHOP->event_ids = $this->control_event_ids;
+      }elseif (!isset($_SHOP->event_ids)) {
+        $query="select adminlink_event_id from adminlink
+                where adminlink_event_id is not null ";
       if (isset($this->user_id)) {
          $query .= "and adminlink_pos_id = {$this->user_id}";
       } elseif (isset($this->admin_id)) {
