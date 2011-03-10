@@ -31,7 +31,7 @@
  *}
 {if $shop_event.event_pm_id}
 	{assign var=event_has_seats value="false"}
-  <form name='catselect' method='post' action='index.php'>
+  <form id='catselect' method='post' action='index.php'>
     {ShowFormToken}
   <br>
   <table border=0 class='table_midtone'>
@@ -103,24 +103,20 @@
 		</table> <br/>   <br/>
   {elseif $shop_event.event_date ge $smarty.now|date_format:"%Y-%m-%d"}
     <div id='num-tickets' style='visibility:hidden;'>
-      <label>
-  			{!select_qty!}:
+      <label>{!select_qty!}:</label>
 				{cart->maxSeatsAlowed event=$shop_event}
                 <select name='qty' id='qty'  class="styled">
                   {section name="myLoop" start=0 loop=$seatlimit+1}
                     <option value='{$smarty.section.myLoop.index}' > {$smarty.section.myLoop.index} </option>
                   {/section}
                 </select>
-                <span class="limit">{if $seatlimit>0}
-                   ({!order_limit!} {$seatlimit})
-                {/if}</span>
-		  </label>
+                <span class="limit">{if $seatlimit>0}({!order_limit!} {$seatlimit}){/if}</span>
 	  </div>
 	      <!-- Steps -->
     {if $event_has_seats == "true"}
-			<div class="next">
+			<div class="next" align='right'>
 		        <input type='hidden' name='event_id' value='{$shop_event.event_id}'>
-		        <button title="Next" onClick="return validateSelection();">Next</button>
+		        <button title="Next" onclick=" validateSelection();" >Next</button>
 			</div>
   	{/if}
     </form>
@@ -164,6 +160,7 @@
 							}
 						}
 						$('#catselect').submit();
+						return true;
 					}
 			</script>
 			{/literal}
