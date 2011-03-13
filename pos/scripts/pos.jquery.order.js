@@ -167,7 +167,7 @@ var loadOrder = function(){
       success:function(data, status){
         printMessages(data.messages);
         if(data.status){
-        	$("#user_data :input").each(function() {
+        	$("#user_data input").each(function() {
           	$(this).val('');
         	});
           $('#user_id').val(0);

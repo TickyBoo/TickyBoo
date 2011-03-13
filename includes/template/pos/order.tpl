@@ -63,11 +63,6 @@
   <div id="cart-pager"></div>
   <div id="order_action" title='{!pos_order_page!}'></div>
   <br />
- {*   <div id="error-message" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
-       <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-          <strong>{!alert!} </strong><span id='error-text'></span>
-       </p>
-    </div> *}
     <table width='100%'>
       <tr>
         <td valign='top'  width='50%'>

@@ -48,12 +48,16 @@ class install_login {
       $GLOBALS['_SHOP'] = $_SHOP;
 
       $link      = OpenDatabase();
-      if ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
+      $result = false;
+      $row = shopdb::query_one_row("show variables like 'have_inno%'");
+      if ($row && ($row['value'] !== 'YES')) {
+        array_push($Install->Errors,'Fusion Ticket uses the MySQL InnoDB engine. This is not installed on your server.');
+      } elseif ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
         //do nothing here;
       } elseif ($result = $link->Query("SHOW TABLE STATUS LIKE 'admin'")) {
         //do nothing here;
       }
-
+      print_r($row);
       if (!$result) {
         $_SESSION['DatabaseExist'] = false;
       } elseif ( !$row = $result->fetch_assoc()) {
@@ -81,7 +85,7 @@ class install_login {
   static function postcheck($Install) {
     $link      = OpenDatabase();
     if(!loginmycheck ($link, $_POST['username'], $_POST['password'])){
-      array_push($Install->Errors,"Administrator not found in database.");
+      array_push($Install->Errors,"Username or Password not found.");
     }
     return true;
   }

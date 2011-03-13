@@ -103,7 +103,7 @@ if (!defined('PATH_SEPARATOR')) {
         define('PATH_SEPARATOR', ':');
     }
 }
-set_include_path(INC. PATH_SEPARATOR.
+set_include_path(ROOT.'includes'. PATH_SEPARATOR.
                  LIBS.'pear'.PATH_SEPARATOR.
                  get_include_path());
 // system defines

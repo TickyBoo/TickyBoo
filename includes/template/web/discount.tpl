@@ -33,7 +33,7 @@
 {assign var='category_id' value=$smarty.post.category_id}
 
 {if $event_id}
-  {discount all='on' event_id=$event_id}{/discount}
+  {discount all='on' event_id=$event_id  category_id=$category_id}{/discount}
   {if $shop_discounts}
     {include file="header.tpl" name=!discounts!}
     {category event='on' category_id=$category_id}
