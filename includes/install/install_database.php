@@ -49,7 +49,7 @@ class install_database {
 
     $link = OpenDatabase();
     $row = shopdb::query_one_row("show variables like 'have_inno%'");
-    if ($row && ($row['value'] !== 'YES')) {
+    if ($row && ($row['Value'] !== 'YES')) {
       array_push($Install->Errors,'Fusion Ticket uses the MySQL InnoDB engine. This is not installed on your server.');
     }
 
@@ -147,7 +147,7 @@ class install_database {
               <td>Password</td>
               <td><input type=\"text\" name=\"db_pass\" value=\"".$_SESSION['SHOP']['db_pass']."\" /></td>
             </tr>\n";
-    if ($_SESSION['DB_Error'] ) {
+    if (!empty($_SESSION['DB_Error']) ) {
       echo "
             <tr>
               <td><br>Create Database:</td>
