@@ -56,7 +56,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 //check if the site is online
   require_once("classes/basics.php");
-  set_error_handler("customError");
 
   require_once("classes/class.shopdb.php");
   require_once("classes/class.model.php");
@@ -64,6 +63,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
     require_once "Auth/Auth.php";
     require_once "classes/model.admin.php";
   }
+  set_error_handler("customError");
+
   //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
 

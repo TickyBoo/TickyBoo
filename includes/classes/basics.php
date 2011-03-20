@@ -108,7 +108,9 @@ function urldecode_deep($value)
 function writeLog($what, $where = FT_DEBUG){
   Global $_SHOP;
    if ($where < 0) { return; }
-
+   if (empty($_SHOP->tmp_dir)) {
+     print_r( debug_backtrace());
+   }
    $logname = 'error';
    if ($where == FT_DEBUG) {
       $logname = 'debug';
@@ -819,8 +821,8 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
   $error = is($errortype[$errno],$errno);
   writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
   if ($errno & $user_errors) {
-    require_once("classes/class.restservice.client.php");
-    try{
+  try {
+      require_once("classes/class.restservice.client.php");
       $rsc = new RestServiceClient('http://cpanel.fusionticket.org/reports/errors.xml'); //cpanel.fusionticket.org
       $rsc->subject  = "{$error}: $errstr, $error_file @ $error_line";
       $rsc->excuteRequest();

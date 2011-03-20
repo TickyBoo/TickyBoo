@@ -86,8 +86,8 @@ class MySmarty extends Smarty {
                                 $_SHOP->tpl_dir.$context.DS);
  //   $this->default_resource_type = 'mysql';
 
-    $this->cache_dir    = substr(TEMP, 0, -1);
-    $this->compile_dir  = substr(TEMP,0, -1); // . '/web/templates_c/';
+    $this->cache_dir    = substr($_SHOP->tmp_dir, 0, -1);
+    $this->compile_dir  = substr($_SHOP->tmp_dir, 0, -1); // . '/web/templates_c/';
     $this->compile_id   = $context.'_'.$_SHOP->lang;
 
     $this->plugins_dir[]  = INC . "shop_plugins".DS;
