@@ -59,7 +59,7 @@
   {include file="cart_view.tpl"}
 
 {elseif $smarty.request.action eq "addtocart"}
-  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id, $smarty.post.category_id, $smarty.post.place, 'mode_web')}
+  {assign var='last_item' value=$cart->add_item_f($smarty.post.event_id, $smarty.post.category_id, $smarty.post.place, 0, 'mode_web')}
   {if $last_item}
     {include file="discount.tpl"}
   {else}

@@ -94,7 +94,10 @@ class ShopDB {
             //Set Session Time Zone.
             //This does not work:
             ShopDB::query("SET time_zone = '".date('P')."'");
-            if (!empty($_SHOP->useUTF8))  ShopDB::query("SET NAMES utf8");
+            if (!empty($_SHOP->useUTF8)){
+                ShopDB::query("SET NAMES utf8");
+                ShopDB::query('set character set utf8 ');
+            }
 
             return true;
           } elseif ($canDie) {
@@ -274,19 +277,26 @@ class ShopDB {
         return $res;
     }
 
-    static function insert_id() {
+  static function query_one_row ($query, $assoc = true) {
+    $assoc = ($assoc)? MYSQLI_ASSOC:MYSQLI_NUM;
+    if ($result = self::query($query) and $row = $result->fetch_array($assoc)) {
+      return $row;
+    }
+  }
+
+  static function query_one_object ($query) {
+//    $assoc = ($assoc)? MYSQLI_ASSOC:MYSQLI_NUM;
+    if ($result = self::query($query) and $row = $result->fetch_object()) {
+      return $row;
+    }
+  }
+
+  static function insert_id() {
         global $_SHOP;
         if (!ShopDB::$link) {
           self::init();
         }
         return ShopDB::$link->insert_id;
-    }
-
-    static function query_one_row ($query, $assoc = true) {
-       $assoc = ($assoc)? MYSQLI_ASSOC:MYSQLI_NUM;
-        if ($result = self::query($query) and $row = $result->fetch_array($assoc)) {
-            return $row;
-        }
     }
 
     static function lock ($name, $time = 30) {

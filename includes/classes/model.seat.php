@@ -391,6 +391,9 @@ class Seat  Extends Model {
 
       foreach($seats as $seat_id){
 
+        if (is_object($seat_id)) {
+          $seat_id = $seat_id->places_id;
+        }
         $query="select seat_pmp_id
                 from `Seat`
           where seat_id="._esc($seat_id)."

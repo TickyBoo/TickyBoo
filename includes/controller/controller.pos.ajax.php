@@ -389,7 +389,6 @@ class ctrlPosAjax extends ctrlWebCheckout {
     $this->json['userdata']['can_cancel'] = !$this->__MyCart->is_empty_f() or isset($_SESSION['_SHOP_order']);
     $cart_list  =array();
     if($mycart and !$this->__MyCart->is_empty_f()){
-      $mycart->load_info();
       $mycart->iterate(array(&$this,'_pre_items'),$cart_list);
     }
 
@@ -671,6 +670,10 @@ class ctrlPosAjax extends ctrlWebCheckout {
     }else {
       return false;
     }
+  }
+  private function doPosCancel () {
+    $this->__MyCart->destroy_f();
+    return true;
   }
 
 

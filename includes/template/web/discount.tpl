@@ -52,7 +52,6 @@
                   <td  valign='top'> <b>{!place_nr!}</b></td>
                   <td colspan='{$shop_discounts_count+1}'></td>
                 </tr>
-                {if $last_item->load_info()}{/if}
                 {assign var='places_id' value=$last_item->places_id}
                 {assign var='places_nr' value=$last_item->places_nr}
                 {section name='i' loop=$places_id}

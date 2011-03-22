@@ -617,7 +617,9 @@ class OrdersView extends AdminView{
    if (!is_array($config)) $config = array();
    $config['image']= $img;
    $config['disable'] = $hide;
-
+   if ($hide) {
+     return '';
+   }
    if($confirm){
      $param['action1']=$action;
      $param['order_id']=$order_id;

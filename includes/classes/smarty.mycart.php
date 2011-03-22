@@ -44,60 +44,29 @@ class MyCart_Smarty {
   }
 
 
-  function is_empty_f () {
-    $cart=$_SESSION['_SMART_cart'];
-    return !isset($cart) or $cart->is_empty();
-  }
-
   function is_empty ($params,$smarty) {
     return $this->is_empty_f();
   }
 
-
-
-  function total_seats_f ($event_id,$category_id,$only_valid){
+  function is_empty_f () {
     $cart=$_SESSION['_SMART_cart'];
-
-    if($cart){
-      return $cart->total_places($event_id,$category_id,$only_valid);
-    }else{
-      return 0;
-    }
+    return !isset($cart) or $cart->isEmpty();
   }
 
   function total_seats ($params,$smarty){
     return $this->total_seats_f($params['event_id'],$params['category_id'],$params['only_valid']);
   }
 
+  function total_seats_f ($event_id,$category_id,$only_valid){
+    $cart=$_SESSION['_SMART_cart'];
 
-  function add_item ($params, $smarty){
-    $this->add_item_f($params['event_id'],$params['category_id'],$params['seats'],$params['mode']);
+    if($cart){
+      return $cart->totalSeats($event_id,$category_id,$only_valid);
+    }else{
+      return 0;
+    }
   }
 
-	/**
-	* @name add item function
-	*
-	* Used to add seats to the cart. Will check if the selected seats are free.
-	*
-	* @param event_id : required
-	* @param category_id : required
-	* @param seats : int[] (array) or int : required
-	* @param mode : where the order is being made options('mode_web'|'mode_kasse')
-	* @param reserved : set to true if you want to reserve only.
-	* @param discount_id
-	* @return boolean : will return true if that many seats are avalible.
-	*/
-	function add_item_f ($event_id, $category_id, $seats, $mode='mode_web', $reserved=false, $discount_id=0,$force=false){
-    if(!$mode){
-    	$mode='mode_web';
-		}
-    $res=$this->CartCheck($event_id,$category_id,$seats,$mode,$reserved,$discount_id,$force);
-    if($res){
-    	return $res;
-    }else{
-    	return FALSE;
-    }
-	}
 
   function remove_item ($params, $smarty){
     $this->remove_item_f($params['event_id'],$params['category_id'],$params['item_id']);
@@ -105,10 +74,7 @@ class MyCart_Smarty {
 
   function remove_item_f ($event_id, $cat_id, $item_id){
     if($cart=$_SESSION['_SMART_cart']){
-      if($places=$cart->remove_place($event_id,$cat_id,$item_id)){
-        Seat::free(session_id(),$event_id,$cat_id,$places);
-      }
-
+      $cart->remove($event_id, $cat_id, $item_id);
       $_SESSION['_SMART_cart']=$cart;
     }
   }
@@ -126,11 +92,9 @@ class MyCart_Smarty {
         addWarning("order_currently_being_paid_for");
       }
       foreach($tickets as $ticket){
-        $res[] = $this->add_item_f($ticket['event_id'],$ticket['category_id'], array($ticket['seat_id']),$mode,false,$ticket['discount_id'],true);
+        $this->add_item_f($ticket['event_id'],$ticket['category_id'], array($ticket['seat_id']),$ticket['discount_id'],$mode,false,true);
       }
-      print_r($res);
     }
-
   }
 
   function total_price ($params, $smarty){
@@ -139,7 +103,7 @@ class MyCart_Smarty {
 
   function total_price_f (){
     if($cart=$_SESSION['_SMART_cart']){
-      return $cart->total_price();
+      return $cart->totalPrice();
     }
   }
 
@@ -149,9 +113,10 @@ class MyCart_Smarty {
 
   	function use_alt_f (){
     	if($cart=$_SESSION['_SMART_cart']){
-      		return $cart->use_alt();
+      		return $cart->useAlter();
     	}
   	}
+
   	function min_date_f (){
 		if($cart=$_SESSION['_SMART_cart']){
       		return $cart->min_date();
@@ -164,7 +129,7 @@ class MyCart_Smarty {
 
   function can_checkout_f (){
     if($cart=$_SESSION['_SMART_cart']){
-      return $cart->can_checkout();
+      return $cart->canCheckout();
     }
   }
 
@@ -182,11 +147,9 @@ class MyCart_Smarty {
     if($repeat){
       $cart=$_SESSION['_SMART_cart'];
 
-      if(!$cart or $cart->is_empty()){
+      if(!$cart or $cart->isEmpty()){
         $repeat=FALSE;
         return;
-      }else{
-        $cart->load_info();
       }
 
       $this->cart_list=array();
@@ -202,13 +165,11 @@ class MyCart_Smarty {
 
       $smarty->assign_by_ref("category_item",$cart_row[1]);
 
-
-
       $seat_item=$cart_row[2];
 
       $smarty->assign_by_ref("seat_item",$seat_item);
       $smarty->assign("seat_item_id",$seat_item->id);
-      $smarty->assign("seats_id",$seat_item->places_id);
+      $smarty->assign("seats_id",$seat_item->seats);
       $smarty->assign("seats_nr",$seat_item->places_nr);
 
       $cat= $cart_row[1];
@@ -235,40 +196,25 @@ class MyCart_Smarty {
 
 
   function destroy_f (){
+    $this->remove_item_f(null,null,null);
     unset($_SESSION['_SMART_cart']);
   }
 
   function destroy ($params,$smarty){
-    unset($_SESSION['_SMART_cart']);
+     $this->destroy_f();
   }
 
   function set_discounts ($params,$smarty){
-
     $this->set_discounts_f($params['event_id'],$params['category_id'],$params['item_id'],$params['discounts']);
   }
 
   function set_discounts_f ($event_id,$category_id,$item_id,$discounts){
     if(!$cart=$_SESSION['_SMART_cart']){return;}
 
-    foreach($discounts as $disc_id){
-      if($disc_id>0){
-        if(!isset($dcache[$disc_id])){
-          $dcache[$disc_id]=Discount::load($disc_id);
-        }
-        $discs[]=$dcache[$disc_id];
-	      $has=1;
-      }else{
-        $discs[]=0;
-      }
+    if($cart->set_discounts($event_id,$category_id,$item_id,$discs)){
+      $_SESSION['_SMART_cart']=$cart;
+     return TRUE;
     }
-
-    if($has){
-      if($cart->set_discounts($event_id,$category_id,$item_id,$discs)){
-        $_SESSION['_SMART_cart']=$cart;
-	      return TRUE;
-      }
-    }
-
   }
 
   function maxSeatsAlowed($params,$smarty){
@@ -294,6 +240,34 @@ class MyCart_Smarty {
     }
   }
 
+  function add_item ($params, $smarty){
+    print_r($params);
+    $this->add_item_f($params['event_id'],$params['category_id'],$params['seats'],$params['Discount_id'],$params['mode']);
+  }
+
+  /**
+   * @name add item function
+   *
+   * Used to add seats to the cart. Will check if the selected seats are free.
+   *
+   * @param event_id : required
+   * @param category_id : required
+   * @param seats : int[] (array) or int : required
+   * @param mode : where the order is being made options('mode_web'|'mode_kasse')
+   * @param reserved : set to true if you want to reserve only.
+   * @param discount_id
+   * @return boolean : will return true if that many seats are avalible.
+   */
+  function add_item_f ($event_id, $category_id, $seats, $discount_id=0, $mode='mode_web', $reserved=false, $force=false){
+    print_r(array($event_id, $category_id, $seats, $discount_id, $mode, $reserved, $force));
+    $res=$this->CartCheck($event_id, $category_id, $seats, $discount_id, $mode, $reserved, $force);
+    if($res){
+      return $res;
+    }else{
+      return FALSE;
+    }
+  }
+
   /**
    * MyCart_Smarty::CartCheck()
    *
@@ -306,8 +280,9 @@ class MyCart_Smarty {
    * @param bool $force - Used to force current orders with thouse seats to be added to the cart. (Will currently only work on reservations)
    * @return
    */
-  function CartCheck ($event_id,$category_id,$places,$mode='mode_web',$reserved,$discount_id = 0, $force=false){
+  function CartCheck ($event_id, $category_id, $seats, $discount_id = 0, $mode='mode_web', $reserved =false, $force=false){
   	// Loads event details
+    print_r(array($event_id, $category_id, $seats, $discount_id, $mode, $reserved, $force));
     if(!$event=Event::load($event_id)){
       addWarning('error_cantloadevent');
       return FALSE;
@@ -317,38 +292,31 @@ class MyCart_Smarty {
       addWarning('error_missingcategorytype');
       return FALSE;
     }
-    //Load Discount if not 0.
-    if($discount_id > 0){
-		  $discount = Discount::load($discount_id);
-		  if(!$discount){
-        addWarning('error_discountnotfound');
-			 return false;
-		  }
-	 }
 
     //checks the seating numbering.
     if($category_numbering=='none'){
-      if(!($places>0)){
+      if(is_array($seats) || ($seats ==0)){
         addWarning('places_empty');
         return FALSE;
       }
-      $newp = $this->places;
+      $newSeats = $seats;
     }else if($category_numbering=='rows' or
              $category_numbering=='both' or
 	           $category_numbering=='seat') {
-      if(is_array($places)) {
-        $placesx = $places;
+      if(is_array($seats)) {
+        $placesx = $seats;
 
-        $places = array();
+        $seats = array();
         foreach($placesx as $x) {
-          if ($x) $places[] = $x;
+          $x = (int)$x;
+          if ($x) $seats[] = $x;
         }
       }
-      if(!is_array($places) or empty($places)){
+      if(!is_array($seats) or empty($seats)){
         addWarning('places_empty');
         return FALSE;
       }
-      $newp = count($places);
+      $newSeats = count($seats);
     }else{
       addWarning("unknown_category_numbering", "{$category_numbering}' category_id '{$category_id}'");
       return FALSE;
@@ -363,11 +331,11 @@ class MyCart_Smarty {
       if(isset($cart)){
 
         $has = $cart->total_places($event_id);
-        if(($has+$newp)>$max){
+        if(($has+$newSeats)>$max){
           addWarning('event_order_limit_exceeded',' A:'.$has.' '.$newp.' '.$max );
       	  return FALSE;
       	}
-      }else if($newp>$max){
+      }else if($newSeats>$max){
         addWarning('event_order_limit_exceeded',' B:'.$has.' '.$newp.' '.$max);
         return FALSE;
       }
@@ -375,18 +343,13 @@ class MyCart_Smarty {
 
    // print_r($places);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $places, $category_numbering, $reserved, $force)){
+    if($places_id=Seat::reservate(session_id(), $event_id, $category_id, $seats, $category_numbering, $reserved, $force)){
 	  //if cart empty create new cart
       if(!isset($cart)){
         $cart = new Cart();
       }
       // add place in cart.
-      $res=$cart->add_place($event_id, $category_id, $places_id);
-      If ($discount_id >0) {
-        $discounts = array_fill(0,count($places_id),$discount);
-        $res->set_discounts(0,0,0,$discounts);
-      }
-      $cart->load_info();
+      $res=$cart->add($event_id, $category_id, $places_id, $discount_id);
 
       $_SESSION['_SMART_cart']=$cart;
       return $res;

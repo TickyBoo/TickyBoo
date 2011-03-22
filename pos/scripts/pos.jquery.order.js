@@ -184,17 +184,17 @@ var loadOrder = function(){
    $("#error-message-main").hide();
    ajaxQManager.add({
       type:      "POST",
-      url:      "checkout.php?x=poscancel",
+      url:      "ajax.php?x=poscancel",
       dataType:   "HTML",
-      data:      {pos:"yes",action:"PosCancel"},
+      data:      {pos:"yes", action:"_PosCancel"},
       success:function(html, status){
         refreshOrder();
+      	$("#user_data :input").each(function() {
+          	$(this).val('');
+        	});
+      	$('#user_id').val(0);
       }
     });
-    	$("#user_data :input").each(function() {
-        	$(this).val('');
-      	});
-    	$('#user_id').val(0);
 
     return false;
   });
