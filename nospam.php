@@ -36,6 +36,7 @@
 define('ft_check','shop');
 //require_once('includes/config/defines.php');
 //require_once('includes/classes/basics.php');
+error_reporting(0);
 
 session_name('ShopSession');
 session_start();

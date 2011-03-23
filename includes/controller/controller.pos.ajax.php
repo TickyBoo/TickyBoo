@@ -664,7 +664,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
     }
   }
   private function doPosCancel () {
-    $this->__MyCart->destroy_f();
+    $this->__MyCart->destroy_f(true);
     return true;
   }
 

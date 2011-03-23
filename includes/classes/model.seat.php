@@ -396,7 +396,7 @@ class Seat  Extends Model {
         $query="select seat_pmp_id
                 from `Seat`
           where seat_id="._esc($seat_id)."
-          and seat_sid='$sid'
+          and seat_sid="._esc($sid)."
           and seat_status='res'
           and seat_event_id="._esc($event_id)."
           and seat_category_id="._esc($category_id)."
@@ -414,7 +414,7 @@ class Seat  Extends Model {
                 seat_ts=NULL,
                 seat_sid=NULL
                 where seat_id="._esc($seat_id)."
-                and seat_sid='$sid'
+                and seat_sid="._esc($sid)."
                 and seat_status='res'
                 and seat_event_id="._esc($event_id)."
                 and seat_category_id="._esc($category_id);
@@ -499,9 +499,9 @@ class Seat  Extends Model {
       $new_code=self::generate_code($code_length);
 
       $query="UPDATE Seat
-              SET seat_code='$new_code'
-              WHERE seat_id='$seat_id'
-              and seat_order_id='$order_id'
+              SET seat_code="._esc($new_code)."
+              WHERE seat_id="._esc($seat_id)."
+              and seat_order_id="._esc($order_id)."
               LIMIT 1";
 
       if(!ShopDB::query($query) or ShopDB::affected_rows()!=1){

@@ -194,8 +194,10 @@ class MyCart_Smarty {
   }
 
 
-  function destroy_f (){
-    $this->remove_item_f(null,null,null);
+  function destroy_f ($removeseats=false){
+    if ($removeseats) {
+       $this->remove_item_f(null,null,null);
+    }
     unset($_SESSION['_SMART_cart']);
   }
 

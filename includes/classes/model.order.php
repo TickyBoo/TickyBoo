@@ -255,13 +255,12 @@ class Order Extends Model {
     //$this->order_date = date('Y-m-d H:i:s');
     $this->order_date = "CURRENT_TIMESTAMP() ";
 
-    if (!plugin::call('!OrderCreate',$this)) {return false;}
+    if (!plugin::call('!canOrderCreate',$this)) {return false;}
 
     if(!ShopDB::begin('Create Order')){
       return FALSE;
     } elseif(parent::save()){
-
-      /* Create intial Order status log */
+     /* Create intial Order status log */
       OrderStatus::statusChange($this->order_id,$this->order_status,NULL,'Order::save',"Create New order",$this);
 
 
@@ -270,9 +269,10 @@ class Order Extends Model {
         OrderStatus::statusChange($this->order_id, false, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
       $tickets = array();
-      foreach(array_keys($this->places) as $i){
+      foreach($this->places as $i => &$ticket){
         $ticket =& $this->places[$i];
         $ticket->order_id($this->order_id);
+        $ticket->testing = 'test';
         $tickets[] = $ticket->id;
         // Tickets are saved here if handled==1 tickets are reserved instead of ordered.
         if(!$ticket->save($this->handling->handling_id=='1')){
@@ -281,6 +281,7 @@ class Order Extends Model {
         $event_stat[$ticket->seat_event_id]++;
         $category_stat[$ticket->seat_category_id]++;
       }
+
       if (count($tickets)>0) {
         OrderStatus::statusChange($this->order_id, false, NULL, 'Order::save', "Seats: ".implode(', ',$tickets ));
       }
