@@ -44,7 +44,7 @@
       <table class='pm_info'>
         <tr><td class='title' align='center'>{$shop_category.event_name}</td></tr>
         <tr>
-          <td class='title' align='center'>
+          <td align='left'>
             {$shop_category.event_date|date_format:!date_format!} - {$shop_category.event_time|date_format:!time_format!}  {* "%A %e %B %Y" *}
             {$shop_category.pm_name} - {$shop_category.category_name} ({valuta value=$shop_category.category_price})
           </td>

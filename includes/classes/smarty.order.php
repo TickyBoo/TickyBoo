@@ -680,23 +680,11 @@ function _collect(&$event_item,&$cat_item,&$place_item,&$order){
   if(!$place_item->is_expired()){
 
     $i=0;
-    $discounts=$place_item->discounts;
-    foreach($place_item->places_id as $place_id){
-      if($discounts[$i]){
-        $order->add_seat($event_item->event_id,$cat_item->cat_id,$place_id,$cat_item->cat_price,$discounts[$i]);
-      }else{
-        $order->add_seat($event_item->event_id,$cat_item->cat_id,$place_id,$cat_item->cat_price);
-      }
+    foreach($place_item->seats as $place_id => $place){
+      $order->add_seat($event_item->event_id, $cat_item->cat_id, $place_id, $cat_item->cat_price, $place_item->discount($place->discount_id));
       $i++;
     }
     $place_item->ordered =  $order;
-    // cant find any
-/*
-    if(!isset($order->place_items)){
-      $order->place_items=array();
-    }
-    array_push($order->place_items,array($event_item->event_id,$cat_item->id,$place_item->id));
-*/
   }
 
   return 1;

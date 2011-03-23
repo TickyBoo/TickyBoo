@@ -36,7 +36,7 @@
   <br>
   <table border=0 class='table_midtone'>
     <tr>
-      <td colspan='3' class="title2">
+      <td colspan='4' class="title2">
         {!cat_description!}
       </td>
     </tr>
@@ -47,8 +47,9 @@
 			<th>{!tickets_available!}</th>
 		</tr>
     {category event_id=$shop_event.event_id stats="on"}
-      <tr class="{cycle name='events' values="TblHigher,TblLower"}">
-        <td>
+      {assign var='cycle' value=="{cycle name='events' values="TblHigher,TblLower"}
+      <tr class=$cycle>
+        <td rowspan=2>
     		  {if $user->mode() neq '-1' or $user->logged}
             <span id="catcolor" style="background-color:{$shop_category.category_color}">
               <input type="radio" id="category_id_{$shop_category.category_id}" name="category_id" value="{$shop_category.category_id}" {if $category_id eq $shop_category.category_id}checked{/if} onClick="setNum('{$shop_category.category_numbering}')" {if $shop_category.category_free == 0}disabled="true"{/if}>
@@ -59,21 +60,21 @@
         <td align='right'>
           {valuta value=$shop_category.category_price}
         </td>
-        <td align='left' width='25%'>
+        <td align='right' width='10%'>
           {if $shop_category.category_free>0}
           	{assign var=event_has_seats value="true"}
 	          {if $shop_category.category_free/$shop_category.category_size ge 0.2}
-              <font>{!tickets_available!} {$shop_category.category_free}</font>
+              <font>{$shop_category.category_free}</font>
             {else}
-              <font color='Yellow'>{!tickets_available!} {$shop_category.category_free}</font>
+              <font color='Yellow'>{$shop_category.category_free}</font>
             {/if}
           {else}
             <span class='error'>{!category_sold!}</span>
           {/if}
         </td>
       </tr>
-      <tr>
-        <td colspan='4'>
+      <tr  class=$cycle>
+        <td colspan='3'>
           {!Discount_for!}
           {discount event_id=$shop_event.event_id cat_price=$shop_category.category_price}
             &nbsp;
@@ -86,12 +87,12 @@
       </tr>
     {/category}
      <tr>
-      <td colspan='3' align='left' class='note'>
+      <td colspan='4' align='left' class='note'>
         {!prices_in!} {$organizer_currency}
       </td>
     </tr>
   </table>
-  {/literal}
+
   {if $user->mode() eq '-1' and !$user->logged}
       <br />
     	<table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
@@ -116,7 +117,7 @@
     {if $event_has_seats == "true"}
 			<div class="next" align='right'>
 		        <input type='hidden' name='event_id' value='{$shop_event.event_id}'>
-		        <button title="Next" onclick=" validateSelection();" >Next</button>
+		        <button title="Next" onclick="validateSelection();" >Next</button>
 			</div>
   	{/if}
     </form>

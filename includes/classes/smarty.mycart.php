@@ -50,7 +50,7 @@ class MyCart_Smarty {
 
   function is_empty_f () {
     $cart=$_SESSION['_SMART_cart'];
-    return !isset($cart) or $cart->isEmpty();
+    return !isset($cart) or $cart->is_empty();
   }
 
   function total_seats ($params,$smarty){
@@ -74,7 +74,7 @@ class MyCart_Smarty {
 
   function remove_item_f ($event_id, $cat_id, $item_id){
     if($cart=$_SESSION['_SMART_cart']){
-      $cart->remove($event_id, $cat_id, $item_id);
+      $cart->remove( $item_id, $event_id, $cat_id);
       $_SESSION['_SMART_cart']=$cart;
     }
   }
@@ -103,7 +103,7 @@ class MyCart_Smarty {
 
   function total_price_f (){
     if($cart=$_SESSION['_SMART_cart']){
-      return $cart->totalPrice();
+      return $cart->total_price();
     }
   }
 
@@ -113,7 +113,7 @@ class MyCart_Smarty {
 
   	function use_alt_f (){
     	if($cart=$_SESSION['_SMART_cart']){
-      		return $cart->useAlter();
+      		return $cart->use_alt();
     	}
   	}
 
@@ -129,7 +129,7 @@ class MyCart_Smarty {
 
   function can_checkout_f (){
     if($cart=$_SESSION['_SMART_cart']){
-      return $cart->canCheckout();
+      return $cart->can_checkout();
     }
   }
 
@@ -147,7 +147,7 @@ class MyCart_Smarty {
     if($repeat){
       $cart=$_SESSION['_SMART_cart'];
 
-      if(!$cart or $cart->isEmpty()){
+      if(!$cart or $cart->is_empty()){
         $repeat=FALSE;
         return;
       }
@@ -169,14 +169,13 @@ class MyCart_Smarty {
 
       $smarty->assign_by_ref("seat_item",$seat_item);
       $smarty->assign("seat_item_id",$seat_item->id);
-      $smarty->assign("seats_id",$seat_item->seats);
-      $smarty->assign("seats_nr",$seat_item->places_nr);
+      $smarty->assign_by_ref("seats_id",$seat_item->seats);
 
       $cat= $cart_row[1];
       if($cat->cat_numbering=='rows'){
         $rcount=array();
-        foreach($seat_item->places_nr as $places_nr){
-          $rcount[$places_nr[0]]++;
+        foreach($seat_item->seats as $places_nr){
+          $rcount[$places_nr->seat_row_nr]++;
 	}
         $smarty->assign("seat_item_rows_count",$rcount);
       }
@@ -208,10 +207,10 @@ class MyCart_Smarty {
     $this->set_discounts_f($params['event_id'],$params['category_id'],$params['item_id'],$params['discounts']);
   }
 
-  function set_discounts_f ($event_id,$category_id,$item_id,$discounts){
+  function set_discounts_f ($event_id, $category_id, $item_id, $discounts){
     if(!$cart=$_SESSION['_SMART_cart']){return;}
 
-    if($cart->set_discounts($event_id,$category_id,$item_id,$discs)){
+    if($cart->set_discounts($event_id, $category_id, $item_id, $discounts)){
       $_SESSION['_SMART_cart']=$cart;
      return TRUE;
     }
@@ -241,7 +240,6 @@ class MyCart_Smarty {
   }
 
   function add_item ($params, $smarty){
-    print_r($params);
     $this->add_item_f($params['event_id'],$params['category_id'],$params['seats'],$params['Discount_id'],$params['mode']);
   }
 
@@ -259,7 +257,6 @@ class MyCart_Smarty {
    * @return boolean : will return true if that many seats are avalible.
    */
   function add_item_f ($event_id, $category_id, $seats, $discount_id=0, $mode='mode_web', $reserved=false, $force=false){
-    print_r(array($event_id, $category_id, $seats, $discount_id, $mode, $reserved, $force));
     $res=$this->CartCheck($event_id, $category_id, $seats, $discount_id, $mode, $reserved, $force);
     if($res){
       return $res;
@@ -282,7 +279,6 @@ class MyCart_Smarty {
    */
   function CartCheck ($event_id, $category_id, $seats, $discount_id = 0, $mode='mode_web', $reserved =false, $force=false){
   	// Loads event details
-    print_r(array($event_id, $category_id, $seats, $discount_id, $mode, $reserved, $force));
     if(!$event=Event::load($event_id)){
       addWarning('error_cantloadevent');
       return FALSE;

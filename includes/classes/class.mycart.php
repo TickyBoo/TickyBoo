@@ -39,10 +39,10 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class Cart {
 
 	// sessions.docx for cart layout
-  private $event_list; //array, indexed by event_id
-  private $cat_list;
-  private $disc_list;
-  private $items;
+  public $event_list; //array, indexed by event_id
+  public $cat_list;
+  public $disc_list;
+  public $items;
 
   function __construct(){
     $this->event_list = array(); //array, indexed by event_id
@@ -52,29 +52,39 @@ class Cart {
   }
 
   public function add($event_id, $cat_id, $seat_ids, $discount_id=0, $mode='mode_web', $reserved =false, $force=false){
-    if(!isset($this->event_items[$event_id])){
-      $this->event_items[$event_id]= $this->loadEvent($event_id);
+    if(empty($this->event_list[$event_id])){
+      $this->event_list[$event_id]= $this->loadEvent($event_id);
     }
-    if(!isset($this->cat_list[$cat_id])){
-      $this->cat_list[$cat_id]= $this->loadCat($cat_id);
+    if(empty($this->cat_list[$cat_id])){
+      $this->cat_list[$cat_id]= $this->loadCat($event_id,$cat_id);
     }
-    $this->items[] = new placeItem($this, $event_id, $cat_id, $seat_ids, $discount_id=0);
+    $this->items[] = new placeItem($this, $event_id, $cat_id, $seat_ids);
 
     $id=end(array_keys($this->items));
     $item =& $this->items[$id];
     $item->id=$id;
-    $this->setDiscouns($event_id, $cat_id, $id, $discount_id);
-    return true;
+    if ($discount_id) {
+      $this->set_discounts($event_id, $cat_id, $id, $discount_id);
+    }
+    return $item;
   }
 
-  function setDiscouns($event_id, $cat_id, $id, $discount_id){
+  function set_discounts($event_id, $cat_id, $id, $discount_id){
     $item = $this->items[$id];
-    if (is_integer($discount_id)) {
+    if (!is_array($discount_id)) {
+      $discount_id = (int)$discount_id;
+      if($discount_id && empty($this->disc_list[$discount_id])){
+        $this->disc_list[$discount_id]= $this->loadDisc($discount_id);
+      }
+
       foreach( $item->seats as $key => &$value) {
         $value->discount_id = $discount_id;
       }
-    } elseif(is_array($discount_id) and (count($disc)==$this->count()))  {
+    } elseif(is_array($discount_id) and (count($discount_id)==$item->count()))  {
       foreach( $item->seats as $key => &$value) {
+        if($discount_id[$key] && empty($this->disc_list[$discount_id[$key]])){
+          $this->disc_list[$discount_id[$key]]= $this->loadDisc($discount_id[$key]);
+        }
         $value->discount_id =$discount_id[$key];
       }
     }
@@ -86,13 +96,15 @@ class Cart {
       $freeme = $freeme && (($event_id==null) || ($event_id==$item->event_id));
       $freeme = $freeme && (($cat_id==null)   || ($cat_id  ==$item->category_id));
       $freeme = $freeme && (($place_id==null) || ($place_id==$item->id));
-      if ($freeme) {
-         $this->remove();
+      if ($freeme) { echo "remove: $key, ";
+
+        $item->remove();
+        unset($this->items[$key]);
       }
     }
   }
 
-  function totalPrice(){
+  function total_price(){
     $total_price=0;
     foreach($this->items as $item){
       $total_price+=$item->total_price();
@@ -100,7 +112,7 @@ class Cart {
     return $total_price;
   }
 
-  function useAlter(){
+  function use_alt(){
     $use_alt=0;
     foreach($this->items as $event){
       $use_alt += $event->useAlter();
@@ -111,40 +123,55 @@ class Cart {
    		return false;
   	}
   }
-  function minDate (){
+  function min_date (){
     $min_date=true;
     foreach($this->items as $item){
       $event = $this->event_list[$item->event_id];
-      $min_date=min($event['event_date'].' '.$event['event_time'], $min_date);
+      $min_date=min($event->event_date.' '.$event->event_time, $min_date);
     }
     return $min_date;
   }
 
-  function totalSeats($event_id=0,$cat_id=0,$only_valid=TRUE){
+  function total_places($event_id=0,$cat_id=0,$only_valid=TRUE){
     $total_places=0;
     foreach ($this->items as  $key => $item ){
       $freeme = true;
       $freeme = $freeme && (($event_id==null) || ($event_id==$item->event_id));
       $freeme = $freeme && (($cat_id==null) || ($cat_id==$item->category_id));
       if ($freeme) {
-        $total_places += $this->total_places ($only_valid=TRUE);
+        $total_places += $item->total_places ($only_valid=TRUE);
       }
     }
     return $total_places;
   }
-
-  function isEmpty (){
+  function count(){
     $count=0;
     foreach($this->items as $item) {
-      if (!$item->isExpired ()) {
+      if (!$item->is_expired ()) {
         $count++;
       }
+    }
+    return $count;
+  }
+
+  function is_empty (){
+    $count=0;
+    foreach($this->items as $item) {
+    //  if (!$item->is_expired ()) {
+        $count++;
+    //  }
     }
     return $count==0;
   }
 
-  function canCheckout (){
-    return !$this->isEmpty();
+  function can_checkout (){
+    $count=0;
+    foreach($this->items as $item) {
+      if (!$item->is_expired ()) {
+        $count++;
+      }
+    }
+    return $count > 0;
   }
 
   //BOOL iter_func($event_item,$cat_item,$place_item[,$data])
@@ -169,7 +196,7 @@ class Cart {
 
 
   function _overview ($event_item, $cat_item, $place_item, &$data){
-    if($place_item->isExpired()){
+    if($place_item->is_expired()){
       $data['expired']++;
     }else{
       $data['valid']+=$place_item->count();
@@ -181,7 +208,7 @@ class Cart {
 
   protected function loadEvent($event_id){
     global $_SHOP;
-    $qry="select event_name, event_date, event_time, event_ort_id, ort_name, ort_city, event_order_limit
+    $qry="select event_id, event_name, event_date, event_time, event_ort_id, ort_name, ort_city, event_order_limit
             from Event left join Ort on event_ort_id=ort_id
             where event_id='{$event_id}' ";
     //echo $qry;
@@ -191,7 +218,7 @@ class Cart {
   }
 
   protected function loadCat ($event_id, $cat_id){
-    $qry="select category_name, category_price, category_event_id,category_numbering,
+    $qry="select category_id cat_id, category_event_id, category_name cat_name, category_price cat_price, category_numbering AS cat_numbering
            from Category where category_id='{$cat_id}' and category_event_id='{$event_id}'";
     return ShopDB::query_one_object($qry);
   }
@@ -199,40 +226,47 @@ class Cart {
   protected function loadDisc($discount_id){
     return Discount::load($discount_id);
   }
+  function event($id){
+    return $this->event_list[$id];
+  }
+  function cat($id){
+    return $this->cat_list[$id];
+  }
+  function disc($id){
+    return $this->disc_list[$id];
+  }
 }
 
 
 class PlaceItem {
+  var $id;
   var $cart;
   var $event_id;
   var $category_id;
-  var $discount_id;
-  var $places_nr;
   var $seats;
-  var $not_load=1;
   var $ts;
 
-  function __construct ($cart, $event_id, $category_id, $seat_ids, $discount_id){
+  function __construct ($cart, $event_id, $category_id, $seat_ids){
     global $_SHOP;
 
     $this->cart = $cart;
     $this->event_id=$event_id;
     $this->category_id=$category_id;
-    $this->discount_id=$discount_id;
-
+    $this->seats = array();
     if (is_array($seat_ids)) {
       $this->loadInfo($seat_ids);
     } else {
 //      raise;
+      die ('oeps');
     }
     $this->ts=time()+$_SHOP->cart_delay;
   }
 
   function remove(){
-    Seat::free($this->event_id, $this->category_id, $this->seats);
+    Seat::free(session_id(), $this->event_id, $this->category_id, $this->seatids());
   }
 
-  function usealtAlter (){
+  function use_alt(){
     return $this->cart->event_list[$this->event_id]['event_use_alt'];
   }
 
@@ -240,7 +274,7 @@ class PlaceItem {
     return count($this->seats);
   }
 
-  function isExpired (){
+  function is_expired (){
     return time()>$this->ts;
   }
 
@@ -251,47 +285,61 @@ class PlaceItem {
     return intval(floor(($this->ts-time())));
   }
 
-  function totalPrice ($price){
-    if($this->isExpired()){
+  function total_price (){
+    if($this->is_expired()){
       return 0;
     }else{
-      $res= $this->count()*$price;
-      if ($this->discount_id) {
-        $discount = $this->cart->disc_list[$this->discount_id];
-        $res-=$discount->total_value($price,1);
+      $cat = $this->cart->cat($this->category_id);
+      $res= $this->count()*$cat->cat_price;
+      foreach ($this->seats as  $seat){
+        if ($seat->discount_id) {
+          $discount = $this->cart->disc($seat->discount_id);
+          $res-=$discount->total_value($cat->cat_price,1);
+        }
       }
       return $res;
     }
   }
 
-  function totalSeats ($only_valid=TRUE){
-    if(!$only_valid or !$this->isExpired()){
+  function total_places ($only_valid=TRUE){
+    if(!$only_valid or !$this->is_expired()){
       return $this->count();
     } else {
       return 0;
     }
   }
 
-  function loadInfo ($seats){
+  protected function loadInfo ($seats){
     global $_SHOP;
-    if($this->not_load){
-      $places = implode(', ', $seats);
-      $qry="select seat_id, seat_row_nr, seat_nr
-            from Seat
-            where field(seat_id, {$places})
-            and   seat_category_id="._esc($this->category_id)."
-            and   seat_event_id="._esc($this->event_id);
-      if($result=ShopDB::query($qry)) {
-        while ($obj=shopDB::fetch_object($result)){
-          $this->places_nr[$obj->seat_id] = array($obj->seat_row_nr,$obj->seat_nr);
-        }
-      } else{
-    	  $this->invalid=TRUE;
-    	  return FALSE;
+    $places = implode(', ', $seats);
+    $qry="select seat_id, seat_row_nr, seat_nr
+          from Seat
+          where field(seat_id, {$places})
+          and   seat_category_id="._esc($this->category_id)."
+          and   seat_event_id="._esc($this->event_id);
+    if($result=ShopDB::query($qry)) {
+      while ($obj=shopDB::fetch_object($result)){
+        $this->seats[$obj->seat_id] = $obj;
+        $obj->discount_id = 0;
       }
-      $this->not_load=0;
+    } else{
+  	  $this->invalid=TRUE;
+  	  return FALSE;
     }
     return TRUE;
+  }
+  function seatids(){
+    return array_keys($this->seats);
+
+  }
+  function discount($discout_id){
+    if ((int)$discout_id) {
+      return $this->cart->disc((int)$discout_id);
+
+    } else {
+      return null;
+    }
+
   }
 }
 
@@ -303,7 +351,7 @@ class PlaceItem {
   }
 
   foreach($this->place_items as $k=>$v){
-  if($v->isExpired()){ unset($this->place_items[$k]); }
+  if($v->is_expired()){ unset($this->place_items[$k]); }
   }
 
   if(is_array($places_id) and !empty($places_id)){

@@ -34,6 +34,7 @@
 
 {if $event_id}
   {discount all='on' event_id=$event_id  category_id=$category_id}{/discount}
+
   {if $shop_discounts}
     {include file="header.tpl" name=!discounts!}
     {category event='on' category_id=$category_id}
@@ -52,32 +53,30 @@
                   <td  valign='top'> <b>{!place_nr!}</b></td>
                   <td colspan='{$shop_discounts_count+1}'></td>
                 </tr>
-                {assign var='places_id' value=$last_item->places_id}
-                {assign var='places_nr' value=$last_item->places_nr}
-                {section name='i' loop=$places_id}
+                {assign var='seats' value=$last_item->seats}
+                {foreach key=key from=$seats item=seat name=foo}
                   <tr>
                     <td >
                       {if $shop_category.category_numbering eq 'both'}
-                        {!seat!} {$places_nr[i].0} - {$places_nr[i].1}
+                        {!seat!} {$seat->seat_row_nr} - {$seat->seat_nr}
                       {elseif $shop_category.category_numbering eq 'rows'}
-                        {!row!} {$places_nr[i].0}
+                        {!row!} {$seat->seat_row_nr}
                       {elseif $shop_category.category_numbering eq 'seat'}
-                        {!seat!} {$places_nr[i].1}
+                        {!seat!} {$seat->seat_nr}
                       {elseif $shop_category.category_numbering eq 'none'}
-                        {!ticket!} {$smarty.section.i.index+1}
+                        {!ticket!} {$smarty.foreach.foo.index+1}
                       {/if}
                     </td>
                     <td style='font-size:11px;font-family:Verdana;'>
-                      <label><input class='checkbox_dark' type='radio' name='discount[{$places_id[i]}]' value='0' checked>{!normal!}</label>
+                      <label><input class='checkbox_dark' type='radio' name='discount[{$key}]' value='0' checked>{!normal!}</label>
                     </td>
                     {section name='d' loop=$shop_discounts}
                       <td style='font-size:11px;font-family:Verdana;'>
-                        <label><input class='checkbox_dark discount_{$shop_discounts[d].discount_id}' type='radio' name='discount[{$places_id[i]}]' value='{$shop_discounts[d].discount_id}'>{$shop_discounts[d].discount_name}</label>
-
+                        <label><input class='checkbox_dark discount_{$shop_discounts[d].discount_id}' type='radio' name='discount[{$key}]' value='{$shop_discounts[d].discount_id}'>{$shop_discounts[d].discount_name}</label>
                       </td>
                     {/section}
                   </tr>
-                {/section}
+                {/foreach}
                 <tr>
                   <td colspan='{$shop_discounts_count+2}' align='center'>
                     <table width='100%' border=0>

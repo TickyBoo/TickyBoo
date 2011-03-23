@@ -85,7 +85,7 @@
             		  {$seat_item->count()} {!x_tick!}{*$category_item->cat_price*}
           		  </td>
           		  <td  width="45%" valign='top' class='cart_content' style='border-bottom:#cccccc 1px solid;padding-bottom:4px;padding-top:4 font-size:10px;'>
-            			<b>{$seat_item->total_price($category_item->cat_price)|string_format:"%.2f"}</b> {$organizer_currency}
+            			<b>{gui->valuta value=$seat_item->total_price()|string_format:"%.2f"}</b>
             			<br>
                 			<img src='{$_SHOP_themeimages}clock.gif' valign='middle' align='middle'> {$seat_item->ttl()} min.
           		  </td>
@@ -98,7 +98,7 @@
           			<br>
           			<a href='index.php?action=view_cart'>{!view_order!}</a>
           			<br>
-          			<br>{!tot_tick_price!} {cart->total_price|string_format:"%.2f"} {$organizer_currency}
+          			<br>{!tot_tick_price!} {gui->valuta value=$cart->total_price()|string_format:"%.2f"}
         		  </td>
         		</tr>
         		<tr>

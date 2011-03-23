@@ -54,7 +54,7 @@ require_once(CLASSES."jsonwrapper.php"); // Call the real php encoder built into
   if(function_exists("date_default_timezone_set")) {
     @date_default_timezone_set($_SHOP->timezone);
   }
-
+error_reporting(0);
 require_once ("controller.web.checkout.php");
 
 class ctrlPosAjax extends ctrlWebCheckout {
@@ -400,22 +400,21 @@ class ctrlPosAjax extends ctrlWebCheckout {
       $category_item = $cart_row[1];
       $seat_item     = $cart_row[2];
       $seat_item_id  = $seat_item->id;
-      $seats_ids     = $seat_item->places_id;
-      $seats_nr      = $seat_item->places_nr;
-      $disc          = ($seat_item->discounts)?$seat_item->discounts[0]: 0;
+      $seats         = $seat_item->seats;
+      $disc          = $seat_item->discount(reset($seats)->discount_id);
       $seatinfo = '';
 
       if($category_item->cat_numbering=='rows'){
         $rcount=array();
-        foreach($seat_item->places_nr as $places_nr){
-          $rcount[$places_nr[0]]++;
+        foreach($seats as $seat){
+          $rcount[$seat->seat_row_nr]++;
         }
         foreach($rcount as $row => $count){
-          $seatinfo .= ", $count x ".con('row')." {$row}";
+          $seatinfo .= ", {$count} x ".con('row')." {$row}";
         }
       } elseif (!$category_item->cat_numbering or $category_item->cat_numbering == 'both'){
-        foreach($seat_item->places_nr as $places_nr){
- 					$seatinfo .= ", {$places_nr[0]} - {$places_nr[1]}";
+        foreach($seats as $places_nr){
+ 					$seatinfo .= ", {$places_nr->seat_row_nr} - {$places_nr->seat_nr}";
         }
       }
       $seatinfo = substr($seatinfo,2);
@@ -441,7 +440,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
       $row = array($col);
       $row[] = "<b>{$event_item->event_name}</b> - {$event_item->event_ort_name}<br>".
                formatdate($event_item->event_date,con('shortdate_format'))."  ".formatdate($event_item->event_time,con('time_format'));
-      $row[] = count($seats_ids);
+      $row[] = count($seats);
       $col = "{$category_item->cat_name}";
       if ($seatinfo) {
         $col = "<acronym title='{$seatinfo}'>$col</acronym>";
@@ -608,11 +607,12 @@ class ctrlPosAjax extends ctrlWebCheckout {
   private function doAddToCart() {
     $event_id = is($this->request['event_id'],0);
     $category_id = is($this->request['category_id'],0);
+    $discount_id = is($this->request['discount_id'],0);
     if($event_id <= 0){
       addWarning('wrong_event_id');
       return false;
     }
-    $res = $this->__MyCart->CartCheck($event_id,$category_id,$this->request['place'],'mode_pos',false,$this->request['discount_id'],false);
+    $res = $this->__MyCart->CartCheck($event_id, $category_id, $this->request['place'], $discount_id, 'mode_pos', false, false);
     if($res){
       $this->json['reason']=$res;
       $this->json['status']=true;
@@ -631,15 +631,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
       addWarning('wrong_input_ids');
       return false;
     }
-
-    if($cart=$_SESSION['_SMART_cart']){
-
-      if($places=$cart->remove_place($event_id,$cat_id,$item)){
-        Seat::free(session_id(),$event_id,$cat_id,$places);
-      }
-
-      $_SESSION['_SMART_cart']=$cart;
-    }
+    $this->__MyCart->remove_item_f($event_id,$cat_id,$item);
     return true;
   }
 

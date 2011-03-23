@@ -37,68 +37,45 @@
   </td>
   <td  valign='top'>
     {$seat_item->count()} x {$category_item->cat_name} {* ({valuta value=$category_item->cat_price|string_format:"%.2f"}) *}
-    {if $seat_item->discounts}        {* there are discounts *}
+    {assign var='seats' value=$seat_item->seats}
+
       <table border='0' width='100%'>
-        {section name="seats" loop=$seats_id}
+        {foreach from=$seats item=seat name=foo}
+
           <tr>
-            <td class='view_cart_td'><li>
-              {if !$category_item->cat_numbering or $category_item->cat_numbering eq 'both'}
-                  {$seats_nr[seats][0]} - {$seats_nr[seats][1]}
-              {elseif $category_item->cat_numbering eq 'seat'}
-                  {$seats_nr[seats][1]}
-              {elseif $category_item->cat_numbering eq 'rows'}
-                  {!row!} {$seats_nr[seats][0]}
-              {/if}</li>
+            <td class='view_cart_td' nowrap=nowrap>
+                {if $category_item->cat_numbering eq 'both'}
+                  {!seat!} {$seat->seat_row_nr} - {$seat->seat_nr}
+                {elseif $category_item->cat_numbering eq 'rows'}
+                  {!row!} {$seat->seat_row_nr}
+                {elseif $category_item->cat_numbering eq 'seat'}
+                  {!seat!} {$seat->seat_nr}
+                {elseif $category_item->cat_numbering eq 'none'}
+                  {!ticket!} {$smarty.foreach.foo.index+1}
+                {/if}
+
             </td>
-            <td class='view_cart_td'>
-              {assign var='disc' value=$seat_item->discounts[seats]}
+            <td class='view_cart_td' nowrap=nowrap>
+              {assign var='disc' value=$seat_item->discount($seat->discount_id)}
               {if $disc}
                   {$disc->discount_name}
               {else}
                   {!normal!}
               {/if}
             </td>
-            <td align='right'>
+            <td align='right' nowrap=nowrap>
               {if $disc}
-                {valuta value=$disc->apply_to($category_item->cat_price)|string_format:"%.2f"}
+                {valuta value=$disc->apply_to($category_item->cat_price)}
               {else}
-                {valuta value=$category_item->cat_price|string_format:"%.2f"}
+                {valuta value=$category_item->cat_price}
               {/if}
             </td>
           </tr>
-        {/section}
+        {/foreach}
       </table>
-    {else}                              {* no discounts *}
-      <table border='0' width='100%'>
-        <tr>
-          <td class='view_cart_td'><li>
-            {if !$category_item->cat_numbering or $category_item->cat_numbering eq 'both'}
-              {section name="seats" loop=$seats_id}
-                 {$seats_nr[seats][0]} - {$seats_nr[seats][1]}
-              {/section}
-            {elseif $category_item->cat_numbering eq 'seat'}
-              {section name="seats" loop=$seats_id}
-                {$seats_nr[seats][1]}
-              {/section}
-            {elseif $category_item->cat_numbering eq 'rows'}
-              {foreach key=row item=count from=$seat_item_rows_count}
-                {$count} x {!row!} {$row}
-              {/foreach}
-            {/if}
-            </li>
-          </td>
-          <td class='view_cart_td'>
-            {!normal!}
-          </td>
-          <td align='right'>
-            {valuta value=$category_item->cat_price|string_format:"%.2f"}
-          </td>
-        </tr>
-      </table>
-    {/if}
   </td>
   <td  valign='top' align='right' >
-    {valuta value=$seat_item->total_price($category_item->cat_price)|string_format:"%.2f"}
+    {valuta value=$seat_item->total_price()}
   </td>
   {if $three_cols neq "on"}
     <td  valign='top'>

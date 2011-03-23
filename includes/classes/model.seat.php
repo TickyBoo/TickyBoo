@@ -386,7 +386,6 @@ class Seat  Extends Model {
 
   function free ($sid, $event_id, $category_id, $seats){
     global $_SHOP;
-
     if(ShopDB::begin('free seats')){
 
       foreach($seats as $seat_id){
@@ -405,7 +404,7 @@ class Seat  Extends Model {
 
         if(!$row=ShopDB::query_one_row($query)){
           ShopDB::rollback('cant lock seats');
-          return FALSE;
+          return addWarning('cant lock seats');
         }else{
           $pmps_id[$row['seat_pmp_id']]=1;
         }
