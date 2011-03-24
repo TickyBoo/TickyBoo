@@ -58,9 +58,9 @@ class install_settings {
     @file_put_contents($_SHOP->tmp_dir.'ssl_instal.txt',$test);
   	$file = constructBase(true).'index.php?do=testhttps';
 	//$file = str_replace('https','ssl',$file );
-    
+
  	  $testx = get_content($file);
-    
+
 
 
     $_SESSION['SHOP']['secure_site'] = is($_SESSION['SHOP']['secure_site'], ($test===$testx) );
@@ -101,7 +101,7 @@ class install_settings {
             </tr>
             <tr>
               <td width='30%' class='has-tooltip'>
-                  &nbsp;&nbsp;Use secure checkout:
+                  &nbsp;&nbsp;Force SSL on checkout:
                   <div id='secureCheckout' style='display:none;'>
                      Fusion ticket is designed to be used with SSL certified (HTTPS) checkout pages.<br>
                      We strongly recommend enabling this on your site.<br>

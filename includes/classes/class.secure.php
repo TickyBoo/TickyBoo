@@ -58,7 +58,7 @@
     {
       $token = is($_SESSION['tokens']['n'],null);
       //create a token
-      if ($token === null || $forceNew) { echo 'new:';
+      if ($token === null || $forceNew) {
         $token	=	self::_createToken(12);
         $_SESSION['tokens']['n'] = $token;
       }

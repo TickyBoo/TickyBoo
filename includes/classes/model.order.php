@@ -269,10 +269,9 @@ class Order Extends Model {
         OrderStatus::statusChange($this->order_id, false, NULL,'Order::save',"Global discount used: ".$this->discount->discount_name);
       }
       $tickets = array();
-      foreach($this->places as $i => &$ticket){
+      foreach(array_keys($this->places) as $i){
         $ticket =& $this->places[$i];
         $ticket->order_id($this->order_id);
-        $ticket->testing = 'test';
         $tickets[] = $ticket->id;
         // Tickets are saved here if handled==1 tickets are reserved instead of ordered.
         if(!$ticket->save($this->handling->handling_id=='1')){
