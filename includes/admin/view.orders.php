@@ -138,7 +138,7 @@ class OrdersView extends AdminView{
 
     foreach ($orders  as $obj){
       $head = $obj['_name'];
-      $date = formatAdminDate($head['event_date']).' '.substr($head['event_time'],0,5);
+      $date = formatAdminDate($head['event_date']).'&nbsp;'.substr($head['event_time'],0,5);
 //      echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
       echo "<tr class='stats_event_item'>
               <td >
