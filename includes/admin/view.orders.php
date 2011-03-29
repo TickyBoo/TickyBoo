@@ -109,10 +109,10 @@ class OrdersView extends AdminView{
 
   function tableByEvent (){
     $query="SELECT distinct seat_event_id, seat_order_id, order_shipment_status, order_payment_status, order_status,
-                   event_id, event_name, event_status, event_date, event_time
+                   event_id, event_name, event_status, event_date, event_time, ort_name, ort_city
             FROM  Seat left join  Event  on seat_event_id= event_id
                        left JOIN `Order` on seat_order_id=order_id
-
+                       left join `Ort`   on ort_id= event_ort_id
             WHERE Order.order_status!='trash'
             ORDER BY seat_event_id, order_status, order_shipment_status, order_payment_status ";
 
@@ -138,12 +138,14 @@ class OrdersView extends AdminView{
 
     foreach ($orders  as $obj){
       $head = $obj['_name'];
+      $date = formatAdminDate($head['event_date']).' '.substr($head['event_time'],0,5);
 //      echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='4' border='0'>\n";
       echo "<tr class='stats_event_item'>
               <td >
-                <a href='{$_SERVER['PHP_SELF']}?action=event_all&event_id={$head['event_id']}' class='UITabMenuNavOff'>
-                  {$head['event_name']}. </a>
-                (<a href='view_event.php?action=view&event_id={$head['event_id']}' class='UITabMenuNavOff'>#{$head['event_id']}</a>)
+                <a href='{$_SERVER['PHP_SELF']}?action=event_all&event_id={$head['event_id']}' class='UITabMenuNavOff'
+                   title='Location: {$head['ort_name']},&nbsp;{$head['ort_city']}' >
+                  {$head['event_name']}. {$date}</a>
+                (<a href='view_event.php?action=edit&event_id={$head['event_id']}' class='UITabMenuNavOff'>#{$head['event_id']}</a>)
               </td>
               <td align=right>".con('total')." : {$head['count']}</td>
             </tr>" ;
