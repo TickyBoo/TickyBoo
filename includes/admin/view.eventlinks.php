@@ -184,22 +184,12 @@ class EventLinksView extends AdminView {
     } elseif ($_REQUEST['action'] == 'remove_al' and $_REQUEST['adminlink_id'] > 0) {
     	//before deleting, check that the link is not in use
     	//we should never get here as used links do not have a delete button, but check anyway
-    	
+    	// This check is moved to the model AdminLink where it belongs.
     	if($pmp = AdminLink::load($_REQUEST['adminlink_id'])){
-	    	$query = "select 1 as inUse from `User` left join   `adminlink` on user_id = adminlink_pos_id left join
-	    	(select distinct seat_pos_id, seat_event_id from Seat  ) as sss on user_id = seat_pos_id where seat_pos_id is not null and adminLink_id = ".$_REQUEST['adminlink_id']." 
-	    	and adminlink_event_id = seat_event_id";
-	    	if ($row = ShopDB::query_one_row($query)){
-	    		if($row != null && $row['inUse'] == 1){
-	    			//this is in use, return
-	    			return addWarning(con("delete_link_error"));
-	    		}	
-	    	}
 	    	$pmp->delete();
     	}
-      }
+    }
   }
-
 }
 
 ?>

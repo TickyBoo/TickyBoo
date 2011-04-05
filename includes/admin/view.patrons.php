@@ -86,7 +86,7 @@ class patronView extends AdminView{
 	       <img src=\"".$_SHOP->images_url."view.png\" border='0'/>
 	       </a></td><tr>";
       $query = "select * from Seat LEFT JOIN Discount ON seat_discount_id=discount_id,Event,Category where seat_order_id='" . $order["order_id"] . "'
-               AND seat_event_id=event_id AND seat_category_id= category_id";
+               AND seat_event_id=event_id AND seat_category_id= category_id ".$_SHOP->admin->getEventRestriction();
       if (!$res1 = ShopDB::query($query)){
         user_error(shopDB::error());
         return;

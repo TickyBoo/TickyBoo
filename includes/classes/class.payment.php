@@ -196,8 +196,6 @@ class Payment {
         $this->debug .= 'curl_info = '.print_r(curl_getinfo($ch), true)."\n";
     }
 
-    $this->debug .= 'curl_info = '.print_r(curl_getinfo($ch), true)."\n";
-
   	curl_close($ch);
 
   	return $info;

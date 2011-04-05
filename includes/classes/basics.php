@@ -819,9 +819,11 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
 
   //...blah...
   $error = is($errortype[$errno],$errno);
-  writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
+
   if ($errno & $user_errors) {
-  try {
+    writeLog( "{$error}: $errstr, $error_file @ $error_line", FT_ERROR);
+  /*
+   try {
       require_once("classes/class.restservice.client.php");
       $rsc = new RestServiceClient('http://cpanel.fusionticket.org/reports/errors.xml'); //cpanel.fusionticket.org
       $rsc->subject  = "{$error}: $errstr, $error_file @ $error_line";
@@ -830,6 +832,7 @@ function customError($errno, $errstr, $error_file, $error_line, $error_context) 
     }catch(Exception $e){
       print_r($e->getMessage());
     }
+  */
   }
 }
 

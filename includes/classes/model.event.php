@@ -283,6 +283,11 @@ class Event Extends Model {
         return self::_abort('discount_delete_failed');
       }
 
+      $query="DELETE FROM adminlink
+              WHERE adminlink_event_id="._esc($this->id);
+      if(!ShopDB::query($query)){
+        return self::_abort('adminlink_delete_failed');
+      }
       $query="DELETE FROM Event
               WHERE event_id="._esc($this->id);
       if(!ShopDB::query($query)){

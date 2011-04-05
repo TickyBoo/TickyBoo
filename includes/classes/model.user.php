@@ -37,6 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class User extends Model{
   protected $_idName    = 'user_id';
   protected $_tableName = 'User';
+  protected $_prefs = array('user_prefs_print','user_prefs_strict');
   protected $_columns   = array('#user_id', '*user_lastname', 'user_firstname', '*user_address', 'user_address1',
                                 '*user_zip', '*user_city', 'user_state', '*user_country', 'user_phone', 'user_fax' ,
                                 '*user_email', '*user_status', 'user_prefs', 'user_created', 'user_custom1', 'user_custom2',
@@ -63,6 +64,13 @@ class User extends Model{
     }
   	$user['is_member'] = ($user['user_status']==2);
     $user['active']    = (empty($user['active'])) && $user['is_member'];
+    if (!empty($user['user_prefs'])) {
+      $prefs = unserialize( $user['user_prefs']);
+      foreach($prefs as $key => $value) {
+        $user[$key] = $value;
+      }
+
+    }
   	$_SESSION['_SHOP_USER']=$user_id;
     return $user;
   }
@@ -87,6 +95,11 @@ class User extends Model{
   		addWarning('log_err_not_act_info');
   		return FALSE;
   	}
+    if (!empty($user['user_prefs'])) {
+      $user['user_prefs'] = unserialize( $user['user_prefs']);
+
+    }
+
     unset($res['password']);
     unset($res['active']);
   	$res['is_member']=true;
@@ -160,6 +173,17 @@ class User extends Model{
     }
     unset($user);
     return false;
+  }
+
+  function saveEx($id=null, $expl=false){
+    $prefs =array();
+    foreach ($this as $key =>$value){
+      if (in_array($key,$this->_prefs )) {
+        $prefs[$key] = $value;
+      }
+    }
+    $this->user_prefs = serialize( $prefs);
+    return parent::saveEx($id,$expl);
   }
 
 	function updateEx (&$data, $mandatory=0, $short=0){

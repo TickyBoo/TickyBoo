@@ -46,12 +46,7 @@ class install_database {
     if(empty($_SESSION['SHOP']['db_name']))
       {array_push($Install->Errors,'No database name specified.');}
     if ($Install->Errors) return true;
-
     $link = OpenDatabase();
-    $row = shopdb::query_one_row("show variables like 'have_inno%'");
-    if ($row && ($row['Value'] !== 'YES')) {
-      array_push($Install->Errors,'Fusion Ticket uses the MySQL InnoDB engine. This is not installed on your server.');
-    }
 
     if(@mysqli_errno ($link)==1049 and $_REQUEST['db_create_now']){
       $link->query('CREATE DATABASE ' . $_SESSION['SHOP']['db_name']);
@@ -67,6 +62,11 @@ class install_database {
                                  'Error code: '. @mysqli_connect_error($link) . @mysqli_error($link));
       if(@mysqli_errno ($link)==1049) $_SESSION['DB_Error'] = true;
       return true;
+    }
+
+    $row = shopdb::query_one_row("show variables like 'have_inno%'");
+    if ($row && ($row['Value'] !== 'YES')) {
+      array_push($Install->Errors,'Fusion Ticket uses the MySQL InnoDB engine. This is not installed on your server.');
     }
 
     if ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {
@@ -103,7 +103,7 @@ class install_database {
       $_SESSION['ORG']['organizer_plz'] = 'Demo Town';
       $_SESSION['ORG']['organizer_state'] = 'DT';
       $_SESSION['ORG']['organizer_country'] = 'US';
-      $_SESSION['ORG']['organizer_email'] = 'info@fusionticket.test';
+      $_SESSION['ORG']['organizer_email'] = '';
       $_SESSION['ORG']['organizer_fax'] = '(555) 555-1215';
       $_SESSION['ORG']['organizer_phone'] = '(555) 555-1214';
       $_SESSION['ORG']['organizer_place'] = '';

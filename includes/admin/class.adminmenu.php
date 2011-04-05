@@ -73,7 +73,7 @@ class MenuAdmin extends AUIComponent {
 
 		// Loop through the menu item array and put the'menu_admin_link_selected'-class on the linkt to current file
 		foreach($this->menu_items as $link => $text){
-     // if ($_SHOP->admin->isAllowed($text)) {
+      if ($_SHOP->admin->isAllowed($text)) {
 			  echo "<tr><td  class='menu_admin_item'><a href={$link} ";
   			if ($text=="{$this->current_page}_admin"){
   				echo "class='menu_admin_link_selected'>";
@@ -83,7 +83,7 @@ class MenuAdmin extends AUIComponent {
   			echo con($text);
   			echo "</a></td></tr>";
   		}
-	//	}
+		}
     echo "<tr><td></td></tr>";
     echo "<tr><td  class='menu_admin_item'>
      <a href='{$_SERVER["PHP_SELF"]}?action=logout' class='menu_admin_link'>" . con('logout') . "</a></td></tr>

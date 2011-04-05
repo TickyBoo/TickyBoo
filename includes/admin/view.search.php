@@ -138,6 +138,7 @@ class SearchView extends AdminView{
             WHERE event_rep LIKE '%sub%'
             and field(event_status, 'trash','unpub')=0
             and event_pm_id IS NOT NULL 
+            {$_SHOP->admin->getEventRestriction()}
             order by event_date,event_time";
     if(!$res=ShopDB::query($query)){
       user_error(shopDB::error());
@@ -186,7 +187,8 @@ class SearchView extends AdminView{
                       left join Event    ON seat_event_id=event_id
                       left join User     ON seat_user_id=user_id
                       left join `Order`  ON seat_order_id=order_id
-            where ". implode("\n AND ",$query_type);
+            where ". implode("\n AND ",$query_type). '
+                  '. $_SHOP->admin->getEventRestriction();
 
     if(!$res=ShopDB::query($query)){
        user_error(shopDB::error());
@@ -273,7 +275,8 @@ class SearchView extends AdminView{
                                 	    LEFT JOIN User on seat_user_id=user_id
                                 	    LEFT JOIN `Order` on seat_order_id=order_id
          where seat_id="._esc($seat_id)."
-  	     AND seat_code="._esc($ticket_code);
+  	     AND seat_code="._esc($ticket_code).'
+        '.$_SHOP->admin->getEventRestriction();
 
 
       if(!$ticket=ShopDB::query_one_row($query)){

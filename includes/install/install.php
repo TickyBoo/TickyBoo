@@ -32,7 +32,7 @@
  * clear to you.
  */
 if (!defined('ft_check')) {die('System intrusion ');}
-
+error_reporting(0);
 $states = array('install_welcome',   'install_license',  'install_login', 'install_database', 'install_mode',
                 'install_adminuser', 'install_merchant', 'install_settings', 'install_mail',  'install_register',
                 'install_execute',   'install_finish');
@@ -42,6 +42,7 @@ session_start();
 if (empty($_REQUEST)) {
   session_destroy();
   session_start();
+
 }
 include_once 'install_version.php';
 

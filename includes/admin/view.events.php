@@ -83,6 +83,8 @@ select SQL_CALC_FOUND_ROWS *
               order by event_date
               limit 0,15
 */
+    $wherey = $_SHOP->admin->getEventRestriction();
+    $wherem = $_SHOP->admin->getEventRestriction('main.');
     $wherex = (!$history)?"event_status = 'pub' or ":"event_status != 'pub' AND ";
     $where  = "and ((event_rep !='main' and  ({$wherex} TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 )) \n";
 	  $where .= "OR     (Event.event_rep='main' and (((select COALESCE(count(*),0)
@@ -179,6 +181,8 @@ select SQL_CALC_FOUND_ROWS *
 
 	function tableSubs( $event_main_id, &$alt, $main_name, $history= false ) {
 		global $_SHOP;
+
+    $wherey = $_SHOP->admin->getEventRestriction();
     $where = "and (TO_DAYS(event_date) ".(($history)?'<':'>=')." TO_DAYS(NOW())-1 ".((!$history)?"or event_status='pub'":"and event_status!='pub'").')';
 
 		$query = "select *
@@ -186,7 +190,7 @@ select SQL_CALC_FOUND_ROWS *
               where event_main_id="._esc($event_main_id)."
               and event_rep='sub'
               and event_status!='trash'
-              $where
+              $where $wherey
               order by event_date, event_time ";
 
 		if ( !$res = ShopDB::query($query) ) {
@@ -281,6 +285,7 @@ select SQL_CALC_FOUND_ROWS *
     } else {
       $mail ='';
     }
+    	echo "<tr ><td colspan='2' class='admin_name_header'>" . con('event_details') ."</td></tr>";
 		$this->print_field_o('event_id', $data);
 		$this->print_input('event_name', $data, $err, 30, 100, $main );
 	  $this->print_select_group( 'event_group_id', $data, $err, $main );
@@ -581,28 +586,25 @@ select SQL_CALC_FOUND_ROWS *
   }
 
   function state_change_event ($state, $event) {
-    $date = $event->event_name;
+    $data = $event->event_name;
     if ($event->event_rep == 'sub'){
-       $date .= ' @ '. formatAdminDate($event->event_date);
+       $data .= ' @ '. formatAdminDate($event->event_date);
     }
-
+    $oldstate = $event->event_status;
     if ($state == 1 and $event->event_status == 'unpub') {
        $oke = $event->publish($stats, $pmps);
        $result = 'pub_';
-       $oldstate = 'unpub';
     } elseif ($state == 1 and $event->event_status == 'nosal') {
        $oke = $event->restart_sales();
        $result = 'restart_';
-       $oldstate = 'nosal';
     } elseif($state == 2 and $event->event_status == 'pub') {
        $oke = $event->stop_sales();
        $result = 'stop_';
-       $oldstate = 'pub';
     } else
       return '';
 
-    if ($oke){
-      addNotice($result.'success',$date);
+    if ($oke=== true){
+      addNotice($result.'success',$data);
       if ($event->event_rep == 'main' and $_POST['also_sub_'.$event->event_id] and $subs = Event::loadAllSubs($event->event_id)) {
         foreach($subs as $sub) {
           if ($sub->event_status == $oldstate) {
@@ -611,7 +613,7 @@ select SQL_CALC_FOUND_ROWS *
         }
       }
     } else {
-      addWarning($result.'_failure',$date);
+      addWarning($result.'failure',$data);
     }
   }
 
@@ -621,17 +623,17 @@ select SQL_CALC_FOUND_ROWS *
       $log    = '';
       $errs = false;
       if (count($_REQUEST['cbxEvents']) > 0) {
-      	foreach($_REQUEST['cbxEvents'] as $eventID) {
+        foreach($_REQUEST['cbxEvents'] as $eventID) {
           if ($event = Event::load($eventID, false)) {
             if ($state == 1 and $event->event_status == 'unpub' and $_POST['confirm'] !== con('confirm_yes') ) {
               //echo $event->event_status;
               unset($stats);
               unset($pmps);
               $event->publish($stats, $pmps, true);
-             	$event_d = (array)$event;
-             	if($varNum==0) $this->state_confirm_button($state, false);
-             	$errs = $this->event_view($event_d, $stats, $pmps, false) or $errs;
-             	$varNum++;
+              $event_d = (array)$event;
+              if($varNum==0) $this->state_confirm_button($state, false);
+              $errs = $this->event_view($event_d, $stats, $pmps, false) or $errs;
+              $varNum++;
             } else {
               $this->state_change_event ($state, $event);
             }

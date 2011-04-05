@@ -20,11 +20,17 @@ class Admins extends Model {
     if ($row = ShopDB::query_one_row($query)){
       $adm = new Admins(false);
       $adm->_fill($row);
-      if ($row['admin_status'] =='pos' || $row['admin_status'] =='posman' ) {
+      if ($row['admin_user_id'] ) {
         $query = "select *
                   from User
                   where user_id = "._esc($row['admin_user_id']);
         $rowx = ShopDB::query_one_row($query);
+        if (!empty($rowx['user_prefs'])) {
+          $prefs = unserialize( $rowx['user_prefs']);
+          foreach($prefs as $key => $value) {
+            $rowx[$key] = $value;
+          }
+        }
       $adm->_fill($rowx);
     }
       return $adm;
@@ -89,9 +95,7 @@ class Admins extends Model {
       }
 
     }
-  //  if (parent::delete() and $this->user) {
-  //    return $this->user->delete();
-   // }
+
   }
 
   private function isLastAdmin(){
@@ -118,9 +122,28 @@ class Admins extends Model {
     }
     return false;
   }
+  public function allowedRoles(){
+   return  array('admin' => 'admin',
+                 'pos'=>'pos',
+                 'control'=>'control_user_title');
+}
 
-  public function isAllowed($Resource, $login = false ) {
-  //  print_r($this->admin_status);
+public function isAllowed($Resource, $login = false ) {
+    global $_SHOP;
+    if ($login && $this->admin_user_id) {
+      if ($this->user_prefs_strict) {
+        $check     = is($_COOKIE['use'.$this->admin_user_id],false);
+        $hash = hash('ripemd160',$this->user_prefs_strict.$_SHOP->secure_id.$this->admin_user_id.$this->user_lastname);
+        if ($check === false) { return false; }
+        if ($check !== $hash) {
+          return false;
+        }
+        $myDomain  = ereg_replace('^[^\.]*\.([^\.]*)\.(.*)$', '\1.\2', $_SERVER['HTTP_HOST']);
+        $setDomain = ($_SERVER['HTTP_HOST']) != "localhost" ? ".$myDomain" : false;
+        setcookie ('use'.$adm->id, $check , time()+3600*24*(20), '/', "$setDomain", 0 );
+      }
+
+    }
     if (plugin::call('%isACL')) {
        return plugin::call('%isAllowedACL', $this->admin_status, $Resource );
     } elseif ($login) { // this ia only used when the ACL manager is not installed.
@@ -157,9 +180,9 @@ class Admins extends Model {
 
   public function getEventRestriction($prefix='', $sefix='AND') {
     $result ='';
-    if (($this->admin_status=='organizer' || $this->admin_status=='posman') && ($list=$this->getEventLinks())) {
-      $result = "{$sefix} (field({$prefix}event_id, {$list}) or (select  count(*) from `adminlink` where adminlink_event_id = {$prefix}event_id) = 0)";
-    }
+ //   if (($this->admin_status=='organizer' || $this->admin_status=='posman') && ($list=$this->getEventLinks())) {
+ //     $result = "{$sefix} (field({$prefix}event_id, {$list}) or (select  count(*) from `adminlink` where adminlink_event_id = {$prefix}event_id) = 0)";
+ //   }
     return $result;
   }
 

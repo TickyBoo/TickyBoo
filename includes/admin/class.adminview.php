@@ -382,7 +382,22 @@ class AdminView extends AUIComponent {
 
     function print_checkbox ($name, &$data, &$err, $size = '', $max = '')
     {
-      self::print_select_assoc ($name, $data, $err, array('0'=>'no', '1'=>'yes'));
+      $suffix = self::_check($name, $suffix,$data);
+      if (empty($data[$name])) {
+        $sel0='checked';
+      } else {
+        $sel1='checked';
+      }
+      echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
+
+          <td class='admin_value'>
+            <input type='radio'  id='{$name}-no' name='$name' value=0 $sel0><label for='{$name}-no'>".con('no')."</label>&nbsp;
+            <input type='radio'  id='{$name}-yes' name='$name' value=1 $sel1><label for='{$name}-yes' >".con('yes')."</label>
+
+          ".printMsg($name, $err)."
+          </td></tr>\n";
+
+       //     self::print_select_assoc ($name, $data, $err, array('0'=>'no', '1'=>'yes'));
 /*        if ($data[$name]) {
             $chk = 'checked';
         }

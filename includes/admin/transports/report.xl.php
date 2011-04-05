@@ -42,6 +42,7 @@ class report_xl extends AdminView {
     global $_SHOP;
 		$query = "select * from Event
               where event_rep LIKE '%sub%'
+              {$_SHOP->admin->getEventRestriction()}
               and event_pm_id IS NOT NULL
               and field(event_status, 'trash','unpub')=0
               ORDER BY event_date,event_time,event_name";

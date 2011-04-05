@@ -242,14 +242,18 @@ class ctrlWebCheckout extends ctrlWebShop {
 
 
   function actionPrint () {
+    global $_SHOP;
+
     $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
       ShopDB::dblogging("Print error ($myorder).");
       return;
     }
     $mode = (int)$_REQUEST['mode'];
-    If (!$mode) $mode =2;
-    Order::printOrder($myorder->order_id, '', 'stream', false, $mode );
+    if (!$mode) $mode =2;
+    $print = (is($_SHOP->admin->user_prefs_print, false) === 'pdt');
+   // die (is($_SHOP->admin->user_prefs_print, false));
+    Order::printOrder($myorder->order_id, '', 'stream', $print, $mode );
     return;
   }
 

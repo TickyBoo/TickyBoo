@@ -60,6 +60,26 @@ class Adminlink Extends Model {
       return $eg;
     }
   }
+  function delete(){
+    /* This query need to be checked !!!
+     $query = "select 1 as inUse
+                  from `User`
+                  left join   `adminlink` on user_id = adminlink_pos_id
+                  left join
+	    	(select distinct seat_pos_id, seat_event_id
+         from Seat
+         where seat_status = 'free'
+         and seat_event_id = "._esc($_REQUEST['event_id']).') as sss on user_id = seat_pos_id
+         where seat_pos_id is not null and adminLink_id = "._esc((int)$_REQUEST['adminlink_id'])."
+	    	and adminlink_event_id = seat_event_id";
+	    	if ($row = ShopDB::query_one_row($query)){
+	    		if($row != null && $row['inUse'] == 1){
+     //this is in use, return
+     return addWarning(con("delete_link_error"));
+    }
+  */
+    return parent::detete();
+  }
 
 }
 ?>

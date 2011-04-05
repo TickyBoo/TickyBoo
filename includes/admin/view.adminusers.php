@@ -74,18 +74,15 @@ class AdminUsersView extends AdminView{
     $this->form_head($title);
 		$this->print_field_o( 'admin_id', $data );
     $this->print_input('admin_login',$data,$err,30,100);
-    $this->print_select_assoc('admin_status',$data,$err, array('admin' => 'admin',
-                                                               // 'organizer' =>'organizer', 'posman' =>'posman',
-                                                               'pos'=>'pos','control'=>'control_user_title') );
+    $this->print_select_assoc('admin_status',$data,$err, $_SHOP->admin->allowedRoles() );
    // var_dump($_SESSION);
     $this->print_posoffices('admin_user_id',$data);
     $this->print_events('control_event_ids', $data);
     $this->print_input('admin_email',$data,$err,30,100);
     $script = "
         $('#admin_status-select').change(function(){
-           var pos = 'pos';
            var data = $(this).val();
-           if (data.substr(0, pos.length) === pos) {
+           if (data.substr(0, 3) === 'pos') {
               $('#admin_user_id-tr').show();
            } else {
               $('#admin_user_id-tr').hide();
@@ -95,9 +92,13 @@ class AdminUsersView extends AdminView{
            } else {
               $('#control_event_ids-tr').hide();
            }
-        });
         ";
-
+    $script .=  " });";
+    if ($data['admin_status'] !== 'control') {
+      $script .= "
+        $('#control_event_ids-tr').hide();
+          ";
+    }
     $this->addJQuery($script);
 
  //   $this->print_select_assoc('admin_ismaster',$data,$err,array('No'=>'no','Yes'=>'yes'));
@@ -178,14 +179,14 @@ class AdminUsersView extends AdminView{
             where event_pm_id is not null
 		  		and event_rep LIKE '%sub%'
 		  		AND event_status <> 'unpub'
-		  		AND event_date >= now()
+		  		AND event_date >= date(now())
             order by event_date,event_time";
     if(!$res=ShopDB::query($query)){
       user_error(shopDB::error());
       return;
     }
 
-    echo "<tr id='{$name}-tr'><td  class='admin_name' width='40%' valign='top'>".con('$name')."</td>
+    echo "<tr id='{$name}-tr'><td  class='admin_name' width='40%' valign='top'>".con($name)."</td>
           <td class='admin_value'>";
     echo "<select multiple size='10' name='control_event_ids[]' style='width:100%'>";
     while($row=shopDB::fetch_assoc($res)){

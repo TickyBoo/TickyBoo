@@ -103,7 +103,7 @@ class router {
  * 5. render the actual view and layout (if autoRender is true)
  * 6. return the output
  * @param string $url raw url string passed to the array (eg. /main/index/foo/bar)
- */
+ * /
 	function dispatch($url) {
     global $_SHOP;
 		$params = self::constructParams($url);

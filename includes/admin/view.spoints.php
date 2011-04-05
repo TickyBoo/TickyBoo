@@ -112,7 +112,9 @@ class SpointsView extends AdminView{
 		$this->print_input( 'user_fax', $data, $err, 30, 50 );
 		$this->print_input( 'user_email', $data, $err, 30, 50 );
 
-		$this->print_select( 'user_prefs', $data, $err, array('pdt', 'pdf') );
+		$this->print_select( 'user_prefs_print', $data, $err, array('pdt', 'pdf') );
+    $this->print_checkbox( 'user_prefs_strict', $data, $err );
+    $this->print_checkbox( 'user_prefs_store_now', $data, $err );
    // var_dump($_SESSION);
     $this->form_foot(2,$_SERVER['PHP_SELF']);
     if ($data['user_id']) {
@@ -137,6 +139,13 @@ class SpointsView extends AdminView{
          $adm->user_status = 1;
       }
       if ($adm->fillPost() && $adm->saveEx()) {
+        if ($adm->user_prefs_store_now) {
+          $myDomain = ereg_replace('^[^\.]*\.([^\.]*)\.(.*)$', '\1.\2', $_SERVER['HTTP_HOST']);
+          $setDomain = ($_SERVER['HTTP_HOST']) != "localhost" ? ".$myDomain" : false;
+          $done = setcookie ('test'.$adm->id, $adm->user_prefs_strict.$_SHOP->secure_id.$adm->id.$adm->user_lastname , time()+600, '/', "$setDomain", 0 );
+          $done = setcookie ('use'.$adm->id, hash('ripemd160',$adm->user_prefs_strict.$_SHOP->secure_id.$adm->id.$adm->user_lastname) , time()+3600*24*(60), '/', "$setDomain", 0 );
+          addNotice('POS registration Cookie placed: ',($done?'Yes':'no'));
+        }
         $this->table();
       } else {
         $this->form($_POST, null, con(((isset($_POST['user_id']))?'pos_update_title':'pos_add_title')));

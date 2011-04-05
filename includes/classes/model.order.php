@@ -1141,8 +1141,10 @@ class Order Extends Model {
         $pdf->output($_SHOP->ticket_dir.DS.$order_file_name, 'F');
       }else if($mode=='stream'){
         if($print){
-          $pdf->pdf->IncludeJS("print({bUI: false, bSilent: true}); doc.closeDoc(true);");
+          $pdf->pdf->IncludeJS("print({bUI: false, bSilent: true}); this.exit(true)");
         }
+      //    $pdf->output($order_file_name, 'D');
+      //  } else
         $pdf->output($order_file_name, 'I');
       }else if($mode=='data'){
         $pdf_data=$pdf->output($order_file_name, 'S');
