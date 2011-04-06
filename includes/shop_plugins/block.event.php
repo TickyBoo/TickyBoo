@@ -37,7 +37,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
   if ($repeat) {
     $from='Event';
-      $where="where event_status='pub'";
+    $where="event_status='pub'";
 
     if($params['order']){
 			$params['order']=_esc($params['order'], false);
@@ -45,7 +45,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
     }
 
     if($params['event_id']){
-			$where .= " and event_id="._esc($params['event_id']);
+			$where = "({$where} or event_rep = 'main') and event_id="._esc($params['event_id']);
     }
 
     if($params['ort']){
@@ -116,8 +116,13 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
     }
 
     if($params['main']){
-      $where.=" and event_rep LIKE '%main%'";
+      $where  = "(event_rep ='main,sub' and ({$where}))
+             OR     (event_rep = 'main' and (select COALESCE(count(*),0)
+                                                    from Event main
+                                                    where main.event_main_id = Event.event_id
+                                                    and {$where})>0)";
     }
+
 
     if($params['first']){
 			$params['first']=(int)$params['first'];
@@ -138,7 +143,8 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
      $value =', (select sum(seat_price) from Seat where seat_event_id = event_id and seat_status = "com") as event_paid';
   }
 
-    $query="select {$cfr} * {$value} from {$from} {$where} {$order_by} {$limit}";
+
+    $query="select {$cfr} * {$value} from {$from} where {$where} {$order_by} {$limit}";
     $res=ShopDB::query($query);
 
 	  $part_count=ShopDB::num_rows($res);

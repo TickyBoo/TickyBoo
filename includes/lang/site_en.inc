@@ -1576,4 +1576,12 @@ define('payment_not_approved','payment_not_approved');
 
 define('control','control');
 define('error','error');
+
+define('event_details','event_details');
+define('event_view_periode','event_view_periode');
+define('event_view_begin_date','event_view_begin_date');
+define('event_view_begin_time','event_view_begin_time');
+define('event_view_end_date','event_view_end_date');
+define('event_view_end_time','event_view_end_time');
+define('select_qty','select_qty');
 ?>
