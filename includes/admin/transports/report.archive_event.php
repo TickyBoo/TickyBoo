@@ -43,7 +43,11 @@ class report_archive_event extends AdminView {
   function cp_form (&$data,&$err){
 		global $_SHOP;
 
-		$query = "select * from Event where event_rep LIKE '%main%' AND event_main_id is null ORDER BY event_date,event_time,event_name";
+    $query = "select * from Event
+              where event_rep LIKE '%sub%'
+              {$_SHOP->admin->getEventRestriction()}
+              and event_pm_id IS NOT NULL
+              ORDER BY event_date,event_time,event_name";
 
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_assoc($res)){
@@ -54,8 +58,8 @@ class report_archive_event extends AdminView {
 		echo "<form action='{$_SERVER["PHP_SELF"]}' method='GET'>";
 		$this->form_head(con('export_xml_event_title'));
 		//function print_select_assoc ($name,&$data,&$err,$opt,$mult=false){
-
-		$this->print_select_assoc('event_id',$data,$err,$event);// choose an event
+)_id
+		$this->print_select_assoc('export_entrant_event',$data,$err,$event);// choose an event
 		echo "
 		<tr><td align='center' class='admin_value' colspan='2'>
   		  	<input type='hidden' name='run' value='{$_REQUEST['run']}'>
@@ -67,8 +71,8 @@ class report_archive_event extends AdminView {
     global $_SHOP;
 
 
-    if($_GET['event_id']>0){
-      $event_id=(int)$_GET["event_id"];
+    if($_GET['export_entrant_event']>0){
+      $event_id=(int)$_GET["export_entrant_event"];
       $query="SELECT *
               FROM Event left join Ort on Event.event_ort_id=Ort.ort_id
               WHERE Event.event_id='{$event_id}'";

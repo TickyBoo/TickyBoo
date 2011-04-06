@@ -1574,4 +1574,6 @@ define('payment_not_approved','payment_not_approved');
   define("cc_exp","Expiry date");
   define("cc_code","Security code");
 
+define('control','control');
+define('error','error');
 ?>

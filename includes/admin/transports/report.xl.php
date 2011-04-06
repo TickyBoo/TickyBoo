@@ -91,7 +91,7 @@ class report_xl extends AdminView {
 
     // Creating a worksheet
     $worksheet =& $workbook->addWorksheet (con('export_xl'));
-    
+
     $format_bold =& $workbook->addFormat();
     $format_bold->setBold();
 
@@ -140,14 +140,14 @@ class report_xl extends AdminView {
     $format_rightb =&$workbook->addFormat(array('Align'=>'right'));
     $format_rightb->setBold();
 
-    
+
     // The actual data
     $worksheet->hideGridLines();
 
     $worksheet->setrow(0,25);
     $worksheet->setrow(1,20);
     $worksheet->setrow(2,15);
-    
+
     $worksheet->setcolumn(0, 0,7);
     $worksheet->setcolumn(1, 1,7);
     $worksheet->setcolumn(2, 2,7);
@@ -184,13 +184,13 @@ class report_xl extends AdminView {
     $worksheet->write(0, 25, "", $format_header);
     $worksheet->write(0, 26, "", $format_header);
 
-    
+
 			$worksheet->write(1, 0, "--", $format_header2);
     		$worksheet->write(1, 1, "", $format_header2);
-    
+
     $worksheet->write(2, 0, con('seat_id'),$format_bold);
     $worksheet->write(2, 1, con('rep_ord_id'),$format_bold);
-    	    
+
     	    $worksheet->write(1, 2, con('user_title'), $format_header2);
     		$worksheet->write(1, 3, "", $format_header2);
     		$worksheet->write(1, 4, "", $format_header2);
@@ -249,7 +249,7 @@ class report_xl extends AdminView {
     $worksheet->write(2, 21, con('cat_name'),$format_bold);
     $worksheet->write(2, 22, con('cat_price'),$format_bold);
     $worksheet->write(2, 23, con('cat_sold'),$format_bold);
-    
+
     		$worksheet->write(1, 24, "Discounts", $format_header2);
     		$worksheet->write(1, 25, "", $format_header2);
     		$worksheet->write(1, 26, "", $format_header2);
@@ -311,13 +311,10 @@ class report_xl extends AdminView {
      }else{
        $query="
                select *, u.*, p.user_lastname pos_office,
-                      p.user_city pos_city, p.user_country pos_country,
-                      p1.user_lastname physic_office,
-                      p1.user_city physic_city, p1.user_country physic_country
+                      p.user_city pos_city, p.user_country pos_country
                from Seat LEFT JOIN `Discount` ON seat_discount_id=discount_id
                                   LEFT JOIN `Order` on seat_order_id=order_id
                         LEFT JOIN `User` p on order_owner_id= p.user_id
-                        LEFT JOIN `User` p1 on seat_pos_id= p1.user_id
                         LEFT JOIN `User` u on seat_user_id= u.user_id
                         LEFT JOIN `Event` on seat_event_id=event_id
                         LEFT JOIN `Category` on seat_category_id=category_id
