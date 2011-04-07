@@ -30,10 +30,9 @@
  * clear to you.
  *}
 {if $shop_event.event_rep eq 'main'}
-  <table class="table_dark" cellpadding="5" border=1>
+  <table class="table_dark" cellpadding="5" border=0>
     <tr>
-      {assign var='file' value="files/"+$shop_event.event_thumb}
-    	{if $shop_event.event_image and file_exists($file)}
+    	{if $shop_event.event_image}
         <td width="30%" valign="top" colspan="2">
     	  	<!-- a href='index.php?event_id={$shop_event.event_id}' -->
             <img src="files/{$shop_event.event_image}" align='left' class="magnify" border="0" style="margin:3px;" alt="{$shop_event.event_name} in {$shop_event.ort_city}" title="{$shop_event.event_name} in {$shop_event.ort_city}" border="0" width="100">
