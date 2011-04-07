@@ -100,13 +100,7 @@ class OrtView extends AdminView {
         preg_match('/_pmp$/', $_REQUEST['action']) or preg_match('/_category$/', $_REQUEST['action'])){
         require_once('admin/view.placemaps.php');
         $pm_view = new PlaceMapView($this->width);
-        if ($pm_view->draw()) {
-          if ($ort = Ort::load($_REQUEST['pm_ort_id'])) {
-            $this->form((array)$ort, null, con('ort_update_title'));
-          } else {
-            $this->table();
-          }
-        }
+        $pm_view->draw();
         $this->addJQuery($pm_view->getJQuery());
 
     } elseif ($_GET['action'] == 'add') {

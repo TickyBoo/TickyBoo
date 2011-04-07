@@ -61,10 +61,6 @@ class SearchView extends AdminView{
 
   function patronTable (&$data){
     global $_SHOP;
-//    if(!($data["user_lastname"] or $data["user_firstname"] or $data["user_zip"]
-//        or $data["user_city"] or $data["user_phone"] or $data["user_email"] or $data["user_status"])){
-//      return addWarning('search_choice_one_field');
-//    }
     $count = 0;
     if($data["user_lastname"]){
       $query_type[]= "user_lastname LIKE "._esc($data['user_lastname'].'%');
@@ -137,7 +133,7 @@ class SearchView extends AdminView{
             FROM Event
             WHERE event_rep LIKE '%sub%'
             and field(event_status, 'trash','unpub')=0
-            and event_pm_id IS NOT NULL 
+            and event_pm_id IS NOT NULL
             {$_SHOP->admin->getEventRestriction()}
             order by event_date,event_time";
     if(!$res=ShopDB::query($query)){
@@ -346,9 +342,9 @@ class SearchView extends AdminView{
     }
     $_SHOP->trace_subject .= "[tab:{$_SESSION['_SEARCH_tab']}]";
 
-    $menu = array( con("patron_tab") =>0 , 
+    $menu = array( con("patron_tab") =>0 ,
                    con("seat_tab")   =>1 ,
-                   con("order_tab")   =>2,  
+                   con("order_tab")   =>2,
                    con("barcode_tab") =>3);
     echo $this->PrintTabMenu($menu, $_SESSION['_SEARCH_tab'], "left");
 

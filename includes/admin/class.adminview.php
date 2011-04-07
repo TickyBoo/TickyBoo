@@ -55,7 +55,7 @@ class AdminView extends AUIComponent {
   }
 
   function extramenus(&$menu){}
-  function execute(){return false;} 
+  function execute(){return false;}
 
   function drawall() {
     // width=200 for menu ...Change it to your preferd width;
@@ -739,15 +739,11 @@ class AdminView extends AUIComponent {
     function print_color ($name, &$data, &$err) {
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
         <td class='admin_value'>";
-        if ($act = $data[$name]){
-          echo "<input type='hidden' id='{$name}_text' name='$name' value='$act'>\n
-        		<div id='colorSelector'><div style='background-color: $act'></div></div>";
-         }else{
-         	echo "<input type='hidden' id='{$name}_text' name='$name' value=''>\n
-        		<div id='colorSelector'><div style='background-color: #FFFFFF' ></div></div>";
-        }
+        $act = is($data[$name],'#000000');
+        echo "<input type='hidden' id='{$name}_text' name='$name' value='$act'>\n
+      		<div id='colorSelector'><div style='background-color: $act'></div></div>";
        echo "<script>$('#colorSelector').ColorPicker({
-								color: '#ffffff',
+								color: '{$act}',
 								onShow: function (colpkr) {
 									$(colpkr).fadeIn(500);
 									return false;

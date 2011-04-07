@@ -1376,7 +1376,7 @@ define('email_compile_error','Compile error: ');
 define ('order_discount_price','Discount amount');
 define ('order_partial_price','Partial amount');
 define ('discount_promo','Discount promo code');
-define ('Global_discounts','Global Discounts');
+define ('Global_discounts','Order Discounts');
 define ('down_install_again','Install new version');
 define ('version_checker','Install new version');
 define ('avaliable_version','Available version');
@@ -1430,25 +1430,15 @@ define('shopconfig_maxorder','Max tickets to order');
 //08-02-2010
 
 define('enabled','Enabled');
-
 define('InfoGetFileFunction','InfoGetFileFunction');
-
 define('InfoZipLibInstalled','InfoZipLibInstalled');
-
 define('show_stat_reports','Reports');
-
 define('report_admin_title','Spreadsheet Reports');
-
 define('report_xl','Sales Report');
-
 define('report_archive_event','Event Archives');
-
 define('report_entrant','Ticket Status Report');
-
 define('export_statuslog','Export Status Log');
-
 define('max_seats_reached','Maximum Seats Reached');
-
 define('handling_alt_settings','Alternate Settings');
 
 define('Show always','Show Always');
@@ -1577,11 +1567,18 @@ define('payment_not_approved','payment_not_approved');
 define('control','control');
 define('error','error');
 
-define('event_details','event_details');
-define('event_view_periode','event_view_periode');
-define('event_view_begin_date','event_view_begin_date');
-define('event_view_begin_time','event_view_begin_time');
-define('event_view_end_date','event_view_end_date');
-define('event_view_end_time','event_view_end_time');
-define('select_qty','select_qty');
+  define('event_details','Event details');
+  define('event_view_periode','Scheduled publishing');
+  define('event_view_begin_date','Published start date');
+  define('event_view_begin_time','Published start time');
+  define('event_view_end_date','Published end date');
+  define('event_view_end_time','Published end time');
+  define('select_qty','Select quantity');
+
+define('please_select','please select');
+define('venue_in_use','This venue is in use.');
+
+
+define('print_both','Print invoice & ticket');
+define('view_details','View order details');
 ?>

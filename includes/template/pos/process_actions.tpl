@@ -31,19 +31,16 @@
  * Contact info@phpmyticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
- 
+
                 {if $shop_order.order_status neq "cancel" and $shop_order.order_status neq "reemit" and $shop_order.order_status neq "reissue"}
                   <a  title="{!print_invoice!}" target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=2'>
-                    <img border='0' src='{$_SHOP_images}pig.png' />
-                  </a>
+                    <img border='0' src='{$_SHOP_images}printer_invoice.png' /></a>
                   <a  title="{!print_tickets!}" target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=1'>
-                    <img border='0' src='{$_SHOP_images}pm.png' />
-                  </a>
-                  <a target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
-                    <img border='0' src='{$_SHOP_images}printer.gif'>
-                  </a>
+                    <img border='0' src='{$_SHOP_images}printer_ticket.png' /></a>
+                  <a title="{!print_both!}"  target='_blank' href='checkout.php?action=print&{$order->EncodeSecureCode($shop_order.order_id)}&mode=3'>
+                    <img border='0' src='{$_SHOP_images}printer.gif'></a>
                   {* if $shop_order.payment_status eq 'none' *}
-                  <a href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$firstpos}{literal}";}{/literal}'>
+                  <a title="{!cancel_order!}" href='javascript:if(confirm("{!cancel_order!} {$shop_order.order_id}?")){literal}{location.href="view.php?action=cancel_order&place={/literal}{$shop_order.order_place}{literal}&order_id={/literal}{$shop_order.order_id}&{$dates}&{$firstpos}{literal}";}{/literal}'>
                     <img border='0' src='{$_SHOP_images}trash.png'>
                   </a>
                   {*/if*}

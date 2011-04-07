@@ -20,11 +20,13 @@
 
 #The following is required for Google Checkout on PHP:CGI Enviroments. (Apahce/mod_cgi) (IIS)
 <IfModule mod_rewrite.c>
-RewriteEngine on
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+  RewriteEngine on
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
 </IfModule>
 
-## To be used for production enviroments improves page loading speed
-<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf)$">
-Header set Expires "access plus 1 months"
-</FilesMatch>
+#To be used for production enviroments improves page loading speed
+<IfModule mod_headers.c>
+  <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf)$">
+    Header set Expires "access plus 1 months"
+  </FilesMatch>
+</IfModule>

@@ -119,9 +119,8 @@
               <td class='admin_info'>{$shop_order.order_tickets_nr}</td>
               <td class='admin_info'>{$shop_order.order_date}</td>
               <td class='admin_info' align="right">
-                <a href='view.php?order_id={$shop_order.order_id}'>
-                  <img src='{$_SHOP_themeimages}view.png' border='0'>
-                </a>
+                <a title="{!view_details!}"  href='view.php?order_id={$shop_order.order_id}'>
+                  <img src='{$_SHOP_themeimages}view.png' border='0'></a>
                 {include file='process_actions.tpl' shop_order=$shop_order}
               </td>
             </tr>
