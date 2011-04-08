@@ -36,31 +36,31 @@
   <br>
   <table border=0 class='table_midtone'>
     <tr>
-      <td colspan='4' class="title2">
+      <td colspan='4' class="title">
         {!cat_description!}
       </td>
     </tr>
-		<tr>
-      <th></th>
+		<tr class='small_table_dark' >
+      <th>&nbsp;</th>
 			<th>{!category!}</th>
 			<th>{!price!}</th>
 			<th>{!tickets_available!}</th>
 		</tr>
     {category event_id=$shop_event.event_id stats="on"}
-      {assign var='cycle' value=="{cycle name='events' values="TblHigher,TblLower"}
-      <tr class=$cycle>
-        <td rowspan=2>
+      {cycle assign='cycle' name='events' values="tr_0,tr_1" print=NO}
+      <tr class='{$cycle}'>
+        <td rowspan=2  class='{$cycle}'>
     		  {if $user->mode() neq '-1' or $user->logged}
             <span id="catcolor" style="background-color:{$shop_category.category_color}">
               <input type="radio" id="category_id_{$shop_category.category_id}" name="category_id" value="{$shop_category.category_id}" {if $category_id eq $shop_category.category_id}checked{/if} onClick="setNum('{$shop_category.category_numbering}')" {if $shop_category.category_free == 0}disabled="true"{/if}>
             </span>
           {/if}
         </td>
-        <td><b>{$shop_category.category_name}</b></td>
-        <td align='right'>
+        <td class='{$cycle}'><b>{$shop_category.category_name}</b></td>
+        <td class='{$cycle}' align='right'>
           {valuta value=$shop_category.category_price}
         </td>
-        <td align='right' width='10%'>
+        <td class='{$cycle}' align='right' width='10%'>
           {if $shop_category.category_free>0}
           	{assign var=event_has_seats value="true"}
 	          {if $shop_category.category_free/$shop_category.category_size ge 0.2}
@@ -73,8 +73,8 @@
           {/if}
         </td>
       </tr>
-      <tr  class=$cycle>
-        <td colspan='3'>
+      <tr class='{$cycle}'>
+        <td class='{$cycle}' colspan='3'>
           {!Discount_for!}
           {discount event_id=$shop_event.event_id cat_price=$shop_category.category_price}
             &nbsp;
