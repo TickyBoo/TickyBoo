@@ -96,8 +96,7 @@ class Cart {
       $freeme = $freeme && (($event_id==null) || ($event_id==$item->event_id));
       $freeme = $freeme && (($cat_id==null)   || ($cat_id  ==$item->category_id));
       $freeme = $freeme && (($place_id==null) || ($place_id==$item->id));
-      if ($freeme) { echo "remove: $key, ";
-
+      if ($freeme) {
         $item->remove();
         unset($this->items[$key]);
       }

@@ -84,18 +84,12 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
     if ($params['all']) {
         if (!empty($discount)) {
             $c = 1;
+            calcprice($discount, $params);
             $discounts[] = $discount;
+
             while ($discount = shopDB::fetch_assoc($res)) {
-                If ($params['cat_price']) {
-                    if($discount['discount_type']=='fixe'){
-                      $discount['discount_price'] = $params['cat_price']-$discount['discount_value'];
-                    }else if($discount['discount_type']=='percent'){
-                      $discount['discount_price'] = $params['cat_price']*(1.0-$discount['discount_value']/100.0);
-                    }else{
-                      $discount['discount_price'] =  FALSE;
-                    }
-                }
-                            $discounts[] = $discount;
+                calcprice($discount, $params);
+                $discounts[] = $discount;
                 $c++;
             }
 
@@ -111,20 +105,7 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
         $repeat = !empty($discount);
 
         if ($discount) {
-      		if($params['category_id']){
-      			$params['cat_price'] = $discount['category_price'];
-      		}
-
-             if ($params['cat_price']) {
-                  if($discount['discount_type']=='fixe'){
-                    $discount['discount_price'] = $params['cat_price']-$discount['discount_value'];
-                  }else if($discount['discount_type']=='percent'){
-                    $discount['discount_price'] =  $params['cat_price']*(1.0-$discount['discount_value']/100.0);
-                  }else{
-                    $discount['discount_price'] =  FALSE;
-                  }
-              }
-
+            calcprice($discount, $params);
             $smarty->assign("shop_discount", $discount);
             $smarty->_SHOP_db_res[] = $res;
         }
@@ -132,4 +113,15 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
     return $content;
 }
 
+function calcprice(&$discount, $params){
+  If ($params['cat_price']) {
+    if($discount['discount_type']=='fixe'){
+      $discount['discount_price'] = $params['cat_price']-$discount['discount_value'];
+    }else if($discount['discount_type']=='percent'){
+      $discount['discount_price'] = $params['cat_price']*(1.0-$discount['discount_value']/100.0);
+    }else{
+      $discount['discount_price'] =  FALSE;
+    }
+  }
+}
 ?>

@@ -33,11 +33,10 @@
 {assign var='category_id' value=$smarty.post.category_id}
 
 {if $event_id}
-  {discount all='on' event_id=$event_id  category_id=$category_id}{/discount}
-
-  {if $shop_discounts}
-    {include file="header.tpl" name=!discounts!}
-    {category event='on' category_id=$category_id}
+  {category event='on' category_id=$category_id}
+    {discount all='on' event_id=$event_id  category_id=$category_id cat_price=$shop_category.category_price}{/discount}
+    {if $shop_discounts}
+      {include file="header.tpl" name=!discounts!}
       <form action='index.php' method='post' id='discount-select'>
         {ShowFormToken name='Discounts'}
         <table class="table_midtone">
@@ -72,7 +71,7 @@
                     </td>
                     {section name='d' loop=$shop_discounts}
                       <td style='font-size:11px;font-family:Verdana;'>
-                        <label><input class='checkbox_dark discount_{$shop_discounts[d].discount_id}' type='radio' name='discount[{$key}]' value='{$shop_discounts[d].discount_id}'>{$shop_discounts[d].discount_name}</label>
+                        <label><input class='checkbox_dark discount_{$shop_discounts[d].discount_id}' type='radio' name='discount[{$key}]' value='{$shop_discounts[d].discount_id}'>{$shop_discounts[d].discount_name}&nbsp;{valuta value=$shop_discounts[d].discount_price|string_format:"%.2f"} </label>
                       </td>
                     {/section}
                   </tr>
@@ -106,50 +105,50 @@
           </tr>
         </table>
       </form>
-    {/category}
-    <script  type="text/javascript">
-      $("#discount-select").validate();
-      {section name='d' loop=$shop_discounts}
-        {if $shop_discounts[d].discount_promo}
-          $('#discount_promo_{$shop_discounts[d].discount_id}_tr').hide();
-        {/if}
-      {/section}
-      $(":radio").click(function(){literal}{ {/literal}
-        var n, promotr, promoinp;
+      <script  type="text/javascript">
+        $("#discount-select").validate();
         {section name='d' loop=$shop_discounts}
           {if $shop_discounts[d].discount_promo}
-            n = $(".discount_{$shop_discounts[d].discount_id}:checked").length;
-            promotr  = $('#discount_promo_{$shop_discounts[d].discount_id}_tr');
-            promoinp = $("input[name='discount_promo_{$shop_discounts[d].discount_id}']");
-            showPromocode(n >0, promotr, promoinp, {$shop_discounts[d].discount_id});
+            $('#discount_promo_{$shop_discounts[d].discount_id}_tr').hide();
           {/if}
         {/section}
-      {literal} });
-      var showPromocode = function(show, promoname, promoinp, promoid){
-        promoinp.rules("remove");
-        if(show == true){
-          promoname.show();
-          promoinp.rules("add",{ required : true,
-                          			 remote: {
-                                    url: "jsonrpc.php",
-                                    type: "post",
-                                    data: {
-                                      name: promoinp.attr('name'),
-                                      action: "DiscountPromo",
-                                      id : promoid
-                                    }
-                            		 }
-          });
-        }else{
-          promoname.hide();
+        $(":radio").click(function(){literal}{ {/literal}
+          var n, promotr, promoinp;
+          {section name='d' loop=$shop_discounts}
+            {if $shop_discounts[d].discount_promo}
+              n = $(".discount_{$shop_discounts[d].discount_id}:checked").length;
+              promotr  = $('#discount_promo_{$shop_discounts[d].discount_id}_tr');
+              promoinp = $("input[name='discount_promo_{$shop_discounts[d].discount_id}']");
+              showPromocode(n >0, promotr, promoinp, {$shop_discounts[d].discount_id});
+            {/if}
+          {/section}
+        {literal} });
+        var showPromocode = function(show, promoname, promoinp, promoid){
+          promoinp.rules("remove");
+          if(show == true){
+            promoname.show();
+            promoinp.rules("add",{ required : true,
+                            			 remote: {
+                                      url: "jsonrpc.php",
+                                      type: "post",
+                                      data: {
+                                        name: promoinp.attr('name'),
+                                        action: "DiscountPromo",
+                                        id : promoid
+                                      }
+                              		 }
+            });
+          }else{
+            promoname.hide();
+          }
         }
-      }
-      {/literal}
+        {/literal}
 
-    </script>
+      </script>
 
 
-  {else}
-    {include file='cart_view.tpl'}
-  {/if}
+    {else}
+      {include file='cart_view.tpl'}
+    {/if}
+  {/category}
 {/if}

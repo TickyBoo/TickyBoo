@@ -1581,6 +1581,7 @@ define('venue_in_use','This venue is in use.');
 
 define('print_both','Print invoice & ticket');
 define('view_details','View order details');
- 
+
 define('main','main');
+define('ticket','ticket');
 ?>

@@ -43,7 +43,7 @@
 		<tr class='small_table_dark' >
       <th>&nbsp;</th>
 			<th>{!category!}</th>
-			<th>{!price!}</th>
+			<th width='20%'>{!price!}</th>
 			<th>{!tickets_available!}</th>
 		</tr>
     {category event_id=$shop_event.event_id stats="on"}
@@ -87,7 +87,7 @@
       </tr>
     {/category}
      <tr>
-      <td colspan='4' align='left' class='note'>
+      <td colspan='4' align='left' class='note' align='right' style='text-align:right'>
         {!prices_in!} {$organizer_currency}
       </td>
     </tr>
