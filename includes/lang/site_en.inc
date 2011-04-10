@@ -332,8 +332,8 @@ define("organizer_remove_image","Remove Logo");
 
 //Configuration
 define("shopconfig_tab","Configuration");
-define("option_update_title","Config Shop Auto-Updates");
-define("shopconfig_lastrun_int","Order check interval (0 = off)");
+define("option_update_title","Config Shop Auto-Cleanup settings.");
+define("shopconfig_lastrun_int","Cleanup check interval (0 = off)");
 define("shopconfig_restime","Reservation time (0 = off)");
 //define("shopconfig_restime_remind","When reminder email is sent");
 define("shopconfig_check_pos","Check for Unpaid POS Orders?");
@@ -350,8 +350,8 @@ define("shopconfig_user_activate","Users Checkout Level");
 	define("act_restrict_quest_only","Only guest users");
 define("shopconfig_maxres","Max tickets to reserve");
 define("shopconfig_posttocollect","Switch to Alt Payment");
-define("res_delay","Reserve Timeout");
-define("cart_delay","Cart Timeout");
+define("res_delay","Shopping Cart Timeout");
+define("cart_delay","Database Cart Timeout");
 define("res_delay_less_cart"," < Can not be less than Cart Timeout");
 
 //System Managers

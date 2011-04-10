@@ -57,6 +57,8 @@ class OptionsView extends AdminView{
     $this->print_select_assoc('shopconfig_check_pos',$data,$err,$yesno);
     $this->print_select_assoc('shopconfig_delunpaid',$data,$err,$yesno);
     $this->print_select_assoc('shopconfig_delunpaid_pos',$data,$err,$yesno);
+    $this->print_input('res_delay' ,$data, $err, 5, 10);
+    $this->print_input('cart_delay',$data, $err, 5, 10);
 
   // 	echo "</table>\n<br>";
   //	echo "<table class='admin_form' width='$this->width' cellspacing='1' cellpadding='4'>\n";
@@ -74,8 +76,6 @@ class OptionsView extends AdminView{
    	$this->print_input('shopconfig_maxres',$data, $err,5,10);
    	$this->print_input('shopconfig_maxorder',$data, $err,5,10);
 
-  	$this->print_input('res_delay' ,$data, $err, 5, 10);
-    $this->print_input('cart_delay',$data, $err, 5, 10);
     $this->form_foot();
 
   }
