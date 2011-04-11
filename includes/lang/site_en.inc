@@ -1584,4 +1584,6 @@ define('view_details','View order details');
 
 define('main','main');
 define('ticket','ticket');
+
+define('failed_send_to','Failed to send an Email.');
 ?>
