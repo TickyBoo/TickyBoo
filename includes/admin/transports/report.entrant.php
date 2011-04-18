@@ -128,7 +128,7 @@ class report_entrant extends AdminView {
     $format_rightb->setBold();
     $format_titler->setBgColor(26);
 
-    $query = "select * from Event where event_id = {$event}";
+    $query = "select * from Event where event_id ="._esc($event);
 
 		$row=ShopDB::query_one_row($query);
 //    $dta = print_r($row, true);
@@ -203,7 +203,7 @@ class report_entrant extends AdminView {
         $query="SELECT DISTINCT `seat_row_nr`, `seat_nr`, `category_numbering`
                       FROM `Seat` left join `Category` on `seat_category_id` = `category_id`
                       WHERE seat_order_id = {$row['order_id']}
-                      and   seat_event_id = ".($event_id);
+                      and   seat_event_id = "._esc($event);
         if ($res_seat=ShopDB::query($query)){
           while($seat=shopDB::fetch_assoc($res_seat)){
       //      $seats .= "|{$seat['category_numbering']}";

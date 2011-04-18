@@ -42,6 +42,9 @@ if (!defined('ft_check')) {die('System intrusion ');}
 class ExportView extends AdminView {
   private $current_row = 2;
   private $current_col = 0;
+  var $img_pub = array ('pub' => '../images/grun.png',
+                        'unpub' => '../images/rot.png',
+                        'nosal' => '../images/grey.png');
 
   function startExport($title, $maxcol =1){
     // Creating a workbook
@@ -191,6 +194,20 @@ class ExportView extends AdminView {
       $year = $_REQUEST["year"];
     }
   }
+  function Showurlplacemap($events){
+    $row = shopdb::query_one_row("select pmp_id from `PlaceMapPart` where pmp_event_id={$events['event_id']}");
+    if ($row) {
+      return "<a href='?action=view_pmp&event_id={$events['event_id']}&pmp_id={$row['pmp_id']}' ><img src='{$this->img_pub[$events['event_status']]}'></a>";
+    }
+    return "<img style='' src='{$this->img_pub[$events['event_status']]}'>";
+  }
 
+  function showplacemap($event_id){
+    require_once('shop_plugins'.DS.'function.placemap.php');
+    $places = placeMapDraw(array('category_pmp_id'=>$_GET['pmp_id']), false);
+    echo "<div style='overflow: auto; height: 350px; width:{$this->width}px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
+            {$places}
+          </div>";
+  }
 }
 ?>

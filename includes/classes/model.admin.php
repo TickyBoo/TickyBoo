@@ -52,6 +52,10 @@ class Admins extends Model {
         addError('admin_login','already_exist');
       }
     }
+
+    if (!array_key_exists($data['admin_status'], $this->allowedRoles() )) {
+      addError('admin_status','role_not_allowed');
+    }
     if (strpos($data['admin_status'], 'pos') ===0 && empty($data['admin_user_id'])) {
       addError('admin_user_id','mandatory');
     }

@@ -51,7 +51,7 @@ class report_archive_event extends AdminView {
 
 		if($res=ShopDB::query($query)){
 		  while($row=shopDB::fetch_assoc($res)){
-			  $event[$row['event_id']]=$row['event_name'].' ('.formatDate($row['event_date']).'-'.formatTime($row['event_time']).')';
+			  $event[$row['event_id']]=formatDate($row['event_date']).'-'.formatTime($row['event_time']).' '.$row['event_name'];
 			}
 		}
 

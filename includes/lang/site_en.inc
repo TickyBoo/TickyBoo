@@ -372,9 +372,11 @@ define("pos_user_title","Points of Sale");
 define("pos_add_title","Add a Point of Sale");
 define("pos_update_title","Modify Point of Sale");
 		define("kasse_name","POS Name");
-		define("user_prefs","Preferences");
-			define("user_prefs_pdf","Open Orders in Acrobat");
-			define("user_prefs_pdt","Send Orders to Printer");
+		define("user_prefs_print","Preferences");
+			define("user_prefs_print_pdf","Open Orders in Acrobat");
+			define("user_prefs_print_pdt","Send Orders to Printer");
+  define("user_prefs_strict","Use Office On fixed PC");
+  define("user_prefs_store_now","Store cookie now");
 		define("user_nickname","Nickname");
 define("print_warning","When you want to directly print the PDF's, you need to setup our system.");
 

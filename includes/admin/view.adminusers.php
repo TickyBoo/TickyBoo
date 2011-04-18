@@ -55,7 +55,7 @@ class AdminUsersView extends AdminView{
     while($row=shopDB::fetch_assoc($res)){
       echo "<tr class='admin_list_row_$alt'>";
       echo "<td class='admin_list_item' width='550' >{$row['admin_login']}</td>\n";
-      echo "<td class='admin_list_item' width='550' >".con($row['admin_status'])."</td>\n";
+      echo "<td class='admin_list_item' width='550' >".con('admin_status_'.$row['admin_status'])."</td>\n";
       echo "<td class='admin_list_item'width='65' align='right' nowrap><nowrap>";
       echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&admin_id={$row['admin_id']}","edit",2);
       echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&admin_id={$row['admin_id']}\";}","remove",2,array('tooltiptext'=>"Delete {$row['admin_login']}?"));
@@ -74,7 +74,7 @@ class AdminUsersView extends AdminView{
     $this->form_head($title);
 		$this->print_field_o( 'admin_id', $data );
     $this->print_input('admin_login',$data,$err,30,100);
-    $this->print_select_assoc('admin_status',$data,$err, $_SHOP->admin->allowedRoles() );
+    $this->print_select('admin_status',$data, $err, $_SHOP->admin->allowedroles() );
    // var_dump($_SESSION);
     $this->print_posoffices('admin_user_id',$data);
     $this->print_events('control_event_ids', $data);

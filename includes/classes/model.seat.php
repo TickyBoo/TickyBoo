@@ -136,6 +136,7 @@ class Seat  Extends Model {
     if(!$this->seat_order_id){ return FALSE; }
     $this->seat_code=$this->generate_code(8);
     $this->seat_status=($reservate)?'resp':'com';
+    $this->seat_price=number_format($this->seat_price, 2, '.', '');
     return parent::save();
   }
 
