@@ -67,9 +67,9 @@ class DiscountView extends AdminView {
     $alt = 0;
     echo "<table class='admin_list' width='$this->width' cellspacing='1' cellpadding='2'>\n";
     if (!is_null($discount_event_id)) {
-       echo "<tr><td class='admin_list_title' colspan='5' align='left'>". con('discount_title') . "</td>";
+       echo "<tr><td class='admin_list_title' colspan='7' align='left'>". con('discount_title') . "</td>";
     } else {
-       echo "<tr><td class='admin_list_title' colspan='4' align='left'>". con('discount_title') . "</td>";
+       echo "<tr><td class='admin_list_title' colspan='6' align='left'>". con('discount_title') . "</td>";
     }
     if (!$live) {
       if (!is_null($discount_event_id)) {
@@ -96,16 +96,30 @@ class DiscountView extends AdminView {
             $type = valuta($row['discount_value']);
         }
         $pmp = ($row['discount_event_id'])?"&discount_event_id={$row['discount_event_id']}":'';
-        echo "<td class='admin_list_item' align='right' width='70'>$type</td>\n";
+        echo "<td class='admin_list_item' align='right' width='120'>$type</td>\n";
         echo "<td class='admin_list_item' align='right' width='30'>{$row['discount_used']}&nbsp;</td>\n";
-        echo "<td class='admin_list_item' width='70' align='right'>";
-        if ($row['discount_active'] =='yes') {
-          echo $this->show_button("javascript:if(confirm(\"".con('discount_deactivate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=no{$pmp}\"; }","unpublish",2,
+        echo "<td class='admin_list_item' width='19' align='center'>";
+        $handling_mode_pos=(strpos($row['discount_active'],'pos')!==false) || $row['discount_active'] =='yes';
+        $handling_mode_web=(strpos($row['discount_active'],'www')!==false) || $row['discount_active'] =='yes';
+
+        if ($handling_mode_web ) {
+          echo $this->show_button("javascript:if(confirm(\"".con('discount_www_deactivate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=www&do=remove{$pmp}\"; }",('discount_www_activated'),2,
                array('image'=>'checked.gif'));
         } else {
-          echo $this->show_button("javascript:if(confirm(\"".con('discount_activate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=yes{$pmp}\"; }","publish",2,
+          echo $this->show_button("javascript:if(confirm(\"".con('discount_www_activate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=www&do=add{$pmp}\"; }",('discount_www_deactivated'),2,
                array('image'=>'unchecked.gif'));
         }
+        echo "</td>";
+        echo "<td class='admin_list_item' width='19' align='center'>";
+        if ($handling_mode_pos ) {
+          echo $this->show_button("javascript:if(confirm(\"".con('discount_pos_deactivate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=pos&do=remove{$pmp}\"; }",('discount_pos_activated'),2,
+               array('image'=>'checked.gif'));
+        } else {
+          echo $this->show_button("javascript:if(confirm(\"".con('discount_pos_activate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_disc&discount_id={$row['discount_id']}&mode=pos&do=add{$pmp}\"; }",('discount_pos_deactivated'),2,
+               array('image'=>'unchecked.gif'));
+        }
+        echo "</td>";
+        echo "<td class='admin_list_item' width='70' align='right'>";
 
         echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit_disc&discount_id={$row['discount_id']}","edit",2);
         echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove_disc&discount_id={$row['discount_id']}{$pmp}\";}","remove",2,
@@ -174,8 +188,15 @@ class DiscountView extends AdminView {
     } elseif ($_GET['action'] == 'active_disc') {
         $row = Discount::load($_GET['discount_id']);
         if ($row) {
-          $row->discount_active = ($_GET['mode']=='yes')?'yes':'no';
+          $mode = ($_GET['mode']==='www')?'www':'pos';
+          $do = is($_GET['do'],'');
+          if ($do==='add' and !in_array($mode,$row->discount_active)) {
+            $row->discount_active[] = $mode;
           $row->save();
+          } elseif ($do==='remove' and in_array($mode,$row->discount_active)) {
+            $row->discount_active = array_diff($row->discount_active, array($mode));
+            $row->save();
+          }
         }
         if ($showlist) {
             $this->table(null, false);

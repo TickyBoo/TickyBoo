@@ -381,6 +381,8 @@ select SQL_CALC_FOUND_ROWS *
 	$(function() {
 		$( "#accordion" ).accordion({
       autoHeight: false,
+			clearStyle: true,
+			collapsible: true,
       active: '.$page.',
       animated: "none"
 		});

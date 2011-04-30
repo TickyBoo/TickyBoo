@@ -37,7 +37,7 @@ class Discount  Extends Model {
   protected $_idName    = 'discount_id';
   protected $_tableName = 'Discount';
   protected $_columns   = array( '#discount_id', '*discount_type', '*discount_value', '*discount_name','#discount_category_id',
-                                 '#discount_event_id', 'discount_promo', 'discount_cond', '*discount_active');
+                                 '#discount_event_id', 'discount_promo', 'discount_cond', 'discount_active');
   function __construct($filldefs= false, $event_id=null){
     parent::__construct($filldefs);
     if ($filldefs) {
@@ -58,6 +58,7 @@ class Discount  Extends Model {
     if($row=ShopDB::query_one_row($query)){
       $new = new Discount;
       $new->_fill($row);
+      $new->_unser_extra();
       return $new;
     }
   }
@@ -71,6 +72,7 @@ class Discount  Extends Model {
       while($row=shopDB::fetch_assoc($res)){
         $new = new Discount;
         $new->_fill($row);
+        $new->_unser_extra();
         $discounts[]= $new;
       }
       return $discounts;
@@ -85,15 +87,16 @@ class Discount  Extends Model {
     if($row=ShopDB::query_one_row($query)){
       $new = new Discount;
       $new->_fill($row);
+      $new->_unser_extra();
       return $new;
     }
   }
 
-  static function hasGlobals() {
+  static function hasGlobals($place='www') {
     $query = "SELECT count(*) count
               from Discount
               where discount_event_id is null
-              and discount_active = \"yes\"";
+              and (FIND_IN_SET('yes', discount_active)>0 or FIND_IN_SET('{$place}', discount_active)>0)";
     $count = ShopDB::query_one_row($query);
     return (is($count['count'], 0) != 0);
   }
@@ -107,7 +110,7 @@ class Discount  Extends Model {
         return addWarning('in_use');
       }
       $query = "SELECT count(*) count
-                from `Order'
+                from `Order`
                 where order_discount_id="._esc($this->id);
       if (!($count = ShopDB::query_one_row($query)) || (int)$count['count']) {
         return addWarning('in_use');
@@ -117,6 +120,11 @@ class Discount  Extends Model {
       } else
         return ShopDB::commit('Deleted discount');
     }
+  }
+
+  function save($id = null, $exclude=null){
+    $this->_ser_extra();
+    return parent::save($id, $exclude);
   }
 
   function copy($event_main_id, $event_sub_id) {
@@ -183,6 +191,23 @@ class Discount  Extends Model {
     $query = "update Discount set discount_used = discount_used + ".(int)$count."
               where discount_id="._esc($this->id);
     ShopDB::query($query);
+  }
+  function _ser_extra(){
+    If (is_array($this->discount_active)) {
+      $this->discount_active = implode(",", $this->discount_active);
+    }
+  }
+
+  function _unser_extra(){
+    If (is_string($this->discount_active)) {
+      if ($this->discount_active=='yes') {
+        $this->discount_active = array('www','pos');
+      } elseif ($this->discount_active=='no') {
+        $this->discount_active = array();
+      } else {
+        $this->discount_active = explode(",", $this->discount_active);
+      }
+    }
   }
 }
 ?>

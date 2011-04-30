@@ -73,7 +73,10 @@ class Awf_Acl {
         }
         throw new Exception('This role ('.$role.') does not exists!');
     }
-
+    // returns the list of Role names defined in this ACL class.
+    public function getRolenames(){
+      return array_keys($this->roles);
+    }
     /**
      * Alle rechten die de $extend heeft, worden ook aan de $role gegeven
      *

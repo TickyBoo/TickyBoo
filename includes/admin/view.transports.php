@@ -68,7 +68,7 @@ class TransportsView extends AdminView {
 		   {
 		   while (false !== ($file = readdir($handle)))
           {
-             if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^{$filetype}.(.*?\w+).php/", $file, $matches))
+             if ($file != "." && $file != ".." && !is_dir($dir.$file) && preg_match("/^{$filetype}.(.*?\w+).php\z/", $file, $matches))
                 { $content[] .=  $matches[1];}
           }
 		   closedir($handle);

@@ -67,6 +67,13 @@ class PlaceMapCategoryView extends AdminView {
 
   function form ($data, $err) {
     //print_r($data);
+    if (!isset($data['event_status'])) {
+      $query = "select event_status
+                from `PlaceMap2` left join `Event` on pm_event_id = event_id
+                where pm_id = "._esc($_REQUEST['pm_id']);
+      $row = ShopDB::query_one_row($query);
+      $data['event_status'] = $row['event_status'];
+    }
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<input type=hidden name=action value=save_category>";
     if ($data['category_id']) {
@@ -84,14 +91,15 @@ class PlaceMapCategoryView extends AdminView {
 
     $this->print_field_o('category_id', $data);
     $this->print_input('category_name', $data, $err, 30, 100);
-    if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
+    if (!$data['event_status'] or ($data['event_status'] != 'pub')) {
         $this->print_input('category_price', $data, $err, 6, 6);
     } else {
         $this->print_field('category_price', $data);
     }
     $this->print_select_tpl('category_template', $data, $err);
     $this->print_color('category_color', $data, $err);
-    if (!$data['event_status'] or ($data['event_status'] == 'unpub')) {
+//    $this->print_field('event_status', $data);
+    if (!$data['event_status'] or ($data['event_status'] === 'unpub')) {
       $this->print_select('category_numbering', $data, $err, array('none', 'rows', 'seat', 'both'),'');
       $script = "
       $('#category_numbering-select').change(function(){
@@ -104,6 +112,9 @@ class PlaceMapCategoryView extends AdminView {
       $('#category_numbering-select').change();";
       $this->addJQuery($script);
       $this->print_input('category_size', $data, $err, 6, 6);
+    } elseif (($data['event_status'] === 'nosal') && empty($data['category_id'])) {
+      echo "<input type='hidden' name='category_numbering' value='none'>";
+      $this->print_input('category_nosale_size', $data, $err, 6, 6);
     } else {
       $this->print_field('category_numbering', $data);
       $this->print_field('category_size', $data);
@@ -113,7 +124,7 @@ class PlaceMapCategoryView extends AdminView {
 
     $this->print_area('category_data', $data, $err, 3, 40);
 
-    if ($data['event_status'] == 'nosal' and $data['category_numbering'] == 'none') {
+    if ($data['event_status'] == 'nosal' && $data['category_numbering'] == 'none'&& !empty($data['category_id'])) {
       $this->form_foot();
       echo "<br>";
       echo "<form action='{$_SERVER['PHP_SELF']}' method=post>";
@@ -135,13 +146,23 @@ class PlaceMapCategoryView extends AdminView {
       $category = PlaceMapCategory::load((int)$_GET['category_id']);
       $data = (array)$category;
       $this->form($data, null);
-    } elseif ($_POST['action'] == 'save_category' and $_POST['category_pm_id'] > 0) {
+    } elseif ($_POST['action'] == 'save_category' && $_POST['category_pm_id'] > 0) {
       if (!$pmc = PlaceMapCategory::load((int)$_POST['category_id'])) {
          $pmc = new PlaceMapCategory(true);
       }
       if (!$pmc->fillPost() || !$pmc->saveEx()) {
         $this->form($_POST, null);
       } else {
+        $category = PlaceMapCategory::load($pmc->id);
+        if (($category->event_status == 'nosal') &&
+            (int)$_POST['category_new_size'] &&
+            !$category->change_size((int)$_POST['category_nosale_size'])) {
+          $data = (array)$category;
+          addError('category_nosale_size', 'error');
+          $data['category_nosale_size'] = $_POST['category_nosale_size'];
+          $this->form($data, null);
+          return false;
+        }
         return true;
       }
 

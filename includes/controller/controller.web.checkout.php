@@ -284,6 +284,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     if ($myorder) {
        Order::delete($myorder->order_id,'pos_manual_canceled' );
     }
+    return true;
   }
 
   function actionCancel () {

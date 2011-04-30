@@ -104,7 +104,7 @@ class PlaceMapView extends AdminView {
 		if ( $data['pm_id'] ) {
   		$this->form_foot();
 			$pmp_view = new PlaceMapCategoryView( $this->width );
-			$pmp_view->table( $data['pm_id'], $live );
+			$pmp_view->table( $data['pm_id'], $live  and $event->event_status !== 'nosal');
 			echo "<br>";
 			$pmz_view = new PlaceMapZoneView( $this->width );
 			$pmz_view->table( $data['pm_id'], $live );

@@ -41,7 +41,7 @@ $tbls['Admin']['fields'] = array(
   'admin_id' => " int(11) NOT NULL AUTO_INCREMENT ",
   'admin_login' => " varchar(50) NOT NULL DEFAULT ''",
   'admin_password' => " varchar(45) NOT NULL DEFAULT ''",
-  'admin_status'   => " varchar(15) NOT NULL DEFAULT 'organizer'",
+  'admin_status'   => " varchar(15) NOT NULL DEFAULT 'admin'",
   'admin_created' => " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
   'admin_user_id' => " int(11) DEFAULT NULL",
   'admin_email'    => " varchar(50) NOT NULL DEFAULT ''",
@@ -167,7 +167,7 @@ $tbls['Discount']['fields'] = array(
   'discount_value' => " decimal(10,2) NOT NULL DEFAULT '0.00'",
   'discount_promo' => " varchar(15) DEFAULT ''",
   'discount_used' => " int(11) DEFAULT '0'",
-  'discount_active' => " enum('no','yes') DEFAULT 'yes'",
+  'discount_active' => " set('pos','www','yes') DEFAULT ''",
   'discount_cond' => " text"
   );
 $tbls['Discount']['key'] = array(

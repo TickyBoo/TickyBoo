@@ -147,16 +147,13 @@ class PlaceMapCategory Extends Model {
 
   function increment_size($delta){
     if($delta==0){
-      echo "#ERR-NOSIZEDIFF(1)";
-      return FALSE;
+      return addwarning("ERROR_NOSIZEDIFF");
     }
     if($this->event_status!='nosal'){
-        echo "#ERR-NOTUNPUBCAT(2)";
-      return FALSE;
+      return addwarning("ERROR_NOSIZEDIFF");
     }
     if($this->category_numbering!='none'){
-      echo "#ERR-CNTCHGNUMSTS(3)";
-      return FALSE;
+      return addwarning("ERROR_CNTCHGNUMSTS");
     }
     $new_category_size = $this->category_size+$delta;
 

@@ -101,7 +101,7 @@ class ControlContent extends AUIComponent{
 
       $query="select seat_event_id, seat_status, seat_nr, seat_row_nr,
                      category_numbering, category_name, category_color,
-                     pmz_name, order_payment_status, order_status
+                     pmz_name, order_payment_status, order_status,order_id
               from Seat LEFT JOIN PlaceMapZone ON seat_zone_id=pmz_id
                         LEFT JOIN Category on seat_category_id=category_id
                         LEFT JOIN `Order` on seat_order_id= order_id
@@ -109,19 +109,19 @@ class ControlContent extends AUIComponent{
   	          AND   seat_code="._esc($ticket_code);
 
       if(!$ticket=ShopDB::query_one_row($query)){
-        return $this->showerror('ticket_not_found');
+        return $this->showerror('ticket_not_found',$ticket);
       } elseif($ticket['seat_event_id'] !==$_SESSION['event']){
-        return $this->showerror('not_valid_event');
+        return $this->showerror('not_valid_event',$ticket);
       } elseif($ticket['seat_status']=='check'){
-        return $this->showerror('ticket_already_checked');
+        return $this->showerror('ticket_already_checked',$ticket);
       } elseif($ticket['seat_status']=='free'){
-        return $this->showerror('place_not_commanded');
+        return $this->showerror('place_not_commanded',$ticket);
       } elseif($ticket['seat_status']=='res'){
-        return $this->showerror('place_only_reserved');
+        return $this->showerror('place_only_reserved',$ticket);
       } elseif(!in_array($ticket['order_status'],array('ord','pros'))){
-        return $this->showerror('order_is_not_valid');
+        return $this->showerror('order_is_not_valid',$ticket);
       } elseif(!in_array($ticket['order_payment_status'],array('payed'))){
-        return $this->showerror('order_is_not_paid');
+        return $this->showerror('order_is_not_paid',$ticket);
       }
 
       if($ticket['category_numbering']=='both'){
@@ -156,7 +156,7 @@ class ControlContent extends AUIComponent{
               </td>
             </tr>
           </table>";
-
+      OrderStatus::statusChange($ticket['order_id'],'TicketTaker',con('seat_checked').$seat_id,'tickettaker::checkticket');
       $query="UPDATE Seat set seat_status='check' where seat_id="._esc($seat_id);
 
       if(!ShopDB::query($query)){
@@ -167,7 +167,8 @@ class ControlContent extends AUIComponent{
     }
   }
 
-  function showerror($message){
+  function showerror($message,$ticket){
+    OrderStatus::statusChange($ticket['order_id'],'TicketTaker',$Message,'tickettaker::error');
     echo"
               <div class='err'>
                  <table width='100%'>

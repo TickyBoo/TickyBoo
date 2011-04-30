@@ -50,9 +50,9 @@ function minify($type, $files='', $base=''){
 
   if (!$files) {
     if ($type=='css') {
-      $files = 'css/flick/jquery-ui-1.8.9.custom.css,css/jquery.tooltip.css';
+      $files = 'css/flick/jquery-ui-1.8.11.custom.css,css/jquery.tooltip.css';
     } else {
-      $files = 'jquery.min.js,jquery-ui.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal.js,jquery.tooltip.min.js';
+      $files = 'jquery.min.js,jquery.ui.js,jquery.ajaxmanager.js,jquery.json-2.2.min.js,jquery.form.js,jquery.validate.min.js,jquery.validate.add-methods.js,jquery.simplemodal.js,jquery.tooltip.min.js';
     }
   }
 

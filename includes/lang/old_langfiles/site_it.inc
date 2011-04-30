@@ -1,0 +1,692 @@
+<?php
+/*
+%%%copyright%%%
+ */
+?>
+<?php
+define("cart_empty","Il suo carrello &egrave; vuoto");
+define("valid_tickets","Biglietti validi:");
+define("next_expire","Tempo restante:");
+define("minutes","Minuti");
+define("expired_tickets","Biglietti espirati:");
+
+define("weiter","Continua");
+define("save","Salva"); //submit
+define("res","Cancella"); //reset
+define("search","Cercare"); //reset
+
+//events.php
+define("order_now","Ordinare adesso");
+
+//categories.php
+define("choice_cat_title","Scegliere una categoria");
+define("date","Data");
+define("open","Apertura delle porte");
+define("start","Inizio");
+define("ort","Luogo");
+define("ort_phone","Tel");
+define("ort_url","Homepage");
+define("categories_prices","Categorie e prezzi");
+define("tickets","Biglietti");
+define("prices","Prezzi");
+define("prices_chf","Prezzi in CHF");
+define("choice_cat","Scegliere una categoria");
+define("choice_qty","Quantit&agrave; ");
+
+//places.php
+define("reservate","Prenotare");
+define("choice_place_title","Scelta del posto");
+define("info1","1.Prego, scelga il suo posto ");
+define("info2","2.Cliccare per prenotare");
+
+//view_cart.php
+define("ev_name","Spettacolo");
+define("ev_datum","Data,Luogo");
+define("ev_ticket","Biglietti");
+define("cat_total","Totale");
+define("exp_rm","Cancellare");
+define("expired","Scaduto");
+define("warenkorb","Il Suo carrello");
+define("remove","Eliminare");
+define("warenkorb_title","Il Suo carrello");
+define("total_price","Prezzo totale");
+define("go_pay","Acquistare");
+define("by_post","Invio per posta");
+define("back_shop","Acquistare altri biglietti");
+define("place_row","Fila");
+define("place_seat","Posto");
+
+//functions/user_func.php
+define("mandatory","Questo campo &egrave; obbligatorio");
+define("alreadyexist","Questo indirizzo email &egrave; gi&agrave; registrato!");
+define("choice","scegliere");
+define("lastname","Cognome");
+define("firstname","Nome");
+define("address","Indirizzo");
+define("address1","Indirizzo 1");
+define("city","Localit&agrave;");
+define("country","Stato");
+define("phone","Tel");
+define("fax","Fax");
+define("email","Email");
+define("conditions","Ho letto le condizioni generali di vendita e le accetto.");
+define("password","Parola d&#146;accesso");
+define("password2","Ripetere la parola d&#146;accesso");
+define("regist_weiter","Registrare");
+define("kreditkarte","Carta di Credito");
+define("type","Tipo");
+define("cc_number","Numero");
+define("valable_until","Valida fino al");
+define("cc_owner"," Titolare della carta");
+define("per_post","Per posta");
+define("nur_schweiz","Soltanto in Svizzera");
+define("invalid","non valido");
+define("outdated","antiquato");
+define("pay_methods","Modalit&agrave; di pagamento");
+define("not_valid_email","Email non valido");
+define("forgot_password","Ha dimenticato la parola d&#146;accesso?");
+define("passwd_changed","La nuova parola d&#146;accesso le &egrave; stata inviata per email.");
+define("user_dont_exist","Il Suo indirizzo Email non si trova nella banca dati");
+
+//page_classes/KasseContent.php
+define("pay_error","Per favore, scelga una modalit&agrave; di pagamento");
+define("cc_error","Errore nei dati relativi alla carta di credito");
+define("email_failed","Errore interno: imposibile inviare email  - Ordine Nr:");
+define("pdf_failed","Errore interno: impossibile generare pdf - Ordine Nr:");
+define("save_failed","Errore interno: impossibile salvare l&#146;ordine");
+define("reservate_failed","Errore interno: impossibile prenotare i posti");
+define("error_loading_user","Errore nel caricamento dei dati d&#146;utilizzatore");
+define("parzial_price","Somma parziale");
+define("shipment_price","Spese di trasferimento");
+define("order_nr","Ordine-Nr ");
+define("order_total","Totale fatturato");
+
+//check_login.php
+define("welcome","Benvenuto");
+define("not_to_be","Se non &egrave;");
+define("not_to_be2","");
+define("click_here","clicchi per favore qui");
+
+//add_cart.php
+define("cart_updated","Carrello aggiornato");
+define("cart_not_updated","Carrello non aggiornato");
+define("cart_try_again","Provi per favore ancora una volta");
+define("places_empty","Per favore, scelga il Suo posto");
+define("event_order_limit_exceeded","Lei ha superato il limite massimo di posti per ordine per questo spettacolo");
+define("places_occupied","Spiacente! I posti che desidera, sono stati nel frattempo occupati da qualcun altro.");
+define("places_toomuch","Non &egrave; possibile di prenotare cos&igrave; tanti posti");
+define("places_remains","Posti rimanenti");
+define("internal_error","Errore interno");
+
+// forgot_password.php
+define("forgot_pass","Ha dimenticato la Sua parola d&#146;accesso?");
+define("forgot_pass_note","Per favore, indichi l&#146;indirizzo email con il quale ha aperto il Suo conto.
+       Clicchi  &#146;Inviare parola d&#146;accesso &#146; e Le invieremo un email con la Sua nouva parola d&#146;accesso");
+define("send_password","Inviare parola d&#146;accesso ");
+
+//salepoint_web/shop.php
+
+define("free_places","Ancora LIBERI");
+define("event_sold_out","Spettacolo venduto");
+define("cat_sold_out","Categoria venduta");
+define("to_pay","Alla cassa");
+define("kasse","Cassa");
+define("logout","Disconnettersi");
+define("shop","Prenotazioni");
+define("view_cart","Carrello");
+define("discounts","Riduzioni");
+define("places","Posto N.");
+//salepoint_web/view_cart.php
+define("kassecontent","Cassa");
+define("kasse_empty","Nessun ordine &egrave; in sospeso");
+define("printing_wait","Attendere prego: i biglietti sono in corso di stampa");
+define("printing_manual","Stampare l&#146;ordine");
+define("category_sold_out","VENDUTO");
+define("sure_to_cancel","Cancellare?");
+define("sure_to_delete","Eliminare?");
+//salepoint
+define("kasse_nickname","Login");
+define("kasse_lang","Lingua");
+define("user_prefs","Preferenze");
+define("user_prefs_pdf","Stampante: Aprire con Acrobat");
+define("user_prefs_pdt","Stampante: Inviare alla stampante");
+
+//salepoint_web/kasse.php
+define("spoint_confirm_print","Confermare l&#146;ordine e stampare i biglietti");
+define("spoint_cancel","Cancellare l&#146;ordine");
+define("spoint_order","Conferma ordine");
+
+//admin interface
+define("ort_admin","Luoghi");
+define("event_admin","Spettacoli");
+define("ort_title","Tutti i luoghi");
+define("view","Vedere");
+define("edit","Modificare");
+define("add","Aggiungere");
+define("ort_id","Luogo nr.");
+define("ort_name","Nome del luogo");
+define("ort_plan_nr","Mappa nr");
+define("ort_add_title","Aggiungere un nuovo luogo");
+define("ort_update_title","Modificare un luogo");
+define("admin_list","Lista");
+define("event_id","Spettacolo nr");
+define("event_name","Nome dello spettacolo");
+define("event_short_text","Breve descrizione dello spettacolo");
+define("event_text","Descrizione dello spettacolo");
+define("event_url","Pagina Web");
+define("event_date","Data");
+define("event_time","Inizio");
+define("event_open","Apertura delle porte");
+define("event_ort_id","Nome del luogo");
+define("event_add_title","Aggiungere un nuovo spettacolo ");
+define("event_update_title","Modificare lo spettacolo");
+define("event_title","Tutti gli spettacoli");
+define("ort_pm","Mappa dei posti");
+define("pm_id","Mappa nr.");
+define("pm_name","Nome della mappa");
+define("pm_width","Larghezza della mappa");
+define("pm_height","Altezza della mappa");
+define("pm_first_row","Numero della prima fila");
+define("pm_dir","Direzione");
+define("pm_img_url","URL dell&#146;immagine della mappa");
+define("pm_dir_LR","Da sinistra verso destra");
+define("pm_dir_RL","Da destra verso sinistra");
+define("pm_ort_id","Luogo Nr:");
+define("pm_update_title","Modificare la mappa");
+define("pm_add_title","Aggiungere una nuova mappa ");
+define("pm_title","Tutte le mappe");
+define("category_id","Categoria Nr.");
+define("category_name","Nome della categoria");
+define("category_price","Prezzo della categoria");
+define("category_pm_id","Mappa della categoria Nr.");
+define("category_event_id","Spettacolo nr.");
+define("category_update_title","Modificare la categoria");
+define("category_add_title","Aggiungere una nuova categoria ");
+define("category_title","Tutte le categorie ");
+define("event_cats","Categorie:");
+define("already_pub","Gi&agrave; in vendita");
+define("pub_begin_failed","Errore inizio della transazione");
+define("pub_begin_trans","Successo inizio della transazione");
+define("pub_places_failed","Errore - I posti non sono stati messi in vendita");
+define("pub_places_published","Successo - Posti messi in vendita");
+define("pub_status_updated","Status aggiornato");
+define("pub_pm_locked","Mappa dei posti bloccata");
+define("pub_category_failed", "Errore: la categoria non &egrave; stata messa in vendita");
+define("pub_success","Successo");
+define("pub_failure","Errore");
+define("pub_confirm_msg","Vuole mettere questo spettacolo in vendita?");
+define("delete_confirm_msg","Vuole rimuovere questo spettacolo?");
+define('delete_subs_first','Cancellare prima i sottoeventi');
+define('in_use','Questo oggetto &grave; in uso e non pu&ograve; essere cancellato');
+
+define("user_lastname","Cognome");
+define("user_firstname","Nome");
+define("user_address","Indirizzo");
+define("user_address1","Indirizzo");
+define("user_zip","CAP");
+define("user_city","Localit&agrave;");
+define("user_country_name","Nazione");
+define("user_country","Nazione");
+define("user_state_name","Regione");
+define("user_state","Regione");
+define("user_email","Email");
+define("user_phone","Tel");
+define("user_fax","Fax");
+define("user_status","Status");
+define("member","Membro");
+define("sale_point","Posto di vendita");
+define("guest","Ospite");
+define("tickets_nr","Quantit&agrave;");
+define("orders","Ordine");
+define("order_type_post","Posta");
+define("order_type_email","Email");
+define("order_type_ordered","Ordinato");
+define("order_type_sended","Inviato");
+define("order_type_payed","Pagato");
+define("order_type_canceled","Annullato");
+define("order_type_reissued","Reemesso");
+define("ordered","Commandato");
+define("sended","Inviato");
+define("payed","Pagato");
+define("canceled","Annullato");
+define("reissued","Reemesso");
+define("order_status_email","Ordine per email");
+define("order_status_post","Ordine per Post");
+define("order_price","Prezzo totale");
+define("time_stamp","Ora");
+define("organizer_admin","Organizzatori");
+define("search_order","Cercare");
+define("order_admin","Ordini");
+define("order_list_title","Ordini");
+define("order_status_ord","Comandato");
+define("order_status_reissue","Riemesso");
+define("order_status_send","Inviato");
+define("order_status_payed","Pagato");
+define("order_status_cancel","Annullato");
+define("firstpage","Inizio");
+define("lastpage","Fine");
+define("previouspage","<<<<<<<");
+define("nextpage",">>>>>>>");
+define("search_title_user","Cercare un utilizzatore");
+define("search_title_place","Cercare un posto");
+define("search_title_order","Cercare un ordine");
+define("choice_please","Scegliere per favore");
+define("event_list","Spettacoli");
+define("place_row_nr","Numero della fila");
+define("seat_row_nr","Numero della fila");
+define("place_seat_nr","Numero del posto");
+define("seat_nr","Numero del posto");
+define("order_id","Numero dell&#146;ordine");
+define("search_result","Risultato della ricerca");
+define("event","Spettacolo");
+define("category","Cat.");
+define("place","Posto");
+define("price","Prezzo");
+define("user","Utilizzatore");
+define("bs","Ord.");
+define("status","Status");
+define("organizer_title","Tutti gli organizzatori");
+define("organizer_id","Organizzatore Nr.");
+define("organizer_name","Nome");
+define("organizer_address","Indirizzo");
+define("organizer_phone","Tel");
+define("organizer_fax","Fax");
+define("organizer_plz","CAP");
+define("organizer_ort","Citt&agrave;");
+define("organizer_email","Email");
+define("organizer_place","Sale");
+define("organizer_nickname","Nickname");
+define("organizer_update_title","Modificare l&#146;organizzatore");
+define("organizer_add_title","Aggiungere un nuovo organizzatore");
+define("event_image_url","URL dell&#146;immagine");
+define("event_order_limit","Max. numero di posti per ordine");
+define("event_payment","Modalit&agrave; di pagamento");
+define("delete_item","Rimuovere?");
+define("event_stats_title","Statistiche");
+define("stats","Statistiche");
+define("graph_stats","Statistiche grafiche");
+define("event_organizer","Organizzatore");
+define("yes","SI");
+define("pm_shift","Spostamento della fila ");
+define("order_tickets_nr","Quantit&agrave; di biglietti");
+define("order_total_price","Prezzo totale");
+define("order_date","Data dell&#146;ordine");
+define("order_shipment_mode","Invio");
+define("order_status","Status");
+define("view_order_details","Dettagli relativi all&#146;ordine");
+define("print_order","Stampare l&#146;ordine");
+define("send_order_post","Cambiare lo Status in &#146;inviato&#146;");
+define("send_order_email","Inviare l&#146;ordine per email e cambiare lo Status in &#146;Inviato&#146;");
+define("change_order_to_payed","Cambiare lo Status  in &#146;Pagato&#146;");
+define("reissue_order_menu","Riemettere con un Numero d'ordine e Status &#146;Commandato&#146; e cambiare lo Status del vecchio ordine in &#146;Reemesso&#146;");
+define("cancel_order","Cambiare lo Status in &#146;Annullato&#146; e rimettere i biglietti in vendita");
+define("possible_actions","Possibili opzioni");
+define("legende","Leggenda");
+define("change_status_to_send","Cambiare lo Status in &#146;Inviato&#146;?");// und drucken?");
+define("change_status_to_send_email","Cambiare lo Status in &#146;Inviato&#146; ue inviare per email?");
+define("change_status_to_payed","Cambiare lo Status in &#146;Pagato&#146;?");
+define("reissue_order","Emettere un nuovo ordine ed annullare questo ordine?");
+define("cancel","Annullare l&#146;ordine?");
+define("order_not_found","L&#146;ordine non &egrave; Status trovato");
+define("order_cannot_change_to_send","Impossibile di cambiare lo Status in Inviato");
+define("pdf_failed","Errore in PDF");
+define("email_failed","Errore: Impossible inviare l&#146;email");
+define("change_order_status_failed","Impossimile modificare lo Status");
+define("order_cannot_change_to_payed","Impossibile cambiare lo Status in Pagato");
+define("order_cannot_reissue","Questo ordine non pu&ograve; essere riemesso");
+define("new_order_failed","Errore nella creazione del nuovo ordine");
+define("new_order_created","Ordine riemesso con successo");
+define("tickets_update_failed","Errore nell&#146;aggiornamento dei biglietti");
+define("tickets_update_done","Aggiornamento dei biglietti eseguito con successo");
+define("old_order_not_canceled","Impossibile annullare il vecchio ordine");
+define("old_order_canceled","Il vecchio ordine &egrave; Status annullato con successo");
+define("order_not_canceled","L&#146;ordine non &egrave; Status annullato");
+define("order_canceled","L&#146;ordine  &egrave; stato annullato");
+define("places_not_freed","I posti non sono stati rimessi in vendita");
+define("places_freed","I posti sono stati rimessi in vendita");
+define("category_size","Grandezza della categoria");
+define("category_numbering","Numerazione della categoria");
+define("category_numbering_none","Nessun numero");
+define("category_numbering_rows","Soltanto le file sono numerate, nessun numero per il posto");
+define("category_numbering_both","Posti con numero");
+define("category_numbering_both","Posti con numero, file senza numero");
+define("payment_cc","Carta di credito");
+define("payment_post","Posta");
+define("filling_stats","Tabella per le statistiche...");
+define("cat_stat_success","Successo - La statistica della categoria &egrave; stata aggiornata");
+define("cat_stat_error","Errore - La statistica della categoria non &egrave; stata aggiornata");
+define("event_stat_success","Successo - La statistica dello spettocolo  &egrave; stata aggiornata");
+define("event_stat_error","Errore - La statistica dello spettocolo non &egrave; stata aggiornata");
+define("salepoint_admin","Punti di vendita");
+define("template_admin","Templates");
+define("excel_admin","Excel");
+define("spoint_title","Tutti i punti di vendita");
+define("spoint_add_title","Aggiungere un nuovo punto vendita");
+define("kasse_name","Nome del punto vendita");
+define("user_nickname","Nickname");
+define("user_id","ID");
+define("spoint_update_title","Modificare il punto vendita");
+define("old_password","Vecchia parola d&#146;accesso");
+define("new_password","Nuova parola d&#146;accesso");
+define("template_title","Tutti i Templates");
+define("template_add_title","Aggiungere un nuovo templates");
+define("template_update_title","Modificare il template");
+define("template_id","ID");
+define("template_name","Nome");
+define("template_type","Tipo");
+define("template_ts","Timestamp");
+define("template_status","Status");
+define("comp","Compilato");
+define("new","Nuovo");
+define("error","Errore");
+define("template_type_email","email");
+define("template_type_pdf","PDF");
+define("compile_all","Compilare Tutto");
+
+
+define('export_admin','Esportazione');
+define('export_admin_title','Esportare i dati');
+
+define('export_cc','Carte di credito');
+define('export_cc_title','Esportare i numeri delle carte di credito');
+define('export_xl','Documento Excel ');
+define('export_xl_title','File Excel');
+define('export_cc_count','Numero di carte di credito da esportare');
+define('export_cc_submit','Esportare');
+
+define('export_xml_event','Event in XML');
+define('export_xml_event_title','Esporta evento in XML');
+define('export_xml_event_event','Scegli un evento');
+define('export_xml_event_file','Nome del File');
+define('export_xml_event_submit','Esportalo!');
+
+
+define('import_admin','Importazione');
+define('import_admin_title','Importazione Dati');
+
+define('import_xml','XML');
+define('import_xml_title','Importa dati in formato XML');
+define('import_xml_file','file XML');
+define('import_xml_submit','Importalo!');
+
+define('handling_text_payment','Descrizione breve del modo di pagamento');
+define('handling_text_shipment','Descrizione breve del modo di spedizione');
+
+
+define("xl_view_title","Excel File");
+define("xl_start","Dal");
+define("xl_end","Al");
+define("order_type_spoint","Cassa");
+define("order_status_sp","Cassa");
+define("compilation_succeed","Successo - Il template &egrave; stato compilato");
+define("compilation_failed","Errore - Il template non &egrave; stato compilato");
+define("sp","Posto di vendita");
+define("event_discounts","Riduzioni");
+define("event_template","Template del biglietto per lo spettacolo");
+define("discount_id","ID");
+define("discount_name","Nome della riduzione");
+define("discount_type","Tipo di riduzione");
+define("discount_type_fixe","Riduzione fissa");
+define("discount_type_percent","Riduzione in percentuale");
+define("discount_value","Valore della riduzione");
+define("discount_title","Tutte le riduzioni");
+define("login","Nickname");
+define("already_exist","Questo nome &egrave; gi&agrave; registrato nella banca dati. Per favore ne scelga uno nuovo.");
+define("login_invalid","Parola d&#146;accesso o Login non valido");
+define("sp","Posto di vendita");
+define("pm_used","Questa mappa &egrave; attualmente in uso!");
+define("category_template","Template del biglietto per la categoria");
+define("category_color","Colore della categoria");
+define("no_color","Nessun colore");
+define("generate_xl","Generare il documento Excel");
+define("nosale_confirm_msg","Vuoi togliere questo spettacolo dalla vendita?");
+define("unpub_begin_trans","Transazione iniziata con successo");
+define("unpub_begin_failed","Errore nell&#146;apertura della transazione");
+define("nosale_status_updated","Status aggiornato");
+define("nosale_success","Successo");
+define("nosale_failure","Errore");
+define("already_no_sale","Di gi&agrave; non in vendita");
+define("no_result","Nessun risultato");
+define("status_not_valid_for_repub","Lo Status attuale dell&#146;ordine non permette di riemetterlo");
+define("event_image","Immagine");
+define("new_event_image","Cambiare immagine");
+define("remove_event_image","Rimuovere l&#146;immagine");
+define("ort_image","Immagine della sala");
+define("new_ort_image","Cambiare immagine");
+define("remove_image","Rimuovere l&#146;immagine");
+define("administration","Amministrazione");
+define("file_admin","Files");
+define("event_group_admin","Gruppi di eventi");
+define("event_group_title","Tutti i gruppi di eventi");
+define("event_group_add_title","Aggiungere un gruppo di eventi");
+define("event_group_id","ID Gruppo");
+define("event_group_name","Nome");
+define("event_group_start_date","Inizio");
+define("event_group_end_date","Fine");
+define("event_group_description","Descrizione");
+define("event_group_image","Immagine");
+define("start_date","Inizio");
+define("end_date","Fine");
+define("event_group_update_title","Modificare il gruppo di eventi");
+define("file_name","Nome del file");
+define("file_upload","Caricare i files");
+define("file_mkdir","Directories");
+define("file_dir_name","Nome della directory ");
+define("organizer_not_found","Organizzatore non trovato");
+define("file_not_found","File non trovato");
+define("create","Creare");
+define("upload","Caricare");
+define("admin_select_organizer","Selezionare un organizzatore");
+define("categories","Categorie");
+define("place_maps","Mappe dei posti");
+define("place_map","Mappa dei posti");
+
+define("select","Selezionare");
+define("pm_zones","Zone");
+define("pm_zone","Zona");
+
+define("new_pm_zone","Aggiungere una nuova zona");
+define("pmz_color","Colore");
+define("pmz_name","Nome");
+define("pmz_short_name","Nickname");
+define("new_pmz","Nuova Zona");
+define("redefine_pm_zone","Ridefinire la zona");
+define("redefine","Ridefinire");
+define("seat_numbering","Numerotazione dei posti");
+define("autonumber_pmz","Numerazione automatica");
+define("first_row","Prima fila");
+define("step_row","Passo per le file");
+define("inv_row","Invertire la numerazione delle file");
+define("first_seat","Primo posto");
+define("step_seat","Passo per i posti");
+define("inv_seat","Invertire la numerazione dei posti");
+define("flip","Flip");
+define("map","Carta");
+define("payment_admin","Trattamento");
+define("payment_title","Tutte le modalit&agrave; di pagamento");
+define("invoice","Giroconto");
+define("post","Posta");
+define("payment_add_title","Aggiungere una modalit&agrave; di pagamento");
+define("payment_mode","Modalit&agrave; di pagamento");
+define("payment_send","Invio");
+define("payment_email_template","Email Template");
+define("payment_fee_fixe","Spese di transferimento fisse");
+define("payment_fee_percent","Spese di transferimento in percentuale");
+define("payment_update_title","Modificare la modalit&agrave; di pagamento");
+define("order_payment_mode","Pagamento");
+define("order_fee","Spese di trasferimento");
+define("import","Importare");
+define("shared_ort_title","Luoghi in comune");
+define("ort_address","Indirizzo");
+define("ort_address1","Indirizzo 1");
+define("ort_zip","CAP");
+define("ort_city","Localit&agrave;");
+define("ort_country_name","Nazione");
+define("ort_country","Nazione");
+define("ort_fax","Fax");
+define("control_admin","Punti di controllo");
+define("control_title","Tutti i punti di controllo");
+define("control_login","Identificatore");
+define("control_event_ids","Spettacoli");
+define("control_add_title","Aggiungere un accesso di controllo");
+define("control_update_title","Modificare un accesso di controllo");
+define("control_view","Punto di controllo");
+define("classics","Musica classica");
+define("jazz","Jazz");
+define("blues","Blues");
+define("funk","Funk");
+define("pop","Pop");
+define("rock","Rock");
+define("folklore","Folclore");
+define("theater","Teatro");
+define("sacred","Musica sacra");
+define("ballet","Balletto");
+define("opera","Opera");
+define("humour","Humour");
+define("organizer_currency","Valuta");
+define("event_pm_ort_id","Carta dei posti");
+define("event_rep","Repetibilit&agrave;");
+define("event_type","Tipo");
+define("event_mp3","MP3");
+define("event_rep_main","Multiplo");
+define("event_rep_unique","Unico");
+define("pm_parts","Parti della carta");
+define("pmp_id","Parte ID");
+define("pmp_name","Nome della parte");
+define("pm_part","Parte della mappa");
+define("edit_pm","Modificare la mappa dei posti");
+define("pm_image","Immagine per la mappa dei posti");
+define("remove_pm_image","Eliminare l'immagine");
+define("search_title_codebar","Cercare un codice a barra");
+define("codebar","Codice a barra");
+define("user_organizer_ids","Organizzatore");
+define("category_data","Dati della categoria");
+define("pmp_height","Altezza della parte");
+define("pmp_width","Larghezza della parte");
+define("discount_add_title","Aggiungere uno sconto");
+define("remove_event_mp3","Eliminare MP3");
+define("category_view_title","Categoria");
+define("split_pm","Dividere la mappa dei posti");
+define("pm_split","Dividere la mappa dei posti");
+define("split_zones","Dividere per zone");
+define("correct_errors_first","Correggere gli errori prima di pubblicare");
+define("undefined","indefinito");
+define("category_pmp_id","ID della categoria della parte");
+
+define("scene_h","images/scene_h_it.png");
+define("scene_v","images/scene_v_it.png");
+
+define("view_handling","Modalit&agrave; di trattamento dell'ordine");
+define("handling_title","Modalit&agrave; di trattamento dell'ordine");
+define("handling_add_title","Aggiungere una modalit&agrave; di trattamento dell'ordine");
+define("handling_id","ID");
+define("handling_payment","Pagamento");
+define("handling_shipment","Invio");
+define("handling_email_template_ord","Email Template per ordinazione");
+define("handling_email_template_send","Email Template per invio");
+define("handling_email_template_payed","Email Template per pagamento");
+define("handling_html_template","HTML Template per spiegazioni");
+define("handling_pdf_template","PDF Template per fattura");
+define("handling_sale_mode","Modalit&agrave; di vendita");
+define("handling_fee_fix","Spese di transferimento fisse");
+define("handling_fee_percent","Spese di transferimento in percentuale");
+
+define("entrance","All'entrata");
+define("cash","Contanti");
+define("email","Email");
+define("sp","punto vendita");
+
+define("pmp_scene","Posizione della scena");
+define("pmp_scene_north","nord");
+define("pmp_scene_est","est");
+define("pmp_scene_south","sud");
+define("pmp_scene_west","ovest");
+define("pmp_shift","Spostamento della fila");
+define("define","Definire");
+define("labels","Etichette");
+define("label_type","Tipo");
+define("label_text","Testo");
+define("label_type_text","Testo");
+define("label_type_row_east","Fila est");
+define("label_type_row_west","Fila ovest");
+define("label_type_seat_south","Posto sud");
+define("label_type_seat_north","Posto nord");
+define("label_type_exit","Uscita");
+define("clear","Cancellare");
+
+define("organizer_logo","Logo");
+define("new_organizer_logo","Nuovo Logo");
+define("remove_logo","Rimuovere il logo");
+define("copy","Copiare");
+define("agenda_only","Solo agenda");
+define('copy_main_pm','Copiare');
+
+define("order_shipment_status","Stato della consegna");
+define("order_payment_status","Stato del pagamento");
+define("none","Nessuno");
+define("send","Inviato");
+define("ord","Ordinato");
+define("change_status_to_no_send","Cambiare lo Status in &#146;non inviato&#146;?");
+define("change_status_to_no_payed","Cambiare lo Status in &#146;non pagato&#146;?");
+define("change_status_to_ord","Cambiare lo Status in &#146;ordinato&#146;?");
+define("change_order_to_ord","Cambiare lo Status in 'Ordinato'");
+define("no_send_order_post","Cambiare lo Status in 'Non-inviato'");
+define("change_order_to_no_payed","Cambiare lo Status in 'Non-pagato'");
+define("payed_and_send","Pagato e Inviato");
+
+define("pass_too_short","Parola d'accesso troppo corta");
+define("music","Musica");
+define("other","Altro");
+define("cinema","Cinema");
+define("exposition","Esposizione");
+define("ballet","Balletto");
+define("party","Party");
+
+define("also_sub","Anche i sotto-eventi");
+define("restart_success","Ripubblicato con successo");
+define("stop_success","Fermatop con successo");
+
+//control
+define("check_success","Biglietto verificato con successo");
+define("place_without_nr","Posto senza numero");
+define("category","Categoria");
+define("check","Controllare");
+define("res","Cancellare");
+define("not_valid_event","Biglietto non valido per questo spettacolo");
+define("ticket_not_found","Biglietto non valido: Il biglietto non &egrave; stato trovato nella banca dati");
+define("ticket_already_checked","Questo biglietto &egrave; gi&agrave; stato controllato");
+define("place_not_commanded","Posto non ordinato");
+define("place_only_reserved","Posto prenotato, ma non ordinato");
+define("place_nr","Posto nr");
+define("rang_nr","Fila nr");
+define("place_status_not_updated","Errore: Lo Status del posto non &egrave; stato cambiato in Controllato");
+define("change_event","Cambiare Spettacolo");
+define("control_events_list","Spettacoli");
+define("free","Libero");
+define("com","Prenotato");
+define("reserved","Riservato");
+define("checked","Verificato");
+
+define("nickname","Nickname");
+define("lang","Lingua");
+define("img_loading_problem","Problema nel carricamento dell&#146;immagine");
+define("enter_guest","Informazioni personali");
+
+define("yp","Yellowpay");
+define("authorize_aim","Authorize.net AIM");
+define("authorize_sim","Authorize.net SIM");
+define("paypal","PayPal");
+define("cc","Carta di credito");
+
+define("garbage","Pattumiera");
+define("seat","Posto");
+define("order","Ordine");
+define("empty_trash","Svuotare pattumiera");
+define('purge','eliminare');
+
+
+define("","");
+define("","");
+define("","");
+
+?>

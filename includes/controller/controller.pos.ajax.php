@@ -164,12 +164,16 @@ class ctrlPosAjax extends ctrlWebCheckout {
 		}else{
 			$toDate = 'event_date';
 		}
+	  $eventlinks = $_SHOP->admin->getEventLinks();
+	  $eventlinks = ($eventlinks)?$eventlinks:'-1';
     $this->json['events'] = array(); //assign a blank array.
 		$sql = "SELECT  event_id, event_name, ort_name, event_date, event_time, event_free es_free
 				FROM Event left join 	Ort on ort_id = event_ort_id
 				where 1=1
 				AND event_date >= "._esc($fromDate)."
 				AND event_date <= ".$toDate."
+        AND (event_view_begin = '00-00-0000 00:00:00' OR (event_view_begin <= now()))
+        and (event_view_end   = '00-00-0000 00:00:00' OR (event_view_end >= now()))
 				and event_rep LIKE '%sub%'
 				AND event_status = 'pub'
 				AND event_free > 0
@@ -326,7 +330,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
     //Select Events Discounts
     $sql = "select discount_id, discount_name, discount_value, discount_type
     	FROM Discount d
-    	WHERE  discount_active=\"yes\"
+    	WHERE  (FIND_IN_SET('yes', discount_active)>0 or FIND_IN_SET('pos', discount_active)>0)
     	and discount_event_id = "._esc($eventId);
     if ($catId) {
        $sql .=  " AND (discount_category_id="._esc($catId)." OR discount_category_id is null)";

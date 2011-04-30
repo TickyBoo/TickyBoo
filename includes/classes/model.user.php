@@ -380,6 +380,13 @@ class User extends Model{
       return addWarning('in_use');
     }
 
+    $query = "SELECT count(*)
+              FROM `adminlink`
+              Where adminlink_pos_id="._esc($this->user_id);
+    //var_dump($res = ShopDB::query_one_row($query, false));
+    if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
+      return addWarning('in_use');
+    }
     return parent::delete();
   }
 

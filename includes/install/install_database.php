@@ -67,6 +67,7 @@ class install_database {
     $row = shopdb::query_one_row("show variables like 'have_inno%'");
     if ($row && ($row['Value'] !== 'YES')) {
       array_push($Install->Errors,'Fusion Ticket uses the MySQL InnoDB engine. This is not installed on your server.');
+      return true;
     }
 
     if ($result = $link->Query("SHOW TABLE STATUS LIKE 'Admin'")) {

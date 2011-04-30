@@ -175,6 +175,18 @@ class Event Extends Model {
   }
 
   function CheckValues(&$data) {
+      $t1 = $this->fillDate($data,'event_view_begin_date');
+      $t2 = $this->fillTime($data,'event_view_begin_time');
+      if ($t1 || $t2) {
+        $data['event_view_begin'] = is($data['event_view_begin_date'],'0000-00-00').' '.is($data['event_view_begin_time'],'00:00').':00';
+      }
+
+      $t1 = $this->fillDate($data,'event_view_end_date');
+      $t2 = $this->fillTime($data,'event_view_end_time');
+      if ($t1 || $t2) {
+        $data['event_view_end']   = is($data['event_view_end_date'],'0000-00-00').' '.is($data['event_view_end_time'],'00:00').':00';
+      }
+
      $t1 = $this->fillDate($data,'event_custom4_date');
       $t2 = $this->fillTime($data,'event_custom4_time');
       if ($t1 || $t2) {
@@ -242,11 +254,11 @@ class Event Extends Model {
               where event_status!='trash'
               and   event_main_id="._esc($this->id);
       if(!$count=ShopDB::query_one_row($query, false) or $count[0]>0){
-        echo '<div class=error>'.con('delete_subs_first').'</div>';
-        return FALSE;
+
+        return addwarning('delete_subs_first');
       }
     } elseif($this->event_status=='nosal' and $this->event_pm_id){
-      echo '<div class=error>'.con('To_Trash').'</div>';
+      addNotice('To_Trash');
       return $this->toTrash();
     }
 

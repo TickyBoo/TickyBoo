@@ -36,10 +36,11 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
 {
     if ($repeat) {
         $from = 'from Discount';
+        $place = is($params['place'],'www');
         if ($params['discount_id']) {
           $where = " where  discount_id=" . _esc($params['discount_id']);
         } else {
-          $where = "where discount_active=\"yes\"";
+          $where = " where (FIND_IN_SET('yes', discount_active)>0 or  FIND_IN_SET('{$place}', discount_active)>0) ";
         }
 
         if ($params['order']) {

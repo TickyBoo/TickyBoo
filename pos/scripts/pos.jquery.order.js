@@ -11,11 +11,11 @@ var loadOrder = function(){
     datatype: 'json',
     mtype: 'POST',
     postData: {"pos":true,"action":"CartInfo"},
-    colNames: ['Expire in','Event','Count','Tickets','Price','Total'],
+    colNames: ['Expire in','Event','No#','Tickets','Price','Total'],
     colModel :[
-        {name:'Expire in',  index:'Expire_in',  width:100, sortable:false },
+        {name:'Expire in',  index:'Expire_in',  width: 85, sortable:false },
         {name:'Event',      index:'Event',      width:240, sortable:false, resizable: false },
-        {name:'Count',      index:'Count',      width: 55, sortable:false, resizable: false, align:'right' },
+        {name:'No#',        index:'Count',      width: 45, sortable:false, resizable: false, align:'right' },
         {name:'Tickets',    index:'Tickets',    width:210, sortable:false, resizable: false                },
         {name:'Price',      index:'Price',      width: 70, sortable:false, resizable: false, align:'right' },
         {name:'Total',      index:'Total',      width:100, sortable:false, resizable: false, align:'right' }],
@@ -217,7 +217,12 @@ var orderDialogs = function(){
         $(this).dialog('close');
       }
     },
-    open: function(){jQuery("#seat-chart").parent().appendTo($("#order-form"));}
+    close: function(){
+        $("#show-seats input").val( $("#seatsselected").text());
+    },
+    open: function(){
+      jQuery("#seat-chart").parent().appendTo($("#order-form"));
+    }
   });
 
   // Opens a dialog to confirm payment

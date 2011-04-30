@@ -226,16 +226,20 @@ class MyCart_Smarty {
   function maxSeatsAlowed_f ($event){
     global $_SHOP;
     if ($result = $_SHOP->shopconfig_maxorder){
-    $eventmax = 0;
-    $event = (array)$event;
-    $eventmax = $event['event_order_limit'];
-    if ($eventmax >0) $result = $eventmax;
-    $cart = $_SESSION['_SMART_cart'];
-    if (isset($cart)) {
-      $has = $cart->total_places($event['event_id']);
-      $result -= $has ;
-    }
-    return $result;
+      $eventmax = 0;
+      if ((int)$event) {
+         $event = event::load((int)$event);
+      }
+
+      $event = (array)$event;
+      $eventmax = $event['event_order_limit'];
+      if ($eventmax >0) $result = $eventmax;
+      $cart = $_SESSION['_SMART_cart'];
+      if (isset($cart)) {
+        $has = $cart->total_places($event['event_id']);
+        $result -= $has ;
+      }
+      return $result;
     } else {
       return -1;
     }

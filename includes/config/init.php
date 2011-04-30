@@ -261,6 +261,12 @@ if (!defined('ft_check')) {die('System intrusion ');}
     } elseif($res = Admins::load($_SESSION['_SHOP_AUTH_ADMIN_ID'])) {
       $_SHOP->admin = $res;
       unset($res->admin_password);
+    } else {
+      session_unset();
+      $_SESSION = array();
+      session_destroy();
+      header("location:{$_REQUEST['href']}");
+      die;
     }
    // print_r($_SESSION);
   }

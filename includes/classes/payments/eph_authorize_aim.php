@@ -201,6 +201,10 @@ class EPH_authorize_aim Extends Payment{
 		}else{
 			$return['response'].="Payment Error: Order $order_id can't be valided, no responce from Authorize.net!";
     }
+
+    OrderStatus::statusChange($order_id,'authorize_aim',$return['response'],'checkout::notify',$debug.print_r($_POST,true));
+    $debug .= $return['response'] ."\n";
+
     $debug .= $return['response'] ."\n";
     $handle=fopen($_SHOP->tmp_dir."authorize.log","a");
     fwrite($handle,$debug);

@@ -48,14 +48,14 @@ class HandlingsView extends AdminView{
       echo "<td class='admin_list_item'>".con('payment')."</td>";
       echo "<td class='admin_list_item'>".con('shipment')."</td>";
       echo "<td class='admin_list_item'>".con('fees')."</td>";
-      echo "<td class='admin_list_item'>".con('www','?')."</td>";
-      echo "<td class='admin_list_item'>".con('sp','?')."</td>";
+      echo "<td class='admin_list_item' align='center'>".con('handling_www','Web')."</td>";
+      echo "<td class='admin_list_item' align='center'>".con('handling_sp','POS')."</td>";
       echo "<td class='admin_list_item'></td>";
     echo "</tr>\n";
 		if($hands=Handling::loadAll()){
 			foreach($hands as $hand){
-				$handling_mode_pos=(strpos($hand->handling_sale_mode,'sp')!==false)?'pos':'&nbsp;';
-				$handling_mode_web=(strpos($hand->handling_sale_mode,'www')!==false)?'web':'&nbsp;';
+				$handling_mode_pos=(strpos($hand->handling_sale_mode,'sp')!==false);
+				$handling_mode_web=(strpos($hand->handling_sale_mode,'www')!==false);
 
         echo "<tr class='admin_list_row_$alt'>";
 				if($hand->handling_id==1){
@@ -63,8 +63,8 @@ class HandlingsView extends AdminView{
 //				 	echo "<td class='admin_list_item'>".reserved."</td>\n";
 //				 	echo "<td class='admin_list_item' colspan=3>&nbsp;</td>";
 				}else{
-					echo "<td class='admin_list_item'>".con($hand->handling_payment)."</td>";
-					echo "<td class='admin_list_item'>".con($hand->handling_shipment)."</td>\n";
+					echo "<td class='admin_list_item'>".$hand->handling_text_payment."</td>";
+					echo "<td class='admin_list_item'>".$hand->handling_text_shipment."</td>\n";
   				echo "<td class='admin_list_item' align='right'>";
     				$perc=$hand->handling_fee_percent;
     				$fixe=$hand->handling_fee_fix;
@@ -75,11 +75,27 @@ class HandlingsView extends AdminView{
     					echo "+";
     				}
     				if($fixe > 0){
-    					echo valuta($fixe);
+    					echo valutdefault($fixe);
     				}
   				echo "</td>\n";
-  				echo "<td width='30' class='admin_list_item'>$handling_mode_web</td>\n";
-  				echo "<td width='30' class='admin_list_item'>$handling_mode_pos</td>\n";
+  				echo "<td  align='center' class='admin_list_item'>";
+				  if ($handling_mode_web ) {
+				    echo $this->show_button("javascript:if(confirm(\"".con('handling_www_deactivate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_hand&handling_id={$hand->handling_id}&mode=www&do=remove\"; }",('handling_www_activated'),2,
+				         array('image'=>'checked.gif'));
+				  } else {
+				    echo $this->show_button("javascript:if(confirm(\"".con('handling_www_activate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_hand&handling_id={$hand->handling_id}&mode=www&do=add\"; }",('handling_www_deactivated'),2,
+				         array('image'=>'unchecked.gif'));
+				  }
+				  echo "</td>";
+				  echo "<td class='admin_list_item' align='center'>";
+				  if ($handling_mode_pos ) {
+				    echo $this->show_button("javascript:if(confirm(\"".con('handling_pos_deactivate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_hand&handling_id={$hand->handling_id}&mode=sp&do=remove\"; }",('handling_pos_activated'),2,
+				         array('image'=>'checked.gif'));
+				  } else {
+				    echo $this->show_button("javascript:if(confirm(\"".con('handling_pos_activate')."\")){ location.href=\"{$_SERVER['PHP_SELF']}?action=active_hand&handling_id={$hand->handling_id}&mode=sp&do=add\"; }",('handling_pos_deactivated'),2,
+				         array('image'=>'unchecked.gif'));
+				  }
+				  echo "</td>";
 
           echo "<td class='admin_list_item' width='45' align='right' nowrap><nowrap>";
           echo $this->show_button("{$_SERVER['PHP_SELF']}?action=edit&handling_id={$hand->handling_id}","edit",2);
@@ -227,6 +243,21 @@ class HandlingsView extends AdminView{
         }else{
           addNotice('save_successful');
         }
+		  } elseif ($_GET['action'] == 'active_hand') {
+		    $row = Handling::load($_GET["handling_id"]);
+		    if ($row) {
+
+		      $mode = ($_GET['mode']==='www')?'www':'sp';
+		      $do = is($_GET['do'],'');
+		      if ($do==='add' and !array_key_exists($mode,$row->sale_mode)) {
+		        $row->sale_mode[$mode] = $mode;
+		        $row->save();
+		      } elseif ($do==='remove' and array_key_exists($mode,$row->sale_mode)) {
+		        $row->sale_mode = array_diff_assoc($row->sale_mode, array($mode=>1));
+		        $row->save();
+		      }
+		    }
+  //      $this->table(null, false);
 
 		}elseif($_GET['action']=='remove' and $_GET['handling_id']>0){
    		$hand=new Handling();

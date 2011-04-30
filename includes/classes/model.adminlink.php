@@ -78,7 +78,7 @@ class Adminlink Extends Model {
      return addWarning(con("delete_link_error"));
     }
   */
-    return parent::detete();
+    return parent::delete();
   }
 
 }

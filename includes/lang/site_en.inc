@@ -268,7 +268,7 @@ define('compilation_failed','Compilation Failed!');
 define('ClassCatch:','Class Catch:');
 define('wrong_input_ids','Wrong Input Id');
 define('file_not_exsist','File does Not Exist!');
-define('username_not_found','User Name Not Found!');
+define('username_not_found','User not registered. Please provide a valid email.');
 define('search_choice_one_field','Choose a Field to Search!');
 define('search_choice_event','Choose an Event to Search!');
 define('search_choice_seat_row_nr','Choose a Seat/Row to Search!');
@@ -367,7 +367,7 @@ define("admin_update_title","Modify Administrator");
 	define("admin_add_title","Add System Administrator");
 
 //Sale Points
-define("spoint_tab","Sale Points");
+define("spoint_tab","Points of Sale");
 define("pos_user_title","Points of Sale");
 define("pos_add_title","Add a Point of Sale");
 define("pos_update_title","Modify Point of Sale");
@@ -431,7 +431,7 @@ define("categories","Categories");
 		define("category_name","Category Name");
 		define("category_price","Category Price");
 		define("category_template","Template for Tickets");
-		define("category_color","Colour for Category");
+		define("category_color","Color for Category");
 		define("category_numbering","Category Numbering");
 			define("category_numbering_both","Rows and Seats Numbered");
 			define("category_numbering_rows","Only Rows Numbered");
@@ -602,6 +602,7 @@ define("order_event_list_title","Orders by Event");
 	define("order_type_reserved","Reserved");
 	define("purge","Purge");
 	define("order_patron","Customer");
+	define("order_place","Created By");
 
 	//View Order
 	define("order_nr","Order #: ");
@@ -1435,6 +1436,8 @@ define('enabled','Enabled');
 define('InfoGetFileFunction','InfoGetFileFunction');
 define('InfoZipLibInstalled','InfoZipLibInstalled');
 define('show_stat_reports','Reports');
+define('show_stat_reports','Other Reports');
+
 define('report_admin_title','Spreadsheet Reports');
 define('report_xl','Sales Report');
 define('report_archive_event','Event Archives');
@@ -1467,6 +1470,7 @@ define('discount_promo_for', 'Discount promocode for&nbsp;');
 
 define('rep_ord_id','Order #');
 define('rep_sale_date','Sale Date');
+define('rep_sale_barcode','Barcode');
 define('hand_payment_text','Payment Method');
 
 define('user_title','Customer Information');
@@ -1528,6 +1532,15 @@ define("logged_in","User:");
 //Events
 define("placemap","Event Placemap");
 
+define("event_details","Event Details");
+define("event_view_periode","Event Viewing Period");
+define("event_view_begin_date","Event View Begin Date");
+define("event_view_begin_time","Event View Begin Time");
+define("event_view_end_date","Event View End Date");
+define("event_view_end_time","Event View End Time");
+
+
+define('placemap','placemap');
 define('discount_deactivate','Deactivate Discount');
 define('discount_activate','Activate Discount');
 define('print_invoice','Print invoice');
@@ -1537,7 +1550,7 @@ define('print_tickets','Print tickets');
 	define("clear_selection","Clear Selection");
 	define("reset","Reset");
 	define("confirm_clear", "Are you sure you want to clear your selection?");
-define("delete_link_error","Can't delete an admin link when there are seats associated to this pos");
+define("delete_link_error", "Can't delete an admin link when there are seats associated to this pos");
 
 //Events Mailer
 define("mailer_description","Use this interface to send emails to customers attending this event.");
@@ -1576,6 +1589,8 @@ define('error','error');
   define('event_view_end_date','Published end date');
   define('event_view_end_time','Published end time');
   define('select_qty','Select quantity');
+define('successfully_add_note','successfully_add_note');
+define('plugin_allow_uninstall','plugin_allow_uninstall');
 
 define('please_select','please select');
 define('venue_in_use','This venue is in use.');
@@ -1583,9 +1598,59 @@ define('venue_in_use','This venue is in use.');
 
 define('print_both','Print invoice & ticket');
 define('view_details','View order details');
+define('cannot_find_order','Cannot find order');
 
 define('main','main');
+define('control','Ticket Taker');
 define('ticket','ticket');
 
 define('failed_send_to','Failed to send an Email.');
+define('admin_status_control','Ticket taker');
+define('admin_status_pos','POS User');
+define('admin_status_posman','POS Manager');
+define('admin_status_organizer','Organizer');
+define('admin_status_accountant','Accountant');
+define('admin_status_admin','Administrator');
+
+define('role_not_allowed','Role not allowed.');
+
+define('ERROR_NOSIZEDIFF','No new size given.');
+
+define('category_nosale_size','Category Size');
+
+define('plugin_install_title','plugin_install_title');
+define('plugin_name','Pluginname');
+define('plugin_info','Plugin information');
+define('plugin_myversion','Version number');
+define('plugin_priority','Priority');
+define('plugin_priority_5','5');
+define('plugin_priority_4','4');
+define('plugin_priority_3','3');
+define('plugin_priority_2','2');
+define('plugin_priority_1','1');
+define('plugin_enabled','Enabled');
+define('plugin_protected','Protected plugin');
+
+define('discount_www_deactivate','Deactivate this Discount for the webshop?');
+define('discount_pos_deactivate','Deactivate this Discount for the Points of Sale?');
+define('discount_www_activate','Activate this Discount for the webshop?');
+define('discount_pos_activate','Activate this Discount for the Points of Sale?');
+
+define('discount_www_activated','Active in the webshop');
+define('discount_pos_activated','Active in the Points of Sale');
+define('discount_pos_deactivated','Deactive in the Points of Sale');
+define('discount_www_deactivated','Deactive in the webshop');
+
+define('handling_www_deactivate','Deactivate this handling for the webshop?');
+define('handling_pos_deactivate','Deactivate this handling for the Points of Sale?');
+define('handling_www_activate','Activate this handling for the webshop?');
+define('handling_pos_activate','Activate this handling for the Points of Sale?');
+
+define('handling_www_activated','Active in the webshop');
+define('handling_pos_activated','Active in the Points of Sale');
+define('handling_pos_deactivated','Deactive in the Points of Sale');
+define('handling_www_deactivated','Deactive in the webshop');
+
+define('nextbutton','Next');
+
 ?>

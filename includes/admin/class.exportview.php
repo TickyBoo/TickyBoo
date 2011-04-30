@@ -174,7 +174,7 @@ class ExportView extends AdminView {
                 order by event_date,event_time limit 1";
       if ($row = ShopDB::query_one_row($query, false) and !empty($row[0])){
         list($year, $month) = explode('-', $row[0]);
-        $start_date = "$year-$month-1";
+        $start_date = "$year-$month-01";
         $end_date = "$year-$month-31";
       }else{
         $start_date = date("Y-m-01");
@@ -197,17 +197,49 @@ class ExportView extends AdminView {
   function Showurlplacemap($events){
     $row = shopdb::query_one_row("select pmp_id from `PlaceMapPart` where pmp_event_id={$events['event_id']}");
     if ($row) {
-      return "<a href='?action=view_pmp&event_id={$events['event_id']}&pmp_id={$row['pmp_id']}' ><img src='{$this->img_pub[$events['event_status']]}'></a>";
+      return "<a target='info_placemap' href='?action=view_pmp&event_id={$events['event_id']}&pmp_id={$row['pmp_id']}' ><img src='{$this->img_pub[$events['event_status']]}'></a>";
     }
     return "<img style='' src='{$this->img_pub[$events['event_status']]}'>";
   }
 
   function showplacemap($event_id){
+    global $_SHOP;
+
     require_once('shop_plugins'.DS.'function.placemap.php');
     $places = placeMapDraw(array('category_pmp_id'=>$_GET['pmp_id']), false);
     echo "<div style='overflow: auto; height: 350px; width:{$this->width}px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
             {$places}
           </div>";
+/*
+    echo "<br>
+            <a id='admin_list' class='admin-button ui-state-default admin-button-icon-left ui-corner-all link' href='javascript:history.back();' onclick='javascript:history.back();' title='List' alt='List'>
+              	<span class='ui-icon' style='background-image:url(\"{$_SHOP->images_url}arrow_left.png\"); background-position:center center; margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='List' ></span>List
+            </a>&nbsp;";
+    */
+    echo $this->pmpnamesList($places->pm_id, $_GET['pmp_id'] );
   }
+  function pmpnamesList ($pm_id, $pmp_id = 0, $view_only = false) {
+    if (!$pmps = PlaceMapPart::loadNames($pm_id) or count($pmps) < 2) {
+      return;
+    }
+
+    if ($view_only) {
+      $action = "view_only_pmp";
+    } else {
+      $action = "view_pmp";
+    }
+
+    //        echo"<br><br><center>";
+    foreach($pmps as $pmp) {
+      if ($pmp_id != $pmp->pmp_id) {
+        echo " ".$this->show_button("{$_SERVER['PHP_SELF']}?action={$action}&pmp_id={$pmp->pmp_id}",$pmp->pmp_name,1);
+      } else {
+        echo " ".$this->show_button("{$_SERVER['PHP_SELF']}?action={$action}&pmp_id={$pmp->pmp_id}",$pmp->pmp_name,1,
+            array('disable'=>true));
+      }
+    }
+    //        echo"</center>";
+  }
+
 }
 ?>

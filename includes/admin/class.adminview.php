@@ -739,7 +739,7 @@ class AdminView extends AUIComponent {
     function print_color ($name, &$data, &$err) {
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."'>" . con($name) . "</td>
         <td class='admin_value'>";
-        $act = is($data[$name],'#000000');
+          $act = is($data[$name],'#FFFFFF');
         echo "<input type='hidden' id='{$name}_text' name='$name' value='$act'>\n
       		<div id='colorSelector'><div style='background-color: $act'></div></div>";
        echo "<script>$('#colorSelector').ColorPicker({

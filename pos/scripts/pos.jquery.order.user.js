@@ -1,8 +1,8 @@
 var loadUser = function(mycolNames){
 	$('#search_user').hide();
 
-	$('#user_data').show();
-	
+	$('#user_data').hide();
+
 	$('#users_table').jqGrid({
 		url:'ajax.php?x=users',
 		datatype: 'json',
@@ -22,7 +22,7 @@ var loadUser = function(mycolNames){
 		footerrow : false,
 		viewrecords: false
     });
-	
+
 	$('#user_info_none').click(function(){
     	$("#user_data :input").each(function() {
         	$(this).val('');
@@ -31,7 +31,7 @@ var loadUser = function(mycolNames){
     	$('#user_data').hide();
       $('#user_id').val(-1);
     });
-	
+
 	$('#user_info_search').click(function(){
     	$('#search_user').show();
     	$('#user_data').show();
@@ -40,13 +40,13 @@ var loadUser = function(mycolNames){
             if(e.which == 13){
                 $('#search_user').click();
              }});
-    	
+
 	    if ($('#user_id').val() <=0) {
 	    	$('#user_id').val(-2);
      	}
-	    
+
     });
-	
+
 	$('#user_info_new').click(function(){
     	$('#search_user').hide();
     	$('#user_data').show();
@@ -65,13 +65,13 @@ var loadUser = function(mycolNames){
         	$('#user_info_search').click();
       	}
     });
-    
+
 	$('form#pos-user-form').unbind('keypress');
 	$('form#pos-user-form').bind('keypress',function(e){
         if(e.which == 13){
             $('#pos-user-form').submit();
          }});
-    
+
 	$("#search-dialog").dialog({
 		bgiframe: false,
 		autoOpen: false,

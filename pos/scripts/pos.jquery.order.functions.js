@@ -145,16 +145,6 @@ var bindSeatChart = function(){
    $("#show-seats button").click(function(){
       $("#seat-chart").dialog('open');
    });
-   $("#seat-chart > input").click(function(){
-      if($(this).attr('checked') == "checked"){
-         seatCount++;
-      }else{
-         if(seatCount>0){
-            seatCount--;
-         }
-      }
-      $("#show-seats input").val(seatCount);
-   });
 }
 var unBindSeatChart = function(){
    //$("#seat-chart").dialog('destroy');

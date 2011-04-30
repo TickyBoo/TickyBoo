@@ -32,10 +32,11 @@
  * clear to you.
  *}
 {assign var='order_id' value=$smarty.request.order_id}
-
-{order->order_list curr_order_id="$order_id $cur_order_dir" first=0 length=1 not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent order=$orderby}
+{if !$order_search}
+  {order->order_list curr_order_id="$order_id $cur_order_dir" first=0 length=1 not_hand_payment=$not_hand_payment hand_shipment=$hand_shipment place=$place status=$status not_status=$not_status not_sent=$not_sent order=$orderby order_search=$order_search}
   {assign var='next_order_id' value=$shop_order.order_id}
 {/order->order_list}
+{/if}
 <br />
   <table width='100%' border='0'>
     {order->order_list order_id=$order_id handling=true}
@@ -329,8 +330,9 @@
             <td width='33%' align="left"><a href="view.php">{!pos_goback!}</a></td>
             <td width='34%' align="center"> &nbsp;</td>
             <td width='33%' align="right">
-
-				{if $not_status eq "payed"}
+              {if $order_search}
+                &nbsp;
+      				{elseif $not_status eq "payed"}
               		<a href="view.php?order_id={$next_order_id}">{!pos_nextunpaid!}</a>
   				{elseif $not_status eq "send"}
   					<a href="view.php?order_id={$next_order_id}">{!pos_nextunsent!}</a>

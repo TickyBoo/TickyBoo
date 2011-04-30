@@ -20,7 +20,7 @@ class Admins extends Model {
     if ($row = ShopDB::query_one_row($query)){
       $adm = new Admins(false);
       $adm->_fill($row);
-      if ($row['admin_user_id'] ) {
+      if (strpos($row['admin_status'], 'pos') ===0 && $row['admin_user_id'] ) {
         $query = "select *
                   from User
                   where user_id = "._esc($row['admin_user_id']);
@@ -53,7 +53,7 @@ class Admins extends Model {
       }
     }
 
-    if (!array_key_exists($data['admin_status'], $this->allowedRoles() )) {
+    if (!in_array($data['admin_status'], $this->allowedRoles() )) {
       addError('admin_status','role_not_allowed');
     }
     if (strpos($data['admin_status'], 'pos') ===0 && empty($data['admin_user_id'])) {
@@ -99,7 +99,23 @@ class Admins extends Model {
       }
 
     }
-
+    $query = "SELECT count(*)
+              FROM `adminlink`
+              Where adminlink_admin_id="._esc($this->admin_id);
+    //var_dump($res = ShopDB::query_one_row($query, false));
+    if (!($res = ShopDB::query_one_row($query, false)) || (int)$res[0]) {
+      return addWarning('in_use');
+    }
+    if(ShopDB::begin('delete adminuser')){
+      if (parent::delete()) {
+        $query ="delete from adminlink where adminlink_admin_id ="._esc($this->admin_id);
+        if (!ShopDB::query($query)) {
+          return _abort('error_deleting_adminlinks');
+        }
+      } else
+        return _abort('error_deleting_adminuser');
+      ShopDB::commit('deleted adminuser');
+    }
   }
 
   private function isLastAdmin(){
@@ -127,14 +143,15 @@ class Admins extends Model {
     return false;
   }
   public function allowedRoles(){
-   return  array('admin' => 'admin',
-                 'pos'=>'pos',
-                 'control'=>'control_user_title');
+    if (plugin::call('%isACL')) {
+      return plugin::call('_getRolesACL', $this->admin_status, $Resource );
+    } else
+     return  array('admin', 'pos', 'control');
 }
 
 public function isAllowed($Resource, $login = false ) {
     global $_SHOP;
-    if ($login && $this->admin_user_id) {
+    if ($login && strpos($row['admin_status'], 'pos') ===0) {
       if ($this->user_prefs_strict) {
         $check     = is($_COOKIE['use'.$this->admin_user_id],false);
         $hash = hash('ripemd160',$this->user_prefs_strict.$_SHOP->secure_id.$this->admin_user_id.$this->user_lastname);
@@ -160,8 +177,8 @@ public function isAllowed($Resource, $login = false ) {
 
     public function getEventLinks(){
       global $_SHOP;
-      if (isset($this->control_event_ids)) {
-        $_SHOP->event_ids = $this->control_event_ids;
+      if (isset($this->control_event_ids) && !empty($this->control_event_ids)) {
+        $_SHOP->event_ids = $this->control_event_ids.', 9999999';
       }elseif (!isset($_SHOP->event_ids)) {
         $query="select adminlink_event_id from adminlink
                 where adminlink_event_id is not null ";
@@ -184,9 +201,9 @@ public function isAllowed($Resource, $login = false ) {
 
   public function getEventRestriction($prefix='', $sefix='AND') {
     $result ='';
- //   if (($this->admin_status=='organizer' || $this->admin_status=='posman') && ($list=$this->getEventLinks())) {
- //     $result = "{$sefix} (field({$prefix}event_id, {$list}) or (select  count(*) from `adminlink` where adminlink_event_id = {$prefix}event_id) = 0)";
- //   }
+//    if (($this->admin_status=='organizer' || strpos($this->admin_status, 'pos') ===0) && ($list=$this->getEventLinks())) {
+//      $result = "{$sefix} (field({$prefix}event_id, {$list}) or (select  count(*) from `adminlink` where adminlink_event_id = {$prefix}event_id) = 0)";
+//    }
     return $result;
   }
 

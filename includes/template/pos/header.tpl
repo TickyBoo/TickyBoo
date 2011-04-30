@@ -36,17 +36,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="shortcut icon" type="images/png" href="{$_SHOP_images}favicon.png" />
 		<title>FusionTicket: Box Office / Sale Point </title>
-{*    <script type="text/javascript" language="javascript">{literal}
-    if (console==undefined){
-      var console = Object;
-      console.log = function(){};
-    }
-    {/literal} </script> *}
     {minify type='css'  base=''}
     {minify type='css'  base='css' files='formatting.css,ui.jqgrid.css'}
 
     {minify type='js' base='scripts/jquery'}
-    {minify type='js' base='scripts/jquery' files='jquery.checkboxselect.js,i18n/grid.locale-en.js,jquery.jqGrid.min.js,DD_roundies.js'}
+    {minify type='js' base='scripts/jquery' files='i18n/grid.locale-en.js,jquery.jqGrid.min.js,DD_roundies.js'}
     {minify type='js' base='pos/scripts' files='pos.jquery.style.js,pos.jquery.ajax.js,pos.jquery.order.functions.js,pos.jquery.order.js,pos.jquery.order.user.js,pos.jq.forms.js,pos.jq.current.js,pos.jq.current.functions.js'}
 
 		<script type="text/javascript">
