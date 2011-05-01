@@ -25,13 +25,14 @@
             datatype: 'JSON',
             mtype: 'POST',
             postData: {"load":"grid","lang":lang},
-            colNames: ['Define','Default language','Editedable language'],
+            colNames: ['Define','Default language','Editable language'],
             colModel :[
-                {name:'key',   index:'key',   width:200, sortable:false, resizable: false,
+                {name:'key',   index:'key',   width:135, sortable:false, resizable: false,
                  editable:true, editoptions: {readonly:"true"}  },
-                {name:'lang1', index:'lang1', width:470, sortable:false, resizable: false,
+                {name:'lang1', index:'lang1', width:425, sortable:false, resizable: false,
                  editable:true, edittype: "textarea", editoptions: {rows:"4",cols:"70",readonly:"true"}  },
-                {name:'lang2', index:'lang2', width:470, sortable:false, resizable: false,
+                {name:'lang2', index:'lang2', width:425
+                , sortable:false, resizable: false,
                  editable:true, edittype: "textarea", editoptions: {rows:"4",cols:"70"} }],
             altRows: true,
             height: 400,
@@ -113,12 +114,12 @@ function checksave(result) {
 	</style>
  	</head>
 	<body>
-  	<div id="header"  style="width:1155px">
+  	<div id="header"  style="width:1002px">
      		<img src='http://localhost/beta6.4/images/logo.png'  border='0'/>
   			<h2>Language translater</h2>
   	</div>
 
-	<div id="toolbarz" class="ui-widget-header ui-corner-all"  style="width:1155px">
+	<div id="toolbarz" class="ui-widget-header ui-corner-all"  style="width:1000px">
   Select the languagefile: <select id='combo'>
 <?Php
     $content = array();
@@ -140,7 +141,7 @@ function checksave(result) {
 
   <table id="table1"></table>
   <div id="prowed2"></div> <br>
-  <div align='right' id="toolbarz" class="ui-widget-header ui-corner-all" style="width:1155px">
+  <div align='right' id="toolbarz" class="ui-widget-header ui-corner-all" style="width:1000px">
   <input type="BUTTON" id="sved4" value="Edit row" />
   </div>
 

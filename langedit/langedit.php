@@ -32,6 +32,12 @@
  * clear to you.
  */
   session_name('langedit');
+if (!defined('DS')) {
+/**
+ * shortcut for / or \ (depending on OS)
+ */
+  define('DS', DIRECTORY_SEPARATOR);
+}
   error_reporting(0);
   session_start();
   if(function_exists("date_default_timezone_set")) {
@@ -53,12 +59,16 @@
       return array_combine( $m[1],$m[2]);
   }
 
+  $lang = !empty($_POST['lang'])?$_POST['lang']: $_SESSION['lang'];
+  $editfile = dirname(__FILE__).DS.'..'.DS.'includes'.DS.'lang'.DS."site_{$lang}.inc";
+  $deffile = dirname(__FILE__).DS.'..'.DS.'includes'.DS.'lang'.DS."site_en.inc";
+
   if ($_POST['load'] || $_POST['lang']) {
     If (!isset($_SESSION['diff1']) or $_SESSION['lang']<>$_POST['lang'] ) {
-      $string1 = file_get_contents('../includes/lang/site_en.inc');
+      $string1 = file_get_contents($deffile);
       $diff1 = findinside($string1);
-      if (file_exists( dirname(__FILE__)."/../includes/lang/site_{$_POST['lang']}.inc")) {
-        $string2 = file_get_contents("../includes/lang/site_{$_POST['lang']}.inc");
+      if (file_exists( $editfile)) {
+        $string2 = file_get_contents($editfile);
         $diff2 = findinside($string2);
       } else {
           $diff2 = array();
@@ -71,10 +81,8 @@
       }
     }
   }
-
   $diff1= $_SESSION['diff1'];
   $diff2= $_SESSION['diff2'];
-  $lang = $_SESSION['lang'];
 
   if ($_POST['load']=='new_language') {
     $lang = strtolower($_POST['lang']);
@@ -83,18 +91,18 @@
 
     } elseif (!is_string($lang)) {
       die('Language code needs to be 2 characters');
-    } elseif (file_exists("../includes/lang/site_{$lang}.inc")){
+    } elseif (file_exists()){
       die('Language code already exist.');
     } else {
       $string2 = "<"."?php\n";
       $string2 .= "// defines added at: ".date('c')."\n\n";
       $string2 .= "?>";
-      file_put_contents("../includes/lang/site_{$lang}.inc",$string2, FILE_TEXT );
+      file_put_contents($editfile,$string2, FILE_TEXT );
     }
     die("done");
   } elseif ($_POST['oper']=='edit') {
-      if (!is_writable("../includes/lang/site_{$lang}.inc")) {
-        die('This file is not writable. : '."../includes/lang/site_{$lang}.inc");
+      if (!is_writable($editfile)) {
+        die('This file is not writable. : '.$editfile);
       } else {
         $text =  $_POST['lang2'];
         $_SESSION['diff2'][$_POST['id']] = $_POST['lang2'];
@@ -105,18 +113,18 @@
           $string2 .= "define('$key', '".addslashes($value)."');\n";
         }
         $string2 .= "?>";
-        file_put_contents("../includes/lang/site_{$lang}.inc",$string2, FILE_TEXT );
+        file_put_contents($editfile,$string2, FILE_TEXT );
       }
      die("done");
 
   }elseif ($_POST['load']=='update_2') {
      if (count($diff1)===0) {
        die('noting to update');
-     } elseif (!is_writable("../includes/lang/site_{$lang}.inc")) {
+     } elseif (!is_writable($editfile)) {
        die('This file is not writable.');
      } else {
        $string2 = "<"."?php\n";
-       $string2 .= "// defines added at: ".date('c')."\n";
+       $string2 .= "'.DS.'/ defines added at: ".date('c')."\n";
        foreach ($diff2 as $key =>$value) {
          $string2 .= "define('$key', '".addslashes($value)."');\n";
        }
@@ -126,7 +134,7 @@
        }
        $string2 .= "?>";
        $_SESSION['diff2'] = array_merge($diff2, $diff );
-       file_put_contents("../includes/lang/site_{$lang}.inc",$string2, FILE_TEXT );
+       file_put_contents($editfile,$string2, FILE_TEXT );
      }
      die("done");
   } elseif ($_POST['load']=='grid')  {
@@ -152,20 +160,4 @@
     echo json_encode($responce);
     exit;
   };
-
-/*
-  onSelectRow: function(rowid,status) {
-  //   alert('click');
-  if(rowid && rowid!==lastsel){
-  jQuery("#sved4").attr("disabled",false);
-  mygrid1.jqGrid('restoreRow',lastsel);
-  mygrid1.jqGrid('editRow',rowid, true, null, null, null, null, null, null, function(){lastsel=-1;});
-  lastsel=rowid;
-  }
-  }
-
-  ,
-  {name:'save', index:'', width:20, sortable:false, resizable: false,
-  editable:true, edittype: "custom", editoptions: {custom_element: myelem}
-*/
 ?>
