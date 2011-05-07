@@ -36,12 +36,6 @@
 define('ft_check','admin');
 session_cache_limiter("must-revalidate");
 
-require_once("../includes/config/init_admin.php");
-
-if(is($_GET['action'],'')=='print' and is($_GET['order_id'],0) > 0){
-  Order::printOrder($_GET['order_id'],'','stream');
-  exit;
-}
 require_once('../includes/classes/class.router.php');
 router::draw('orders', 'admin/main');
 ?>

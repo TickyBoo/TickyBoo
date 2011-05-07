@@ -41,25 +41,6 @@ class TransportsView extends AdminView {
 	var $runtype ;
 	var $runobject;
 
-	function __construct($width=0){
-    parent::__construct($width);
-
-    If (isset($_REQUEST['run'])) {
-      preg_match("/^(.*)-(.*?\w+)/", $_REQUEST['run'], $matches);
-      $this->runtype = $matches[1];
-      $run=$matches[2];//
-      $file = INC.'admin'.DS.'transports'.DS."{$this->runtype}.{$run}.php";
-      if(file_exists($file)){
-	  		require_once($file);
-			  $runclass = $this->runtype.'_'.$run;
-		  	$this->runobject = new $runclass;
-		  } else {
-        addWarning($this->runtype.'_script_not_found');
-      }
-	  }//  else echo "b";
- }
-
-
 	function load($filetype) {
     global $_SHOP;
     $content = array();
@@ -118,11 +99,24 @@ class TransportsView extends AdminView {
 	}
 
   function execute (){
+    If (isset($_REQUEST['run'])) {
+      preg_match("/^(.*)-(.*?\w+)/", $_REQUEST['run'], $matches);
+      $this->runtype = $matches[1];
+      $run=$matches[2];//
+      $file = INC.'admin'.DS.'transports'.DS."{$this->runtype}.{$run}.php";
+      if(file_exists($file)){
+        require_once($file);
+        $runclass = $this->runtype.'_'.$run;
+
+        $this->runobject = new $runclass;
+      } else {
+        addWarning($this->runtype.'_script_not_found');
+      }
+    }
+
 		if($this->runobject){
 		  return $this->runobject->execute();
 		}
-    orphanCheck();
-    trace("End of export \n\n\r");
 		return FALSE;
   }
 

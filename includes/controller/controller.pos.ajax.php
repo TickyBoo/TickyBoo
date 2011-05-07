@@ -55,16 +55,17 @@ require_once(CLASSES."jsonwrapper.php"); // Call the real php encoder built into
     @date_default_timezone_set($_SHOP->timezone);
   }
 error_reporting(0);
-require_once ("controller.web.checkout.php");
+require_once ("controller.pos.checkout.php");
 
-class ctrlPosAjax extends ctrlWebCheckout {
+class ctrlPosAjax extends ctrlPosCheckout {
 	private $request = array();
 	private $json    = array();
 	private $action  = "";
 	private $actionName = "";
   private $ErrorsAsWarning = false;
 
-  public function draw($page, $action) {
+
+  public function drawContent($page, $action) {
 
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
   		$this->request    = $_REQUEST;
@@ -84,9 +85,7 @@ class ctrlPosAjax extends ctrlWebCheckout {
     	header("Status: 400");
     	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
     }
-
-    orphanCheck();
-    trace("End of ajax req \n");
+    $this->executed = true;
 	}
 
   public function callAction(){
@@ -177,12 +176,9 @@ class ctrlPosAjax extends ctrlWebCheckout {
 				and event_rep LIKE '%sub%'
 				AND event_status = 'pub'
 				AND event_free > 0
-				ORDER BY event_date,event_time
+				ORDER BY event_name, event_date,event_time, event_id
 				LIMIT 0,50";
-		if(!$query = ShopDB::query($sql)){
-		  $option = "<option value='{$evt['event_id']}'>".con('no_event_sets')."</option>";
-			$this->json['events'][] = array ('html'=>$option,'free_seats'=>0);
-		} else {
+		if($query = ShopDB::query($sql)){
 		//Load html and javascript in the json var.
 
 		//Break down cats and array up with additional details.
@@ -192,13 +188,13 @@ class ctrlPosAjax extends ctrlWebCheckout {
 
 			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date} - {$time}</option>";
 
-			$this->json['events'][strval($evt['event_id'])] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
+			$this->json['events'][] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
 		}
+    }
 		if (count($this->json['events'])==0) {
 		  $option = "<option value='{$evt['event_id']}'>".con('no_event_sets')."</option>";
 		  $this->json['events'][] = array ('html'=>$option,'free_seats'=>0);
         }
-    }
 		return true;
 	}
 

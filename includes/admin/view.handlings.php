@@ -44,13 +44,13 @@ class HandlingsView extends AdminView{
 		echo "<tr><td class='admin_list_title' colspan='4' align='left'>".con('handling_title')."</td>\n";
     echo "<td class='admin_list_title' colspan='2' align='right'>".$this->show_button("{$_SERVER['PHP_SELF']}?action=add","add",3)."</td>";
     echo "</tr>\n";
-    echo "<tr>";
-      echo "<td class='admin_list_item'>".con('payment')."</td>";
-      echo "<td class='admin_list_item'>".con('shipment')."</td>";
-      echo "<td class='admin_list_item'>".con('fees')."</td>";
-      echo "<td class='admin_list_item' align='center'>".con('handling_www','Web')."</td>";
-      echo "<td class='admin_list_item' align='center'>".con('handling_sp','POS')."</td>";
-      echo "<td class='admin_list_item'></td>";
+    echo "<tr  class='admin_list_header'>";
+      echo "<th>".con('payment')."</th>";
+      echo "<th>".con('shipment')."</th>";
+      echo "<th>".con('fees')."</th>";
+      echo "<th align='center'>".con('handling_www','Web')."</th>";
+      echo "<th align='center'>".con('handling_sp','POS')."</th>";
+      echo "<th>&nbsp;</th>";
     echo "</tr>\n";
 		if($hands=Handling::loadAll()){
 			foreach($hands as $hand){
@@ -75,7 +75,7 @@ class HandlingsView extends AdminView{
     					echo "+";
     				}
     				if($fixe > 0){
-    					echo valutdefault($fixe);
+    					echo valuta($fixe);
     				}
   				echo "</td>\n";
   				echo "<td  align='center' class='admin_list_item'>";
@@ -196,10 +196,10 @@ class HandlingsView extends AdminView{
 
     $extras = $hand->admin_form();
     if ( $extras) {
-      require_once('smarty/Smarty.class.php');
-      require_once('classes/smarty.gui.php');
+      require_once(CLASSES.'class.smarty.php');
+      require_once(CLASSES.'smarty.gui.php');
 
-      $smarty = new Smarty;
+      $smarty = new MySmarty;
   //    $smarty->plugins_dir = array("plugins", INC . "shop_plugins".DS);
       $smarty->plugins_dir  = array("plugins".DS, $_SHOP->includes_dir . "shop_plugins".DS);
 

@@ -169,6 +169,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
                             'NZD' => '&#36;',
                             'GBP' => '&pound;',
                             'JPY' => '&yen;');
+  $_SHOP->allowed_uploads = array('jpg', 'jpeg', 'png', 'gif', 'mp3' );
 
   require_once(INC.'config'.DS."init_config.php");
   require_once(INC.'install'.DS."install_version.php");
@@ -177,6 +178,38 @@ if (!defined('ft_check')) {die('System intrusion ');}
     define('CURRENT_VERSION','Unknown');
   }
   include_once('classes/basics.php');
+
+  //emulates magic_quotes_gpc off
+  if (get_magic_quotes_gpc()) {
+    function stripslashes_deep($value) {
+      if(is_array($value)) {
+        foreach($value as $k => $v) {
+          $return[$k] = stripslashes_deep($v);
+        }
+      } elseif(isset($value)) {
+        $return = stripslashes($value);
+      }
+      return $return;
+    }
+    $_POST    = array_map('stripslashes_deep', $_POST);
+    $_GET     = array_map('stripslashes_deep', $_GET);
+    $_COOKIE  = array_map('stripslashes_deep', $_COOKIE);
+    $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
+  }
+
+  $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
+  $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
+
+  if (isset($_SERVER['SCRIPT_URI'])) {
+
+    $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
+  }
+  if (isset($_SERVER['SCRIPT_URL'])) {
+    $_SERVER['SCRIPT_URL'] = clean($_SERVER['SCRIPT_URL'] ,'HTML');
+  }
+
+  if (!defined('PHP_SELF'))
+    define('PHP_SELF',$_SERVER['PHP_SELF']);
 
   //Construct $_SHOP
   $_SHOP->Messages = array();
@@ -200,5 +233,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
     echo "<a href='{$_SHOP->root_base}inst/index.php'>Upgrade me now!</a>";
     exit;
   }
-
+  if (!isset($_SHOP->software_updater_enabled)){
+    $_SHOP->software_updater_enabled = false;
+  }
 ?>

@@ -49,6 +49,7 @@ echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 
 require_once (CLASSES.'class.smarty.php');
+  require_once (CLASSES.'class.controller.php');
 
 
 // remove the # below under linux to get a list of locale tags.
@@ -57,69 +58,37 @@ require_once (CLASSES.'class.smarty.php');
 
 
 
-class ctrlWebShop  {
+class ctrlWebShop extends controller  {
   protected $smarty ;
-  protected $HelperList = array();
-  protected $context = '';
+  public    $session_name = "ShopSession";
 
-  public function __construct($context='web') {
+  public function __construct($context='web', $page= '', $action) {
+    global $_SHOP;
+
+    parent::__construct($context, $page, $action);
+
     $this->smarty = new MySmarty($this);
-    $this->context = $context;
     $this->Loadplugins(array('MyCart','User','Order','Update'));
     if (strtolower($context) == 'pos') {
       $this->Loadplugins(array('POS'));
     }
-    require_once (INC. 'config'.DS.'init.php' );
+  }
+
+  function init(){
+    parent::init();
     $this->initPlugins();
-    $this->smarty->init($context);
-    plugin::call('*Pageload', $this);
+    $this->smarty->init($this->context);
   }
 
-  public function draw($fond, $action, $isAjax= false) {
-    $this->init();
-    $this->assign('action',$action);
-    $this->assign('isAjax',$isAjax);
-    $this->smarty->display(is($fond, 'shop') . '.tpl');
-    orphanCheck();
-    trace("End of shop \n\n\r");
+  public function drawContent() {
+    $this->assign('action',$this->action);
+//    $this->assign('isAjax',$isAjax);
+    $this->smarty->display(is($this->current_page, 'shop') . '.tpl');
   }
 
-  protected function checkSSL(){
-    global $_SHOP;
-//    print_r($_SERVER);
-    if ($_SHOP->secure_site) {
-      $url = $_SHOP->root_secured.basename($_SERVER['SCRIPT_NAME']);
-      if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-        header("Location: $url");
-        exit;
-      }
-    } elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-      addWarning('This_page_is_not_secure');
-    }
-    /* */
-  }
 
   public function assign($tpl_var, $value = null) {
     return $this->smarty->assign($tpl_var, $value);
-  }
-
-  public function Loadplugins($pluginList) {
-    foreach ($pluginList as $plugin) {
-      $filename = 'smarty.'.strtolower($plugin).'.php';
-      require_once (CLASSES.$filename);
-      $this->HelperList[]=$plugin;
-    }
-  }
-
-  protected function initPlugins() {
-    foreach ($this->HelperList as $plugin) {
-      $classname = $plugin.'_smarty';
-      $plugin = "__{$plugin}";
-      $this->$plugin  = new $classname($this->smarty);
-    }
-  }
-  public function init() {
-
   }
 }
 

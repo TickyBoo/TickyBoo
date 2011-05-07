@@ -48,6 +48,11 @@ require_once("admin/class.adminview.php");
 require_once("classes/redundantdatachecker.php");
 
 class UtilitiesView extends AdminView{
+  var $tabitems = array( 0=> "orphan_tab|admin",
+                         1=> "garbage_tab|admin",
+                         2=> "emaillog_tab|admin",
+                         3=> "backup_tab|admin",
+                         4=> "plugins_tab|admin");
 
 	function garbage_list (){
 
@@ -413,14 +418,7 @@ HTML;
 
 	function draw () {
 		global $_SHOP;
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_UTILS_tab'] = (int)$_REQUEST['tab'];
-    }
-
-    $menu = array( con("orphan_tab")=>0, con("garbage_tab")=>1,
-                   con("emaillog_tab")=>2,  con("backup_tab")=>3,
-                   con("plugins_tab")=>4);
-    echo $this->PrintTabMenu($menu, $_SESSION['_UTILS_tab'], "left");
+	  if (!$this->drawtabs('_UTILS_tab')) { return; }
 
     if(isset($_GET['fix'])){
       Orphans::dofix($_GET['fix']);

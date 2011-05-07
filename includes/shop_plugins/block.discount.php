@@ -79,7 +79,7 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
 
         $discount = shopDB::fetch_assoc($res);
     } else {
-        $res = array_pop($smarty->_SHOP_db_res);
+        $res = $smarty->popBlockData();
         $discount = shopDB::fetch_assoc($res);
     }
     if ($params['all']) {
@@ -108,7 +108,7 @@ function smarty_block_discount ($params, $content, $smarty, &$repeat)
         if ($discount) {
             calcprice($discount, $params);
             $smarty->assign("shop_discount", $discount);
-            $smarty->_SHOP_db_res[] = $res;
+            $smarty->pushBlockData($res);
         }
     }
     return $content;

@@ -35,17 +35,6 @@
 define('ft_check','control');
 session_cache_limiter("must-revalidate");
 
-require_once("../includes/config/init_control.php");
-require_once ("control/ControlPage.php");
-require_once ("control/OrderView.php");
-
-//print cart update
-$body=new OrderView();
-
-// width=200 for menu ...Change it to your preferd width;
-// 700 total table
-$page=new ControlPage();
-$page->setTitle("Ticket Taker");
-$page->set("body",$body);
-$page->draw();
+  require_once('includes/classes/class.router.php');
+  router::draw('orders', 'control/main');
 ?>

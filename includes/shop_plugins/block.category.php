@@ -66,7 +66,7 @@ function smarty_block_category ($params, $content, $smarty, &$repeat) {
     $cat=shopDB::fetch_assoc($res);
 
   }else{
-    $res=array_pop($smarty->_SHOP_db_res);
+    $res=$smarty->popBlockData();
     $cat=shopDB::fetch_assoc($res);
   }
 
@@ -74,8 +74,7 @@ function smarty_block_category ($params, $content, $smarty, &$repeat) {
 
   if($cat){
     $smarty->assign("shop_category",$cat);
-
-    $smarty->_SHOP_db_res[]=$res;
+    $smarty->pushBlockData($res);
   }
 
   return $content;

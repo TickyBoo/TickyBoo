@@ -80,7 +80,7 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
     $pay=shopDB::fetch_assoc($res);
 
   }else{
-    $res=array_pop($smarty->_SHOP_db_res);
+    $res=$smarty->popBlockData();
     $pay=shopDB::fetch_assoc($res);
   }
 
@@ -98,7 +98,7 @@ function smarty_block_handling ($params, $content, $smarty, &$repeat) {
       $pay['fee'] = calculate_fee ($pay, $params['total']);
 	    $smarty->assign("shop_handling",$pay);
 
-	    $smarty->_SHOP_db_res[]=$res;
+	    $smarty->pushBlockData($res);
 	  }
 
 

@@ -37,6 +37,8 @@ require_once("admin/class.adminview.php");
 
 class OrdersView extends AdminView{
   var $page_length=15;
+  var $tabitems = array(0=> "orders_handlings_tab|admin",
+                        1=> "orders_event_tab|admin");
 
   function tableByHandling (){
     $query="SELECT order_handling_id id, order_shipment_status, order_payment_status, order_status, count( * ) as count,
@@ -71,7 +73,7 @@ class OrdersView extends AdminView{
               <a href='{$_SERVER['PHP_SELF']}?action=list_all&order_handling_id=$hand' class='UITabMenuNavOff'>
                 ".con($obj['handling_payment'])." / ".con($obj['handling_shipment'])."
               </a> (<a href='view_handling.php?action=edit&handling_id={$hand}' class='UITabMenuNavOff'>
-                 #{$obj['handling_id']} {$obj['handling_sale_mode']}
+                 #{$obj['handling_id']} {$this->showSaleMode($obj['handling_sale_mode'])}
               </a>)
              </td>\n";
       echo " <td align=right width=80>".con('total').' : '.$obj['count'].' </td></tr>' ;
@@ -503,21 +505,20 @@ class OrdersView extends AdminView{
     return true;
   }
 
+  function execute(){
+    if(is($_GET['action'],'')=='print' and is($_GET['order_id'],0) > 0){
+      Order::printOrder($_GET['order_id'],'','stream');
+      return true;
+    }
+  }
+
   function draw($noTab=false){
     //echo "<pre>";
  //   print_r($_REQUEST);
     //print_r($_SESSION);
     //echo "</pre>";
     if(!$noTab){
-      if(isset($_REQUEST['tab'])) {
-        $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
-      }
-      if(!isset( $_SESSION['_overview_tab'])) {
-        $_SESSION['_overview_tab'] = 2;
-      }
-      $menu = array( con("orders_handlings_tab")=>"0",
-                     con("orders_event_tab")=>'1');
-      echo $this->PrintTabMenu($menu, $_SESSION['_overview_tab'], "left");
+      if (!$this->drawtabs('_overview_tab')) { return; }
     }
 
     if(!isset($_REQUEST['order_id'])){
@@ -607,9 +608,9 @@ class OrdersView extends AdminView{
   		Order::purgeReissued((int)$_GET['order_handling_id']);
     }
     if (!$noTab) {
-    if($_SESSION['_overview_tab']==1) {
-       $this->tableByEvent();
-    } else {
+      if($_SESSION['_overview_tab']==1) {
+         $this->tableByEvent();
+      } else {
        $this->tableByHandling();
       }
     }
@@ -683,9 +684,8 @@ class OrdersView extends AdminView{
   }
 
   function extramenus(&$menu) {
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_overview_tab'] = (int)$_REQUEST['tab'];
-    }
+    if (!$this->drawtabs('_overview_tab', false)) { return; }
+
     if ( is($_SESSION['_overview_tab'],2)==2) {
       return false;
     }
@@ -800,7 +800,14 @@ class OrdersView extends AdminView{
       $file = $_SHOP->trace_dir.'order_'.$order_id.'.'.date('Y-m-d') . '.log';
       file_put_contents($file, $log);
   }
+  function showSaleMode($handling_sale_mode) {
+    $modes = explode(',',$handling_sale_mode);
 
+    foreach($modes as &$mode) {
+      $mode = con('handling_'.$mode);
+    }
+    return con('for_handling_salemode').implode(', ',$modes);
 
+  }
 }
 ?>

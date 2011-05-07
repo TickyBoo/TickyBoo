@@ -34,10 +34,11 @@
 
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("classes/AUIComponent.php");
+require_once("classes/class.component.php");
 
-class AdminView extends AUIComponent {
+class AdminView extends Component {
   static $labelwidth = '40%';
+  var $tabitems = null;
   var $page_width = 800;
   var $title = "Administration";
   var $ShowMenu = true;
@@ -45,9 +46,28 @@ class AdminView extends AUIComponent {
   private $jScript = "";
 
   function __construct ($width=0, $dummy=null){
-     if ($width) {
-       $this->width = $width;
-     }
+    global $_SHOP;
+    parent::__construct();
+    if ($width) {
+      $this->width = $width;
+    }
+    if (is_array($this->tabitems)) {
+      $this->tabitems = plugin::call('_ExtendMenuItems', $this->tabitems, get_class($this));
+      $this->tabitems = $_SHOP->controller->addACLs($this->tabitems, true);
+    }
+  }
+
+  function ActionACLs($ACLs){
+    global $_SHOP;
+    if (is_array($ACLs)) {
+      $ACLs = plugin::call('_ExtendViewActions', $ACLs, get_class($this));
+      $_SHOP->controller->addACLs($ACLs);
+    }
+  }
+
+  function isAllowed($task, $isAction=false){
+    global $_SHOP;
+    return $_SHOP->controller->isAllowed($task);
   }
 
   protected function addJQuery($script){
@@ -57,21 +77,26 @@ class AdminView extends AUIComponent {
   function extramenus(&$menu){}
   function execute(){return false;}
 
-  function drawall() {
-    // width=200 for menu ...Change it to your preferd width;
-    // 700 total table
-    $page = new AdminPage($this->page_width, $this->title);
-    if ($this->ShowMenu) {
-      require_once ("admin/class.adminmenu.php");
-      $menu[] = new MenuAdmin();
-      $this->extramenus($menu);
-      $page->setmenu($menu);
-    }
-    $page->setbody($this);
-    $page->draw();
+  function draw(){ }
 
-    orphanCheck();
-    trace("End of page. \n\n\r");
+  function drawtabs($session, $show=true, $get='tab'){
+    GLOBAL $_SHOP;
+
+    if(isset($_REQUEST[$get])) {
+      $_SESSION[$session] = (int)$_REQUEST[$get];
+    } elseif(!isset($_SESSION[$session])) {
+      $_SESSION[$session] = (int)reset($this->tabitems);
+    }
+    if (!in_array((int)$_SESSION[$session], array_values($this->tabitems))) {
+      $_SHOP->controller->showForbidden(get_class($this));
+      return false;
+    }
+
+    if ($show) {
+      $_SHOP->trace_subject .= "[tab:{$_SESSION[$session]}]";
+      echo $this->PrintTabMenu($this->tabitems, $_SESSION[$session], "left");
+    }
+    return true;
   }
 
   function list_head ($name, $colspan=2, $width = 0) {
@@ -969,7 +994,7 @@ class AdminView extends AUIComponent {
       $menuStyle=($v==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
       $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->images_url."left_arc.gif\"></td>\n";
       $str.= "<td nowrap=\"nowrap\" height=\"16\" align=\"center\" valign=\"middle\" class=\"$menuStyle\">\n";
-      $str.= "      <a class='$menuStyle' href='?{$param}={$v}'>".$k."</a>";
+      $str.= "      <a class='$menuStyle' href='?{$param}={$v}'>".con($k)."</a>";
       $str.= "</td>\n";
       $str.= "<td valign=\"top\" class=\"$menuStyle\"><img src=\"".$_SHOP->images_url."right_arc.gif\"></td>\n";
       $str.= "<td width=\"1pt\">&nbsp;</td>\n";

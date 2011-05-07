@@ -21,6 +21,7 @@ var clearOrder = function(){
 }
 
 var eventIdChange = function(){
+  var event = $("#event-id option:selected");
   var eventId = $("#event-id").val();
   if(eventId > 0){
     ajaxQManager.add({
@@ -42,7 +43,7 @@ var eventIdChange = function(){
 
       }
     });
-    $("#ft-event-free-seats").html(eventData.events[eventId].free_seats);
+    $("#ft-event-free-seats").html(event.data('seats'));
   }else{
     $("#cat-select").html("<option value='0'></option>");
     $("#discount-name").hide();
@@ -112,11 +113,9 @@ var updateEvents = function(){
       success:function(data, status){
          printMessages(data.messages);
          if(data.status){
-            eventData = data//set event data
-            //Fill Categories
-            $("#event-id").hide().html(" ");
-            $.each(eventData.events,function(){
-               $("#event-id").append(this.html);
+            $("#event-id").hide().empty();
+            $.each(data.events,function(){
+               $("#event-id").append($(this.html).data('seats', this.free_seats));
             });
             $("#event-id").show().change();
          }

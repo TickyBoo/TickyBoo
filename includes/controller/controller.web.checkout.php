@@ -41,15 +41,16 @@ require_once ("controller.web.shop.php");
 class ctrlWebCheckout extends ctrlWebShop {
   private $secureType = false;
   private $secureCode = '';
+  protected $useSSL = true;
 
-  public function __construct($context='web') {
-    parent::__construct($context);
-    $this->checkSSL();
+  public function __construct($context='web', $page, $action) {
+    parent::__construct($context, $page, $action);
   }
 
-  public function draw($page, $action, $isAjax= false) {
+  public function drawContent($action) {
     GLOBAL $_SHOP;
-    if (!$action) {$action = 'index';}
+    $action = is($this->action, 'index');
+
     ShopDB::begin('Running the Checkout pages');
     $this->getSecurecode();
     if ($this->secureType) {
@@ -82,8 +83,6 @@ class ctrlWebCheckout extends ctrlWebShop {
     if (ShopDB::isTxn()) { //Commit allready does this check!
       ShopDB::commit('Checkout page rendered.'); //Never Committs!
     }
-    orphanCheck();
-    trace("End of shop \n\n\r");
   }
 
   Function actionLogin (){

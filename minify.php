@@ -33,6 +33,6 @@
  */
 define('ft_check','shop');
 require_once ( 'includes/config/defines.php' );
-require_once ( INC.'config'.DS.'init_web.php' );
+require_once ( INC.'config'.DS.'init_common.php' );
 require_once LIBS.'min'.DS.'index.php';
 ?>

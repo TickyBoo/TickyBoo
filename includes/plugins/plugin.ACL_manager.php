@@ -16,7 +16,7 @@ class plugin_ACL_manager extends baseplugin {
 	/**
 	 * version - Your plugin's version string. Required value.
 	 */
-	public $plugin_myversion		= '0.0.1';
+	public $plugin_myversion		= '0.0.4';
 	/**
 	 * requires - An array of key/value pairs of basename/version plugin dependencies.
 	 * Prefixing a version with '<' will allow your plugin to specify a maximum version (non-inclusive) for a dependency.
@@ -58,11 +58,12 @@ class plugin_ACL_manager extends baseplugin {
   function doLoadACL() {
  // echo "[ACL_load]";
     if ($this->acl_loaded) return true;
-    $this->acl->add(new Awf_Acl_Role('pos'))
+    $this->acl->add(new Awf_Acl_Role('control'))
+              ->add(new Awf_Acl_Role('pos'))
               ->add(new Awf_Acl_Role('posman'))
-              ->add(new Awf_Acl_Role('control'))
               ->add(new Awf_Acl_Role('organizer'))
-              ->add(new Awf_Acl_Role('admin'));
+              ->add(new Awf_Acl_Role('admin'))
+              ->add(new Awf_Acl_Role('adminz'));
 
     if (!$this->acl->hasResources()) {
     // Setup the list of roles.
@@ -71,7 +72,7 @@ class plugin_ACL_manager extends baseplugin {
                 ->add('pos')
                 ->add('posman')
                 ->add('organizer')
-                ->add('admin');
+                ->add('admin')->add('adminz');
     }
 
     // Vertel de Awf_Acl instantie welke role wat mag
@@ -86,24 +87,38 @@ class plugin_ACL_manager extends baseplugin {
                  ->allow('organizer','organizer')
               ->extend('admin', 'organizer')
                  ->allow('admin','admin')
-                ;
+      ->extend('adminz', 'admin')
+      ->allow('adminz','adminz')
+      ;
     return $this->acl_loaded = true;
   }
+
   function doisAllowedACL($Role,$Resource) {
     plugin::call('%LoadACL');
     return $this->acl->isAllowed($Role,$Resource);
   }
 
-  function doisACL() { return plugin::call('%LoadACL');}
+  function doisACL() {
+    return plugin::call('%LoadACL');
+  }
+  function doGetRolesACL($roles = array()){
+    if (!is_array($roles)) $roles = array();
+    $return = array_merge($roles, $this->acl->getRolenames());
+    return $return;
+  }
 
   function doAddACLResource($name, $role='') {
      plugin::call('%LoadACL');
      $this->acl->add($name);
-     If ($role) {
+     If (!empty($role)) {
        $this->acl->allow($role, $name);
+     } else {
+       $x = $this->acl->getRolenames();
+       $this->acl->allow(reset($x), $name);
      }
      return '';
   }
+
   function doACLShow() {
     print_r($this->acl);
     return true;

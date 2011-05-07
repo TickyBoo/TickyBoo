@@ -309,7 +309,7 @@ define("InfoVenueCount",   	"Venue count:");
 define("InfoEventCount",   	"Event count:");
 define("InfoAdminCount",   	"Admin count:");
 define("system_summary",	"System Summary");
-define("index_admins_count","<b>Admins:</b> %d, <b>Event-managers:</b> %d, <b>Controllers:</b> %d, <b>Total:</b> %d");
+define("index_admins_count","<b>Admins:</b> %d, <b>Managers:</b> %d, <b>Pos:</b> %d, <b>TicketTakers:</b> %d");
 define("index_user_count","<b>POS:</b> %d, <b>Guests:</b> %d, <b>Members:</b> %d/%d/%d");
 define("index_events_count","<b>Pub:</b> %d, <b>New:</b> %d, <b>Nosale:</b> %d, <b>Trash:</b> %d, <b>Total:</b> %d");
 define("index_ort_count","%d");
@@ -1653,4 +1653,14 @@ define('handling_www_deactivated','Deactive in the webshop');
 
 define('nextbutton','Next');
 
+define('handling_sp','POS');
+define('handling_www','WEB');
+
+define('for_handling_salemode','for: ');
+define('you_requested_that_is_not_visable','you_requested_that_is_not_visable');
+define('you_do_not_have_access','you_do_not_have_access');
+
+define('order_seats','order_seats');
+define('templ_files','templ_files');
+define('discount_used','discount_used');
 ?>

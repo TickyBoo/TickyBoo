@@ -1,6 +1,6 @@
   <tr>
     <td colspan="2">
-      {* new order notes *} 
+      {* new order notes *}
       <table class='admin_form' width='100%' cellspacing='1' cellpadding='2'>
         <tr>
           <td class='title' colspan='2'>{!order_note_title!}</td>
@@ -23,15 +23,15 @@
  {*       <tr class='admin_list_row_{$row%2}'>
           <td class='admin_info' colspan='2'>
             <p style="float:left;"  >{!onote_private!} : {$order_onote.onote_private}</p>
-            
+
             {gui->StartForm name=order_note_resend action=$smarty.server.REQUEST_URI data=$smarty.post table=false}
-            {gui->hidden name='onote_id' value=$order_onote.id }
-            {gui->hidden name='onote_order_id' value=$order.order_id }
-            {gui->hidden name='order_id' value=$order.order_id }
+            {gui->hidden name='onote_id' value=$order_onote.id}
+            {gui->hidden name='onote_order_id' value=$order.order_id}
+            {gui->hidden name='order_id' value=$order.order_id}
             {gui->hidden name='action' value='resendnote'}
             {if $order_onote.onote_type eq 'payment'}
               <button type='submit' name='save_payment' value='' style='float:right;'>{!onote_resend_payed!}</button>
-            {elseif $order_onote.onote_type eq 'ship' }
+            {elseif $order_onote.onote_type eq 'ship'}
               <button type='submit' name='save_ship' value='' style='float:right;'>{!onote_resend_sent!}</button>
             {/if}
             </form>
@@ -43,7 +43,7 @@
   </tr>
   <tr>
     <td colspan="2">
-      
+
       {gui->StartForm name=order_add_note width='100%' action=$smarty.server.REQUEST_URI data=$smarty.post}
       {gui->hidden name='action' value='addnote'}
       {gui->hidden name='onote_order_id' value=$order.order_id }
@@ -76,7 +76,7 @@
           <button type="submit" name="save_note" id="save_note">{!save_note!}</button>
         </td>
       </tr>
-        
+
       <script language="javascript" type="text/javascript">
       {literal}
       $('#onote_type-select').change(function(){
@@ -98,11 +98,11 @@
       {/literal}
       </script>
 *}
-      {gui->EndForm }
+      {gui->EndForm}
     </td>
   </tr>
   {if $order.order_note}
-  <tr>   
+  <tr>
     <form name='f' action='view.php' method='post'>
       <td valign='top'>{!pos_enternote!}</td>
       <td>

@@ -70,7 +70,7 @@ function smarty_block_event_group ($params, $content, $smarty, &$repeat) {
     $event=shopDB::fetch_assoc($res);
 
   }else{
-    $res=array_pop($smarty->_SHOP_db_res);
+    $res=$smarty->popBlockData();
     $event=shopDB::fetch_assoc($res);
   }
 
@@ -79,7 +79,7 @@ function smarty_block_event_group ($params, $content, $smarty, &$repeat) {
   if($event){
     $smarty->assign("shop_event_group",$event);
 
-    $smarty->_SHOP_db_res[]=$res;
+    $smarty->pushBlockData($res);
   }
 
   return $content;

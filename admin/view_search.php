@@ -35,11 +35,6 @@
 
 define('ft_check','admin');
 
-if($_GET['action']=='print' and $_GET['order_id']>0){
-  require_once("../includes/config/init_admin.php");
-  Order::printOrder($_GET['order_id'],'','stream');
-  exit;
-}
 require_once('../includes/classes/class.router.php');
 router::draw('search', 'admin/main');
 ?>

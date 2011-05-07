@@ -57,7 +57,7 @@ jQuery().ready(function(){
         });
       }
     });
-    
+
   });
   var contact = {
     'show': function (dialog) {
@@ -107,26 +107,26 @@ jQuery().ready(function(){
   </tr>
   <tr>
     <td class='TblHigher' nowrap="" >
-      {user->user_firstname|clean} {user->user_lastname|clean}
+      {$user->user_firstname|clean} {$user->user_lastname|clean}
     </td>
   </tr>
   <tr>
     <td class='TblHigher' nowrap="" >
-     {user->user_address|clean}
+     {$user->user_address|clean}
     </td>
   </tr>
-  
+
   {if $user->user_address1|clean}
   <tr>
     <td class='TblHigher' nowrap="" >
-      {user->user_address1|clean}
+      {$user->user_address1|clean}
     </td>
   </tr>
   {/if}
-  
+
   <tr>
     <td class='TblHigher' nowrap="" >
-     {user->user_zip|clean} {user->user_city|clean}
+     {$user->user_zip|clean} {$user->user_city|clean}
     </td>
   </tr>
   <tr>
@@ -136,7 +136,7 @@ jQuery().ready(function(){
   </tr>
   <tr>
     <td class='TblHigher' nowrap="" >
-     {user->user_email}
+     {$user->user_email}
     </td>
   </tr>
   <tr>

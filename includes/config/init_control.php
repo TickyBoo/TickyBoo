@@ -43,6 +43,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
   $_SHOP->auth_status="control";
 
   require_once("init.php");
-  $_SHOP->event_ids = $_SHOP->admin->getEventLinks();
-  $_SHOP->currency  = $_SHOP->organizer_data->organizer_currency;
+
+
 ?>

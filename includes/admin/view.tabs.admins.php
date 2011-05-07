@@ -36,17 +36,14 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class tabsAdminsView extends AdminView {
+  var $tabitems = array(
+       0=> "admin_user_tab",
+       1=>"spoint_tab");
 
   function draw() {
       global $_SHOP;
 
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_ADMIN_tab'] = (int)$_REQUEST['tab'];
-    }
-    $_SHOP->trace_subject .= "[tab:{$_SESSION['_ADMIN_tab']}]";
-    $menu = array(con("admin_user_tab")=>0,
-          				con("spoint_tab")=>1);
-    echo $this->PrintTabMenu($menu, $_SESSION['_ADMIN_tab'], "left");
+    if (!$this->drawtabs('_ADMIN_tab')) { return; }
 
     switch ((int)$_SESSION['_ADMIN_tab']) {
      case 0:

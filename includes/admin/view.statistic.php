@@ -40,6 +40,10 @@ class StatisticView extends ExportView{
     var $img_pub = array ('pub' => '../images/grun.png',
                           'unpub' => '../images/rot.png',
                           'nosal' => '../images/grey.png');
+    var $tabitems = array (
+      0=>'show_text_stats|control',
+      1=>'show_grafik_stats|control',
+      2=>'show_stat_reports|admin');
 
 
   function plotEventStats ($start_date, $end_date, $month, $year) {
@@ -231,9 +235,7 @@ class StatisticView extends ExportView{
   function draw ()
   {
     global $_SHOP;
-
-    $menu = $this->loadMenuArray();
-    echo $this->PrintTabMenu($menu, $_SESSION['_STATS_tab'], "left");
+    if (!$this->drawtabs('_STATS_tab')) { return; }
 
     switch ((int)$_SESSION['_STATS_tab']){
       case 0:
@@ -254,29 +256,18 @@ class StatisticView extends ExportView{
   }
   function loadMenuArray(){
     global $_SHOP;
-    if ($_SHOP->admin->isAllowed('admin')) {$menu[con('show_text_stats')]=0;}
-    if ($_SHOP->admin->isAllowed('admin')) {$menu[con('show_grafik_stats')]=1;}
-    if ($_SHOP->admin->isAllowed('admin')) {$menu[con('show_stat_reports')]=2;}
    //  var_dump($menu);
     return $menu;
   }
 
   function execute (){
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_STATS_tab'] = (int)$_REQUEST['tab'];
-    } elseif (!isset($_SESSION['_STATS_tab']))  {
-
-      $menu = $this->loadMenuArray();
-      $_SESSION['_STATS_tab'] = reset($menu);
-    }
+    if (!$this->drawtabs('_STATS_tab', false)) { return; }
 
     if (isset($_SESSION['_STATS_tab']) && (int)$_SESSION['_STATS_tab']==2){
         require('view.transports.php');
         $this->expviewer = new TransportsView($this->width);
         return $this->expviewer->execute();
-
     }
-
   }
 }
 

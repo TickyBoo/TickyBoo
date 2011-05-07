@@ -33,15 +33,15 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("classes/AUIComponent.php");
+require_once("classes/class.component.php");
 
-class MenuAdmin extends AUIComponent {
+class MenuAdmin extends Component {
   function __construct(){
+    global $_SHOP;
     $menu_items = array (
     	"index.php" 	    	=> "index_admin|control",
     	"view_users.php"	  => "tabs.admins_admin|admin",
     	"view_event.php"	  => "tabs.events_admin|admin",
- //   	"view_banners.php"  => "banner_admin|admin",
     	"view_stats.php"	  => "statistic_admin|organizer",
     	"view_order.php"	  => "orders_admin|admin",
     	"view_template.php"	=> "template_admin|admin",
@@ -51,14 +51,11 @@ class MenuAdmin extends AUIComponent {
     	"view_utils.php"	  => "utilities_admin|admin"
     );
 
-    $menu_items = plugin::call('_adminMenuItems',$menu_items);
-
-    foreach($menu_items as $link => $text){
-      list($txt,$role) = explode('|',$text );
-      plugin::call('AddACLResource',$txt, $role );
-      $this->menu_items[$link] = $txt;
-    }
+    $menu_items = plugin::call('_ExtendMenuItems', $menu_items, 'admin');
+    $this->menu_items = $_SHOP->controller->addACLs($menu_items);
   }
+
+
   function draw () {
     global $_SHOP;
 
@@ -73,7 +70,6 @@ class MenuAdmin extends AUIComponent {
 
 		// Loop through the menu item array and put the'menu_admin_link_selected'-class on the linkt to current file
 		foreach($this->menu_items as $link => $text){
-      if ($_SHOP->admin->isAllowed($text)) {
 			  echo "<tr><td  class='menu_admin_item'><a href={$link} ";
   			if ($text=="{$this->current_page}_admin"){
   				echo "class='menu_admin_link_selected'>";
@@ -82,7 +78,6 @@ class MenuAdmin extends AUIComponent {
   			}
   			echo con($text);
   			echo "</a></td></tr>";
-  		}
 		}
     echo "<tr><td></td></tr>";
     echo "<tr><td  class='menu_admin_item'>

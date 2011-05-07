@@ -34,14 +34,18 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 
-require(INC.'smarty/Smarty.class.php');
+require(LIBS.'smarty3/Smarty.class.php');
 
 //$smarty->force_compile = true;
 
 class MySmarty extends Smarty {
-  public $layoutName = 'theme.html';
+  public $layoutName = 'theme.tpl';
+  public $deprecation_notices = false;
+  public $_SHOP_db_res = array();
   public $ShowThema  = false;
   public $title ='testing';
+  public $debugging = true;
+
   public $headerNote;
   public $footNote;
   public $buttons;
@@ -58,7 +62,9 @@ class MySmarty extends Smarty {
     $this->cache_id       = 'cache_';
     $this->cache_lifetime = 120;
     $this->config_dir   = INC . 'lang'.DS;
-    $controllor->loadPlugins(array('gui'));
+    if (is_object($controllor)) {
+      $controllor->loadPlugins(array('gui'));
+    }
     if (isset($this->smarty->register)) {
       $this->smarty->register->templateFunction('showTheme', array(&$this,'_SetTheme'));
       $this->smarty->register->templateFunction('con', 'con');
@@ -66,13 +72,12 @@ class MySmarty extends Smarty {
       $this->smarty->register->prefilter(array(&$this,'Con_prefilter'));
     } else {
       $this->register_Function('showTheme', array(&$this,'_SetTheme'));
-//      $this->smarty->register_Function('con', 'con');
+      $this->smarty->register_Function('con', 'con');
       $this->register_Block('menuBlock', array(&$this,'_setMenuBlock'));
-//      $this->smarty->register_prefilter(array(&$this,'Con_prefilter'));
-
+      $this->smarty->register_prefilter(array(&$this,'Con_prefilter'));
     }
     $_SHOP->smarty = $this;
-    $this->_SHOP_db_res = array();
+   // $this->_SHOP_db_res = array();
   }
 
   public function init($context='web') {
@@ -176,6 +181,12 @@ class MySmarty extends Smarty {
       $plugin = "__{$plugin}";
       $this->$plugin  = new $classname($this);
     }
+  }
+  public function pushBlockData($dbrec){
+    array_push($this->_SHOP_db_res, $dbrec );
+  }
+  public function popBlockData(){
+    return array_pop($this->_SHOP_db_res);
   }
 
 }

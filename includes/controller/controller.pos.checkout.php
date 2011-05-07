@@ -49,6 +49,15 @@ echo "<script>window.location.href='$url';</script>"; exit;
 require_once ("controller.web.checkout.php");
 
 class ctrlPosCheckout extends ctrlWebCheckout {
+  public $auth_required=TRUE;
+  public $auth_status="pos";
+  public $session_name="SalesSession";
+  protected $useSSL = true;
+
+  public function __construct($context, $page, $action) {
+    parent::__construct($context, $page, $action);
+  }
+
 }
 
 ?>

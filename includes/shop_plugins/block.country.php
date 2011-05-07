@@ -44,12 +44,12 @@ function smarty_block_country ($params, $content, $smarty, &$repeat) {
 			$params['order']=_esc($params['order'], false);
       $order_by="order by {$params['order']}";
     }
-    
+
     if($params['event']){
       $from .= " LEFT JOIN `Event` ON ort_id=event_ort_id ";
       $where .= "AND event_status='pub'";
     }
-    
+
     if($params['event_id']){
 			$where .= " and event_id="._esc($params['event_id']);
     }
@@ -91,7 +91,7 @@ function smarty_block_country ($params, $content, $smarty, &$repeat) {
   		$cfr=true;
       $select .= ' SQL_CALC_FOUND_ROWS ';
   	}
-    
+
     if($params['distinct']){
       $select .= " DISTINCT "._esc($params['distinct'],false);
     }else{
@@ -115,7 +115,7 @@ function smarty_block_country ($params, $content, $smarty, &$repeat) {
     $ort=ShopDB::fetch_assoc($res);
 
   } else {
-    $res_a=array_pop($smarty->_SHOP_db_res);
+    $res_a=$smarty->popBlockData();
 
 		$res=$res_a[0];
 		$tot_count=$res_a[1];
@@ -133,7 +133,7 @@ function smarty_block_country ($params, $content, $smarty, &$repeat) {
 
     $smarty->assign("shop_country",$ort);
 
-    $smarty->_SHOP_db_res[]=array($res,$tot_count,$part_count);
+    $smarty->pushBlockData(array($res,$tot_count,$part_count));
   }
 
   return $content;

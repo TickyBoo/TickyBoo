@@ -32,6 +32,9 @@
  * clear to you.
  */
 
+  define('ft_check','control');
+  session_cache_limiter("nocache");
 
-require_once('control.php');
+  require_once('../includes/classes/class.router.php');
+  router::draw('control', 'control/main');
 ?>

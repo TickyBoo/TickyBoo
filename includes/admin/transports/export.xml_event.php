@@ -78,8 +78,8 @@ class export_xml_event extends AdminView {
 			$what[]=array(
 			'table'=>'Event_group',
       'pk'=>'event_group_id',
-			'query'=>"SELECT Event_group.* FROM `Event` left join Event_group on `event_group_id`=event_group_id
-                WHERE `event_group_id` is not null and event_id=$event_id");
+			'query'=>"SELECT Event_group.* FROM `Event` left join Event_group on `Event`.`event_group_id`= Event_group.event_group_id
+                WHERE `Event`.`event_group_id` is not null and event_id=$event_id");
 
 			$what[]=array(
 			'table'=>'Event',

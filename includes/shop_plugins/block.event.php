@@ -161,7 +161,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
     $event=ShopDB::fetch_assoc($res);
 
   } else {
-    $res_a=array_pop($smarty->_SHOP_db_res);
+    $res_a=$smarty->popBlockData();
 
 		$res=$res_a[0];
 		$tot_count=$res_a[1];
@@ -179,7 +179,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
     $smarty->assign("shop_event",$event);
 
-    $smarty->_SHOP_db_res[]=array($res,$tot_count,$part_count);
+    $smarty->$smarty->pushBlockData(array($res,$tot_count,$part_count));
   }
 
   return $content;

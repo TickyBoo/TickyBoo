@@ -35,17 +35,14 @@
 
 
 require_once(CLASSES."jsonwrapper.php"); // Call the real php encoder built into 5.2+
+require_once (CLASSES.'class.controller.php');
 
-class ctrlWebJson  {
-  protected $smarty ;
-  protected $HelperList = array();
-  protected $context = '';
+class ctrlWebJson Extends Controller  {
+  public    $session_name = "ShopSession";
 
-  public function __construct($context='web') {
-    require_once (INC. 'config'.DS.'init.php' );
-  }
-
-  public function draw($page, $action) {
+  public function draw($action) {
+    $this->$executed = true;
+    parent::draw($action);
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
   		$this->request    = $_REQUEST;
   		$this->actionName = $action;
@@ -59,9 +56,7 @@ class ctrlWebJson  {
     	header("Status: 400");
     	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
     }
-
-    orphanCheck();
-    trace("End of ajax req \n");
+    $this->executed = true;
 	}
 
   public function callAction(){

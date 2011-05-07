@@ -33,20 +33,7 @@
  */
 
 define('ft_check','control');
-require_once ("../includes/config/init_control.php");
-require_once ("control/ControlPage.php");
-require_once ("control/UserView.php");
-
-
-//print cart update
-   $body=new UserView($_GET["user_id"]);
-
-
-// width=150 for menu ...Change it to your preferd width;
-// 700 total table
-$page=new ControlPage();
-$page->setTitle("Ticket Taker");
-$page->set("body",$body);
-$page->draw();
+  require_once('includes/classes/class.router.php');
+  router::draw('users', 'control/main');
 
 ?>

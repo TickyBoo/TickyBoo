@@ -32,13 +32,13 @@
  * clear to you.
  */
 
-function smarty_block_order_note ($params, $content, $smarty, &$repeat) {      
-        
+function smarty_block_order_note ($params, $content, $smarty, &$repeat) {
+
   if ($repeat) {
     $select = "SELECT * ";
     $from = 'FROM `order_note`';
     $where = "WHERE 1=1 ";
-    
+
     if($params['order_id']){
       $where .= "AND onote_order_id="._esc($params['order_id']);
     }else{
@@ -55,7 +55,7 @@ function smarty_block_order_note ($params, $content, $smarty, &$repeat) {
     $res=ShopDB::query($query);
 
     $onote=ShopDB::fetch_assoc($res);
-    
+
     $smarty->_noteTypes = array(
       OrderNote::TYPE_NOTE=>"on_type_note",
       OrderNote::TYPE_ADMIN=>"on_type_admin",
@@ -63,7 +63,7 @@ function smarty_block_order_note ($params, $content, $smarty, &$repeat) {
       OrderNote::TYPE_SHIP=>"on_type_ship",
       OrderNote::TYPE_TODO=>"on_type_todo"
     );
-    
+
     if($params['order_var']){
       if(is_array($params['order_var'])){
         $order = $params['order_var'];
@@ -75,15 +75,15 @@ function smarty_block_order_note ($params, $content, $smarty, &$repeat) {
         unset($smarty->_noteTypes[OrderNote::TYPE_SHIP]);
       }
     }
-    
+
 
   }else{
-    $res=array_pop($smarty->_SHOP_db_res);
+    $res=$smarty->popBlockData();
     $onote=ShopDB::fetch_assoc($res);
   }
-  
+
   $smarty->_noteCounts[$onote["onote_type"]] += 1;
-  
+
   $noteTypes = $smarty->_noteTypes;
   if($onote["onote_type"] == OrderNote::TYPE_PAYMENT){
     unset($noteTypes[OrderNote::TYPE_PAYMENT]);
@@ -97,11 +97,11 @@ function smarty_block_order_note ($params, $content, $smarty, &$repeat) {
   if($onote){
     $onote["onote_privatetxt"] = ($onote["onote_private"])?con('yes'):con('no');
     $smarty->assign("order_onote",$onote);
-    $smarty->_SHOP_db_res[]=$res;
+    $smarty->pushBlockData($res);
   }
   $smarty->assign("order_onote_types",$noteTypes);
 
   return $content;
-        
+
 }
 ?>

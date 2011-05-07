@@ -37,6 +37,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class OptionsView extends AdminView{
+
   function option_form (&$data, $err=null){
   	global $_SHOP;
   	$yesno = array('No'=>'confirm_no', 'Yes'=>'confirm_yes');

@@ -36,6 +36,11 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class SearchView extends AdminView{
+  var $tabitems = array(
+                    0 => "patron_tab",
+                    1 => "seat_tab" ,
+                    2 => "order_tab",
+                    3 => "barcode_tab");
 
   function patronForm (&$data){
     global $_SHOP;
@@ -334,19 +339,18 @@ class SearchView extends AdminView{
     return true;
   }
 
-  function draw () {
-        global $_SHOP;
-
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_SEARCH_tab'] = (int)$_REQUEST['tab'];
+  function execute(){
+    if(is($_GET['action'],'')=='print' and is($_GET['order_id'],0) > 0){
+      Order::printOrder($_GET['order_id'],'','stream');
+      return true;
     }
-    $_SHOP->trace_subject .= "[tab:{$_SESSION['_SEARCH_tab']}]";
+  }
 
-    $menu = array( con("patron_tab") =>0 ,
-                   con("seat_tab")   =>1 ,
-                   con("order_tab")   =>2,
-                   con("barcode_tab") =>3);
-    echo $this->PrintTabMenu($menu, $_SESSION['_SEARCH_tab'], "left");
+
+  function draw () {
+    global $_SHOP;
+
+    if (!$this->drawtabs('_SEARCH_tab', false)) { return; }
 
     if ((int) $_REQUEST['order_id']){
       require_once("admin/view.orders.php");

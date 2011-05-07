@@ -59,53 +59,13 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
   require_once("classes/class.shopdb.php");
   require_once("classes/class.model.php");
-  if(isset($_SHOP->auth_required)){
-    require_once "Auth/Auth.php";
-    require_once "classes/model.admin.php";
-  }
+
+
   set_error_handler("customError");
 
   //ini_set('session.save_handler','user');
   //require_once("classes/class.sessions.php");
 
-	//emulates magic_quotes_gpc off
-  function stripslashes_deep($value) {
-    if(is_array($value)) {
-        foreach($value as $k => $v) {
-            $return[$k] = stripslashes_deep($v);
-        }
-    } elseif(isset($value)) {
-        $return = stripslashes($value);
-    }
-    return $return;
-  }
-
-  if (get_magic_quotes_gpc()) {
-	    $_POST    = array_map('stripslashes_deep', $_POST);
-	    $_GET     = array_map('stripslashes_deep', $_GET);
-	    $_COOKIE  = array_map('stripslashes_deep', $_COOKIE);
-	    $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-	}
-
-
-  $_SERVER['PHP_SELF']   = clean($_SERVER['PHP_SELF']   ,'HTML');
-  $_SERVER['REQUEST_URI']= clean($_SERVER['REQUEST_URI'],'HTML');
-
-  if (isset($_SERVER['SCRIPT_URI'])) {
-
-    $_SERVER['SCRIPT_URI'] = clean($_SERVER['SCRIPT_URI'] ,'HTML');
-  }
-  if (isset($_SERVER['SCRIPT_URL'])) {
-    $_SERVER['SCRIPT_URL'] = clean($_SERVER['SCRIPT_URL'] ,'HTML');
-  }
-
-  if (!defined('PHP_SELF'))
-    define('PHP_SELF',$_SERVER['PHP_SELF']);
-
-
-
-  trace( $_SERVER["PHP_SELF"]. " [{$_REQUEST['action']}]", true);
-  trace( '====================================================================');
  // print_r($_SERVER);
   $query="SELECT *, UNIX_TIMESTAMP() as current_db_time FROM ShopConfig LIMIT 1";
   if(!$res=ShopDB::query_one_row($query) or $res['status']==='OFF'){
@@ -168,52 +128,8 @@ if (!defined('ft_check')) {die('System intrusion ');}
   // check the order system for outdated orders and reservations
   check_system();
 
+  if (!loadLanguage('custom')) {loadLanguage('site');}
 
-//loading language file
-  if (isset($_SHOP->lang)) {
-    // do noting
-    $_SESSION['_SHOP_LANG']=$_SHOP->lang;
-  } elseif(isset($_REQUEST['setlang']) ) {
-	  if ($lang=$_REQUEST['setlang'] and in_array($lang,$_SHOP->langs)){
-  		//  setcookie("lang",$lang,time()+60*60*24*30);
-    	$_SHOP->lang=$lang;
-    	$_SESSION['_SHOP_LANG']=$_SHOP->lang;
-      If (isset($_REQUEST['href'])) {
-        header("location:{$_REQUEST['href']}");
-        die;
-      }
-	  }
-  }elseif(isset($_SESSION['_SHOP_LANG'])){
-    $_SHOP->lang=$_SESSION['_SHOP_LANG'] ;
-  }elseif(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && $_SERVER["HTTP_ACCEPT_LANGUAGE"]){
-		$lpat=implode($_SHOP->langs,"|");
-    if(preg_match_all("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res )){
-      $newlang = '';
-      $langid = 9999;
-       foreach ($res[0] as $lang) {
-        $x =  array_search($lang, $_SHOP->langs );
-        if (($x < $langid) && file_exists(INC."lang".DS."site_". $lang.".inc")) {
-          $langid = $x;
-          $newlang = $lang;
-        }
-      }
-      $_SHOP->lang=$newlang;
-    }else{
-      $_SHOP->lang=$_SHOP->langs[0];
-      $_SESSION['_SHOP_LANG']=$_SHOP->lang;
-    }
-  }else{
-    $_SHOP->lang=$_SHOP->langs[0];
-    $_SESSION['_SHOP_LANG']=$_SHOP->lang;
-  }
-
-  If (file_exists(INC."lang".DS."site_". $_SHOP->lang.".inc")){
-    include_once(INC."lang".DS."site_". $_SHOP->lang.".inc");
-    $_SHOP->langfile = INC."lang".DS."site_". $_SHOP->lang.".inc";
-  }else {
-    include_once(INC."lang".DS."site_en.inc");
-    $_SHOP->langfile = INC."lang".DS."site_en.inc";
-  }
 
  // writeLog($old = setlocale(LC_TIME, NULL));
 
@@ -226,50 +142,6 @@ if (!defined('ft_check')) {die('System intrusion ');}
     setlocale(LC_TIME, explode(';',$loc));
   }
 
-  if(isset($_SHOP->auth_required)){
-
-    //authentication starts here
-    $params = array("advancedsecurity"=>false,
-                    'sessionName'=> $_SHOP->session_name,
-                    );
-
-
-    $auth_container = new CustomAuthContainer($_SHOP->auth_status);
-    $_auth = new Auth($auth_container,$params);//,'loginFunction'
-    $_auth ->setLoginCallback('loginCallback');
-    $action = is($action, $_REQUEST['action']);
-    if ($action == 'logout') {
-      $_auth->logout();
-      session_unset();
-      $_SESSION = array();
-      session_destroy();
-      $_auth->start();
-      orphancheck();
-      exit;
-    } else {
-      $_auth->start();
-    }
-
-    if (!$_auth->checkAuth()) {
-      orphancheck();
-      exit;
-    }
-
-    if(isset($_auth->admin)){
-      $_SHOP->admin = $_auth->admin;
-      unset($res->admin_password);
-    } elseif($res = Admins::load($_SESSION['_SHOP_AUTH_ADMIN_ID'])) {
-      $_SHOP->admin = $res;
-      unset($res->admin_password);
-    } else {
-      session_unset();
-      $_SESSION = array();
-      session_destroy();
-      header("location:{$_REQUEST['href']}");
-      die;
-    }
-   // print_r($_SESSION);
-  }
 
   //ini_set("session.gc_maxlifetime", [timeinsec]);
 
@@ -280,27 +152,5 @@ if (!defined('ft_check')) {die('System intrusion ');}
 	}
 
   $_SHOP->organizer_data=(object)$_SESSION['_SHOP_ORGANIZER_DATA'];
-
-
-  function logincallback ($username, $auth){
-    global $_SHOP;
-    if($res = $auth->admin){
-      $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
-      $_SESSION['_SHOP_AUTH_ADMIN_ID']=$res->admin_id;
-    //  $res = empt($res->user,$res);
-      $_SHOP->admin = $res;
-      unset($res->admin_password);
-    //  unset($res->_columns);
-      $_SESSION['_SHOP_AUTH_USER_DATA']= (array)$res;
-    }	else {
-      session_destroy();
-      orphancheck();
-      exit;
-    }
-
-    $_SESSION['_SHOP_AUTH_USER_NAME']=$username;
-   // echo ini_get("session.gc_maxlifetime");
-  }
-
-
+  $_SHOP->currency  = $_SHOP->organizer_data->organizer_currency;
 ?>

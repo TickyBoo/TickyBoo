@@ -64,57 +64,6 @@ class ControlPage extends AUIComponent {
         trace("End of page. \n\n\r");
     }
 
-    function drawHead() {
-      Global $_SHOP;
-        if (!$_SERVER["INTERFACE_LANG"]) {
-            $_SERVER["INTERFACE_LANG"] = "de";
-        }
-        $page = $_SERVER["REQUEST_URI"];
-        $page_1 = substr($page, 3);
-        foreach($this->key as $val) {
-            if (!$content) {
-                $content = $val;
-            } else {
-                $content .= "," . $val;
-            }
-        }
-
-        echo "<html><head>
-    <meta HTTP-EQUIV=\"content-type\" CONTENT=\"text/html; charset=UTF-8\">
-    <META HTTP-EQUIV=\"Content-Language\" CONTENT=\"" . $_SERVER["INTERFACE_LANG"] . "\">
-    <title>" . $this->getTitle() . "</title>
-    <link rel='stylesheet' href='style.css'>
-    <link rel='shortcut icon' type='images/png' href='{$_SHOP->images_url}favicon.png' />
-
-    <script><!--
-    function init(){if(document.f && document.f.codebar){document.f.codebar.focus();}}
-    --></script>
-    </head><body onload='init();'>";
-    echo "  		<div id='wrap'>\n";
-        echo "<div  id='header'>
-        		<img src=\"".$_SHOP->images_url."logo.png\" border='0'/>
-        		<h2>" . $this->getTitle() . "</h2>
-               </div>";
-        echo"<div id='navbar'>
-				<ul>
-					<li><a class='link_head' href='control.php?action=change_event'>". con('change_event')."</a></li>
-          <li><a class='link_head' href='control.php?action=search_form'>" . con('search')."</a></li>
-          <li><a class='link_head' href='control.php?action=logout'>" . con('logout') . "</a>&nbsp;&nbsp;</td></li>
-        </ul>
-      </div><br>";
-    }
-
-    function drawFoot()
-    {
-        echo "<br>";
-    echo "<div id='footer'>
-				Powered by <a href='http://fusionticket.org'>Fusion Ticket</a> - The Free Open Source Box Office
-			</div>
-		</div>
-	</body>
-</html>";
-    }
-
     function setRobots($tags)
     {
         $this->robots = $tags;

@@ -36,18 +36,15 @@ if (!defined('ft_check')) {die('System intrusion ');}
 require_once("admin/class.adminview.php");
 
 class TabsEventsView extends AdminView {
+  var $tabitems = array(2=>"event_tab|admin",
+                3=>"history_tab|admin",
+                0=>'ort_admin_tab|admin',
+                1=>"event_group_tab|admin",
+                4=>'Global_discounts|admin');
 
   function draw() {
     global $_SHOP;
-    $_SESSION['_EVENT_tab'] = (isset($_REQUEST['tab']))? (int)$_REQUEST['tab']:((isset($_SESSION['_EVENT_tab']))?$_SESSION['_EVENT_tab']:0);
-    $_SHOP->trace_subject .= "[tab:{$_SESSION['_EVENT_tab']}]";
-
-    $menu = array(con('ort_admin_tab')=>0,
-                  con("event_group_tab")=>1,
-                  con("event_tab")=>2,
-                  con("history_tab")=>3,
-                  con('Global_discounts')=>4);
-    echo $this->PrintTabMenu($menu, $_SESSION['_EVENT_tab'], "left");
+    if (!$this->drawtabs('_EVENT_tab')) { return; }
 
     switch ((int)$_SESSION['_EVENT_tab'])
        {

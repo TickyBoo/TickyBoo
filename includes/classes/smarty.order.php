@@ -376,7 +376,7 @@ class Order_Smarty {
       $order=shopDB::fetch_assoc($res[0]);
 
     }else{
-      $res=array_pop($smarty->_SHOP_db_res);
+      $res=$smarty->popBlockData();
       $part_count= $res[1];
       if(isset($res)){
         $order=shopDB::fetch_assoc($res[0]);
@@ -403,7 +403,7 @@ class Order_Smarty {
       if($order){
         $smarty->assign("shop_order",$order);
         $smarty->assign("shop_orders_count",$part_count);
-        $smarty->_SHOP_db_res[]=$res;
+        $smarty->pushBlockData($res);
 
         $query="SELECT * FROM User WHERE user_id={$order['order_user_id']}";
         $res=ShopDB::query($query);
@@ -452,7 +452,7 @@ class Order_Smarty {
 
 	      	$ticket=ShopDB::fetch_array($res);
     	}else{
-      		$res=array_pop($smarty->_SHOP_db_res);
+      		$res=$smarty->popBlockData();
 		  	$ticket=ShopDB::fetch_assoc($res);
     	}
     	if($params['all']){
@@ -488,7 +488,7 @@ class Order_Smarty {
       		if($ticket){
 	        	$smarty->assign("shop_ticket",$ticket);
 	        	//print_r($ticket);
-	      		$smarty->_SHOP_db_res[]=$res;
+	      		$smarty->pushBlockData($res);
 			    }
 	    }
     return $content;

@@ -40,30 +40,21 @@ if (!defined('ft_check')) {die('System intrusion ');}
   require_once("admin/view.versionutil.php");
 
 class IndexView extends AdminView {
+  var $tabitems= array(
+    0 => "index_admin_tab|control",
+    1 => "owner_tab|admin",
+    2 => "shopconfig_tab|admin");
+
+  function __construct( $width=0){
+    GLOBAL $_SHOP;
+    if($_SHOP->software_updater_enabled){
+      $this->tabitems[3] = "version_updater|admin";
+    }
+    parent::__construct($width);
+  }
 
   function draw() {
-    GLOBAL $_SHOP;
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_INDEX_tab'] = (int)$_REQUEST['tab'];
-    }
-    $_SHOP->trace_subject .= "[tab:{$_SESSION['_INDEX_tab']}]";
-    plugin::call('AddACLResource','index_default_info', 'organizer' );
-   plugin::call('AddACLResource','index_default_specs', 'admin' );
-    plugin::call('AddACLResource','index_owner_info', 'admin' );
-    plugin::call('AddACLResource','index_settings_info','admin' );
-    plugin::call('AddACLResource','index_upgrade_system','admin' );
-    if ($_SHOP->admin->isAllowed('index_default_info')) { $menu[con("index_admin_tab")]=0;}
-    if ($_SHOP->admin->isAllowed('index_owner_info')) $menu[con("owner_tab")]=1;
-    if ($_SHOP->admin->isAllowed('index_settings_info')) $menu[con("shopconfig_tab")]=2;
-    if($_SHOP->software_updater_enabled){
-      if ($_SHOP->admin->isAllowed('index_upgrade_system')) $menu[con("version_updater")]=3;
-    }
-    if (!in_array((int)$_SESSION['_INDEX_tab'], array_values($menu))) {
-      $_SESSION['_INDEX_tab'] = reset($menu);
-    }
-
-    echo $this->PrintTabMenu($menu, $_SESSION['_INDEX_tab'], "left");
-
+    if (!$this->drawtabs('_INDEX_tab')) { return; }
     switch ((int)$_SESSION['_INDEX_tab']){
       case 0:
         $licention = file_get_contents (ROOT."licence.txt");
@@ -150,7 +141,8 @@ class IndexView extends AdminView {
     $part = array('admin'=>0, 'organizer'=>0, 'pos'=>0, 'control'=>0,'total'=>0);
     $sql = "SELECT count(admin_status) as count, admin_status
   	       	FROM Admin
-  	       	group by admin_status";
+  	       	group by admin_status
+  	       	order by admin_status";
     if(!$res=ShopDB::query($sql)){
       return FALSE;
     }
@@ -159,7 +151,7 @@ class IndexView extends AdminView {
       $part['total'] += $data[0];
       $part[$data[1]]=$data[0];
     }
-
+    var_dump($part);
     return vsprintf(con('index_admins_count'),$part);
   }
 

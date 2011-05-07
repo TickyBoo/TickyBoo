@@ -47,7 +47,7 @@ if (!defined('__CLASS_HTML2PDF__')) {
         protected $_unicode          = true;        // means that the input text is unicode (default = true)
 
         protected $_testTdInOnepage  = true;        // test of TD that can not take more than one page
-        protected $_testIsImage      = true;        // test if the images exist or not
+        protected $_testIsImage      = false;        // test if the images exist or not
         protected $_testIsDeprecated = false;       // test the deprecated functions
 
         protected $_parsePos         = 0;           // position in the parsing
@@ -150,7 +150,7 @@ if (!defined('__CLASS_HTML2PDF__')) {
 
             // init some tests
             $this->setTestTdInOnePage(true);
-            $this->setTestIsImage(true);
+            $this->setTestIsImage(false);
             $this->setTestIsDeprecated(true);
 
             // init the default font

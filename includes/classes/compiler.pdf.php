@@ -37,10 +37,10 @@ class PDF2TCompiler {
 
   function build ($pdf, $data, $testme=false){
     global $_SHOP;
-    require_once("smarty/Smarty.class.php");
+    require_once(CLASSES."class.smarty.php");
     require_once("classes/smarty.gui.php");
 
-    $smarty = new Smarty;
+    $smarty = new MySmarty;
     $gui    = new gui_smarty($smarty);
 
     $smarty->plugins_dir  = array("plugins", $_SHOP->includes_dir . "shop_plugins");

@@ -34,7 +34,10 @@
 
 require_once ( dirname(dirname(__FILE__)).'/config/defines.php' );
 require_once ( INC.'classes'.DS.'basics.php' );
+require_once ( INC.'config'.DS."init_common.php");
+require_once("classes/class.shopdb.php");
 
+header('X-Powered-By: FusionTicket/'.CURRENT_VERSION);
 if (file_exists(LIBS.'FirePHPCore'.DS.'fb.php' )) {
   require_once ( LIBS.'FirePHPCore'.DS.'fb.php' );
   require_once ( LIBS.'FirePHPCore'.DS.'FirePHP.class.php' );
@@ -58,8 +61,8 @@ class router {
 	 * @var array
 	 */
 
-  static function draw($page, $module = 'web', $isAjax= false) {
-    GLOBAL $action, $_SHOP;
+  static function draw($page, $module = 'web', $action=null) {
+    GLOBAL $_SHOP;
     if (strpos($module,'/') === false) {
       $controller = 'shop';
     } else {
@@ -70,11 +73,15 @@ class router {
       $action = substr($page ,    strpos($page,'/')+1 );
       $page   = substr($page , 0, strpos($page,'/') );
     }
-    if (isset($_REQUEST['action'])) {
-      $action=$_REQUEST['action'];
-    } elseif(!isset($action)){
-      $action=false;
+    if(is_null($action)){
+      if (isset($_POST['action'])) {
+        $action=$_POST['action'];
+      } elseif (isset($_GET['action'])) {
+        $action=$_GET['action'];
+      } else
+        $action=false;
     }
+
     $_REQUEST['action'] = $action;
     $_GET['action']     = $action;
     $_POST['action']    = $action;
@@ -86,12 +93,28 @@ class router {
 */
 
 
-    require_once ( INC.'config'.DS.'init_'.$module.'.php' );
-
 		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
-    require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
-  	$c = new $classname($module, $page);
-    $c->draw($page, $action, $isAjax);
+
+    trace( $_SERVER["PHP_SELF"]. " [{$_REQUEST['action']}]", true);
+    trace( '====================================================================');
+
+    if (file_exists(INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' )) {
+      require_once ( INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' );
+      if (class_exists($classname)) {
+        $_SHOP->controller = new $classname($module, $page, $action);
+        require_once ( INC.'config'.DS."init.php");
+        $_SHOP->controller->draw();
+        $isdone = true;
+      }else {
+        header('HTTP/1.1 501');
+        trace("Class {$classname} was not present in file: ".INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php');
+      }
+    } else {
+      header('HTTP/1.1 501');
+      trace("File not found: ".INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php');
+    }
+    trace("End of shop \n\n\r");
+    orphanCheck();
   }
 }
 ?>

@@ -38,6 +38,13 @@ require_once("admin/class.adminview.php");
 
 class TemplateView extends AdminView{
   private $types = array('systm','email', 'swift', 'pdf2','pdf');
+  var $tabitems = array(
+    0=>"templ_System|admin",
+    1=>"templ_email|admin",
+    2=>"templ_swift|admin",  //the newshift system needs to be extended
+    3=>"templ_pdf2|admin",
+    4=>"templ_files|adminz"
+  );
 
   function show_pdf() {
     if ($_GET['action'] == 'view' and $_SESSION['_TEMPLATE_tab']=='3'){
@@ -49,7 +56,6 @@ class TemplateView extends AdminView{
     }
     return 0;
   }
-
 
   function template_view ($data, $type) {
     global $_SHOP,  $_COUNTRY_LIST;
@@ -359,19 +365,7 @@ class TemplateView extends AdminView{
 
   function draw (){
     global $_SHOP;
-    if(isset($_REQUEST['tab'])) {
-      $_SESSION['_TEMPLATE_tab'] =(int) $_REQUEST['tab'];
-   	}
-
-
-    $menu = array(
-      con("templ_System")=>0,
-      con("templ_email")=>1,
-//      con("templ_swift")=>'?tab=2',  //the newshift system needs to be extended
-      con("templ_pdf2")=>3
-    );
-
-    echo $this->PrintTabMenu($menu, $_SESSION['_TEMPLATE_tab'], "left");
+    if (!$this->drawtabs('_TEMPLATE_tab')) { return; }
 
     $type =  $this->types[(int)$_SESSION['_TEMPLATE_tab']];
 

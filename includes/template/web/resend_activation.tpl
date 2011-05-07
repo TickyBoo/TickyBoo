@@ -29,14 +29,14 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-{if $smarty.post.email and $user->resend_activation_f($smarty.post.email) }
+{if $smarty.post.email and $user->resend_activation_f($smarty.post.email)}
   {include file="user_activate.tpl"}
 {else}
   {include file="header.tpl" name=!resend_activation!}
   <form action='index.php' method='post' class="yform full">
     {ShowFormToken name='ResendActivation'}
     <input type='hidden' name='action' value='resend_activation' />
-    
+
     <table class="full" width='80%' align='center'>
       <tr>
         <td class='title' colspan='2' align='center'>

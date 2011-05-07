@@ -289,6 +289,7 @@ function empt(&$arg , $default=null){
   return $default;
 }
 
+
 /**
  * con() show translation text
  *
@@ -296,6 +297,60 @@ function empt(&$arg , $default=null){
  * @param string $default default value when $name is not defined.
  * @return
  */
+function loadLanguage($model='site', $nameonly=false){
+global $_SHOP;
+   $newlang = '';
+  //loading language file
+  if (isset($_SHOP->lang)) {
+    // do noting
+    $newlang=$_SHOP->lang;
+  } elseif(isset($_REQUEST['setlang']) ) {
+    if ($lang=$_REQUEST['setlang'] and in_array($lang,$_SHOP->langs)){
+      //  setcookie("lang",$lang,time()+60*60*24*30);
+      $newlang=$lang;
+      $_SESSION['_SHOP_LANG']=$newlang;
+
+      If (isset($_REQUEST['href'])) {
+        Redirect($_REQUEST['href']);
+        die;
+      }
+    }
+  }elseif(isset($_SESSION['_SHOP_LANG'])){
+    $newlang=$_SESSION['_SHOP_LANG'] ;
+  }elseif(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && $_SERVER["HTTP_ACCEPT_LANGUAGE"]){
+    $lpat=implode($_SHOP->langs,"|");
+    if(preg_match_all("/$lpat/",$_SERVER["HTTP_ACCEPT_LANGUAGE"],$res )){
+      $langid = 9999;
+      foreach ($res[0] as $lang) {
+        $x =  array_search($lang, $_SHOP->langs );
+        if (file_exists(INC."lang".DS."{$model}_". $lang.".inc")) {
+          $newlang = $lang;
+          break;
+        }
+      }
+    }
+  }
+  if ($newlang) {
+    $_SHOP->lang=$newlang;
+  }else{
+    $_SHOP->lang=$_SHOP->langs[0];
+
+  }
+  $_SESSION['_SHOP_LANG']=$_SHOP->lang;
+  if ($nameonly) {
+    return  INC."lang".DS."{$model}_". $_SHOP->lang.".inc";
+  } elseif (file_exists(INC."lang".DS."{$model}_". $_SHOP->lang.".inc")){
+    include_once(INC."lang".DS."{$model}_". $_SHOP->lang.".inc");
+    $_SHOP->langfile = INC."lang".DS."{$model}_". $_SHOP->lang.".inc";
+    return true;
+  }elseif (file_exists(INC."lang".DS."{$model}_en.inc")) {
+    include_once(INC."lang".DS."{$model}_en.inc");
+    $_SHOP->langfile = INC."lang".DS."{$model}_en.inc";
+    return true;
+  } else
+    return false;
+}
+
 function con($name, $default='') {
   global $_SHOP;
   if (defined($name)) {
@@ -306,10 +361,11 @@ function con($name, $default='') {
     return $default;
   } elseif ($name) {
     if (is($_SHOP->AutoDefineLangs, false)) {
-      if (isset($_SHOP->langfile) && is_writable($_SHOP->langfile)){
+  //    echo loadLanguage('site', true);
+      if (is_writable(loadLanguage('site', true))){
         $namex= _esc($name, false);
         $addcon = "\n<?php\ndefine('{$namex}','{$namex}');\n?>";
-        file_put_contents($_SHOP->langfile, $addcon, FILE_APPEND);
+        file_put_contents(loadLanguage('site', true), $addcon, FILE_APPEND);
         define($name,$name);
       }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
     }
@@ -322,8 +378,11 @@ function con($name, $default='') {
  * @param string url to redirect to
  * @param int status http status-code to use for redirection (default 303=get the new url via GET even if this page was reached via POST)
  */
-function Redirect($url, $status = 303) {
+function Redirect($url, $status = 303, $message='') {
   GLOBAL $_SHOP;
+
+  $_SESSION['LastMessages'] = $_SHOP->Messages;
+
   if (function_exists('session_write_close')) {
     session_write_close();
   }

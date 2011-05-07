@@ -104,7 +104,7 @@
   {if $smarty.request.order_id}
     {include file="process_view.tpl" status="" orderby="order_date DESC" cur_order_dir="DESC" order_search='on'}
   {else}
-    {include file="process_list.tpl" status="" orderby="order_date DESC" order_search='on' }
+    {include file="process_list.tpl" status="" orderby="order_date DESC" order_search='on'}
   {/if}
 
 {/if}

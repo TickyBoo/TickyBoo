@@ -49,7 +49,7 @@ echo "<script>window.location.href='$url';</script>"; exit;
 }*/
 
 //require_once (CLASSES.'class.smarty.php');
-require_once("classes/AUIComponent.php");
+require_once("classes/class.controller.php");
 require_once('shop_plugins/function.minify.php');
 // remove the # below under linux to get a list of locale tags.
 
@@ -57,24 +57,37 @@ require_once('shop_plugins/function.minify.php');
 
 
 
-class ctrlAdminMain extends AUIComponent  {
+class ctrlAdminMain extends Controller  {
   protected $menu_width =  200;
   protected $body_width =  '100%';
   public    $width      = 1000;
-  protected $key        = array();  // depricated
-  protected $title      = '';
-  protected $executed   = false;
+  protected $section    = 'admin';
+  protected $useSSL = true;
+  public    $session_name  = "AdminSession";
+  public    $auth_required = true;
+  public    $auth_status   = "organizer";
 
-  public function __construct($context='action', $fond='index') {
+  public function __construct($context='action', $fond='index', $action) {
+    parent::__construct($context, $fond, $action);
+  }
+
+  public function init(){
+    parent::init();
+  }
+  function loadMenu(){
     global $_SHOP;
     require_once ("admin/class.adminmenu.php");
-    $menu = new MenuAdmin();
-    if (is_object($_SHOP->admin) and ! $_SHOP->admin->isAllowed($fond.'_admin')) {
-       $fond= 'index';
+    $this->menu = new MenuAdmin($this);
+    if (!$this->isAllowed($this->current_page.'_admin')) {
+      return false;
     }
-    $menu->current_page = $fond;
-    require_once ("admin/view.{$fond}.php");
-    $fond = str_replace('.','' ,$fond );
+    if (!file_exists( INC ."{$this->section}/view.{$this->current_page}.php")) {
+      $this->showForbidden();
+      return false;
+    }
+    $this->menu->current_page = $this->current_page;
+    require_once ("{$this->section}/view.{$this->current_page}.php");
+    $fond = str_replace('.','' ,$this->current_page );
     $classname = "{$fond}View";
     $body = new $classname($this->body_width);
     $this->executed = $body->execute();
@@ -82,70 +95,17 @@ class ctrlAdminMain extends AUIComponent  {
       $this->width = $body->page_width;
       $this->title = $body->title;
       if ($body->ShowMenu) {
-        $menu = array($menu);
+        $menu = array($this->menu);
         $body->extramenus($menu);
         $this->setmenu($menu);
       }
       $this->setbody($body);
     }
-    plugin::call('*Pageload', $this);
+    return true;
   }
 
-  public function draw($fond, $action, $isAjax= false) {
-    if (!$this->executed) {
-      ob_start();
-      $this->drawcontent();
-      $content = ob_get_contents();
-      ob_end_clean();
-
-      $this->drawHead();
-      echo $content;
-      $this->drawFoot();
-    }
-
-    orphanCheck();
-    trace("End of shop \n\n\r");
-  }
-
-  protected function checkSSL(){
-    global $_SHOP;
-//    print_r($_SERVER);
-    if ($_SHOP->secure_site) {
-      $url = $_SHOP->root_secured.basename($_SERVER['SCRIPT_NAME']);
-      if($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-        header("Location: $url");
-        exit;
-      }
-    } elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-      addWarning('This_page_is_not_secure');
-    }
-    /* */
-  }
-
-  // depricated
-  function addKey($kk) {
-      array_push($this->key, $kk);
-  }
-
-  function setTitle($title){
-      $this->title = $title;
-  }
-
-  function getTitle(){
-      return $this->title;
-  }
-
-  public function setJQuery($script){
-    $this->set('jquery',$script);
-  }
-
-  function setMenu($menu) {
-    $this->set("menu",$menu);
-    if (is_object($menu)) {$menu->setWidth($this->menu_width-10);}
-  }
-
-  function setBody($body) {
-    $this->set("body", $body);
+  public function draw($action) {
+    parent::draw($action);
   }
 
   function drawOrganizer () {
@@ -156,7 +116,7 @@ class ctrlAdminMain extends AUIComponent  {
           $_SHOP->organizer_data['organizer_name']) . "</b></font>";
   }
 
-  function drawHead(){
+  function drawHeader(){
     global $_SHOP;
     if (!isset($_SERVER["INTERFACE_LANG"]) or !$_SERVER["INTERFACE_LANG"]) {
         $_SERVER["INTERFACE_LANG"] = $_SHOP->langs[0];
@@ -253,25 +213,26 @@ class ctrlAdminMain extends AUIComponent  {
   }
 
   function drawContent() {
-    echo "<table border=0 width='" . $this->width . "' class='aui_bico'><tr>";
-    if ($menu = $this->items["menu"]) {
-      echo "<td class='aui_bico_menu' width='" . $this->menu_width . "' valign=top>\n";
-      $this->drawChild($menu);
-      echo "</td>";
-    }
-    echo "<td class=aui_bico_body valign=top>";
-
-    $body = $this->items["body"];
-    if (is_object($body)) {
-      If ($menu) {
-        $body->setWidth($this->width - $this->menu_width);
-      } else {
-        $body->setWidth($this->width);
+    if (!$this->executed) {
+      echo "<table border=0 width='" . $this->width . "' class='aui_bico'><tr>";
+      if ($menu = $this->items["menu"]) {
+        echo "<td class='aui_bico_menu' width='" . $this->menu_width . "' valign='top'>\n";
+        $this->drawChild($menu);
+        echo "</td>";
       }
-    }
-    $this->drawChild($body);
-    echo"</td></tr></table>\n";
+      echo "<td class=aui_bico_body valign=top>";
 
+      $body = $this->items["body"];
+      if (is_object($body)) {
+        If ($menu) {
+          $body->setWidth($this->width - $this->menu_width);
+        } else {
+          $body->setWidth($this->width);
+        }
+      }
+      $this->drawChild($body);
+      echo"</td></tr></table>\n";
+    }
 
     if(is_object($body)){
       $this->setJQuery($body->getJQuery());
@@ -279,7 +240,7 @@ class ctrlAdminMain extends AUIComponent  {
   }
 
 
-  function drawFoot() {
+  function drawFooter() {
     global $_SHOP;
 
     echo "

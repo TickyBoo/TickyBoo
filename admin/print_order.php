@@ -33,7 +33,7 @@
  */
 
 
-
+die ('this is not supported anymore');
 
 define('ft_check','admin');
 require_once("../includes/config/init_admin.php");
