@@ -44,7 +44,7 @@ class MySmarty extends Smarty {
   public $_SHOP_db_res = array();
   public $ShowThema  = false;
   public $title ='testing';
-  public $debugging = true;
+  public $debugging = false;
 
   public $headerNote;
   public $footNote;

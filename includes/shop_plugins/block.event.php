@@ -179,7 +179,7 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
     $smarty->assign("shop_event",$event);
 
-    $smarty->$smarty->pushBlockData(array($res,$tot_count,$part_count));
+    $smarty->pushBlockData(array($res,$tot_count,$part_count));
   }
 
   return $content;
