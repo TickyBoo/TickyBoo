@@ -118,7 +118,7 @@ class EPH_ebs extends payment{
       Order::set_payment_id($order->order_id,'ebs:'.$response['PaymentID']);
     }
     if ($response['ResponseCode']==0) {
-      $order->set_payment_status('payed');
+      $order->set_payment_status('paid');
       return array('approved'=>true,
                    'transaction_id'=>$response['PaymentID'],
                    'response'=> $response['ResponseMessage']);

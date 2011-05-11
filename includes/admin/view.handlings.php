@@ -176,7 +176,7 @@ class HandlingsView extends AdminView{
 
       echo "<tr ><td colspan='2' class='admin_name'>" . con('hanging_email_settings') ."</td></tr>";
   		$this->print_select_tpl('handling_email_template_ord',"'email','swift'",$data,$err, true);
-  		$this->print_select_tpl('handling_email_template_payed',"'email','swift'",$data,$err, true);
+  		$this->print_select_tpl('handling_email_template_paid',"'email','swift'",$data,$err, true);
       $this->print_select_tpl('handling_email_template_send',"'email','swift'",$data,$err, true);
 
   //		$this->print_paper_format('pdf_paper',$data,$err);

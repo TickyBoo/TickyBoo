@@ -215,8 +215,8 @@ class EPH_vpc extends payment{
 	  if ($txnResponseCode == "P") {
         $order->set_payment_status('pending');
 	  } else {
-	    $order->order_payment_status = 'payed';
-        $order->set_payment_status('payed');
+	    $order->order_payment_status = 'paid';
+        $order->set_payment_status('paid');
 	  }
       return array('approved'=>true,
                    'transaction_id'=>$_REQUEST['vpc_TransactionNo'].'/'.$_REQUEST['vpc_ReceiptNo'],

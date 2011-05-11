@@ -81,7 +81,7 @@
   				<tr class='user-order-{$shop_order.order_status}'>
   			{elseif $shop_order.order_status eq "res"}
   				<tr class='user-order-{$shop_order.order_status}'>
-        {elseif $shop_order.order_payment_status eq "payed"}
+        {elseif $shop_order.order_payment_status eq "paid"}
   				<tr class='user-order-{$shop_order.order_payment_status}'>
   			{elseif $shop_order.order_shipment_status eq "send"}
   				<tr class='user-order-{$shop_order.order_shipment_status}'>
@@ -99,7 +99,7 @@
       			{elseif $shop_order.order_status eq "reemit" or $shop_order.order_status eq "reissue"}{!pers_reissue!}
       			{elseif $shop_order.order_status eq "res"}{!pers_res!}
       			{elseif $shop_order.order_shipment_status eq "send"}{!pers_send!}
-      			{elseif $shop_order.order_payment_status eq "payed"}{!pers_payed!}
+      			{elseif $shop_order.order_payment_status eq "paid"}{!pers_paid!}
       			{elseif $shop_order.order_status eq "ord"}{!pers_ord!}
       			{else}{!pers_unknown!}
       			{/if}</td>

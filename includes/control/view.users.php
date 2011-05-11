@@ -136,15 +136,16 @@ function print_status ($user_status){
 
 function print_order_status ($order_status){
   if($order_status=='ord'){
-    return "<font color='blue'>".con('ordered')."</font>";
+    return "<font color='blue'>".con('order_status_ordered')."</font>";
   }else if ($order_status=='send'){
-    return "<font color='red'>".con('sended')."</font>";
-  }else if($order_status=='payed'){
-    return "<font color='green'>".con('payed')."</font>";
+    return "<font color='red'>".con('order_status_sended')."</font>";
+  }else if($order_status=='paid'){
+    return "<font color='green'>".con('order_status_paid')."</font>";
   }else if($order_status=='cancel'){
-    return "<font color='#787878'>".con('canceled')."</font>";
+    return "<font color='#787878'>".con('order_status_cancelled')."</font>";
  }
 }
+
   function print_field ($name, &$data){
     echo "<tr><td class='admin_name' width='20%'>".con($name)."</td>
     <td class='admin_value'>

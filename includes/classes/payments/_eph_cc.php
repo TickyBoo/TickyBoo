@@ -150,7 +150,7 @@ class EPH_cc extends payment{
 		global $_SHOP;
 
 		if($order->order_id){
-			if($field=='order_payment_status' and $new_status=='payed'){
+			if($field=='order_payment_status' and $new_status=='paid'){
 				$query="DELETE from CC_Info where cc_info_order_id='{$order->order_id}'";
 				ShopDB::query($query);
 			}

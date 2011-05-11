@@ -30,7 +30,7 @@
  * clear to you.
  *}
 {if $pm_return.approved}
-  {if $shop_order.order_payment_status eq 'payed'}
+  {if $shop_order.order_payment_status eq 'paid'}
     {include file="header.tpl" name=!pay_accept! noHeader=$no_header}
   {else}
     {include file="header.tpl" name=!pay_ispending! noHeader=$no_header}
@@ -41,7 +41,7 @@
 <table class="table_midtone">
   <tr>
     <td>
-        {if $pm_return.approved}
+        {if $shop_order.order_payment_status eq 'paid'}
           {!pay_reg!}!
         {/if}
         <br />

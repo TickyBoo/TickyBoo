@@ -30,7 +30,7 @@
             {gui->hidden name='order_id' value=$order.order_id}
             {gui->hidden name='action' value='resendnote'}
             {if $order_onote.onote_type eq 'payment'}
-              <button type='submit' name='save_payment' value='' style='float:right;'>{!onote_resend_payed!}</button>
+              <button type='submit' name='save_payment' value='' style='float:right;'>{!onote_resend_paid!}</button>
             {elseif $order_onote.onote_type eq 'ship'}
               <button type='submit' name='save_ship' value='' style='float:right;'>{!onote_resend_sent!}</button>
             {/if}
@@ -67,8 +67,8 @@
           <button type="submit" name="save_payment" id="save_payment">{!save_payment!}</button>
         </td>
         <td>
-          <label for='onote_set_payed'>{!onote_set_payed!}</label>
-          <input type='checkbox' id='onote_set_payed' name='onote_set_payed' value='1' />
+          <label for='onote_set_paid'>{!onote_set_paid!}</label>
+          <input type='checkbox' id='onote_set_paid' name='onote_set_paid' value='1' />
         </td>
       </tr>
       <tr class="admin_list_row_0" id="on_save_email_note" style="display:none;">
@@ -82,7 +82,7 @@
       $('#onote_type-select').change(function(){
         if($(this).val() == 'ship'){
           $('#on_save_email_ship').show(); $('#on_save_email_note').hide();
-          $('#on_save_email_payment').hide(); $('#onote_set_payed').attr('checked',false);
+          $('#on_save_email_payment').hide(); $('#onote_set_paid').attr('checked',false);
         }else if($(this).val() == 'payment'){
           $('#on_save_email_ship').hide(); $('#on_save_email_note').hide();
           $('#onote_set_sent').attr('checked',false); $('#on_save_email_payment').show();

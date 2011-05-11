@@ -119,7 +119,7 @@ class ControlView extends Component{
         return $this->showerror('place_only_reserved',$ticket);
       } elseif(!in_array($ticket['order_status'],array('ord','pros'))){
         return $this->showerror('order_is_not_valid',$ticket);
-      } elseif(!in_array($ticket['order_payment_status'],array('payed'))){
+      } elseif(!in_array($ticket['order_payment_status'],array('paid'))){
         return $this->showerror('order_is_not_paid',$ticket);
       }
 
@@ -532,13 +532,13 @@ class ControlView extends Component{
 
   function print_order_status ($order_status){
     if($order_status=='ord'){
-      return "<font color='blue'>".con('ordered')."</font>";
+      return "<font color='blue'>".con('order_status_ordered')."</font>";
     }else if ($order_status=='send'){
-      return "<font color='red'>".con('sended')."</font>";
-    }else if($order_status=='payed'){
-      return "<font color='green'>".con('payed')."</font>";
+      return "<font color='red'>".con('order_status_sended')."</font>";
+    }else if($order_status=='paid'){
+      return "<font color='green'>".con('order_status_paid')."</font>";
     }else if($order_status=='cancel'){
-      return "<font color='#787878'>".con('canceled')."</font>";
+      return "<font color='#787878'>".con('order_status_cancelled')."</font>";
     }
   }
 }

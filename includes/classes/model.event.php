@@ -339,7 +339,7 @@ class Event Extends Model {
 
     if(!$dry_run) {
       $this->event_status='pub';
-      if (!plugin::call('!EventPublish', $this) || !$this->save()) {
+      if (!plugin::call('!EventPublishCheck', $this, 'pub') || !$this->save()) {
         return self::_abort('publish7');
       }
       if( ShopDB::commit('Event publised')){
@@ -351,31 +351,28 @@ class Event Extends Model {
   }
 
   function stop_sales (){
-    plugin::call('EventUnPublish', $this);
     return $this->_change_state('pub','nosal');
   }
 
   function restart_sales (){
-    return plugin::call('!EventPublish', $this) &&
-           $this->_change_state('nosal','pub');
+    return $this->_change_state('nosal','pub');
   }
 
   function _change_state ($old_s, $new_s){
 
     if($this->event_status!=$old_s){
-       echo "<div class=error>".con('oldstate_not_correct')."</div>";
-       return FALSE;}
+       return addWarning('oldstate_not_correct');
+    }
 
     if(ShopDB::begin('change event_state')){
       $this->event_status=$new_s;
 
-      if(!$this->save()){
+      if(!plugin::call('!EventPublishCheck', $this, $new_s) || !$this->save()){
         return $this->_abort('error_event_save_changes');
       }
       return ShopDB::commit('Event_state changed');
     } else {
-      echo '<div class=error>'.con('cant_Start_transaction').'</div>';
-      return FALSE;
+      return addWarning('cant_Start_transaction');;
     }
   }
 

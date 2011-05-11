@@ -33,7 +33,7 @@
  */
 
 if (!defined('ft_check')) {die('System intrusion ');}
-require_once("class.xml2php.php");
+
 
 class RestServiceClient {
 
@@ -94,9 +94,9 @@ class RestServiceClient {
 
 		//if we didn't get a '200 OK' then thow an Exception
 		if ($httpStatusCode != 200) {
-			throw new Exception('HTTP/REST error: ' . $httpMessage. $httpStatusCode);
+			throw new Exception('HTTP/REST error: ' . $httpMessage. " ({$httpStatusCode})");
 		} else {
-			$this->response = $result;
+		 return	$this->response = $result;
 		}
 	}
 
@@ -105,6 +105,7 @@ class RestServiceClient {
 	}
 
   public function getArray(){
+    require_once("class.xml2php.php");
     return Xml2php::xml2array($this->getResponse());
   }
 
@@ -145,6 +146,110 @@ class RestServiceClient {
 		}
 
     return http_build_query($queryArray,null,"&");
+  }
+
+  static function encrypt($string, $key) {
+    srand((double) microtime() * 1000000); //for sake of MCRYPT_RAND
+    $key = md5($key); //to improve variance
+    /* Open module, and create IV */
+    $td = mcrypt_module_open('rijndael-256', '','cfb', '');
+    $key = substr($key, 0, mcrypt_enc_get_key_size($td));
+    $iv_size = mcrypt_enc_get_iv_size($td);
+    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+    /* Initialize encryption handle */
+    if (mcrypt_generic_init($td, $key, $iv) != -1) {
+
+      /* Encrypt data */
+      $length = strlen($string);
+      $string = $length.'|'.$string;
+
+      $c_t = mcrypt_generic($td, $string);
+      mcrypt_generic_deinit($td);
+      mcrypt_module_close($td);
+      $c_t = $iv.$c_t;
+      return $c_t;
+    } //end if
+  }
+
+  static function decrypt($string, $key) {
+    $key = md5($key); //to improve variance
+    /* Open module, and create IV */
+    $td = mcrypt_module_open('rijndael-256', '','cfb', '');
+    $key = substr($key, 0, mcrypt_enc_get_key_size($td));
+    $iv_size = mcrypt_enc_get_iv_size($td);
+    $iv = substr($string,0,$iv_size);
+    $string = substr($string,$iv_size);
+    /* Initialize encryption handle */
+    if (mcrypt_generic_init($td, $key, $iv) != -1) {
+
+      /* Encrypt data */
+      $c_t = mdecrypt_generic($td, $string);
+      list($length, $padded_data) = explode('|', $c_t, 2);
+      $c_t = substr($padded_data, 0, $length);
+
+      mcrypt_generic_deinit($td);
+      mcrypt_module_close($td);
+      return $c_t;
+    } //end if
+  }
+
+  static function deCryptJSON($json, $checksom, $token){
+  global $localData;
+  if (empty($json)) {
+    header('HTTP/1.1 400 datablock not filled correctly');
+    die;
+  } elseif (!RestServiceClient::isBase64($json)) {
+    header('HTTP/1.1 400 result not a valid value');
+    die;
+  } else {
+    $json = base64_decode($json);
+    if (sha1($json) !== $checksom) {
+      header('HTTP/1.1 400 Checksom failed');
+      die;
+
+    } else {
+      try {
+        $json = RestServiceClient::decrypt($json, $token);
+      }catch(Exception $e){
+        header('HTTP/1.1 400 Decryption faild');
+        die (print_r($e));
+      }
+      $json = json_decode($json,true);
+      if ($err = RestServiceClient::json_error() ) {
+        header('HTTP/1.1 400 json: '.$err);
+        die;
+      }
+      return $json;
+    }
+  }
+  return false;
+}
+  static function json_error(){
+    switch(json_last_error()) {
+      case JSON_ERROR_DEPTH:
+        return 'Maximum stack depth exceeded';
+        break;
+      case JSON_ERROR_CTRL_CHAR:
+        return 'Unexpected control character found';
+        break;
+      case JSON_ERROR_SYNTAX:
+        return 'Syntax error, malformed JSON';
+        break;
+      case JSON_ERROR_NONE:
+        return false;//  ' - No errors';
+        break;
+      default:
+        return 'Unknown error: '.json_last_error();
+    }
+  }
+
+  static function isBase64($data)
+  {
+    if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $data)) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
   }
 }
 ?>

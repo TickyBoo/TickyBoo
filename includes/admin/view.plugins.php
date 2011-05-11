@@ -186,7 +186,7 @@ class PluginsView extends AdminView{
 
     $extras = $hand->config($this);
     if ( $extras) {
-      require_once('smarty/Smarty.class.php');
+      require_once(LIBS.'smarty3/Smarty.class.php');
       require_once('classes/smarty.gui.php');
 
       $smarty = new Smarty;

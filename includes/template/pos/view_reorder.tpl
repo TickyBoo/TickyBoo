@@ -91,7 +91,7 @@
     		  <td class="subtitle">
     		  {if $shop_order.order_payment_status eq "none"}
     		    <font color="#FF0000">{!NotPaid!}</font>
-    		  {elseif $shop_order.order_payment_status eq "payed"}
+    		  {elseif $shop_order.order_payment_status eq "paid"}
     		  	<font color='green'>{!paid!}</font>
     		  {/if}
     		  </td>

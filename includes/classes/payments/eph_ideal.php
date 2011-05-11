@@ -154,7 +154,7 @@ class eph_ideal extends payment{
    if ($status = IDEAL_TX_STATUS_SUCCESS) {
 	    $order->order_payment_id=$transactionID;
 	    Order::set_payment_id($order->order_id,'ideal:'.$transactionID);
-      $order->set_payment_status('payed');
+      $order->set_payment_status('paid');
       return array('approved'=>true,
                    'transaction_id'=>$transactionID ,
                    'response'=> 'Naam: '.$consumerName. "<br>".
@@ -191,7 +191,7 @@ class eph_ideal extends payment{
     	if (in_array($status, array(IDEAL_TX_STATUS_SUCCESS))) {
   	    $order->order_payment_id=$transactionID;
   	    Order::set_payment_id($order->order_id,'ideal:'.$transactionID);
-        $order->set_payment_status('payed');
+        $order->set_payment_status('paid');
         return true;
       } elseif (in_array($status, array(IDEAL_TX_STATUS_CANCELLED, IDEAL_TX_STATUS_EXPIRED ))) {
         $order->delete($order->order_id, $response->GetStatusText());

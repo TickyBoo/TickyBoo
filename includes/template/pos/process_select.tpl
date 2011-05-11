@@ -62,14 +62,14 @@
 {elseif $TabBarid == 1} {*  eq "unpaid" *}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq "setpaid"}
-      {$order->set_payed_f($smarty.post.order_id)}
+      {$order->set_paid_f($smarty.post.order_id)}
      	<div class='success' style="text-align:center;">
         {!order_status_changed!}
      	</div>
   	{/if}
-    {include file="process_view.tpl" status="ord" not_status="payed" place='' not_hand_payment='entrance'}
+    {include file="process_view.tpl" status="ord" not_status="paid" place='' not_hand_payment='entrance'}
   {else}
-    {include file="process_list.tpl" status="ord" not_status="payed" place='' not_hand_payment='entrance'}
+    {include file="process_list.tpl" status="ord" not_status="paid" place='' not_hand_payment='entrance'}
   {/if}
 
 {elseif $TabBarid == 2} {*  eq "unsent" *}
@@ -81,9 +81,9 @@
         {!order_status_changed!}
       </div>
     {/if}
-    {include file="process_view.tpl" not_status="send" status="payed" hand_shipment='post,sp'}
+    {include file="process_view.tpl" not_status="send" status="paid" hand_shipment='post,sp'}
   {else}
-    {include file="process_list.tpl" not_status="send" status="payed" hand_shipment='post,sp'}
+    {include file="process_list.tpl" not_status="send" status="paid" hand_shipment='post,sp'}
   {/if}
 
 {elseif $TabBarid == 3} {*  eq "pos owned orders" *}
@@ -95,9 +95,9 @@
 
 {elseif $TabBarid == 4} {*  eq "all paid orders" *}
   {if $smarty.request.order_id}
-    {include file="process_view.tpl" status="payed,send" orderby="order_date DESC" cur_order_dir="DESC"}
+    {include file="process_view.tpl" status="paid,send" orderby="order_date DESC" cur_order_dir="DESC"}
   {else}
-    {include file="process_list.tpl" status="payed,send" orderby="order_date DESC"}
+    {include file="process_list.tpl" status="paid,send" orderby="order_date DESC"}
   {/if}
 
 {elseif $TabBarid == 5} {*  eq "search other orders" *}

@@ -150,7 +150,7 @@
                   <font color="#FF0000">{!notpaid!}</font>
                 {elseif $shop_order.order_payment_status eq "pending"}
           			<font color="orange">{!pending!}</font>
-                {elseif $shop_order.order_payment_status eq "payed"}
+                {elseif $shop_order.order_payment_status eq "paid"}
                   <font color='#00CC00'>{!paid!}</font>
                 {/if}
               </td>
@@ -191,7 +191,7 @@
                 <form name='manualpayment' action='view.php' method='post'>
                   <input type="hidden" name="action" value="setpaid" />
       						<input type="hidden" name="order_id" value="{$shop_order.order_id}" />
-                  <input type="submit" value="{!change_order_to_payed!}" onclick="if(alert()){return true}else{return false}" />
+                  <input type="submit" value="{!change_order_to_paid!}" onclick="if(alert()){return true}else{return false}" />
                 </form>
               </td>
             </tr>
@@ -217,7 +217,7 @@
       						    	<input type="hidden" name="action" value="setpaid" />
       						        <input type="hidden" name="order_id" value="{$shop_order.order_id}" />
       				          		<p>
-      				          		<input type="submit" value="{!change_order_to_payed!}" />
+      				          		<input type="submit" value="{!change_order_to_paid!}" />
       					      	<p>
                     </form>
       				  		{/if}
@@ -240,7 +240,7 @@
               </td>
             </tr>
            	{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel")
-				and $shop_order.order_payment_status eq "payed" and $shop_order.order_shipment_status neq "send"
+				and $shop_order.order_payment_status eq "paid" and $shop_order.order_shipment_status neq "send"
 				and ($shop_order.handling_shipment eq 'sp' or $shop_order.handling_shipment eq 'post')}
 			<tr>
 				<td colspan="2" style="text-align:center;">
@@ -332,7 +332,7 @@
             <td width='33%' align="right">
               {if $order_search}
                 &nbsp;
-      				{elseif $not_status eq "payed"}
+      				{elseif $not_status eq "paid"}
               		<a href="view.php?order_id={$next_order_id}">{!pos_nextunpaid!}</a>
   				{elseif $not_status eq "send"}
   					<a href="view.php?order_id={$next_order_id}">{!pos_nextunsent!}</a>

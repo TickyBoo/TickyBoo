@@ -4,6 +4,14 @@
 **
 **************************************************************************************************
 
+18-04-2011:
+
+- Ondersteuning voor het nieuwe 'status' veld toegevoegd. Bevat de status zoals deze door de bank werd terug gegeven.
+
+14-09-2010:
+
+- cURL ondersteuning toegevoegd. Wordt gebruikt als het beschikbaar is, anders fsock.
+
 17-02-2010:
 
 - Casting toegevoegd bij SimpleXML results 

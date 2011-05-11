@@ -178,7 +178,7 @@ class EPH_eProcessingNetwork Extends Payment{
 					if($this->_check_order($order, $res)){
 						$order->order_payment_id=$transaction_id;
       	    Order::set_payment_id($order->order_id,'auth_aim:'.$transaction_id);
-						$order->set_payment_status('payed');
+						$order->set_payment_status('paid');
 						$return['approved'] = TRUE;
 					}else{
 						$return['response'].="Payment Error: Order $order_id check failed!";

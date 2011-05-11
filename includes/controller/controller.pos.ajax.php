@@ -560,7 +560,7 @@ class ctrlPosAjax extends ctrlPosCheckout {
             FROM `Order`
             WHERE order_id="._esc($orderid);
     	$q = ShopDB::query_one_row($sql);
- 	  	$this->json['status'] = $q['order_payment_status']=='payed';
+ 	  	$this->json['status'] = $q['order_payment_status']=='paid';
       $this->json['show'] = true;
 		return true;
 	}

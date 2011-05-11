@@ -107,7 +107,7 @@
               <tr class='admin_order_{$shop_order.order_status}'>
             {elseif $shop_order.order_shipment_status eq "send"}
               <tr class='admin_order_{$shop_order.order_shipment_status}'>
-            {elseif $shop_order.order_payment_status eq "payed"}
+            {elseif $shop_order.order_payment_status eq "paid"}
               <tr class='admin_order_{$shop_order.order_payment_status}'>
             {elseif $shop_order.order_status eq "ord"}
               <tr class='admin_order_{$shop_order.order_status}'>

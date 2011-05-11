@@ -186,8 +186,8 @@ class report_entrant extends AdminView {
       $worksheet->write($i, 3 ,$row['seat_count'], $format_left);
       $totseats += $row['seat_count'];
       $price ='';
-      If ($row['order_payment_status'] == 'payed') {
-        $price .= con('order_type_payed');
+      If ($row['order_payment_status'] == 'paid') {
+        $price .= con('order_type_paid');
       } else {
         $price .= $row['seat_totall_price'];
         $totprice += $row['seat_totall_price'];

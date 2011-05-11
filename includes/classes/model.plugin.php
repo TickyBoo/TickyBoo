@@ -94,13 +94,6 @@ class plugin extends model {
     return parent::save($id, $exclude);
   }
 
-  public function __call($method, $args) {
-    print "Method $method called:\n";
-    var_dump($args);
-    return $this->x;
-  }
-
-
   static function call($eventname) {
     global $_SHOP;
     if (!isset($_SHOP->plugins)) {
@@ -204,7 +197,7 @@ class plugin extends model {
       $extra = array();
       foreach($this->_plug->extras as $key) {
         self::getFieldtype($key);
-        $extra[$key] = is($data[$key], null);
+        $extra[$key] = is($this->$key, null);
       }
       $this->plugin_settings=serialize($extra);
     }
@@ -220,7 +213,7 @@ class plugin extends model {
     foreach($this->_plug->extras as $key) {
       self::getFieldtype($key);
       if(isset($extra[$key])){
-        $this->$key = $val;
+        $this->$key = $extra[$key];
       }
     }
   }
@@ -235,6 +228,11 @@ class plugin extends model {
   function _fill (& $data, $nocheck=true){
     if (!empty($data['plugin_name'])) $this->plug($data['plugin_name']);
     $ok = parent::_fill($data, $nocheck);
+    if ($ok && $this->_plug) {
+      foreach($_plug->extras as $key)
+        $this->extra[$key] = is($data[$key], null);
+
+    }
     if ($this->_plug && !$this->_plug->isInit) $this->_plug->init();
     return $ok;
   }
@@ -344,7 +342,7 @@ abstract class basePlugin {
 
   public function CheckValues(&$arr){
     foreach($this->extras as $key){
-      if (self::getFieldtype($key) & self::MDL_MANDATORY) {
+      if (model::getFieldtype($key) & model::MDL_MANDATORY) {
         if ((!isset($arr[$key]) || $arr[$key]=='') && ( (!isset($this->plugin->$key) || ($this->plugin->$key=='')))) {
           addError($key, 'mandatory');
         }

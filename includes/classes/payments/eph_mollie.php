@@ -112,23 +112,31 @@ class eph_mollie extends payment{
         return array('approved'=>false,
                      'transaction_id'=>$ideal->getErrorCode().' - '.$ideal->getErrorMessage(),
                      'response'=> implode('<br>',$ideal->getConsumerInfo()));
-
     	}
     }
   }
 
   function on_return($order, $result){
-    if ($order->order_payment_status == 'canceled'){
-        return array('approved'      => false,
-                     'transaction_id'=> null ,
-                     'response'      => con('mollie_status_canceled'));
-    } else {
-      return array('approved'=>true,
-                   'transaction_id'=>($_GET['transaction_id']) ,
-                     'response'=> 'Betaling '.con($order->order_payment_status).'. De tickets zijn (of worden) naar je verzonden zo gouw de betaling binnen is.<br>'
-				   				.'Order Status: '.con($order->order_status).'<br />'
-				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
-				   				.'Shipping Status: '.con($order->order_shipment_status));
+    if (isset($_GET['transaction_id'])) {
+
+      if ($order->order_payment_status == 'cancelled'){
+          return array('approved'      => false,
+                       'transaction_id'=> null ,
+                       'response'      => con('mollie_status_canceled'));
+      } elseif ($order->order_payment_status == 'paid') {
+        return array('approved'=>true,
+                     'transaction_id'=>($_GET['transaction_id']) ,
+                       'response'=> 'Betaling '.con($order->order_payment_status).'. De tickets zijn (of worden) naar je verzonden zo gouw de betaling binnen is.<br>'
+  				   				.'Order Status: '.con($order->order_status).'<br />'
+  				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
+  				   				.'Shipping Status: '.con($order->order_shipment_status));
+      } elseif ($order->order_payment_status == 'paid') {
+        return array('transaction_id'=>($_GET['transaction_id']) ,
+                       'response'=> 'De betaling is nog niet afgerond. Zo gauw dat is gebeurd wordt dit op de hoogte gebracht.<br>'
+  				   				.'Order Status: '.con($order->order_status).'<br />'
+  				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
+  				   				.'Shipping Status: '.con($order->order_shipment_status));
+      }
     }
   }
 
@@ -139,17 +147,20 @@ class eph_mollie extends payment{
       $ideal->setTestmode($this->pm_mollie_test);
     	$ideal->checkPayment($_GET['transaction_id']);
 
-      OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::notpaide',print_r(	$ideal,true));
+      OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::message',print_r(	$ideal,true));
 	    if ($ideal->getPaidStatus() == true){
   	    Order::set_payment_id($order->order_id,'mollie:'.$_GET['transaction_id']);
-        $order->set_payment_status('payed');
+        $order->set_payment_status('paid');
       } else {
-        $order->set_payment_status('canceled');
+        $order->set_payment_status('cancelled');
+
       }
+      header('HTTP/1.1 200 Data received', true, 200);
+
     } else {
       OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify:result_error',print_r($_REQUEST,true));
+      header('HTTP/1.1 400 Missing transaction_id', true, 400);
     }
-    header('HTTP/1.1 200 Data received', true, 200);
     return true;
 
   }

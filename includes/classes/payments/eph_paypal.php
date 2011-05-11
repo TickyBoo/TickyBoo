@@ -150,7 +150,7 @@ class EPH_paypal extends payment{
         $return =true;
     	  $order->order_payment_id='paypal:'.$_POST['txn_id'];
   	    Order::set_payment_id($order->order_id,'paypal:'.$_POST['txn_id']) ;
-        $order->set_payment_status('payed');
+        $order->set_payment_status('paid');
     }
     $debug .= $debugx;
     OrderStatus::statusChange($order_id,'paypal',$debugx,'checkout::notify',$debug.print_r($_POST,true));

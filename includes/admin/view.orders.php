@@ -246,7 +246,7 @@ class OrdersView extends AdminView{
       <td class='admin_list_item'>".formatAdminDate($row["order_date"])."</td>";
 
       $com=$this->order_commands($row,TRUE);
-      echo "<td class='admin_list_item' align='right' width=130>".$com["details"].$com["print"]." ".$com["send"].$com["payed"].$com["reissue"].$com["delete"]."</td>";
+      echo "<td class='admin_list_item' align='right' width=130>".$com["details"].$com["print"]." ".$com["send"].$com["paid"].$com["reissue"].$com["delete"]."</td>";
       echo "</tr>";
     }
 
@@ -469,7 +469,7 @@ class OrdersView extends AdminView{
       echo "<tr id=\"on_save_email_ship\" style=\"display:none;\"><td class='' style='text-align:center;'>"
         .$this->Show_button('submit','save_ship',3)."</td><td><label for='onote_set_sent'>".con("onote_set_sent")."</label><input type='checkbox' id='onote_set_sent' name='onote_set_sent' value='1' /></td></tr>";
       echo "<tr id=\"on_save_email_payment\" style=\"display:none;\"><td class='' style='text-align:center;'>"
-        .$this->Show_button('submit','save_payment',3)."</td><td><label for='onote_set_payed'>".con("onote_set_payed")."</label><input type='checkbox' id='onote_set_payed' name='onote_set_payed' value='1' /></td></tr>";
+        .$this->Show_button('submit','save_payment',3)."</td><td><label for='onote_set_paid'>".con("onote_set_paid")."</label><input type='checkbox' id='onote_set_paid' name='onote_set_paid' value='1' /></td></tr>";
       echo "<tr id=\"on_save_email_note\" style=\"display:none;\"><td class='' colspan='2' style='text-align:center;'>"
         .$this->Show_button('submit','save_note',3)."</td></tr>";
 */
@@ -479,7 +479,7 @@ class OrdersView extends AdminView{
       $('#onote_type-select').change(function(){
         if($(this).val() == '".OrderNote::TYPE_SHIP."'){
           $('#on_save_email_ship').show(); $('#on_save_email_note').hide();
-          $('#on_save_email_payment').hide(); $('#onote_set_payed').attr('checked',false);
+          $('#on_save_email_payment').hide(); $('#onote_set_paid').attr('checked',false);
         }else if($(this).val() == '".OrderNote::TYPE_PAYMENT."'){
           $('#on_save_email_ship').hide(); $('#on_save_email_note').hide();
           $('#onote_set_sent').attr('checked',false); $('#on_save_email_payment').show();
@@ -530,7 +530,7 @@ class OrdersView extends AdminView{
       switch($_GET['action1']){
         case 'set_status_shipment_send': $order->set_shipment_status('send');break;
         case 'set_status_shipment_none': $order->set_shipment_status('none');break;
-        case 'set_status_payment_payed': $order->set_payment_status('payed');break;
+        case 'set_status_payment_paid': $order->set_payment_status('paid');break;
         case 'set_status_payment_none':  $order->set_payment_status('none');break;
         case 'set_status_ord':           $order->set_status('ord');break;
       }
@@ -565,8 +565,8 @@ class OrdersView extends AdminView{
       $order->emailNote = $orderNote->onote_note;
       if(is($_REQUEST['onote_set_sent'])==="1"){
         $order->set_shipment_status('send');
-      }elseif(is($_REQUEST['onote_set_payed'])==="1"){
-        $order->set_payment_status('payed');
+      }elseif(is($_REQUEST['onote_set_paid'])==="1"){
+        $order->set_payment_status('paid');
       }elseif(isset($_REQUEST['save_payment'])){
         $orderNote->sendNote($order);
       }elseif(isset($_REQUEST['save_ship'])){
@@ -672,12 +672,12 @@ class OrdersView extends AdminView{
 
   function print_order_status ($order){
     switch($order['order_status']){
-      case 'ord':   return "<font color='blue'>".con('ordered')."</font>";
-      case 'send':  return "<font color='red'>".con('sended')."</font>";
-      case 'payed': return "<font color='green'>".con('payed')."</font>";
-      case 'cancel':return "<font color='#787878'>".con('canceled')."</font>";
-      case 'res':return "<font color='orange'>".con('reserved')."</font>";
-      case 'reissue':return "<font color='#787878'>".con('reissued')."</font> (
+      case 'ord':   return "<font color='blue'>".con('order_status_ordered')."</font>";
+      case 'send':  return "<font color='red'>".con('order_status_sended')."</font>";
+      case 'paid': return "<font color='green'>".con('paidorder_status_')."</font>";
+      case 'cancel':return "<font color='#787878'>".con('order_status_cancelled')."</font>";
+      case 'res':return "<font color='orange'>".con('order_status_reserved')."</font>";
+      case 'reissue':return "<font color='#787878'>".con('order_status_reissued')."</font> (
       <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reissued_id']}'>
       {$order['order_reissued_id']}</a> )";
     }
@@ -696,10 +696,10 @@ class OrdersView extends AdminView{
     <tr><td class='admin_order_res' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('reserved')."</td></tr>
     <tr><td class='admin_order_ord' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('ordered')."</td></tr>
     <tr><td class='admin_order_pending' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('pending')."</td></tr>
-    <tr><td class='admin_order_payed' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('payed')."</td></tr>
+    <tr><td class='admin_order_paid' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('paid')."</td></tr>
     <tr><td class='admin_order_send' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('sended')."</td></tr>
-    <tr><td class='admin_order_payedsend' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('payed_and_send')."</td></tr>
-    <tr><td class='admin_order_cancel' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('canceled')."</td></tr>
+    <tr><td class='admin_order_paidsend' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('paid_and_send')."</td></tr>
+    <tr><td class='admin_order_cancel' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('cancelled')."</td></tr>
     <tr><td class='admin_order_reissue' style='padding-left: 25px; padding-top: 2px; padding-bottom: 2px;'>".con('reissue')."</td></tr>
     </table><br>";
 
@@ -716,8 +716,8 @@ class OrdersView extends AdminView{
       <tr><td class='menu_admin_item' $sty><img src='../images/no_mail.png' border='0'> ".con('no_send_order_post')."</td></tr>
 
       <!--tr><td class='menu_admin_item' $sty><img src='../images/email.png' border='0'> ".con('send_order_email')."</td></tr-->
-      <tr><td class='menu_admin_item' $sty><img src='../images/pig.png' border='0'> ".con('change_order_to_payed')."</td></tr>
-      <tr><td class='menu_admin_item' $sty><img src='../images/no_pig.png' border='0'> ".con('change_order_to_no_payed')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/pig.png' border='0'> ".con('change_order_to_paid')."</td></tr>
+      <tr><td class='menu_admin_item' $sty><img src='../images/no_pig.png' border='0'> ".con('change_order_to_no_paid')."</td></tr>
 
       <tr><td class='menu_admin_item' $sty><img src='../images/remis.png' border='0'> ".con('reissue_order_menu')."</td></tr>
       <tr><td class='menu_admin_item' $sty><img src='../images/trash.png' border='0'> ".con('cancel_order')."</td></tr>
@@ -729,10 +729,10 @@ class OrdersView extends AdminView{
   function fill_tr() {
     $tr['ord']     = con('order_type_ordered');
     $tr['send']    = con('order_type_sended');
-    $tr['cancel']  = con('order_type_canceled');
+    $tr['cancel']  = con('order_type_cancelled');
     $tr['reissue'] = con('order_type_reissued');
     $tr['pending'] = con('order_type_pending');
-    $tr['payed']   = con('order_type_payed');
+    $tr['paid']   = con('order_type_paid');
     $tr['res']     = con('order_type_reserved');
     $tr['none']    = '-';
     return $tr;
@@ -772,15 +772,15 @@ class OrdersView extends AdminView{
       $com["no_send"]=$this->link("set_status_shipment_none",$order["order_id"],"no_mail.png",TRUE,con('change_status_to_no_send'),$_GET,
                                ($hide || ( $list) ||  $order['order_status']=='res'));
     }
-    $com["payed"]=$this->link("set_status_payment_payed",$order["order_id"],"pig.png",TRUE,con('change_status_to_payed'),$_GET,
-                              ($order['order_payment_status']=='payed' || $order['order_status']=='res' || $list));
+    $com["paid"]=$this->link("set_status_payment_paid",$order["order_id"],"pig.png",TRUE,con('change_status_to_paid'),$_GET,
+                              ($order['order_payment_status']=='paid' || $order['order_status']=='res' || $list));
 
-    $com["no_payed"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_payed'),$_GET,
+    $com["no_paid"]=$this->link("set_status_payment_none",$order["order_id"],"no_pig.png",TRUE,con('change_status_to_no_paid'),$_GET,
                                  $order['order_payment_status']=='none' || $order['order_status']=='res' || $list);
     $com["reissue"]=$this->link("reissue",$order["order_id"],"remis.png",TRUE,con('reissue_order'),$_GET, $list);
 
     $com["delete"]=$this->link ("delete",$order["order_id"],"trash.png",true,con('order_delete_now') ,$_GET,
-                                ($order['order_payment_status']=='payed' || $hide || $list));
+                                ($order['order_payment_status']=='paid' || $hide || $list));
 
     if(empty($com)){$com[]='';}
     return $com;

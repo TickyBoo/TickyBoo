@@ -234,7 +234,7 @@ tr.user-order-res {
   border-left: 2px solid orange;
 }
 
-tr.user-order-payed {
+tr.user-order-paid {
   border-right: 2px solid green;
   border-left: 2px solid green;
 }

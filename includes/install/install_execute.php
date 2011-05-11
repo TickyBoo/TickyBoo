@@ -114,6 +114,8 @@ class install_execute {
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='forgot_passwd'");
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='Signup_email'");
     shopDB::query("UPDATE Template set template_type='systm' where  template_type='email' and template_name='email_res'");
+    shopDB::query("UPDATE `Order`  set order_payment_status='cancelled' where order_payment_status='canceled'");
+    shopDB::query("UPDATE `Order`  set order_status='paid' where order_status='payed'");
 
     if ((install_execute::CreateConfig($configpath)===false) or !file_exists($configpath)){
         array_push($Install->Errors,"Configuration file is not saved correctly check the folder permissions!");

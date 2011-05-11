@@ -40,7 +40,7 @@ class Seat  Extends Model {
   const STATUS_ORDERED = 'com';
   const STATUS_RESERVED = 'resp';
   const STATUS_HOLD = 'res';
-  const STATUS_CANCELED = 'cancel';
+  const STATUS_CANCELLED = 'cancel';
   const STATUS_TRASH = 'trash';
   const STATUS_SENT = 'sent';
 
@@ -360,7 +360,7 @@ class Seat  Extends Model {
         }
       }
     }
-    if(!$nocommit and !ShopDB::commit('Canceled_cancel_seats')){ //echo e;
+    if(!$nocommit and !ShopDB::commit('Cancelled_seats')){ //echo e;
     	return FALSE;
     }
     return TRUE;

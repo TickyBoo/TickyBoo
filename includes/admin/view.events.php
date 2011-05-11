@@ -574,17 +574,18 @@ select SQL_CALC_FOUND_ROWS *
   function state_confirm_button ($state, $show_button = true) {
     $names = array(1=>'pub_confirm_msg', 2=>'nosale_confirm_msg',3=>'pub_confirm_msg', 4=>'pub_events_confirm_msg');
    // echo $names[$state], ' - ', $state;
-    echo "<div class='info'><br>" . con($names[$state]).'<br>';
+    if (!$show_button) {
+      echo "<form action='{$_SERVER['PHP_SELF']}' method='POST' id='PublishEvents'>";
+      echo "<input type='hidden' name='action' value='{$_REQUEST['action']}'>";
+    }
+     echo "<div class='info'><br>" . con($names[$state]).'<br>';
     if ($show_button) {
-       echo "<input type='hidden' name='action' value='{$_REQUEST['action']}'><br>
+      echo "
        <input type='submit' name='confirm' value='".con('confirm_yes')."'>
        <input type='button' name='goback' onclick='location.href=\"view_event.php\"' value='".con('confirm_no')."'>";
-       echo "</form>";
-     } else {
-	     echo "<form action='{$_SERVER['PHP_SELF']}' method='POST'>";
-     }
-
-     echo "</div>";
+      echo "</form>";
+    }
+    echo "<br></div>";
   }
 
   function state_change_event ($state, $event) {
@@ -619,19 +620,27 @@ select SQL_CALC_FOUND_ROWS *
     }
   }
 
-  function state_change ($state)    {
+  function state_change ($state){
       global $_SHOP;
       $varNum = 0;
       $log    = '';
       $errs = false;
       if (count($_REQUEST['cbxEvents']) > 0) {
+        plugin::call('EventPublishCalc', false, $state);
         foreach($_REQUEST['cbxEvents'] as $eventID) {
           if ($event = Event::load($eventID, false)) {
-            if ($state == 1 and $event->event_status == 'unpub' and $_POST['confirm'] !== con('confirm_yes') ) {
-              //echo $event->event_status;
-              unset($stats);
-              unset($pmps);
+            unset($stats);
+            unset($pmps);
+
+            if ($event->event_status == 'unpub') {
               $event->publish($stats, $pmps, true);
+            } else
+              $_POST['confirm'] = con('confirm_yes');
+            if (!plugin::call('!EventPublishCalc', $event, $stats)) {
+              $_POST['confirm'] = false;
+            }
+            if ($_POST['confirm'] !== con('confirm_yes') ) {
+              //echo $event->event_status;
               $event_d = (array)$event;
               if($varNum==0) $this->state_confirm_button($state, false);
               $errs = $this->event_view($event_d, $stats, $pmps, false) or $errs;
@@ -642,11 +651,17 @@ select SQL_CALC_FOUND_ROWS *
           }
         }
         if($varNum!==0) {
-          if ($errs) {
+          $message = plugin::call('*EventPublishShow');
+          if ($message) {
+            $errs = true;
+            // Display an external page using an iframe
+            echo $message;
+          }elseif ($errs) {
             addWarning('correct_errors_first');
           } else {
-            $this->state_confirm_button($state);
+            $this->state_confirm_button($state, true);
           }
+
           return true;
         }
       } elseif (count($_POST['cbxEvents']) > 0) {

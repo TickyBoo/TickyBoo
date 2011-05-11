@@ -146,7 +146,7 @@ class Order_Smarty {
 
   function cancel_f ($order_id, $reason = null ){
     if ($order = Order::load($order_id)) {
-      return Order::delete($order_id, is($reason,'order_canceled_by_user'), $this->user_auth_id);
+      return Order::delete($order_id, is($reason,'order_cancelled_by_user'), $this->user_auth_id);
     }
   }
 
@@ -174,7 +174,7 @@ class Order_Smarty {
    * 	user = id
    * 	place =
    * 	not_sent = bool
-   * 	not_status = "payed,send"
+   * 	not_status = "paid,send"
    * 	order = "order_date DESC,order_time DESC"
    * 	order_id = id
    *  curr_order_id = "curr_id [DESC|ASC]" Subject to change..
@@ -198,7 +198,7 @@ class Order_Smarty {
       		$types=explode(",",$status);
 
       		foreach($types as $type){
-            if($type=="payed"){
+            if($type=="paid"){
               $where .=" AND Order.order_payment_status='{$type}'";
             }elseif($type=="send"){
               $where .=" AND Order.order_shipment_status='{$type}'";
@@ -218,7 +218,7 @@ class Order_Smarty {
     		$types=explode(",",$notStatus);
 
     		foreach($types as $type){
-          if($type=="payed" && $params['status']!="payed" ){
+          if($type=="paid" && $params['status']!="paid" ){
             $where .=" AND Order.order_payment_status <> "._esc($type);
           }elseif($type=="send" && $params['status']!="send"){
             $where .=" AND Order.order_shipment_status <> "._esc($type);
@@ -500,7 +500,7 @@ class Order_Smarty {
   }
 
   function setStatusPaid($order_id){
-    return Order::set_payed($order_id);
+    return Order::set_paid($order_id);
   }
 
   /**
@@ -594,8 +594,8 @@ class Order_Smarty {
     }
     if(is($request['onote_set_sent'])==="1"){
       $order->set_shipment_status('send');
-    }elseif(is($request['onote_set_payed'])==="1"){
-      $order->set_payment_status('payed');
+    }elseif(is($request['onote_set_paid'])==="1"){
+      $order->set_payment_status('paid');
     }elseif(isset($request['save_payment'])){
       $onote->sendNote($order);
     }elseif(isset($request['save_ship'])){
@@ -608,12 +608,12 @@ class Order_Smarty {
     }
   }
 
-  function set_payed ($params,$smarty){
-    $this->set_payed_f($params['order_id']);
+  function set_paid ($params,$smarty){
+    $this->set_paid_f($params['order_id']);
   }
 
-  function set_payed_f ($order_id){
-    return Order::set_payed($order_id);
+  function set_paid_f ($order_id){
+    return Order::set_paid($order_id);
   }
 
   function order_print ($params, $smarty){

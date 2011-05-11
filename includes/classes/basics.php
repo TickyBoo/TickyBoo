@@ -464,7 +464,7 @@ function check_system() {
               AND order_shipment_status != 'send'";
 
     if($resultOrder=ShopDB::query($query)){
-      //Cycles through orders to see if they should be canceled!
+      //Cycles through orders to see if they should be cancelled!
       while ( $roword = ShopDB::fetch_assoc($resultOrder) ) {
         if ( !Order::Check_payment($roword['order_id'])) {
           if ( $_SHOP->shopconfig_delunpaid_pos == 'Yes' or $roword['order_place'] != 'pos'){

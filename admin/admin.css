@@ -222,9 +222,10 @@ tr.admin_list_row_1:hover {background-color:#Faede4}
 
 .order_list_sended{background-color:#cccccc; }
 
-.order_list_payed{background-color:#cccccc ;}
+.order_list_paid{background-color:#cccccc ;}
 
 .order_list_canceled{background-color:#cccccc ;}
+.order_list_cancelled{background-color:#cccccc ;}
 
 .order_list_reissue{background-color:#cccccc ;}
 
@@ -240,7 +241,7 @@ tr.admin_list_row_1:hover {background-color:#Faede4}
 
 .admin_order_pending{background-color:#77aaee;}
 
-.admin_order_payed{background-color:#99ffcc;}
+.admin_order_paid{background-color:#99ffcc;}
 
 .admin_order_send{background-color:#ffcccc;}
 
@@ -248,7 +249,7 @@ tr.admin_list_row_1:hover {background-color:#Faede4}
 
 .admin_order_reissue{background-color:#ffffcc;}
 
-.admin_order_payedsend{background-color:#FF9966;}
+.admin_order_paidsend{background-color:#FF9966;}
 
 
 
@@ -386,3 +387,46 @@ A.UITabMenuNavOn:hover {
   padding: .2em .6em;
   padding-left: 2.5em;
 }
+
+    #basic-modal-content {display:none;}
+
+    /* Overlay */
+    #simplemodal-overlay {background-color:#0f0f0f; cursor:wait;}
+
+    /* Container */
+    #simplemodal-container {
+      background-color:#ffffff; border:4px solid #004088; padding:12px;
+    }
+    #simplemodal-container code {
+      background:#ffffff;
+      border-left:3px solid #65B43D;
+      color:#bbb; display:block;
+      margin-bottom:12px;
+      padding:4px 6px 6px;
+    }
+    #simplemodal-container a {color:#ddd;}
+    #simplemodal-container a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+
+    #simplemodal-container #basic-modal-content {padding:8px;}
+    #simplemodal-container .header {height:30px; line-height:30px; width:100%; background:url(../imgages/modelheader.gif) repeat-x; color:#fff; font-weight:bold;}
+
+#confirm {display:none;}
+
+/* Overlay */
+#confirm-overlay {background-color:#eee; cursor:wait;}
+
+/* Container */
+#confirm-container {font: 16px/22px 'Trebuchet MS', Verdana, Arial;
+                    text-align:left;
+                    background:#fff;
+                    border:2px solid #336699;}
+#confirm-container .header {height:25px; line-height:25px; width:100%; background:url(../images/modelheader.gif) repeat-x; color:#fff; font-weight:bold;}
+#confirm-container .header span {padding-left:8px;}
+#confirm-container .message {color:#333; font-size:14px; margin:0; padding:12px 4px 12px 8px; width:}
+#confirm-container .buttons {line-height:26px; width:160px; float:right; padding:10px 8px 0; bottom:5; right:5; vertical-align:text-bottom;position:absolute; }
+#confirm-container .buttons div {float:right; margin-left:4px; width:70px; height:26px; color:#666; font-weight:bold; text-align:center; background:url(../images/modelbutton.gif) repeat-x; border:1px solid #bbb; cursor:pointer;}
+#confirm-container a.modal-close,
+#confirm-container a.modal-close:link,
+#confirm-container a.modal-close:active,
+#confirm-container a.modal-close:visited {text-decoration:none; font-weight:bold; position:absolute; right:10px; top:2px; color:#fff;}
+#confirm-container a.modal-close:hover {color:#ccc;}

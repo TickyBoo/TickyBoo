@@ -27,7 +27,7 @@
 {else}
   {if $smarty.request.order_id}
     {if $smarty.post.action eq "setpaid"}
-      {$order->set_payed_f($smarty.post.order_id)}
+      {$order->set_paid_f($smarty.post.order_id)}
   	{/if}
     {if $smarty.post.action eq 'setsend'}
     	{* $order->set_status_f($smarty.post.order_id,'ord') *}

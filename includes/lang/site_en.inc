@@ -105,7 +105,7 @@ define('print','Print');
 define('set_status_ord','Set to Ordered');
 define('set_status_shipment_send','Set to Sent');
 define('set_status_shipment_none','Set to Not Sent');
-define('set_status_payment_payed','Set to Paid');
+define('set_status_payment_paid','Set to Paid');
 define('set_status_payment_none','Set to Not Paid');
 define("save_payment_tooltip","Save &amp; Email the above note to the customer.");
 define("save_ship_tooltip","Save &amp; Email shipping note");
@@ -221,18 +221,18 @@ define("new_order_created","New Order Created");
 define("not_number","Enter a Number Without -()!");
 define("not_valid_email","E-mail is invalid.");
 define("no_result","No Result!");
-define("old_order_canceled","Old Order Cancelled!");
+define("old_order_cancelled","Old Order Cancelled!");
 define("order_allready_cancelled","Order Already Cancelled!");
-define("order_canceled","Order Cancelled!");
+define("order_cancelled","Order Cancelled!");
 define("order_cannot_reissue","Can Not Re-Issue!");
 define('order_error_message','Order Error Message');
 define('order_madefinal','Order is Complete');
 define("order_not_found","Order Not Found!");
 define('OrderNotFound','Order Not Found');
-define("order_not_canceled","Order Not Cancelled!");
+define("order_not_cancelled","Order Not Cancelled!");
 define('order_notice_message','Order Notice Message');
-define('order_payed_already','Order Already Paid');
-define('order_payed_total','Total Paid');
+define('order_paid_already','Order Already Paid');
+define('order_paid_total','Total Paid');
 define("pass_not_egal","Passwords Do Not Match!");
 define("pass_match","Passwords do not match");
 define("pass_too_short","Password is too short");
@@ -595,9 +595,9 @@ define("order_list_title","Orders by Payment Handling");
 define("order_event_list_title","Orders by Event");
 	define("order_type_ordered","Ordered");
 	define("order_type_pending","Pending");
-	define("order_type_canceled","Cancelled");
+	define("order_type_cancelled","Cancelled");
 	define("order_type_reissued","Re-issued");
-	define("order_type_payed","Paid");
+	define("order_type_paid","Paid");
 	define("order_type_sended","Sent");
 	define("order_type_reserved","Reserved");
 	define("purge","Purge");
@@ -616,11 +616,11 @@ define("order_event_list_title","Orders by Event");
 
 		define("send","Sent");
 	define("order_payment_status","Payment Status");
-	define("order_payed_total_view","Order Total");
+	define("order_paid_total_view","Order Total");
 	define("order_payment_id","Payment ID");
 	define("order_status","Status");
 	define("processed","Processed");
-	define("order_deleted_manual","Order Manually Canceled");
+	define("order_deleted_manual","Order Manually cancelled");
 	define("order_responce","Cancellation Type");
 	define("order_responce_date","Cancellation Date");
   define("order_delete_now","Are you sure to remove this order?");
@@ -651,8 +651,8 @@ define("order_event_list_title","Orders by Event");
 	define("change_status_to_ord","Change Status to Ordered?");
 	define("change_status_to_send","Change Status to Sent?");
 	define("change_status_to_no_send","Change Status to Not Sent?");
-	define("change_status_to_payed","Change Status to Paid?");
-	define("change_status_to_no_payed","Change Status to Not Paid?");
+	define("change_status_to_paid","Change Status to Paid?");
+	define("change_status_to_no_paid","Change Status to Not Paid?");
 	define("reissue_order","Update this order and re-issue with new tickets?");
 	define("reissue_ticket","Re-issue the ticket (recalculate unique barcode)? Ticket Nr:");
 
@@ -661,10 +661,10 @@ define("order_event_list_title","Orders by Event");
 	define("reserved","Reserved");
 	define("ordered","Ordered");
 	define("pending","Pending");
-	define("payed","Paid");
+	define("paid","Paid");
 	define("sended","Sent");
-	define("payed_and_send","Paid and Sent");
-	define("canceled","Cancelled");
+	define("paid_and_send","Paid and Sent");
+	define("cancelled","Cancelled");
 	define("reissue","Re-issued");
 
 	//Action menu
@@ -674,11 +674,11 @@ define("order_event_list_title","Orders by Event");
 	define("change_order_to_ord","Mark 'Ordered'");
 	define("send_order_post","Mark 'Sent'?");
 	define("no_send_order_post","Mark 'Not Sent'");
-	define("change_order_to_payed","Mark 'Paid'");
+	define("change_order_to_paid","Mark 'Paid'");
 	define("change_order_to_send","Mark 'Sent'");
-	define("change_order_to_no_payed","Mark 'Not Paid'");
+	define("change_order_to_no_paid","Mark 'Not Paid'");
 	define("reissue_order_menu","Update this Order and Issue with new tickets.");
-	define("cancel_order","Mark `Canceled` and Delete Tickets");
+	define("cancel_order","Mark `cancelled` and Delete Tickets");
 
 //Templates
 define("templ_System","System Emails");
@@ -750,20 +750,20 @@ define("handling_update_title","Modify the Payment Type");
 	define("handling_fee_percent","Fee Percent");
 	define("handling_email_template_ord","Email to send when Ordered");
 	define("handling_email_template_send","Email to send when Shipped");
-	define("handling_email_template_payed","Email to send when Paid");
+	define("handling_email_template_paid","Email to send when Paid");
 	define("handling_pdf_template","PDF Template for Invoice/Receipt");
 	define("handling_pdf_ticket_template","PDF Ticket Template");
 	define("handling_text_payment","Payment Label");
 	define("handling_text_shipment","Shipment Label");
 	define("handling_html_template","HTML Template for Explanations");
   define("handling_email_template_ord_incl_pdf","Include PDF's for Order");
-  define("handling_email_template_payed_incl_pdf","Include PDF's for Paid");
+  define("handling_email_template_paid_incl_pdf","Include PDF's for Paid");
   define("handling_email_template_send_incl_pdf","Include PDF's for Sent");
   define("handling_email_template_ord_incl_inv_pdf","Invoice/Receipt");
-  define("handling_email_template_payed_incl_inv_pdf","Invoice/Receipt");
+  define("handling_email_template_paid_incl_inv_pdf","Invoice/Receipt");
   define("handling_email_template_send_incl_inv_pdf","Invoice/Receipt");
   define("handling_email_template_ord_incl_ticket_pdf"," Ticket");
-  define("handling_email_template_payed_incl_ticket_pdf"," Ticket");
+  define("handling_email_template_paid_incl_ticket_pdf"," Ticket");
   define("handling_email_template_send_incl_ticket_pdf"," Ticket");
   define("handling_only_manual_send","Always manually send email");
 
@@ -1105,7 +1105,7 @@ define("number_tickets","Number of tickets"); //personal_reorder.tpl
 define("userid","User Id");
 define("cancelled","Cancelled");
 define("buytimeleft","You have ~DAYS~ Days, ~HOURS~ Hours, ~MINS~ Mins, ~SECS~ Seconds left to confirm your order!");
-define("autocancel","After this time your order is automatically canceled!");
+define("autocancel","After this time your order is automatically cancelled!");
 define("ordertickets","To Order Tickets Click below:");
 define("reserv_cancel","WARNING this is a one way process!");
 define("notpaid","Not Paid");
@@ -1128,7 +1128,7 @@ define("options","Options");
 define("pers_cancel","Cancelled");
 define("pers_ord","Ordered/Unpaid");
 define("pers_page","Personal Page"); //user_logon_block.tpl
-define("pers_payed","Paid");
+define("pers_paid","Paid");
 define("pers_reissue","Re-issued");
 define("pers_res","Reserved");
 define("pers_send","Sent & Paid");
@@ -1264,7 +1264,7 @@ define("pos_nextorder","Next Order");
 define("pos_nextunpaid","Next UnPaid Order");
 define("pos_nextunsent","Next UnSent Order");
 define("pos_processorder","Processed Order? The Order ID and Ticket IDs been noted?");
-define("pos_reorder_info","To Order Tickets Click below:<br>WARNING old order is CANCELED on Re-Order!");
+define("pos_reorder_info","To Order Tickets Click below:<br>WARNING old order is cancelled on Re-Order!");
 define("pos_ticketready","The tickets have there ID and Order ID on them and are ready to to be posted?");
 define("shipmentstatus","Shipment Status");
 define("next_order_id","Next Order ID");
@@ -1425,7 +1425,7 @@ define('publish7','publish7');
 define('pub__failure','The following event failed to publish:');
 define('export_entrant_withseats','Export with seat numbers');
 
-define('mollie_status_canceled','You have canceled the order while in iDeal');
+define('mollie_status_cancelled','You have cancelled the order while in iDeal');
 define('always_show_handling','Show always');
 define('shopconfig_maxorder','Max tickets to order');
 
@@ -1523,9 +1523,9 @@ define('onote_isprivate',' (<i>private</i>)');
   define("onote_subject","Note Subject");
   define("onote_note","Note Details");
   define("onote_set_sent","On \"Save &amp; Email\" Set Order To Sent.");
-  define("onote_set_payed","On \"Save &amp; Email\" Set Order To Paid.");
+  define("onote_set_paid","On \"Save &amp; Email\" Set Order To Paid.");
   define("onote_resend_sent","Resend \"Sent\" Email.");
-  define("onote_resend_payed","Resend \"Paid\" Email.");
+  define("onote_resend_paid","Resend \"Paid\" Email.");
 
 
 define("logged_in","User:");
@@ -1663,4 +1663,52 @@ define('you_do_not_have_access','you_do_not_have_access');
 define('order_seats','order_seats');
 define('templ_files','templ_files');
 define('discount_used','discount_used');
+?>
+<?php
+define('Click to UnPublish','Click to UnPublish');
+?>
+<?php
+define('New Event','New Event');
+?>
+<?php
+define('Click to Publish','Click to Publish');
+?>
+<?php
+define('Install','Install');
+?>
+<?php
+define('Uninstall','Uninstall');
+?>
+<?php
+define('plugin_config_title','plugin_config_title');
+?>
+<?php
+define('plugin_fts_username','plugin_fts_username');
+?>
+<?php
+define('plugin_fts_password','plugin_fts_password');
+?>
+<?php
+define('plugin_fts_comm_error','plugin_fts_comm_error');
+?>
+<?php
+define('plugin_fts_user','plugin_fts_user');
+?>
+<?php
+define('plugin_fts_servertoken','plugin_fts_servertoken');
+?>
+<?php
+define('pub_failure','pub_failure');
+?>
+<?php
+define('error_event_save_changes','error_event_save_changes');
+?>
+<?php
+define('stop_failure','stop_failure');
+?>
+<?php
+define('Click to RePublish','Click to RePublish');
+?>
+<?php
+define('restart_failure','restart_failure');
 ?>

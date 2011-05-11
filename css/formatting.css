@@ -108,7 +108,7 @@ line-height: 12px;}
 .order_ptotal{font-family:Verdana; color:#000000;font-size:12px;}
 
 .admin_order_ord{background-color:#99ccff;}
-.admin_order_payed{background-color:#99ffcc;}
+.admin_order_paid{background-color:#99ffcc;}
 .admin_order_send{background-color:#ffcccc;}
 .admin_order_cancel{background-color:#cccccc;}
 .admin_order_reissue{background-color:#ffffcc;}

@@ -203,11 +203,11 @@ class OrderView extends AdminView{
 
   function print_order_status ($order){
     switch($order['order_status']){
-      case 'ord':    return "<font color='blue'>".con('ordered')."</font>";
-      case 'send':   return "<font color='red'>".con('sended')."</font>";
-      case 'payed':  return "<font color='green'>".con('payed')."</font>";
-      case 'cancel': return "<font color='#787878'>".con('canceled')."</font>";
-      case 'reissue':return "<font color='#787878'>".con('reissued')."</font> (
+      case 'ord':    return "<font color='blue'>".con('order_status_ordered')."</font>";
+      case 'send':   return "<font color='red'>".con('order_status_sended')."</font>";
+      case 'paid':  return "<font color='green'>".con('order_status_paid')."</font>";
+      case 'cancel': return "<font color='#787878'>".con('order_status_cancelled')."</font>";
+      case 'reissue':return "<font color='#787878'>".con('order_status_reissued')."</font> (
       <a href='{$_SERVER['PHP_SELF']}?action=details&order_id={$order['order_reissued_id']}'>
       {$order['order_reissued_id']}</a> )";
     }

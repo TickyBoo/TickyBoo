@@ -245,8 +245,8 @@ class EPH_google extends Payment{
 							Order::delete($order->order_id,'user_cancelled_by_google_checkout'); //"Canceled By Google Checkout (User Canceled)."
 
 							$Grequest->SendBuyerMessage($google_order_id,
-						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been canceled.
-						   		Your order has been canceled, please login into Google Checkout for more info.", true);
+						   		"Your payment for ".$_SHOP->organizer_data->organizer_name." has been cancelled.
+						   		Your order has been cancelled, please login into Google Checkout for more info.", true);
             }else{
 				   			$order->set_payment_status('none');
 				  			$Grequest->SendBuyerMessage($google_order_id,
@@ -302,7 +302,7 @@ class EPH_google extends Payment{
 			  		$amount = $order->order_total_price - $google_total_charge_amount;
 			  		$Grequest->SendChargeOrder($google_order_id,$amount);
 			  	}elseif($google_total_charge_amount >= $order->order_total_price){
-			  		$order->set_payment_status("payed");
+			  		$order->set_payment_status("paid");
 			  		$Grequest->SendArchiveOrder($google_order_id);
 			  	}else{
 			  		$Gresponse->SendServerErrorStatus("500 The server couldn't match the amounts paid please try later.", true);

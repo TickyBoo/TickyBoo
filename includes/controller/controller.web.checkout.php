@@ -281,7 +281,7 @@ class ctrlWebCheckout extends ctrlWebShop {
  		$this->__MyCart->destroy_f(); // destroy cart
     $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if ($myorder) {
-       Order::delete($myorder->order_id,'pos_manual_canceled' );
+       Order::delete($myorder->order_id,'pos_manual_cancelled' );
     }
     return true;
   }
@@ -294,7 +294,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     }
     $hand=$myorder->handling;
     $pm_return = $hand->on_return($myorder, false );
-    Order::delete($myorder->order_id,'order_canceled_will_paying' );
+    Order::delete($myorder->order_id,'order_cancelled_will_paying' );
     $this->setordervalues($myorder);
     $pm_return['response'] .= "<tr><td colspan='2'><p class='notice'>".con('orderdeleted')."</p></td></tr>";
     $this->assign('pm_return',$pm_return);

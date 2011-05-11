@@ -93,12 +93,12 @@
 			  <td class="subtitle">
 			  {if $shop_order.order_payment_status eq "none"}
 			    <font color="#FF0000">{!notpaid!}</font>
-			  {elseif $shop_order.order_payment_status eq "payed"}
+			  {elseif $shop_order.order_payment_status eq "paid"}
 			  	<font color="green">{!paid!}</font>
 			  {/if}
 			  </td>
 			</tr>
-			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") or $shop_order.order_payment_status eq "payed"}
+			{if ($shop_order.order_status neq "res" and $shop_order.order_status neq "cancel") or $shop_order.order_payment_status eq "paid"}
 			<tr>
 			  <td colspan="2">
 			  		<font color="Black" size="12px"><b>

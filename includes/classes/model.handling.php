@@ -220,7 +220,7 @@ class Handling Extends Model {
     //If the tickets can be sent email  can be sent upon payment automaticaly go for it!;
     $status = strtolower($new_state);
     $manSend = strtolower($order->handling->handling_only_manual_send);
-    if($status=='payed' &&
+    if($status=='paid' &&
        $order->handling->handling_shipment=='email' &&
        $manSend=='no'){
       $order->set_shipment_status('send');
@@ -353,7 +353,7 @@ class Handling Extends Model {
       	$return = $pm->on_confirm($order);
   		} else {
         if((real)$order->order_total_price === 0.00){
-          $order->set_payment_status ('payed');
+          $order->set_payment_status ('paid');
         }
         return array('approved'=>true,
                      'transaction_id'=>false,

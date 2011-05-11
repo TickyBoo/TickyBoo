@@ -37,9 +37,9 @@ require_once('classes/model.orderstatus.php');
 
 class Order Extends Model {
 
-  const STS_PMT_PAID = 'payed';
+  const STS_PMT_PAID = 'paid';
   const STS_PMT_PEND = 'pending';
-  const STS_PMT_CANCELED = 'canceled';
+  const STS_PMT_CANCELLED = 'cancelled';
   const STS_PMT_NONE = 'none';
 
   const STS_SMT_SENT = 'send';
@@ -456,7 +456,7 @@ class Order Extends Model {
 
       // Added v1.3.4 Checks to see if the order has allready been canceled.
       if($order['order_status']=='cancel'){
-        return self::_abort("Order Allready canceled");
+        return self::_abort("order_allready_cancelled");
       }
 
       //if the order has only one ticket, the whole order will be deleted/canceled instead of just the ticket!
@@ -642,7 +642,7 @@ class Order Extends Model {
       //checks to see if its an remitted or canceled order!
       if($order['order_status']=='cancel' or
        $order['order_status']=='reissue'){
-        return self::_abort('order_already_reissue_canceled');
+        return self::_abort('order_already_reissue_cancelled');
       }
 
       //Update Status to let the admin know the order has been remitted.
@@ -692,9 +692,9 @@ class Order Extends Model {
     $order->set_shipment_status('send');
   }
 
-  function set_payed ($order_id){
+  function set_paid ($order_id){
     $order=self::load($order_id);
-    $order->set_payment_status ('payed');
+    $order->set_payment_status ('paid');
   }
 
   function set_reserved ($order_id){
@@ -775,12 +775,12 @@ class Order Extends Model {
         }
       }
 
-      if($field=='order_payment_status' and  $new_status=='payed' ){ //and
+      if($field=='order_payment_status' and  $new_status=='paid' ){ //and
         $suppl = ", order_date_expire=NULL";
       }
       if($field=='order_payment_status'
           and  $new_status=='pending'
-          and  $old_payment_status =='payed'){ //and
+          and  $old_payment_status =='paid'){ //and
         return true; // just show the m
       }
 
@@ -885,7 +885,7 @@ class Order Extends Model {
           FOR UPDATE";
 
       if(!$res = ShopDB::query($query)){
-        return self::_abort("Failed to find canceled contracts");
+        return self::_abort("failed_to_find_cancelled_orders");
       }
       $nRows = ShopDB::num_rows($res);
 
