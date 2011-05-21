@@ -38,7 +38,7 @@ require_once("classes/class.component.php");
 
 class AdminView extends Component {
   static $labelwidth = '40%';
-  var $tabitems = null;
+  var $tabitems = array(0=> 'admin_default|control');
   var $page_width = 800;
   var $title = "Administration";
   var $ShowMenu = true;
@@ -52,7 +52,7 @@ class AdminView extends Component {
       $this->width = $width;
     }
     if (is_array($this->tabitems)) {
-      $this->tabitems = plugin::call('_ExtendMenuItems', $this->tabitems, get_class($this));
+      $this->tabitems = plugin::call('_'.get_class($this).'_Items', $this->tabitems);
       $this->tabitems = $_SHOP->controller->addACLs($this->tabitems, true);
     }
   }
@@ -60,7 +60,7 @@ class AdminView extends Component {
   function ActionACLs($ACLs){
     global $_SHOP;
     if (is_array($ACLs)) {
-      $ACLs = plugin::call('_ExtendViewActions', $ACLs, get_class($this));
+      $ACLs = plugin::call('_'.get_class($this).'_Actions', $ACLs);
       $_SHOP->controller->addACLs($ACLs);
     }
   }
@@ -79,24 +79,28 @@ class AdminView extends Component {
 
   function draw(){ }
 
-  function drawtabs($session, $show=true, $get='tab'){
+  function drawtabs($session=null, $show=true, $get='tab'){
     GLOBAL $_SHOP;
-
-    if(isset($_REQUEST[$get])) {
-      $_SESSION[$session] = (int)$_REQUEST[$get];
-    } elseif(!isset($_SESSION[$session])) {
-      $_SESSION[$session] = (int)reset($this->tabitems);
+    if (is_null($session)) {
+      $session = get_class($this);
     }
-    if (!in_array((int)$_SESSION[$session], array_values($this->tabitems))) {
+    if(isset($_REQUEST[$get])) {
+      $_SESSION['tabs'][$session] = (int)$_REQUEST[$get];
+    } elseif(!isset($_SESSION['tabs'][$session])) {
+      $_SESSION['tabs'][$session] = (int)reset($this->tabitems);
+    }
+    if (!in_array((int)$_SESSION['tabs'][$session], array_values($this->tabitems))) {
       $_SHOP->controller->showForbidden(get_class($this));
       return false;
     }
 
     if ($show) {
-      $_SHOP->trace_subject .= "[tab:{$_SESSION[$session]}]";
-      echo $this->PrintTabMenu($this->tabitems, $_SESSION[$session], "left");
+      $_SHOP->trace_subject .= "[tab:{$_SESSION['tabs'][$session]}]";
+      if (count($this->tabitems)>1 ) {
+        echo $this->PrintTabMenu($this->tabitems, $_SESSION['tabs'][$session], "left");
+      }
     }
-    return true;
+    return ((int)$_SESSION['tabs'][$session])+1;
   }
 
   function list_head ($name, $colspan=2, $width = 0) {
@@ -143,7 +147,7 @@ class AdminView extends Component {
    * @param bool $multiArr to fields Key / Value or just Text/Field
    * @return void
    */
-  protected function print_multiRowField($name, &$data , &$err, $size = 30, $max = 100, $multiArr=false, $arrayPrefix=''){
+   function print_multiRowField($name, &$data , &$err, $size = 30, $max = 100, $multiArr=false, $arrayPrefix=''){
     if($arrayPrefix <> ''){
       $prefix = $arrayPrefix."[$name]";
     }else{
@@ -214,7 +218,7 @@ class AdminView extends Component {
    * @param array other : additional optional options
    *  add_arr => array('value'=>'name') this is the value for the add row button which wen set can be a drop down box.
    */
-  protected function print_multiRowGroup($name, &$data , &$err, $fields=array(),$arrayPrefix='',$other=array()){
+   function print_multiRowGroup($name, &$data , &$err, $fields=array(),$arrayPrefix='',$other=array()){
     if(!is_array($fields)){
       return false;
     }elseif(empty($fields)){
@@ -486,7 +490,7 @@ class AdminView extends Component {
      *  'showtooltip'=>false
      * @return string
      */
-    protected function show_button($url, $name, $type=1, $options=array() ){
+     function show_button($url, $name, $type=1, $options=array() ){
 
       if(!empt($name,false)){
           return;

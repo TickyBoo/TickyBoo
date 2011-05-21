@@ -44,10 +44,10 @@ class TabsEventsView extends AdminView {
 
   function draw() {
     global $_SHOP;
-    if (!$this->drawtabs('_EVENT_tab')) { return; }
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
 
-    switch ((int)$_SESSION['_EVENT_tab'])
-       {
+    switch ((int)$tab-1){
        case 0:
            require_once ('view.venues.php');
            $viewer = new OrtView($this->width);
@@ -77,6 +77,8 @@ class TabsEventsView extends AdminView {
            $viewer = new DiscountView($this->width);
            $viewer->draw(true);
            break;
+      default:
+          plugin::call(get_class($this).'_Draw', $tab-1, $this);
 
        }
     $this->addJQuery($viewer->getJQuery());

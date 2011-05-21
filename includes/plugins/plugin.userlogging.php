@@ -6,7 +6,7 @@
  * @version $Id$
  * @copyright 2010
  */
- define (TABLE_STATS,'userstats');
+ define ('TABLE_STATS','userstats');
 class plugin_userlogging extends baseplugin {
 
 	public $plugin_info		  = 'User Logging';

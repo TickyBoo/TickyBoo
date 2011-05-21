@@ -200,7 +200,9 @@ class Template Extends Model {
     // Include Pdfs if told to.
     $includeInvoice = is($data['handling_incl_inv_pdf'],0) ;
     $includeTickets = is($data['handling_incl_ticket_pdf'],0) ;
-
+    if (is($data['send_pdf'],0) ) {
+      $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], $data['send_pdf'], 'data', FALSE, 2), "order_{$data['order_id']}_".con('invoice').".pdf", 'application/pdf'));
+    }
     if($includeInvoice==1){
       $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], '', 'data', FALSE, 2), "order_{$data['order_id']}_".con('invoice').".pdf", 'application/pdf'));
     }

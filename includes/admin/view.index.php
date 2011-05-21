@@ -54,8 +54,10 @@ class IndexView extends AdminView {
   }
 
   function draw() {
-    if (!$this->drawtabs('_INDEX_tab')) { return; }
-    switch ((int)$_SESSION['_INDEX_tab']){
+    global $_SHOP;
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
+    switch ($tab-1){
       case 0:
         $licention = file_get_contents (ROOT."licence.txt");
         $this->form_head("Fusion&nbsp;Ticket&nbsp;".con('current_version').'&nbsp;'.CURRENT_VERSION.$this->hasNewVersion(),$this->width,1);
@@ -88,6 +90,8 @@ class IndexView extends AdminView {
         $viewer = new VersionUtilView($this->width);
         $viewer->draw();
         break;
+      default:
+        plugin::call(get_class($this).'_Draw', $tab-1, $this);
     }
   }
 
@@ -151,7 +155,6 @@ class IndexView extends AdminView {
       $part['total'] += $data[0];
       $part[$data[1]]=$data[0];
     }
-    var_dump($part);
     return vsprintf(con('index_admins_count'),$part);
   }
 

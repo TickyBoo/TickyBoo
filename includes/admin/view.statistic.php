@@ -235,9 +235,11 @@ class StatisticView extends ExportView{
   function draw ()
   {
     global $_SHOP;
-    if (!$this->drawtabs('_STATS_tab')) { return; }
+    global $_SHOP;
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
 
-    switch ((int)$_SESSION['_STATS_tab']){
+    switch ((int)$tab-1){
       case 0:
         $this->getSearchDate($start_date, $end_date, $month, $year);
         $this->eventStats($start_date, $end_date, $month, $year);
@@ -248,10 +250,13 @@ class StatisticView extends ExportView{
         break;
       case 2:
         if (is_object($this->expviewer)) {
-        $this->expviewer->setwidth($this->width);
-        $this->expviewer->draw(true);
+          $this->expviewer->setwidth($this->width);
+          $this->expviewer->draw(true);
         }
-      break;
+        break;
+      default:
+        plugin::call(get_class($this).'_Draw', $tab-1, $this);
+
     }
   }
   function loadMenuArray(){
@@ -261,12 +266,16 @@ class StatisticView extends ExportView{
   }
 
   function execute (){
-    if (!$this->drawtabs('_STATS_tab', false)) { return; }
+    if (!($tab=$this->drawtabs(false))) { return; }
 
-    if (isset($_SESSION['_STATS_tab']) && (int)$_SESSION['_STATS_tab']==2){
+    if ($tab-1==2){
         require('view.transports.php');
         $this->expviewer = new TransportsView($this->width);
         return $this->expviewer->execute();
+    } if ($tab <256) {
+      return false;
+    } else {
+        return plugin::call('%'.get_class($this).'_Execute', $tab-1, $this);
     }
   }
 }

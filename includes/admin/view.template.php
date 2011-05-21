@@ -365,9 +365,16 @@ class TemplateView extends AdminView{
 
   function draw (){
     global $_SHOP;
-    if (!$this->drawtabs('_TEMPLATE_tab')) { return; }
+    global $_SHOP;
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
+    if (isset($this->types[$tab-1])) {
+      $type =  $this->types[$tab-1];
+    } else {
+      plugin::call(get_class($this).'_Draw', $tab-1, $this);
+      return false;
+    }
 
-    $type =  $this->types[(int)$_SESSION['_TEMPLATE_tab']];
 
 
 		if ($_POST['action'] == 'insert'){

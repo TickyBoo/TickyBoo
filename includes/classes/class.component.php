@@ -35,7 +35,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 class Component {
     protected $items = array();
-    protected $width = 190;
+    public $width = 190;
 
   function __construct(){
   }

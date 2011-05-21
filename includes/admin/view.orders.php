@@ -85,19 +85,11 @@ class OrdersView extends AdminView{
                                                                           "&order_status={$obj['order_status']}".
                                                                           "&order_shipment_status={$obj['order_shipment_status']}".
                                                                           "&order_payment_status={$obj['order_payment_status']}'>";
-    		if($obj['order_status']=='cancel'){
-    		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_deleted&order_handling_id=$hand'>".con('purge')."</a>)";
-    		}elseif($obj['order_status']=='reissue'){
-    		  $purge="(<a class=link href='{$_SERVER['PHP_SELF']}?action=purge_rereissued&order_handling_id=$hand'>".con('purge')."</a>)";
-    		}else{
-    			$purge='';
-    		}
-
     		echo "<tr class='admin_order_$alt'>
 
                 <td class=admin_list_item align=left width='80%'>&nbsp;&nbsp;&nbsp;$link{$tr[$obj['order_status']]}
                 {$tr[$obj['order_payment_status']]}
-                {$tr[$obj['order_shipment_status']]}</a> $purge </td>
+                {$tr[$obj['order_shipment_status']]}</a></td>
                 <td class=admin_list_item align=right >
     	            {$obj['count']}
                 </td>
@@ -518,7 +510,8 @@ class OrdersView extends AdminView{
     //print_r($_SESSION);
     //echo "</pre>";
     if(!$noTab){
-      if (!$this->drawtabs('_overview_tab')) { return; }
+      $tab = $this->drawtabs();
+      if (!$tab) { return; }
     }
 
     if(!isset($_REQUEST['order_id'])){
@@ -608,10 +601,15 @@ class OrdersView extends AdminView{
   		Order::purgeReissued((int)$_GET['order_handling_id']);
     }
     if (!$noTab) {
-      if($_SESSION['_overview_tab']==1) {
-         $this->tableByEvent();
-      } else {
-       $this->tableByHandling();
+      switch ($tab-1){
+        case 0:
+          $this->tableByHandling();
+          break;
+        case 1:
+          $this->tableByEvent();
+          break;
+        default:
+          plugin::call(get_class($this).'_Draw', $tab-1, $this);
       }
     }
   }

@@ -41,12 +41,12 @@ class tabsAdminsView extends AdminView {
        1=>"spoint_tab");
 
   function draw() {
-      global $_SHOP;
+    global $_SHOP;
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
 
-    if (!$this->drawtabs('_ADMIN_tab')) { return; }
-
-    switch ((int)$_SESSION['_ADMIN_tab']) {
-     case 0:
+    switch ((int)$tab-1) {
+      case 0:
          require_once ('view.adminusers.php');
          $viewer = new AdminUsersView($this->width);
          $viewer->draw();
@@ -59,7 +59,9 @@ class tabsAdminsView extends AdminView {
          $viewer->draw();
          $this->addJQuery($viewer->getJQuery());
          break;
-     }
+     default:
+         plugin::call(get_class($this).'_Draw', $tab-1, $this);
+    }
   }
 }
 

@@ -104,8 +104,8 @@ class ctrlAdminMain extends Controller  {
     return true;
   }
 
-  public function draw($action) {
-    parent::draw($action);
+  public function draw() {
+    parent::draw();
   }
 
   function drawOrganizer () {

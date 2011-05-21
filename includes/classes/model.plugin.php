@@ -7,11 +7,13 @@
  * @copyright 2010
  */
 class plugin extends model {
+  protected $isLocked = false;
   protected $_idName    = 'plugin_id';
   protected $_tableName = 'plugins';
   protected $_columns   = array( '#plugin_id', '*plugin_name', '*plugin_version','*plugin_enabled',
                                  '*plugin_protected', 'plugin_settings', '*plugin_priority');
   protected $_plug = null;
+  public $plugin_id = 0;
 
   static function load($plugin_name) {
     $query = "select * from `plugins`
@@ -40,7 +42,7 @@ class plugin extends model {
       while($plug_d=shopDB::fetch_assoc($res)){
         if (file_exists(INC.'plugins'.DS.'plugin.'.$plug_d['plugin_name'].'.php')){
           $plugin = new plugin;
-          $plugin->plug($plug_d['plugin_name']);
+          $plugin->plug($plug_d['plugin_name'],$plug_d['plugin_id'] );
           $plugin->_fill($plug_d, false);
           $plugin->_unser_extra();
           $plugins[$plug_d['plugin_name']] = $plugin;
@@ -56,6 +58,7 @@ class plugin extends model {
             if (!isset($plugins[$content])) {
               $plugin = new plugin(true);
               $plugin->plugin_name = $content;
+              $plugin->plugin_id = 0;
               $plugin->plug($content);
               $plugins[$content] = $plugin;
             }
@@ -67,14 +70,14 @@ class plugin extends model {
     return $plugins;
   }
 
-	private function plug($plugname='') {
+	private function plug($plugname='',$id=0) {
 	  if (empty($plugname)) return;
     if (!isset($this->_plug)){
   		$file = INC.'plugins'.DS.'plugin.'.$plugname.'.php';
   		if (file_exists($file)){
         require_once ($file);
     		$name = 'plugin_'. $plugname;
-        $this->_plug = new $name($this);
+        $this->_plug = new $name($this, $id);
         $vars = get_object_vars($this->_plug);
         foreach ($vars as $key => $value) {
           if (strpos($key, 'plugin_') ===0) {
@@ -167,11 +170,39 @@ class plugin extends model {
       return $return;
   }
 
-  function install() {
+  static function getTables( $tbls= null ){
+    if(is_null($tbls)){
+      include (INC.'install'.DS.'install_db.php');
+    }
+    $plugins = self::loadAll(true);
+    foreach($plugins as $key => $plugin) {
+ //     var_dump($plugin->plugin_id);
+  //    var_dump($plugin->plugin_name);
+  //    var_dump($plugin->plugin_actions);
+
+      if (!$plugin->plugin_id && !in_array('install',$plugin->plugin_actions)) {
+        $plugin->install(false);
+      }
+      if ($plugin->plugin_id || !in_array('install',$plugin->plugin_actions)) {
+        $plugin->_plug->getTables($tbls );
+      }
+    }
+    return $tbls;
+  }
+
+  function install($updateDB= true) {
     if ($this->_plug->install()) {
       $this->plugin_version = $this->plugin_myversion;
       $this->plugin_enabled = 1;
-      return $this->save();
+      if (!$this->save()) {
+        addwarning('cant_save_given_plugin');
+        return false;
+      } elseif ($updateDB) {
+        $tbls = self::getTables();
+        ShopDB::DatabaseUpgrade($tbls);
+      }
+      return true ;
+
     }
   }
 
@@ -229,8 +260,9 @@ class plugin extends model {
     if (!empty($data['plugin_name'])) $this->plug($data['plugin_name']);
     $ok = parent::_fill($data, $nocheck);
     if ($ok && $this->_plug) {
-      foreach($_plug->extras as $key)
-        $this->extra[$key] = is($data[$key], null);
+      foreach($this->_plug->extras as $key){
+        $this->_plug->extra[$key] = is($data[$key], null);
+      }
 
     }
     if ($this->_plug && !$this->_plug->isInit) $this->_plug->init();
@@ -248,11 +280,13 @@ class plugin extends model {
 abstract class basePlugin {
   public $plugin;
   public $extras    = array();
+  public $extra    = array();
 
 	/**
 	 * name - Your plugin's full name. Required value.
 	 */
-	public $plugin_info		= null;
+  public $plugin_acl  		= null;
+  public $plugin_info		= null;
 	/**
 	 * description - A full description of your plugin.
 	 */
@@ -284,8 +318,10 @@ abstract class basePlugin {
   private $isInit = false;
 
 	### Core plugin functionality ###
-	final public function __construct( $p_base ) {
+	final public function __construct( $p_base, $id ) {
     $this->plugin = $p_base;
+	  $this->plugin_acl = (int)$id << 8;
+//	  var_dump($this);
 	}
 
 	/**
@@ -300,6 +336,8 @@ abstract class basePlugin {
 	public function config() {
 		return '';
 	}
+
+  public function getTables(& $tbls) {}
 
 	public function install() {
 		return true;

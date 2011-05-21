@@ -55,7 +55,11 @@ define('YEAR', 365 * DAY);
 define('FT_DEBUG', 2);
 define('FT_ERROR', 1);
 
-
+function diff_date($date1, $date2){
+  $date1 = (is_int($date1))?$date1:strtotime($date1);
+  $date2 = (is_int($date2))?$date1:strtotime($date2);
+  return round(($date1-$date2)/60/60/24);
+}
 
 /**
  * print out type and content of the given variable if DEBUG-define (in config/core.php) > 0
@@ -145,6 +149,9 @@ function FindClass(&$class_name) {
 //  echo CLASSES . 'model.'. $class_name . '.php','|';
   If (file_exists(CLASSES . $class_name . '.php')) {
     return CLASSES ;
+  }  elseIf (file_exists(CLASSES . 'class.'. $class_name . '.php')) {
+    $class_name = 'class.'. $class_name;
+    return CLASSES;
   }  elseIf (file_exists(CLASSES . 'model.'. $class_name . '.php')) {
     $class_name = 'model.'. $class_name;
     return CLASSES;

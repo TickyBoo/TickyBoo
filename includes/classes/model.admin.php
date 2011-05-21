@@ -31,8 +31,8 @@ class Admins extends Model {
             $rowx[$key] = $value;
           }
         }
-      $adm->_fill($rowx);
-    }
+        $adm->_fill($rowx);
+      }
       return $adm;
     }
   }
@@ -152,7 +152,9 @@ class Admins extends Model {
 public function isAllowed($Resource, $login = false ) {
     global $_SHOP;
     if ($login && strpos($row['admin_status'], 'pos') ===0) {
-      if ($this->user_prefs_strict) {
+      if ((int)$this->user_id <> (int)$this->admin_user_id) {
+        return addwarning('error_SalesPoint_not_found');
+      }elseif ($this->user_prefs_strict) {
         $check     = is($_COOKIE['use'.$this->admin_user_id],false);
         $hash = hash('ripemd160',$this->user_prefs_strict.$_SHOP->secure_id.$this->admin_user_id.$this->user_lastname);
         if ($check === false) { return false; }
@@ -163,7 +165,6 @@ public function isAllowed($Resource, $login = false ) {
         $setDomain = ($_SERVER['HTTP_HOST']) != "localhost" ? ".$myDomain" : false;
         setcookie ('use'.$adm->id, $check , time()+3600*24*(20), '/', "$setDomain", 0 );
       }
-
     }
     if (plugin::call('%isACL')) {
        return plugin::call('%isAllowedACL', $this->admin_status, $Resource );

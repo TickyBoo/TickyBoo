@@ -418,7 +418,6 @@ HTML;
 
 	function draw () {
 		global $_SHOP;
-	  if (!$this->drawtabs('_UTILS_tab')) { return; }
 
     if(isset($_GET['fix'])){
       Orphans::dofix($_GET['fix']);
@@ -430,8 +429,10 @@ HTML;
       if ($this->backupExec($_POST )) return;
     }
 
-    switch ((int)$_SESSION['_UTILS_tab']) {
-      case 0:
+	  $tab = $this->drawtabs();
+	  if (! $tab) { return; }
+	  switch ($tab-1){
+	    case 0:
          $this->orphan_list($_POST);
          break;
 
@@ -453,7 +454,8 @@ HTML;
          $viewer = new pluginsView($this->width);
          $viewer->draw();
          break;
-
+      default:
+  	    plugin::call(get_class($this).'_Draw', $tab-1, $this);
     }
 	}
 

@@ -346,50 +346,51 @@ class SearchView extends AdminView{
     }
   }
 
-
   function draw () {
     global $_SHOP;
 
-    if (!$this->drawtabs('_SEARCH_tab', false)) { return; }
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
 
-    if ((int) $_REQUEST['order_id']){
-      require_once("admin/view.orders.php");
-      $view = new OrdersView($this->width);
-      if ($view->draw(true)) return;
-      //$view->order_details($_REQUEST['order_id']);
-    }elseif ($_REQUEST['action']=='user_detail'){
+    if ($_REQUEST['action']=='user_detail'){
       require_once("admin/view.patrons.php");
       $view = new PatronView($this->width, $_REQUEST['user_id']);
       $view->draw();
       return;
-
-    }elseif($_POST['action']=='search_patron'){
-      if($query_type=$this->patronTable($_POST)) return;
-
-    }elseif($_POST['action']=='search_place'){
-      if ($this->placesTable($_POST)) return;
-
-    }elseif($_POST['action']=='search_codebar'){
-      if ($this->codebarTable($_POST)) return;
     }
 
-    switch ((int)$_SESSION['_SEARCH_tab']) {
+    switch ((int)$tab-1){
       case 0:
+         if($_POST['action']=='search_patron'){
+           if($query_type=$this->patronTable($_POST)) return;
+         }
          $this->patronForm($_POST);
          break;
 
       case 1:
+         if($_POST['action']=='search_place'){
+           if ($this->placesTable($_POST)) return;
+         }
          $this->placesForm($_POST);
          break;
 
       case 2:
-         $this->orderForm($_POST);
-         break;
+        if ((int) $_REQUEST['order_id']){
+          require_once("admin/view.orders.php");
+          $view = new OrdersView($this->width);
+          if ($view->draw(true)) return;
+        }
+        $this->orderForm($_POST);
+        break;
 
       case 3:
+        if($_POST['action']=='search_codebar'){
+          if ($this->codebarTable($_POST)) return;
+        }
          $this->barcodeForm($_POST);
          break;
-
+      default:
+        plugin::call(get_class($this).'_Draw', $tab-1, $this);
     }
   }
 

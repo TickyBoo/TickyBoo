@@ -220,51 +220,59 @@ class HandlingsView extends AdminView{
 
   function draw (){
     global $_SHOP;
-      if($_GET['action']=='add'){
-        $hand= new Handling(true);
-        $this->form((array)$hand, null, con('handling_add_title'));
-        return 0;
-		  }elseif($_GET['action']=='edit'){
-  		  $hand=Handling::load($_GET["handling_id"]);
-  		  $this->form((array)$hand, null, con('payment_update_title'));
- 			  return 0;
-		  }elseif($_POST['action']=='save'){
-        $new = false;
-        if(!$hand=Handling::load($_POST["handling_id"])){
-          $hand= new Handling(true); $new = true;
-        }
-        if(!$hand->fillPost() || !$hand->saveEx()){
-    		  $this->form($_POST, null, con('handling_update_title')); //handling_add_title
-    			return 0;
-        } elseif ($new){
-          $hand->admin_init();
-          $this->form((array)$hand, null, con('handling_update_title'));
+    $tab = $this->drawtabs();
+    if (! $tab) { return; }
+    switch ($tab-1){
+      case 0:
+
+        if($_GET['action']=='add'){
+          $hand= new Handling(true);
+          $this->form((array)$hand, null, con('handling_add_title'));
           return 0;
-        }else{
-          addNotice('save_successful');
-        }
-		  } elseif ($_GET['action'] == 'active_hand') {
-		    $row = Handling::load($_GET["handling_id"]);
-		    if ($row) {
+  		  }elseif($_GET['action']=='edit'){
+    		  $hand=Handling::load($_GET["handling_id"]);
+    		  $this->form((array)$hand, null, con('payment_update_title'));
+   			  return 0;
+  		  }elseif($_POST['action']=='save'){
+          $new = false;
+          if(!$hand=Handling::load($_POST["handling_id"])){
+            $hand= new Handling(true); $new = true;
+          }
+          if(!$hand->fillPost() || !$hand->saveEx()){
+      		  $this->form($_POST, null, con('handling_update_title')); //handling_add_title
+      			return 0;
+          } elseif ($new){
+            $hand->admin_init();
+            $this->form((array)$hand, null, con('handling_update_title'));
+            return 0;
+          }else{
+            addNotice('save_successful');
+          }
+  		  } elseif ($_GET['action'] == 'active_hand') {
+  		    $row = Handling::load($_GET["handling_id"]);
+  		    if ($row) {
 
-		      $mode = ($_GET['mode']==='www')?'www':'sp';
-		      $do = is($_GET['do'],'');
-		      if ($do==='add' and !array_key_exists($mode,$row->sale_mode)) {
-		        $row->sale_mode[$mode] = $mode;
-		        $row->save();
-		      } elseif ($do==='remove' and array_key_exists($mode,$row->sale_mode)) {
-		        $row->sale_mode = array_diff_assoc($row->sale_mode, array($mode=>1));
-		        $row->save();
-		      }
-		    }
-  //      $this->table(null, false);
+  		      $mode = ($_GET['mode']==='www')?'www':'sp';
+  		      $do = is($_GET['do'],'');
+  		      if ($do==='add' and !array_key_exists($mode,$row->sale_mode)) {
+  		        $row->sale_mode[$mode] = $mode;
+  		        $row->save();
+  		      } elseif ($do==='remove' and array_key_exists($mode,$row->sale_mode)) {
+  		        $row->sale_mode = array_diff_assoc($row->sale_mode, array($mode=>1));
+  		        $row->save();
+  		      }
+  		    }
 
-		}elseif($_GET['action']=='remove' and $_GET['handling_id']>0){
-   		$hand=new Handling();
-      $hand->handling_id=$_GET['handling_id'];
-      $hand->delete();
-  	}
-  	$this->table();
+    		} elseif($_GET['action']=='remove' and $_GET['handling_id']>0){
+       		$hand=new Handling();
+          $hand->handling_id=$_GET['handling_id'];
+          $hand->delete();
+      	}
+      	$this->table();
+        break;
+      default:
+        plugin::call(get_class($this).'_Draw',$tab-1, $this);
+    }
 	}
 
 

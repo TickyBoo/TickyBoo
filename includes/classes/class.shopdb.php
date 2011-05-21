@@ -609,6 +609,7 @@ class ShopDB {
 
       if ($update) {
         require($dbstructfile);
+        $tbls = plugin::getTables($tbls);
         if ($errors = ShopDB::DatabaseUpgrade($tbls, true, $viewonly)) {
           $handle=fopen($logfile,"a");
           fwrite($handle, date('c',time()).": \n". print_r($errors,true). "\n");

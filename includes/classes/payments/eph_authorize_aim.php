@@ -168,8 +168,13 @@ class EPH_authorize_aim Extends Payment{
     $debug.="Order_id : $order_id\n";
     $debug.="Amount   : $order_total\n";
 
-    $debug .= print_r($post, true);
 		$result =$this->url_post($url,$post);
+
+    $len= strlen($post['x_card_num']);
+    $post['x_card_num'] = str_pad('',$len-4, 'x' )+ substr($post['x_card_num'],-4 );
+    unset($post['x_card_code']);
+
+    $debug .= print_r($post, true);
     $debug .= $result ."\n";
 		if(!empty($result)){
 			$res=explode("|",$result );
@@ -201,15 +206,7 @@ class EPH_authorize_aim Extends Payment{
 		}else{
 			$return['response'].="Payment Error: Order $order_id can't be valided, no responce from Authorize.net!";
     }
-
     OrderStatus::statusChange($order_id,'authorize_aim',$return['response'],'checkout::notify',$debug.print_r($_POST,true));
-    $debug .= $return['response'] ."\n";
-
-    $debug .= $return['response'] ."\n";
-    $handle=fopen($_SHOP->tmp_dir."authorize.log","a");
-    fwrite($handle,$debug);
-    fclose($handle);
-
 		return $return ;
 	}
 

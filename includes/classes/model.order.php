@@ -1081,8 +1081,11 @@ class Order Extends Model {
 
     $paper_size=$_SHOP->pdf_paper_size;
     $paper_orientation=$_SHOP->pdf_paper_orientation;
-
-    $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+    if ($mode='bulk' and is_object($print)) {
+      $pdf = $print;
+    } else {
+      $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
+    }
 
     if(!$bill_template){
       $bill_template=$hand->handling_pdf_template;
@@ -1137,6 +1140,7 @@ class Order Extends Model {
       //composing filename without extension
       $order_file_name = "order_".$order_id.'.pdf';
         //producing the output
+
       if($mode=='file'){
         $pdf->output($_SHOP->ticket_dir.DS.$order_file_name, 'F');
       }else if($mode=='stream'){
@@ -1148,6 +1152,8 @@ class Order Extends Model {
         $pdf->output($order_file_name, 'I');
       }else if($mode=='data'){
         $pdf_data=$pdf->output($order_file_name, 'S');
+      }else if($mode=='bulk'){
+        $pdf_data = $pdf;
       }
       return $pdf_data;
     }
