@@ -162,7 +162,7 @@ class PlaceMapCategory Extends Model {
       return FALSE;
     }
     if(($delta+$this->category_free)<0){
-      return self::_about('Size is to small category');
+      return self::_abort('Size is to small category');
     }
 
     if(ShopDB::begin('resize category')){
@@ -174,11 +174,11 @@ class PlaceMapCategory Extends Model {
               WHERE event_id='{$this->category_event_id}'
               FOR UPDATE";
       if(!$es=ShopDB::query_one_row($query)){
-        return self::_about('cant lock event_stat');
+        return self::_abort('cant lock event_stat');
       }
 
       if(($delta+$es['event_free'])<0){
-        return self::_about('Size to small for event');
+        return self::_abort('Size to small for event');
       }
 
       $new_es_total= $delta+$es['event_total'];
@@ -188,7 +188,7 @@ class PlaceMapCategory Extends Model {
       if($delta>0){
         for($i=0;$i<$delta;$i++){
           if(!Seat::publish($this->category_event_id,0,0,0,0,$this->category_id)){
-            return false;//'self::_about('Cant publish new seats');
+            return false;//'self::_abort('Cant publish new seats');
           }
         }
       } else {
@@ -201,10 +201,10 @@ class PlaceMapCategory Extends Model {
                   LIMIT $limit";
 
         if(!ShopDB::query($query)){
-          return self::_about('Cant delete old seats');
+          return self::_abort('Cant delete old seats');
         }
         if(shopDB::affected_rows()!=$limit){
-          return self::_about('Different No off seats removed');
+          return self::_abort('Different No off seats removed');
         }
       }
 
@@ -215,17 +215,17 @@ class PlaceMapCategory Extends Model {
               LIMIT 1";
 
       if(!ShopDB::query($query)){
-        return self::_about('Cant update event_stat');
+        return self::_abort('Cant update event_stat');
       }
       if(shopDB::affected_rows()!=1){
-        return self::_about('event_stat not changes');
+        return self::_abort('event_stat not changes');
       }
 
       $this->category_free =$new_cs_free;
       $this->category_size =$new_category_size;
 
       if(!$this->save()){
-        return self::_about('cant save category');
+        return self::_abort('cant save category');
       }
 
       return ShopDB::commit('Category resized');

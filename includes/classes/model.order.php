@@ -1081,7 +1081,7 @@ class Order Extends Model {
 
     $paper_size=$_SHOP->pdf_paper_size;
     $paper_orientation=$_SHOP->pdf_paper_orientation;
-    if ($mode='bulk' and is_object($print)) {
+    if ($mode==='bulk' and is_object($print)) {
       $pdf = $print;
     } else {
       $pdf = new html2pdf(($paper_orientation=="portrait")?'P':'L', $paper_size, $_SHOP->lang);
@@ -1138,7 +1138,13 @@ class Order Extends Model {
     if(true and !$first_page){
 
       //composing filename without extension
-      $order_file_name = "order_".$order_id.'.pdf';
+
+	if (isset($subj)){
+	 if ($subj=="3") { $fext="_Tickets_Rechnung";}
+	 if ($subj=="1") { $fext="_Tickets";}
+	 if ($subj=="2") { $fext="_Rechnung";}
+	  	  }
+      $order_file_name = "order_".$order_id.$fext.'.pdf';
         //producing the output
 
       if($mode=='file'){
