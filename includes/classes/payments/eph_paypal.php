@@ -144,11 +144,11 @@ class EPH_paypal extends payment{
     } elseif($_POST["mc_gross"]+is($_POST["mc_gross"],0)<$order_total) {
         $debugx="Invalid payment\n";
     } elseif($_POST["payment_status"]!="Completed") {
-        $debugx=$_POST["payment_status"]."\n";
+        $debugx='Payment status:'.$_POST["payment_status"]."\n";
     } else {
         $debugx="OK \n";
         $return =true;
-    	  $order->order_payment_id='paypal:'.$_POST['txn_id'];
+    	$order->order_payment_id='paypal:'.$_POST['txn_id'];
   	    Order::set_payment_id($order->order_id,'paypal:'.$_POST['txn_id']) ;
         $order->set_payment_status('paid');
     }
