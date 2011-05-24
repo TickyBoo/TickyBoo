@@ -56,7 +56,7 @@
       </tbody>
     </table>
     <div id="continue-div" style="width:100%; overflow:auto;"></div>
-    <div id="seat-chart" title='{!select_seat!}'></div>
+    <div id="seat-chart" title='{!select_seat_pos!}xxx'></div>
   </form>
 
   <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>

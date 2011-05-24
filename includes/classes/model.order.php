@@ -1139,12 +1139,12 @@ class Order Extends Model {
 
       //composing filename without extension
 
-	if (isset($subj)){
-	 if ($subj=="3") { $fext="_Tickets_Rechnung";}
-	 if ($subj=="1") { $fext="_Tickets";}
-	 if ($subj=="2") { $fext="_Rechnung";}
+    	if (isset($subj)){
+    	 if ($subj=="3") { $fext=con("pdf_tickets_and_invoice");}
+    	 if ($subj=="1") { $fext=con("pdf_tickets_only");}
+    	 if ($subj=="2") { $fext=con("pdf_invoice_only");}
 	  	  }
-      $order_file_name = "order_".$order_id.$fext.'.pdf';
+      $order_file_name = "order_".$order_id.'_'.$fext.'.pdf';
         //producing the output
 
       if($mode=='file'){

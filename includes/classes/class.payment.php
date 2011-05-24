@@ -221,7 +221,7 @@ class Payment {
 
   	if(!$fp) {
     	//Error checking
-      $this->debug .=   "$errnum: $errstr";
+      $this->debug .=   "$errnum: $errstr\n";
     }	else {
       //Post Data
   		fputs($fp, "POST $web[path] HTTP/1.1\r\n");
@@ -235,9 +235,10 @@ class Payment {
   		while(!feof($fp)) {
         $info .= @fgets($fp, 1024);
       }
-
-  		//close fp - we are done with it
+      //close fp - we are done with it
   		fclose($fp);
+
+      $this->debug .= $info;
       $data = substr($reply, (strpos($info, "\r\n\r\n")+4));
       if (strpos(strtolower($info), "transfer-encoding: chunked") !== FALSE) {
         $data = $this->unchunkHttp11($data);

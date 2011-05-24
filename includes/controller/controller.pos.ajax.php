@@ -43,7 +43,7 @@
  * JSON is 'Object Notifaction'
  *
  */
-
+//error_reporting(0);
 if (!defined('ft_check')) {die('System intrusion ');}
 $fond = 0;
 
@@ -60,21 +60,20 @@ require_once ("controller.pos.checkout.php");
 class ctrlPosAjax extends ctrlPosCheckout {
 	private $request = array();
 	private $json    = array();
-	private $action  = "";
-	private $actionName = "";
+  private $actionName = "";
   private $ErrorsAsWarning = false;
 
 
-  public function drawContent($page, $action) {
-
+  public function drawContent() {
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
   		$this->request    = $_REQUEST;
-  		$this->actionName = $action;
-      $other = substr($action,0,1);
+  		$this->actionName = $this->action;
+      $other = substr($this->action,0,1);
+ //     echo $this->action;
       if(strtolower($other) == '_'){
-        $this->action = 'do'.ucfirst(substr($action,1));
+        $this->action = 'do'.ucfirst(substr($this->action,1));
       }else{
-        $this->action = "get".ucfirst(strtolower($action));
+        $this->action = "get".ucfirst(strtolower($this->action));
       }
       $result = $this->callAction();
   		if(!$result){
@@ -181,15 +180,15 @@ class ctrlPosAjax extends ctrlPosCheckout {
 		if($query = ShopDB::query($sql)){
 		//Load html and javascript in the json var.
 
-		//Break down cats and array up with additional details.
-		while($evt = ShopDB::fetch_assoc($query)){
-      		$date = formatDate($evt['event_date'],con('shortdate_format'));
-      		$time = formatTime($evt['event_time']);
+  		//Break down cats and array up with additional details.
+  		while($evt = ShopDB::fetch_assoc($query)){
+        		$date = formatDate($evt['event_date'],con('shortdate_format'));
+        		$time = formatTime($evt['event_time']);
 
-			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date} - {$time}</option>";
+  			$option = "<option value='{$evt['event_id']}'>{$evt['event_name']} - {$evt['ort_name']} - {$date} - {$time}</option>";
 
-			$this->json['events'][] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
-		}
+  			$this->json['events'][] = array ('html'=>$option,'free_seats'=>$evt['es_free']);
+  		}
     }
 		if (count($this->json['events'])==0) {
 		  $option = "<option value='{$evt['event_id']}'>".con('no_event_sets')."</option>";

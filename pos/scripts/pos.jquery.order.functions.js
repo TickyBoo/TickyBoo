@@ -92,6 +92,7 @@ var updateSeatChart = function(){
    if(catData.categories[catId].numbering){
       $("#seat-qty").hide();
       $("#seat-qty input").val('');
+      $("#seat-chart").attr("title", catData.categories[catId].title);
       $("#seat-chart").html(catData.categories[catId].placemap);
       bindSeatChart();
    }else{

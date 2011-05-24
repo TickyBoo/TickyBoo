@@ -53,17 +53,22 @@
           <p>{eval var=$pm_return.response}</p>
         {/if}
         <br /> <br />
-        {if !$pm_return.approved}
-          <div class='error'>
-  	    {else}
+        {if $pm_return.approved}
           <br />
-
-             <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
+          <table width='100%'>
+            <tr>
+              <th align='left' width=200 >
+                <a href='checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printinvoice!}</a>
+              </th>
+              {if $shop_order.order_payment_status eq 'paid'}
+                <th align='left'>
+                  <a href='checkout.php?action=print%mode=2&{$order->EncodeSecureCode($order->obj)}' target='_blank'>{!printtickets!}</a>
+                </th>
+              {/if}
+            </tr>
+          </table>
           <br />
-          <div>
         {/if}
-			  </div>
-
     </td>
   </tr>
 </table>

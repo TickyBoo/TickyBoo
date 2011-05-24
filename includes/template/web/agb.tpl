@@ -29,12 +29,9 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  *}
-
-
-{include file="header.tpl" name=!agb_name!}
+{*include file="header.tpl" name=!agb_name!*}
+<h1>{!agb_name!}</h1>
 <br>
 <p><h3>This file is a demo document.</h3> <br><br>Please copy the <b>includes/template/web/agb.tpl</b>
 to <b>includes/template/web/custom/agb.tpl</b> and change this text as you like it to be. </p>
-<br>
-
-{include file="footer.tpl"}
+{*include file="footer.tpl"*}
