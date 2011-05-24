@@ -238,12 +238,30 @@ class Payment {
 
   		//close fp - we are done with it
   		fclose($fp);
+      $data = substr($reply, (strpos($info, "\r\n\r\n")+4));
+      if (strpos(strtolower($info), "transfer-encoding: chunked") !== FALSE) {
+        $data = $this->unchunkHttp11($data);
+      }
 
   		//break up results into a string
   		//$info=implode(",",$info);
 
   	}
-  	return $info;
+  	return $data;
+  }
+
+  function unchunkHttp11($data) {
+    $fp = 0;
+    $outData = "";
+    while ($fp < strlen($data)) {
+      $rawnum = substr($data, $fp, strpos(substr($data, $fp), "\r\n") + 2);
+      $num = hexdec(trim($rawnum));
+      $fp += strlen($rawnum);
+      $chunk = substr($data, $fp, $num);
+      $outData .= $chunk;
+      $fp += strlen($chunk);
+    }
+    return $outData;
   }
 
   function dyn_load($name){
