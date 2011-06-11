@@ -117,7 +117,7 @@ class Payment {
 		return "cbr=".urlencode($code);
 	}
 
-  protected function url_post ($url,&$data){
+  protected function url_post ($url, $data){
     global $_SHOP;
     $this->debug = 'ExucuteCall = '.$_SHOP->url_post_method . "\n";
   	switch($_SHOP->url_post_method) {
@@ -146,7 +146,7 @@ class Payment {
 
   //post transaction data using curl
 
-  private function curlPost($url,&$data)  {
+  private function curlPost($url, $data)  {
 
   	global $_SHOP;
 
@@ -171,7 +171,7 @@ class Payment {
 
   //posts transaction data using libCurl
 
-  private function libCurlPost($url,&$data)  {
+  private function libCurlPost($url, $data)  {
 
   	//build post string
 
@@ -203,7 +203,7 @@ class Payment {
   }
 
   //posts transaction data using fsockopen.
-  private function fsockPost($url,&$data) {
+  private function fsockPost($url, $data) {
 
   	//Parse url
   	$web=parse_url($url);
@@ -239,16 +239,16 @@ class Payment {
   		fclose($fp);
 
       $this->debug .= $info;
-      $data = substr($reply, (strpos($info, "\r\n\r\n")+4));
+      $result = substr($info, (strpos($info, "\r\n\r\n")+4));
       if (strpos(strtolower($info), "transfer-encoding: chunked") !== FALSE) {
-        $data = $this->unchunkHttp11($data);
+        $result = $this->unchunkHttp11($result);
       }
 
   		//break up results into a string
   		//$info=implode(",",$info);
 
   	}
-  	return $data;
+  	return $result;
   }
 
   function unchunkHttp11($data) {

@@ -203,8 +203,22 @@ class Template Extends Model {
     if (is($data['send_pdf'],0) ) {
       $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], $data['send_pdf'], 'data', FALSE, 2), "order_{$data['order_id']}_".con('invoice').".pdf", 'application/pdf'));
     }
+
     if($includeInvoice==1){
-      $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], '', 'data', FALSE, 2), "order_{$data['order_id']}_".con('invoice').".pdf", 'application/pdf'));
+	   	$includePDF=$data['handling_pdf_template'];  //Get the name of the PDF template that is being used
+
+		  if (stristr($includePDF, 'invoice') !=FALSE) { //If it has 'invoice' int he title - apend 'invoice'
+  		  $includeType='invoice';
+  		} elseif (stristr($includePDF, 'receipt') !=FALSE) { //If it has 'receipt' int he title - apend 'receipt'
+  		  $includeType='receipt';
+  		} elseif (stristr($includePDF, '_') !=FALSE) {  //If it has neither of the above - take the first word/s upto the underscore mark and apend that
+  		  list($name,$extension)=explode("_",$includePDF);
+  		  $includeType=$name;
+  		} else {
+  		  $includeType=$includePDF;
+  		}  //If all else fails call it by the name of the file
+      $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], '', 'data', FALSE, 2), "order_{$data['order_id']}_".con($includeType).".pdf", 'application/pdf')); //Use the new name
+
     }
     if($includeTickets==1){
       $message->attach(Swift_Attachment::newInstance(Order::printOrder($data['order_id'], '', 'data', FALSE, 1), "order_{$data['order_id']}_".con('tickets').".pdf", 'application/pdf'));

@@ -132,7 +132,7 @@ class EPH_paypal extends payment{
 
     $result=$this->url_post($url,$_POST);
 
-   // $debug .= print_r($this->debug,true);
+   //
 
     $debug .= "res : $result\n";
 
@@ -153,7 +153,11 @@ class EPH_paypal extends payment{
         $order->set_payment_status('paid');
     }
     $debug .= $debugx;
-    OrderStatus::statusChange($order_id,'paypal',$debugx,'checkout::notify',$debug.print_r($_POST,true));
+  	if (!$return) {
+  	  $debug .= print_r($this->debug,true);
+      $debug .= print_r($_POST,true);
+  	}
+    OrderStatus::statusChange($order_id,'paypal',$debugx,'checkout::notify',$debug);
 //    $handle=fopen($_SHOP->tmp_dir."paypal.log","a");
 //    fwrite($handle,$debug);
 //    fclose($handle);

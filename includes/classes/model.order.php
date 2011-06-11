@@ -755,19 +755,29 @@ class Order Extends Model {
   }
 
   function _set_status ($field, $new_status, $dont_do_update=FALSE){
-    $old_status=$this->order_status;
-    $old_payment_status = $this->order_payment_status;
-    //checks to see if its an remitted or canceled order!
-    if($this->order_status=='cancel' or
-       $this->order_status=='reissue'){
-      return false;
-    }
-
-    if (!plugin::call('!OrderStatusChanged',$this, $new_status, $dont_do_update)) {
-      return false;
-    }
-
     if(ShopDB::begin("change_{$field}_to_{$new_status}")){
+      $fieldx =(!in_array($field,array('order_status', 'order_payment_status')))?", $field":'';
+	   	$query="SELECT order_status, order_payment_status $fieldx FROM `Order` WHERE order_id='{$this->order_id}' for update";
+	   	if($data=ShopDB::query_one_row($query)){
+	   		$this->_fill($data);
+	   	  writeLog( print_r($data, true));
+	   	  writeLog("$field => $new_status");
+	   	} else {
+	   	  return _abort('Cant_lock_order_to_set_status');
+	   	}
+
+	   	$old_status=$this->order_status;
+	   	$old_payment_status = $this->order_payment_status;
+	   	//checks to see if its an remitted or canceled order!
+	   	if($this->order_status=='cancel' or
+	   	$this->order_status=='reissue'){
+	   		return _abort('order_already_cancelled');
+	   	}
+
+	   	if (!plugin::call('!OrderStatusChanged',$this, $new_status, $dont_do_update)) {
+	   		return _abort();
+	   	}
+
       if(!$this->user_id){
         $query="SELECT * FROM `User` WHERE user_id='{$this->order_user_id}'";
         if($data=ShopDB::query_one_row($query)){
@@ -775,12 +785,13 @@ class Order Extends Model {
         }
       }
 
-      if($field=='order_payment_status' and  $new_status=='paid' ){ //and
+      if($field=='order_payment_status' and $new_status=='paid' ){ //and
         $suppl = ", order_date_expire=NULL";
       }
       if($field=='order_payment_status'
           and  $new_status=='pending'
           and  $old_payment_status =='paid'){ //and
+        _abort('order_already_paid');
         return true; // just show the m
       }
 
