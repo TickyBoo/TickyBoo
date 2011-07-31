@@ -77,7 +77,7 @@ class ctrlWebCheckout extends ctrlWebShop {
       } elseif(!$_REQUEST['pos']) {
       	redirect($_SHOP->root."index.php?action=cart_view",403);
       } else {
-        addWarning('noting_checkout'); echo 'bummer';
+        addWarning('noting_checkout'); //echo 'bummer';
       }
     }
     if (ShopDB::isTxn()) { //Commit allready does this check!
@@ -169,8 +169,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     if ($this->secureType) {
       $myorder = Order::DecodeSecureCode($this->secureCode, true);
       if(is_numeric($myorder)) {
-        echo "Confirm error ($myorder).\n";
-        return;
+        return addwarning("Confirm_error", ($myorder));
       }
     } elseif (!isset($_SESSION['_SHOP_order'])) {
       $myorder = $this->__Order->make_f($_POST['handling_id'], $origin, $no_cost, $user_id, $no_fee);
@@ -259,8 +258,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   function actionAccept () {
     $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
-      echo "accept error ($myorder).\n";
-      return;
+      return addwarning("checkout_accept_error", ($myorder));
     }
 
     $hand=$myorder->handling;
@@ -289,8 +287,7 @@ class ctrlWebCheckout extends ctrlWebShop {
   function actionCancel () {
     $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
-      echo "Cancel error ($myorder).\n";
-      return;
+      return addwarning("checkout_cancel_error", ($myorder));
     }
     $hand=$myorder->handling;
     $pm_return = $hand->on_return($myorder, false );
@@ -325,14 +322,27 @@ class ctrlWebCheckout extends ctrlWebShop {
 			$hand->on_notify($order);
 		}
  	}
-
   function actionPayment (){
     $myorder = Order::DecodeSecureCode($this->secureCode, true);
     if(is_numeric($myorder)) {
-      echo "Payment error ($myorder).\n";
-      return;
+      return addwarning("Payment_error", ($myorder));
     }
     return $this->_payment($myorder);
+  }
+
+  function actionTestPage (){
+    $myorder = Order::DecodeSecureCode($this->secureCode, true);
+    if(is_numeric($myorder) or !isset($_GET['page'])) {
+      die();//return addwarning("testcheckout_cancel_error", ($myorder));
+    }
+    $this->setordervalues($myorder);
+    $this->assign('confirmtext', 'Conformation text.');
+
+    $this->assign('pm_return', array('approved'      => false,
+             'transaction_id'=> 'Test transaction_id' ,
+             'response'      => 'Some responce text'));
+
+    return $_GET['page'];
   }
   /**
    * Checkout::paymentAction()

@@ -95,48 +95,40 @@ class eph_mollie extends payment{
 
     $return_url = $_SHOP->root_secured. 'checkout_accept.php?'.$order->EncodeSecureCode();
     $report_url = $_SHOP->root_secured. 'checkout_notify.php?'.$order->EncodeSecureCode()."&setlang={$_SHOP->lang}";
-    if (isset($_POST['bank_id']) and !empty($_POST['bank_id'])) {
-     	if ($ideal->createPayment((int) $_POST['bank_id'], (int)($order->order_total_price *100), $order->order_description(), $return_url, $report_url)) 	{
-    		/* Hier kunt u de aangemaakte betaling opslaan in uw database, bijv. met het unieke transactie_id
-    		   Het transactie_id kunt u aanvragen door $iDEAL->getTransactionId() te gebruiken. Hierna wordt
-    		   de consument automatisch doorgestuurd naar de gekozen bank. */
-     		$transactionID = $ideal->getTransactionId();
-        $order->order_payment_id=$transactionID;
-        Order::set_payment_id($order->order_id,'mollie:'.$transactionID) ;
-        $order->set_payment_status('pending');
 
-     		header("Location: " . $ideal->getBankURL());
-    //    echo "<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($ideal->getBankURL())."';\n</script>";
-        return '';
-    	} else {
-        return array('approved'=>false,
-                     'transaction_id'=>$ideal->getErrorCode().' - '.$ideal->getErrorMessage(),
-                     'response'=> implode('<br>',$ideal->getConsumerInfo()));
-    	}
+      $Issuers =& $ideal->getBanks();
+      if (!empty($_POST['bank_id']) && array_key_exists($_POST['bank_id'], $Issuers) ) {
+       	if ($ideal->createPayment($_POST['bank_id'], (int)($order->order_total_price *100), $order->order_description(), $return_url, $report_url)) 	{
+      		/* Hier kunt u de aangemaakte betaling opslaan in uw database, bijv. met het unieke transactie_id
+      		   Het transactie_id kunt u aanvragen door $iDEAL->getTransactionId() te gebruiken. Hierna wordt
+      		   de consument automatisch doorgestuurd naar de gekozen bank. */
+       		$transactionID = $ideal->getTransactionId();
+          $order->order_payment_id=$transactionID;
+          Order::set_payment_id($order->order_id,'mollie:'.$transactionID) ;
+          $order->set_payment_status('pending');
+
+       		header("Location: " . $ideal->getBankURL());
+          //    echo "<script type=\"text/javascript\" language=\"JavaScript\">\nwindow.location='".trim($ideal->getBankURL())."';\n</script>";
+          return '';
+      	} else {
+          return array('approved'=>false,
+                       'transaction_id'=>$ideal->getErrorCode().' - '.$ideal->getErrorMessage(),
+                       'response'=> implode('<br>',$ideal->getConsumerInfo()));
+      	}
     }
   }
 
   function on_return($order, $result){
-    if (isset($_GET['transaction_id'])) {
-
-      if ($order->order_payment_status == 'cancelled'){
+    if ($order->order_payment_status == 'cancelled' || $order->order_payment_status == 'canceled'){
           return array('approved'      => false,
                        'transaction_id'=> null ,
                        'response'      => con('mollie_status_canceled'));
-      } elseif ($order->order_payment_status == 'paid') {
+    } else {
         return array('approved'=>true,
                      'transaction_id'=>($_GET['transaction_id']) ,
-                       'response'=> 'Betaling '.con($order->order_payment_status).'. De tickets zijn (of worden) naar je verzonden zo gouw de betaling binnen is.<br>'
-  				   				.'Order Status: '.con($order->order_status).'<br />'
-  				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
-  				   				.'Shipping Status: '.con($order->order_shipment_status));
-      } elseif ($order->order_payment_status == 'paid') {
-        return array('transaction_id'=>($_GET['transaction_id']) ,
-                       'response'=> 'De betaling is nog niet afgerond. Zo gauw dat is gebeurd wordt dit op de hoogte gebracht.<br>'
-  				   				.'Order Status: '.con($order->order_status).'<br />'
-  				   				.'Payment Status: '.con($order->order_payment_status).'<br />'
-  				   				.'Shipping Status: '.con($order->order_shipment_status));
-      }
+                     'response'=> 'Bevestigd: De tickets worden naar het door u opgegeven adres verzonden. Desgewenst kunt u met onderstaande link een kwitantie afdrukken. Hiervoor heeft u <a href="http://get.adobe.com/nl/reader/" target="_blank">Adobe Reader</a> nodig.<br>'
+				   				.'Verzend Status: '.con($order->order_shipment_status));
+
     }
   }
 
@@ -150,17 +142,14 @@ class eph_mollie extends payment{
       OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify::message',print_r(	$ideal,true));
 	    if ($ideal->getPaidStatus() == true){
   	    Order::set_payment_id($order->order_id,'mollie:'.$_GET['transaction_id']);
-        $order->set_payment_status('paid');
+        $order->set_payment_status('payed');
       } else {
         $order->set_payment_status('cancelled');
-
       }
-      header('HTTP/1.1 200 Data received', true, 200);
-
     } else {
       OrderStatus::statusChange($order->order_id,'mollie-notify',NULL,'notify:result_error',print_r($_REQUEST,true));
-      header('HTTP/1.1 400 Missing transaction_id', true, 400);
     }
+    header('HTTP/1.1 200 Data received', true, 200);
     return true;
 
   }
