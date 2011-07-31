@@ -86,7 +86,7 @@ class ControlView extends Component{
   	      <form method='POST' action='index.php' name='f' onSubmit='this.submit.disabled=true;return true;'>
             <input type=text name='codebar' value='' size='40'>&nbsp;
             <input type='submit' name='submit' value='".con('check')."' >
-            <input type='reset' name='reset' value='".con('res')."'>
+            <input type='reset' name='reset' value='".con('res')."' onclick='init();'>
           </form><br>
         </div>
       </center><br><br>";

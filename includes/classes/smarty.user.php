@@ -200,7 +200,7 @@ class User_Smarty {
     return $actived;
   }
 
-  function asarray(){
+  function asArray(){
     return (array)$this;
   }
 }

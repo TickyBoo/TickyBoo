@@ -28,12 +28,13 @@
  *
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
- *}
- <!-- checkout_preview.tpl -->
+ *}{strip}
+
 {if $user->mode() eq 0 && !$user->active}
 	{include file="user_activate.tpl"}
 {else}
   {include file="header.tpl" name=!shopping_cart_check_out! header=!Handling_cont_mess!}
+   <!-- checkout_preview.tpl -->
   {if  $user->mode() lte 2 && $user->new_member}
     <table class='table_dark' cellpadding='5' bgcolor='white' width='100%'>
       <tr>
@@ -164,4 +165,4 @@
   {/literal}
   </script>
 {/if}
-{include file="footer.tpl"}
+{include file="footer.tpl"}{/strip}

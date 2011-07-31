@@ -47,7 +47,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     parent::__construct($context, $page, $action);
   }
 
-  public function drawContent($action) {
+  public function drawContent() {
     GLOBAL $_SHOP;
     $action = is($this->action, 'index');
 

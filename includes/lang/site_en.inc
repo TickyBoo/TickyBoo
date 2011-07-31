@@ -1580,4 +1580,19 @@ define('reminder_need_to_be_send', ' need to be send!');
 define('reminders_order_title', 'Show All unpaid orders!');
 
 define('reminder_is_send_on', ' is send on ');
+
+define('eProcessingNetwork','eProcessingNetwork');
+define('maroc','maroc');
+define('maroctelecommerce','maroctelecommerce');
+define('mollie','mollie');
+define('vpc','vpc');
+define('pm_maroc_SecretKey','pm_maroc_SecretKey');
+define('pm_maroc_storeId','pm_maroc_storeId');
+define('no_event_data','no_event_data');
+define('pm_maroc_url','pm_maroc_url');
+define('pm_mollie_partnerid','pm_mollie_partnerid');
+define('pm_mollie_test','pm_mollie_test');
+define('bank_id','bank_id');
+define('Uninstall','Uninstall');
+define('Install','Install');
 ?>

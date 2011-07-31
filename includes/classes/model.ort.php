@@ -32,9 +32,7 @@
 * clear to you.
 */
 
-if (!defined('ft_check')) {
-  die('System intrusion ');
-}
+if (!defined('ft_check')) {die('System intrusion ');}
 require_once('classes/class.shopdb.php');
 
 /**

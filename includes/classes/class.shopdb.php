@@ -137,7 +137,7 @@ class ShopDB {
             if (!ShopDB::$link) {
                 self::init();
             }
-            if (ShopDB::$link->autocommit(false)) {
+            if (ShopDB::query('START TRANSACTION')) { //$link->autocommit(false)
                 self::$db_trx_started = 1;
                 trace("[Begin {$name}]");
                 return true;

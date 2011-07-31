@@ -80,7 +80,7 @@
     <input type='hidden' name='action' value='update' />
    	<input type='hidden' name='personal_page' value='details' />
 {/if}
-    <input type='hidden' name='user_id' value='{user->user_id}' />
+    <input type='hidden' name='user_id' value='{$user->user_id}' />
     <input type="hidden" name="submit_update" value="yes" />
 
     <table cellpadding="3" class="main" bgcolor='white'>

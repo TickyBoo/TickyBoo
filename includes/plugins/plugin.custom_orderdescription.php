@@ -6,17 +6,17 @@
  * @version $Id$
  * @copyright 2010
  */
-class plugin_custom_used extends baseplugin {
+class plugin_Custom_OrderDescription extends baseplugin {
 
-	public $plugin_info		  = 'Custom plugin';
+	public $plugin_info		  = 'OrderDescription plugin';
 	/**
 	 * description - A full description of your plugin.
 	 */
-	public $plugin_description	= 'This plugin can be used to handle events';
+	public $plugin_description	= 'This plugin allows you to change the order description at the payment handler';
 	/**
 	 * version - Your plugin's version string. Required value.
 	 */
-	public $plugin_myversion		= '0.8.1';
+	public $plugin_myversion		= '0.0.1';
 	/**
 	 * requires - An array of key/value pairs of basename/version plugin dependencies.
 	 * Prefixing a version with '<' will allow your plugin to specify a maximum version (non-inclusive) for a dependency.
@@ -35,18 +35,13 @@ class plugin_custom_used extends baseplugin {
 	 */
 	public $plugin_url			= 'http://www.fusionticket.org';
 
-  public $plugin_actions  = array ('config','install','uninstall','priority','enable','protect');
+  public $plugin_actions  = array ('install','uninstall');
 
   function doOrderDiscription($order, $discription) {
-    return con('OrderDiscription');
-  }
-
-  function doOrderencodebarcode($order, $ticket, $code) {
-    return str_pad(base_convert($code,10,16), 10, "0", STR_PAD_LEFT);
-  }
-
-  function doOrderdecodebarcode($barcode) {
-    return (sscanf(str_pad(base_convert($barcode,16,10), 16, "0", STR_PAD_LEFT),"%08d%s"));
+    if (!defined('OrderDiscriptionfor')) {
+      define('OrderDiscriptionfor','Order payment for order# :');
+    }
+    return con('OrderDiscriptionfor').$order->order_id;
   }
 
 }

@@ -40,13 +40,13 @@ require_once (CLASSES.'class.controller.php');
 class ctrlWebJson Extends Controller  {
   public    $session_name = "ShopSession";
 
-  public function draw($action) {
+  public function draw() {
     $this->$executed = true;
-    parent::draw($action);
+    parent::draw();
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
   		$this->request    = $_REQUEST;
-  		$this->actionName = $action;
-      $this->action = 'do'.ucfirst($action);
+  		$this->actionName = $this->action;
+      $this->action = 'do'.ucfirst($this->action);
       $result = $this->callAction();
   		if(!$result){
   		    $object = array("status" => false, "reason" => 'Missing action request');
@@ -56,7 +56,6 @@ class ctrlWebJson Extends Controller  {
     	header("Status: 400");
     	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
     }
-    $this->executed = true;
 	}
 
   public function callAction(){

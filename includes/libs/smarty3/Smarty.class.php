@@ -352,10 +352,10 @@ class Smarty extends Smarty_Internal_Data {
                         header('HTTP/1.1 304 Not Modified');
                 } else {
                     header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $_template->getCachedTimestamp()) . ' GMT');
-                    echo $_output;
+                    echo trim( $_output, " \n\r");;
                 }
             } else {
-                echo $_output;
+                echo trim( $_output, " \n\r");
             }
             // debug output
             if ($this->debugging) {
@@ -364,7 +364,7 @@ class Smarty extends Smarty_Internal_Data {
             return;
         } else {
             // return fetched content
-            return $_output;
+            return trim( $_output, " \n\r");
         }
     }
 

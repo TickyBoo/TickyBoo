@@ -99,7 +99,7 @@ class User extends Model{
       $user['user_prefs'] = unserialize( $user['user_prefs']);
 
     }
-
+    self::log_user($res['user_id']);
     unset($res['password']);
     unset($res['active']);
   	$res['is_member']=true;
@@ -485,6 +485,14 @@ class User extends Model{
     return Seat::getCount($options);
   }
 
+  static function log_user($user_id){ //Added by Lxsparks 05/11
+    $query="UPDATE User SET user_lastlogin=now() WHERE user_id="._esc($user_id);
+    if(!$res=ShopDB::query($query)){
+      user_error(shopDB::error());
+      return false;
+    }
+    return true;
+  }
 }
 
 function convMandatory($mandatory_l){

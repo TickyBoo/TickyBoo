@@ -298,7 +298,7 @@ function empt(&$arg , $default=null){
 
 
 /**
- * con() show translation text
+ * loadLanguage() show translation text
  *
  * @param string $name the name of the definded language constant
  * @param string $default default value when $name is not defined.

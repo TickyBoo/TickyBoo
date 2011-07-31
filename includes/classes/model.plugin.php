@@ -99,8 +99,9 @@ class plugin extends model {
 
   static function call($eventname) {
     global $_SHOP;
-    if (!isset($_SHOP->plugins)) {
-      $_SHOP->plugins = plugin::loadAll(false);
+    $pluginname = false;
+    if (is_array($eventname)) {
+      list($pluginname,$eventname) = $eventname;
     }
     $type= substr($eventname,0,1);
     $args = func_get_args();
@@ -130,17 +131,26 @@ class plugin extends model {
 
     } else $return = null;
 
-    if (!is_array($_SHOP->plugins )) return $return;
-    // echo "<pre>",$eventname;
+    $plugins = false;
+    if ($pluginname) {
+      if (($plug = plugin::load($pluginname)) && in_array('named', $plug->plugin_actions)) {
+        $plugins[$pluginname] = $plug;
+        $eventname = 'action'.ucfirst($eventname);
+      }
+    } else {
+      if (!isset($_SHOP->plugins)) {
+        $_SHOP->plugins = & plugin::loadAll(false);
+      }
+      $plugins   = & $_SHOP->plugins;
+      $eventname = 'do'.ucfirst($eventname);
+    }
+    if (!is_array($plugins)) return $return;
 
-  //  print_r($args);
-  //  print_r($_SHOP->plugins);
-
-    foreach ($_SHOP->plugins as $key => $plugin) {
+    foreach ($plugins as $key => $plugin) {
       $plugin = $plugin->_plug;
       //print_r(get_class_methods(get_class($plugin)));
-      if (method_exists($plugin, 'do'.$eventname )) {
-        $ret = call_user_func_array(array($plugin, 'do'.$eventname ),$args) ;
+      if (method_exists($plugin, $eventname )) {
+        $ret = call_user_func_array(array($plugin, $eventname ),$args) ;
       //  echo $ret;
         switch ($type){
           case '_':
@@ -165,9 +175,8 @@ class plugin extends model {
             $return .= (string)$ret;
         }
       }
-  //  echo "</pre>";
     }
-      return $return;
+    return $return;
   }
 
   static function getTables( $tbls= null ){
@@ -176,14 +185,18 @@ class plugin extends model {
     }
     $plugins = self::loadAll(true);
     foreach($plugins as $key => $plugin) {
+
  //     var_dump($plugin->plugin_id);
   //    var_dump($plugin->plugin_name);
-  //    var_dump($plugin->plugin_actions);
+      if (!is_array($plugin->plugin_actions)) {
+        continue;
+      }
 
       if (!$plugin->plugin_id && !in_array('install',$plugin->plugin_actions)) {
         $plugin->install(false);
       }
       if ($plugin->plugin_id || !in_array('install',$plugin->plugin_actions)) {
+        if (!is_object($plugin->_plug)) { continue; }
         $plugin->_plug->getTables($tbls );
       }
     }
@@ -191,6 +204,8 @@ class plugin extends model {
   }
 
   function install($updateDB= true) {
+    if (!is_object($this->_plug)) { return false; }
+
     if ($this->_plug->install()) {
       $this->plugin_version = $this->plugin_myversion;
       $this->plugin_enabled = 1;
@@ -312,8 +327,8 @@ abstract class basePlugin {
 	 * url - A web address for your plugin.
 	 */
 	public $plugin_url			= null;
-
-  public $plugin_actions = array ('config','install','uninstall','priority','enable','protect');
+  //
+  public $plugin_actions = array ('config','install','uninstall','priority','enable','protect','named');
 
   private $isInit = false;
 

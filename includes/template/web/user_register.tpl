@@ -28,7 +28,7 @@
  *
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
- *}
+ *}{strip}
  <!-- user_register.tpl -->
 {if $ManualRegister}
   {include file="header.tpl" name=!becomemember! header=!memberinfo!}
@@ -130,4 +130,4 @@ $(window).load(function(){
 
 {if !$ManualRegister}
   {include file='footer.tpl'}
-{/if}
+{/if}{/strip}

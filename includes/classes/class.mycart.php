@@ -210,7 +210,6 @@ class Cart {
     $qry="select event_id, event_name, event_date, event_time, event_ort_id, ort_name, ort_city, event_order_limit
             from Event left join Ort on event_ort_id=ort_id
             where event_id='{$event_id}' ";
-    //echo $qry;
     $row = ShopDB::query_one_object($qry);
     $row->event_use_alt = check_event($row->event_date);
     return $row;

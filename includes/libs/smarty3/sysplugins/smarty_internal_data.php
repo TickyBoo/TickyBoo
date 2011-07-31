@@ -329,8 +329,8 @@ class Smarty_Internal_Data {
     {
         $_result = '';
         if ($fp = fopen($variable, 'r+')) {
-            while (!feof($fp)) {
-                $_result .= fgets($fp);
+            while (!feof($fp) && ($current_line = fgets($fp)) !== false ) {
+                $_result .= $current_line;
             } 
             fclose($fp);
             return $_result;
