@@ -236,6 +236,8 @@ class Smarty extends Smarty_Internal_Data {
     public $inheritance = false;
     // generate deprecated function call notices?
     public $deprecation_notices = true;
+    // internal flag for getTags()
+    public $get_used_tags = false;
     // Smarty 2 BC
     public $_version = self::SMARTY_VERSION;
     // self pointer to Smarty object

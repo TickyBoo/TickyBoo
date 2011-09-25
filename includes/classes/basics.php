@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -237,6 +237,38 @@ function constructBase($secure=null, $useroot=false) {
   return $base;
 }
 
+function isValidURL($url)
+{
+  return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
+}
+
+function isValidURLEx($url)
+{
+  // SCHEME
+  $urlregex = "^(https?)\:\/\/"; // |ftp
+
+  // USER AND PASS (optional)
+ // $urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";
+
+  // HOSTNAME OR IP
+  $urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*"; // http://x = allowed (ex. http://localhost, http://routerlogin)
+   //$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)+"; // http://x.x = minimum
+   //$urlregex .= "([a-z0-9+\$_-]+\.)*[a-z0-9+\$_-]{2,3}"; // http://x.xx(x) = minimum
+   //use only one of the above
+
+   // PORT (optional)
+   $urlregex .= "(\:[0-9]{2,5})?";
+  // PATH (optional)
+  $urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";
+  // GET Query (optional)
+  $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?";
+  // ANCHOR (optional)
+  $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+
+  // check
+  return (eregi($urlregex, $url));
+  }
+
 /**
  * Merge a group of arrays
  * @param array First array
@@ -361,12 +393,10 @@ global $_SHOP;
 function con($name, $default='') {
   global $_SHOP;
   if (defined($name)) {
-    $ret = constant($name);
-//    $ret .= ($default)?$default:'';
-    return $ret;
+    return constant($name);
   } elseif ($default) {
     return $default;
-  } elseif ($name) {
+  } elseif ($name && preg_match('|^[a-z_-]+$|', $name) ) {
     if (is($_SHOP->AutoDefineLangs, false)) {
   //    echo loadLanguage('site', true);
       if (is_writable(loadLanguage('site', true))){
@@ -376,8 +406,8 @@ function con($name, $default='') {
         define($name,$name);
       }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
     }
-    return $name;
   }
+    return $name;
 }
 
 /**
@@ -406,6 +436,7 @@ function Redirect($url, $status = 303, $message='') {
     }
     header('Location: ' . $url);
   }
+  exit;
 }
 
 function _esc ($str, $quote=true){
@@ -791,6 +822,9 @@ function addNotice($const, $varb='') {
  */
 function addWarning($const, $varb='') {
   Global $_SHOP;
+if (is_array($const)) {
+$_SHOP->Messages['__Warning__'] = array_merge(is($_SHOP->Messages['__Warning__'], array()), $const);
+  } else
   $_SHOP->Messages['__Warning__'][] = con($const).$varb;
   return false;
 }

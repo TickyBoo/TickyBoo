@@ -95,6 +95,8 @@ class Smarty_Internal_Wrapper {
                  return call_user_func_array(array($this->smarty,'clearAllCache'),$args);
               case 'cache':
                  return call_user_func_array(array($this->smarty,'clearCache'),$args);
+              case 'config':
+                 return call_user_func_array(array($this->smarty,'clearConfig'),$args);
               case 'compiled_template':
                  return call_user_func_array(array($this->smarty,'clearCompiledTemplate'),$args);
            }

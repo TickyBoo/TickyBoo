@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -38,7 +38,7 @@
  * This this will invalided all given passwords in the system.
  */
 if (!defined('ft_check')) {die('System intrusion ');}
-
+  header('Content-Type: text/html; charset=utf-8');
 
   global $_SHOP;
   if(function_exists("mb_internal_encoding")) {

@@ -47,6 +47,9 @@ class Model {
   const MDL_MANDATORY = 1;
   const MDL_IDENTIFY  = 2;
   const MDL_NOQOUTE   = 4;
+  const MDL_SKIPSAVE  = 8;
+  const MDL_SERIALIZE = 16;
+  const MDL_ARRAY     = 32;
   const LOCK_SHARED   = -1;
   const LOCK_NONE     = false;
   const LOCK_UPDATE   = 1;
@@ -54,7 +57,6 @@ class Model {
   protected $_idName = false;
   protected $_tableName;
   protected $_columns = array();
-  protected $isLocked = false;
 
   function __construct($filldefs= false){
     if ((!$this->_columns || $filldefs) && $this->_tableName) {
@@ -75,6 +77,13 @@ class Model {
         }
       }
     }
+  }
+  function getRows(){
+    $query='SELECT FOUND_ROWS();';
+    if($row = ShopDB::query_one_row($query, false)){
+      return $row[0];
+    }
+    return 0;
   }
 
   function clear(){
@@ -144,18 +153,22 @@ class Model {
     }
   }
 
-  function quoteColumnVals() {
+  function quoteColumnVals($exclude= null) {
     $vals = array();
     foreach($this->_columns as $key) {
-      if ($val= $this->_set($key)) {
-        $vals[] = $val;
+      $type= self::getFieldtype($key);
+      if (($type & self::MDL_SKIPSAVE)){ continue;}
+      if (is_array($exclude) && in_array($key,$exclude )) { continue; }
+      if ($val= $this->_set($key,'~~~',$type)) {
+        $vals[] =  "`{$key}`=".$val;
       }
     }
     return $vals;
    }
 
-  function _set ($key, $value='~~~'){
-    $type= self::getFieldtype($key);
+  function _set (&$key, $value='~~~', $type=-1){
+
+    if ($type== -1) {$type= self::getFieldtype($key);}
     if ($key == $this->_idName) {
       return null;
     } elseif($value =='~~~'){
@@ -164,10 +177,13 @@ class Model {
        } else
          return null;
     }
-    if (($type & self::MDL_IDENTIFY) && $value == 0){
+    if (($type & self::MDL_IDENTIFY) && empty($value)){
         $value = null;
     }
-    return "`{$key}`="._esc($value, ($type & self::MDL_NOQOUTE)?false:true );
+    if ($type & self::MDL_SERIALIZE) {
+      $value = serialize($value);
+    }
+    return _esc($value, ($type & self::MDL_NOQOUTE)?false:true );
   }
 
   function delete()  {
@@ -176,6 +192,19 @@ class Model {
     ShopDB::query("DELETE FROM `{$this->_tableName}`
                    WHERE `{$this->_idName}` = "._esc($this->id));
     return ShopDB::affected_rows();
+  }
+
+  function checkDateTime(&$data, $name, $format='o-m-d H:i:00'){
+    $date = trim($data[$name]);
+    if (empty($date)) { return true; }
+    $date = date_parse($data[$name]);
+    if ($date['errors']) {
+      return addError($name,$date['errors'][0]);
+    } else {
+       $date = mktime($date['hour'],$date['minute'],0,$date['month'],$date['day'],$date['year']);
+       $data[$name] = date($format, $date);
+    }
+    return true;
   }
 
   Function CheckValues (&$arr) {
@@ -197,21 +226,33 @@ class Model {
 
   static function getFieldtype(&$key){
     $return = self::MDL_NONE;
-    while (true ){
+    while (!empty($key)){
       $type= substr($key,0,1);
       if ($type == '#') {
         $key = substr($key,1);
-        $return +=  self::MDL_IDENTIFY;
+        $return |=  self::MDL_IDENTIFY;
       } elseif ($type == '*') {
         $key = substr($key,1);
-        $return +=  self::MDL_MANDATORY;
+        $return |=  self::MDL_MANDATORY;
       } elseif ($type == '~') {
         $key = substr($key,1);
-        $return +=  self::MDL_NOQOUTE;
+        $return |=  self::MDL_NOQOUTE;
+      } elseif ($type == '-') {
+        $key = substr($key,1);
+        $return |=  self::MDL_SKIPSAVE;
+      } elseif ($type == '$') {
+        $key = substr($key,1);
+        $return |=  self::MDL_SERIALIZE;
+      } elseif ($type == '@') {
+        $key = substr($key,1);
+        $return |=  self::MDL_ARRAY;
       } else {
         return $return;
       }
     }
+  }
+  function isMandatory($name){
+    return in_array('*'.$name, $this->_columns);
   }
 
   function fillPost($nocheck=false)    { return $this->_fill($_POST,$nocheck); }
@@ -363,4 +404,15 @@ function file_upload_error_message($error_code) {
     }
 }
 
+  /**
+   * MDL_SERIALIZE()
+   *
+   * @param mixed $_idName
+   * @param mixed $type
+   * @return
+   */
+  function MDL_SERIALIZE($_idName, $type)
+  {
+    throw new Exception('Not implemented.');
+  }
 ?>

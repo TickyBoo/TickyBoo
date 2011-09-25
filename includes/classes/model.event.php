@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *  phpMyTicket - ticket reservation system
@@ -91,7 +91,7 @@ class Event Extends Model {
           }
         }
         $this->event_timestamp = $this->event_date." ".$this->event_time;
-        if (!parent::save()){
+        if (!parent::save($id, is($exclude,array('event_created')))){
           return self::_abort('Cant_save_event');
         } elseif($new && $this->event_pm_id){
           $pm=PlaceMap::load($this->event_pm_id);

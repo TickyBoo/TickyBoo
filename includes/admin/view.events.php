@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -149,7 +149,7 @@ select SQL_CALC_FOUND_ROWS *
         }
 			} else {
 				echo "<td width=120 class='admin_list_item'>$edate $etime</td>\n";
-				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"] ) . "</td> \n";
+				echo "<td class='admin_list_item'>" . showstr( $row["ort_name"],16 ) . "</td> \n";
 			}
 
 			echo "<td width=105 class='admin_list_item' nowrap='nowrap'><nobr>";
@@ -219,7 +219,7 @@ select SQL_CALC_FOUND_ROWS *
 
       echo "&nbsp;</nobr></td>
                 <td class='admin_list_item' NOWRAP>$edate $etime</td>
-                <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'] ) .	"</nobr></td>\n";
+                <td class='admin_list_item' NOWRAP><nobr>" . showstr( $row['ort_name'],16 ) .	"</nobr></td>\n";
 
 			echo "<td class='admin_list_item' width=105 NOWRAP><nobr>";
       $this->showbuttons($img_pub, $row, $history);

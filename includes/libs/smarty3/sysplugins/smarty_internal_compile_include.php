@@ -37,48 +37,6 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
         // save posible attributes
         $include_file = $_attr['file'];
         $has_compiled_template = false;
-        if ($compiler->smarty->merge_compiled_includes || $_attr['inline'] === true) {
-            // check if compiled code can be merged (contains no variable part)
-            if (!$compiler->has_variable_string && (substr_count($include_file, '"') == 2 or substr_count($include_file, "'") == 2) and substr_count($include_file, '(') == 0) {
-             $tmp = null;
-	    eval("\$tmp = $include_file;");
-                if ($this->compiler->template->template_resource != $tmp) {
-                    $tpl = new $compiler->smarty->template_class ($tmp, $compiler->smarty, $compiler->template, $compiler->template->cache_id, $compiler->template->compile_id);
-                    // suppress writing of compiled file
-                    $tpl->write_compiled_code = false;
-                    if ($this->compiler->template->caching) {
-                        // needs code for cached page but no cache file
-                        $tpl->caching = self::CACHING_NOCACHE_CODE;
-                    } 
-//                    if ($this->compiler->template->mustCompile) {
-                        // make sure whole chain gest compiled
-                        $tpl->mustCompile = true;
-//                    } 
-                    if ($tpl->resource_object->usesCompiler && $tpl->isExisting()) {
-                        // get compiled code
-                        $compiled_tpl = $tpl->getCompiledTemplate(); 
-                        // merge compiled code for {function} tags
-                        $compiler->template->properties['function'] = array_merge($compiler->template->properties['function'], $tpl->properties['function']); 
-                        // merge filedependency by evaluating header code
-                        preg_match_all("/(<\?php \/\*%%SmartyHeaderCode:{$tpl->properties['nocache_hash']}%%\*\/(.+?)\/\*\/%%SmartyHeaderCode%%\*\/\?>\n)/s", $compiled_tpl, $result);
-                        $saved_has_nocache_code = $compiler->template->has_nocache_code;
-                        $saved_nocache_hash = $compiler->template->properties['nocache_hash'];
-                        $_smarty_tpl = $compiler->template;
-                        eval($result[2][0]);
-                        $compiler->template->properties['nocache_hash'] = $saved_nocache_hash;
-                        $compiler->template->has_nocache_code = $saved_has_nocache_code; 
-                        // remove header code
-                        $compiled_tpl = preg_replace("/(<\?php \/\*%%SmartyHeaderCode:{$tpl->properties['nocache_hash']}%%\*\/(.+?)\/\*\/%%SmartyHeaderCode%%\*\/\?>\n)/s", '', $compiled_tpl);
-                        if ($tpl->has_nocache_code) {
-                            // replace nocache_hash
-                            $compiled_tpl = preg_replace("/{$tpl->properties['nocache_hash']}/", $compiler->template->properties['nocache_hash'], $compiled_tpl);
-                            $compiler->template->has_nocache_code = true;
-                        } 
-                        $has_compiled_template = true;
-                    } 
-                } 
-            } 
-        } 
 
         if (isset($_attr['assign'])) {
             // output will be stored in a smarty variable instead of beind displayed
@@ -135,12 +93,57 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
             $this->compiler->tag_nocache = true;
             $_caching = Smarty::CACHING_OFF;
         } 
+
+
+        if (($compiler->smarty->merge_compiled_includes || $_attr['inline'] === true)  && !($compiler->template->caching && ($this->compiler->tag_nocache || $this->compiler->nocache)) && $_caching != Smarty::CACHING_LIFETIME_CURRENT) {
+            // check if compiled code can be merged (contains no variable part)
+            if (!$compiler->has_variable_string && (substr_count($include_file, '"') == 2 or substr_count($include_file, "'") == 2) and substr_count($include_file, '(') == 0) {
+             $tmp = null;
+	    eval("\$tmp = $include_file;");
+                if ($this->compiler->template->template_resource != $tmp) {
+                    $tpl = new $compiler->smarty->template_class ($tmp, $compiler->smarty, $compiler->template, $compiler->template->cache_id, $compiler->template->compile_id);
+                    // suppress writing of compiled file
+                    $tpl->write_compiled_code = false;
+                    if ($this->compiler->template->caching) {
+                        // needs code for cached page but no cache file
+                        $tpl->caching = self::CACHING_NOCACHE_CODE;
+                    }
+//                    if ($this->compiler->template->mustCompile) {
+                        // make sure whole chain gest compiled
+                        $tpl->mustCompile = true;
+//                    }
+                    if ($tpl->resource_object->usesCompiler && $tpl->isExisting()) {
+                        // get compiled code
+                        $compiled_tpl = $tpl->getCompiledTemplate();
+                        // merge compiled code for {function} tags
+                        $compiler->template->properties['function'] = array_merge($compiler->template->properties['function'], $tpl->properties['function']);
+                        // merge filedependency by evaluating header code
+                        preg_match_all("/(<\?php \/\*%%SmartyHeaderCode:{$tpl->properties['nocache_hash']}%%\*\/(.+?)\/\*\/%%SmartyHeaderCode%%\*\/\?>\n)/s", $compiled_tpl, $result);
+                        $saved_has_nocache_code = $compiler->template->has_nocache_code;
+                        $saved_nocache_hash = $compiler->template->properties['nocache_hash'];
+                        $_smarty_tpl = $compiler->template;
+                        eval($result[2][0]);
+                        $compiler->template->properties['nocache_hash'] = $saved_nocache_hash;
+                        $compiler->template->has_nocache_code = $saved_has_nocache_code;
+                        // remove header code
+                        $compiled_tpl = preg_replace("/(<\?php \/\*%%SmartyHeaderCode:{$tpl->properties['nocache_hash']}%%\*\/(.+?)\/\*\/%%SmartyHeaderCode%%\*\/\?>\n)/s", '', $compiled_tpl);
+                        if ($tpl->has_nocache_code) {
+                            // replace nocache_hash
+                            $compiled_tpl = preg_replace("/{$tpl->properties['nocache_hash']}/", $compiler->template->properties['nocache_hash'], $compiled_tpl);
+                            $compiler->template->has_nocache_code = true;
+                        }
+                        $has_compiled_template = true;
+                    }
+                }
+            }
+        }
+
         // create template object
         $_output = "<?php ";
         if ($_caching != 'null' && $_caching != Smarty::CACHING_OFF) {
         	$_output .= "\$sha = sha1($include_file . $_cache_id . $_compile_id);\n";
         	$_output .= "if (isset(\$_smarty_tpl->smarty->template_objects[\$sha])) {\n";
-        	$_output .= "\$_template = \$_smarty_tpl->smarty->template_objects[\$sha]; \$_template->caching = $_caching; \$_template->cache_lifetime =  $_cache_lifetime;\n"; 
+        	$_output .= "\$_template = \$_smarty_tpl->smarty->template_objects[\$sha]; \$_template->parent = \$_smarty_tpl; \$_template->caching = $_caching; \$_template->cache_lifetime =  $_cache_lifetime;\n";
         	$_output .= "} else {\n";
         }
         $_output .= "\$_template = new {$compiler->smarty->template_class}($include_file, \$_smarty_tpl->smarty, \$_smarty_tpl, $_cache_id, $_compile_id, $_caching, $_cache_lifetime);\n";
@@ -164,7 +167,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
         if (isset($_assign)) {
             $_output .= "\$_smarty_tpl->assign($_assign,\$_template->getRenderedTemplate());?>";
         } else {
-            if ($has_compiled_template && !($compiler->template->caching && ($this->compiler->tag_nocache || $this->compiler->nocache))) {
+            if ($has_compiled_template) {
                 $_output .= "\$_template->properties['nocache_hash']  = '{$compiler->template->properties['nocache_hash']}';\n";
                 $_output .= "\$_tpl_stack[] = \$_smarty_tpl; \$_smarty_tpl = \$_template;?>\n";
                 $_output .= $compiled_tpl;

@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -266,8 +266,8 @@ class StatisticView extends ExportView{
   }
 
   function execute (){
-    if (!($tab=$this->drawtabs(false))) { return; }
-
+    if (!($tab=$this->drawtabs(null, false))) { return; }
+   // var_dump($tab);
     if ($tab-1==2){
         require('view.transports.php');
         $this->expviewer = new TransportsView($this->width);

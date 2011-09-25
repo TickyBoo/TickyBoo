@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -754,7 +754,6 @@ class AdminView extends Component {
         if ($mult) {
             $mu = 'multiple';
         }
-
         echo "<tr id='{$name}-tr'><td class='admin_name'  width='".self::$labelwidth."' $mu>" . con($name) . "</td>
                 <td class='admin_value'> <select id='{$name}-select' name='$name'  $actions>\n";
 

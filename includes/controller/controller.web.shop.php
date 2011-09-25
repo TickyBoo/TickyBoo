@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -83,7 +83,8 @@ class ctrlWebShop extends controller  {
   public function drawContent() {
     $this->assign('action',$this->action);
 //    $this->assign('isAjax',$isAjax);
-    $this->smarty->display(is($this->current_page, 'shop') . '.tpl');
+    $this->assign('page','shop');
+    $this->smarty->display(is($this->current_page,'shop').'.tpl');
   }
 
 

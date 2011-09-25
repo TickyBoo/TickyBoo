@@ -224,11 +224,11 @@ class Smarty_Internal_Utility {
      * @param object $templae template object
      * @return array of tag/attributes
      */
-	function getTags(Smarty_Internal_Template $template) 
+	public static function getTags(Smarty_Internal_Template $template)
 	{
 		$template->smarty->get_used_tags = true;
 		$template->compileTemplateSource();
-		return $template->compiler_object->used_tags;
+		return $template->used_tags;
 	}	
 	
     function testInstall()

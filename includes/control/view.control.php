@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -38,48 +38,7 @@ require_once("classes/class.component.php");
 
 class ControlView extends Component{
 
-  function draw (){
-
-    if($_GET['event_id']){
-       $_SESSION['event']=$_GET['event_id'];
-       $_SESSION['event_name']=$_GET['event_name'];
-  	}
-
-    if($_GET['action']=="search_form"){
-      $this->search_form($_GET);
-      return 1;
-    }
-
-    if($_GET['action']=='search'){
-      if(!$query_type=$this->search_check($_GET)){
-        $this->search_form($_GET);
-        return 1;
-      }else{
-         $this->result_list($_GET,$query_type);
-         return 1;
-      }
-    }else if($_GET['action']=='search_place'){
-      if(!$query_type=$this->search_place_check($_GET)){
-        $this->search_form($_GET);
-        return 1;
-      }else{
-        $this->result_place($_GET,$query_type);
-        return 1;
-      }
-    }
-    if(!isset($_SESSION['event'])){
-      $this->event_list();
-      return 1;
-    }
-
-    if($_GET['action']=="change_event"){
-      unset($_SESSION['event']);
-      unset($_SESSIOn['event_name']);
-      $this->event_list();
-      return 1;
-    }
-
-
+  function checkBarcode(){
     echo "
       <center>
         <div class='control_form'><br>{$_SESSION['event_name']}<br><br>
@@ -133,7 +92,7 @@ class ControlView extends Component{
         $place_nr=con('place_without_nr');
       }
 
-      echo "
+      echo "<center>
           <table class='check' width='700' cellpadding='5'>
             <tr>
               <td align='center' valign='middle' width='150'><img src='../images/bigsmile.gif'></td>
@@ -145,8 +104,8 @@ class ControlView extends Component{
                   <tr><td colspan='2'> &nbsp;</td></tr>";
 
       if(isset($ticket['category_color'])){
-          echo "
-                  <tr><td  bgcolor='{$ticket['category_color']}' style='border: #999999 1px dashed;'> &nbsp </td></tr>";
+        echo "
+                <tr><td  bgcolor='{$ticket['category_color']}' style='border: #999999 1px dashed;'> &nbsp </td></tr>";
       }
 
       echo  "
@@ -154,30 +113,77 @@ class ControlView extends Component{
                 </table>
               </td>
             </tr>
-          </table>";
+          </table></center><br><br>";
       OrderStatus::statusChange($ticket['order_id'],'TicketTaker',con('seat_checked').$seat_id,'tickettaker::checkticket');
       $query="UPDATE Seat set seat_status='check' where seat_id="._esc($seat_id);
 
       if(!ShopDB::query($query)){
-          echo "<div class='err'>".con('place_status_not_updated')."</div>";
-          return 0;
+        echo "<div class='err'>".con('place_status_not_updated')."</div>";
+        return false;
       }
 
     }
+    return true;
+  }
+
+  function draw (){
+    GLOBAL $_SHOP;
+    if($_GET['event_id']){
+       $_SESSION['event']=$_GET['event_id'];
+       $_SESSION['event_name']=$_GET['event_name'];
+  	}
+
+    if($_GET['action']=="search_form"){
+      $this->search_form($_GET);
+      return 1;
+    }
+
+    if($_GET['action']=='search'){
+      if(!$query_type=$this->search_check($_GET)){
+        $this->search_form($_GET);
+        return 1;
+      }else{
+         $this->result_list($_GET,$query_type);
+         return 1;
+      }
+    }else if($_GET['action']=='search_place'){
+      if(!$query_type=$this->search_place_check($_GET)){
+        $this->search_form($_GET);
+        return 1;
+      }else{
+        $this->result_place($_GET,$query_type);
+        return 1;
+      }
+    }
+    if(!isset($_SESSION['event'])){
+      $this->event_list();
+      return 1;
+    }
+
+    if($_GET['action']=="change_event"){
+      unset($_SESSION['event']);
+      unset($_SESSIOn['event_name']);
+      $this->event_list();
+      return 1;
+    }
+    if(!isset($_POST['codebar'])){
+      $this->checkBarcode();
+    } elseif ($this->checkBarcode()) {
+      echo "<embed src='{$_SHOP->images_url}beep_ok.mp3' autostart='true' loop='false' width='0' height='0'></embed>";
+    } else {
+      echo "<embed src='{$_SHOP->images_url}beep_error.mp3' autostart='true' loop='false' width='0' height='0'></embed>";
+    }
+
   }
 
   function showerror($message,$ticket){
+    GLOBAL $_SHOP;
+
     OrderStatus::statusChange($ticket['order_id'],'TicketTaker',$Message,'tickettaker::error');
-    echo"
-              <div class='err'>
-                 <table width='100%'>
-                   <tr>
-                     <td width='150' align='center'>
-                       <img src='../images/attention.png'></td><td class='error' >".con($message)."
-                     </td>
-                   </tr>
-                 </table>
-               </div>";
+    echo" <center>
+              <div width='150' class='err' align='left' valing='middle' style='padding-left:20px; vertical-align:middle;'>
+                 <img src='{$_SHOP->images_url}attention.png' height='100' style='float:left;margin-right:20px;'><span class='error' style='line-height:normal; vertical-align:middle;'>".con($message)."</span>
+               </div> </center><br>";
   }
 
   function event_list(){

@@ -3,7 +3,7 @@ Change Log
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system

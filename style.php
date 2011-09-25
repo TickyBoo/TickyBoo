@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -31,9 +31,26 @@
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
  */
-header('Content-Type: text/css');
 define('ft_check','shop');
 require_once('includes/config/init_common.php');
 global $_SHOP;
-require_once($_SHOP->theme_dir.'/style.css');
+
+if (!isset($_GET['T'])) {
+  header('Content-Type: text/css');
+  echo file_get_contents ($_SHOP->theme_dir.'/style.css');
+} elseif (file_exists($_SHOP->theme_dir.DS.$_GET['T'])) {
+  if (file_extension($_GET['T'])=='js') {
+    header('Content-Type: text/javascript');
+  } else {
+    header('Content-Type: text/css');
+  }
+  echo file_get_contents ($_SHOP->theme_dir.DS.$_GET['T']);
+} else {
+  header('HTTP/1.1 404');
+}
+
+function file_extension($filename)
+{
+  return end(explode(".", $filename));
+}
 ?>

@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -227,7 +227,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
             $res = "<table border=0 cellspacing=0 cellpadding=0>
                       <tr>
                         <td>
-                          <table class='pm_table' border=1  cellspacing=0 cellpadding=0>$res</table>
+                          <table class='pm_table' border=0  cellspacing=0 cellpadding=0>$res</table>
                         </td>
                       </tr>
                       <tr>
@@ -327,7 +327,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
      font-size: '.((int)($imagesize/1.75)).'px;
   }
   .pm_seatmap img {
-     border:1px dashed transparent;
+     border:1px dashed transparent;margin:0;
   }
   .pm_shiftright {
     margin:0;padding:0;
@@ -337,7 +337,7 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
      width:'.((int)($imagesize/2)).'px;
      height:'.($imagesize).'px;
   }
-  .pm_table {margin:5px;}
+  .pm_table {margin:5px; border:0px  !important; padding:0px   !important;}
   .pm_info{width:100%;}
   .pm_box{width:600px; background-color:#FFFFFF; padding:10px;}
   .pm_nosale{background-color:#d2d2d2;width:14px; height:14px;}

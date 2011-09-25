@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -158,10 +158,10 @@ class report_entrant extends AdminView {
     }
 
 
-    $worksheet->write(2, 1, date." :",$format_bold);
-    $worksheet->write(2, 2, formatDate($row['event_date']));
     $worksheet->write(2, 0, "");
-    $worksheet->write(2, 3, time." :",$format_bold);
+    $worksheet->write(2, 1, con('entrant_date'),$format_bold);
+    $worksheet->write(2, 2, formatDate($row['event_date']));
+    $worksheet->write(2, 3, con('entrant_time'),$format_bold);
     $worksheet->write(2, 4, formatTime($row['event_time']));
 
     $worksheet->write(3, 0, con('export_entrant_order_id'),$format_title);
