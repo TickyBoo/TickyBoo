@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -34,11 +34,11 @@
 
 if (!defined('ft_check')) {die('System intrusion ');}
 
-require(LIBS.'smarty3/Smarty.class.php');
+require(LIBS.'smarty3/SmartyBC.class.php');
 
 //$smarty->force_compile = true;
 
-class MySmarty extends Smarty {
+class MySmarty extends SmartyBC {
   public $layoutName = 'theme.tpl';
   public $deprecation_notices = false;
   public $_SHOP_db_res = array();
@@ -53,7 +53,7 @@ class MySmarty extends Smarty {
   public function __construct($controllor) {
     global $_SHOP;
 
-    $this->exception_handler = array($this, 'exception_handler');
+  //  $this->exception_handler = array($this, 'exception_handler');
     $this->controllor = $controllor;
 
     parent::__construct();
@@ -65,19 +65,12 @@ class MySmarty extends Smarty {
     if (is_object($controllor)) {
       $controllor->loadPlugins(array('gui'));
     }
-    if (isset($this->smarty->register)) {
-      $this->smarty->register->templateFunction('showTheme', array(&$this,'_SetTheme'));
-      $this->smarty->register->templateFunction('con', 'con');
-      $this->smarty->register->block('menuBlock', array(&$this,'_setMenuBlock'));
-      $this->smarty->register->prefilter(array(&$this,'Con_prefilter'));
-    } else {
-      $this->register_Function('showTheme', array(&$this,'_SetTheme'));
-      $this->smarty->register_Function('con', 'con');
-      $this->register_Block('menuBlock', array(&$this,'_setMenuBlock'));
-      $this->smarty->register_prefilter(array(&$this,'Con_prefilter'));
-    }
+
+    $this->register_function('theme', array(&$this,'_SetTheme'));
+    $this->register_function('redirect', array(&$this,'_ReDirect'));
+    $this->register_prefilter(array(&$this,'Con_prefilter'));
+
     $_SHOP->smarty = $this;
-   // $this->_SHOP_db_res = array();
   }
 
   public function init($context='web') {
@@ -87,7 +80,7 @@ class MySmarty extends Smarty {
     $this->controllor->__gui->gui_value ='TblHigher';
 
     $this->template_dir = array($_SHOP->tpl_dir.$context.DS.'custom'.DS,
-                                $_SHOP->tpl_dir.$context.DS.'custum'.DS,
+                                $_SHOP->tpl_dir.$context.DS.'shop'.DS,
                                 $_SHOP->tpl_dir.$context.DS);
  //   $this->default_resource_type = 'mysql';
 
@@ -105,7 +98,6 @@ class MySmarty extends Smarty {
     $this->assign('_SHOP_themeimages', $_SHOP->images_url . "theme/".$_SHOP->theme_name.'/' );
     $this->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
     $this->assign("_SHOP_images", $_SHOP->images_url);
-    $this->assign("_SHOP_theme_css", "css/theme/".$_SHOP->theme_name);
 
     $this->assign('organizer_currency', $_SHOP->organizer_data->organizer_currency);
     $this->assign('organizer', $_SHOP->organizer_data);
@@ -114,30 +106,24 @@ class MySmarty extends Smarty {
     $this->debugging_ctrl = false;
   }
 
-  function exception_handler ($exception) {
-     echo ($exception->getMessage());
-
-  }
-
   public function display($template, $cache_id = null, $compile_id = null, $parent = null) {
-    $webContent = $this->fetch($template);
+    global $_SHOP;
 
+    $webContent = $this->fetch($template);
     if ($this->ShowThema) { //print_r($this);
       $this->assign('Title'  ,$this->title,true);
-
-
-      $this->assign('HeaderNote' ,$this->headerNote,true);
-      $this->assign('FootNote'   ,$this->footNote,true  );
-      $this->assign('Buttons'    ,$this->buttons,true  );
-      $this->assign('MenuBlock'  ,$this->menuBlock,true  );
       $this->assign('WebContent', $webContent);
 
-      return parent::display($this->layoutName);
+      parent::display( $_SHOP->tpl_dir . "theme".DS. $_SHOP->theme_name.DS . $this->layoutName);
+      print_r($_CONFIG->Messages);
+    } elseif ($_REQUEST['p']=='content') {
+      $this->assign('WebContent', $webContent);
+      parent::display('theme-ajax.html');
     } else {
       echo $webContent;
-      if ($this->debugging) {
-          Smarty_Internal_Debug::display_debug($this);
-      }
+    }
+    if ($this->debugging) {
+        Smarty_Internal_Debug::display_debug($this);
     }
   }
 
@@ -146,7 +132,7 @@ class MySmarty extends Smarty {
     return '';
   }
 
-  public function _SetTheme( $params){
+  public function _SetTheme( $params, $smarty){
     If (isset($params['name'])) {
       $this->layoutName = $params['name'];
     }
@@ -160,8 +146,7 @@ class MySmarty extends Smarty {
       $this->footNote = $params['footer'];
     }
     If (isset($params['set'])) {
-      $this->ShowThema = ((strtoupper($params['set'])==='ON') or
-                          (strtoupper($params['set'])==='TRUE'));
+      $this->ShowThema = $params['set'];
     } else {
       $this->ShowThema = true;
     }
@@ -188,6 +173,8 @@ class MySmarty extends Smarty {
   public function popBlockData(){
     return array_pop($this->_SHOP_db_res);
   }
-
+  function exception_handler ($exception) {
+     echo ($exception->getMessage());
+  }
 }
 ?>

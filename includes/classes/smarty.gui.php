@@ -3,7 +3,7 @@
 %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
- *  Copyright (C) 2007-2010 Christopher Jenkins, Niels, Lou. All rights reserved.
+ *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
  *
  * Original Design:
  *	phpMyTicket - ticket reservation system
@@ -51,11 +51,13 @@ class Gui_smarty {
 	var $gui_name   = 'gui_name';
 	var $gui_value  = 'gui_value';
 	var $gui_name_width  = '30%';
+  var $gui_form_id  = '';
   public $guidata = array();
+  private $model  = null;
 
   function __construct  ($smarty){
 
-    $smarty->register_object("gui",$this);
+    $smarty->register_object("gui",$this, null,true, Array('label'));
     $smarty->assign_by_ref("gui",$this);
 
     $smarty->register_function('ShowFormToken', array($this,'showFormToken'));
@@ -66,43 +68,48 @@ class Gui_smarty {
     $smarty->register_function('weeksofyear', 'weeksofyear');
 
   }
+  function validate($tmp, $arr){
+    $result = array();
+    foreach ($arr  as $key => $value ){
+      $result[] = $key.':'.$value;
+    }
+    return implode($tmp, $result);
+  }
 
   function printMsg($params, $smarty) {
     $addspan     = is($params['addspan'],true);
     return printMsg($params['key'],null, $addspan );
   }
 
-  function url($params, $smarty, $skipnames){
-    GLOBAL $_SHOP;
+  function url($params, $smarty=false, $skipnames= false){
+    GLOBAL $_CONFIG;
     if (isset($params['surl'])) {
-      return $_SHOP->root_secured.'?'.$params['surl'];
+      return $_SHOP->root_secured.$params['surl'];
     } elseif (isset($params['url'])) {
-      return $_SHOP->root.'?'.$params['url'];
+      return $_SHOP->root.$params['url'];
     } else {
       If (!is_array($skipnames)) {$skipnames= array();}
     //  print_r($params);
       $urlparams ='';
-      foreach ($params as $key => $value) {
-        if ($params['secure']) {
-          unset($params['secure']);
-          $secure = true;
-        } else $secure = false;
-        if (!in_array($key,$skipnames)) {
-          $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
-        }
-      }
-      $urlparams .= (($urlparams)?'?':'').$urlparams;
 
+      if ($params['secure']) {
+        unset($params['secure']);
+        $secure = true;
+      } else $secure = false;
+      parse_str($_SERVER['QUERY_STRING'], $queryHash);
+
+      //   merge parameters from the current url
+      //   with the new parameters
+      //   notice: the same keys will be overwritten
+      $paramHash = array_merge($queryHash, $params);
+      foreach ($skipnames as $value) {unset($paramHash[$value]);}
       If ($secure) {
         $result = $_SHOP->root_secure;
       } elseif (isset($params['url'])) {
         $result = $_SHOP->root_secure;
       }
 
-      return $result.$urlparams;
-     // print_r($urlparams);
-
-   //   return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
+      return $result.'?'.http_build_query($paramHash);
     }
   }
 
@@ -124,45 +131,9 @@ class Gui_smarty {
     *   @return string
     */
 
-   function currenturl($params, &$smarty, $skipnames)
+   function currenturl($params, $smarty=false, $skipnames=false)
    {
-   	  global $_SHOP;
-      $queryHash   = Array();
-
-      //   write the parameters of the current url
-      //   in a key-value pair hash/array
-      foreach(explode('&', $_SERVER['QUERY_STRING']) as $value)
-      {
-         $results = explode('=', $value);
-
-         //   continue by empty key-value pair
-         if (empty($results[0]) &&
-            empty($results[1]))
-         {
-            continue;
-         }
-
-         $queryHash[$results[0]] = $results[1];
-      }
-
-      //   merge parameters from the current url
-      //   with the new parameters
-      //   notice: the same keys will be overwritten
-      $paramHash         = array_merge(   $queryHash,
-                                 $params);
-      $paramStringHash   = Array();
-    If (!is_array($skipnames)) {$skipnames= array();}
-      //   write the new hash/array in the query
-      //   syntax
-      foreach ($paramHash as $key => $value)
-      {
-      	if (!in_array($key,$skipnames)) {
-         array_push($paramStringHash, $key.'='.$value);
-      }
-      }
-
-      //   return the url with the new parameters
-      return $_SERVER['PHP_SELF'].'?'.implode('&', $paramStringHash);
+    return url($params, $smarty, $skipnames);
    }
 
   function print_r($params, $smarty) {
@@ -243,37 +214,84 @@ class Gui_smarty {
     If( isset($params['namewidth'])) {
       $this->gui_name_width = $params['namewidth'] ;
     }
+    $model = is($params['model'],'');
+    if ($model) {
+      $classname = $model;
+      FindClass($classname);
+      if (substr($classname,0,6)=='model.') {
+        $this->model = new $model();
+      }
+    }
   }
   function StartForm($params, $smarty) //($name, $width = 0, $colspan = 2)
   {
     $name     = is($params['name']);
     $id       = is($params['id']);
     $title    = is($params['title']);
+    $style    = is($params['style']);
     $table    = is($params['table'],true);
     $width    = is($params['width'],$this->width);
     $class    = is($params['class'],'gui_form');
     $enctype  = is($params['enctype'],'application/x-www-form-urlencoded');
     $method   = is($params['method'],'post');
-    $onsubmit = is($params['onsubmit'],'');
     $url      = is($params['action']);//$this->_URL( $params, $smarty, array('name','class','width','method','title','enctype','onsubmit', 'data' ));
-    If( isset($params['data'])) {
-      $this->guidata = $params['data'];
-    }
+    if ($style)  $style = 'style='._esc($style);
+    $this->setData($params,$smarty);
+    $this->gui_form_id = $id;
     $return ='';
     If ($method <> 'none') {
-       $target       = is($params['target']);
-       if ($target) $target = 'target="'.$target.'"';
-      $return .= "<form action='$url' id='$id' name='$name' method='$method' enctype='$enctype' $target";
-      $return .= ($onsubmit)?" onsubmit ='$onsubmit'>":">";
+      $target       = is($params['target']);
+      $onsubmit = is($params['onsubmit'],'');
+      $props ='';
+      if ($target)   $props .= ' target="'.$target.'"';
+      if ($onsubmit) $props .= " onsubmit ='$onsubmit'";
+      $return .= "<form action='{$url}' id='{$id}' name='{$name}' method='{$method}' class='{$class}' enctype='{$enctype}'{$props}>\n";
       $return .= self::showFormToken( $params, $smarty);
       $this->FormDepth ++;
       $this->_ShowLabel = True;
-    }
-    if($table){
-      $return .= "<table class='$class' width='$width' border=0 cellspacing='1' cellpadding='4'>\n";
-      if ($title) {
-        $return .= "<tr><th class='$class_title' colspan='2'>$title</th></tr>\n";
+      if (!is($params['hasTabs'],false)) {
+        $this->addJQuery(" $(\"#{$id}\").validate({}); ");
+
+      } else {
+      $this->addJQuery("
+        $(\"".$params['hasTabs']."\").tabs({});
+        $(\"#{$id}\").validate({
+          invalidHandler: function(form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+              var invalidPanels = $(validator.invalidElements()).closest(\".ui-tabs-panel\", form);
+              if (invalidPanels.size() > 0) {
+                $.each($.unique(invalidPanels.get()), function(){
+                  $(this).siblings(\".ui-tabs-nav\")
+                  .find(\"a[href='#\" + this.id + \"']\").parent().not(\".ui-tabs-selected\")
+                  .addClass(\"ui-state-error\")
+                  .show(\"pulsate\",{times: 3});
+                });
+              }
+            }
+            return !errors;
+          },
+          unhighlight: function(element, errorClass, validClass) {
+            $(element).removeClass(errorClass);
+            $(element.form).find(\"label[for=\" + element.id + \"]\").removeClass(errorClass);
+            var \$panel = $(element).closest(\".ui-tabs-panel\", element.form);
+            if (\$panel.size() > 0) {
+              if (\$panel.find(\".\" + errorClass + \":visible\").size() == 0) {
+                \$panel.siblings(\".ui-tabs-nav\").find(\"a[href='#\" + \$panel[0].id + \"']\")
+                  .parent().removeClass(\"ui-state-error\");
+              }
+            }
+          }
+        }); ");
       }
+    }
+    if ($this->model) {
+      $return .= con('input_fields_requered')."\n";
+
+    }
+    $return .= "<fieldset>\n";
+    if ($title) {
+      $return .= "<legend='$class_title'>$title</legend>\n";
     }
     return $return;
   }
@@ -283,23 +301,24 @@ class Gui_smarty {
     $name     = is($params['name'],'submit');
     $align    = is($params['align'],'right');
     $title    = is($params['title'], con('gui_save','submit'));
-    $class    = is($params['class'], $this->gui_value);
+    $class    = is($params['class'], 'gui_footer');
     $noreset  = is($params['noreset'], false);
+    $backlink  = is($params['backlink'], false);
     $show  = is($params['showbuttons'], true);
     $onclick  = is($params['onclick'],'');
     if ($show) {
-     $return = "<tr class='$class' ><td style='text-align:{$align};' colspan='2'>\n".
-        //        $this->jbutton(array('url'=>'submit', 'name'=>$name, 'title'=>$title), $smarty );
+      $return = "<div class='$class'>\n";
+      if (!is_array($backlink) and $backlink) {
+          $return .= $this->button(array('url'=>$backlink, 'name'=>'admin_list', 'id'=>"{$id}_back", 'type'=>3), $smarty );
+      }
 
-    $return = "<input type='submit' name='$name'  id='$name' value='{$title}'  style='float:none;' >";
-    if (!$noreset) {
-        $return .= "&nbsp; ".
-          "<input type='reset' name='reset'  id='reset' style='float:none;' >";
-//      $this->jbutton(array('url'=>'reset', 'name'=>'reset'), $smarty );
+      if (!$noreset) {
+        $return .= $this->button(array('url'=>'reset', 'name'=>'reset', 'class'=>'cancel', 'type'=>3, 'style'=>"float:$align;", 'id'=>"{$id}_reset" ), $smarty );
+      }
+      $return .= $this->button(array('url'=>'submit', 'style'=>"float:$align;",'type'=>3,  'name'=>$name, 'id'=>"{$id}_{$name}", 'title'=>$title), $smarty );
+      $return .= "</div>\n";
     }
-    $return .= "</td></tr>\n";
-    }
-    $return .=  "</table>\n";
+    $return .=  "</fieldset>\n";
     if ($this->FormDepth) {
       $this->FormDepth --;
       $return .= "</form>\n";
@@ -307,19 +326,38 @@ class Gui_smarty {
     return $return;
   }
 
+
   function setShowLabel($params, $smarty) {
     $this->_ShowLabel =is($params['set'],$this->_ShowLabel);
   }
 
-  private function showlabel($name, $value, $params=array()) {
+  function Label($params, $content, $smarty, &$repeat) {
+    //$repeat = false;
+    $name = is($params['name']);
+    $colspan = is($params['colspan'],1);
+    $this->checkRequired($params);
+    return $this->showLabel($name,$content,$params,$colspan, $smarty);
+  }
+
+  private function showlabel($name, $value = null, $params=array(), $colspan=1, $smarty=null) {
     $nolabel  = is($params['nolabel'],false);
-    $caption  = is($params['caption'],con($name));
-    $mandatory = $params['mandatory'] ? "*" :"";
+    $required = (is($params['required'],false))?' required':'';
     if ($this->_ShowLabel and !$nolabel) {
-      $return = "<tr id='{$name}-tr' class='shop-tr'><td id='{$name}-label' class='{$this->gui_name}' width='40%'>{$caption} {$mandatory}</td>".
-                "    <td id='{$name}-value' class='{$this->gui_value}'>{$value}";
-      $return .= printMsg($name);
-      return $return."</td></tr>\n";
+      $caption  = con(is($params['caption'],$name));
+      if ($colspan==2) {
+         $class= 'full ';
+      }
+      $return = "
+      <p id='{$name}-tr'>
+          <label id='{$name}-label' class='{$class}input{$required}' for='{$name}'>{$caption}</label>\n";
+      if ($colspan==2) {
+        $return .= "<br/>\n";
+      }
+      $return .= "<span class='input {$class}' id='{$name}-value'>{$value}";
+      if (!is($params['noerror'],false)) {
+        $return .= printMsg($name);
+      }
+      return $return."</span>\n</p>\n";
     } else {
       return $value;
     }
@@ -328,9 +366,9 @@ class Gui_smarty {
   function view($params, $smarty) //$name, &$data, $prefix = ''*/)
   {
     $name = is($params['name']);
-    $Option = is($params['option'], false);
     $value  = is($params['value'],$this->guidata[$name]);
-    If (!$Option or $this->values[$name]) {
+    $Option = is($params['option'], false);
+    If (!$Option or !empty($value)) {
       return $this->showlabel($name, $value, $params);
     }
   }
@@ -339,47 +377,394 @@ class Gui_smarty {
   {
     $name = is($params['name'] );
     $value  = is($params['value'],$this->guidata[$name]);
-    return "<input type='hidden' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) ."'>\n";
+    $Option = is($params['option'], false);
+    If (!$Option or !empty($value)) {
+      return "<input type='hidden' id='$name' name='$name' value='" . clean($value) ."'>";
+    }
+  }
+
+  private function checkRequired(&$params){
+    if ($this->model) {
+     $required = $this->model->isMandatory($params['name']);
+    }
+    $params['required'] = is($params['required'], $required);
   }
 
   function input ($params, $smarty) //$name, &$data, $size = 30, $max = 100)
   {
     $name = is($params['name'] );
+    $idname  = is($params['id'], $name);
     $type = is($params['type'], 'text');
-    $size = is($params['size'], 30);
-    $max  = is($params['maxlength'] ,100);
     $value  = is($params['value'],$this->guidata[$name]);
-	$disabled = $params['disabled'] ? "disabled" :"";
-    return $this->showlabel($name, "<input type='$type' id='$name' name='$name' value='" . htmlspecialchars($value, ENT_QUOTES) .
-           "' size='$size' maxlength='$max' $disabled>",$params);
+    $validate = is($params['validate'] ,array());
+    $title    = is($params['title'] ,'');
+    $style    = is($params['style'],'');
+    $class    = is($params['class'], '');
+    $disabled = $params['disabled'] ? "disabled" :"";
+
+    if ($style) {$style    = ' style="'.$style.'"';}
+    if ($title) {$style    = ' title="'.$title.'"';}
+    if ($class) {$style    = ' class="'.$class.'"';}
+
+    $this->checkRequired($params);
+    if ($params['required']) {
+      $validate['required'] = 'true';
+    }
+    if (strtolower($type)=='date') {
+      $size = is($params['size'], 11);
+      $max  = is($params['maxlength'] ,11);
+      $type = 'text';
+      if (!empty($value)) {
+        $value = date('d-m-o', strtotime($value));
+      }
+      $validate[strtolower($type)]= 'true';
+      $this->addJQuery("
+    if ($(\"#{$idname}\")[0].type!=='date') {
+      $(\"#{$idname}\").datepicker({
+        showOn: 'both',
+        buttonText: '',
+        buttonImage: '',
+        buttonImageOnly: true,
+        showButtonPanel: false
+      });
+    }");
+
+
+    } elseif (strtolower($type)=='datetime') {
+      if ($value && $value != '0000-00-00 00:00:00') {
+        $value = date('d-m-o H:i', strtotime($value));
+      } else $value = '';
+      $type = 'text';
+      $size = is($params['size'], 17);
+      $max  = is($params['maxlength'] ,17);
+   //   $validate[strtolower($type)]= 'true';
+      $this->addJQuery("
+$(\"#{$idname}\").datetimepicker({
+      showOn: 'both',
+      buttonText: '',
+      buttonImageOnly: true,
+      buttonImage: '',
+      	hourGrid: 3,
+      	stepMinute: 5,
+      	minuteGrid: 10
+});");
+
+
+    } elseif (strtolower($type)=='time') {
+      if ($value) {
+        $value = date('H:i', strtotime($value));
+      }
+      $type = 'text';
+      $size = is($params['size'], 5);
+      $max  = is($params['maxlength'] ,5);
+ //     $validate[strtolower($type)]= 'true';
+      $value = substr($value,0,5);
+      $this->addJQuery("
+    if ($(\"#{$idname}\")[0].type!=='time') {
+      $(\"#{$idname}\").timepicker({
+        showOn: 'both',
+        buttonText: '',
+        buttonImageOnly: true,
+        buttonImage: '',
+      	hourGrid: 3,
+      	stepMinute: 5,
+      	minuteGrid: 10
+      });
+    }");
+
+
+    } elseif (false and strtolower($type)!=='text') {
+      //        $validate[strtolower($type)]= 'true';
+
+    } else {
+      $size = is($params['size'], 30);
+      $max  = is($params['maxlength'] ,100);
+    }
+    $validate  = $this->validate(',',$validate );
+
+    return $this->showlabel($name, "<input type='$type' id='$idname' name='$name' value='" . clean($value) .
+             "' size='$size' maxlength='$max' validate='{$validate}' {$style} {$disabled}>", $params);
   }
+
+  function inputDate ($params, $smarty) {
+    $params['type'] =  is($params['type'],'date' );
+    return $this->input($params, &$smarty);
+  }
+
+ function inputTime ($params, $smarty) //($name, &$data, &$err,  = '')
+  {
+    $params['type'] =  is($params['type'],'time' );
+    return $this->input($params, &$smarty);
+  }
+
 
   function checkbox ($params, $smarty) //($name, &$data, &$err, $size = '', $max = '')
   {
-    $name = is($params['name']    );
-    if ($this->guidata[$name]) {
+    $name   = is($params['name']    );
+    $value  = is($params['value'],$this->guidata[$name]);
+
+    if ($value) {
       $chk = 'checked';
     }
-    return $this->showlabel($name, "<input type='checkbox' id='$name' name='$name' value='1' $chk>",$params);
+    $validate = is($params['validate'] ,array());
+    $this->checkRequired($params);
+    if ($params['required']) {
+      $validate['required'] = 'true';
+    }
+
+    $validate  = $this->validate(',',$validate );
+    return $this->showlabel($name, "<input type='checkbox' id='$name' name='$name' value='1' $chk validate='{$validate}'>",$params);
   }
 
-  function area ($params, $smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
+  function yesNo ($params, &$smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
+  {
+    $name    = is($params['name']   );
+    $class   = is($params['class'],'');
+    $options = is($params['options'], array(0=>'no',1=>'yes'));
+    $keys    = array_keys ($options);
+    $value   = is($params['value'],$this->guidata[$name]);
+
+    $validate = is($params['validate'] ,array());
+
+    $this->checkRequired($params);
+    if ($params['required']) {
+      $validate['required'] = 'true';
+    }
+
+    if (empty($value)|| $value==$keys[0]) {
+      $sel0='checked=checked';
+    } else {
+      $sel1='checked=checked';
+    }
+    $validate  = $this->validate(',',$validate );
+    return $this->showlabel($name,"
+          <input type='radio'  id='{$name}-no'  name='$name' value='{$keys[0]}' {$sel0} validate='{$validate}'><label for='{$name}-no'>".con($options[$keys[0]])."</label>&nbsp;
+          <input type='radio'  id='{$name}-yes' name='$name' value='{$keys[1]}' {$sel1}><label for='{$name}-yes' >".con($options[$keys[1]])."</label>
+        ",$params);
+  }
+
+
+  function area ($params, &$smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')
   {
     $name = is($params['name']   );
     $rows = is($params['rows'], 6);
-    $cols = is($params['cols'],80);
-    return $this->showlabel($name, "&nbsp;</td></tr><tr><td colspan=2><textarea rows='$rows' cols='$cols' style='width:100%;' id='$name' name='$name'>" . htmlspecialchars($this->guidata[$name], ENT_QUOTES) . "</textarea>",$params);
+    $cols = is($params['cols'],40);
+    $class = is($params['class'],'');
+    $escape = is($params['escape'],'all');
+    $large = is($params['large'],false);
+    $validate = is($params['validate'] ,array());
+    $value  = is($params['value'],$this->guidata[$name]);
+    $this->checkRequired($params);
+    if ($params['required']) {
+      $validate['required']='true';
+    }
+    $validate  = $this->validate(',',$validate );
+    return $this->showlabel($name, "<textarea rows='$rows' style='width:99%;' cols='$cols' id='$name' name='$name' validate='{$validate}'>" . clean($value, $escape). "</textarea>",$params, ($large?2:1));
   }
 
-  function inputTime ($params, $smarty) //($name, &$data, &$err,  = '')
-  {
-    require_once('class.datetimeselect.php');
-    $name = is($params['name']    );
-    $timeselect = new DateTimeSelect('t', $name, $this->guidata[$name],0);
-    return $this->showlabel($name, $timeselect->selectbox,$params);
+  function ckeditor ($params, &$smarty) //($name, &$data, &$err, $rows = 6, $cols = 40,  = '')\
+   {
+    GLOBAL $_CONFIG;
+
+    $name = is($params['name']   );
+    $rows = is($params['rows'], 6);
+    $cols = is($params['cols'],40);
+    $class = is($params['class'],'');
+    $escape = is($params['escape'],'html');
+    $large = is($params['large'],true);
+    $validate = is($params['validate'] ,array());
+    $value  = is($params['value'],$this->guidata[$name]);
+    $this->checkRequired($params);
+    if ($params['required']) {
+      $validate['required'] ='true';
+    }
+    include("ckeditor_php5.php");
+
+    // Create a class instance.
+    $CKEditor = new CKEditor();
+      $config['toolbar'] = array(
+      array( 'Source', '-','Preview', 'Maximize', 'ShowBlocks','-','About'),
+      array( 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ),
+      array('Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ),
+      '/',
+      array( 'Bold','Italic','Underline','Strike','Subscript','Superscript','-', 'TextColor','BGColor', '-','RemoveFormat' ),
+  array( 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'),
+
+      );
+/*
+   { name: 'document',    items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
+   { name: 'clipboard',   items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+   { name: 'editing',     items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
+   { name: 'forms',       items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+   '/',
+   { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+   { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
+   { name: 'links',       items : [ 'Link','Unlink','Anchor' ] },
+   { name: 'insert',      items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak' ] },
+   '/',
+   { name: 'styles',      items : [ 'Styles','Format','Font','FontSize' ] },
+   { name: 'colors',      items : [ 'TextColor','BGColor' ] },
+   { name: 'tools',       items : [ 'Maximize', 'ShowBlocks','-','About' ] }
+
+   */
+
+
+
+
+
+
+    $config['skin'] = 'office2003';
+
+    // Do not print the code directly to the browser, return it instead.
+    $CKEditor->returnOutput = true;
+
+    // Path to the CKEditor directory, ideally use an absolute path instead of a relative dir.
+    //   $CKEditor->basePath = '/ckeditor/'
+    // If not set, CKEditor will try to detect the correct path.
+    $CKEditor->basePath = $_CONFIG->root.'scripts/ckeditor/';
+
+    // Set global configuration (will be used by all instances of CKEditor).
+    $CKEditor->config['width'] = '99%';
+
+    // Change default textarea attributes.
+    $CKEditor->textareaAttributes = array("cols" => $cols, "rows" => $rows);
+
+    // The initial value to be displayed in the editor.
+    $initialValue = clean($value, $escape);
+
+    // Create the first instance.
+    $code = $CKEditor->editor($name, $value, $config);
+    $validate  = $this->validate(',',$validate );
+
+    return $this->showlabel($name, $code,$params, ($large?2:1));
   }
 
   function button($params, $smarty ){
+    global $_SHOP;
+    $name = is($params['name']    );
+    $url  = is($params['url']    );
+    $type  = is($params['type'], 2);
+
+    $toolbutton = ( ($type==2) || is($params['toolbutton'],false))?'tool':'';
+
+    if(!empt($name,false)){
+        return;
+    }
+    $button = false;
+    $text = false;
+    $icon = false;
+    $iconArr = array(
+      'add'=>array('image'=>'add.png'),
+      'edit'=>array('image'=>'edit.gif'),
+      'view'=>array('image'=>'view.png'),
+      'list'=>array('image'=>'arrow_left.png'),
+      'delete'=>array('image'=>'trash.png'),
+      'remove'=>array('image'=>'trash.png'));
+
+    //Find what to show
+    if($type===1 || $type >= 3){
+      $icon = false;
+      $text = $name;
+    }
+    if(is($params['image'],false)){
+      $icon = true;
+      $image = $params['image'];
+    }elseif($type===2 || $type >= 3){
+      foreach($iconArr as $icoNm=>$iconDtl){
+        $name2 = strtolower($name);
+        if(preg_match('/'.$icoNm.'/',$name2)){
+          $icon = $icoNm;
+          $image = $iconDtl['image'];
+          break;
+        };
+      }
+      if(!$icon){
+        $text = $name;
+      }
+    }
+    //Is it a button?
+    if($url=='submit' || $url=='reset'|| $url=='button'){
+      $button = true;
+    }
+    //Extra options
+    $classes = is($params['classes'],' ui-corner-all');
+    $style   = is($params['style'],'');
+    $idname  = is($params['id'], $name);
+    $disabled= is($params['disable'],false);
+    $target= is($params['target'],'');
+
+    if ($target) {
+      $target = "target='{$target}'";
+    }
+
+    $onclick = is($params['onclick'], '');
+    if ($onclick) {
+      $onclick = 'onclick="'.$onclick.'"';
+    }
+    if(!$icon){
+      $classes .= " admin-button-text";
+    }
+    $disClass = ''; $disAtr = '';
+    if($disabled){
+      $disAtr = " disabled='disabled' ";
+      $disClass = " ui-state-disabled ";
+      $onclick = " onclick='javascript:return false;' ";
+      $url = '';
+    }
+    //Tooltip stuff
+    $toolTipName = $this->hasToolTip($name);
+    if (defined($toolTipName)) {
+      $toolTipText = con($toolTipName);
+      $hasTTClass = 'has-tooltip';
+    }
+    if(is($params['showtooltip'], false)===false){
+      $hasTTClass = '';
+      $title = con($name);
+
+    }elseif(empt($params['tooltiptext'],false)){
+      $toolTipText = $params['tooltiptext'];
+      $toolTipName = empt($toolTipName,$name."-tooltip");
+
+    }elseif(!empt($toolTipName,false)){
+      $hasTTClass = '';
+      $title = con($name);
+    }
+
+    $alt     = is($params['alt'],is($title,con($name,'')));
+    if ($alt) {
+      $alt = "alt='{$alt}'";
+    }
+    $rtn = "";
+
+    //If image bolt on image css for button
+    if($icon && $image && $text){ $css = 'admin-button-icon-left'; }else{ $css = ''; }
+
+    if(!$button){
+      $rtn .= "<a id='{$idname}' {$target} class='{$hasTTClass} admin-{$toolbutton}button ui-state-default {$css} ui-corner-all link {$classes} {$disClass}' style='{$style}' href='".empt($url,'#')."' title='{$title}' {$onclick} {$alt}>";
+    }else{
+      $rtn .= "<button $disAtr type='{$url}' name='{$name}' id='{$idname}' class='{$hasTTClass} admin-{$toolbutton}button ui-state-default {$css} link {$classes} {$disClass}' style='{$style}' {$onclick} {$alt}>";
+    }
+    if($icon && $image && $text){
+      $rtn .= "<span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
+    }elseif($icon && $image){
+      $rtn .= "<span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; ' title='{$title}' ></span>";
+    }
+    if($text){
+      $rtn .= con($text);
+    }
+    //Add on the Tooltip div for the text
+/*    if(!empty($hasTTClass)){
+   $rtn .= "<div id='{$toolTipName}' style='display:none;'>{$toolTipText}</div>";
+   } */
+    if(!$button){
+      $rtn .= "</a>";
+    }else{
+      $rtn .= "</button>";
+    }
+    return $rtn;//. $disabled;
+  }
+
+  function jbutton($params, $smarty ){
     global $_CONFIG;
     $name = is($params['name']    );
     $url  = is($params['url']    );
@@ -391,7 +776,7 @@ class Gui_smarty {
     $onclick = is($params['onclick'], '');
 
     if(!empt($name,false)){
-        return;
+      return;
     }
     $button = false;
     $text = false;
@@ -470,7 +855,7 @@ class Gui_smarty {
       $css = "{icons: {primary: '{$image}' }";
       if (!$text) $css .= ', text: false';
       $css .= '}';
-     }else{ $css = ''; }
+    }else{ $css = ''; }
     if ($style) $style=" style='{$style}'";
     $class= trim("{$hasTTClass} {$classes} {$disClass}");
     if ($class) $class=" class='{$class}'";
@@ -482,24 +867,24 @@ class Gui_smarty {
     }
     $this->addJQuery("$(\"#{$idname}\").button({$css});");
 /*    if($icon && $image && $text){
-      $rtn .= "   <span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
-    }elseif($icon && $image){
-      $rtn .= "   <span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; ' title='{$title}' ></span>";
-    }
+   $rtn .= "   <span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; margin:-8px 5px 0 0; top:50%; left:0.6em; position:absolute;' title='{$title}' ></span>";
+   }elseif($icon && $image){
+   $rtn .= "   <span class='ui-icon' style='background-image:url(\"{$_CONFIG->root}img/{$image}\"); background-position:center center; ' title='{$title}' ></span>";
+   }
 */
     if($text){
       $rtn .= con($text);
     } else {
       $rtn .= $title;
     }
-     //Add on the Tooltip div for the text
+    //Add on the Tooltip div for the text
 /*    if(!empty($hasTTClass)){
-      $rtn .= "<div id='{$toolTipName}' style='display:none;'>{$toolTipText}</div>";
-    } */
+   $rtn .= "<div id='{$toolTipName}' style='display:none;'>{$toolTipText}</div>";
+   } */
     if(!$button){
       $rtn .= "</a>";
     }else{
-      $rtn .= "</button>\n";
+      $rtn .= "</button>";
     }
     return $rtn;//. $disabled;
   }
@@ -525,37 +910,39 @@ class Gui_smarty {
     }
   }
 
-  function inputDate ($params, $smarty) //($name, &$data, &$err,  = '')
-  {
-    require_once('class.datetimeselect.php');
-    $name = is($params['name']    );
-    $type = is($params['type'],'d' );
-    $range = is($params['range'],5    );
-    $timeselect = new DateTimeSelect($type, $name, $this->guidata[$name],$range);
-    return $this->showlabel($name, $timeselect->selectbox, $params);
-  }
 
   function viewUrl ($params, $smarty) //($name, &$data,  = '')
   {
     $name = is($params['name']    );
-    return $this->showlabel($name, "<a href='{$this->guidata[$name]}' target='blank'>{$this->guidata[$name]}</a>",$params['nolabel'] ,$params);
+    return $this->showlabel($name, "<a href='{$this->guidata[$name]}' target='blank'>{$this->guidata[$name]}</a>",$params['nolabel'],$params);
+  }
+
+  function select ($params, &$smarty) //($name, &$data, &$err, $opt)
+  {
+    return $this->selection ($params, $smarty); //($name, &$data, &$err, $opt)
   }
 
   function selection ($params, $smarty) //($name, &$data, &$err, $opt)
   {
     $name = is($params['name']);
-    $style = is($params['style']);
+    $idname  = is($params['id'], $name);
+
     $opt  = is($params['options']);
     $prefix = is($params['prefix']);
     $mult =   is($params['multiselect']);
     $size =   is($params['size']);
     $con  =   is($params['con']);
     $class  =   is($params['class']);
+    $style  =   is($params['style']);
     $nokey =  is($params['nokey'], false);
-    $nolabel = is($params['nolabel'], false);
-    $mult = ($mult)?"multiple":'';
-    $mult .= ($size)?" size='$size'":'';
-    $value = is($params['value'], $this->guidata[$name]);
+    $value = is($params['value'], $this->guidata[$idname]);
+    $value = is($value, $params['default']);
+    $validate = is($params['validate'] ,array());
+    $this->checkRequired($params);
+    if ($params['required']) {
+      $validate['required']='true';
+    }
+
     if ($style) $style = "style='{$style}' ";
     if ($class) $class = "class='{$class}' ";
     If (!is_array($opt)) {
@@ -563,13 +950,41 @@ class Gui_smarty {
     }
 //    print_r($opt);
     // $val=array('both','rows','none');
-    $sel[$value] = " selected ";
+    if (is_array($value)) {
+      foreach($value as $v) {
+        $sel[$v] = " selected ";
+        $mult = true;
+      }
+    } else {
+      $sel[$value] = " selected ";
+    }
 
-    $return = "<select {$class}{$style} id='$name' name='$name' $mult value=$value>\n";
+    $mult = ($mult)?"multiple":'';
+    $mult .= ($size)?" size='$size'":'';
+    if (count($opt)==1 && !is($params['showalways'])) {
+      $key = array_keys($opt);
+      $params['value'] = is($value, $key[0]);
+      return $this->hidden($params,$smarty );
+    }
+    $validate  = $this->validate(',',$validate );
+
+    $return = "<select {$class}{$style} id='$idname' name='$name' $mult value='$value' validate='{$validate}'>\n";
+    if (is($params['DefaultEmpty'],false)) {
+      $return .= "<option value=''>" .  con('select_'.$idname) . "</option>\n";
+    }
 
     foreach($opt as $v => $n) {
         if (is_array($n)) {
-          list($v, $n) = $n;
+          $return .= "<optgroup label='{$v}'>\n";
+          foreach($n as $v2 => $n2) {
+            if($nokey) {
+              $v2 = $n2;
+            }
+            $cap = ($prefix or $con)?con($prefix.$n2):$n2;
+            $return .= "<option value='". htmlspecialchars($v2)."' {$sel[$v2]}>" .  htmlspecialchars($cap) . "</option>\n";
+          }
+          $return .= "</optgroup>\n";
+          continue;
         } elseif (strpos($n, '~')!==false) {
           list($v, $n) = explode('~',$n);
         } elseif($nokey) {
@@ -709,14 +1124,17 @@ class Gui_smarty {
   {
     $name = is($params['name']);
     $type = is($params['type'],'img');
-
-    if (!$this->guidata[$name]) {
+    $value = is($params['value'], $this->guidata[$name]);
+    if (!$value) {
         return $this->showlabel($name, "<input type='file' name='$name'>",$params);
     } else {
-      $src = $this->user_file($this->guidata[$name]);
-
-      if ($type == 'img') {
-         list($width, $height, $type, $attr) = getimagesize(ROOT.'files'.DS.$this->guidata[$name]);
+      $src = $this->user_url('files/'.$this->guidata[$name]);
+      $loc = $this->user_file($this->guidata[$name]);
+      if (!file_exists($loc)) {
+        $return = "<b>".con("image_not_found")."</b>";
+        $remove_text = ($type == 'img')?"remove_image":"remove_link";
+      }elseif ($type == 'img') {
+         list($width, $height, $type, $attr) = getimagesize($loc);
 
          if (($width>$height) and ($width > 300)) {
            $attr = "width='300'";
@@ -725,37 +1143,43 @@ class Gui_smarty {
          }
 
          $return = "<img $attr src='$src'>";
+         $remove_text = "remove_image";
       } else {
-          $return = "<a href='$src'>{$this->guidata[$name]}</a>";
+          $return = "<a href='$src'>".con('input_link')."</a>";
+          $remove_text = "remove_link";
       }
-      return $this->showlabel($name, $return . "<br><br><input type='file' size=35 name='$name'>".
-                       "<input type='checkbox'  name='remove_$name' value='1'>" . con("remove_image")."<br>",$params);
+      return $this->showlabel($name, $return . "<br><input type='checkbox' id='remove_$name'  name='remove_$name' value='1'><label for='remove_$name'>".con($remove_text)."</label><br><input type='file' size=35 name='$name'>" ,$params);
     }
   }
 
   function Navigation($params, $smarty) { //($offset, $matches, $url, $stepsize=10)
     $name     = is($params['name'],'offset');
-    $offset   = is($params['offset'],0);
+    //var_dump($params);
+    $offset   = is($params['offset'], $_SESSION[$name]);
+    unset($params['offset']);
+
     $matches  = is($params['count'],0);
     $stepsize = is($params['length'],10);
     $maxpages = is($params['maxpages'],10);
-    $params['action'] = is($params['action'],$this->action);
+    $params['a'] = is($params['a'],$this->action);
+    if (!$params['a']) { unset($params['a']);}
+
    // If ($matches<=$stepsize ) {return "";}
 
     //TODO: Should this be using a new pagnation method?
-    $url     = $this->currenturl( $params, $smarty, array('name',$name,'maxpages','count','length','action'));
+    $url     = $this->url( $params, $smarty, array('name',$name,'maxpages','count','length'));
 
     $breaker = ( strpos($url,'?')===false)?'?':'&';
-    $output = '';
+    $output = '<div class="gui_pager">';
+
     if ($offset<0) {$offset=0;}
     if ($offset !=0){
-      $output .= "<a href='".$url.$breaker.$name."= 0'>".con('nav_first')."</a>&nbsp;";
-      $output .= "<a href='".$url.$breaker.$name."=".($offset-$stepsize)."'>".con('nav_prev')."</a>&nbsp;";
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=0", 'name'=>'nav_first', 'toolbutton'=>true), $smarty);
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=".max(0,$offset-$stepsize), 'name'=>'nav_prev', 'toolbutton'=>true), $smarty);
     } else {
-      $output .= con('nav_first')."&nbsp;";
-      $output .= con('nav_prev')."&nbsp;";
-      }
-
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=0", 'name'=>'nav_first', 'disable'=>true, 'toolbutton'=>true), $smarty);
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=".max(0, $offset-$stepsize), 'name'=>'nav_prev', 'disable'=>true, 'toolbutton'=>true), $smarty);
+    }
 
     $offpages=intval($offset/$stepsize);
     if ($offset%$stepsize) {$offpages++;}
@@ -767,79 +1191,96 @@ class Gui_smarty {
          $start = $offpages - intval($maxpages/2);
          If ($start < 2) $start =2;
          //if ($start >= $pages-$maxpages) $start = $pages-$maxpages;
-         $output .= '...&nbsp;';
+         $output .= '&nbsp;...&nbsp;';
          }
     for ($i=$start;$i<=$pages;$i++) {
-      if (($i-$start == $maxpages) and ($i<$pages)) {
-             $output .= '...&nbsp;';
-             break;
-             }
+      if (($i-$start == $maxpages-1) and ($i<$pages)) {
+         $output .= '&nbsp;...&nbsp;';
+         break;
+      }
       if ($offpages+1 == $i){
-             $output .= "<b>[$i]</b>&nbsp;";
+         $output .= $this->button(array("url"=>$url.$breaker.$name."=".($stepsize*($i-1)), 'name'=>$i, 'disable'=>true, 'toolbutton'=>true),$smarty);
       } else {
-             $output .= "<a href='".$url.$breaker.$name."=".($stepsize*($i-1))."'>".$i."</a>&nbsp;";
-             }
-         }
+         $output .= $this->button(array("url"=>$url.$breaker.$name."=".($stepsize*($i-1)), 'name'=>$i, 'toolbutton'=>true),$smarty);
+      }
+    }
     if (!($offset+$stepsize >= $matches)) {
-         $output .= "<a href='".$url.$breaker.$name."=".($offset+$stepsize)."'>".con('nav_next')."</a>&nbsp;";
-         $output .= "<a href='".$url.$breaker.$name."=".($matches-$stepsize)."'>".con('nav_last')."</a>&nbsp;";
-         }
-    else
-     {
-     $output .= con('nav_next')."\n";
-     $output .= con('nav_last')."\n";
-     }
-    return '<center>'. $output.'</center>';
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=".min($matches-1,$offset+$stepsize), 'name'=>'nav_next', 'toolbutton'=>true), $smarty);
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=".($matches-$stepsize), 'name'=>'nav_last', 'toolbutton'=>true), $smarty);
+    } else {
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=".min($matches-1,$offset+$stepsize), 'name'=>'nav_next', 'disable'=>true, 'toolbutton'=>true), $smarty);
+      $output .= $this->button(array("url"=>$url.$breaker.$name."=".($matches-$stepsize), 'name'=>'nav_last', 'disable'=>true, 'toolbutton'=>true), $smarty);
+    }
+    $output .= '</div>';
+    return  $output;
   }
 
 
   function tabBar($params , $smarty) {
-    require_once('admin'.DS.'class.adminview.php');
+    $TabBarid  = is($params['TabBarid'],'TabBarid');
+    $Tabname   = is($params['name'],'tab');
+    $menuAlign = is($params['align'],'left');
+    $value     = is($params['value']);
+    $menu      = is($params['menu']);
 
-    $TabBarid = is($params['TabBarid'],'TabBarid');
-    $menuAlign = is($params['menuAlign'],'left');
-    $menu  = is($params['menu']);
-
-    if (isset($_REQUEST['tab'])) {
-      $_SESSION[$TabBarid] = (int)$_REQUEST['tab'];
+    if (!empty($value)) {
+      $_SESSION[$TabBarid] = $value;
+    } elseif (isset($_REQUEST[$Tabname])) {
+      $_SESSION[$TabBarid] = $_REQUEST[$Tabname];
     } elseif (!isset($_SESSION[$TabBarid])) {
-      $_SESSION[$TabBarid] = 0;
+      $_SESSION[$TabBarid] = '';
     }
 
     If (!is_array($menu)) {
       $opt  = explode('|',$menu);
-      $a =0;
       $menu = array();
-      foreach ($opt as $key) {
-        $val  = explode('~',$key);
-        $menu[$val[0]] = (int) is($val[1],$a); //"?tab=".
-        $a++;
+      foreach ($opt as $key => $val) {
+        list($k,$a) = explode('=',$menu);
+        $menu[$k] = $a;
       }
     }
-    if (isset($_REQUEST['tab'])) {
-      $_SESSION[$TabBarid] = (int)$_REQUEST['tab'];
-    } elseif (!isset($_SESSION[$TabBarid])) {
-      $_SESSION[$TabBarid] = (int)reset($menu);
-    }
-  //  var_dump($_SESSION);
     $smarty->assign($TabBarid, $_SESSION[$TabBarid]);
-    return  AdminView::PrintTabMenu($menu, $_SESSION[$TabBarid], $menuAlign);
+    return  PrintTabMenu($menu, $_SESSION[$TabBarid], $menuAlign,$Tabname);
   }
 
   function captcha($params, $smarty) //($name)
   {
+  global $_SHOP;
     //print_r($smarty);
     $name = is($params['name']);
-    return $this->showlabel(con('captcha'),
-           "  <table cellpadding='0' cellspacing='0' width='350'>\n".
-           "  <tr><td valign='top'>\n".
-           "     <input type='hidden' name='_~nospam~_' value='".base64_encode($name)."' >\n".
-           "     <input type='text' name='user_nospam' size='10' maxlength='10' value='' ><br>\n".
-           "     <sup>".con('captcha_info')."</sup>\n".
-           "  </td><td align='right'>\n".
-           "     <img src='".makeURL('Captcha/'.$name)."' alt=''  border=1>\n".
-           "  </td></tr>\n".
-           "</table>\n",$params);
+    $validate = is($params['validate'] ,array());
+    $validate['required'] = 'true';
+//   $validate .= 'remote: {url:\'nospam.php\', type:\'post\', data:{ name:\'user_nospam\', check: function() { return $(\'#'.$name.'\').val(); } } }';
+
+//  $this->addJQuery(" $(\"#{$id}\").validate(); ");
+/*    $this->addJQuery("
+    $('#{$this->gui_form_id}').validate({
+      rules: {
+        user_nospam: {
+          required: true,
+          remote: {
+            url: 'nospam.php',
+            type: 'post',
+            data: {
+              name: '{$name}',
+              check: function() { return $('input[name$=\"{$name}\"]').val(); }
+            }
+          }
+        }
+      }
+    });
+");*/
+    $params['noerror'] = true;
+    $validate  = $this->validate(',',$validate );
+
+    return $this->showlabel($name,
+//           "<span style='width:100%;margin:0;clear:none; display: inline-block;'>\n".
+           "     <img src='{$_CONFIG->root}nospam.php?name={$name}' alt='' style='float:right; margin:1px;padding:0;' border=1>\n".
+           "     <input type='hidden' name='_~nospam~_' value='".base64_encode($name)."'>\n".
+           "     <input type='text' id='{$name}' name='{$name}' size='10' maxlength='15' value='' validate=\"{$validate}\">". printMsg($name)."<br>\n".
+           "     <f6>".con('captcha_info')."</f6>\n".
+//           "</span>".
+           "\n",$params);
   }
 
   function delayedLocation($params, $smarty) { //($url){
@@ -871,24 +1312,40 @@ class Gui_smarty {
       $set = array();
       if (!empty($ids) and $ids[0] != "") {
           foreach($ids as $id) {
-              $query = "select $column_name as id from $table_name where $key_name='$id'";
-              if (!$row = ShopDB::query_one_row($query)) {
-                  // user_error(shopDB::error());
-                  return 0;
+              $query = "select {$column_name} as id from {$table_name} where {$key_name}="._esc($id);
+              if (!$row = MySQL::query_one_row($query)) {
+                  return '';
               }
               $row["id"] = $id;
               array_push($set, $row);
           }
       }
-      return "<tr><td class='gui_name'>" . con($name) . "</td>
-  <td class='gui_value'>";
+      $result = '';
       if (!empty($set)) {
           foreach ($set as $value) {
-              return "<a class='link' href='$file_name?action=view&$key_name={$value['id']}'>" . $value[$column_name] . "</a><br>";
+              $result .= "<a class='link' href='$file_name?action=view&$key_name={$value['id']}'>" . $value[$column_name] . "</a><br>";
           }
       }
-      return "</td></tr>\n";
+    return $this->showlabel($name, $result,$params);
   }
+
+  function image($params, &$smarty) {
+    global $_SHOP;
+    $file      = ROOT.'files'.DS.is($params['href'],'None');
+    $src       = $_SHOP->files_url .$params['href'];
+    $newwidth  = is($params['width'],100);
+    $newheight = is($params['height'],100);
+    if(!file_exists($file)){
+      $src = $file      = $_SHOP->images_url . "theme/".$_SHOP->theme_name.'/'.'na.png';
+    }
+      list($width, $height, $type, $attr) = getimagesize($file);
+      if (($width>$height) and ($width > $newwidth)) {
+				$attr = "width='{$newwidth}'";
+			} elseif ($height > $newheight) {
+				$attr = "height='{$newheight}'";
+			}
+			echo "<img $attr src='$src'>";
+    }
 
   protected function user_url($data){
       global $_SHOP;
@@ -898,6 +1355,8 @@ class Gui_smarty {
   protected function user_file ($path) {
       return ROOT. 'files'. DS . $path;
   }
+
+
 }
 
 
@@ -905,10 +1364,36 @@ function smarty_modifier_clean($string, $type='ALL') {
   return clean($string, $type);
 }
 
+function PrintTabMenu($linkArray, $activeTab=0, $menuAlign="center", $tabname='tab') {
+  Global $_CONFIG;
+	$tabCount=0;
 
-  function weeksofyear($year){
-    $result = idate("W",mktime(0,0,0,12,28, $year)); //idate('W', strtotime("31 dec ".is($params,$_SESSION['settings']['jaar'])));
-    return $result;
+	$str= "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0  class=\"UITabMenuNav\">\n";
+	$str.= "<tr>\n";
+	if($menuAlign=="right"){
+    $str.= "<td width=\"100%\" align=\"left\">&nbsp;</td>\n";
   }
+	foreach ($linkArray as $k => $v){
+    $menuStyle=($k==$activeTab)?"UITabMenuNavOn":"UITabMenuNavOff";
+    $str.= "<td valign='top' height='16' width= '20px' class='{$menuStyle}left '>&nbsp;</td>\n";
+    $str.= "<td nowrap='nowrap' align='center' valign='middle' class='{$menuStyle}'>\n";
+    $str.= "  <a class='$menuStyle' href='?{$tabname}=$k'>". $v . "</a>";
+    $str.= "</td>\n";
+    $str.= "<td valign=\"top\" class='{$menuStyle}right'>&nbsp;</td>\n";
+    $str.= "<td width=\"1pt\">&nbsp;</td>\n";
+    $tabCount++;
+  }
+	if($menuAlign=="left"){
+    $str.= "<td width=\"100%\" align=\"right\">&nbsp;</td>";
+  }
+	$str.= "</tr>\n";
+	$str.= "</table>\n";
+ return $str;
+}
+
+function weeksofyear($year){
+  $result = idate("W",mktime(0,0,0,12,28, $year)); //idate('W', strtotime("31 dec ".is($params,$_SESSION['settings']['jaar'])));
+  return $result;
+}
 
 ?>
