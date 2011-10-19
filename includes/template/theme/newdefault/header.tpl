@@ -1,6 +1,4 @@
-<?php
-/**
-%%%copyright%%%
+{*                  %%%copyright%%%
  *
  * FusionTicket - ticket reservation system
  *  Copyright (C) 2007-2011 Christopher Jenkins, Niels, Lou. All rights reserved.
@@ -30,29 +28,9 @@
  *
  * Contact help@fusionticket.com if any conditions of this licencing isn't
  * clear to you.
- */
-
-function smarty_resource_text_source ($tpl_name, &$tpl_source, $smarty_obj)
-{
-  $tpl_source = $smarty_obj->my_template_source;
- // writeLog('7.'.print_r ($smarty_obj,true));
-  return true;
-}
-
-function smarty_resource_text_timestamp($tpl_name, &$tpl_timestamp, $smarty_obj)
-{
-  $tpl_timestamp =time();//$this->timestamp;
-  return true;
-}
-
-function smarty_resource_text_secure($tpl_name, $smarty_obj)
-{
-  // assume all templates are secure
-  return true;
-}
-
-function smarty_resource_text_trusted($tpl_name, $smarty_obj)
-{
-    // not used for templates
-}
-?>
+ *}
+{theme set=true}
+{$topmenu=[['href'=>'index.php', 'title'=>"{!home!}"], ['href'=>'calendar.php', 'title'=>"{!calendar!}"], ['href'=>'programm.php', 'title'=>"{!program!}"]]  scope='root'}
+{$pagetitle=$name scope='root'}
+{$headerNote=$header scope='root'}
+{$footNote=$footer scope='root'}
