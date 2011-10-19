@@ -286,6 +286,15 @@ class Seat  Extends Model {
       }
     }
 
+    $query="UPDATE Seat SET
+              seat_ts="._esc($time)."
+            WHERE seat_sid="._esc($sid);
+
+    if(!ShopDB::query($query)){
+      ShopDB::rollback('cant update seat time');
+      return FALSE;
+   }
+
     //invalidate cache
     if(is_array($pmps_id)){
       foreach($pmps_id as $pmp_id=>$v){
@@ -405,7 +414,7 @@ class Seat  Extends Model {
 
         if(!$row=ShopDB::query_one_row($query)){
           ShopDB::rollback('cant lock seats');
-          return addWarning('cant lock seats');
+      //    return addWarning('cant lock seats');
         }else{
           $pmps_id[$row['seat_pmp_id']]=1;
         }

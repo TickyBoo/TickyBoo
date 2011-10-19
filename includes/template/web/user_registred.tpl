@@ -30,7 +30,7 @@
  * clear to you.
  *}
 
-  <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-top: .7em; " >
+  <div id="notice-message"  class="ui-state-highlight ui-corner-all" style=" padding: 1em; margin-top: .7em; " >
      <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
         <table >
           <tr>

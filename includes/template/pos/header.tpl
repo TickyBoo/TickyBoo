@@ -74,13 +74,13 @@
 			</div>
 
       <!-- Message Divs -->
-    <div id="error-message-main" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
+    <div id="error-message-main" title="{!order_error_message!}" class="ui-state-error ui-corner-all" style="display:none; padding: 0 .7em;" >
        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
           <strong>{!alert!} </strong><span id='error-text-main'></span>
        </p>
     </div>
 
-      <div id="notice-message" title='{!order_notice_message!}' class="ui-state-highlight ui-corner-all center" style=" padding: 1em; margin-top: .7em; display:none;" >
+      <div id="notice-message" title="{!order_notice_message!}" class="ui-state-highlight ui-corner-all center" style=" padding: 1em; margin-top: .7em; display:none;" >
         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
           <span id='notice-text'>fff</span>
         </p>

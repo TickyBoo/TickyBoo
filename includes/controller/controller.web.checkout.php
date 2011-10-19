@@ -108,7 +108,7 @@ class ctrlWebCheckout extends ctrlWebShop {
     } else {
       $this->assign('user_data',   $this->__User->asarray());
     }
-    return "user_update";
+    return "user_update_win";
   }
 
   Function actionUseraddress (){

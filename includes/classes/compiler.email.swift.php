@@ -170,8 +170,7 @@ class EmailSwiftCompiler {
     $smarty->assign("_SHOP_files", $_SHOP->files_url );//ROOT.'files'.DS
     $smarty->assign("_SHOP_images", $_SHOP->images_url);
 
-    $smarty->my_template_source = $code;
-    $compiledCode = $smarty->fetch("text:".get_class($this).$name);
+    $compiledCode = $smarty->fetch("string:".$code);//get_class($this).$name
     unset($smarty);
     unset($gui);
     return $compiledCode;

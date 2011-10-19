@@ -58,7 +58,7 @@ class EPH_cash extends payment{
               <input type='hidden' name='sor' value='{$order->EncodeSecureCode('')}'>
               <input type='hidden' name='order_id' value='{$order_id}'>
               <input type='hidden' name='alreadypaid' value='{$alreadypaid}'>
-              ".(($alreadypaid)?"{gui->view name='order_paid_already' value='".valuta(number_format($alreadypaid, 2, '.', ''))."'":"")."
+              ".(($alreadypaid)?"{gui->view name='order_paid_already' value='".valuta(number_format($alreadypaid, 2, '.', ''))."'}":"")."
               {gui->input name='order_paid_total' value='".number_format(($order->order_total_price -$alreadypaid), 2, '.', '')."'}
             {gui->EndForm title=!pay! noreset=true}
             ";

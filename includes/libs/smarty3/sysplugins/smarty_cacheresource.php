@@ -18,7 +18,7 @@ abstract class Smarty_CacheResource {
     * cache for Smarty_CacheResource instances
     * @var array
     */
-    protected static $resources = array();
+    public static $resources = array();
 
     /**
     * resource types provided by the core
@@ -161,7 +161,7 @@ abstract class Smarty_CacheResource {
         if (isset(self::$sysplugins[$type])) {
             $cache_resource_class = 'Smarty_Internal_CacheResource_' . ucfirst($type);
             return self::$resources[$type] = new $cache_resource_class();
-        }
+            }
         // try plugins dir
         $cache_resource_class = 'Smarty_CacheResource_' . ucfirst($type);
         if ($smarty->loadPlugin($cache_resource_class)) {

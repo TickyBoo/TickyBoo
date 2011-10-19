@@ -214,7 +214,7 @@ class HandlingsView extends AdminView{
   	  $gui->gui_value = 'admin_value';
 
       $smarty->my_template_source = $extras;
-      $smarty->display('text:'. $hand->handling_payment );
+      $smarty->display('string:'. $extras);
     }
   }
 

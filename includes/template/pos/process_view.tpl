@@ -48,7 +48,7 @@
                 {!order_id!} {$shop_order.order_id}
               </td>
               <td class='title'  align='right'>&nbsp;
-                {include file='process_actions.tpl' $shop_order=$shop_order}
+                {include file='process_actions.tpl' shop_order=$shop_order}
               </td>
             </tr>
             <tr>
@@ -111,10 +111,9 @@
             <tr>
               <td colspan="2">
                 {update->countdown order_id=$shop_order.order_id reserved=true}
-                  {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
-                  <br />
-      		        {!autocancel!}
-                {/update->countdown}
+                {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
+                <br />
+    		        {!autocancel!}
               </td>
     				</tr>
     				<form name='f' action='view.php?order_id={$shop_order.order_id}' method='post'>

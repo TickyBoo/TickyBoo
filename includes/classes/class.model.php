@@ -187,7 +187,7 @@ class Model {
   }
 
   function delete()  {
-    if (!$this->id) return addWarning('Cant_delete_without_id');
+    if (!$this->id) return addWarning('cant_delete_without_id');
 
     ShopDB::query("DELETE FROM `{$this->_tableName}`
                    WHERE `{$this->_idName}` = "._esc($this->id));
@@ -218,8 +218,8 @@ class Model {
     return (!hasErrors());
   }
 
-  function _abort ($str=''){
-    if ($str)  addWarning ($str);
+  function _abort ($str='', $more=''){
+    if ($str)  addWarning ($str, $more);
     if (ShopDB::isTxn()) ShopDB::rollback($str);
     return false; // exit;
   }

@@ -204,7 +204,7 @@ class PluginsView extends AdminView{
   	  $gui->gui_value = 'admin_value';
 
       $smarty->my_template_source = $extras;
-      $smarty->display('text:'. $hand->plugin_name );
+      $smarty->display('string:'. $extras );
 
     }
   }

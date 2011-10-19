@@ -2,7 +2,7 @@
 /**
 * Project:     Smarty: the PHP compiling template engine
 * File:        Smarty.class.php
-* SVN:         $Id: Smarty.class.php 4319 2011-09-24 15:45:30Z rodneyrehm $
+* SVN:         $Id: Smarty.class.php 4395 2011-10-15 10:46:03Z rodneyrehm $
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -107,7 +107,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     /**
     * smarty version
     */
-    const SMARTY_VERSION = 'Smarty 3.1-DEV';
+    const SMARTY_VERSION = 'Smarty-3.1.3';
 
     /**
     * define variable scopes
@@ -188,9 +188,19 @@ class Smarty extends Smarty_Internal_TemplateBase {
     public $use_include_path = false;
     /**
     * template directory
+    * @var array
+    */
+    protected $template_dir = array();
+    /**
+    * joined template directory string used in cache keys
     * @var string
     */
-    protected $template_dir = null;
+    public $joined_template_dir = null;
+    /**
+    * joined config directory string used in cache keys
+    * @var string
+    */
+    public $joined_config_dir = null;
     /**
     * default template handler
     * @var callable
@@ -213,9 +223,9 @@ class Smarty extends Smarty_Internal_TemplateBase {
     protected $compile_dir = null;
     /**
     * plugins directory
-    * @var string
+    * @var array
     */
-    protected $plugins_dir = null;
+    protected $plugins_dir = array();
     /**
     * cache directory
     * @var string
@@ -223,9 +233,9 @@ class Smarty extends Smarty_Internal_TemplateBase {
     protected $cache_dir = null;
     /**
     * config directory
-    * @var string
+    * @var array
     */
-    protected $config_dir = null;
+    protected $config_dir = array();
     /**
     * force template compiling?
     * @var boolean
@@ -483,10 +493,20 @@ class Smarty extends Smarty_Internal_TemplateBase {
     */
     public $registered_resources = array();
     /**
+    * resource handler cache
+    * @var array
+    */
+    public $_resource_handlers = array();
+    /**
     * registered cache resources
     * @var array
     */
     public $registered_cache_resources = array();
+    /**
+    * cache resource handler cache
+    * @var array
+    */
+    public $_cacheresource_handlers = array();
     /**
     * autoload filter
     * @var array
@@ -574,6 +594,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             $this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
         }
     }
+
 
     /**
     * Class destructor
@@ -771,6 +792,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             $this->template_dir[$k] = rtrim($v, '/\\') . DS;
         }
 
+        $this->joined_template_dir = join(DIRECTORY_SEPARATOR, $this->template_dir);
         return $this;
     }
 
@@ -804,7 +826,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             // append new directory
             $this->template_dir[] = rtrim($template_dir, '/\\') . DS;
         }
-
+        $this->joined_template_dir = join(DIRECTORY_SEPARATOR, $this->template_dir);
         return $this;
     }
 
@@ -836,6 +858,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             $this->config_dir[$k] = rtrim($v, '/\\') . DS;
         }
 
+        $this->joined_config_dir = join(DIRECTORY_SEPARATOR, $this->config_dir);
         return $this;
     }
 
@@ -869,6 +892,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             $this->config_dir[] = rtrim($config_dir, '/\\') . DS;
         }
 
+        $this->joined_config_dir = join(DIRECTORY_SEPARATOR, $this->config_dir);
         return $this;
     }
 
@@ -1148,7 +1172,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
         $cache_id = $cache_id === null ? $this->cache_id : $cache_id;
         $compile_id = $compile_id === null ? $this->compile_id : $compile_id;
         // already in template cache?
-        $_templateId =  sha1(join(DIRECTORY_SEPARATOR, $this->getTemplateDir()).$template . $cache_id . $compile_id);
+        $_templateId =  sha1($this->smarty->joined_template_dir.$template . $cache_id . $compile_id);
         if ($do_clone) {
             if (isset($this->template_objects[$_templateId])) {
                 // return cached template object

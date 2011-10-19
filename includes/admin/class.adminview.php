@@ -439,7 +439,7 @@ class AdminView extends Component {
     function print_area ($name, &$data, &$err, $rows = 6, $cols = 50, $suffix = '') {
       $suffix = self::_check($name, $suffix,$data);
       echo "<tr id='{$name}-tr'><td class='admin_name'>$suffix" . con($name) . "</td>
-          <td class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
+          <td class='admin_value'><textarea id='{$name}-textarea' style='width:100%;' rows='$rows' cols='$cols' name='$name'>" . htmlspecialchars($data[$name], ENT_QUOTES) . "</textarea>
           ".printMsg($name, $err)."
           </td></tr>\n";
     }
@@ -465,7 +465,7 @@ class AdminView extends Component {
       $escape = is($options['escape'],true);
       $suffix = self::_check($name, $suffix,$data);
       echo "<tr id='{$name}-tr'><td colspan='2' class='admin_name'>$suffix" . con($name) . "&nbsp;&nbsp; ".printMsg($name, $err)."</td></tr>
-              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . ($escape ? htmlspecialchars($data[$name], ENT_QUOTES):$data[$name]) . "</textarea>
+              <tr><td colspan='2' class='admin_value'><textarea id='{$name}-textarea' style='width:100%;' rows='$rows' cols='$cols' id='$name' name='$name' $class>" . ($escape ? htmlspecialchars($data[$name], ENT_QUOTES):$data[$name]) . "</textarea>
               </td></tr>\n";
     }
 

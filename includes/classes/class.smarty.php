@@ -43,7 +43,7 @@ class MySmarty extends SmartyBC {
   public $deprecation_notices = false;
   public $_SHOP_db_res = array();
   public $ShowThema  = false;
-  public $title ='testing';
+  public $title ='Fusion Ticket';
   public $debugging = false;
 
   public $headerNote;
@@ -65,6 +65,9 @@ class MySmarty extends SmartyBC {
     if (is_object($controllor)) {
       $controllor->loadPlugins(array('gui'));
     }
+    $this->cache_dir      = INC.'temp'.DS;
+    $this->compile_id     = 'template_';
+    $this->compile_dir    = $this->cache_dir;
 
     $this->register_function('theme', array(&$this,'_SetTheme'));
     $this->register_function('redirect', array(&$this,'_ReDirect'));
@@ -84,8 +87,8 @@ class MySmarty extends SmartyBC {
                                 $_SHOP->tpl_dir.$context.DS);
  //   $this->default_resource_type = 'mysql';
 
-    $this->cache_dir    = substr($_SHOP->tmp_dir, 0, -1);
-    $this->compile_dir  = substr($_SHOP->tmp_dir, 0, -1); // . '/web/templates_c/';
+    $this->cache_dir    = $_SHOP->tmp_dir;
+    $this->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
     $this->compile_id   = $context.'_'.$_SHOP->lang;
 
     $this->plugins_dir[]  = INC . "shop_plugins".DS;
@@ -166,6 +169,33 @@ class MySmarty extends SmartyBC {
       $plugin = "__{$plugin}";
       $this->$plugin  = new $classname($this);
     }
+  }
+  public function _URL( $params, &$smarty, $skipnames= array()){
+    Global $_SHOP;
+    If (isset($params['url'])) {
+      return $_SHOP->root.$params['url'];
+    } else {
+      If (!is_array($skipnames)) {$skipnames= array();}
+    //  print_r($params);
+      $urlparams ='';
+      foreach ($params as $key => $value) {
+        if (!in_array($key,array('action','controller','module')) and
+            !in_array($key,$skipnames)) {
+          $urlparams .= (($urlparams)?'&':'').$key.'='.$value;
+        }
+      }
+   //   $urlparams = substr($urlparams,1);
+     // print_r($urlparams);
+      return makeURL($params['action'], $urlparams, $params['controller'], $params['module']);
+    }
+  }
+  public function _ReDirect( $params, &$smarty){
+    If (isset($params['status'])) {
+      $status = $params['status'];
+      unset($params['status']);
+    }
+    redirect($this->_URL($params, $smarty), $status);
+    die;
   }
   public function pushBlockData($dbrec){
     array_push($this->_SHOP_db_res, $dbrec );

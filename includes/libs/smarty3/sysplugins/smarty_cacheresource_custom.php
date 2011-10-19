@@ -184,6 +184,6 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
         $this->cache = array();
         return $this->delete($resource_name, $cache_id, $compile_id, $exp_time);
     }
-
+    
 }
 ?>

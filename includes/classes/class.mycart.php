@@ -43,12 +43,15 @@ class Cart {
   public $cat_list;
   public $disc_list;
   public $items;
+  public $ts;
 
   function __construct(){
+    Global $_SHOP;
     $this->event_list = array(); //array, indexed by event_id
     $this->cat_list   = array();
     $this->disc_list  = array();
     $this->items      = array();
+    $this->ts         = time()+$_SHOP->cart_delay;
   }
 
   public function add($event_id, $cat_id, $seat_ids, $discount_id=0, $mode='mode_web', $reserved =false, $force=false){
@@ -175,9 +178,15 @@ class Cart {
 
   //BOOL iter_func($event_item,$cat_item,$place_item[,$data])
   //returns 1=continue iterate or 0=stop
-  function iterate ($iter_func, &$data){
-    foreach($this->items as $item){
-      call_user_func_array($iter_func,array(&$this->event_list[$item->event_id], &$this->cat_list[$item->category_id], &$item, &$data));
+  function iterate ($iter_func, &$data,$all= false){
+    $x = 0;
+    foreach($this->items as $key => $item){
+       if (!$item->is_expired () || $all) {
+         call_user_func_array($iter_func,array(&$this->event_list[$item->event_id], &$this->cat_list[$item->category_id], &$item, &$data));
+       }
+       if ($item->is_expired ()){
+         $this->items[$key]->remove();
+       }
     }
   }
 
@@ -189,7 +198,7 @@ class Cart {
                 'minttl'=>$_SHOP->cart_delay,
                 'secttl'=>$_SHOP->cart_delay);
     $classname = "Cart";
-    $this->iterate(array($classname,'_overview'),$data);
+    $this->iterate(array($classname,'_overview'),$data, true);
     return $data;
   }
 
@@ -257,11 +266,12 @@ class PlaceItem {
 //      raise;
       die ('oeps');
     }
-    $this->ts=time()+$_SHOP->cart_delay;
+    $this->cart->ts=time()+$_SHOP->cart_delay;
   }
 
   function remove(){
     Seat::free(session_id(), $this->event_id, $this->category_id, $this->seatids());
+    unset($this->cart->items[$this->id]);
   }
 
   function use_alt(){
@@ -273,14 +283,14 @@ class PlaceItem {
   }
 
   function is_expired (){
-    return time()>$this->ts;
+    return time()>$this->cart->ts;
   }
 
   function ttl (){
-    return intval(floor(($this->ts-time())/60));
+    return intval(floor(($this->cart->ts-time())/60));
   }
   function ttlsec (){
-    return intval(floor(($this->ts-time())));
+    return intval(floor(($this->cart->ts-time())));
   }
 
   function total_price (){
@@ -330,9 +340,12 @@ class PlaceItem {
     return array_keys($this->seats);
 
   }
-  function discount($discout_id){
-    if ((int)$discout_id) {
-      return $this->cart->disc((int)$discout_id);
+  function discount($discount_id= -1){
+    if ($discount_id== -1) {
+      $x = reset($this->seats);
+      return $this->cart->disc($x->discount_id);
+    } elseif ((int)$discount_id) {
+      return $this->cart->disc((int)$discount_id);
 
     } else {
       return null;

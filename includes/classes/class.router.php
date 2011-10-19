@@ -92,10 +92,9 @@ class router {
   	}
 */
 
-
 		$classname = 'ctrl'.ucfirst($module).ucfirst($controller);
 
-    trace( $_SERVER["PHP_SELF"]. " [{$_REQUEST['action']}]", true);
+    trace( $_SERVER["PHP_SELF"]. " [{$action}]", true);
     trace( '====================================================================');
 
     if (file_exists(INC.'controller'.DS.'controller.'.$module.'.'.$controller.'.php' )) {

@@ -132,7 +132,7 @@ class EmailSwiftXMLCompiler {
     $smarty->assign("_SHOP_images", $_SHOP->images_url);
 
     $smarty->my_template_source = $code;
-    $compiledXML = $smarty->fetch("text:".get_class($this).$name);
+    $compiledXML = $smarty->fetch("string:". $code);//get_class($this).$name);
     unset($smarty);
     unset($gui);
     return $compiledXML;

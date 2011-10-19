@@ -56,12 +56,12 @@
       </tbody>
     </table>
     <div id="continue-div" style="width:100%; overflow:auto;"></div>
-    <div id="seat-chart" title='{!select_seat_pos!}xxx'></div>
+    <div id="seat-chart" title="{!select_seat_pos!}"></div>
   </form>
 
   <table id="cart_table" class="scroll" cellpadding="0" cellspacing="0"></table>
   <div id="cart-pager"></div>
-  <div id="order_action" title='{!pos_order_page!}'></div>
+  <div id="order_action" title="{!pos_order_page!}"></div>
   <br />
     <table width='100%'>
       <tr>

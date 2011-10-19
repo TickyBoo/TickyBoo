@@ -396,16 +396,17 @@ function con($name, $default='') {
     return constant($name);
   } elseif ($default) {
     return $default;
-  } elseif ($name && preg_match('|^[a-z_-]+$|', $name) ) {
+  } elseif ($name && preg_match('|^[a-z]+[a-z0-5_-]+$|', $name) ) {
     if (is($_SHOP->AutoDefineLangs, false)) {
   //    echo loadLanguage('site', true);
       if (is_writable(loadLanguage('site', true))){
-        $namex= _esc($name, false);
+        $namex= _esc('!!'.$name.'!!, false);
         $addcon = "\n<?php\ndefine('{$namex}','{$namex}');\n?>";
         file_put_contents(loadLanguage('site', true), $addcon, FILE_APPEND);
-        define($name,$name);
+        define($name,'!!'.$name.'!!');
       }// else echo "****$name|".print_r( debug_backtrace(),true).'|';
     }
+    return '!!'.$name.'!!';
   }
     return $name;
 }
@@ -439,10 +440,23 @@ function Redirect($url, $status = 303, $message='') {
   exit;
 }
 
+/**
+ * _esc()
+ *
+ * @param mixed $str
+ * @param mixed $quote
+ * @return
+ */
 function _esc ($str, $quote=true){
   return shopDB::quote($str, $quote);
 }
 
+/**
+ * check_event()
+ *
+ * @param mixed $event_date
+ * @return
+ */
 function check_event($event_date){
   require_once("classes/class.time.php");
 
@@ -459,6 +473,11 @@ function check_event($event_date){
   }
 }
 
+/**
+ * check_system()
+ *
+ * @return
+ */
 function check_system() {
   global $_SHOP;
   require_once("classes/class.time.php");
@@ -532,6 +551,13 @@ function check_system() {
 
 }
 
+/**
+ * formatDate()
+ *
+ * @param mixed $edate
+ * @param string $format
+ * @return
+ */
 function formatDate($edate, $format="%m/%d/%Y" ){
   $pdate = strftime ($format, strtotime($edate));
   If ($pdate == false) {
@@ -541,11 +567,24 @@ function formatDate($edate, $format="%m/%d/%Y" ){
   return $pdate;
  }
 
+/**
+ * formatAdminDate()
+ *
+ * @param mixed $edate
+ * @param mixed $year4
+ * @return
+ */
 function formatAdminDate($edate,$year4=true){
   $format =(defined('admin_date_format'))?constant('admin_date_format'):(($year4)?'Y':'y').'-m-d';
   return date($format,strtotime($edate));
 }
 
+/**
+ * formatTime()
+ *
+ * @param mixed $time
+ * @return
+ */
 function formatTime($time){
   list($h,$m,$s)=explode(":",$time);
 
@@ -555,6 +594,13 @@ function formatTime($time){
   }
 }
 
+/**
+ * stringDatediff()
+ *
+ * @param mixed $datefrom
+ * @param mixed $dateto
+ * @return
+ */
 function stringDatediff($datefrom, $dateto) {
    $datefrom   = strtotime($datefrom, 0);
    $dateto     = strtotime($dateto, 0);
@@ -563,6 +609,13 @@ function stringDatediff($datefrom, $dateto) {
    return $difference;
 }
 
+/**
+ * subtractDaysFromDate()
+ *
+ * @param mixed $date
+ * @param mixed $no_days
+ * @return
+ */
 function subtractDaysFromDate($date,$no_days) {
   $time1  = strtotime($date);
   $res = strtotime((date('Y-m-d', $time1)." -$no_days"."days"));
@@ -607,6 +660,11 @@ function trace($content, $addDate=false, $addtrace=false){
   }
 }
 
+/**
+ * getOphanData()
+ *
+ * @return
+ */
 function getOphanData(){
   global $_SHOP;
   require_once("classes/redundantdatachecker.php");
@@ -628,6 +686,11 @@ function getOphanData(){
   return $text;
 }
 
+/**
+ * orphanCheck()
+ *
+ * @return
+ */
 function orphanCheck(){
   global $_SHOP;
   if(is($_SHOP->trace_on,false)){
@@ -666,6 +729,14 @@ function orphanCheck(){
   }
 }
 
+/**
+ * SendMail()
+ *
+ * @param mixed $message
+ * @param mixed $subject
+ * @param mixed $toaddress
+ * @return
+ */
 function SendMail($message, $subject, $toaddress) {
   global $_SHOP;
   require_once (ROOT."includes/classes/email.swift.sender.php");
@@ -677,6 +748,13 @@ function SendMail($message, $subject, $toaddress) {
   EmailSwiftSender::send($message, "", $logger, $failedAddr, array('action' => 'Errorlog'));
 }
 
+/**
+ * addDaysToDate()
+ *
+ * @param mixed $date
+ * @param mixed $no_days
+ * @return
+ */
 function addDaysToDate($date,$no_days) {
   $time1  = strtotime($date);
   $res = strtotime((date('Y-m-d', $time1)." +$no_days"."days"));
@@ -727,6 +805,13 @@ function clean($string, $type='ALL') {
  * This function creates a md5 password code to allow login true WWW-Authenticate
  *
  */
+/**
+ * md5pass()
+ *
+ * @param mixed $user
+ * @param mixed $pass
+ * @return
+ */
 function md5pass($user,$pass) {
   return '*'.md5($user.':'.AUTH_REALM.':'.$pass);
 }
@@ -769,6 +854,13 @@ function MakeUrl($action='', $params='', $ctrl ='', $mod ='') {
   return $result;
 }
 
+/**
+ * valuta()
+ *
+ * @param string $value
+ * @param mixed $code
+ * @return
+ */
 function valuta($value='', $code=null) {
   global $_SHOP;
   if (is_numeric($value)) { $value = number_format($value,2);}
@@ -781,14 +873,46 @@ function valuta($value='', $code=null) {
  *
  */
 
+/**
+ * sha1pass()
+ *
+ * @param mixed $user
+ * @param mixed $pass
+ * @return
+ */
 function sha1pass($user, $pass) {
   return '*'.sha1(md5($user.':'.AUTH_REALM.':'.$pass).'~'.$user);
 }
 
+/**
+ * is_base64_encoded()
+ *
+ * @param mixed $data
+ * @return
+ */
 function is_base64_encoded($data){
-  return preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $data);
+  return preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $data) || preg_match('%^[a-zA-Z0-9_-]*~{0,2}$%', $data);
 }
 
+/**
+ * base64_decodex()
+ *
+ * @param mixed $data
+ * @return
+ */
+function base64_decodex($data){
+  return base64_decode(strtr($data, '-_~', '+/='));
+}
+
+/**
+ * base64_encodex()
+ *
+ * @param mixed $data
+ * @return
+ */
+function base64_encodex($data){
+  return strtr(base64_encode($data), '+/=', '-_~'); //  }
+}
 
 
 /**
@@ -829,6 +953,12 @@ $_SHOP->Messages['__Warning__'] = array_merge(is($_SHOP->Messages['__Warning__']
   return false;
 }
 
+/**
+ * hasErrors()
+ *
+ * @param string $key
+ * @return
+ */
 function hasErrors($key=''){
   Global $_SHOP;
   if ($key)  {
@@ -838,6 +968,14 @@ function hasErrors($key=''){
   }
 }
 
+/**
+ * printMsg()
+ *
+ * @param mixed $key
+ * @param mixed $err
+ * @param mixed $addspan
+ * @return
+ */
 function printMsg($key, $err = null, $addspan=true) {
   Global $_SHOP;
   $output ='';

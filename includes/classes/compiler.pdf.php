@@ -54,8 +54,8 @@ class PDF2TCompiler {
     $smarty->assign("_SHOP_files", ROOT.'files'.DS );//ROOT.'files'.DS
     $smarty->assign("_SHOP_images", ROOT.'images'.DS);
 
-    $smarty->my_template_source = $this->sourcetext;
-    $htmlresult = $smarty->fetch("text:".get_class($this));
+  //  $smarty->my_template_source = $this->sourcetext;
+    $htmlresult = $smarty->fetch("string:".$this->sourcetext);//get_class($this));
     $pdf->WriteHTML($htmlresult, $testme);
     unset($smarty);
     unset($gui);

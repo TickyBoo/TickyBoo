@@ -30,7 +30,7 @@
  * clear to you.
  *}
 <!-- user_update.tpl -->
-  <div id="error-message-user" title='{!order_error_message!}' class="ui-state-error ui-corner-all" style="padding: 1em; margin-top: .7em; display:none;" >
+  <div id="error-message-user" class="ui-state-error ui-corner-all" style="padding: 1em; margin-top: .7em; display:none;" >
     <p>
       <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
       <span id='error-text-user'>ffff</span>

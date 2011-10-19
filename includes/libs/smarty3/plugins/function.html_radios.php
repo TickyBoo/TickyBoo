@@ -66,6 +66,12 @@ function smarty_function_html_radios($params, $template)
             case 'selected':
                 if (is_array($_val)) {
                     trigger_error('html_radios: the "' . $_key . '" attribute cannot be an array', E_USER_WARNING);
+                } elseif (is_object($_val)) {
+                    if (method_exists($_val, "__toString")) {
+                        $selected = smarty_function_escape_special_chars((string) $_val->__toString());
+                    } else {
+                        trigger_error("html_radios: selected attribute is an object of class '". get_class($_val) ."' without __toString() method", E_USER_NOTICE);
+                    }
                 } else {
                     $selected = (string)$_val;
                 } 
@@ -103,15 +109,17 @@ function smarty_function_html_radios($params, $template)
         } 
     } 
 
-    if (!isset($options) && !isset($values))
+    if (!isset($options) && !isset($values)) {
+        /* raise error here? */
         return '';
-    /* raise error here? */
+    }
 
     $_html_result = array();
 
     if (isset($options)) {
-        foreach ($options as $_key => $_val)
+        foreach ($options as $_key => $_val) {
         $_html_result[] = smarty_function_html_radios_output($name, $_key, $_val, $selected, $extra, $separator, $labels, $label_ids);
+        }
     } else {
         foreach ($values as $_i => $_key) {
             $_val = isset($output[$_i]) ? $output[$_i] : '';
@@ -129,27 +137,58 @@ function smarty_function_html_radios($params, $template)
 function smarty_function_html_radios_output($name, $value, $output, $selected, $extra, $separator, $labels, $label_ids)
 {
     $_output = '';
+    
+    if (is_object($value)) {
+        if (method_exists($value, "__toString")) {
+            $value = (string) $value->__toString();
+        } else {
+            trigger_error("html_options: value is an object of class '". get_class($value) ."' without __toString() method", E_USER_NOTICE);
+            return '';
+        }
+    } else {
+        $value = (string) $value;
+    }
+    
+    if (is_object($output)) {
+        if (method_exists($output, "__toString")) {
+            $output = (string) $output->__toString();
+        } else {
+            trigger_error("html_options: output is an object of class '". get_class($output) ."' without __toString() method", E_USER_NOTICE);
+            return '';
+        }
+    } else {
+        $output = (string) $output;
+    }
+    
     if ($labels) {
         if ($label_ids) {
-            $_id = smarty_function_escape_special_chars(preg_replace('![^\w\-\.]!', '_', $name . '_' . $value));
+            $_id = smarty_function_escape_special_chars(preg_replace('![^\w\-\.]!u', '_', $name . '_' . $value));
             $_output .= '<label for="' . $_id . '">';
         } else {
             $_output .= '<label>';
         } 
     } 
-    $_output .= '<input type="radio" name="'
-     . smarty_function_escape_special_chars($name) . '" value="'
-     . smarty_function_escape_special_chars($value) . '"';
 
-    if ($labels && $label_ids) $_output .= ' id="' . $_id . '"';
+    $name = smarty_function_escape_special_chars($name);
+    $value = smarty_function_escape_special_chars($value);
+    $output = smarty_function_escape_special_chars($output);
+    
+    $_output .= '<input type="radio" name="' . $name . '" value="' . $value . '"';
 
-    if ((string)$value == $selected) {
+    if ($labels && $label_ids) {
+        $_output .= ' id="' . $_id . '"';
+    }
+
+    if ($value === $selected) {
         $_output .= ' checked="checked"';
     } 
+    
     $_output .= $extra . ' />' . $output;
-    if ($labels) $_output .= '</label>';
+    if ($labels) {
+        $_output .= '</label>';
+    }
+    
     $_output .= $separator;
-
     return $_output;
 } 
 

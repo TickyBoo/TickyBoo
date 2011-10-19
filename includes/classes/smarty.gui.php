@@ -137,7 +137,8 @@ class Gui_smarty {
    }
 
   function print_r($params, $smarty) {
-    return '<pre>'.print_r($params['var'],true).'</pre>';
+    var_dump($params['var'],true);
+    return '';
   }
 
   function fillArr($params, $smarty)
@@ -303,8 +304,8 @@ class Gui_smarty {
     $title    = is($params['title'], con('gui_save','submit'));
     $class    = is($params['class'], 'gui_footer');
     $noreset  = is($params['noreset'], false);
-    $backlink  = is($params['backlink'], false);
-    $show  = is($params['showbuttons'], true);
+    $backlink = is($params['backlink'], false);
+    $show     = is($params['showbuttons'], true);
     $onclick  = is($params['onclick'],'');
     if ($show) {
       $return = "<div class='$class'>\n";
@@ -662,14 +663,14 @@ $(\"#{$idname}\").datetimepicker({
       'remove'=>array('image'=>'trash.png'));
 
     //Find what to show
-    if($type===1 || $type >= 3){
+    if(($type & 1) == 1){
       $icon = false;
-      $text = $name;
+      $text = is($params['value'],$name);
     }
     if(is($params['image'],false)){
       $icon = true;
       $image = $params['image'];
-    }elseif($type===2 || $type >= 3){
+    }elseif(($type & 2) == 2){
       foreach($iconArr as $icoNm=>$iconDtl){
         $name2 = strtolower($name);
         if(preg_match('/'.$icoNm.'/',$name2)){
@@ -679,7 +680,7 @@ $(\"#{$idname}\").datetimepicker({
         };
       }
       if(!$icon){
-        $text = $name;
+        $text = is($params['value'],$name);
       }
     }
     //Is it a button?
@@ -753,9 +754,9 @@ $(\"#{$idname}\").datetimepicker({
       $rtn .= con($text);
     }
     //Add on the Tooltip div for the text
-/*    if(!empty($hasTTClass)){
+    if(!empty($hasTTClass)){
    $rtn .= "<div id='{$toolTipName}' style='display:none;'>{$toolTipText}</div>";
-   } */
+   }
     if(!$button){
       $rtn .= "</a>";
     }else{

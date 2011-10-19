@@ -39,9 +39,10 @@ require_once (CLASSES.'class.controller.php');
 
 class ctrlWebJson Extends Controller  {
   public    $session_name = "ShopSession";
-
+  public    $json = array();
+  public    $ErrorsAsWarning = false;
   public function draw() {
-    $this->$executed = true;
+    $this->executed = true;
     parent::draw();
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
   		$this->request    = $_REQUEST;
@@ -49,9 +50,10 @@ class ctrlWebJson Extends Controller  {
       $this->action = 'do'.ucfirst($this->action);
       $result = $this->callAction();
   		if(!$result){
-  		    $object = array("status" => false, "reason" => 'Missing action request');
+  		    $object = array("status" => false, "reason" => 'Missing action request', 'request'=>$_REQUEST);
   		    echo json_encode($object);
   		}
+
     }else{
     	header("Status: 400");
     	echo "This is for AJAX / AJAJ / AJAH requests only, please go else where.";
@@ -59,21 +61,47 @@ class ctrlWebJson Extends Controller  {
 	}
 
   public function callAction(){
+
     if(is_callable(array($this,$this->action))){
-		  $this->json = am($this->json,array("status" =>true, "reason" => 'success'));
+		  $this->json = am($this->json, array("status" =>true, "reason" => 'success'));
       //Instead of falling over in a heap at least return an error.
       try{
-        $return = call_user_func(array($this,$this->action));
+        $return = call_user_func(array($this, $this->action));
       }catch(Exception $e){
-        return false;
+        addWarning('Error!');
+        addWarning($e->getMessage());
+        return true;
       }
       if($return){
+        $this->loadMessages();
     		echo json_encode($this->json);
 			}
 			return true;
 		}
+
 		return false;
 	}
+
+  private function loadMessages() {
+    global $_SHOP;
+    $this->json['messages']['Error']   = array();
+    if (isset($_SHOP->Messages['__Errors__'])) {
+      $err = $_SHOP->Messages['__Errors__'];
+      foreach ($err as $key => $value) {
+        $output = '';
+        foreach($value as $val){
+          $output .= $val. "</br>";
+        }
+        if ($this->ErrorsAsWarning ) {
+          addWarning('', '* error <b>'.con($key) .'</b>: '.$output);
+        }
+        $this->json['messages']['Error'][$key] = $output;
+      }
+    }
+    $this->json['messages']['warning'] = printMsg('__Warning__', null, false);
+    $this->json['messages']['Notice']  = printMsg('__Notice__', null, false);
+  }
+
 
   public function doDiscountpromo() {
     $discount = Discount::load($this->request['id']);
@@ -85,5 +113,29 @@ class ctrlWebJson Extends Controller  {
     }
     return true;
   }
+
+  public function doPlacemap(){
+    global $_SHOP;
+    if(!isset($this->request['category_id'])){
+      addWarning('bad_category_id');
+      return true;
+    }else{
+      $catId = &$this->request['category_id'];
+    }
+    if(!is_numeric($catId)){
+      addWarning('bad_category_id');
+      return true;
+    }
+    $sql = "SELECT *
+    	FROM Category c
+    	WHERE 1=1
+    	AND c.category_id = "._esc($catId);
+    $result = ShopDB::query_one_row($sql);
+    require_once("shop_plugins".DS."function.placemap.php");
+    $this->json['cat'] =$result;
+    $this->json['placemap'] = placeMapDraw($result, true, true, 'www', 16, $this->request['seatlimit']); //return the placemap
+    return true;
+  }
+
 }
 ?>

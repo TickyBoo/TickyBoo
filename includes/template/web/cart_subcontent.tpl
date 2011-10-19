@@ -85,7 +85,7 @@
         <img src='{$_SHOP_themeimages}clock.gif' valign="middle" align="middle"> {$seat_item->ttl()} {!minutes!}.
       {/if}
       {if $check_out neq "on"}
-        <br><a  href='index.php?action=remove&event_id={$event_item->event_id}&cat_id={$category_item->cat_id}&item={$seat_item_id}'>
+        <br><a  href='index.php?action=remove&event_id={$event_item->event_id}&cat_id={$category_item->cat_id}&item={$seat_item->id}'>
           {!remove!}
         </a>
       {/if}

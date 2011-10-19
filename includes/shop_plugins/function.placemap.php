@@ -61,6 +61,9 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
     }
     $res = '';
     $pmp = PlaceMapPart::loadFull($category['category_pmp_id']);
+    if (!$pmp) {
+      return '';
+    }
   //  print_r($category);
     $cats = $pmp->categories;
     $zones = $pmp->zones;
@@ -317,49 +320,13 @@ function placeMapDraw($category, $restrict = false, $print_zone = true, $area = 
    $res = $resx .'
 <style type="text/css">
   .pm_seatmap {
-    margin:0;padding:0;
-    vertical-align:middle;
-    text-align: center;
-     border:0px dashed transparent;
-
      width:'.($imagesize).'px;
      height:'.($imagesize).'px;
      font-size: '.((int)($imagesize/1.75)).'px;
   }
-  .pm_seatmap img {
-     border:1px dashed transparent;margin:0;
-  }
   .pm_shiftright {
-    margin:0;padding:0;
-    vertical-align:middle;
-    text-align: center;
-     border:0px dashed transparent;
      width:'.((int)($imagesize/2)).'px;
      height:'.($imagesize).'px;
-  }
-  .pm_table {margin:5px; border:0px  !important; padding:0px   !important;}
-  .pm_info{width:100%;}
-  .pm_box{width:600px; background-color:#FFFFFF; padding:10px;}
-  .pm_nosale{background-color:#d2d2d2;width:14px; height:14px;}
-
-  .pm_ruler {}
-
-  .pm_free {background-color:#339900;width:14px; height:14px; border-right:#339900 1px solid;border-bottom:#339900 1px solid;padding:0px;}
-
-  .pm_occupied {background-color:#FF0066;width:14px; height:14px;border-top:#000000 1px solid;border-left:#000000 1px solid;padding:0px;}
-
-  .pm_none {padding:0px;zoom:1;}
-  .pm_check {
-    cursor:pointer;
-  }
-
-  .pm_first {
-     clear:both;
-  }
-
-  .pm_check:hover {
-    background-color:#4F07E2;
-    cursor:pointer;
   }
 </style>'."\n".$res;
     return $res;

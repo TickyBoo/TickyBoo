@@ -903,7 +903,7 @@ define("total_price", "Total Price"); //personal_order.tpl, personal_orders.tpl
 // cart_resume.tpl
 define("shopcart", "Shopping Cart");
 define("no_tick_res", "You have no reserved tickets.");
-define("valid_tickets", "Valid Tickets:");
+define("valid_tickets", "Valid tickets:");
 define("expired_tickets", "Expired Tickets:");
 define("tick_exp_in", "Expiring in ");
 define("x_tick", "x Tickets");
@@ -945,7 +945,7 @@ define("handlings", "Payment Methods");
 define("payment", "Payment"); //personal_order.tpl
 define("shipment", "Shipment"); //personal_order.tpl
 define("order_not_found_or_created", "Cannot proceed with order.");
-define("limit", "Unfortunately, you have exceeded the amount of allowed reserved tickets. To check your orders click <a href='index.php?personal_page=orders'>here</a>.");
+define("limit", "Unfortunately, you have exceeded the amount of allowed reserved tickets.<br> To check your orders click <a href='index.php?action=person_orders'>here</a>.");
 define("orclick", " Or Click to:");
 define('freeTicketCode', 'Discount Code:');
 // checkout_result.tpl
@@ -1050,7 +1050,7 @@ define("pers_mess2", "To change or see your orders in more detail please click <
 define("payment_status", "Payment Status");
 define("shipment_status", "Shipment Status");
 // programm.tpl
-define("program", "Programme");
+define("program", "Program");
 define("div_dates", "Multiple Dates");
 // user_address/tpl
 define("your_addr", "Shipment details");
@@ -1063,14 +1063,14 @@ define("register", "Register");
 // user_login_block.tpl - no unique defines
 // user_register.tpl
 define("alreadymember", "Already a Member?");
-define("alreadymembertext", "to the site with your username and password on your right.");
+define("alreadymembertext", "to the site with your username and password on your left.");
 define("becomemember", "Become a Member");
 define("pers_info", "Customer Information");
 define("user_notice", "To order your tickets please complete the following fields and click on 'Continue'. Fields with (*) are mandatory. This information will stay confidential. We will not give out your information or sell it to others. You can also choose to become a member and never fill this form again.");
 define("becomememberorguest", "Register as Member or Guest");
 define("becomeguest", "Register as Guest");
 define("guest_info", "Fill your details here, so that the ticket can be sent to you.
-					 <br> Already a regular customer? Fill at the right side, your email address and password.");
+					 <br> Already a regular customer? Fill at the left side, your email address and password.");
 define("pwd_min", " (min 6 letters)");
 define("user_nospam", "Security Code");
 define("nospam_info", "Enter this code >>>");
@@ -1595,94 +1595,69 @@ define('pm_mollie_test','pm_mollie_test');
 define('bank_id','bank_id');
 define('Uninstall','Uninstall');
 define('Install','Install');
-?>
-<?php
+
 define('Bill','Bill');
-?>
-<?php
 define('Others','Others');
-?>
-<?php
-define('report_eventbarcodes','report_eventbarcodes');
-?>
-<?php
-define('export_eventbarcodes_title','export_eventbarcodes_title');
-?>
-<?php
-define('export_eventbarcodes_event','export_eventbarcodes_event');
-?>
-<?php
-define('eventbarcodes_date','eventbarcodes_date');
-?>
-<?php
-define('eventbarcodes_time','eventbarcodes_time');
-?>
-<?php
-define('export_eventbarcodes_code','export_eventbarcodes_code');
-?>
-<?php
-define('export_eventbarcodes_fullname','export_eventbarcodes_fullname');
-?>
-<?php
-define('entrant_date','entrant_date');
-?>
-<?php
-define('entrant_time','entrant_time');
-?>
-<?php
-define('nav_first-tooltip','nav_first-tooltip');
-?>
-<?php
-define('nav_prev-tooltip','nav_prev-tooltip');
-?>
-<?php
-define('nav_next-tooltip','nav_next-tooltip');
-?>
-<?php
-define('nav_last-tooltip','nav_last-tooltip');
-?>
-<?php
-define('select_seat_title','select_seat_title');
-?>
-<?php
+define('report_eventbarcodes','List of Barcode per event');
+define('export_eventbarcodes_title','List of Barcode per event');
+define('export_eventbarcodes_event','Select Event');
+define('eventbarcodes_date','Date');
+define('eventbarcodes_time','Time');
+define('export_eventbarcodes_code','Barcode');
+define('export_eventbarcodes_fullname','Patron');
+define('entrant_date','Date');
+define('entrant_time','Time');
+define('nav_first-tooltip','');
+define('nav_prev-tooltip','');
+define('nav_next-tooltip','');
+define('nav_last-tooltip','');
+define('select_seat_title','Select seat');
 define('ismember','ismember');
-?>
-<?php
-define('captcha_info','captcha_info');
-?>
-<?php
-define('user_condition','user_condition');
-?>
-<?php
+define('captcha_info','Enter this code >>>');
+define('user_condition','"Conditions: Information collected will only be stored to handle shipping and payment."');
 define('pdf_tickets_and_invoice','pdf_tickets_and_invoice');
-?>
-<?php
 define('home','home');
+define('order_is_not_paid','Order not Paid.');
+define('seat_checked','Seat checked');
+define('event_ordering','Order tickets');
+define('event_ordering-tooltip','');
+define('event_select_cat','Select Category');
+define('event_select_seats','Seatmap');
+define('select_discounts','Select Discount');
+define('no_discount','No discount');
+define('bad_category_id','Category not found.');
+define('next','next');
+define('add_to_cart','Add to Cart');
+define('error_cantloadevent','can\'t load selected event');
+define('buy_tickets','Buy Tickets');
+define('input_fields_requered','Inputfield with a <b>*</b> are requered.');
+define('person_user','Profile details');
+define('person_orders','List of orders');
+define('printticket','Print Ticket(s)');
+define('pdf_invoice_only','pdf_invoice_only');
+define('with_discount',' with ');
+define('edit_user','Edit');
+define('user_update','Save profile');
+define('failed_too_update_user','failed too update userprofile');
+define('order_info','Order overview');
+define('invalid_order','invalid_order');
+define('submit_reserve','Reserve');
+define('order_allready_cancelled','Order allready cancelled.');
 ?>
 <?php
-define('admin_status_adminz','admin_status_adminz');
+define('go_home','go_home');
 ?>
 <?php
-define('order_is_not_paid','order_is_not_paid');
+define('go_pay','go_pay');
 ?>
 <?php
-define('seat_checked','seat_checked');
+define('user_email2','Repeat E-Mail');
 ?>
 <?php
-define('event_ordering','event_ordering');
+define('status_change_handling_error','status_change_handling_error');
+define('order_reserved','Order is reserved for you');
 ?>
 <?php
-define('event_ordering-tooltip','event_ordering-tooltip');
-?>
-<?php
-define('event_select_cat','event_select_cat');
-?>
-<?php
-define('event_select_seats','event_select_seats');
-?>
-<?php
-define('select_discounts','select_discounts');
-?>
-<?php
-define('no_discount','no_discount');
+define('cart_expired','The tickets in you cart are expired and will be removed from the cart.');
+define('vertical_menu','Menu');
 ?>

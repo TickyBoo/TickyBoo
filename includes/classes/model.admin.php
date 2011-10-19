@@ -154,7 +154,7 @@ public function isAllowed($Resource, $login = false ) {
     if ($login && strpos($row['admin_status'], 'pos') ===0) {
       if ((int)$this->user_id <> (int)$this->admin_user_id) {
         return addwarning('error_SalesPoint_not_found');
-      }elseif ($this->user_prefs_strict) {
+      }elseif ($Resource == 'pos' && $this->user_prefs_strict) {
         $check     = is($_COOKIE['use'.$this->admin_user_id],false);
         $hash = hash('ripemd160',$this->user_prefs_strict.$_SHOP->secure_id.$this->admin_user_id.$this->user_lastname);
         if ($check === false) { return false; }

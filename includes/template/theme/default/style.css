@@ -253,3 +253,44 @@ tr.user-order-ord {
   border-right: 2px solid #99CCFF;
   border-left: 2px solid #99CCFF;
 }
+
+
+  .pm_seatmap {
+    margin:0;padding:0;
+    vertical-align:middle;
+    text-align: center;
+     border:0px dashed transparent;
+  }
+  .pm_seatmap img {
+     border:1px dashed transparent;margin:0;
+  }
+  .pm_shiftright {
+    margin:0;padding:0;
+    vertical-align:middle;
+    text-align: center;
+     border:0px dashed transparent;
+  }
+  .pm_table {margin:5px; border:0px  !important; padding:0px   !important;}
+  .pm_info{width:100%;}
+  .pm_box{width:600px; background-color:#FFFFFF; padding:10px;}
+  .pm_nosale{background-color:#d2d2d2;width:14px; height:14px;}
+
+  .pm_ruler {}
+
+  .pm_free {background-color:#339900;width:14px; height:14px; border-right:#339900 1px solid;border-bottom:#339900 1px solid;padding:0px;}
+
+  .pm_occupied {background-color:#FF0066;width:14px; height:14px;border-top:#000000 1px solid;border-left:#000000 1px solid;padding:0px;}
+
+  .pm_none {padding:0px;zoom:1;}
+  .pm_check {
+    cursor:pointer;
+  }
+
+  .pm_first {
+     clear:both;
+  }
+
+  .pm_check:hover {
+    background-color:#4F07E2;
+    cursor:pointer;
+  }

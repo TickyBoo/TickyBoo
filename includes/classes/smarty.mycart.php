@@ -156,20 +156,21 @@ class MyCart_Smarty {
       $this->cart_index=0;
 
       $cart->iterate(array(&$this,'_pre_items'),$this->cart_list);
-
+      if (is($params['perevent'],false)) {
+        usort($this->cart_list,'usort_seats_cmp');
+      }
     }
 
     if($cart_row=&$this->cart_list[$this->cart_index++]){
-      $smarty->assign_by_ref("event_item",$cart_row[0]);
+  //    var_dump($cart_row);
+      $smarty->assign("event_item",$cart_row[0]);
 
 
-      $smarty->assign_by_ref("category_item",$cart_row[1]);
+      $smarty->assign("category_item",$cart_row[1]);
 
-      $seat_item=$cart_row[2];
+      $seat_item=$cart_row[2];//
 
-      $smarty->assign_by_ref("seat_item",$seat_item);
-      $smarty->assign("seat_item_id",$seat_item->id);
-      $smarty->assign_by_ref("seats_id",$seat_item->seats);
+      $smarty->assign("seat_item",$seat_item);
 
       $cat= $cart_row[1];
       if($cat->cat_numbering=='rows'){
@@ -297,7 +298,7 @@ class MyCart_Smarty {
 
     //checks the seating numbering.
     if($category_numbering=='none'){
-      if(is_array($seats) || ($seats ==0)){
+      if(is_array($seats) ||  ($seats ==0)){
         addWarning('places_empty');
         return FALSE;
       }
@@ -357,7 +358,15 @@ class MyCart_Smarty {
       return $res;
     }
   }
-
 }
 
+function usort_seats_cmp($a, $b) {
+  if ($a[2]->event_id == $b[2]->event_id) {
+    if ($a[2]->id != $b[2]->id) {
+      return ($a[2]->id < $b[2]->id) ? -1 : 1;
+    }
+    return 0;
+  }
+  return ($a[2]->event_id < $b[2]->event_id) ? -1 : 1;
+}
 ?>

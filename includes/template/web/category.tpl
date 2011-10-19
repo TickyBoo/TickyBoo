@@ -91,14 +91,12 @@
               </tr>
             {/if}
           </table>
-<style type="text/css">
-{literal}
-.seatmapimage {
-   width: 16px;
-   height:16px;
-}
-</style>
-{/literal}
+          <style type="text/css">
+          .seatmapimage {
+             width: 16px;
+             height:16px;
+          }
+          </style>
           <div style='overflow: auto; height: 350px; width:595px; border: 1px solid #DDDDDD;background-color: #fcfcfc' align='center' valign='middle'>
             {placemap  category=$shop_category seatlimit=$seatlimit}
           </div>
