@@ -41,7 +41,7 @@ class Order_Smarty {
   function Order_Smarty ($smarty){
     global $_SHOP;
     $smarty->register_object("order",$this,null,true,array("order_list","tickets"));
-    $smarty->assign_by_ref("order",$this);
+    $smarty->assign("order",$this);
 
     if(isset($_SESSION['_SHOP_AUTH_USER_DATA']['user_id'])) {
       $this->user_auth_id=$_SESSION['_SHOP_AUTH_USER_DATA']['user_id'];
@@ -673,6 +673,41 @@ class Order_Smarty {
       }
     }
   }
+  /**
+   * Countdown now used the order_date_expire.
+   * Could be simplified down as there shouldnt be the need for the two
+   * seperate methods.
+   *
+   * @name countdown
+   * @uses Time, ShopDB
+   * @author Christopher Jenkins
+   * @access Public
+   * @todo Clean and remove unnessary method and both use the same field to calc remaining time.
+   * @version BETA4
+   * @since 1.3.4
+   */
+  function countdown( $params, $smarty ) {
+    global $_SHOP;
+
+    $order_id = $this->secure_url_param( $params['order_id'] );
+    $query = "SELECT order_date_expire
+              FROM `Order`
+              WHERE order_id=" . ShopDB::quote( $order_id ) ."
+              AND order_status NOT IN ('cancel','trash') LIMIT 1";
+    if ( $result = ShopDB::query_one_row($query) ) {
+      $time  = Time::StringToTime( $result['order_date_expire'] );
+      $timeRemain = Time::countdown( $time );
+      if($result['order_date_expire'] == null){
+        $timeRemain['forever']=true;
+      }
+      if ( $_SHOP->shopconfig_delunpaid_pos == 'No' && $params['pos']==true ){
+        $timeRemain['forever']=true;
+      }
+    }
+    $smarty->assign( "order_remain", $timeRemain );
+  }
+
+
 }
 
 function _collect(&$event_item,&$cat_item,&$place_item,&$order){

@@ -39,7 +39,7 @@ class Update_Smarty {
 
 	function Update_Smarty( $smarty ) {
 		global $_SHOP;
-		$smarty->register_object( "update", $this, array('view', 'countdown','is_demo','can_reserve') );
+		$smarty->register_object( "update", $this, array('view', 'is_demo','can_reserve') );
 		$smarty->assign_by_ref( "update", $this );
 	}
 
@@ -101,40 +101,6 @@ class Update_Smarty {
 			}
 		}
 		$smarty->assign( "update_view", $enabled );
-	}
-
-	/**
-	 * Countdown now used the order_date_expire.
-	 * Could be simplified down as there shouldnt be the need for the two
-	 * seperate methods.
-	 *
-	 * @name countdown
-	 * @uses Time, ShopDB
-	 * @author Christopher Jenkins
-	 * @access Public
-	 * @todo Clean and remove unnessary method and both use the same field to calc remaining time.
-	 * @version BETA4
-	 * @since 1.3.4
-	 */
-	function countdown( $params, $smarty ) {
-		global $_SHOP;
-
-		$order_id = $this->secure_url_param( $params['order_id'] );
-		$query = "SELECT order_date_expire
-              FROM `Order`
-              WHERE order_id=" . ShopDB::quote( $order_id ) ."
-              AND order_status NOT IN ('cancel','trash') LIMIT 1";
-		if ( $result = ShopDB::query_one_row($query) ) {
-			$time  = Time::StringToTime( $result['order_date_expire'] );
-      $timeRemain = Time::countdown( $time );
-      if($result['order_date_expire'] == null){
-        $timeRemain['forever']=true;
-      }
-      if ( $_SHOP->shopconfig_delunpaid_pos == 'No' && $params['pos']==true ){
-        $timeRemain['forever']=true;
-      }
-			$smarty->assign( "order_remain", $timeRemain );
-		}
 	}
 
 	/**

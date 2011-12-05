@@ -59,9 +59,7 @@
   {include file="header.tpl" name=!pers_info! header=!user_notice!}
   {gui->StartForm action="{$_SHOP_root_secured}checkout.php" method='post' model='user' id="userregister"}
 {/if}
-    <input type='hidden' name='action' value='register' />
-    <input type='hidden' name='register_user' value='on' />
-
+    <input type='hidden' name='action' value='register_now' />
       {if $user->mode() <= '1' or $ManualRegister}
         <input type='hidden' name='ismember' id='type' value='true'/>
       {elseif $user->mode() eq '2'}

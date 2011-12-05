@@ -159,9 +159,9 @@ class Cart {
   function is_empty (){
     $count=0;
     foreach($this->items as $item) {
-    //  if (!$item->is_expired ()) {
+      if (!$item->is_expired ()) {
         $count++;
-    //  }
+      }
     }
     return $count==0;
   }
@@ -176,14 +176,10 @@ class Cart {
     return $count > 0;
   }
 
-  //BOOL iter_func($event_item,$cat_item,$place_item[,$data])
-  //returns 1=continue iterate or 0=stop
-  function iterate ($iter_func, &$data,$all= false){
+  function iterate ($iter_func, &$data, $all= false){
     $x = 0;
     foreach($this->items as $key => $item){
-       if (!$item->is_expired () || $all) {
-         call_user_func_array($iter_func,array(&$this->event_list[$item->event_id], &$this->cat_list[$item->category_id], &$item, &$data));
-       }
+       call_user_func_array($iter_func,array(&$this->event_list[$item->event_id], &$this->cat_list[$item->category_id], &$item, &$data));
        if ($item->is_expired ()){
          $this->items[$key]->remove();
        }
@@ -260,6 +256,7 @@ class PlaceItem {
     $this->event_id=$event_id;
     $this->category_id=$category_id;
     $this->seats = array();
+    $this->expired = false;
     if (is_array($seat_ids)) {
       $this->loadInfo($seat_ids);
     } else {
@@ -283,7 +280,10 @@ class PlaceItem {
   }
 
   function is_expired (){
-    return time()>$this->cart->ts;
+    if (!$this->expired) {
+      $this->expired = time()>$this->cart->ts;
+    }
+    return $this->expired;
   }
 
   function ttl (){

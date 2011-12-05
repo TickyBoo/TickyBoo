@@ -189,16 +189,26 @@ class Smarty_Internal_Utility {
             $smarty->caching = false;
             $tpl = new $smarty->template_class($resource_name, $smarty);
             $smarty->caching = $_save_stat;
+
+            // remove from template cache
+            $tpl->source; // have the template registered before unset()
+            if ($smarty->allow_ambiguous_resources) {
+                $_templateId = $tpl->source->unique_resource . $tpl->cache_id . $tpl->compile_id;
+            } else {
+                $_templateId = $smarty->joined_template_dir . '#' . $resource_name . $tpl->cache_id . $tpl->compile_id;
+            }
+            if (isset($_templateId[150])) {
+                $_templateId = sha1($_templateId);
+            }
+            unset($smarty->template_objects[$_templateId]);
+
             if ($tpl->source->exists) {
                  $_resource_part_1 = basename(str_replace('^', '/', $tpl->compiled->filepath));
                  $_resource_part_1_length = strlen($_resource_part_1);
-                // remove from template cache
-                unset($smarty->template_objects[sha1($smarty->joined_template_dir.$tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
             } else {
-                // remove from template cache
-                unset($smarty->template_objects[sha1($smarty->joined_template_dir.$tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
                 return 0;
             }
+
             $_resource_part_2 = str_replace('.php','.cache.php',$_resource_part_1);
             $_resource_part_2_length = strlen($_resource_part_2);
         } else {
@@ -213,7 +223,12 @@ class Smarty_Internal_Utility {
             $_compile_id_part_length = strlen($_compile_id_part);
         }
         $_count = 0;
+        try {
         $_compileDirs = new RecursiveDirectoryIterator($_dir);
+        // NOTE: UnexpectedValueException thrown for PHP >= 5.3
+        } catch (Exception $e) {
+            return 0;
+        }
         $_compile = new RecursiveIteratorIterator($_compileDirs, RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($_compile as $_file) {
             if (substr($_file->getBasename(), 0, 1) == '.' || strpos($_file, '.svn') !== false)
@@ -356,7 +371,7 @@ class Smarty_Internal_Utility {
         // test if registered compile_dir is accessible
         $__compile_dir = $smarty->getCompileDir();
         $_compile_dir = realpath($__compile_dir);
-        if (!$__compile_dir) {
+        if (!$_compile_dir) {
             $status = false;
             $message = "FAILED: {$__compile_dir} does not exist";
             if ($errors === null) {
@@ -485,7 +500,7 @@ class Smarty_Internal_Utility {
         // test if all registered cache_dir is accessible
         $__cache_dir = $smarty->getCacheDir();
         $_cache_dir = realpath($__cache_dir);
-        if (!$__cache_dir) {
+        if (!$_cache_dir) {
             $status = false;
             $message = "FAILED: {$__cache_dir} does not exist";
             if ($errors === null) {

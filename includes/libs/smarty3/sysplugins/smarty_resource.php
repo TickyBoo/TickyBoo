@@ -335,63 +335,76 @@ abstract class Smarty_Resource {
      * @param string $type      name of the resource
      * @return Smarty_Resource Resource Handler
      */
-    public static function load(Smarty $smarty, $resource_type)
+    public static function load(Smarty $smarty, $type)
     {
-        // try the instance cache
-        if (isset(self::$resources[$resource_type])) {
-            return self::$resources[$resource_type];
+        // try smarty's cache
+        if (isset($smarty->_resource_handlers[$type])) {
+            return $smarty->_resource_handlers[$type];
         }
 
         // try registered resource
-        if (isset($smarty->registered_resources[$resource_type])) {
-            if ($smarty->registered_resources[$resource_type] instanceof Smarty_Resource) {
-                return self::$resources[$resource_type] = $smarty->registered_resources[$resource_type];
+        if (isset($smarty->registered_resources[$type])) {
+            if ($smarty->registered_resources[$type] instanceof Smarty_Resource) {
+                $smarty->_resource_handlers[$type] = $smarty->registered_resources[$type];
+                // note registered to smarty is not kept unique!
+                return $smarty->_resource_handlers[$type];
             }
             if (!isset(self::$resources['registered'])) {
                 self::$resources['registered'] = new Smarty_Internal_Resource_Registered();
+                $smarty->_resource_handlers[$type] = self::$resources['registered'];
             }
-            return self::$resources['registered'];
+            return $smarty->_resource_handlers[$type];
         }
 
         // try sysplugins dir
-        if (isset(self::$sysplugins[$resource_type])) {
-            $_resource_class = 'Smarty_Internal_Resource_' . ucfirst($resource_type);
-            return self::$resources[$resource_type] = new $_resource_class();
+        if (isset(self::$sysplugins[$type])) {
+            if (!isset(self::$resources[$type])) {
+                $_resource_class = 'Smarty_Internal_Resource_' . ucfirst($type);
+                self::$resources[$type] = new $_resource_class();
+            }
+            return $smarty->_resource_handlers[$type] = self::$resources[$type];
             }
 
         // try plugins dir
-        $_resource_class = 'Smarty_Resource_' . ucfirst($resource_type);
+        $_resource_class = 'Smarty_Resource_' . ucfirst($type);
         if ($smarty->loadPlugin($_resource_class)) {
+            if (isset(self::$resources[$type])) {
+                return $smarty->_resource_handlers[$type] = self::$resources[$type];
+            }
+            
             if (class_exists($_resource_class, false)) {
-                return self::$resources[$resource_type] = new $_resource_class();
+                self::$resources[$type] = new $_resource_class();
+                return $smarty->_resource_handlers[$type] = self::$resources[$type];
             } else {
-                $smarty->registerResource($resource_type,
-                    array("smarty_resource_{$resource_type}_source",
-                        "smarty_resource_{$resource_type}_timestamp",
-                        "smarty_resource_{$resource_type}_secure",
-                        "smarty_resource_{$resource_type}_trusted"));
+                $smarty->registerResource($type, array(
+                    "smarty_resource_{$type}_source",
+                    "smarty_resource_{$type}_timestamp",
+                    "smarty_resource_{$type}_secure",
+                    "smarty_resource_{$type}_trusted"
+                ));
+
                 // give it another try, now that the resource is registered properly
-                return self::load($smarty, $resource_type);
+                return self::load($smarty, $type);
             }
         }
 
         // try streams
         $_known_stream = stream_get_wrappers();
-        if (in_array($resource_type, $_known_stream)) {
+        if (in_array($type, $_known_stream)) {
             // is known stream
             if (is_object($smarty->security_policy)) {
-                $smarty->security_policy->isTrustedStream($resource_type);
+                $smarty->security_policy->isTrustedStream($type);
             }
             if (!isset(self::$resources['stream'])) {
                 self::$resources['stream'] = new Smarty_Internal_Resource_Stream();
             }
-            return self::$resources['stream'];
+            return $smarty->_resource_handlers[$type] = self::$resources['stream'];
         }
 
         // TODO: try default_(template|config)_handler
 
         // give up
-        throw new SmartyException('Unkown resource type \'' . $resource_type . '\'');
+        throw new SmartyException("Unkown resource type '{$type}'");
     }
     
     /**
@@ -459,37 +472,23 @@ abstract class Smarty_Resource {
             $template_resource = $_template->template_resource;
         }
         
+        // parse resource_name, load resource handler, identify unique resource name
+        self::parseResourceName($template_resource, $smarty->default_resource_type, $name, $type);
+        $resource = Smarty_Resource::load($smarty, $type);
+        $unique_resource_name = $resource->buildUniqueResourceName($smarty, $name);
+
         // check runtime cache
-        $_cache_key_dir = $smarty->joined_template_dir;
-        $_cache_key = 'template|' . $template_resource;
-        if (!isset(self::$sources[$_cache_key_dir])) {
-            self::$sources[$_cache_key_dir] = array();
-        }
-        if (isset(self::$sources[$_cache_key_dir][$_cache_key])) {
-            return self::$sources[$_cache_key_dir][$_cache_key];
+        $_cache_key = 'template|' . $unique_resource_name;
+        if (isset(self::$sources[$_cache_key])) {
+            return self::$sources[$_cache_key];
         }
 
-        if (($pos = strpos($template_resource, ':')) === false) {
-            // no resource given, use default
-            $resource_type = $smarty->default_resource_type;
-            $resource_name = $template_resource;
-        } else {
-            // get type and name from path
-            $resource_type = substr($template_resource, 0, $pos);
-            $resource_name = substr($template_resource, $pos +1);
-            if (strlen($resource_type) == 1) {
-                // 1 char is not resource type, but part of filepath
-                $resource_type = 'file';
-                $resource_name = $template_resource;
-            }
-        }
-        
-        $resource = Smarty_Resource::load($smarty, $resource_type);
-        $source = new Smarty_Template_Source($resource, $smarty, $template_resource, $resource_type, $resource_name);
+        // create source
+        $source = new Smarty_Template_Source($resource, $smarty, $template_resource, $type, $name, $unique_resource_name);
         $resource->populate($source, $_template);
 
         // runtime cache
-        self::$sources[$_cache_key_dir][$_cache_key] = $source;
+        self::$sources[$_cache_key] = $source;
         return $source;
     }
 
@@ -505,28 +504,30 @@ abstract class Smarty_Resource {
         $config_resource = $_config->config_resource;
         $smarty = $_config->smarty;
         
-        if (($pos = strpos($config_resource, ':')) === false) {
-            // no resource given, use default
-            $resource_type = $smarty->default_config_type;
-            $resource_name = $config_resource;
-        } else {
-            // get type and name from path
-            $resource_type = substr($config_resource, 0, $pos);
-            $resource_name = substr($config_resource, $pos +1);
-            if (strlen($resource_type) == 1) {
-                // 1 char is not resource type, but part of filepath
-                $resource_type = 'file';
-                $resource_name = $config_resource;
-            }
+        // parse resource_name
+        self::parseResourceName($config_resource, $smarty->default_config_type, $name, $type);
+        
+        // make sure configs are not loaded via anything smarty can't handle
+        if (isset($_incompatible_resources[$type])) {
+            throw new SmartyException ("Unable to use resource '{$type}' for config");
         }
 
-        if (isset($_incompatible_resources[$resource_type])) {
-            throw new SmartyException ("Unable to use resource '{$resource_type}' for config");
+        // load resource handler, identify unique resource name
+        $resource = Smarty_Resource::load($smarty, $type);
+        $unique_resource_name = $resource->buildUniqueResourceName($smarty, $name);
+        
+        // check runtime cache
+        $_cache_key = 'config|' . $unique_resource_name;
+        if (isset(self::$sources[$_cache_key])) {
+            return self::$sources[$_cache_key];
         }
         
-        $resource = Smarty_Resource::load($smarty, $resource_type);
-        $source = new Smarty_Config_Source($resource, $smarty, $config_resource, $resource_type, $resource_name);
+        // create source
+        $source = new Smarty_Config_Source($resource, $smarty, $config_resource, $type, $name, $unique_resource_name);
         $resource->populate($source, null);
+        
+        // runtime cache
+        self::$sources[$_cache_key] = $source;
         return $source;
     }
 
@@ -668,13 +669,9 @@ class Smarty_Template_Source {
     public function getCompiled(Smarty_Internal_Template $_template)
     {
         // check runtime cache
-        $_cache_key_dir = $_template->smarty->joined_template_dir;
-        $_cache_key = $_template->template_resource . '#' . $_template->compile_id;
-        if (!isset(Smarty_Resource::$compileds[$_cache_key_dir])) {
-            Smarty_Resource::$compileds[$_cache_key_dir] = array();
-        }
-        if (isset(Smarty_Resource::$compileds[$_cache_key_dir][$_cache_key])) {
-            return Smarty_Resource::$compileds[$_cache_key_dir][$_cache_key];
+        $_cache_key = $this->unique_resource . '#' . $_template->compile_id;
+        if (isset(Smarty_Resource::$compileds[$_cache_key])) {
+            return Smarty_Resource::$compileds[$_cache_key];
         }
 
         $compiled = new Smarty_Template_Compiled($this);
@@ -683,7 +680,7 @@ class Smarty_Template_Source {
         $compiled->exists = !!$compiled->timestamp;
 
         // runtime cache
-        Smarty_Resource::$compileds[$_cache_key_dir][$_cache_key] = $compiled;
+        Smarty_Resource::$compileds[$_cache_key] = $compiled;
 
         return $compiled;
     }

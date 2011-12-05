@@ -61,7 +61,7 @@
                    format: 'MS',
                    description: 's',
                    onExpiry: function(){
-                        var sURL = unescape(window.location.pathname);
+                        var sURL = unescape(window.location.href);
                         alert('{!cart_expired!} '+ sURL);
                         window.location.href = sURL;
                         //location.reload(true);

@@ -110,7 +110,7 @@
 
             <tr>
               <td colspan="2">
-                {update->countdown order_id=$shop_order.order_id reserved=true}
+                {order->countdown order_id=$shop_order.order_id reserved=true}
                 {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
                 <br />
     		        {!autocancel!}
@@ -161,7 +161,7 @@
             <tr>
               <td colspan="2">
 
-                {update->countdown order_id=$shop_order.order_id pos=true}
+                {order->countdown order_id=$shop_order.order_id pos=true}
                 {if !$order_remain.forever} {* Orders that dont expire wont complain about being cancelled *}
                   <br />
                   <strong>

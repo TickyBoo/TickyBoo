@@ -81,11 +81,10 @@
         <tr>
           <td colspan="2">
 
-            {update->countdown order_id=$shop_order.order_id reserved=true}
+            {order->countdown order_id=$shop_order.order_id reserved=true}
               {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
               <br />
   		        {!autocancel!}
-            {/update->countdown}
           </td>
 				</tr>
 				<form name='f' action='index.php' method='post'>
@@ -129,17 +128,12 @@
         <tr>
           <td colspan="2">
 			  	  <font color="Black" size="12px"><b>
-			  		  {update->countdown order_id=$shop_order.order_id}
+			  		  {order->countdown order_id=$shop_order.order_id}
           	    {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
-						  {/update->countdown}
 						  {!autocancel!}
 						  {!payhere!}</b>
             </font>
 			  		<br />
-			  		{order->tickets order_id=$shop_order.order_id min_date='on'}
-              <input type='hidden' name='min_date' value='{$shop_ticket_min_date}' />
-            {/order->tickets}
-
             {include file='checkout_payment.tpl' order_id=$shop_order.order_id}
           </td>
         </tr>

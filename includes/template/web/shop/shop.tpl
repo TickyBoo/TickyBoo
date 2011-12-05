@@ -37,16 +37,15 @@
 	{include file="user_login.tpl"}
 
 {elseif $smarty.request.action eq 'register'}
-   {if $smarty.request.submit_info}
-    {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
-    {assign var='user_data' value=$smarty.post}
-    {if $user_errors}
-      {include file="user_register.tpl" ManualRegister=true}
-    {else}
-      {include file="user_activate.tpl"}
-    {/if}
-  {else}
     {include file="user_register.tpl" ManualRegister=true}
+
+{elseif $smarty.request.action eq 'register_now'}
+  {user->register ismember=true data=$smarty.post secure='user_nospam' login=true}
+  {assign var='user_data' value=$smarty.post}
+  {if $user_errors}
+    {include file="user_register.tpl" ManualRegister=true}
+  {else}
+    {include file="user_activate.tpl"}
   {/if}
 
 {elseif $smarty.request.action eq 'activate'}

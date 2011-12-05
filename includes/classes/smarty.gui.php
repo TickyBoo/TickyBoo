@@ -337,7 +337,11 @@ class Gui_smarty {
     $name = is($params['name']);
     $colspan = is($params['colspan'],1);
     $this->checkRequired($params);
-    return $this->showLabel($name,$content,$params,$colspan, $smarty);
+    $params['namex'] = 'Label';
+    if (!$repeat) {
+      $repeat = false;
+      return $this->showLabel($name,$content,$params,$colspan, $smarty);
+    }
   }
 
   private function showlabel($name, $value = null, $params=array(), $colspan=1, $smarty=null) {
@@ -366,7 +370,7 @@ class Gui_smarty {
 
   function view($params, $smarty) //$name, &$data, $prefix = ''*/)
   {
-    $name = is($params['name']);
+    $name = is($params['name'],'nonename');
     $value  = is($params['value'],$this->guidata[$name]);
     $Option = is($params['option'], false);
     If (!$Option or !empty($value)) {

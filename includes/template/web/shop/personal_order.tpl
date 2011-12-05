@@ -31,8 +31,7 @@
  *}
 <!--personal-order.tpl -->
 {include file="header.tpl" name=!order_info!}
-	{order->order_list user_id=$user->user_id order_id=$smarty.request.id limit='1'}
-
+	{order->order_list user_id=$user->user_id order_id=$smarty.request.id limit='1' handling=true}
 	{if $shop_order.order_status eq "res"}
 			{$status ="<font style='color:orange'>{!reserved!}</font>"}
 	{elseif $shop_order.order_status eq "ord"}
@@ -60,18 +59,26 @@
  		{$payment ="<font style='color:#00DD00'>{!paid!}</font>"}
  	{/if}
 
-
   <div class="art-content-layout-wrapper layout-item-5">
     <div class="art-content-layout layout-item-6">
       <div class="art-content-layout-row">
         <div class="art-layout-cell layout-item-7 gui_form" style="width: 100%;">
           {gui->view name='order_id' value="#{$shop_order.order_id}"}
+
           {gui->view name='number_tickets' value="#{$shop_order.order_tickets_nr}"}
           {gui->view name='total_price' value="{$orderPreDis}"}
           {gui->view name='order_date' value="{$shop_order.order_date}"}
           {gui->view name='status' value="{$status}"}
-          {gui->view name='payment' value="{$payment}"}
-          {gui->view name='shipment' value="{$shipment}"}
+          {eval var=$shop_order.handling_text_payment assign=paymentVal}
+          {gui->label name='payment'}
+            {gui->view value=$paymentVal nolabel=true}
+            {gui->view value=$payment nolabel=true}
+          {/gui->label}
+          {eval var=$shop_order.handling_text_shipment assign=shipmentVal}
+          {gui->label name='shipment'}
+            {gui->view value=$shipmentVal nolabel=true}
+            {gui->view value=$shipment nolabel=true}
+          {/gui->label}
         </div>
       </div>
     </div>
@@ -86,7 +93,7 @@
           <div class="art-content-layout layout-item-1">
             <div class="art-content-layout-row" style='padding:10px;'>
               <div class="art-layout-cell layout-item-3"  style='width: 100%;padding:10px;'>
-                {update->countdown order_id=$shop_order.order_id reserved=true}
+                {order->countdown order_id=$shop_order.order_id reserved=true}
                 {!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}
                 {!autocancel!}
            	  </div>
@@ -140,13 +147,17 @@
 
 
         {* Pay for unpaid order *}
-        {if ($shop_order.order_status neq "order") and $shop_order.order_payment_status eq "none"}
+        {if ($shop_order.order_status eq "ord") and ($shop_order.order_payment_status neq "paid" && $shop_order.order_payment_status neq "payed") }
           <div class="art-content-layout-br layout-item-0"></div>
           <div class="art-content-layout layout-item-1">
             <div class="art-content-layout-row" style='padding:10px;'>
               <div class="art-layout-cell layout-item-3"  style='width: 100%;padding:10px;'>
-        	      {update->countdown order_id=$shop_order.order_id}
-          	    {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}
+        	      {order->countdown order_id=$shop_order.order_id}
+        	      {if $order_remain.forever}
+        	        {!paytimeforever!}
+        	      {else}
+          	      {!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}
+                {/if}
           	    {!autocancel!}
            	  </div>
             </div>

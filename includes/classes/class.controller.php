@@ -233,7 +233,7 @@ class Controller extends Component{
         exit;
       }
     } elseif($_SERVER['SERVER_PORT'] != 443 || $_SERVER['HTTPS'] !== "on") {
-      addWarning('This_page_is_not_secure');
+      addWarning('this_page_is_not_secure');
     }
     /* */
   }

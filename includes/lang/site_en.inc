@@ -191,7 +191,7 @@ define("log_err_wrong_usr_info", "Wrong Username or Password.
 define("mand_all", "All input fields are Required.");
 define("mandatory", "Field Required!");
 define("MP3_loading_problem", "Problem Loading MP3 File!");
-define('missing_pm_ord_id', 'Error: this placemap cant be saved, venue is missing');
+define('missing_pm_ord_id', 'Error: this placemap cannot be saved, venue is missing');
 define("nosale_confirm_msg", "Remove from Sale?");
 define("new_order_created", "New Order Created");
 define("not_number", "Enter a Number Without -()!");
@@ -200,7 +200,7 @@ define("no_result", "No Result!");
 define("old_order_cancelled", "Old Order Cancelled!");
 define("order_allready_cancelled", "Order Already Cancelled!");
 define("order_cancelled", "Order Cancelled!");
-define("order_cannot_reissue", "Can Not Re-Issue!");
+define("order_cannot_reissue", "Can Not Re-Issued!");
 define('order_error_message', 'Order Error Message');
 define('order_madefinal', 'Order is Complete');
 define("order_not_found", "Order Not Found!");
@@ -217,7 +217,7 @@ define("phone_short", "The Phone Number is too short");
 define("places_empty", "Please select your seats");
 define("places_occupied", "The selected seats have been already reserved");
 define("places_remains", " Remaining seats");
-define("places_toomuch", "This Number of Seats can Not be Reserved!");
+define("places_toomuch", "This Number of Seats cannot be Reserved!");
 define("pwd_not_thesame", "The Passwords Entered Do Not Match!");
 define("pwd_second_missing", "Second Password is Missing!");
 define("pwd_to_short", "Password Too Short!");
@@ -587,7 +587,7 @@ define("order_details_usertab", 'User');
 define("order_details_logtab", 'Status log');
 define("order_details_notetab", 'Note');
 define("order_statuslog", 'Order status log');
-define("order_note", 'Dont forget to save the note.');
+define("order_note", 'Don\'t forget to save the note.');
 define("order_note_title", "Note");
 define("order_add_note", "Add Note");
 define("onote_type", "Note Type");
@@ -940,7 +940,7 @@ define("order_reg", "Order Registered");
 define("tnx_order_mess", "Thank you very much! Your order was registered. To pay for your order follow the proccess below. ");
 // checkout_preview.tpl
 define("shopping_cart_check_out", "Select Payment Method");
-define("Handling_cont_mess", "Check your tickets, Check your details and then select your payment and click 'Order'.");
+define("Handling_cont_mess", "Check your tickets, Check your details and then select your payment option and click 'Order'.");
 define("handlings", "Payment Methods");
 define("payment", "Payment"); //personal_order.tpl
 define("shipment", "Shipment"); //personal_order.tpl
@@ -966,8 +966,8 @@ define("unassigned_seat", "Unassigned");
 define("each", "per ticket.");
 define("shop", "Order Tickets");
 define("shop_main", "Select Event");
-define("shop_info", "Select the desired number of tickets. Click on 'Next', to check and confirm your order.");
-define("shop_info_main", "Select a event below for the day which you wish to purchase tickets for.");
+define("shop_info", "Check tickets are available for the desired Category then click on 'Buy Tickets' to continue.");
+define("shop_info_main", "Select a event below for the day for which you wish to purchase tickets.");
 define("shop_condition", "Conditions: Information collected will only be stored to handle shipping and payment.");
 define("shop_no_event", "Sorry but the event you are looking for, does not exist, has expired or been removed.");
 define("from", "From the");
@@ -1030,7 +1030,10 @@ define("go_back", "Click Here to Go Back");
 define("id", "ID");
 define("zone", "Zone");
 define("discount", "Discount");
+
 define("paytimeleft", "You have ~DAYS~ Days, ~HOURS~ Hours, ~MINS~ Mins and ~SECS~ Seconds to pay for your order!");
+define('paytimeforever','You have to pay for your order, before the start of the event! ');
+
 // personal_orders.tpl
 define("pers_orders", "Current / Previous Order");
 define("options", "Options");
@@ -1261,12 +1264,12 @@ define ('are_you_sure_apply_update', 'Do you want to apply update? YOU WILL LOOS
 define ('shopconfig_ftusername', 'fusionticket.org Username');
 define ('shopconfig_ftpassword', 'fusionticket.org Password');
 define ('shopconfig_keepdetails', 'Save User/Pass/Proxy Settings?');
-define ('download_update', 'Update Settings and Applier');
+define ('download_update', 'Update Settings and Apply');
 define ('shopconfig_proxyaddress', 'Updater optional proxy address.');
-define ('shopconfig_proxyport', 'Updater proxy port.');
+define ('shopconfig_proxyport', 'Update proxy port.');
 define ('downloaded_update_files', 'Downloaded Update Files:');
-define ('download_older_than_curr', 'Avalible Update is older than currently installed!');
-define ('download_same_as_curr', 'Avalible Update is same as currently installed!');
+define ('download_older_than_curr', 'Available Update is older than currently installed!');
+define ('download_same_as_curr', 'Available Update is same as currently installed!');
 define ('download_link_failed', 'Could not get download link');
 define ('file_download_failed', 'Failed to download file, try again later');
 define ('file_downloaded', 'Update.zip downloaded');
@@ -1411,7 +1414,7 @@ define("assign", "Assign Seats");
 define("clear_selection", "Clear Selection");
 define("reset", "Reset");
 define("confirm_clear", "Are you sure you want to clear your selection?");
-define("delete_link_error", "Can't delete an admin link when there are seats associated to this pos");
+define("delete_link_error", "Can't delete an admin link when there are seats associated with this pos");
 // Events Mailer
 define("mailer_description", "Use this interface to send emails to customers attending this event.");
 define("mail_patrons_confirm", "Are you sure you want to email all attending customers?");
@@ -1425,7 +1428,7 @@ define("send_email", "Send Email");
 define("include_invoice", "Include Invoice");
 define("include_tickets", "Include Tickets");
 
-define('cant_create_seat_zone_missing_cat', 'Every zone need to have category in a placemap part.');
+define('cant_create_seat_zone_missing_cat', 'Every zone needs to have category in a placemap part.');
 define('pub_success', 'The following event has been successfully published: ');
 define('pm_vpc_AccessCode', 'pm_vpc_AccessCode');
 define('pm_vpc_Merchant', 'pm_vpc_Merchant');
@@ -1516,7 +1519,7 @@ define('handling_sp', 'POS');
 define('handling_www', 'WEB');
 
 define('for_handling_salemode', 'for: ');
-define('you_requested_that_is_not_visable', 'you_requested_that_is_not_visable');
+define('you_requested_that_is_not_visable', 'you_requested_that_is_not_visible');
 define('you_do_not_have_access', 'you_do_not_have_access');
 
 define('order_seats', 'order_seats');
@@ -1543,7 +1546,7 @@ define('reminder_form_title', 'Reminder settings');
 
 define('reminder_name', 'Reminder title');
 define('reminder_ident', 'Reminder weight');
-define('reminder_days', 'days befor reminding');
+define('reminder_days', 'days before reminder');
 define('reminder_email', 'eMail template');
 define('reminder_pdf', 'PDF template');
 define('reminder_fee', 'Reminder fee');
@@ -1576,7 +1579,7 @@ define('reminder_order_reminder_th', 'Reminders');
 define('reminder_next_to_be_send_in', 'next in ');
 define('reminder_next_days', ' days.');
 
-define('reminder_need_to_be_send', ' need to be send!');
+define('reminder_need_to_be_send', ' needs to be sent!');
 define('reminders_order_title', 'Show All unpaid orders!');
 
 define('reminder_is_send_on', ' is send on ');
@@ -1598,8 +1601,8 @@ define('Install','Install');
 
 define('Bill','Bill');
 define('Others','Others');
-define('report_eventbarcodes','List of Barcode per event');
-define('export_eventbarcodes_title','List of Barcode per event');
+define('report_eventbarcodes','List of Barcodes per event');
+define('export_eventbarcodes_title','List of Barcodes per event');
 define('export_eventbarcodes_event','Select Event');
 define('eventbarcodes_date','Date');
 define('eventbarcodes_time','Time');
@@ -1630,7 +1633,7 @@ define('next','next');
 define('add_to_cart','Add to Cart');
 define('error_cantloadevent','can\'t load selected event');
 define('buy_tickets','Buy Tickets');
-define('input_fields_requered','Inputfield with a <b>*</b> are requered.');
+define('input_fields_requered','Input fields with a <b>*</b> are required.');
 define('person_user','Profile details');
 define('person_orders','List of orders');
 define('printticket','Print Ticket(s)');
@@ -1638,11 +1641,11 @@ define('pdf_invoice_only','pdf_invoice_only');
 define('with_discount',' with ');
 define('edit_user','Edit');
 define('user_update','Save profile');
-define('failed_too_update_user','failed too update userprofile');
+define('failed_too_update_user','failed to update userprofile');
 define('order_info','Order overview');
 define('invalid_order','invalid_order');
 define('submit_reserve','Reserve');
-define('order_allready_cancelled','Order allready cancelled.');
+define('order_allready_cancelled','Order ilready cancelled.');
 ?>
 <?php
 define('go_home','go_home');
@@ -1660,4 +1663,4 @@ define('order_reserved','Order is reserved for you');
 <?php
 define('cart_expired','The tickets in you cart are expired and will be removed from the cart.');
 define('vertical_menu','Menu');
-?>
+define("no_orderid_given", "No Order ID for ticket loading");

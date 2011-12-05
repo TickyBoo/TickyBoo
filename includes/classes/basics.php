@@ -400,8 +400,8 @@ function con($name, $default='') {
     if (is($_SHOP->AutoDefineLangs, false)) {
   //    echo loadLanguage('site', true);
       if (is_writable(loadLanguage('site', true))){
-        $namex= _esc('!!'.$name.'!!, false);
-        $addcon = "\n<?php\ndefine('{$namex}','{$namex}');\n?>";
+        $namex= _esc($name, false);
+        $addcon = "\n<?php\ndefine('{$namex}','!!{$namex}!!');\n?>";
         file_put_contents(loadLanguage('site', true), $addcon, FILE_APPEND);
         define($name,'!!'.$name.'!!');
       }// else echo "****$name|".print_r( debug_backtrace(),true).'|';

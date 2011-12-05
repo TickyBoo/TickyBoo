@@ -80,11 +80,10 @@
 			<tr>
 			  <td colspan="2">
 			  {if $shop_order.order_status eq "res"}
-			  		{update->countdown order_id=$shop_order.order_id reserved=true}
+			  		{order->countdown order_id=$shop_order.order_id reserved=true}
           				{!buytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
 				  		<br />
 				  		{!autocancel!}
-			  		{/update->countdown}
 			  {/if}
 			  </td>
 			</tr>
@@ -102,9 +101,8 @@
 			<tr>
 			  <td colspan="2">
 			  		<font color="Black" size="12px"><b>
-			  			{update->countdown order_id=$shop_order.order_id}
+			  			{order->countdown order_id=$shop_order.order_id}
           					{!paytimeleft!|replace:'~DAYS~':$order_remain.days|replace:'~HOURS~':$order_remain.hours|replace:'~MINS~':$order_remain.mins|replace:'~SECS~':$order_remain.seconds}<br>
-						{/update->countdown}
 						{!autocancel!}
 						{!payhere!}
 					</b></font>

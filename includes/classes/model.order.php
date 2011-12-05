@@ -146,7 +146,7 @@ class Order Extends Model {
     }elseif($order_id>0){
       return Order::_loadTickets($order_id);
     }else{
-      addWarning("No Order ID for ticket loading");
+      addWarning("no_orderid_given");//"No Order ID for ticket loading");
     }
   }
 

@@ -110,6 +110,9 @@ if (!defined('DS')) {
         $string2 = "<"."?php\n";
         $string2 .= "// defines added at: ".date('c')."\n";
         foreach ($_SESSION['diff2'] as $key =>$value) {
+      		$umlautArray = Array("/ä/","/ö/","/ü/","/Ä/","/Ö/","/Ü/","/ß/");
+      		$replaceArray = Array("&auml;","&ouml;","&uuml;","&Auml;","&Ouml;","&Uuml;","&szlig;");
+      		$value = preg_replace($umlautArray , $replaceArray , $value);
           $string2 .= "define('$key', '".addslashes($value)."');\n";
         }
         $string2 .= "?>";

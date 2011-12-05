@@ -105,8 +105,10 @@
    	  </div>
       <div class="art-layout-cell layout-item-3"  style='text-align:right; width: 70%;padding:10px;'>
         {if $pm_return.approved}
-           {gui->button url="checkout.php?action=print&{$order->EncodeSecureCode($order->obj)}" target='_blank' name='printinvoice'}
-           {gui->button url="checkout.php?action=print&mode=2&{$order->EncodeSecureCode($order->obj)}" target='_blank' name='printticket'}
+           {gui->button url="checkout.php?action=print&mode=2&{$order->EncodeSecureCode($order->obj)}" target='_blank' name='printinvoice'}
+           {if $shop_order.order_payment_status eq 'payed' || $shop_order.order_payment_status eq 'paid'}
+             {gui->button url="checkout.php?action=print&mode=1&{$order->EncodeSecureCode($order->obj)}" target='_blank' name='printticket'}
+           {/if}
         {/if}
    	  </div>
     </div>

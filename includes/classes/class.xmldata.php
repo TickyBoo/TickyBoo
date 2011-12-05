@@ -123,13 +123,13 @@ class XMLData {
   	xml_set_character_data_handler($xml_parser, array(&$tmp,"characterData"));
 
   	if (!($fp = fopen($file, "r"))) {
-  		 addWarning("could not open XML input file",$file);
+  		 addWarning("could_not_open_xml_file",$file);
   		 return;
   	}
 
   	while ($data = fread($fp, 4096)) {
   		 if (!xml_parse($xml_parser, $data, feof($fp))) {
-  				 addWarning(sprintf("XML error: %s at line %d",
+  				 addWarning('',sprintf("XML error: %s at line %d",
   										 xml_error_string(xml_get_error_code($xml_parser)),
   										 xml_get_current_line_number($xml_parser)));
   				 return;

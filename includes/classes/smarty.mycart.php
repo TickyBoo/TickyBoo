@@ -191,7 +191,9 @@ class MyCart_Smarty {
   }
 
   function _pre_items (&$event_item,&$cat_item,&$place_item,&$data){
-    $data[]=array($event_item,$cat_item,$place_item);
+    if (!$place_item->is_expired()) {
+      $data[]=array($event_item,$cat_item,$place_item);
+    }
   }
 
 

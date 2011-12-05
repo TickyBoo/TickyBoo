@@ -48,20 +48,6 @@ class Smarty_Config_Source extends Smarty_Template_Source {
     }
 
     /**
-     * get a Compiled Object of this source
-     *
-     * @param Smarty_Internal_Template $_template template objet
-     * @return Smarty_Template_Compiled compiled object
-     *
-    public function getCompiled(Smarty_Internal_Template $_template)
-    {
-        $compiled = new Smarty_Template_Compiled($this);
-        $this->handler->populateCompiledFilepath($compiled, $_template);
-        return $compiled;
-    }
-    */
-
-    /**
      * <<magic>> Generic setter.
      *
      * @param string $property_name valid: content, timestamp, exists

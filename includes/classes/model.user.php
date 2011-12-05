@@ -169,7 +169,7 @@ class User extends Model{
         return $user->user_id; //eer silly <<<
       }
     } else {
-      Addwarning('Error_while_registering_user');
+      Addwarning('error_while_registering_user');
     }
     unset($user);
     return false;

@@ -176,8 +176,17 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
             if ($tpl->source->exists) {
                 $uid = $tpl->source->uid;
             }
+            
             // remove from template cache
-            unset($smarty->template_objects[sha1($smarty->joined_template_dir . $tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
+            if ($smarty->allow_ambiguous_resources) {
+                $_templateId = $tpl->source->unique_resource . $tpl->cache_id . $tpl->compile_id;
+            } else {
+                $_templateId = $smarty->joined_template_dir . '#' . $resource_name . $tpl->cache_id . $tpl->compile_id;
+            }
+            if (isset($_templateId[150])) {
+                $_templateId = sha1($_templateId);
+            }
+            unset($smarty->template_objects[$_templateId]);
         }
         return $uid;
     }
