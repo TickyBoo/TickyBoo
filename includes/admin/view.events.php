@@ -166,8 +166,8 @@ select SQL_CALC_FOUND_ROWS *
           <tr>
           	<td colspan='5'>
           		<input type='hidden' name='action' id='action' value=''>
-              <input type='checkbox'  onclick=\"checkall();\">&nbsp;<font size=-1>Check/Uncheck All&nbsp;&nbsp; </font>
-              ".$this->show_button("javascript: document.frmEvents.action.value=\"publish\";document.frmEvents.submit();","publish",3)."
+              <input type='checkbox' onclick=\"checkall();\">".con('checkbox_all').
+              $this->show_button("javascript: document.frmEvents.action.value=\"publish\";document.frmEvents.submit();","publish",3)."
               ".$this->show_button("javascript: document.frmEvents.action.value=\"unpublish\";document.frmEvents.submit();","unpublish",3)."
               ".$this->show_button("javascript: if(confirm(\"" . con('delete_item') . "\")) {document.frmEvents.action.value=\"remove_events\";document.frmEvents.submit();}","delete",3)."
           	</td>
@@ -257,7 +257,7 @@ select SQL_CALC_FOUND_ROWS *
                              array('image'=>'archive.png',
                                    'disable'=> !$pub));
     echo $this->show_button("javascript:if(confirm(\"".con('delete_item')."\")){location.href=\"{$_SERVER['PHP_SELF']}?action=remove&event_id={$row['event_id']}\";}","remove",2,
-                             array('tooltiptext'=>"Delete {$row['event_name']}?",
+                             array('tooltiptext'=>con('delete')." {$row['event_name']}?",
                                    'disable'=> !$pub ));
   }
 

@@ -1,6 +1,14 @@
   <!-- Required Header .tpl Start -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  {strip}
+  <meta name="description" content="{$organizer->organizer_name}{if $shop_event.event_id} - {$shop_event.event_short_text} {/if}" />
 
+  <title>{$organizer->organizer_name}
+   {if $shop_event.event_id} - {$shop_event.event_name}
+     {if $shop_event.event_rep!="main"}/ {$shop_event.event_date|date_format:!date_format!} / {$shop_event.ort_city} {/if}
+   {/if}
+ </title>
+ {/strip}
   {minify type='css'}
 
   {minify type='js' base='scripts/jquery'} {* Shows the default list *}

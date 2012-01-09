@@ -176,7 +176,6 @@ function smarty_block_event ($params, $content, $smarty, &$repeat) {
 
 		$event['tot_count']=$tot_count;
     $event['part_count']=$part_count;
-
     $smarty->assign("shop_event",$event);
 
     $smarty->pushBlockData(array($res,$tot_count,$part_count));

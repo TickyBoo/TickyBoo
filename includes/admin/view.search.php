@@ -326,7 +326,7 @@ class SearchView extends AdminView{
       $this->print_field("discount_value",$ticket);
 
       $this->print_field("seat_status",$ticket);
-      $this->print_field("seat_code",$ticket);
+   // $this->print_field("seat_code",$ticket);
 
 
       if(isset($ticket[color_code])){

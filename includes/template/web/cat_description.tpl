@@ -117,7 +117,7 @@
     {if $event_has_seats == "true"}
 			<div class="next" align='right'>
 		        <input type='hidden' name='event_id' value='{$shop_event.event_id}'>
-		        <button title="Next" onclick="validateSelection();" >Next</button>
+		        <button title="Next" onclick="validateSelection();" >{!next!}</button>
 			</div>
   	{/if}
     </form>

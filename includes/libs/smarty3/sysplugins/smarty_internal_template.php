@@ -97,7 +97,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      * internal capture runtime stack
      * @var array
      */
-    public $_capture_stack = array();
+    public $_capture_stack = array(0 => array());
 
     /**
      * Create template data object
@@ -221,7 +221,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             return false;
         }
         $this->properties['cache_lifetime'] = $this->cache_lifetime;
-        $this->properties['unifunc'] = 'content_' . uniqid();
+        $this->properties['unifunc'] = 'content_' . uniqid('', false);
         $content = $this->createTemplateCodeFrame($content, true);
         $_smarty_tpl = $this;
         eval("?>" . $content);
@@ -390,7 +390,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         }
         $this->properties['version'] = Smarty::SMARTY_VERSION;
         if (!isset($this->properties['unifunc'])) {
-            $this->properties['unifunc'] = 'content_' . uniqid();
+            $this->properties['unifunc'] = 'content_' . uniqid('', false);
         }
         if (!$this->source->recompiled) {
             $output .= "\$_valid = \$_smarty_tpl->decodeProperties(" . var_export($this->properties, true) . ',' . ($cache ? 'true' : 'false') . "); /*/%%SmartyHeaderCode%%*/?>\n";
@@ -573,7 +573,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     {
         throw new SmartyException("Not matching {capture} open/close in \"{$this->template_resource}\"");
     }
-    
+
     /**
     * Empty cache for this template
     *
@@ -585,7 +585,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         Smarty_CacheResource::invalidLoadedCache($this->smarty);
         return $this->cached->handler->clear($this->smarty, $this->template_name, $this->cache_id, $this->compile_id, $exp_time);
     }
-    
+
      /**
      * set Smarty property in template context
      *

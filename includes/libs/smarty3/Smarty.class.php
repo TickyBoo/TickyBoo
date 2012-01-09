@@ -1,55 +1,55 @@
 <?php
 /**
-* Project:     Smarty: the PHP compiling template engine
-* File:        Smarty.class.php
-* SVN:         $Id: Smarty.class.php 4445 2011-10-21 18:40:16Z rodneyrehm $
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 2.1 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*
-* For questions, help, comments, discussion, etc., please join the
-* Smarty mailing list. Send a blank e-mail to
-* smarty-discussion-subscribe@googlegroups.com
-*
-* @link http://www.smarty.net/
-* @copyright 2008 New Digital Group, Inc.
-* @author Monte Ohrt <monte at ohrt dot com>
-* @author Uwe Tews
-* @author Rodney Rehm
-* @package Smarty
-* @version 3.1-DEV
-*/
+ * Project:     Smarty: the PHP compiling template engine
+ * File:        Smarty.class.php
+ * SVN:         $Id: Smarty.class.php 4518 2011-12-18 18:48:07Z rodneyrehm $
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * For questions, help, comments, discussion, etc., please join the
+ * Smarty mailing list. Send a blank e-mail to
+ * smarty-discussion-subscribe@googlegroups.com
+ *
+ * @link http://www.smarty.net/
+ * @copyright 2008 New Digital Group, Inc.
+ * @author Monte Ohrt <monte at ohrt dot com>
+ * @author Uwe Tews
+ * @author Rodney Rehm
+ * @package Smarty
+ * @version 3.1-DEV
+ */
 
 /**
-* define shorthand directory separator constant
-*/
+ * define shorthand directory separator constant
+ */
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
 /**
-* set SMARTY_DIR to absolute path to Smarty library files.
-* Sets SMARTY_DIR only if user application has not already defined it.
-*/
+ * set SMARTY_DIR to absolute path to Smarty library files.
+ * Sets SMARTY_DIR only if user application has not already defined it.
+ */
 if (!defined('SMARTY_DIR')) {
     define('SMARTY_DIR', dirname(__FILE__) . DS);
 }
 
 /**
-* set SMARTY_SYSPLUGINS_DIR to absolute path to Smarty internal plugins.
-* Sets SMARTY_SYSPLUGINS_DIR only if user application has not already defined it.
-*/
+ * set SMARTY_SYSPLUGINS_DIR to absolute path to Smarty internal plugins.
+ * Sets SMARTY_SYSPLUGINS_DIR only if user application has not already defined it.
+ */
 if (!defined('SMARTY_SYSPLUGINS_DIR')) {
     define('SMARTY_SYSPLUGINS_DIR', SMARTY_DIR . 'sysplugins' . DS);
 }
@@ -61,15 +61,21 @@ if (!defined('SMARTY_MBSTRING')) {
 }
 if (!defined('SMARTY_RESOURCE_CHAR_SET')) {
     // UTF-8 can only be done properly when mbstring is available!
+    /**
+     * @deprecated in favor of Smarty::$_CHARSET
+     */
     define('SMARTY_RESOURCE_CHAR_SET', SMARTY_MBSTRING ? 'UTF-8' : 'ISO-8859-1');
 }
 if (!defined('SMARTY_RESOURCE_DATE_FORMAT')) {
+    /**
+     * @deprecated in favor of Smarty::$_DATE_FORMAT
+     */
     define('SMARTY_RESOURCE_DATE_FORMAT', '%b %e, %Y');
 }
 
 /**
-* register the class autoloader
-*/
+ * register the class autoloader
+ */
 if (!defined('SMARTY_SPL_AUTOLOAD')) {
     define('SMARTY_SPL_AUTOLOAD', 0);
 }
@@ -84,8 +90,8 @@ if (SMARTY_SPL_AUTOLOAD && set_include_path(get_include_path() . PATH_SEPARATOR 
 }
 
 /**
-* Load always needed external class files
-*/
+ * Load always needed external class files
+ */
 include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_data.php';
 include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_templatebase.php';
 include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_template.php';
@@ -95,9 +101,9 @@ include_once SMARTY_SYSPLUGINS_DIR.'smarty_cacheresource.php';
 include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_cacheresource_file.php';
 
 /**
-* This is the main Smarty class
-* @package Smarty
-*/
+ * This is the main Smarty class
+ * @package Smarty
+ */
 class Smarty extends Smarty_Internal_TemplateBase {
 
     /**#@+
@@ -107,7 +113,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     /**
     * smarty version
     */
-    const SMARTY_VERSION = 'Smarty 3.1-DEV';
+    const SMARTY_VERSION = 'Smarty-3.1-DEV';
 
     /**
     * define variable scopes
@@ -166,6 +172,24 @@ class Smarty extends Smarty_Internal_TemplateBase {
      * contains directories outside of SMARTY_DIR that are to be muted by muteExpectedErrors()
      */
     public static $_muted_directories = array();
+    /**
+     * Flag denoting if Multibyte String functions are available
+     */
+    public static $_MBSTRING = SMARTY_MBSTRING;
+    /**
+     * The character set to adhere to (e.g. "UTF-8")
+     */
+    public static $_CHARSET = SMARTY_RESOURCE_CHAR_SET;
+    /**
+     * The date format to be used internally
+     * (accepts date() and strftime())
+     */
+    public static $_DATE_FORMAT = SMARTY_RESOURCE_DATE_FORMAT;
+    /**
+     * Flag denoting if PCRE should run in UTF-8 mode
+     */
+    public static $_UTF8_MODIFIER = 'u';
+    
 
     /**#@+
     * variables
@@ -190,7 +214,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     * template directory
     * @var array
     */
-    protected $template_dir = array();
+    private $template_dir = array();
     /**
     * joined template directory string used in cache keys
     * @var string
@@ -220,22 +244,22 @@ class Smarty extends Smarty_Internal_TemplateBase {
     * compile directory
     * @var string
     */
-    protected $compile_dir = null;
+    private $compile_dir = null;
     /**
     * plugins directory
     * @var array
     */
-    protected $plugins_dir = array();
+    private $plugins_dir = array();
     /**
     * cache directory
     * @var string
     */
-    protected $cache_dir = null;
+    private $cache_dir = null;
     /**
     * config directory
     * @var array
     */
-    protected $config_dir = array();
+    private $config_dir = array();
     /**
     * force template compiling?
     * @var boolean
@@ -584,7 +608,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
         // selfpointer needed by some other class methods
         $this->smarty = $this;
         if (is_callable('mb_internal_encoding')) {
-            mb_internal_encoding(SMARTY_RESOURCE_CHAR_SET);
+            mb_internal_encoding(Smarty::$_CHARSET);
         }
         $this->start_time = microtime(true);
         // set default dirs
@@ -1191,6 +1215,8 @@ class Smarty extends Smarty_Internal_TemplateBase {
                 $tpl = clone $this->template_objects[$_templateId];
                 $tpl->smarty = clone $tpl->smarty;
                 $tpl->parent = $parent;
+                $tpl->tpl_vars = array();
+                $tpl->config_vars = array();
             } else {
                 $tpl = new $this->template_class($template, clone $this, $parent, $cache_id, $compile_id);
             }
@@ -1198,6 +1224,9 @@ class Smarty extends Smarty_Internal_TemplateBase {
             if (isset($this->template_objects[$_templateId])) {
                 // return cached template object
                 $tpl = $this->template_objects[$_templateId];
+                $tpl->parent = $parent;
+                $tpl->tpl_vars = array();
+                $tpl->config_vars = array();
             } else {
                 $tpl = new $this->template_class($template, $this, $parent, $cache_id, $compile_id);
             }
@@ -1425,25 +1454,30 @@ class Smarty extends Smarty_Internal_TemplateBase {
     {
             restore_error_handler();
         }
-    }
+}
+
+// let PCRE (preg_*) treat strings as ISO-8859-1 if we're not dealing with UTF-8
+if (Smarty::$_CHARSET !== 'UTF-8') {
+    Smarty::$_UTF8_MODIFIER = '';
+}
 
 /**
-* Smarty exception class
-* @package Smarty
-*/
+ * Smarty exception class
+ * @package Smarty
+ */
 class SmartyException extends Exception {
 }
 
 /**
-* Smarty compiler exception class
-* @package Smarty
-*/
+ * Smarty compiler exception class
+ * @package Smarty
+ */
 class SmartyCompilerException extends SmartyException  {
 }
 
 /**
-* Autoloader
-*/
+ * Autoloader
+ */
 function smartyAutoload($class)
 {
     $_class = strtolower($class);

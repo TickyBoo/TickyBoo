@@ -57,12 +57,13 @@ class ControlView extends Component{
       list($seat_id,$ticket_code)= is($bar, sscanf($_POST['codebar'],"%08d%s"));
 
 
-      $query="select seat_event_id, seat_status, seat_nr, seat_row_nr,
+      $query="select seat_event_id, discount_name, seat_status, seat_nr, seat_row_nr,
                      category_numbering, category_name, category_color,
                      pmz_name, order_payment_status, order_status,order_id
               from Seat LEFT JOIN PlaceMapZone ON seat_zone_id=pmz_id
                         LEFT JOIN Category on seat_category_id=category_id
                         LEFT JOIN `Order` on seat_order_id= order_id
+                        LEFT JOIN `Discount` on discount_id= seat_discount_id
               where seat_id="._esc($seat_id)."
   	          AND   seat_code="._esc($ticket_code);
 
@@ -80,6 +81,9 @@ class ControlView extends Component{
         return $this->showerror('order_is_not_valid',$ticket);
       } elseif(!in_array($ticket['order_payment_status'],array('paid'))){
         return $this->showerror('order_is_not_paid',$ticket);
+      }
+      if ($ticket['discount_name']) {
+            $discount_txt = " ( ".$ticket['discount_name']." )";
       }
 
       if($ticket['category_numbering']=='both'){
@@ -99,7 +103,7 @@ class ControlView extends Component{
 	            <td align='center' class='success'>
                 <table border='0' width='350'>
                   <tr><td align='center' class='success'>".con('check_success')."</td></tr>
-                  <tr><td class='value' align='center'>{$ticket['category_name']} {$ticket['pmz_name']}</td></tr>
+                  <tr><td class='value' align='center'>{$ticket['category_name']} {$ticket['pmz_name']} {$discount_txt}</td></tr>
                   <tr><td class='value' align='center'> $place_nr </td></tr>
                   <tr><td colspan='2'> &nbsp;</td></tr>";
 
@@ -345,7 +349,7 @@ class ControlView extends Component{
     }
 
 
-    function print_input ($name, &$data, &$err){
+  function print_input ($name, &$data, &$err){
       echo "
          <tr>
            <td class='admin_name'  width='20%'>".con($name)."</td>

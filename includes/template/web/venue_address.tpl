@@ -80,7 +80,7 @@
     </table>
   {/event}
   <div align='right'>
-  <button onclick="jQuery.modal.close();">Close</button>
+  <button onclick="jQuery.modal.close();">{!close!}</button>
   </div>
 
 </body>

@@ -91,7 +91,7 @@ function smarty_function_mailto($params, $template)
     if ($mail_parms) {
         $address .= '?' . join('&', $mail_parms);
     }
-
+    
     $encode = (empty($params['encode'])) ? 'none' : $params['encode'];
     if (!isset($_allowed_encoding[$encode])) {
         trigger_error("mailto: 'encode' parameter must be none, javascript, javascript_charcode or hex", E_USER_WARNING);
@@ -130,7 +130,7 @@ function smarty_function_mailto($params, $template)
         }
         $address_encode = '';
         for ($x = 0, $_length = strlen($address); $x < $_length; $x++) {
-            if (preg_match('!\w!u', $address[$x])) {
+            if (preg_match('!\w!' . Smarty::$_UTF8_MODIFIER, $address[$x])) {
                 $address_encode .= '%' . bin2hex($address[$x]);
             } else {
                 $address_encode .= $address[$x];

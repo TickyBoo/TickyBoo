@@ -137,7 +137,7 @@ class EPH_paypal extends payment{
     $debug .= "res : $result\n";
 
     $return = false;
-  	if(stristr("VERIFIED",$result)===false) {
+  	if(stristr($result,"VERIFIED")===false) {
         $debugx="NOT OK\n";
     } elseif(($_POST["receiver_email"] != $receiver_email) and ($_POST["receiver_id"]!=$receiver_email)) {
         $debugx="wrong receiver_email\n";

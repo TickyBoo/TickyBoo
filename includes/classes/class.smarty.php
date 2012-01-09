@@ -82,16 +82,16 @@ class MySmarty extends SmartyBC {
     $this->controllor->__gui->gui_name  ='TblLower';
     $this->controllor->__gui->gui_value ='TblHigher';
 
-    $this->template_dir = array($_SHOP->tpl_dir.$context.DS.'custom'.DS,
+    $this->setTemplateDir(array($_SHOP->tpl_dir.$context.DS.'custom'.DS,
                                 $_SHOP->tpl_dir.$context.DS.'shop'.DS,
-                                $_SHOP->tpl_dir.$context.DS);
+                                $_SHOP->tpl_dir.$context.DS));
  //   $this->default_resource_type = 'mysql';
 
-    $this->cache_dir    = $_SHOP->tmp_dir;
-    $this->compile_dir  = $_SHOP->tmp_dir; // . '/web/templates_c/';
+    $this->setCacheDir($_SHOP->tmp_dir);
+    $this->setCompileDir($_SHOP->tmp_dir); // . '/web/templates_c/';
     $this->compile_id   = $context.'_'.$_SHOP->lang;
 
-    $this->plugins_dir[]  = INC . "shop_plugins".DS;
+    $this->addPluginsDir(INC . "shop_plugins".DS);
 
     $this->assign('action', $_REQUEST['action']);   // This needs to be added later .'_action'
     $this->assign('_SHOP_root', $_SHOP->root);

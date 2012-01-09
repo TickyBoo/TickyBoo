@@ -48,7 +48,7 @@
     -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-		<title>FusionTicket</title>
+
 		<link rel='stylesheet' href='style.php' type='text/css' />
 
 		<!-- Must be included in all templates -->

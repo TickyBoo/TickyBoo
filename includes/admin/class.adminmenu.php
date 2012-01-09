@@ -76,7 +76,9 @@ class MenuAdmin extends Component {
   			} else {
   				echo "class='menu_admin_link'>";
   			}
+		    $text = str_replace('.','-' ,$text);
   			echo con($text);
+		  //  var_dump( preg_match('|^[a-z]+[a-z0-5_-]+$|', $text));
   			echo "</a></td></tr>";
 		}
     echo "<tr><td></td></tr>";

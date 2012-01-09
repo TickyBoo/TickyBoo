@@ -258,8 +258,8 @@ define('user_details_saved_successfully', 'User details successfully updated');
 // Administration Menu - the menu on the left side
 define("index_admin", "Home");
 define("administration", "Administration");
-define("tabs.admins_admin", "User Management");
-define("tabs.events_admin", "Event Management");
+define("tabs-admins_admin", "User Management");
+define("tabs-events_admin", "Event Management");
 define("statistic_admin", "Reporting");
 define("orders_admin", "Ticket Tracking");
 define("template_admin", "Templates");
@@ -753,6 +753,8 @@ define("guest", "Guest");
 
 define("search_result", "Search Result");
 define("seat_tab", "Seat");
+define('seat_status','Status');
+define('seat_code','Barcode');
 define("search_title_place", "Search Seats");
 define("event_list", "Event List");
 define("seat_row_nr", "Row Number");
@@ -764,8 +766,7 @@ define("price", "Price");
 define("bs", "Ord.#");
 define("status", "Status");
 define("order_tab", "Order");
-define("search_title_order", "Search Orders");
-define("barcode_tab", "Barcode");
+define("search_title_order", "Search Orders");define("barcode_tab", "Barcode");
 define("search_title_codebar", "Search Barcodes");
 define("codebar", "Barcode");
 // Import/Export
@@ -796,7 +797,7 @@ define("export_cc_count", "Credit Card Count");
 define("export_entrant", "Export Attendees");
 define("export_entrant_title", "Ticket Status Report");
 define("export_entrant_event", "Choose an Event");
-define("export_entrant_NotSended", "'Not Sent' Orders only");
+define("export_entrant_NotSended", "\'Not Sent\' Orders only");
 define("export_entrant_order_id", "Order ID");
 define("export_entrant_fullname", "FullName");
 define("export_entrant_city", "City");
@@ -1664,3 +1665,14 @@ define('order_reserved','Order is reserved for you');
 define('cart_expired','The tickets in you cart are expired and will be removed from the cart.');
 define('vertical_menu','Menu');
 define("no_orderid_given", "No Order ID for ticket loading");
+
+define('admin_status_adminz','!!admin_status_adminz!!');
+?>
+<?php
+define('select_user_country','!!select_user_country!!');
+define('select_user_country','&nbsp;<font size=-1>Check/Uncheck All&nbsp;&nbsp; </font>');
+define('cant_lock_seat','can0 lock seat');
+define('Cant_find_seat','Cant find seat');
+define('search_choice_two_fields','Fill atliest 2 fields.');
+define('personal_search_dialog','Personal Search dialog');
+?>

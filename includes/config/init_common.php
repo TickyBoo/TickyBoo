@@ -141,7 +141,7 @@ if (!defined('ft_check')) {die('System intrusion ');}
 
 
 	//accepted languages
-	$_SHOP->langs=array('en');
+	$_SHOP->langs=array('en','de');
 	$_SHOP->langs_names=array('en'=>'English',
                             'de'=>'Deutsch',
                             'nl'=>'Nederlands'

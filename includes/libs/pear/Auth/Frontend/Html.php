@@ -120,13 +120,16 @@ class Auth_Frontend_Html {
     print '    <td>Password:</td>'."\n";
     print '    <td><input type="password" id="'.$caller->getPostPasswordField()
         .'" name="'.$caller->getPostPasswordField().'" /></td>'."\n";
-    print '</tr>'."\n<tr><td>Language</td><td><select name='setlang'>";
+    print '</tr>'."\n";
 
   	global $_SHOP;
-  	foreach($_SHOP->langs_names as $lang=>$name){
-  		echo"<option value='$lang'>$name</option>";
-  	}
-  	echo "</select></td></tr>";
+    if (count($_SHOP->langs)>1) {
+      print "<tr><td>Language</td><td><select name='setlang'>";
+      foreach($_SHOP->langs as $lang){
+    		echo"<option value='$lang'>{$_SHOP->langs_names[$lang]}</option>";
+    	}
+    	echo "</select></td></tr>";
+    }
     if ($status) {
       print '<tr align="center">'."\n";
       print '    <td colspan="2" class="error">'.$status.'</td>'."\n";

@@ -92,7 +92,7 @@ class install_database {
       if ($row = ShopDB::query_one_row($select)) {
         $OrgExist = true;
         foreach ($row as $key => $value) {
-           $_SESSION['ORG'][$key] = $value;
+           $_SESSION['ORG'][$key] = stripslashes($value);
 
         }
       }
