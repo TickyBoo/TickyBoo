@@ -70,6 +70,17 @@
 
   {eval var=$confirmtext}
 
+
 {if !$no_footer}
+  {if $shop_order.order_payment_status eq 'none' || $shop_order.order_payment_status eq 'pending'}
+    <div class="art-content-layout layout-item-1">
+      <div class="art-content-layout-row" style='padding:10px;'>
+        <div class="art-layout-cell layout-item-3"  style='text-align:right; width: 70%;padding:10px;'>
+               {gui->button url="checkout.php?action=cancel&{$order->EncodeSecureCode($order->obj)}" target='_blank' name='cancel_order'}
+     	  </div>
+      </div>
+    </div>
+  {/if}
+
  {include file="footer.tpl"}
 {/if}

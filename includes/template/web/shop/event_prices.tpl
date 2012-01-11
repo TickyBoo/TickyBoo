@@ -61,7 +61,7 @@
       	          {if $shop_category.category_free/$shop_category.category_size ge 0.2}
                     <span>{$shop_category.category_free}</span>
                   {else}
-                    <span color='Yellow'>{$shop_category.category_free}</span>
+                    <span style='color:Orange; '><b>{$shop_category.category_free}</b></span>
                   {/if}
                 {else}
                   <span color='red'>{!category_sold!}</span>
