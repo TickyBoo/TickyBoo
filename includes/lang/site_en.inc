@@ -136,7 +136,7 @@ define("user_address2", "Address 2");
 define("user_city", "City");
 define("user_state", "State");
 define("user_state_name", "State");
-define("user_zip", "PO Box");
+define("user_zip", "Zipcode");
 define("user_country", "Country");
 define("user_country_name", "Country");
 define("user_phone", "Phone");

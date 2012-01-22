@@ -538,7 +538,7 @@ function check_system() {
             seat_ts=NULL,
             seat_sid=NULL
          where seat_status='res'
-         and seat_ts<"._esc($time);
+         and seat_ts <".($time);
   ShopDB::query($query);
 
   //    echo "store";

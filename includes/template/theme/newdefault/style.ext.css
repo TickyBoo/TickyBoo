@@ -269,7 +269,7 @@ tr.admin_list_row_1:hover {background-color:#Faede4}
 }
 
 .admin-button:hover {
-  background:url("images/ui-bg_glass_55_fbf8ee_1x400.png") repeat-x scroll 50% 50% #DADADA;
+  background: #DADADA;
   border:1px solid #999999;
   color:#212121;
   outline:medium none;

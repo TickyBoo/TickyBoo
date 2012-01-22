@@ -81,9 +81,36 @@
 <br />
 <br />
 <script  type="text/javascript">
-{literal}
+
+
+
+  /**
+   *
+   * @access public
+   * @return void
+   **/
+  function showPasswords(show){
+    if(show == true){
+      $('#passwords_tr1').show();
+      $('#passwords_tr2').show();
+        $("input[name='password1']").rules("add",{ required : true, minlength : 6 });
+        $("input[name='password2']").rules("add",{ required : true , minlength : 6, equalTo: "#password" });
+    }else{
+      $('#passwords_tr1').hide();
+      $('#passwords_tr2').hide();
+        $("input[name='password1']").rules("remove");
+        $("input[name='password2']").rules("remove");
+    }
+  }
+
 $(window).load(function(){
-{/literal}
+  $('#ismember-checkbox').click(function(){
+    if($(this).is(':checked')){
+      showPasswords(true);
+    }else{
+      showPasswords(false);
+    }
+  });
   {if $user->mode() <= '1' or $ManualRegister}
     showPasswords(true);
   {elseif $user->mode() eq '2'}
@@ -91,9 +118,7 @@ $(window).load(function(){
   {else}
     showPasswords(false);
   {/if}
-{literal}
 });
-{/literal}
 </script>
 
 {if !$ManualRegister}

@@ -6,13 +6,14 @@
  * distributed under the LGPL License
  *
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @version   4.02
+ * @version   4.03
  */
 
 class HTML2PDF_exception extends exception
 {
     protected $_tag = null;
     protected $_html = null;
+    protected $_other = null;
     protected $_image = null;
     protected $_messageHtml = '';
 
@@ -103,6 +104,9 @@ class HTML2PDF_exception extends exception
             $msg.= ' HTML : ...'.trim($html).'...';
         }
 
+        // save the other informations
+        $this->_other = $other;
+
         // construct the exception
         parent::__construct($msg, $err);
     }
@@ -138,6 +142,17 @@ class HTML2PDF_exception extends exception
     public function getHTML()
     {
         return $this->_html;
+    }
+
+    /**
+     * get the optional other informations
+     *
+     * @access public
+     * @return mixed $other
+     */
+    public function getOTHER()
+    {
+        return $this->_other;
     }
 
     /**
