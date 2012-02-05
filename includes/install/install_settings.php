@@ -43,7 +43,7 @@ function get_content($url)
     //  curl_setopt($ch,CURLOPT_PORT, 443)  ;
       curl_setopt ($ch, CURLOPT_URL, $url);
       curl_setopt ($ch, CURLOPT_HEADER, 0);
-  //    curl_setopt ($ch, CURLOPT_TIMEOUT ,2);
+      curl_setopt ($ch, CURLOPT_TIMEOUT ,8);
 
       $string = curl_exec ($ch);
       curl_close ($ch);
@@ -51,6 +51,7 @@ function get_content($url)
   } else $string = false;
   return $string;
 }
+
 class install_settings {
   static function precheck($Install) {
     global $_SHOP;
@@ -77,7 +78,7 @@ class install_settings {
   }
 
   static function display($Install) {
-    Install_Form_Open ($Install->return_pg,'','Login to update you system');
+    Install_Form_Open ($Install->return_pg,'','Configuration settings');
 
 
 

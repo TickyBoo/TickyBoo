@@ -127,15 +127,18 @@ class Discount  Extends Model {
     return parent::save($id, $exclude);
   }
 
-  function copy($event_main_id, $event_sub_id) {
+  function copy($event_main_id, $event_sub_id, $copylist) {
     $discs = self::LoadAll($event_main_id);
-    //print_r($discs);
     foreach ($discs as $disc) {
       $disc->discount_event_id = $event_sub_id;
       unset($disc->discount_id);
+      if ($disc->discount_category_id) {
+        $disc->discount_category_id = $copylist[$disc->discount_category_id];
+      }
       $disc->save();
     }
   }
+
 	function CheckValues($data){
  		if(empty($data['discount_event_id']) && empty($data['discount_promo']) ){addError('discount_promo','mandatory');}
     if(empty($data['discount_event_id']) && !empty($data['discount_promo'])) {

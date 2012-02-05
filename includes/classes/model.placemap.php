@@ -210,15 +210,17 @@ class PlaceMap Extends Model {
             }
           }
         }
-
-        if($zones=PlaceMapCategory::loadAll($old_id)){
-          foreach($zones as $zone){
-            unset($zone->category_id);
-            $zone->category_pm_id=$new_id;
-            $zone->category_event_id=$event_id;
-            if (!$zone->save()) {
+        $this->copylist = array();
+        if($cats=PlaceMapCategory::loadAll($old_id)){
+          foreach($cats as $cat){
+            $cid = $cat->category_id;
+            unset($cat->category_id);
+            $cat->category_pm_id=$new_id;
+            $cat->category_event_id=$event_id;
+            if (!$cat->save()) {
               return ShopDB::rollback('copying Categories Failed, event: '.$event_id);
             }
+            $this->copylist[$cid] = $cat->category_id;
           }
         }
 

@@ -41,7 +41,7 @@ class Event Extends Model {
                                 'event_image', '#event_ort_id', 'event_webshop', '#event_pm_id', 'event_timestamp', 'event_date', 'event_time',
                                 'event_open', 'event_end', '*event_status', 'event_order_limit', 'event_template',
                                 '#event_group_id', 'event_mp3', '*event_rep', '#event_main_id', 'event_type',
-								'event_custom1', 'event_custom2', 'event_custom3', 'event_custom4',
+                								'event_custom1', 'event_custom2', 'event_custom3', 'event_custom4',
                                 'event_total', 'event_free');
 
   function load ($id, $only_published=TRUE){
@@ -106,7 +106,7 @@ class Event Extends Model {
             return self::_abort('Cant find selected placemap.');
           }
           if ($this->event_rep=='sub') {
-            Discount::Copy($this->event_main_id, $this->event_id);
+            Discount::Copy($this->event_main_id, $this->event_id, $pm->copylist);
           }
         }
       }

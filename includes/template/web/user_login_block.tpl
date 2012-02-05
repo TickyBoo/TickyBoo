@@ -41,7 +41,7 @@
 		<td class="login_title" >{!member!}</td>
 	</tr>
   	<tr>
-		<td class="login_content">{!welcome!} <b>{user->user_firstname|clean} {user->user_lastname|clean}</b>!
+		<td class="login_content">{!welcome!} <b>{$user->user_firstname|clean} {$user->user_lastname|clean}</b>!
 			<br>
 			<li><a  href='index.php?personal_page=on'>{!pers_page!}</a></li>
 			<li><a  href='index.php?action=logout'>{!logout!}</a></li>
